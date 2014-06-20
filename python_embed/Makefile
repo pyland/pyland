@@ -12,8 +12,8 @@ BOOST_LDLIBS    = -lboost_python3 -lboost_filesystem -lboost_system
 BOOST_CPPFLAGS  = $(NULL)
 BOOST_CXXFLAGS  = $(NULL)
 
-PYTHON_LDLIBS   = $(shell python3.4-config --ldflags)
-PYTHON_CPPFLAGS = $(shell python3.4-config --cflags)
+PYTHON_LDLIBS   = $(shell python3.2-config --ldflags)
+PYTHON_CPPFLAGS = $(shell python3.2-config --cflags)
 PYTHON_CXXFLAGS = $(NULL)
 
 
