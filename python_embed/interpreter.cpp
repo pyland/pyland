@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 		py::api::object wrapper_module = py::import("wrapper_functions");
 		main_module.attr("wrapper_functions") = wrapper_module;
 
-		Player my_player = Player(90, 102);
+		Player my_player = Player(Vec2D(90, 102), Direction::UP, "John");
 		main_module.attr("preplayer") = py::object(my_player);
 
 		py::exec(

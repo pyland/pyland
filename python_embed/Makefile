@@ -3,20 +3,19 @@ NULL=
 RM = - rm -f
 
 CXX      = g++
-CXXFLAGS = -g      # -g means include debug symbols
-CPPFLAGS = $(NULL) # Preprocessor
-LDFLAGS  = $(NULL)
-LDLIBS   = $(NULL)
+CXXFLAGS = -std=c++11 -g
+CPPFLAGS =
+LDFLAGS  =
+LDLIBS   =
+PYTHON_VERSION = $(shell python3 -c 'import sys; print("{0.major}.{0.minor}".format(sys.version_info))')
 
 BOOST_LDLIBS    = -lboost_python3 -lboost_filesystem -lboost_system
-BOOST_CPPFLAGS  = $(NULL)
-BOOST_CXXFLAGS  = $(NULL)
+BOOST_CPPFLAGS  =
+BOOST_CXXFLAGS  =
 
-PYTHON_LDLIBS   = $(shell python3.2-config --ldflags)
-PYTHON_CPPFLAGS = $(shell python3.2-config --cflags)
-PYTHON_CXXFLAGS = $(NULL)
-
-
+PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --ldflags)
+PYTHON_CPPFLAGS = $(shell python${PYTHON_VERSION}-config --cflags)
+PYTHON_CXXFLAGS =
 
 all: interpreter wrapper_functions.so
 
