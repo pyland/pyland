@@ -29,24 +29,24 @@ int main(int argc, char **argv) {
         auto wrapper_module = py::import("wrapper_functions");
         main_module.attr("wrapper_functions") = wrapper_module;
 
-        // 
-        auto my_player = new Player(Vec2D(90, 102), Direction::UP, "John");
-        auto preplayer = py::object(py::ptr(my_player));
-        preplayer.attr("move")(Vec2D(1, 0));
-        preplayer.attr("monologue")();
-        my_player->monologue();
+        // Inject a player; will be instantiated in C++
+        auto my_player = Player(Vec2D(90, 102), Direction::UP, "John");
+        main_module.attr("preplayer") = py::object(boost::ref(my_player));
 
-        main_module.attr("preplayer") = preplayer;
+        // Pass the Vec2D class. Should be 
         main_module.attr("Vec2D") = py::object(Vec2D(0, 0)).attr("__class__");
 
+        // Run the wrapper Python code
         py::exec(
+            "print('--- Inside ---')\n"
             "preplayer.monologue()\n"
             "preplayer.move(Vec2D(10, 14))\n"
             "preplayer.monologue()\n"
 
             "def script(player):\n"
+            "    x_direction = Vec2D(1, 0)\n"
             "    for _ in range(10000):\n"
-            "        player.move(Vec2D(1, 0))\n"
+            "        player.move(x_direction)\n"
             "    player.monologue()\n"
 
             "preplayer.give_script(script)\n"
@@ -56,8 +56,9 @@ int main(int argc, char **argv) {
             main_namespace
         );
 
-        my_player->monologue();
-        preplayer.attr("monologue")();
+        // Prove that this has affected the outside environment
+        std::cout << "--- Outside ---" << std::endl;
+        my_player.monologue();
     }
     catch (boost::python::error_already_set) {
         PyErr_Print();

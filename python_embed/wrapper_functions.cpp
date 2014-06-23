@@ -6,7 +6,7 @@
 namespace py = boost::python;
 
 BOOST_PYTHON_MODULE(wrapper_functions) {
-    py::class_<Player, boost::shared_ptr<Player>, boost::noncopyable>("Player", py::no_init)
+    py::class_<Player, boost::noncopyable>("Player", py::no_init)
         .def("move",        &Player::move)
         .def("monologue",   &Player::monologue)
         .def("run_script",  &Player::run_script)
