@@ -22,7 +22,11 @@ int main(int argc, char **argv) {
         main_module.attr("wrapper_functions") = wrapper_module;
 
         auto my_player = new Player(Vec2D(90, 102), Direction::UP, "John");
-        auto preplayer = py::object(my_player);
+        auto preplayer = py::object(boost::shared_ptr<Player>(my_player));
+        preplayer.attr("move")(Vec2D(1, 0));
+        preplayer.attr("monologue")();
+        my_player->monologue();
+
 
         main_module.attr("preplayer") = preplayer;
         main_module.attr("Vec2D") = py::object(Vec2D(0, 0)).attr("__class__");
@@ -33,7 +37,7 @@ int main(int argc, char **argv) {
             "preplayer.monologue()\n"
 
             "def script(player):\n"
-            "    for _ in range(1000):\n"
+            "    for _ in range(10000):\n"
             "        player.move(Vec2D(1, 0))\n"
             "    player.monologue()\n"
 
