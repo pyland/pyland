@@ -2,14 +2,13 @@ NULL=
 
 RM = - rm -f
 
-CXX      = g++
+CXX      = ${COMPILER}
 CXXFLAGS = -std=c++11 -g
 CPPFLAGS =
 LDFLAGS  =
 LDLIBS   =
-PYTHON_VERSION = $(shell python3 -c 'import sys; print("{0.major}.{0.minor}".format(sys.version_info))')
 
-BOOST_LDLIBS    = -lboost_python3 -lboost_filesystem -lboost_system
+BOOST_LDLIBS    = -l${LIBBOOST_PYTHON} -lboost_filesystem -lboost_system
 BOOST_CPPFLAGS  =
 BOOST_CXXFLAGS  =
 

@@ -12,7 +12,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("run_script",  &Player::run_script)
         .def("give_script", &Player::give_script);
 
-    py::class_<Vec2D>("Vec2D", py::init<int, int>())
+    py::class_<Vec2D, boost::shared_ptr<Vec2D>>("Vec2D", py::init<int, int>())
         .def(py::self + py::other<Vec2D>())
         .def_readwrite("x", &Vec2D::x)
         .def_readwrite("y", &Vec2D::y);
