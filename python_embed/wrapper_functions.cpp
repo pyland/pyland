@@ -10,7 +10,8 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("move",        &Player::move)
         .def("monologue",   &Player::monologue)
         .def("run_script",  &Player::run_script)
-        .def("give_script", &Player::give_script);
+        .def("give_script", &Player::give_script)
+        .def_readwrite("in_call", &Player::in_call);
 
     py::class_<Vec2D>("Vec2D", py::init<int, int>())
         .def(py::self + py::other<Vec2D>())
