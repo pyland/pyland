@@ -30,11 +30,34 @@ private:
      *  Initialize SDL.
      */
     static void init_sdl();
-
     /**
      *  Deinitialize SDL.
      */
     static void deinit_sdl();
+    
+    /**
+     *  Initialize EGL. Done once per window.
+     */
+    static void init_egl();
+    /**
+     *  Deinitialize SDL.
+     */
+    static void deinit_egl();
+
+    /**
+     *  Creates the EGL surface.
+     *
+     *  This can be done whenever the surface needs to change position
+     *  or resize.
+     */
+    static void init_surface();
+    /**
+     *  Destroys the EGL surface.
+     *
+     *  This is used as a clean up function, but is also used when the
+     *  window needs to resize/relocate (or even minimize).
+     */
+    static void deinit_surface();
 
 public:
     class InitException: public std::exception {
