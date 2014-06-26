@@ -46,12 +46,47 @@ class Player {
         boost::python::api::object script;
 
     public:
+
+        /**
+         *  counter on number of scripts (need not be the same) this Player has ran
+         */
         static long call_number;
+
+        /**
+         * lock on script running
+         */
         static bool in_call;
 
+        /**
+         *  Player constructor
+         *  @param start inital position
+         *  @param direction of sprite
+         *  @param name the name of sprite  
+         *  @return new instance of Player
+         */
         Player(Vec2D start, Direction direction, std::string name);
+
+        /**
+         *  move player relative to current location
+         *  @param by Vec2D representing movement in the axis 
+         *  @return void as the internal represention of position is permutted 
+         */
         void move(Vec2D by);
+
+        /**
+         *  prints to standard output the name and position of sprite
+         */
         void monologue();
+
+        /**
+         *  running a boost python script
+         *  @see give_script()
+         */
         void run_script();
+
+        /**
+         *  adding boost python script to player
+         *  @see run_script()
+         */
         void give_script(boost::python::api::object in);
 };
