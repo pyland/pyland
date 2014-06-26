@@ -7,7 +7,9 @@ extern "C" {
 #include <GLES/gl.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+
 #include <SDL.h>
+#include <SDL_syswm.h>
 }
 
 /**
@@ -39,6 +41,15 @@ private:
      */
     int window_height;
 
+    /**
+     *  SDL window and EGL surface displacement from XServer left edge.
+     */
+    int window_x;
+    /**
+     *  SDL window and EGL surface displacement from XServer top edge.
+     */
+    int window_y;
+
     bool visible;
 
     bool close_requested;
@@ -54,6 +65,8 @@ private:
 
     EGLConfig config;
     EGLint configCount;
+
+    SDL_SysWMinfo wm_info;
     
     /**
      *  Initialize SDL.
@@ -136,6 +149,16 @@ public:
      *  Checks whether the window has a close request.
      */
     bool check_close();
+
+    /**
+     *  Switches the active opengl context to the one for this window.
+     */
+    void use_context();
+
+    /**
+     *  Swaps the opengl buffers for this window.
+     */
+    void swap_buffers();
 };
 
 #endif

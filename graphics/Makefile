@@ -11,6 +11,9 @@ GLES_CFLAGS   = -I/opt/vc/include -I/opt/vc/include/interface/vmcs_host/linux -I
 GLES_LDFLAGS  = -L/opt/vc/lib/
 GLES_LDLIBS   = -lGLESv2 -lEGL -lbcm_host -lpthread
 
+X11_CFLAGS = $(shell pkg-config x11 --cflags)
+X11_LDLIBS = $(shell pkg-config x11 --libs)
+
 
 
 all: game_window_test
@@ -18,14 +21,13 @@ all: game_window_test
 
 
 game_window_test: game_window_test.o game_window.o
-	$(CXX) -o game_window_test game_window.o game_window_test.o $(CXXFLAGS) $(SDL_CFLAGS) $(SDL_LDLIBS) $(GLES_CLFAGS) $(GLES_LDFLAGS) $(GLES_LDLIBS)
-
+	$(CXX) -o game_window_test game_window.o game_window_test.o $(CXXFLAGS) $(SDL_CFLAGS) $(SDL_LDLIBS) $(GLES_CLFAGS) $(GLES_LDFLAGS) $(GLES_LDLIBS) $(X11_CFLAGS) $(X11_LDLIBS)
 game_window_test.o: game_window_test.cpp
 	$(CXX) -c -o game_window_test.o game_window_test.cpp $(CXXFLAGS) $(SDL_CFLAGS)
 
 
 game_window.o: game_window.cpp
-	$(CXX) -c -o game_window.o game_window.cpp $(CXXFLAGS) $(SDL_CFLAGS) $(GLES_CFLAGS)
+	$(CXX) -c -o game_window.o game_window.cpp $(CXXFLAGS) $(SDL_CFLAGS) $(GLES_CFLAGS) $(X11_CFLAGS)
 
 
 

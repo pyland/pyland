@@ -5,20 +5,22 @@ extern "C" {
 #include <GLES/gl.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+
 #include <SDL.h>
+#include <SDL_syswm.h>
+
+#include <X11/Xlib.h>
 }
 
 #include "game_window.hpp"
 
 
 
-// DEFUNCT
-/**
- *  Count of how many instances exist.
- *
- *  This is used to manage SDL (de)initialisation.
- */
-static int window_count = 0;
+#ifdef DEBUG
+#define GAME_WINDOW_DEBUG
+#endif
+
+
 
 /**
  *  Mapping of SDL window IDs to GameWindows.
@@ -40,6 +42,7 @@ const char* GameWindow::InitException::what() {
 
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
+    close_requested = false;
     
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
@@ -53,26 +56,38 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
                                SDL_WINDOWPOS_CENTERED,
                                width,
                                height,
-                               SDL_WINDOW_OPENGL
-                               | (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
+                               (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
                                | ( (!fullscreen && width == 0 && height == 0) ?
                                    SDL_WINDOW_MAXIMIZED : 0 )
                                );
 
     if (window == NULL) {
-#ifdef DEBUG
+#ifdef GAME_WINDOW_DEBUG
         std::cerr << "Failed to create SDL window." << std::endl;
 #endif
         deinit_sdl();
         throw GameWindow::InitException("Failed to create SDL window");
     }
+
+    SDL_GetWindowWMInfo(window, &wm_info);
     
-    // window_count++;
-    //windows.insert( std::pair<Uint32,GameWindow*>(SDL_GetWindowID(window), this) );
+    try {
+        init_gl();
+    }
+    catch (InitException e) {
+        SDL_DestroyWindow (window);
+        if (windows.size() == 0) {
+            deinit_sdl();
+        }
+        throw e;
+    }
+
     windows[SDL_GetWindowID(window)] = this;
 }
 
 GameWindow::~GameWindow() {
+    deinit_gl();
+    
     SDL_DestroyWindow (window);
     
     // window_count--;
@@ -86,7 +101,7 @@ GameWindow::~GameWindow() {
 void GameWindow::init_sdl() {
     int result;
     
-#ifdef DEBUG
+#ifdef GAME_WINDOW_DEBUG
     std::cerr << "Initializing SDL..." << std::endl;
 #endif
     
@@ -95,22 +110,24 @@ void GameWindow::init_sdl() {
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");
     }
+
+    SDL_VERSION(&wm_info.version);
     
-#ifdef DEBUG
+#ifdef GAME_WINDOW_DEBUG
     std::cerr << "SDL initialized." << std::endl;
 #endif
 }
 
 
 void GameWindow::deinit_sdl() {
-#ifdef DEBUG
+#ifdef GAME_WINDOW_DEBUG
     std::cerr << "Deinitializing SDL..." << std::endl;
 #endif
     
     // Should always work.
     SDL_Quit ();
     
-#ifdef DEBUG
+#ifdef GAME_WINDOW_DEBUG
     std::cerr << "SDL deinitialized." << std::endl;
 #endif
 }
@@ -132,7 +149,7 @@ void GameWindow::init_gl() {
 
     display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     if (display == EGL_NO_DISPLAY) {
-#ifdef DEBUG
+#ifdef GAME_WINDOW_DEBUG
         std::cerr << "Error getting display." << std::endl;
 #endif
         throw GameWindow::InitException("Error getting display");
@@ -141,7 +158,8 @@ void GameWindow::init_gl() {
     // Initialize EGL display connection
     result = eglInitialize(display, NULL, NULL);
     if (result == EGL_FALSE) {
-#ifdef DEBUG
+        eglTerminate(display);
+#ifdef GAME_WINDOW_DEBUG
         std::cerr << "Error initializing display connection." << std::endl;
 #endif
         throw GameWindow::InitException("Error initializing display connection");
@@ -150,7 +168,8 @@ void GameWindow::init_gl() {
     // Get frame buffer configuration
     result = eglChooseConfig(display, attributeList, &config, 1, &configCount);
     if (result == EGL_FALSE) {
-#ifdef DEBUG
+        eglTerminate(display);
+#ifdef GAME_WINDOW_DEBUG
         std::cerr << "Error getting frame buffer configuration." << std::endl;
 #endif
         throw GameWindow::InitException("Error getting frame buffer configuration");
@@ -159,7 +178,8 @@ void GameWindow::init_gl() {
     // Create EGL rendering context
     context = eglCreateContext(display, config, EGL_NO_CONTEXT, NULL);
     if (context == EGL_NO_CONTEXT) {
-#ifdef DEBUG
+    eglTerminate(display);
+#ifdef GAME_WINDOW_DEBUG
         std::cerr << "Error creating rendering context." << std::endl;
 #endif
         throw GameWindow::InitException("Error creating rendering context");
@@ -190,20 +210,32 @@ void GameWindow::init_surface() {
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
     DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
 
-#ifdef DEBUG
-    std::cerr << "Recreating window surface." << std::endl;
+#ifdef GAME_WINDOW_DEBUG
+    std::cerr << "Initializing window surface." << std::endl;
 #endif
   
     // Create EGL window surface
 
     int x, y, w, h;
 
-    SDL_GetWindowPosition(window, &x, &y);
-    destination.x = x;
-    destination.y = y;
+    // It turns out that SDL's window position information is not good
+    // enough, as it reports for the window border, not the rendering
+    // area. For the time being, we shall be using LibX11 to query the
+    // window's position.
+    
+    // child is just a place to put something. We don't need it.
+    Window child;
+    XTranslateCoordinates(wm_info.info.x11.display, wm_info.info.x11.window, XDefaultRootWindow(wm_info.info.x11.display), 0, 0, &x, &y, &child);
+
+    // SDL_GetWindowPosition(window, &x, &y);
+    // destination.x = x;
+    // destination.y = y;
     SDL_GetWindowSize(window, &w, &h);
     destination.width = w;
     destination.height = h;
+#ifdef GAME_WINDOW_DEBUG
+    std::cerr << "New surface: " << w << "x" << h << " at (" << x << "," << y <<")." << std::endl;;
+#endif
     source.x = 0;
     source.y = 0;
     source.width  = w << 16; // (???)
@@ -228,7 +260,7 @@ void GameWindow::init_surface() {
     
     surface = eglCreateWindowSurface(display, config, &nativeWindow, NULL);
     if (surface == EGL_NO_SURFACE) {
-#ifdef DEBUG
+#ifdef GAME_WINDOW_DEBUG
         std::cerr << "Error creating window surface." << std::endl;
 #endif
         throw GameWindow::InitException("Error creating window surface");
@@ -237,13 +269,14 @@ void GameWindow::init_surface() {
     // Connect the context to the surface
     result = eglMakeCurrent(display, surface, surface, context);
     if (result == EGL_FALSE) {
-#ifdef DEBUG
+#ifdef GAME_WINDOW_DEBUG
         std::cerr << "Error connecting context to surface." << std::endl;
 #endif
         throw GameWindow::InitException("Error connecting context to surface");
     }
 
     visible = true;
+    change_surface = InitAction::DO_NOTHING;
 }
 
 
@@ -253,6 +286,7 @@ void GameWindow::deinit_surface() {
         eglDestroySurface(display, surface);
     }
     visible = false;
+    change_surface = InitAction::DO_NOTHING;
 }
 
 
@@ -263,6 +297,9 @@ void GameWindow::update() {
     
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
+        case SDL_QUIT: // Primarily used for killing when we become blind.
+            window->request_close();
+            break;
         case SDL_WINDOWEVENT:
             GameWindow* window = windows[event.window.windowID];
 
@@ -276,24 +313,26 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_RESTORED:
             case SDL_WINDOWEVENT_MAXIMIZED:
             case SDL_WINDOWEVENT_SHOWN:
-                window->change_surface = GameWindow::InitAction::DO_INIT;
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+                window->change_surface = InitAction::DO_INIT;
                 break;
             case SDL_WINDOWEVENT_MINIMIZED:
             case SDL_WINDOWEVENT_HIDDEN:
-                window->change_surface = GameWindow::InitAction::DO_DEINIT;
+                window->change_surface = InitAction::DO_DEINIT;
                 break;
             }
             break;
         }
     }
 
+    // For each open window, do any surface (re/de)initialisation.
     for (auto pair : windows) {
         GameWindow* window = pair.second;
         switch (window->change_surface) {
-        case GameWindow::InitAction::DO_INIT:
+        case InitAction::DO_INIT:
             window->init_surface();
             break;
-        case GameWindow::InitAction::DO_DEINIT:
+        case InitAction::DO_DEINIT:
             window->deinit_surface();
             break;
         }
@@ -313,4 +352,14 @@ void GameWindow::cancel_close() {
 
 bool GameWindow::check_close() {
     return close_requested;
+}
+
+
+void GameWindow::use_context() {
+    eglMakeCurrent(display, surface, surface, context);
+}
+
+
+void GameWindow::swap_buffers() {
+    eglSwapBuffers(display, surface);
 }
