@@ -4,6 +4,9 @@
 #include <exception>
 
 extern "C" {
+#include <GLES/gl.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
 #include <SDL.h>
 }
 
@@ -12,6 +15,16 @@ extern "C" {
  */
 class GameWindow {
 private:
+    /**
+     *  Used to say if something need to be initialized, deinitialized,
+     *  or if no action needs to be taken.
+     */
+    enum class InitAction {
+        DO_NOTHING,
+        DO_INIT,
+        DO_DEINIT
+    };
+    
     /**
      *  Stores the SDL window.
      */
@@ -25,24 +38,40 @@ private:
      *  SDL window and EGL surface height.
      */
     int window_height;
+
+    bool visible;
+
+    bool close_requested;
+
+    /**
+     * Tracks whether the egl surface needs to be changed
+     */
+    InitAction change_surface;
+    
+    EGLDisplay display;
+    EGLSurface surface;
+    EGLContext context;
+
+    EGLConfig config;
+    EGLint configCount;
     
     /**
      *  Initialize SDL.
      */
-    static void init_sdl();
+    void init_sdl();
     /**
      *  Deinitialize SDL.
      */
-    static void deinit_sdl();
+    void deinit_sdl();
     
     /**
      *  Initialize EGL. Done once per window.
      */
-    static void init_egl();
+    void init_gl();
     /**
-     *  Deinitialize SDL.
+     *  Deinitialize EGL. Done once per window.
      */
-    static void deinit_egl();
+    void deinit_gl();
 
     /**
      *  Creates the EGL surface.
@@ -50,14 +79,14 @@ private:
      *  This can be done whenever the surface needs to change position
      *  or resize.
      */
-    static void init_surface();
+    void init_surface();
     /**
      *  Destroys the EGL surface.
      *
      *  This is used as a clean up function, but is also used when the
      *  window needs to resize/relocate (or even minimize).
      */
-    static void deinit_surface();
+    void deinit_surface();
 
 public:
     class InitException: public std::exception {
@@ -84,8 +113,29 @@ public:
 
     /**
      *  Process events, including handling of window events.
+     *
+     *  SDL events are all done in one go, so they are all done here.
      */
-    void update();
+    static void update();
+
+    /**
+     *  Sets a flag signalling a close request to true.
+     *
+     *  This is meant as a way to signal that the user has requested the
+     *  window to close, so that other parts of the program (which use
+     *  the window) can perform their own stuff (like confirmation).
+     */
+    void request_close();
+
+    /**
+     *  Cancels any close requests, setting the flag to false.
+     */
+    void cancel_close();
+
+    /**
+     *  Checks whether the window has a close request.
+     */
+    bool check_close();
 };
 
 #endif
