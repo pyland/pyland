@@ -2,109 +2,142 @@
 #include <boost/python.hpp>
 #include <chrono>
 #include <iostream>
+#include <mutex>
 #include <string>
 #include <thread>
 #include "api.h"
 
 namespace py = boost::python;
-
-py::api::object sys_module;
-py::api::object main_module;
-py::api::object main_namespace;
+std::vector<std::thread> threads;
+std::timed_mutex kill_thread_finish_signal;
 
 long thread_id;
-
-// Perform some Python actions here
+std::string working_dir;
+PyInterpreterState *main_interpreter_state;
 
 void thread_killer() {
-    auto gstate = PyGILState_Ensure();
-
     py::dict tempoary_scope;
     py::api::object killer_func;
 
-    py::exec(
-        "def killer_func(frame, event, arg):\n"
-        "    if event == 'line':\n"
-        "        1/0\n"
-        "    else:\n"
-        "        return killer_func\n"
-        ,
-        tempoary_scope
-    );
-    killer_func = tempoary_scope["killer_func"];
+    {
+        auto gstate = PyGILState_Ensure();
 
-    PyGILState_Release(gstate);
-
+        py::exec(
+            "def killer_func(frame, event, arg):\n"
+            "    if event == 'line':\n"
+            "        1/0\n"
+            "    else:\n"
+            "        return killer_func\n",
+            tempoary_scope
+        );
+        killer_func = tempoary_scope["killer_func"];
+    
+        PyGILState_Release(gstate);
+    }
 
     while (true) {
-        int previous_call_number = Player::call_number;
+        long previous_call_number = Player::call_number;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        // Nonbloking sleep; allows safe quit
+        if (kill_thread_finish_signal.try_lock_for(std::chrono::milliseconds(100))) { break; }
 
         if (Player::call_number == previous_call_number) {
-            // WARNING! NOT THREAD SAFE!
-            // WARNING! NOT THREAD SAFE!
-            if (Player::in_call) {
+            {
                 auto gstate = PyGILState_Ensure();
 
-                try {
-                    std::cout << "Thread id " << thread_id << " and attempting to kill." << std::endl;
-                    PyThreadState_SetAsyncExc(thread_id, PyExc_LookupError);;
-                    //py::exec("import threading; print(threading.current_thread())", main_namespace);
-                }
-                catch (boost::python::error_already_set) {
-                    PyErr_Print();
-                }
+                std::cout << "Attempting to kill thread id " << thread_id << "." << std::endl;
+                PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);;
 
                 PyGILState_Release(gstate);
             }
         }
     }
+
+    std::cout << "Finished KILLER thread" << std::endl;
 }
 
-int main(int argc, char **argv) {
+
+// Steals GIL
+void _spawn_thread(std::string code, py::api::object player, std::string working_dir) {
+    auto threadstate = PyThreadState_New(main_interpreter_state);
+
+    {
+        PyEval_RestoreThread(threadstate);
+
+        try {
+            // Append the working directory to Python's sys.path
+            py::import("sys").attr("path").attr("append")(py::str(working_dir));
+
+            // The main module's namespace is needed to evaluate code
+            // and the main module object is needed to have
+            // juicy, juicy introspection and monkey-patching.
+            auto main_module = py::import("__main__");
+            auto main_namespace = main_module.attr("__dict__");
+
+            // Inject a player; will be instantiated in C++
+            main_module.attr("player") = player;
+
+            // Pass the Vec2D class. Should be neater, but it's not obvious how.
+            // Currently this gets the class object from an instance object.
+            main_module.attr("Vec2D") = py::object(Vec2D(0, 0)).attr("__class__");
+
+            // Totally a hack. Remove ASA(R)P.
+            auto py_thread_id = py::import("threading").attr("current_thread")().attr("ident");
+            thread_id = py::extract<long>(py_thread_id);
+
+            py::exec(code.c_str(), main_namespace);
+        }
+        catch (py::error_already_set) {
+            
+            PyErr_Print();
+        }
+
+        PyThreadState_Clear(threadstate);
+        /*threadstate =*/PyEval_SaveThread();
+    }
+
+    std::cout << "Finishing RUNNER thread" << std::endl;
+    PyThreadState_Delete(threadstate);
+    std::cout << "Finished RUNNER thread" << std::endl;
+}
+
+// Needs GIL
+void spawn_thread(std::string code, py::api::object player, std::string working_dir) {
+    threads.push_back(std::thread(_spawn_thread, code, player, working_dir));
+}
+
+int main(int, char **) {
     Py_Initialize();
+    PyEval_InitThreads();
 
+    // Produe a locked mutex; unlock to allow thread_killer to die
+    kill_thread_finish_signal.lock();
     std::thread kill_thread(thread_killer);
-    kill_thread.detach();
 
-    // All Python errors should result in a Python traceback
+    auto main_thread_state = PyThreadState_Get();
+    main_interpreter_state = main_thread_state->interp;
 
+    Player player = Player(Vec2D(0, 0), Direction::UP, "");
+
+    // All Python errors should result in a Python traceback    
     try {
-        // Get the current directory and add (append) it to Python's sys.path
-        sys_module = py::import("sys");
+        auto sys_module = py::import("sys");
+        working_dir = boost::filesystem::absolute("./").normalize().string();
 
-        auto workingDir = boost::filesystem::absolute("./").normalize();
-        auto sys_paths = sys_module.attr("path");
-        sys_paths.attr("append")(py::str(workingDir.string()));
+        sys_module.attr("path").attr("append")(py::str(working_dir));
+        py::import("wrapper_functions");
 
-        // The main module's namespace is needed to evaluate code
-        // and the main module object is needed to have
-        // juicy, juicy introspection and monkey-patching.
-        main_module = py::import("__main__");
-        main_namespace = main_module.attr("__dict__");
+        player = Player(Vec2D(0, 0), Direction::UP, "John");
+    } catch (py::error_already_set) {
+        std::cout << "Basic error! Complain!" << std::endl;
+        PyErr_Print();
+    }
 
-        // Expose the wrappers to Python code.
-        // This will be wrapped better in the final thing, with
-        // a Python module to abstract C-level errors. 
-        auto wrapper_module = py::import("wrapper_functions");
-        main_module.attr("wrapper_functions") = wrapper_module;
 
-        // Inject a player; will be instantiated in C++
-        auto my_player = Player(Vec2D(0, 0), Direction::UP, "John");
-        main_module.attr("preplayer") = py::object(boost::ref(my_player));
-
-        // Pass the Vec2D class. Should be neater, but it's not obvious how.
-        // Currently this gets the class object from an instance object.
-        main_module.attr("Vec2D") = py::object(Vec2D(0, 0)).attr("__class__");
-
-        auto py_main_thread = py::import("threading").attr("current_thread")().attr("ident");
-        thread_id = py::extract<long>(py_main_thread);
-
-        // Run the wrapper Python code
-        py::exec(
-                "print('--- Inside ---')\n"
-                "preplayer.monologue()\n"
+    for (int i = 0; i < 1; ++i) {
+        spawn_thread(
+                "print('--- Inside " + std::to_string(i) + " ---')\n"
+                "player.monologue()\n"
 
                 "def get_script(n):\n"
                 "    def script(player):\n"
@@ -116,20 +149,27 @@ int main(int argc, char **argv) {
                 "    return script\n"
 
                 "try:\n"
-                "    for i in range(100):\n"
-                "        preplayer.give_script(get_script(10**i))\n"
-                "        preplayer.run_script()\n"
+                "    for i in range(4):\n"
+                "        player.give_script(get_script(10**i))\n"
+                "        player.run_script()\n"
+                "        import time\n"
+                "        for _ in range(10**i):\n"
+                "           time.sleep(0.01)\n"
                 "except BaseException as e:\n"
-                "    print('Halted with {}.'.format(type(e)))\n"
-            ,
-            main_namespace
+                "    print('Halted with {}.'.format(type(e)))\n",
+                py::object(boost::ref(player)),
+                working_dir
         );
+    }
 
-        // Prove that this has affected the outside environment
-        std::cout << "--- Outside ---" << std::endl;
-        my_player.monologue();
+    PyEval_ReleaseLock();
+
+    for (auto &thread : threads) {
+        thread.join();
     }
-    catch (boost::python::error_already_set) {
-        PyErr_Print();
-    }
+
+    kill_thread_finish_signal.unlock();
+    kill_thread.join();
+
+    PyEval_RestoreThread(main_thread_state);
 }

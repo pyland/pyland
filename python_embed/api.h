@@ -22,7 +22,6 @@ class Player {
 
     public:
         static long call_number;
-        static bool in_call;
 
         Player(Vec2D start, Direction direction, std::string name);
         void move(Vec2D by);
