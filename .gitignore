@@ -20,3 +20,6 @@
 *.exe
 *.out
 *.app
+
+# project specific 
+python_embed/interpreter
