@@ -11,7 +11,7 @@ namespace py = boost::python;
 std::vector<std::thread> threads;
 std::timed_mutex kill_thread_finish_signal;
 
-long thread_id;
+volatile long thread_id;
 std::string working_dir;
 PyInterpreterState *main_interpreter_state;
 
