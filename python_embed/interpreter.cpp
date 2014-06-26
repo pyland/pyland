@@ -117,7 +117,7 @@ int main(int, char **) {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    Player player = Player(Vec2D(0, 0), Direction::UP, "");
+    Player player = Player(Vec2D(0, 0), "");
 
     // All Python errors should result in a Python traceback    
     try {
@@ -127,7 +127,7 @@ int main(int, char **) {
         sys_module.attr("path").attr("append")(py::str(working_dir));
         py::import("wrapper_functions");
 
-        player = Player(Vec2D(0, 0), Direction::UP, "John");
+        player = Player(Vec2D(0, 0), "John");
     } catch (py::error_already_set) {
         std::cout << "Basic error! Complain!" << std::endl;
         PyErr_Print();

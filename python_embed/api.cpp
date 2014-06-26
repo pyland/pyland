@@ -29,8 +29,8 @@ std::string Vec2D::to_string() {
 
 
 
-Player::Player(Vec2D start, Direction direction, std::string name):
-    position(start), direction(direction), script("") {
+Player::Player(Vec2D start, std::string name):
+    position(start), script("") {
         this->name = std::string(name);
 }
 

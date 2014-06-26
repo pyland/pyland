@@ -1,8 +1,6 @@
 #include <boost/python.hpp>
 #include <string>
 
-enum class Direction {UP, DOWN, LEFT, RIGHT};
-
 
 class Vec2D {
     public:
@@ -41,7 +39,6 @@ class Vec2D {
 class Player {
     private:
         Vec2D position;
-        Direction direction;
         std::string name;
         boost::python::api::object script;
 
@@ -55,11 +52,10 @@ class Player {
         /**
          *  Player constructor
          *  @param start inital position
-         *  @param direction of sprite
          *  @param name the name of sprite  
          *  @return new instance of Player
          */
-        Player(Vec2D start, Direction direction, std::string name);
+        Player(Vec2D start, std::string name);
 
         /**
          *  move player relative to current location
