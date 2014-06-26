@@ -35,6 +35,9 @@ void thread_killer() {
         PyGILState_Release(gstate);
     }
 
+    while (!thread_id) {}
+    std::cout << thread_id << std::endl;
+
     while (true) {
         long previous_call_number = Player::call_number;
 
