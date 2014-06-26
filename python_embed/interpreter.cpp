@@ -11,7 +11,7 @@ namespace py = boost::python;
 std::vector<std::thread> threads;
 std::timed_mutex kill_thread_finish_signal;
 
-long thread_id;
+volatile long thread_id;
 std::string working_dir;
 PyInterpreterState *main_interpreter_state;
 
@@ -34,6 +34,8 @@ void thread_killer() {
     
         PyGILState_Release(gstate);
     }
+
+    if (kill_thread_finish_signal.try_lock_for(std::chrono::milliseconds(100))) {}
 
     while (true) {
         long previous_call_number = Player::call_number;
