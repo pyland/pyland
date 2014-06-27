@@ -51,8 +51,6 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 /// Uses globals kill_thread_finish_signal and thread_id.
 ///
 void thread_killer() {
-    py::dict tempoary_scope;
-
     while (!thread_id) {}
     std::cout << thread_id << std::endl;
 
