@@ -1,3 +1,11 @@
+///
+/// A RAII lock for the GIL. Usage:
+///
+///     {
+///         GIL lock_gil;
+///         stuff();
+///     }
+///
 class GIL {
     public:
         GIL() { gstate = PyGILState_Ensure(); }

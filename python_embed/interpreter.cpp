@@ -12,10 +12,21 @@ namespace py = boost::python;
 std::vector<std::thread> threads;
 std::timed_mutex kill_thread_finish_signal;
 
+// volatile needed to prevent fallacious optimizations.
+// This is a hack anyway.
 volatile long thread_id;
-std::string working_dir;
 PyInterpreterState *main_interpreter_state;
 
+///
+/// Wrapper function for std::timed_mutex::try_lock_for which works around bugs in
+/// the implementations in certain compilers.
+///
+/// Waiting can be more, but not less than, the required period, assuming that
+/// the user's clock is working as expected.
+///
+/// @param        lock The mutex to wait on
+/// @param time_period The minimal length to wait on.
+///
 bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
     auto end = std::chrono::system_clock::now() + time_period;
 
@@ -35,6 +46,10 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
     }
 }
 
+///
+/// Kills threads. Currently only supports a single thread.
+/// Uses globals kill_thread_finish_signal and thread_id.
+///
 void thread_killer() {
     py::dict tempoary_scope;
     py::api::object killer_func;
@@ -76,8 +91,15 @@ void thread_killer() {
 }
 
 
-// Steals GIL
-void _spawn_thread(std::string code, py::api::object player, std::string working_dir) {
+///
+/// A thread function representing a player character.
+///
+/// @param code        C++ string representing the code to be exeuted.
+/// @param player      Reference to the Player object that moderates execution.
+/// @param working_dir Path, as a string, to inject into Python's sys.path, to allow relative imports.
+///                    This should be the current path, to allow importing our shared object files.
+///
+void _spawn_thread(std::string code, py::api::object player, std::string working_dir, ) {
     auto threadstate = PyThreadState_New(main_interpreter_state);
 
     {
@@ -120,11 +142,21 @@ void _spawn_thread(std::string code, py::api::object player, std::string working
     std::cout << "Finished RUNNER thread" << std::endl;
 }
 
-// Needs GIL
+///
+/// Creates a thread representing a player character.
+///
+/// @param code        C++ string representing the code to be exeuted.
+/// @param player      Reference to the Player object that moderates execution.
+/// @param working_dir Path, as a string, to inject into Python's sys.path, to allow relative imports.
+///                    This should be the current path, to allow importing our shared object files.
+///
 void spawn_thread(std::string code, py::api::object player, std::string working_dir) {
     threads.push_back(std::thread(_spawn_thread, code, player, working_dir));
 }
 
+///
+/// Initialize Python interpreter, spawn threads and do fun stuff.
+///
 int main(int, char **) {
     Py_Initialize();
     PyEval_InitThreads();
@@ -141,7 +173,7 @@ int main(int, char **) {
     // All Python errors should result in a Python traceback    
     try {
         auto sys_module = py::import("sys");
-        working_dir = boost::filesystem::absolute("./").normalize().string();
+        auto working_dir = boost::filesystem::absolute("./").normalize().string();
 
         sys_module.attr("path").attr("append")(py::str(working_dir));
         py::import("wrapper_functions");
