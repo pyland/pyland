@@ -4,7 +4,7 @@ RM = - rm -f
 
 CXX      = ${COMPILER}
 CXXFLAGS = -std=c++11 -g -Wall -Wextra -O2
-CPPFLAGS = -DDEBUG
+CPPFLAGS =
 LDFLAGS  =
 LDLIBS   =
 
@@ -27,6 +27,12 @@ PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 
 # Insert all here.
 
+debug: CPPFLAGS += -DDEBUG
+debug: all
+
+all:
+
+
 
 game_window.o: game_window.cpp
 	$(CXX) -c -o game_window.o game_window.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GLES_CFLAGS) $(X11_CFLAGS)
@@ -35,3 +41,6 @@ game_window.o: game_window.cpp
 
 clean:
 	$(RM) game_window.o
+
+.PHONY : clean
+.PHONY : debug
