@@ -26,11 +26,12 @@ PYTHON_LDFLAGS  = $(shell python${PYTHON_VERSION}-config --ldflags)
 PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 
 # Insert all here.
+all:
+
+
 
 debug: CPPFLAGS += -DDEBUG
 debug: all
-
-all:
 
 
 
