@@ -2,7 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <boost/python.hpp>
+#include <boost/regex.hpp>
 #include "api.h"
+#include <fstream>
 
 namespace py = boost::python;
 
@@ -29,11 +31,12 @@ std::string Vec2D::to_string() {
 
 
 
-Player::Player(Vec2D start, Direction direction, std::string name):
-    position(start), direction(direction), name(name), script("") {}
+Player::Player(Vec2D start, std::string name):
+    position(start), script("") {
+        this->name = std::string(name);
+}
 
 long Player::call_number = 0;
-bool Player::in_call = false;
 
 void Player::move(Vec2D by) {
     position += by;
@@ -44,14 +47,36 @@ void Player::monologue() {
 }
 
 void Player::run_script() {
-    call_number ++;
-
-    in_call = true;
+    ++call_number;
     script(py::ptr(this));
-    in_call = false;
 }
 
-void Player::give_script(py::api::object callable) {
-    script = callable;
+
+void Player::give_script(py::api::object main_namespace) {
+    py::api::object tempoary_scope = main_namespace.attr("copy")();
+    std::string from_file =
+    "def move(x):\n\t"
+    "player.move(x)\n"
+    "north, south, east, west = Vec2D(0, 1), Vec2D(0, -1), Vec2D(1, 0), Vec2D(-1, 0)\n" 
+    "def script(player):\n\t" + read_file() + "\n\treturn script\n";
+    std::cout << from_file << std::endl;
+    script = py::exec(from_file.c_str(), tempoary_scope);
+    script = tempoary_scope["script"];
+   // py::import("dis").attr("dis")(script);
 }
 
+std::string Player::read_file() {
+    std::string loc = name + ".py";
+    std::ifstream inFile (loc); //open the input file
+    if (inFile.is_open()) { 
+        std::stringstream strStream;
+        strStream << inFile.rdbuf(); //read the file
+        std::string old_text = strStream.str();
+        boost::regex replace("\\n");
+        std::string new_text = boost::regex_replace(old_text, replace, "\n\t");
+        return new_text;
+    } else {
+        std::cout << "file opening unsuccessful" << std::endl;
+        return "";
+    }
+}
