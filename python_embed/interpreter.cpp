@@ -9,12 +9,9 @@
 #include "gil.h"
 
 namespace py = boost::python;
-std::vector<std::thread> threads;
-std::timed_mutex kill_thread_finish_signal;
 
-// volatile needed to prevent fallacious optimizations.
-// This is a hack anyway.
-volatile long thread_id;
+std::timed_mutex kill_thread_finish_signal;
+std::vector<PlayerThread> threads;
 PyInterpreterState *main_interpreter_state;
 
 ///
@@ -51,21 +48,20 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 /// Uses globals kill_thread_finish_signal and thread_id.
 ///
 void thread_killer() {
-    while (!thread_id) {}
-    std::cout << thread_id << std::endl;
-
     while (true) {
-        long previous_call_number = Player::call_number;
-
         // Nonbloking sleep; allows safe quit
         if (try_lock_for_busywait(kill_thread_finish_signal, std::chrono::milliseconds(100))) {
             break;
         }
 
-        if (Player::call_number == previous_call_number) {
-            GIL lock_gil;
-            std::cout << "Attempting to kill thread id " << thread_id << "." << std::endl;
-            PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
+        for (auto playerthread : threads) {
+            if (playerthread.is_dirty()) {
+                GIL lock_gil;
+
+                std::cout << "Attempting to kill thread id " << playerthread.thread_id << "." << std::endl;
+
+                PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
+            }
         }
     }
 
