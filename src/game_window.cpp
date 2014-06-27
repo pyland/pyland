@@ -24,10 +24,7 @@ extern "C" {
 
 
 
-///
-/// Mapping of SDL window IDs to GameWindows.
-///
-static std::map<Uint32,GameWindow*> windows = std::map<Uint32,GameWindow*>();
+std::map<Uint32,GameWindow*> windows = std::map<Uint32,GameWindow*>();
 
 
 

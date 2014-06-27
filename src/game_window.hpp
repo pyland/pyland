@@ -92,6 +92,11 @@ private:
     DISPMANX_ELEMENT_HANDLE_T dispmanElement;
 
     ///
+    /// Mapping of SDL window IDs to GameWindows.
+    ///
+    static std::map<Uint32,GameWindow*> windows;
+    
+    ///
     /// Stores X11 display and window information.
     ///
     SDL_SysWMinfo wm_info;
