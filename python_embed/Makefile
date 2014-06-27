@@ -12,7 +12,7 @@ WARN.clang.all := -Wall -Wextra
 WARN.clang.3.2 := -Weverything
 CXXFLAGS += $(WARN.$(CXX).all) $(WARN.$(CXX).$(4.8))
 
-CPPFLAGS =
+CPPFLAGS = -DDEBUG
 LDFLAGS  =
 LDLIBS   =
 
