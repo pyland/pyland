@@ -7,6 +7,7 @@
 #include <thread>
 #include "api.h"
 #include "gil.h"
+#include "debug.h"
 
 namespace py = boost::python;
 
@@ -58,14 +59,14 @@ void thread_killer() {
             if (playerthread.is_dirty()) {
                 GIL lock_gil;
 
-                std::cout << "Attempting to kill thread id " << playerthread.thread_id << "." << std::endl;
+                print_debug << "Attempting to kill thread id " << playerthread.thread_id << "." << std::endl;
 
                 PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
             }
         }
     }
 
-    std::cout << "Finished KILLER thread" << std::endl;
+    print_debug << "Finished KILLER thread" << std::endl;
 }
 
 
@@ -115,9 +116,9 @@ void _spawn_thread(std::string code, py::api::object player, std::string working
         /*threadstate =*/PyEval_SaveThread();
     }
 
-    std::cout << "Finishing RUNNER thread" << std::endl;
+    print_debug << "Finishing RUNNER thread" << std::endl;
     PyThreadState_Delete(threadstate);
-    std::cout << "Finished RUNNER thread" << std::endl;
+    print_debug << "Finished RUNNER thread" << std::endl;
 }
 
 ///
@@ -160,7 +161,7 @@ int main(int, char **) {
 
         player = Player(Vec2D(0, 0), "John");
     } catch (py::error_already_set) {
-        std::cout << "Basic error! Complain!" << std::endl;
+        print_debug << "Basic error! Complain!" << std::endl;
         PyErr_Print();
     }
 
