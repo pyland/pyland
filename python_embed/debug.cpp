@@ -1,3 +1,4 @@
+#include <string>
 #include <iostream>
 
 std::ostream print_null(NULL);

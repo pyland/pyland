@@ -3,7 +3,7 @@ NULL=
 RM = - rm -f
 
 CXX      = ${COMPILER}
-CXXFLAGS = -std=c++11 -g
+CXXFLAGS = -std=c++11
 
 WARN.g++.all := -Wall -Wextra -Wconversion
 WARN.g++.4.7 := -Wzero-as-null-pointer-constant
@@ -27,7 +27,9 @@ PYTHON_CXXFLAGS =
 
 all: interpreter wrapper_functions.so
 
-
+debug: CXXFLAGS += -g
+debug: CPPFLAGS += -DDEBUG
+debug: interpreter wrapper_functions.so
 
 interpreter: interpreter.o wrapper_functions.o api.o debug.o
 	$(CXX) -o interpreter interpreter.o wrapper_functions.o api.o debug.o $(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(LDFLAGS) $(LDLIBS) $(CXXFLAGS)
@@ -61,3 +63,6 @@ clean:
 	$(RM) wrapper_functions.so
 	$(RM) wrapper_functions.o
 	$(RM) api.o
+	$(RM) debug.o
+
+.PHONY : debug
