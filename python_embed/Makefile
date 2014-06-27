@@ -16,7 +16,7 @@ CPPFLAGS =
 LDFLAGS  =
 LDLIBS   =
 
-BOOST_LDLIBS    = -l${LIBBOOST_PYTHON} -lboost_filesystem -lboost_system
+BOOST_LDLIBS    = -l${LIBBOOST_PYTHON} -lboost_filesystem -lboost_system -lboost_regex
 BOOST_CPPFLAGS  =
 BOOST_CXXFLAGS  =
 
