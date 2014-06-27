@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 #include "api.h"
+#include "gil.h"
 
 namespace py = boost::python;
 std::vector<std::thread> threads;
@@ -39,7 +40,7 @@ void thread_killer() {
     py::api::object killer_func;
 
     {
-        auto gstate = PyGILState_Ensure();
+        GIL lock_gil;
 
         py::exec(
             "def killer_func(frame, event, arg):\n"
@@ -50,8 +51,6 @@ void thread_killer() {
             tempoary_scope
         );
         killer_func = tempoary_scope["killer_func"];
-    
-        PyGILState_Release(gstate);
     }
 
     while (!thread_id) {}
@@ -61,17 +60,14 @@ void thread_killer() {
         long previous_call_number = Player::call_number;
 
         // Nonbloking sleep; allows safe quit
-        if (try_lock_for_busywait(kill_thread_finish_signal, std::chrono::milliseconds(100))) { break; }
+        if (try_lock_for_busywait(kill_thread_finish_signal, std::chrono::milliseconds(100))) {
+            break;
+        }
 
         if (Player::call_number == previous_call_number) {
-            {
-                auto gstate = PyGILState_Ensure();
-
-                std::cout << "Attempting to kill thread id " << thread_id << ". " << std::chrono::system_clock::now().time_since_epoch().count() << std::endl;
-                PyThreadState_SetAsyncExc(thread_id, PyExc_LookupError);
-
-                PyGILState_Release(gstate);
-            }
+            GIL lock_gil;
+            std::cout << "Attempting to kill thread id " << thread_id << "." << std::endl;
+            PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
         }
     }
 
