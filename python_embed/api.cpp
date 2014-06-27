@@ -1,10 +1,11 @@
-#include <string>
-#include <iostream>
-#include <sstream>
 #include <boost/python.hpp>
 #include <boost/regex.hpp>
-#include "api.h"
 #include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include "api.h"
+#include "debug.h"
 
 namespace py = boost::python;
 
@@ -55,7 +56,7 @@ void Player::run_script() {
 void Player::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
     std::string from_file = "def script(player):\n\t" + read_file() + "\n\treturn script\n";
-    std::cout << from_file << std::endl;
+    print_debug << from_file << std::endl;
     script = py::exec(from_file.c_str(), tempoary_scope);
     script = tempoary_scope["script"];
    // py::import("dis").attr("dis")(script);
@@ -72,7 +73,7 @@ std::string Player::read_file() {
         std::string new_text = boost::regex_replace(old_text, replace, "\n\t");
         return new_text;
     } else {
-        std::cout << "file opening unsuccessful" << std::endl;
+        print_debug << "file opening unsuccessful" << std::endl;
         return "";
     }
 }
