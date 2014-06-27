@@ -67,8 +67,8 @@ void thread_killer() {
             {
                 auto gstate = PyGILState_Ensure();
 
-                std::cout << "Attempting to kill thread id " << thread_id << "." << std::endl;
-                PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
+                std::cout << "Attempting to kill thread id " << thread_id << ". " << std::chrono::system_clock::now().time_since_epoch().count() << std::endl;
+                PyThreadState_SetAsyncExc(thread_id, PyExc_LookupError);
 
                 PyGILState_Release(gstate);
             }
@@ -155,33 +155,27 @@ int main(int, char **) {
         PyErr_Print();
     }
 
-
+    try {
     for (int i = 0; i < 1; ++i) {
         spawn_thread(
                 "print('--- Inside " + std::to_string(i) + " ---')\n"
                 "player.monologue()\n"
-
-                "def get_script(n):\n"
-                "    def script(player):\n"
-                "        x_direction = Vec2D(1, 0)\n"
-                "        for _ in range(n):\n"
-                "            player.move(x_direction)\n"
-                "        player.monologue()\n"
-
-                "    return script\n"
-
                 "try:\n"
                 "    for i in range(4):\n"
-                "        player.give_script(get_script(10**i))\n"
+                "        player.give_script(globals())\n"
                 "        player.run_script()\n"
                 "        import time\n"
                 "        for _ in range(10**i):\n"
                 "           time.sleep(0.01)\n"
                 "except BaseException as e:\n"
-                "    print('Halted with {}.'.format(type(e)))\n",
+                "    print('Halted with {}.'.format(type(e)))\n"
+                "    raise\n",
                 py::object(boost::ref(player)),
                 working_dir
         );
+    }
+    } catch (py::error_already_set &) {
+        PyErr_Print();
     }
 
     PyEval_ReleaseLock();

@@ -3,6 +3,7 @@
 #include <sstream>
 #include <boost/python.hpp>
 #include "api.h"
+#include <fstream>
 
 namespace py = boost::python;
 
@@ -49,7 +50,27 @@ void Player::run_script() {
     script(py::ptr(this));
 }
 
-void Player::give_script(py::api::object callable) {
-    script = callable;
+
+void Player::give_script(py::api::object main_namespace) {
+    py::api::object tempoary_scope = main_namespace.attr("copy")();
+    std::string from_file = "def script(player):\n" + read_file() + "\n    return script\n";
+    std::cout << from_file << std::endl;
+    script = py::exec(from_file.c_str(), tempoary_scope);
+    script = tempoary_scope["script"];
+   // py::import("dis").attr("dis")(script);
 }
 
+std::string Player::read_file() {
+    std::string loc = name + ".py";
+    std::ifstream inFile (loc); //open the input file
+    if (inFile.is_open()) {
+        std::stringstream strStream;
+        strStream << inFile.rdbuf(); //read the file
+        std::string text = strStream.str();
+        std::cout << "file opening successful" << std::endl;
+        return text;
+    } else {
+        std::cout << "file opening unsuccessful" << std::endl;
+        return "";
+    }
+}

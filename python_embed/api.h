@@ -1,6 +1,7 @@
 #include <boost/python.hpp>
 #include <string>
 
+namespace py = boost::python;
 
 class Vec2D {
     public:
@@ -41,6 +42,7 @@ class Player {
         Vec2D position;
         std::string name;
         boost::python::api::object script;
+        std::string read_file();
 
     public:
 
@@ -79,5 +81,5 @@ class Player {
          *  adding boost python script to player
          *  @see run_script()
          */
-        void give_script(boost::python::api::object in);
+        void give_script(py::api::object main_namespace);
 };
