@@ -52,21 +52,6 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 ///
 void thread_killer() {
     py::dict tempoary_scope;
-    py::api::object killer_func;
-
-    {
-        GIL lock_gil;
-
-        py::exec(
-            "def killer_func(frame, event, arg):\n"
-            "    if event == 'line':\n"
-            "        1/0\n"
-            "    else:\n"
-            "        return killer_func\n",
-            tempoary_scope
-        );
-        killer_func = tempoary_scope["killer_func"];
-    }
 
     while (!thread_id) {}
     std::cout << thread_id << std::endl;
