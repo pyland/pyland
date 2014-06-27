@@ -4,7 +4,7 @@
 #include <exception>
 
 extern "C" {
-#include <GLES/gl.h>
+#include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
@@ -31,6 +31,14 @@ private:
      *  Stores the SDL window.
      */
     SDL_Window* window;
+    
+    /**
+     *  Stores the SDL renderer.
+     *
+     *  The renderer can be used to draw things without the need to go
+     *  through opengl textures and rendering (e.g. fonts).
+     */
+    SDL_Renderer* renderer;
     
     /**
      *  SDL window and EGL surface width.
@@ -66,6 +74,9 @@ private:
     EGLConfig config;
     EGLint configCount;
 
+    DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
+    DISPMANX_ELEMENT_HANDLE_T dispmanElement;
+
     SDL_SysWMinfo wm_info;
     
     /**
@@ -91,13 +102,25 @@ private:
      *
      *  This can be done whenever the surface needs to change position
      *  or resize.
+     *
+     *  @param x x position of surface
+     *  @param y y position of surface
+     *  @param w width of surface
+     *  @param h height of surface
+     */
+    void init_surface(int x, int y, int w, int h);
+    /**
+     *  Creates the EGL surface. (Gets width and height from X window)
+     *
+     *  This can be done whenever the surface needs to change position
+     *  or resize. It also clears up any SDL garbage.
      */
     void init_surface();
     /**
      *  Destroys the EGL surface.
      *
      *  This is used as a clean up function, but is also used when the
-     *  window needs to resize/relocate (or even minimize).
+     *  window needs to resize/relocate (or even minimize or hide).
      */
     void deinit_surface();
 

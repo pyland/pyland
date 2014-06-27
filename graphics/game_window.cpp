@@ -10,6 +10,8 @@ extern "C" {
 #include <SDL_syswm.h>
 
 #include <X11/Xlib.h>
+
+#include <bcm_host.h>
 }
 
 #include "game_window.hpp"
@@ -60,7 +62,6 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
                                | ( (!fullscreen && width == 0 && height == 0) ?
                                    SDL_WINDOW_MAXIMIZED : 0 )
                                );
-
     if (window == NULL) {
 #ifdef GAME_WINDOW_DEBUG
         std::cerr << "Failed to create SDL window." << std::endl;
@@ -71,10 +72,16 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
 
     SDL_GetWindowWMInfo(window, &wm_info);
     
+    dispmanDisplay = vc_dispmanx_display_open(0); // (???)
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    
     try {
         init_gl();
     }
     catch (InitException e) {
+        vc_dispmanx_display_close(dispmanDisplay); // (???)
+        SDL_DestroyRenderer (renderer);
         SDL_DestroyWindow (window);
         if (windows.size() == 0) {
             deinit_sdl();
@@ -88,6 +95,8 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
 GameWindow::~GameWindow() {
     deinit_gl();
     
+    vc_dispmanx_display_close(dispmanDisplay); // (???)
+    SDL_DestroyRenderer (renderer);
     SDL_DestroyWindow (window);
     
     // window_count--;
@@ -136,12 +145,17 @@ void GameWindow::deinit_sdl() {
 void GameWindow::init_gl() {
     EGLBoolean result;
 
-    static const EGLint attributeList[] = {
+    static const EGLint attribute_list[] = {
         EGL_RED_SIZE, 8,
         EGL_GREEN_SIZE, 8,
         EGL_BLUE_SIZE, 8,
         EGL_ALPHA_SIZE, 8,
         EGL_SURFACE_TYPE, EGL_WINDOW_BIT, /* (???) */
+        EGL_NONE
+    };
+
+    static const EGLint context_attributes[] = {
+        EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE
     };
 
@@ -166,7 +180,7 @@ void GameWindow::init_gl() {
     }
 
     // Get frame buffer configuration
-    result = eglChooseConfig(display, attributeList, &config, 1, &configCount);
+    result = eglChooseConfig(display, attribute_list, &config, 1, &configCount);
     if (result == EGL_FALSE) {
         eglTerminate(display);
 #ifdef GAME_WINDOW_DEBUG
@@ -175,8 +189,10 @@ void GameWindow::init_gl() {
         throw GameWindow::InitException("Error getting frame buffer configuration");
     }
 
+    //Should I use eglBindAPI? It is auomatically ES anyway.
+
     // Create EGL rendering context
-    context = eglCreateContext(display, config, EGL_NO_CONTEXT, NULL);
+    context = eglCreateContext(display, config, EGL_NO_CONTEXT, context_attributes);
     if (context == EGL_NO_CONTEXT) {
     eglTerminate(display);
 #ifdef GAME_WINDOW_DEBUG
@@ -192,7 +208,7 @@ void GameWindow::init_gl() {
 
 
 void GameWindow::deinit_gl() {
-    // Release OpenGL resources
+    // Release EGL resources
     deinit_surface();
     eglDestroyContext(display, context);
     eglTerminate(display);
@@ -200,22 +216,6 @@ void GameWindow::deinit_gl() {
 
 
 void GameWindow::init_surface() {
-    EGLBoolean result;
-  
-    VC_RECT_T destination;
-    VC_RECT_T source;
-  
-    static EGL_DISPMANX_WINDOW_T nativeWindow;
-    DISPMANX_ELEMENT_HANDLE_T dispmanElement;
-    DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
-    DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
-
-#ifdef GAME_WINDOW_DEBUG
-    std::cerr << "Initializing window surface." << std::endl;
-#endif
-  
-    // Create EGL window surface
-
     int x, y, w, h;
 
     // It turns out that SDL's window position information is not good
@@ -225,12 +225,37 @@ void GameWindow::init_surface() {
     
     // child is just a place to put something. We don't need it.
     Window child;
-    XTranslateCoordinates(wm_info.info.x11.display, wm_info.info.x11.window, XDefaultRootWindow(wm_info.info.x11.display), 0, 0, &x, &y, &child);
-
+    XTranslateCoordinates(wm_info.info.x11.display,
+                          wm_info.info.x11.window,
+                          XDefaultRootWindow(wm_info.info.x11.display),
+                          0,
+                          0,
+                          &x,
+                          &y,
+                          &child);
     // SDL_GetWindowPosition(window, &x, &y);
-    // destination.x = x;
-    // destination.y = y;
     SDL_GetWindowSize(window, &w, &h);
+    
+    init_surface(x, y, w, h);
+}
+
+
+void GameWindow::init_surface(int x, int y, int w, int h) {
+    EGLBoolean result;
+  
+    VC_RECT_T destination;
+    VC_RECT_T source;
+  
+    static EGL_DISPMANX_WINDOW_T nativeWindow;
+
+#ifdef GAME_WINDOW_DEBUG
+    std::cerr << "Initializing window surface." << std::endl;
+#endif
+  
+    // Create EGL window surface.
+
+    destination.x = x;
+    destination.y = y;
     destination.width = w;
     destination.height = h;
 #ifdef GAME_WINDOW_DEBUG
@@ -241,32 +266,32 @@ void GameWindow::init_surface() {
     source.width  = w << 16; // (???)
     source.height = h << 16; // (???)
 
-    dispmanDisplay = vc_dispmanx_display_open(0); // (???)
+    deinit_surface();
+
+    DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
     dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
 
     dispmanElement = vc_dispmanx_element_add(dispmanUpdate, dispmanDisplay,
                                              0/*layer*/, &destination, 0/*src*/,
                                              &source, DISPMANX_PROTECTION_NONE,
                                              0 /*alpha*/, 0/*clamp*/, (DISPMANX_TRANSFORM_T)0/*transform*/); // (???)
-  
+
     nativeWindow.element = dispmanElement;
     nativeWindow.width = w; // (???)
     nativeWindow.height = h; // (???)
     vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
     
-    if (visible) {
-        eglDestroySurface(display, surface);
-    }
-    
-    surface = eglCreateWindowSurface(display, config, &nativeWindow, NULL);
-    if (surface == EGL_NO_SURFACE) {
+    EGLSurface new_surface;
+    new_surface = eglCreateWindowSurface(display, config, &nativeWindow, NULL);
+    if (new_surface == EGL_NO_SURFACE) {
 #ifdef GAME_WINDOW_DEBUG
-        std::cerr << "Error creating window surface." << std::endl;
+        std::cerr << "Error creating window surface. " << eglGetError() << std::endl;
 #endif
         throw GameWindow::InitException("Error creating window surface");
     }
+    surface = new_surface;
 
-    // Connect the context to the surface
+    // Connect the context to the surface.
     result = eglMakeCurrent(display, surface, surface, context);
     if (result == EGL_FALSE) {
 #ifdef GAME_WINDOW_DEBUG
@@ -277,13 +302,33 @@ void GameWindow::init_surface() {
 
     visible = true;
     change_surface = InitAction::DO_NOTHING;
+    // Only set these if the init was successful.
+    window_x = x;
+    window_y = y;
+
+    // Clean up any garbage in the SDL window.
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
 }
 
 
 void GameWindow::deinit_surface() {
     if (visible) {
+        int result;
+        
+        DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
+        dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
+        vc_dispmanx_element_remove (dispmanUpdate, dispmanElement);
+        vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
+        
         eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-        eglDestroySurface(display, surface);
+        result = eglDestroySurface(display, surface);
+        if (result == EGL_FALSE) {
+#ifdef GAME_WINDOW_DEBUG
+            std::cerr << "Error destroying window surface." << std::endl;
+#endif
+            throw GameWindow::InitException("Error destroying window surface");
+        }
     }
     visible = false;
     change_surface = InitAction::DO_NOTHING;
@@ -291,31 +336,33 @@ void GameWindow::deinit_surface() {
 
 
 void GameWindow::update() {
-    // Instead of reinitialising on every event, do it ater we have
-    // scanned the event queue in full.
     SDL_Event event;
+    bool close_all = false;
     
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
         case SDL_QUIT: // Primarily used for killing when we become blind.
-            window->request_close();
+            close_all = true;
             break;
         case SDL_WINDOWEVENT:
             GameWindow* window = windows[event.window.windowID];
 
+            // Instead of reinitialising on every event, do it ater we have
+            // scanned the event queue in full.
             // Should focus events be included?
             switch (event.window.event) {
             case SDL_WINDOWEVENT_CLOSE:
                 window->request_close();
                 break;
-            case SDL_WINDOWEVENT_MOVED:
             case SDL_WINDOWEVENT_RESIZED:
+            case SDL_WINDOWEVENT_MOVED:
             case SDL_WINDOWEVENT_RESTORED:
             case SDL_WINDOWEVENT_MAXIMIZED:
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 window->change_surface = InitAction::DO_INIT;
                 break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:
             case SDL_WINDOWEVENT_MINIMIZED:
             case SDL_WINDOWEVENT_HIDDEN:
                 window->change_surface = InitAction::DO_DEINIT;
@@ -326,14 +373,47 @@ void GameWindow::update() {
     }
 
     // For each open window, do any surface (re/de)initialisation.
+    // Also set (if needed) the close_requests.
     for (auto pair : windows) {
         GameWindow* window = pair.second;
+        
+        // Hacky fix: The events don't quite chronologically work, so
+        // check the window position to start any needed surface update.
+        int x, y;
+        Window child;
+        XTranslateCoordinates(window->wm_info.info.x11.display,
+                              window->wm_info.info.x11.window,
+                              XDefaultRootWindow(window->wm_info.info.x11.display),
+                              0,
+                              0,
+                              &x,
+                              &y,
+                              &child);
+        if ((window->window_x != x || window->window_y != y) && window->visible) {
+#ifdef GAME_WINDOW_DEBUG
+            std::cerr << "Need surface reinit." << std::endl;
+#endif
+            window->change_surface = InitAction::DO_INIT;
+        }
+        
+        if (close_all) {
+            window->request_close();
+        }
+        
         switch (window->change_surface) {
         case InitAction::DO_INIT:
-            window->init_surface();
+            try {
+                window->init_surface();
+            }
+            catch (InitException e) {
+                std::cerr << "Surface reinit failed: " << e.what() << std::endl;
+            }
             break;
         case InitAction::DO_DEINIT:
             window->deinit_surface();
+            break;
+        case InitAction::DO_NOTHING:
+            // Do nothing - hey, I don't like compiler warnings.
             break;
         }
     }
@@ -356,7 +436,9 @@ bool GameWindow::check_close() {
 
 
 void GameWindow::use_context() {
-    eglMakeCurrent(display, surface, surface, context);
+    if (visible) {
+        eglMakeCurrent(display, surface, surface, context);
+    }
 }
 
 
