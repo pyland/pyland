@@ -14,7 +14,7 @@ void waitsometime() {
 
 	while (true) {
 		lock.try_lock_for(end - std::chrono::system_clock::now());
-		if (end >= std::chrono::system_clock::now()) { break; }
+		if (end <= std::chrono::system_clock::now()) { break; }
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 
