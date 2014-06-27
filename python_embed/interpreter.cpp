@@ -15,6 +15,25 @@ volatile long thread_id;
 std::string working_dir;
 PyInterpreterState *main_interpreter_state;
 
+bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
+    auto end = std::chrono::system_clock::now() + time_period;
+
+    while (true) {
+        // If lock is taken, return true. Otherwise, try to delay
+        if (lock.try_lock_for(end - std::chrono::system_clock::now())) {
+            return true;
+        }
+
+        // If delay has passed, hasn't been locked so return false
+        if (end <= std::chrono::system_clock::now()) {
+            return false;
+        }
+
+        // Make sure not a busy wait on broken compilers
+        std::this_thread::sleep_for(time_period / 100);
+    }
+}
+
 void thread_killer() {
     py::dict tempoary_scope;
     py::api::object killer_func;
@@ -42,14 +61,14 @@ void thread_killer() {
         long previous_call_number = Player::call_number;
 
         // Nonbloking sleep; allows safe quit
-        if (kill_thread_finish_signal.try_lock_for(std::chrono::milliseconds(100))) { break; }
+        if (try_lock_for_busywait(kill_thread_finish_signal, std::chrono::milliseconds(100))) { break; }
 
         if (Player::call_number == previous_call_number) {
             {
                 auto gstate = PyGILState_Ensure();
 
                 std::cout << "Attempting to kill thread id " << thread_id << "." << std::endl;
-                PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);;
+                PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
 
                 PyGILState_Release(gstate);
             }
