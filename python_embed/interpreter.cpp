@@ -81,7 +81,6 @@ void thread_killer() {
 
         if (Player::call_number == previous_call_number) {
             GIL lock_gil;
-
             std::cout << "Attempting to kill thread id " << thread_id << "." << std::endl;
             PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
         }
@@ -99,7 +98,7 @@ void thread_killer() {
 /// @param working_dir Path, as a string, to inject into Python's sys.path, to allow relative imports.
 ///                    This should be the current path, to allow importing our shared object files.
 ///
-void _spawn_thread(std::string code, py::api::object player, std::string working_dir, ) {
+void _spawn_thread(std::string code, py::api::object player, std::string working_dir) {
     auto threadstate = PyThreadState_New(main_interpreter_state);
 
     {
@@ -170,10 +169,12 @@ int main(int, char **) {
 
     Player player = Player(Vec2D(0, 0), "");
 
+    std::string working_dir;
+
     // All Python errors should result in a Python traceback    
     try {
         auto sys_module = py::import("sys");
-        auto working_dir = boost::filesystem::absolute("./").normalize().string();
+        working_dir = boost::filesystem::absolute("./").normalize().string();
 
         sys_module.attr("path").attr("append")(py::str(working_dir));
         py::import("wrapper_functions");
@@ -184,33 +185,27 @@ int main(int, char **) {
         PyErr_Print();
     }
 
-
+    try {
     for (int i = 0; i < 1; ++i) {
         spawn_thread(
                 "print('--- Inside " + std::to_string(i) + " ---')\n"
                 "player.monologue()\n"
-
-                "def get_script(n):\n"
-                "    def script(player):\n"
-                "        x_direction = Vec2D(1, 0)\n"
-                "        for _ in range(n):\n"
-                "            player.move(x_direction)\n"
-                "        player.monologue()\n"
-
-                "    return script\n"
-
                 "try:\n"
                 "    for i in range(4):\n"
-                "        player.give_script(get_script(10**i))\n"
+                "        player.give_script(globals())\n"
                 "        player.run_script()\n"
                 "        import time\n"
                 "        for _ in range(10**i):\n"
                 "           time.sleep(0.01)\n"
                 "except BaseException as e:\n"
-                "    print('Halted with {}.'.format(type(e)))\n",
+                "    print('Halted with {}.'.format(type(e)))\n"
+                "    raise\n",
                 py::object(boost::ref(player)),
                 working_dir
         );
+    }
+    } catch (py::error_already_set &) {
+        PyErr_Print();
     }
 
     PyEval_ReleaseLock();
