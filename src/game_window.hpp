@@ -13,7 +13,9 @@ extern "C" {
 }
 
 ///
-/// Sets up OpenGL|ES and handles SDL functionality.
+/// Sets up OpenGL|ES and handles basic SDL functionality.
+///
+/// Input management is handled in a separate class.
 ///
 class GameWindow {
 private:
@@ -93,6 +95,11 @@ private:
     /// Stores X11 display and window information.
     ///
     SDL_SysWMinfo wm_info;
+
+    ///
+    /// Handle all the input separately to all the display setup.
+    ///
+    InputManager input_manager;
     
     ///
     /// Initialize SDL.
@@ -200,6 +207,11 @@ public:
     /// Swaps the opengl buffers for this window.
     ///
     void swap_buffers();
+
+    ///
+    /// Input manager getter.
+    ///
+    InputManager* get_input_manager();
 };
 
 #endif

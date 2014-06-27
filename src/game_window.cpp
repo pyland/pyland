@@ -45,6 +45,7 @@ const char* GameWindow::InitException::what() {
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
     close_requested = false;
+    input_manager = InputManager(this);
     
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
@@ -53,15 +54,15 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
     // SDL already uses width,height = 0,0 for automatic
     // resolution. Sets maximized if not in fullscreen and given
     // width,height = 0,0.
-    window = SDL_CreateWindow ("Project Zygote",
-                               SDL_WINDOWPOS_CENTERED,
-                               SDL_WINDOWPOS_CENTERED,
-                               width,
-                               height,
-                               (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
-                               | ( (!fullscreen && width == 0 && height == 0) ?
-                                   SDL_WINDOW_MAXIMIZED : 0 )
-                               );
+    window = SDL_CreateWindow("Project Zygote",
+                              SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_CENTERED,
+                              width,
+                              height,
+                              (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
+                              | ( (!fullscreen && width == 0 && height == 0) ?
+                                  SDL_WINDOW_MAXIMIZED : 0 )
+                              );
     if (window == NULL) {
 #ifdef GAME_WINDOW_DEBUG
         std::cerr << "Failed to create SDL window." << std::endl;
@@ -81,8 +82,8 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
     }
     catch (InitException e) {
         vc_dispmanx_display_close(dispmanDisplay); // (???)
-        SDL_DestroyRenderer (renderer);
-        SDL_DestroyWindow (window);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
         if (windows.size() == 0) {
             deinit_sdl();
         }
@@ -96,8 +97,8 @@ GameWindow::~GameWindow() {
     deinit_gl();
     
     vc_dispmanx_display_close(dispmanDisplay); // (???)
-    SDL_DestroyRenderer (renderer);
-    SDL_DestroyWindow (window);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     
     // window_count--;
     windows.erase(SDL_GetWindowID(window));
@@ -114,7 +115,7 @@ void GameWindow::init_sdl() {
     std::cerr << "Initializing SDL..." << std::endl;
 #endif
     
-    result = SDL_Init (SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+    result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");
@@ -369,6 +370,10 @@ void GameWindow::update() {
                 break;
             }
             break;
+        default:
+            // Let the input manager use the event.
+            input_manager.handle_event(event);
+            break;
         }
     }
 
@@ -444,4 +449,9 @@ void GameWindow::use_context() {
 
 void GameWindow::swap_buffers() {
     eglSwapBuffers(display, surface);
+}
+
+
+void GameWindow::get_input_manager() {
+    return &input_manager;
 }
