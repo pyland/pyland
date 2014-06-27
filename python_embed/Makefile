@@ -12,7 +12,7 @@ WARN.clang.all := -Wall -Wextra
 WARN.clang.3.2 := -Weverything
 CXXFLAGS += $(WARN.$(CXX).all) $(WARN.$(CXX).$(4.8))
 
-CPPFLAGS =
+CPPFLAGS = -DDEBUG
 LDFLAGS  =
 LDLIBS   =
 
@@ -29,8 +29,8 @@ all: interpreter wrapper_functions.so
 
 
 
-interpreter: interpreter.o wrapper_functions.o api.o
-	$(CXX) -o interpreter interpreter.o wrapper_functions.o api.o $(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(LDFLAGS) $(LDLIBS) $(CXXFLAGS)
+interpreter: interpreter.o wrapper_functions.o api.o debug.o
+	$(CXX) -o interpreter interpreter.o wrapper_functions.o api.o debug.o $(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(LDFLAGS) $(LDLIBS) $(CXXFLAGS)
 	@echo
 
 interpreter.o: interpreter.cpp
@@ -45,8 +45,12 @@ wrapper_functions.so: wrapper_functions.cpp
 	$(CXX) -shared -fPIC wrapper_functions.cpp -o wrapper_functions.so $(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 	@echo
 
-api.o: api.cpp
-	$(CXX) -c api.cpp $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+api.o: api.cpp debug.o
+	$(CXX) -c api.cpp debug.o $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	@echo
+
+debug.o: debug.cpp
+	$(CXX) -c debug.cpp $(CPPFLAGS) $(CXXFLAGS)
 	@echo
 
 
