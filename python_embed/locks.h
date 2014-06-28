@@ -1,3 +1,5 @@
+#include <boost/python.hpp>
+
 ///
 /// A RAII lock for the GIL. Usage:
 ///
@@ -11,27 +13,12 @@ class GIL {
         GIL();
         ~GIL();
 
+        static int i;
+        int inst;
+
     private:
         GIL(const GIL&);
         PyGILState_STATE gilstate;
-};
-
-
-///
-/// A RAII lock for PyThreadState GIL grabbing. Usage:
-///
-///     {
-///         ThreadGIL lock_thread(threadstate);
-///         stuff();
-///     }
-///
-class ThreadGIL {
-    public:
-        ThreadGIL(ThreadState threadstate);
-        ~ThreadGIL();
-
-    private:
-        ThreadGIL(const ThreadGIL&);
 };
 
 ///
@@ -44,11 +31,28 @@ class ThreadGIL {
 ///
 class ThreadState {
     public:
-        ThreadState();
+        ThreadState(PyInterpreterState *interpreter_state);
         ~ThreadState();
         PyThreadState *get_threadstate();
 
     private:
         ThreadState(const ThreadState&);
         PyThreadState *threadstate;
+};
+
+///
+/// A RAII lock for PyThreadState GIL grabbing. Usage:
+///
+///     {
+///         ThreadGIL lock_thread(threadstate);
+///         stuff();
+///     }
+///
+class ThreadGIL {
+    public:
+        ThreadGIL(ThreadState &);
+        ~ThreadGIL();
+
+    private:
+        ThreadGIL(const ThreadGIL&);
 };

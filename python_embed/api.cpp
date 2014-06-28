@@ -37,7 +37,7 @@ Player::Player(Vec2D start, std::string name):
         this->name = std::string(name);
 }
 
-long Player::call_number = 0;
+uint64_t Player::call_number = 0;
 
 void Player::move(Vec2D by) {
     position += by;

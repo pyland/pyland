@@ -1,9 +1,11 @@
+#include <thread>
+
 class PlayerThread {
     public:
-        PlayerThread(Player &player, std::thread &thread, int64_t thread_id);
+        PlayerThread(Player &player, std::unique_ptr<std::thread> thread, int64_t thread_id);
 
         Player &player;
-        std::thread &thread;
+        std::unique_ptr<std::thread> thread;
 
         // Largest definitely-available integer,
         // gives contingency because a large number

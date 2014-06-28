@@ -9,6 +9,7 @@
 #include "api.h"
 #include "debug.h"
 #include "locks.h"
+#include "make_unique.h"
 #include "playerthread.h"
 
 namespace py = boost::python;
@@ -26,10 +27,7 @@ PyInterpreterState *main_interpreter_state;
 /// @param        lock The mutex to wait on
 /// @param time_period The minimal length to wait on.
 ///
-bool try_lock_for_busywait(std::timed_mutex &lock,
-                           std::chrono::nanoseconds time_period,
-                           std::vector<std::threads> &playerthreads) {
-
+bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
     auto end = std::chrono::system_clock::now() + time_period;
 
     while (true) {
@@ -52,7 +50,7 @@ bool try_lock_for_busywait(std::timed_mutex &lock,
 /// Kills threads. Currently only supports a single thread.
 /// Uses globals kill_thread_finish_signal and thread_id.
 ///
-void thread_killer() {
+void thread_killer(std::vector<PlayerThread> &playerthreads) {
     while (true) {
         // Nonbloking sleep; allows safe quit
         if (try_lock_for_busywait(kill_thread_finish_signal, std::chrono::milliseconds(100))) {
@@ -61,13 +59,13 @@ void thread_killer() {
 
         // Go through the available playerthread objects and kill those that
         // haven't had an API call.
-        for (auto playerthread : playerthreads) {
+        for (auto &playerthread : playerthreads) {
             if (!playerthread.is_dirty()) {
                 GIL lock_gil;
 
                 print_debug << "Attempting to kill thread id " << playerthread.thread_id << "." << std::endl;
 
-                PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
+                PyThreadState_SetAsyncExc(playerthread.thread_id, PyExc_SystemError);
             }
             playerthread.set_clean();
         }
@@ -86,12 +84,16 @@ void thread_killer() {
 ///                    This should be the current path, to allow importing our shared object files.
 ///
 void run_player(std::string code,
-                Player &player,
-                std::promise<int64_t> &thread_id_promise,
+                py::api::object player,
+                std::promise<int64_t> thread_id_promise,
                 std::string working_dir) {
 
-    ThreadState threadstate;
+    print_debug << "run_player: Starting" << std::endl;
+
+    ThreadState threadstate(main_interpreter_state);
     ThreadGIL lock_thread(threadstate);
+
+    print_debug << "run_player: Stolen GIL" << std::endl;
 
     try {
         // Append the working directory to Python's sys.path
@@ -110,17 +112,23 @@ void run_player(std::string code,
         // Currently this gets the class object from an instance object.
         main_module.attr("Vec2D") = py::object(Vec2D(0, 0)).attr("__class__");
 
+        print_debug << "run_player: Basic setup" << std::endl;
         // Totally a hack. Remove ASA(R)P.
         auto py_thread_id = py::import("threading").attr("current_thread")().attr("ident");
         thread_id_promise.set_value(py::extract<int64_t>(py_thread_id));
 
+        print_debug << "run_player: Gave promise" << std::endl;
+
         py::exec(code.c_str(), main_namespace);
+
+        print_debug << "run_player: Executed code" << std::endl;
     }
     catch (py::error_already_set &) {
+        print_debug << "run_player: Python-side error" << std::endl;
         PyErr_Print();
     }
 
-    print_debug << "Finished RUNNER thread" << std::endl;
+    print_debug << "run_player: Finished" << std::endl;
 }
 
 ///
@@ -136,11 +144,32 @@ void spawn_thread(std::string code,
                   std::vector<PlayerThread> &playerthreads,
                   std::string working_dir) {
 
-    std::promise<int64_t> thread_id_promise;
-    auto thread = std::thread(run_player, code, player, thread_set, working_dir);
+    print_debug << "spawn_thread: Starting" << std::endl;
 
-    auto playerthread = PlayerThread(Player, thread, thread_id_promise.get_future().get());
-    playerthreads.push_back(playerthread);
+    std::promise<int64_t> thread_id_promise;
+    auto thread_id_future = thread_id_promise.get_future();
+
+    auto thread = std::make_unique<std::thread>(
+        run_player,
+        code,
+        [&player] () { GIL lock_gil; return py::api::object(boost::ref(player)); } (),
+        std::move(thread_id_promise),
+        working_dir
+    );
+
+    print_debug << "spawn_thread: Made thread" << std::endl;
+
+    thread_id_future.wait();
+
+    print_debug << "spawn_thread: Got thread ID" << std::endl;
+
+    playerthreads.push_back(PlayerThread(
+        player,
+        std::move(thread),
+        thread_id_future.get()
+    ));
+
+    print_debug << "spawn_thread: Created PlayerThread" << std::endl;
 }
 
 ///
@@ -150,10 +179,14 @@ int main(int, char **) {
     Py_Initialize();
     PyEval_InitThreads();
 
+    print_debug << "main: Initialized Python" << std::endl;
+
     // Produe a locked mutex; unlock to allow thread_killer to die
     std::vector<PlayerThread> playerthreads;
     kill_thread_finish_signal.lock();
-    std::thread kill_thread(thread_killer);
+    std::thread kill_thread(thread_killer, std::ref(playerthreads));
+
+    print_debug << "main: Spawned Kill thread" << std::endl;
 
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
@@ -172,9 +205,15 @@ int main(int, char **) {
 
         player = Player(Vec2D(0, 0), "John");
     } catch (py::error_already_set) {
-        print_debug << "Basic error! Complain!" << std::endl;
+        print_debug << "main: Unexpected error setting path" << std::endl;
         PyErr_Print();
+        return 1;
     }
+
+    print_debug << "main: Set path" << std::endl;
+
+    PyEval_ReleaseLock();
+    print_debug << "main: Released GIL " << std::endl;
 
     for (int i = 0; i < 1; ++i) {
         spawn_thread(
@@ -194,16 +233,22 @@ int main(int, char **) {
                 playerthreads,
                 working_dir
         );
+        print_debug << "main: Spawned PlayerThread " << i << std::endl;
     }
 
-    PyEval_ReleaseLock();
-
-    for (auto playerthread : playerthreads) {
-        playerthread.thread.join();
+    for (auto &playerthread : playerthreads) {
+        playerthread.thread->join();
+        print_debug << "main: Joined a PlayerThread" << std::endl;
     }
+
+    print_debug << "main: Joined all PlayerThreads" << std::endl;
 
     kill_thread_finish_signal.unlock();
     kill_thread.join();
 
+    print_debug << "main: Joined kill_thread" << std::endl;
+
     PyEval_RestoreThread(main_thread_state);
+
+    return 0;
 }

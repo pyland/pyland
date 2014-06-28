@@ -1,8 +1,9 @@
-PlayerThread(Player &player, std::thread &thread, int64_t thread_id) {
-	this.player = player;
-	this.thread = thread;
-	this.thread_id = thread_id;
-};
+#include <thread>
+#include "api.h"
+#include "playerthread.h"
+
+PlayerThread::PlayerThread(Player &player, std::unique_ptr<std::thread> thread, int64_t thread_id):
+	player(player), thread(std::move(thread)), thread_id(thread_id) {}
 
 bool PlayerThread::is_dirty() {
 	return previous_call_number != player.call_number;
