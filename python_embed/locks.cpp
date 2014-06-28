@@ -34,8 +34,11 @@ ThreadState::ThreadState(PyInterpreterState *interpreter_state) {
 	threadstate = PyThreadState_New(interpreter_state);
 }
 
-ThreadState::~ThreadState() {
-	GIL lock_gil;
+ThreadState::~ThreadState() {	
+	{
+		GIL lock_gil;
+    	PyThreadState_Clear(threadstate);
+    }
     PyThreadState_Delete(threadstate);
 }
 
