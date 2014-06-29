@@ -1,3 +1,4 @@
+
 #include <iostream>
 
 extern "C" {
@@ -5,7 +6,7 @@ extern "C" {
   
 #ifdef USE_GLES
 #include <bcm_host.h>
-#include <GLES/gl2.h>
+#include <GLES2/gl2.h>
 #endif
 
 #ifdef USE_GL

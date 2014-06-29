@@ -7,7 +7,9 @@
 #ifdef USE_GL
 #undef USE_GLES
 #else
+#ifndef USE_GLES
 #define USE_GLES
+#endif
 #endif
 
 extern "C" {
