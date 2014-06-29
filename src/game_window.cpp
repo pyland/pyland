@@ -1,20 +1,23 @@
 #include <iostream>
 #include <map>
 
+// Include position important.
+#include "game_window.hpp"
+
 extern "C" {
+#ifdef USE_GLES
+#include <bcm_host.h>
+
 #include <GLES/gl.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-
-#include <SDL.h>
-#include <SDL_syswm.h>
+#endif
 
 #include <X11/Xlib.h>
 
-#include <bcm_host.h>
+#include <SDL.h>
+#include <SDL_syswm.h>
 }
-
-#include "game_window.hpp"
 
 
 
@@ -61,6 +64,9 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
                                (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
                                | ( (!fullscreen && width == 0 && height == 0) ?
                                    SDL_WINDOW_MAXIMIZED : 0 )
+#ifdef USE_GL
+			       | SDL_WINDOW_OPENGL
+#endif
                                );
     if (window == NULL) {
 #ifdef GAME_WINDOW_DEBUG
@@ -71,17 +77,24 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
     }
 
     SDL_GetWindowWMInfo(window, &wm_info);
-    
-    dispmanDisplay = vc_dispmanx_display_open(0); // (???)
 
+#ifdef USE_GLES
+    dispmanDisplay = vc_dispmanx_display_open(0);
+#endif
+
+    // Currently has no use with a desktop GL setup.
+#ifdef USE_GLES
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+#endif
     
     try {
         init_gl();
     }
     catch (InitException e) {
-        vc_dispmanx_display_close(dispmanDisplay); // (???)
+#ifdef USE_GLES
+        vc_dispmanx_display_close(dispmanDisplay);
         SDL_DestroyRenderer (renderer);
+#endif
         SDL_DestroyWindow (window);
         if (windows.size() == 0) {
             deinit_sdl();
@@ -94,9 +107,11 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
 
 GameWindow::~GameWindow() {
     deinit_gl();
-    
+
+#ifdef USE_GLES
     vc_dispmanx_display_close(dispmanDisplay); // (???)
     SDL_DestroyRenderer (renderer);
+#endif
     SDL_DestroyWindow (window);
     
     // window_count--;
@@ -143,8 +158,9 @@ void GameWindow::deinit_sdl() {
 
 
 void GameWindow::init_gl() {
+#ifdef USE_GLES  
     EGLBoolean result;
-
+  
     static const EGLint attribute_list[] = {
         EGL_RED_SIZE, 8,
         EGL_GREEN_SIZE, 8,
@@ -204,14 +220,23 @@ void GameWindow::init_gl() {
     // Surface initialization is done here as it can be called multiple
     // times after  main initialization.
     init_surface();
+#endif
+#ifdef USE_GL
+    sdl_gl_context = SDL_GL_CreateContext(window);
+#endif
 }
 
 
 void GameWindow::deinit_gl() {
+#ifdef USE_GLES
     // Release EGL resources
     deinit_surface();
     eglDestroyContext(display, context);
     eglTerminate(display);
+#endif
+#ifdef USE_GL
+    SDL_GL_DeleteContext(sdl_gl_context);
+#endif
 }
 
 
@@ -241,6 +266,7 @@ void GameWindow::init_surface() {
 
 
 void GameWindow::init_surface(int x, int y, int w, int h) {
+#ifdef USE_GLES
     EGLBoolean result;
   
     VC_RECT_T destination;
@@ -309,10 +335,12 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     // Clean up any garbage in the SDL window.
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
+#endif
 }
 
 
 void GameWindow::deinit_surface() {
+#ifdef USE_GLES
     if (visible) {
         int result;
         
@@ -332,6 +360,7 @@ void GameWindow::deinit_surface() {
     }
     visible = false;
     change_surface = InitAction::DO_NOTHING;
+#endif
 }
 
 
@@ -379,6 +408,7 @@ void GameWindow::update() {
         
         // Hacky fix: The events don't quite chronologically work, so
         // check the window position to start any needed surface update.
+#ifdef USE_GLES
         int x, y;
         Window child;
         XTranslateCoordinates(window->wm_info.info.x11.display,
@@ -396,10 +426,6 @@ void GameWindow::update() {
             window->change_surface = InitAction::DO_INIT;
         }
         
-        if (close_all) {
-            window->request_close();
-        }
-        
         switch (window->change_surface) {
         case InitAction::DO_INIT:
             try {
@@ -415,6 +441,11 @@ void GameWindow::update() {
         case InitAction::DO_NOTHING:
             // Do nothing - hey, I don't like compiler warnings.
             break;
+        }
+#endif
+        
+        if (close_all) {
+            window->request_close();
         }
     }
 }
@@ -436,12 +467,22 @@ bool GameWindow::check_close() {
 
 
 void GameWindow::use_context() {
+#ifdef USE_GLES
     if (visible) {
         eglMakeCurrent(display, surface, surface, context);
     }
+#endif
+#ifdef USE_GL
+    SDL_GL_MakeCurrent(window, sdl_gl_context);
+#endif
 }
 
 
 void GameWindow::swap_buffers() {
+#ifdef USE_GLES
     eglSwapBuffers(display, surface);
+#endif
+#ifdef USE_GL
+    SDL_GL_SwapWindow(window);
+#endif
 }

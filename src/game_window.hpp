@@ -3,10 +3,19 @@
 
 #include <exception>
 
+// Flags to allow code to run on standard OpenGL systems.
+#ifdef USE_GL
+#undef USE_GLES
+#else
+#define USE_GLES
+#endif
+
 extern "C" {
+#ifdef USE_GLES
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#endif
 
 #include <SDL.h>
 #include <SDL_syswm.h>
@@ -78,6 +87,7 @@ private:
     ///
     InitAction change_surface;
 
+#ifdef USE_GLES
     // These need to be reused for resource management.
     EGLDisplay display;
     EGLSurface surface;
@@ -88,6 +98,7 @@ private:
 
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
     DISPMANX_ELEMENT_HANDLE_T dispmanElement;
+#endif
 
     ///
     /// Stores X11 display and window information.
