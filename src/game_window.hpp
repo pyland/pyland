@@ -99,6 +99,9 @@ private:
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
     DISPMANX_ELEMENT_HANDLE_T dispmanElement;
 #endif
+#ifdef USE_GL
+    SDL_GLContext sdl_gl_context;
+#endif
 
     ///
     /// Stores X11 display and window information.
