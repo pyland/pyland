@@ -23,6 +23,8 @@ extern "C" {
 #include <SDL2/SDL_syswm.h>
 }
 
+class InputManager;
+
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
 ///

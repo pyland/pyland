@@ -122,7 +122,9 @@ GameWindow::~GameWindow() {
 void GameWindow::init_sdl() {
     int result;
     
+#ifdef USE_GLES
     bcm_host_init();
+#endif
     
 #ifdef GAME_WINDOW_DEBUG
     std::cerr << "Initializing SDL..." << std::endl;

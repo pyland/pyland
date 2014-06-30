@@ -65,7 +65,7 @@ public:
     ///
     /// @param key The scancode of the key.
     ///
-    is_key_held(int key);
+    bool is_key_held(int key);
     ///
     /// Query whether a key is down, given keycode.
     ///
@@ -73,31 +73,31 @@ public:
     ///
     /// @param key The keycode of the key.
     ///
-    is_char_held(int key);
+    bool is_char_held(int key);
     ///
     /// Query whether a key was recently pressed, given scancode.
     ///
     /// @param key The scancode of the key.
     ///
-    is_key_pressed(int key);
+    bool is_key_pressed(int key);
     ///
     /// Query whether a key was recently pressed, given keycode.
     ///
     /// @param key The keycode of the key.
     ///
-    is_char_pressed(int key);
+    bool is_char_pressed(int key);
     ///
     /// Query whether a key was recently released, given scancode.
     ///
     /// @param key The scancode of the key.
     ///
-    is_key_released(int key);
+    bool is_key_released(int key);
     ///
     /// Query whether a key was recently released, given keycode.
     ///
     /// @param key The keycode of the key.
     ///
-    is_char_released(int key);
+    bool is_char_released(int key);
 }
 
 #endif
