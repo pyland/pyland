@@ -15,3 +15,9 @@ COMPILER=g++-4.7 make
 cd python_embed
 COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
+
+For compiling on desktop, use:
+
+  PLATFORM=desktop COMPILER=g++ ... make
+
+Please note that desktop support is secondary, and may be incomplete.
