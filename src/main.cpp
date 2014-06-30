@@ -75,12 +75,23 @@ static void update(float dt);
 static void init_textures();
 static void load_tex_images();
 static void exit_func(void);
+
+static void draw_sprites( float dt);
+void generate_sprite_coords();
+void generate_sprite_tex_data();
+/**
+ * Move the object, identified by the id, in the specified direction.
+ * 0 = move up, 1 = move right, 2 = move down, 3 = move left
+ */
+void move_object(const int id, const int direction);
+
 static volatile int shutdown;
 
 #define VERTEX_POS_INDX 0
 #define VERTEX_TEXCOORD0_INDX 1
+const int num_vbo_ids = 4;
 static void draw_map(int image_height, int image_width, float dt);
-GLuint vboIds[2];
+GLuint vboIds[num_vbo_ids];
 GLuint program_obj =0;
 GLuint texture_id = 0;
 const int map_height = 16;
@@ -91,15 +102,60 @@ float map_bottom_y = 0.0;
 const int map_display_width = 8;
 const int map_display_height = 8;
 
+GLfloat* sprite_data;
+GLfloat* sprite_tex_data;
+
 char* tex_buf1;
 glm::mat4 projection_matrix;
+const int num_objects = 2;
+
+struct Object {
+  float x;
+  float y;
+} objects[num_objects];
+
+void move_object(const int id, const int direction) {
+  if(id > num_objects || id < 0) {
+    cerr << "ERROR: mov_object: object id exceeds number of objects. Object id: " << id << endl;
+    return;
+  } 
+
+ 
+  switch(direction) {
+    //MOVE UP
+  case 0:
+    objects[id].y++;
+    break;
+    //MOVE RIGHT
+  case 1:
+    objects[id].x++;
+   break;
+    //MOVE DOWN
+  case 2:
+    objects[id].y--;
+    break;
+    //MOVE LEFT
+  case 3:
+    objects[id].x--;
+    break;
+  }
+
+
+  //Wrap
+  if(objects[id].x <0) objects[id].x = 600.0f;
+  if(objects[id].y < 0) objects[id].y = 400.0f;
+  if(objects[id].y > 400.0f) objects[id].y = 0.0f;
+  if(objects[id].x > 600.0f) objects[id].x = 0.0f;
+}
 
 static void init_buffers() {
   glUseProgram(program_obj);
 
-  //vboIds[0] = position
-  //vboIds[1] = texture 0
-  glGenBuffers(2, vboIds);
+  //vboIds[0] = map geometric data
+  //vboIds[1] = tileset
+  //vboIds[2] = sprite geometric data
+  //vboIds[3] = texture coords for sprite
+  glGenBuffers(num_vbo_ids, vboIds);
 
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
   glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*18, mapData, GL_STATIC_DRAW);
@@ -108,10 +164,28 @@ static void init_buffers() {
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
   glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*12, mapTexCoords, GL_STATIC_DRAW);
 
+  glBindBuffer(GL_ARRAY_BUFFER, vboIds[2]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*18, sprite_data, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vboIds[3]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*12, sprite_tex_data, GL_STATIC_DRAW);
+
+  //MAPS
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
   glEnableVertexAttribArray(VERTEX_POS_INDX);
+
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
   glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
+
+
+  //SPRITES
+  glBindBuffer(GL_ARRAY_BUFFER, vboIds[2]);
+  glEnableVertexAttribArray(VERTEX_POS_INDX);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vboIds[3]);
+  glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
+
+
 
   glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE,0, 0);
   glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
@@ -137,9 +211,9 @@ static void animate(float dt) {
     map_bottom_y = 0.0f; //wrap round
   }
 }
- static void draw_map(int map_width, int map_height, float dt)
+static void draw_map(int map_width, int map_height, float dt)
  {
-   animate(dt);
+
    //LEAVE THIS HERE!
    glDisable(GL_CULL_FACE);
    glm::mat4 model = glm::mat4(1.0f);
@@ -173,8 +247,50 @@ static void animate(float dt) {
 
 
    glDrawArrays(GL_TRIANGLES, 0, 6*map_width*map_height);
-
+   glUseProgram(0);
  }
+
+static void draw_sprites( float dt)
+ {
+   glm::mat4 model = glm::mat4(1.0f);
+
+
+   glUseProgram(program_obj);
+
+   glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
+
+
+
+   glBindBuffer(GL_ARRAY_BUFFER, vboIds[2]);
+   glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, 0);
+   glEnableVertexAttribArray(VERTEX_POS_INDX);
+
+
+   glBindBuffer(GL_ARRAY_BUFFER, vboIds[3]);
+   glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
+   glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
+
+   glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
+
+
+   glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
+
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D,texture_id);
+
+   //set sampler texture to unit 0
+   glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
+
+   for(int i = 0; i< num_objects; i++) {
+        glm::mat4 translated = glm::translate(model, glm::vec3(objects[i].x, objects[i].y, 0.0f));
+   glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_modelview"), 1, GL_FALSE, glm::value_ptr(translated));
+
+   
+     glDrawArrays(GL_TRIANGLES, 0, 6);
+   }
+   glUseProgram(0);
+ }
+
 
  /***********************************************************
   * Initialise the opengl specifics for the game
@@ -184,9 +300,11 @@ static void animate(float dt) {
  {
    // Set background color and clear buffers
    glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
+   
+   //Leave this here!!!
+   // Disable back face culling.
+   glDisable(GL_CULL_FACE);
 
-   // Enable back face culling.
-   glEnable(GL_CULL_FACE);
  }
 
  /***********************************************************
@@ -221,6 +339,7 @@ static void animate(float dt) {
  {
 
    glLoadIdentity();
+   
  }
 
  /***********************************************************
@@ -237,8 +356,8 @@ static void animate(float dt) {
  {
    glClear( GL_COLOR_BUFFER_BIT );
 
-   draw_map(16, 16, dt);
-
+   //   draw_map(16, 16, dt);
+   draw_sprites( dt);
    window->swap_buffers();
  }
 
@@ -590,6 +709,8 @@ static void exit_func(void)
    // release buffers
    delete []tex_buf1;
    delete []mapData;
+   delete []sprite_data;
+   delete []sprite_tex_data;
    delete []mapTexCoords;
    delete []tileSetTexCoords;
 
@@ -667,14 +788,113 @@ bool init_shaders() {
   }
 
   return true;
-  
 }
+void generate_sprite_tex_data() {
+
+  //holds the map data
+  //need 12 float for the 2D texture coordinates
+  int num_floats = 12;
+  sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
+  assert(sprite_tex_data != 0);
+
+  //generate the map data
+
+  int currTile = 13;
+  GLfloat *tileSetPtr = &tileSetTexCoords[currTile*8];
+  //bottom left
+  sprite_tex_data[0] = tileSetPtr[0];
+  sprite_tex_data[1] = tileSetPtr[1];
+
+  //top left
+  sprite_tex_data[2] = tileSetPtr[2];
+  sprite_tex_data[3] = tileSetPtr[3];
+
+  //bottom right
+  sprite_tex_data[4] = tileSetPtr[4];
+  sprite_tex_data[5] = tileSetPtr[5];
+
+  //top left
+  sprite_tex_data[6] = tileSetPtr[2];
+  sprite_tex_data[7] = tileSetPtr[3];
+
+  //top right
+  sprite_tex_data[8] = tileSetPtr[6];
+  sprite_tex_data[9] = tileSetPtr[7];
+	
+  //bottom right
+  sprite_tex_data[10] = tileSetPtr[4];
+  sprite_tex_data[11] = tileSetPtr[5];
+
+}
+
+void generate_sprite_coords() {
+  #ifdef DEBUG
+  printf("GENERATING MAP DATA...");
+#endif
+  //holds the map data
+   //need 18 floats for each coordinate as these hold 3D coordinates
+  int num_floats = 18;
+  sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+  assert(sprite_data != 0);
+  float scale = 16.0f;
+  //generate the map data
+  /**
+   * Vertex winding order:
+   * 1, 3   4
+   *  * --- * 
+   *  |     |
+   *  |     | 
+   *  * --- *
+   * 0       2,5
+   */
+
+  //generate one tile's worth of data
+  
+  //bottom left 
+  sprite_data[0] = 0;
+  sprite_data[1] = 0;
+  sprite_data[2] = 0;
+	   
+  //top left
+  sprite_data[3] = 0;
+  sprite_data[4] = (1) * scale;
+  sprite_data[5] = 0;
+
+  //bottom right
+  sprite_data[6] = (1) * scale;
+  sprite_data[7] = 0;
+  sprite_data[8] = 0;
+	
+  //top left
+  sprite_data[9] = 0;
+  sprite_data[10] = 1 * scale;
+  sprite_data[11] = 0;
+  
+  //top right
+  sprite_data[12] = 1 * scale;
+  sprite_data[13] = 1 * scale;
+  sprite_data[14] = 0;
+
+  //bottom right
+  sprite_data[15] = 1 * scale;
+  sprite_data[16] = 0;
+  sprite_data[17] = 0;
+
+
+#ifdef DEBUG
+  printf("DONE.");
+#endif
+
+
+}
+
 //==============================================================================
 
 int main ()
 {
    GameWindow window(640, 480, false);
    window.use_context();
+
    // Start OGLES
    init_ogl();
 
@@ -683,13 +903,16 @@ int main ()
 
    generate_tileset_coords(128, 128);
    generate_map_texcoords(map_width, map_height);
+   generate_sprite_coords();
+   generate_sprite_tex_data();
 
    // initialise the OGLES texture(s)
    init_textures();
 
    generate_map_coords(map_width, map_height);
    init_buffers();
-
+   objects[1].x = 30.0f;
+   objects[1].y = 30.0f;
    // Setup the model world
    init_model_proj(&window);
    float dt = get_dt();
