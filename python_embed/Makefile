@@ -28,6 +28,7 @@ PYTHON_CXXFLAGS =
 all: interpreter wrapper_functions.so
 
 debug: CXXFLAGS += -g
+debug: CXXFLAGS +=  -fno-elide-constructors
 debug: CPPFLAGS += -DDEBUG
 debug: interpreter wrapper_functions.so
 
@@ -59,7 +60,6 @@ playerthread.o: playerthread.cpp api.o
 
 api.o: api.cpp debug.o
 	$(CXX) -c api.cpp \
-		debug.o \
 		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 	@echo
 

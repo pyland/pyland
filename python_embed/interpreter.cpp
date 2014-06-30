@@ -149,10 +149,15 @@ void spawn_thread(std::string code,
     std::promise<int64_t> thread_id_promise;
     auto thread_id_future = thread_id_promise.get_future();
 
+    py::api::object player_object = [&player] () {
+        GIL lock_gil;
+        return py::api::object(boost::ref(player));
+    } ();
+
     auto thread = std::make_unique<std::thread>(
         run_player,
         code,
-        [&player] () { GIL lock_gil; return py::api::object(boost::ref(player)); } (),
+        player_object,
         std::move(thread_id_promise),
         working_dir
     );
