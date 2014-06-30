@@ -39,39 +39,14 @@ interpreter: interpreter.o wrapper_functions.o playerthread.o api.o debug.o lock
 		$(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(LDFLAGS) $(LDLIBS) $(CXXFLAGS)
 	@echo
 
-interpreter.o: interpreter.cpp
-	$(CXX) -c interpreter.cpp \
-		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-	@echo
-
-wrapper_functions.o: wrapper_functions.cpp
-	$(CXX) -c wrapper_functions.cpp \
-		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-	@echo
-
 wrapper_functions.so: wrapper_functions.cpp
 	$(CXX) -shared -fPIC wrapper_functions.cpp -o wrapper_functions.so \
 		$(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 	@echo
 
-playerthread.o: playerthread.cpp api.o
-	$(CXX) -c playerthread.cpp \
+%.o: %.cpp
+	$(CXX) -c $< -o $@ \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-	@echo
-
-api.o: api.cpp debug.o
-	$(CXX) -c api.cpp \
-		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-	@echo
-
-debug.o: debug.cpp
-	$(CXX) -c debug.cpp \
-		$(CPPFLAGS) $(CXXFLAGS)
-	@echo
-
-locks.o: locks.cpp
-	$(CXX) -c locks.cpp \
-		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 	@echo
 
 
