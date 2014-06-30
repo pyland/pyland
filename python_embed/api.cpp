@@ -55,7 +55,11 @@ void Player::run_script() {
 
 void Player::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
-    std::string from_file = "def script(player):\n\t" + read_file() + "\n\treturn script\n";
+    std::string from_file =
+    "def move(x):\n\t"
+    "player.move(x)\n"
+    "north, south, east, west = Vec2D(0, 1), Vec2D(0, -1), Vec2D(1, 0), Vec2D(-1, 0)\n" 
+    "def script(player):\n\t" + read_file() + "\n\treturn script\n";
     print_debug << from_file << std::endl;
     script = py::exec(from_file.c_str(), tempoary_scope);
     script = tempoary_scope["script"];
