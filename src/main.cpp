@@ -38,6 +38,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <chrono>
+
  //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -46,8 +48,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include "bcm_host.h"
 
 #include "game_window.hpp"
 
@@ -69,7 +69,7 @@ using namespace std;
 
 
 static  void init_ogl();
-static void init_model_proj();
+static void init_model_proj(GameWindow* window);
 static void redraw_scene(GameWindow* window, float dt);
 static void update(float dt);
 static void init_textures();
@@ -85,7 +85,7 @@ GLuint program_obj =0;
 GLuint texture_id = 0;
 const int map_height = 16;
 const int map_width = 16;
-float map_scroll_speed = 1.0f; //1 tile a second
+float map_scroll_speed = 32.0f; //1 tile a second
 float map_bottom_x = 0.0;
 float map_bottom_y = 0.0; 
 const int map_display_width = 8;
@@ -129,139 +129,143 @@ static void animate(float dt) {
   map_bottom_y += map_scroll_speed*dt;
 
   //perform wrapping
-  if(map_display_right_x > map_width+ 20.0f) {
+  if(map_display_right_x > map_width) {
     map_bottom_x = 0.0f;//wrap round
   }
 
-  if(map_display_top_y > map_height+ 20.0f) {
+  if(map_display_top_y > map_height) {
     map_bottom_y = 0.0f; //wrap round
   }
 }
-static void draw_map(int map_width, int map_height, float dt)
-{
-  animate(dt);
+ static void draw_map(int map_width, int map_height, float dt)
+ {
+   animate(dt);
+   //LEAVE THIS HERE!
+   glDisable(GL_CULL_FACE);
+   glm::mat4 model = glm::mat4(1.0f);
+   glm::mat4 translated = glm::translate(model, glm::vec3(map_bottom_x, map_bottom_y, 0.0f));
 
-  glm::mat4 model = glm::mat4(1.0f);
-  glm::mat4 translated = glm::translate(model, glm::vec3(map_bottom_x, map_bottom_y, 0.0f));
+   glUseProgram(program_obj);
 
-  glUseProgram(program_obj);
-    
-  glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
-  glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_modelview"), 1, GL_FALSE, glm::value_ptr(translated));
-
-
-  glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
-  glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(VERTEX_POS_INDX);
+   glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
+   glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_modelview"), 1, GL_FALSE, glm::value_ptr(translated));
 
 
-  glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
-  glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
-
-  glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
-  
-
-  glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
-
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D,texture_id);
-
-  //set sampler texture to unit 0
-  glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
+   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+   glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, 0);
+   glEnableVertexAttribArray(VERTEX_POS_INDX);
 
 
-  glDrawArrays(GL_TRIANGLES, 0, 6*map_width*map_height);
- 
-}
+   glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
+   glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
+   glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
 
-/***********************************************************
- * Initialise the opengl specifics for the game
- *
- ***********************************************************/
-static void init_ogl()
-{
-  // Set background color and clear buffers
-  glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
-
-  // Enable back face culling.
-  glEnable(GL_CULL_FACE);
-}
-
-/***********************************************************
- * Name: init_model_proj
-
- * Description: Sets the OpenGL|ES model to default values
- *
- * Returns: void
- *
- ***********************************************************/
-
-static void init_model_proj()
-{
-  //  glViewport(0, 0, 640, 480);
-  projection_matrix = glm::ortho(0.0f, 640.0f, 0.0f, 480.0f, -1.0f, 1.0f);
-}
+   glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
 
 
-/***********************************************************
- * Name: update_model
- *
+   glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
 
- * Description: Updates model projection to current position/rotation
- *
- * Returns: void
- *
- ***********************************************************/
-static void update(float dt)
-{
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D,texture_id);
 
-  glLoadIdentity();
-}
-
-/***********************************************************
- * Name: redraw_scene
- *
-
- * Description:   Draws the model and calls eglSwapBuffers
- *                to render to screen
- *
- * Returns: void
- *
- ***********************************************************/
-static void redraw_scene(GameWindow *window, float dt)
-{
-  glClear( GL_COLOR_BUFFER_BIT );
-  
-  draw_map(16, 16, dt);
-
-  window->swap_buffers();
-}
+   //set sampler texture to unit 0
+   glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
 
 
-/***********************************************************
- * Name: generate_tilset_coords
- *
- ***********************************************************/
-static void generate_tileset_coords(int image_height, int image_width)
-{
+   glDrawArrays(GL_TRIANGLES, 0, 6*map_width*map_height);
 
-#ifdef DEBUG
-  printf("GENERATING TILESET TEXTURE COORDS...");
-#endif
-  //check the tilset image height and widths are multiples of the tiles
-  //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
-    
+ }
 
-  int numTilesX = image_width/ TILESET_ELEMENT_SIZE;
-  int numTilesY = image_height / TILESET_ELEMENT_SIZE;
+ /***********************************************************
+  * Initialise the opengl specifics for the game
+  *
+  ***********************************************************/
+ static void init_ogl()
+ {
+   // Set background color and clear buffers
+   glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
 
-  //Each tile needs 8 floats to describe its position in the image
-  tileSetTexCoords = new GLfloat[sizeof(GLfloat)* numTilesX * numTilesY * 4 * 2];
-  assert(tileSetTexCoords != 0);
-  //TODO free this memory
+   // Enable back face culling.
+   glEnable(GL_CULL_FACE);
+ }
 
-  double tileSetXOffset = 0.0;
+ /***********************************************************
+  * Name: init_model_proj
+
+  * Description: Sets the OpenGL|ES model to default values
+  *
+  * Returns: void
+  *
+  ***********************************************************/
+
+ static void init_model_proj(GameWindow *window)
+ {
+   std::pair<int, int> size = window->get_size();
+  glViewport(0, 0,  size.first, size.second);
+ projection_matrix = glm::ortho(0.0f, (float)(size.first), 0.0f, (float)(size.second), -1.0f, 1.0f);
+  //  glViewport(0, 0,  640, 480);
+  //  projection_matrix = glm::ortho(0.0f, 640.0f, 0.0f, 480.0f, -1.0f, 1.0f);
+ }
+
+
+ /***********************************************************
+  * Name: update_model
+  *
+
+  * Description: Updates model projection to current position/rotation
+  *
+  * Returns: void
+  *
+  ***********************************************************/
+ static void update(float dt)
+ {
+
+   glLoadIdentity();
+ }
+
+ /***********************************************************
+  * Name: redraw_scene
+  *
+
+  * Description:   Draws the model and calls eglSwapBuffers
+  *                to render to screen
+  *
+  * Returns: void
+  *
+  ***********************************************************/
+ static void redraw_scene(GameWindow *window, float dt)
+ {
+   glClear( GL_COLOR_BUFFER_BIT );
+
+   draw_map(16, 16, dt);
+
+   window->swap_buffers();
+ }
+
+
+ /***********************************************************
+  * Name: generate_tilset_coords
+  *
+  ***********************************************************/
+ static void generate_tileset_coords(int image_height, int image_width)
+ {
+
+ #ifdef DEBUG
+   printf("GENERATING TILESET TEXTURE COORDS...");
+ #endif
+   //check the tilset image height and widths are multiples of the tiles
+   //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
+
+
+   int numTilesX = image_width/ TILESET_ELEMENT_SIZE;
+   int numTilesY = image_height / TILESET_ELEMENT_SIZE;
+
+   //Each tile needs 8 floats to describe its position in the image
+   tileSetTexCoords = new GLfloat[sizeof(GLfloat)* numTilesX * numTilesY * 4 * 2];
+   assert(tileSetTexCoords != 0);
+   //TODO free this memory
+
+     double tileSetXOffset = 0.0;
   double tileSetYOffset = 0.0;
   double tileSetXInc = 1.0 / (double)numTilesX;
   double tileSetYInc = 1.0 / (double)numTilesY;
@@ -595,28 +599,41 @@ static void exit_func(void)
 
 static float get_dt() {
 
-   //Hold the current time
-   static float    curr_seconds = 0.0f; //seconds
+   static std::chrono::steady_clock::time_point curr_time = std::chrono::steady_clock::now();
 
-   //Get the current time
-   struct timeval time_data;
-   gettimeofday(&time_data, NULL);
-   float seconds = time_data.tv_usec /1000000.0f;
 
-   //If we've just initialised, then we don't have a previous time - set it and return 0
-   if(curr_seconds = 0.0f) {
-     curr_seconds = seconds;
-     return 0.0f;
-   }
+   std::chrono::steady_clock::time_point milliseconds = std::chrono::steady_clock::now();   
+
+typedef std::chrono::duration<int, std::milli> millisecs_t;
+millisecs_t duration(std::chrono::duration_cast<millisecs_t>(milliseconds - curr_time));
+
+ curr_time = milliseconds;
+return duration.count()/ 1000.0f;
+   // //Hold the current time
+   // static double curr_seconds = 0.0f; //seconds
+
+  
+   // //Get the current time
+   // struct timeval time_data;
+   // gettimeofday(&time_data, NULL);
+   // double seconds = time_data.tv_sec + time_data.tv_usec /1000000.0f;
+
+   // //If we've just initialised, then we don't have a previous time - set it and return 0
+   // if(curr_seconds == 0.0f) {
+   //   curr_seconds = seconds;
+   //   return 0.0f;
+   // }
    
-   //Calculate the time difference
-   float dt = seconds - curr_seconds;
-   if(dt < 0.0f)
-     return 0.0f;
-   
-   //update the previous time
-   curr_seconds = seconds;
-   return dt;
+
+   // //   cout << "SEC " << seconds << " CURR " << curr_seconds << endl;
+   // //Calculate the time difference
+   // float dt = seconds - curr_seconds;
+   // if(dt < 0.0f) {
+   //   return 0.0f;
+   // }
+   // //update the previous time
+   // curr_seconds = seconds;
+   // return dt;
 
 }
 
@@ -675,17 +692,19 @@ int main ()
    init_buffers();
 
    // Setup the model world
-   init_model_proj();
+   init_model_proj(&window);
    float dt = get_dt();
-
+   int count = 0;
    while (!window.check_close())
    {
+     //     init_model_proj(&window);
      //Get the time since the last iteration 
      dt = get_dt(); 
-     //         printf("\n%f\n",dt);
+     count++;
      update(dt);
      redraw_scene(&window, dt);
      GameWindow::update();
+//     if(count == 100) break;
    }
    exit_func();
    return 0;
