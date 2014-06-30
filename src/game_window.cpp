@@ -4,6 +4,7 @@
 
 // Include position important.
 #include "game_window.hpp"
+#include "input_manager.hpp"
 
 extern "C" {
 #ifdef USE_GLES
@@ -26,7 +27,7 @@ extern "C" {
 
 
 
-std::map<Uint32,GameWindow*> windows = std::map<Uint32,GameWindow*>();
+std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
 
 
 
@@ -44,7 +45,7 @@ const char* GameWindow::InitException::what() {
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
     close_requested = false;
-    input_manager = InputManager(this);
+    input_manager = new InputManager(this);
     
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
@@ -116,6 +117,8 @@ GameWindow::~GameWindow() {
     if (windows.size() == 0) {
         deinit_sdl();
     }
+
+    delete input_manager;
 }
 
 
@@ -370,13 +373,19 @@ void GameWindow::update() {
     SDL_Event event;
     bool close_all = false;
     
+    for (auto pair : windows) {
+        GameWindow* window = pair.second;
+        window->input_manager->clean();
+    }
+    
     while (SDL_PollEvent(&event)) {
+        GameWindow* window;
         switch (event.type) {
         case SDL_QUIT: // Primarily used for killing when we become blind.
             close_all = true;
             break;
         case SDL_WINDOWEVENT:
-            GameWindow* window = windows[event.window.windowID];
+            window = windows[event.window.windowID];
 
             // Instead of reinitialising on every event, do it ater we have
             // scanned the event queue in full.
@@ -402,7 +411,7 @@ void GameWindow::update() {
             break;
         default:
             // Let the input manager use the event.
-            input_manager.handle_event(event);
+            InputManager::handle_event(&event);
             break;
         }
     }
@@ -501,6 +510,6 @@ void GameWindow::swap_buffers() {
 }
 
 
-void GameWindow::get_input_manager() {
-    return &input_manager;
+InputManager* GameWindow::get_input_manager() {
+    return input_manager;
 }

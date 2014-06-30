@@ -2,6 +2,7 @@
 #define GAME_WINDOW_H
 
 #include <exception>
+#include <map>
 #include <utility>
 
 // Flags to allow code to run on standard OpenGL systems.
@@ -25,6 +26,8 @@ extern "C" {
 
 class InputManager;
 
+
+
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
 ///
@@ -32,6 +35,7 @@ class InputManager;
 ///
 class GameWindow {
 private:
+    friend class InputManager;
     ///
     /// Used to say if something needs to be initialized, deinitialized,
     /// or if no action needs to be taken.
@@ -122,8 +126,8 @@ private:
     ///
     /// Handle all the input separately to all the display setup.
     ///
-    InputManager input_manager;
-    
+    InputManager* input_manager;
+
     ///
     /// Initialize SDL.
     ///

@@ -40,13 +40,20 @@ private:
     std::set<int> released_keys;
 
     ///
+    /// Code to be run before handling event loops.
+    ///
+    /// Clears pressed and released keys.
+    ///
+    void clean();
+    
+    ///
     /// Update the state using the given SDL_Event.
     ///
     /// Called by the friend class GameWindow's update static method.
     ///
     /// @param event An SDL_Event holding the event to process.
     ///
-    void handle_event(SDL_Event* event);
+    static void handle_event(SDL_Event* event);
 
 public:
     ///
@@ -98,6 +105,6 @@ public:
     /// @param key The keycode of the key.
     ///
     bool is_char_released(int key);
-}
+};
 
 #endif
