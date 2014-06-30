@@ -60,8 +60,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define PATH "./"
 
-#define IMAGE_SIZE 128
-
+#define IMAGE_SIZE_WIDTH 128
+#define IMAGE_SIZE_HEIGHT 128
 #ifndef M_PI
 #define M_PI 3.141592654
 #endif
@@ -119,7 +119,10 @@ void move_object(const int id, const int direction) {
     cerr << "ERROR: mov_object: object id exceeds number of objects. Object id: " << id << endl;
     return;
   } 
-
+  if(direction < 0 || direction > 3) {
+    cerr << "ERROR: mov_object: direction is not valid " << direction << endl;
+    return;
+  }
  
   switch(direction) {
     //MOVE UP
@@ -139,7 +142,6 @@ void move_object(const int id, const int direction) {
     objects[id].x--;
     break;
   }
-
 
   //Wrap
   if(objects[id].x <0) objects[id].x = 600.0f;
@@ -167,8 +169,9 @@ static void init_buffers() {
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[2]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*18, sprite_data, GL_STATIC_DRAW);
 
+  //changing texture coords
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[3]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*12, sprite_tex_data, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*12, sprite_tex_data, GL_DYNAMIC_DRAW);
 
   //MAPS
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
@@ -195,6 +198,8 @@ static void init_buffers() {
 }
 
 static void animate(float dt) {
+
+  //animate map
   float map_display_right_x = map_bottom_x + map_display_width;
   float map_display_top_y = map_bottom_y + map_display_height;
 
@@ -210,6 +215,51 @@ static void animate(float dt) {
   if(map_display_top_y > map_height) {
     map_bottom_y = 0.0f; //wrap round
   }
+
+
+  //animate characters
+  static float time_to_next = 0.0f;
+  static int sequence[] = {1, 2, 3, 5, 7, 9, 11};
+  static int i = 0;
+
+  if(i == sizeof(sequence)/sizeof(int))
+    i = 0;
+
+  time_to_next += dt;
+  if(time_to_next > (1.0f/60.0f)) {
+    time_to_next = 0.0f;
+    
+    int currTile = sequence[i++];
+    GLfloat *tileSetPtr = &tileSetTexCoords[currTile*8];
+    //bottom left
+    sprite_tex_data[0] = tileSetPtr[0];
+    sprite_tex_data[1] = tileSetPtr[1];
+
+    //top left
+    sprite_tex_data[2] = tileSetPtr[2];
+    sprite_tex_data[3] = tileSetPtr[3];
+
+    //bottom right
+    sprite_tex_data[4] = tileSetPtr[4];
+    sprite_tex_data[5] = tileSetPtr[5];
+
+    //top left
+    sprite_tex_data[6] = tileSetPtr[2];
+    sprite_tex_data[7] = tileSetPtr[3];
+
+    //top right
+    sprite_tex_data[8] = tileSetPtr[6];
+    sprite_tex_data[9] = tileSetPtr[7];
+	
+    //bottom right
+    sprite_tex_data[10] = tileSetPtr[4];
+    sprite_tex_data[11] = tileSetPtr[5];
+    //changing texture coords
+    glBindBuffer(GL_ARRAY_BUFFER, vboIds[3]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*12, sprite_tex_data, GL_DYNAMIC_DRAW);
+
+  }
+
 }
 static void draw_map(int map_width, int map_height, float dt)
  {
@@ -338,7 +388,7 @@ static void draw_sprites( float dt)
  static void update(float dt)
  {
 
-   glLoadIdentity();
+   animate(dt);
    
  }
 
@@ -356,7 +406,7 @@ static void draw_sprites( float dt)
  {
    glClear( GL_COLOR_BUFFER_BIT );
 
-   //   draw_map(16, 16, dt);
+   draw_map(16, 16, dt);
    draw_sprites( dt);
    window->swap_buffers();
  }
@@ -653,8 +703,8 @@ GLuint shader_create(const string vs, const string fs) {
 
 static void load_tex_images()
 {
-   FILE *tex_file1 = NULL;
-   int bytes_read, image_sz = IMAGE_SIZE*IMAGE_SIZE*3;
+  FILE *tex_file1, *tex_file2 = NULL;
+  int bytes_read, image_sz = IMAGE_SIZE_WIDTH*IMAGE_SIZE_HEIGHT*3;
 
    tex_buf1 = new char[image_sz];
 
@@ -669,6 +719,22 @@ static void load_tex_images()
       assert(bytes_read == image_sz);  // some problem with file?
       fclose(tex_file1);
    }
+
+
+   // tex_buf2 = new char[image_sz];
+
+   // tex_file2 = fopen(PATH "../graphics/tiles/assets/characters_1.raw", "rb");
+   // if(tex_file1 == NULL) {
+   //   std::cerr << "ERROR: Couldn't load textures" << endl;
+   // }
+
+   // if (tex_file1 && tex_buf1)
+   // {
+   //    bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
+   //    assert(bytes_read == image_sz);  // some problem with file?
+   //    fclose(tex_file1);
+   // }
+
 }
   
 
@@ -690,7 +756,7 @@ static void init_textures()
   glGenTextures(1, &texture_id);
   glBindTexture(GL_TEXTURE_2D, texture_id);
   
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_SIZE, IMAGE_SIZE, 0,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_SIZE_WIDTH, IMAGE_SIZE_HEIGHT, 0,
                 GL_RGB, GL_UNSIGNED_BYTE, tex_buf1);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
@@ -911,8 +977,10 @@ int main ()
 
    generate_map_coords(map_width, map_height);
    init_buffers();
-   objects[1].x = 30.0f;
-   objects[1].y = 30.0f;
+   objects[0].x = 330.0f;
+   objects[0].y = 330.0f;
+   objects[1].x = 300.0f;
+   objects[1].y = 300.0f;
    // Setup the model world
    init_model_proj(&window);
    float dt = get_dt();
