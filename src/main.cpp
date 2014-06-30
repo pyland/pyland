@@ -47,8 +47,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "bcm_host.h"
-
 #include "game_window.hpp"
 
 #include "GLES/gl.h"
@@ -69,7 +67,7 @@ using namespace std;
 
 
 static  void init_ogl();
-static void init_model_proj();
+static void init_model_proj(GameWindow* window);
 static void redraw_scene(GameWindow* window, float dt);
 static void update(float dt);
 static void init_textures();
@@ -197,10 +195,12 @@ static void init_ogl()
  *
  ***********************************************************/
 
-static void init_model_proj()
+static void init_model_proj(GameWindow *window)
 {
-  //  glViewport(0, 0, 640, 480);
-  projection_matrix = glm::ortho(0.0f, 640.0f, 0.0f, 480.0f, -1.0f, 1.0f);
+  std::pair<int, int> size = window->get_size();
+  std::cout << "PARAMS: " << size.first << " SEconD " << size.second << std::endl;
+  glViewport(0, 0, size.first, size.second);
+  projection_matrix = glm::ortho(0.0f, (float)(size.first), 0.0f, (float)(size.second), -1.0f, 1.0f);
 }
 
 
@@ -604,7 +604,7 @@ static float get_dt() {
    float seconds = time_data.tv_usec /1000000.0f;
 
    //If we've just initialised, then we don't have a previous time - set it and return 0
-   if(curr_seconds = 0.0f) {
+   if(curr_seconds == 0.0f) {
      curr_seconds = seconds;
      return 0.0f;
    }
@@ -675,11 +675,12 @@ int main ()
    init_buffers();
 
    // Setup the model world
-   init_model_proj();
+
    float dt = get_dt();
 
    while (!window.check_close())
    {
+     init_model_proj(&window);
      //Get the time since the last iteration 
      dt = get_dt(); 
      //         printf("\n%f\n",dt);

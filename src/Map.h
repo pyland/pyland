@@ -7,7 +7,7 @@
 #include "EGL/eglext.h"
 
 
-class Map {
+deletclass Map {
   /**
    * Vertex Buffer Object Opengl identifiers
    */
@@ -90,7 +90,7 @@ class Map {
   GLuint load_shader(GLenum type, const std::string src);
 
   /** 
-   * this function crates the Opengl program
+   * This function crates the Opengl program
    */
   GLuint shader_create(const string vs, const string fs);
 
