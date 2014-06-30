@@ -179,6 +179,27 @@ void spawn_thread(std::string code,
     print_debug << "spawn_thread: Created PlayerThread" << std::endl;
 }
 
+void run_thread (Player &player, std::vector<PlayerThread> &playerthreads, std::string working_dir) {
+    spawn_thread(
+            "print('--- Inside " + std::to_string(0) + " ---')\n"
+            "player.monologue()\n"
+            "try:\n"
+            "    player.give_script(globals())\n"
+            "    for i in range(4):\n"
+            "        player.run_script()\n"
+            "        import time\n"
+            "        for _ in range(int(10**(i-1))):\n"
+            "           time.sleep(0.001)\n"
+            "except BaseException as e:\n"
+            "    print('Halted with {}.'.format(type(e)))\n"
+            "    raise\n",
+            player,
+            playerthreads,
+            working_dir
+    );   
+}
+
+
 ///
 /// Initialize Python interpreter, spawn threads and do fun stuff.
 ///
@@ -221,42 +242,9 @@ int main(int, char **) {
     PyEval_ReleaseLock();
     print_debug << "main: Released GIL " << std::endl;
 
-    spawn_thread(
-            "print('--- Inside " + std::to_string(0) + " ---')\n"
-            "player.monologue()\n"
-            "try:\n"
-            "    player.give_script(globals())\n"
-            "    for i in range(4):\n"
-            "        player.run_script()\n"
-            "        import time\n"
-            "        for _ in range(int(10**(i-1))):\n"
-            "           time.sleep(0.001)\n"
-            "except BaseException as e:\n"
-            "    print('Halted with {}.'.format(type(e)))\n"
-            "    raise\n",
-            playerJ,
-            playerthreads,
-            working_dir
-    );
+    run_thread(playerJ,playerthreads,working_dir);
     print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
-
-    spawn_thread(
-            "print('--- Inside " + std::to_string(0) + " ---')\n"
-            "player.monologue()\n"
-            "try:\n"
-            "    player.give_script(globals())\n"
-            "    for i in range(4):\n"
-            "        player.run_script()\n"
-            "        import time\n"
-            "        for _ in range(int(10**(i-1))):\n"
-            "           time.sleep(0.001)\n"
-            "except BaseException as e:\n"
-            "    print('Halted with {}.'.format(type(e)))\n"
-            "    raise\n",
-            playerA,
-            playerthreads,
-            working_dir
-    );
+    run_thread(playerA,playerthreads,working_dir);
     print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
 
     for (auto &playerthread : playerthreads) {
