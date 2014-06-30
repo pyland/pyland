@@ -124,7 +124,7 @@ void run_player(std::string code,
         print_debug << "run_player: Executed code" << std::endl;
     }
     catch (py::error_already_set &) {
-        print_debexecug << "run_player: Python-side error" << std::endl;
+        print_debug << "run_player: Python-side error" << std::endl;
         PyErr_Print();
     }
 
