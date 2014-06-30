@@ -9,10 +9,6 @@ extern "C" {
 #include <bcm_host.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#include <GLES2/gl2.h>
-#endif
-#ifdef USE_GL
-#include <GLES2/gl2.h>
 #endif
     
 #include <X11/Xlib.h>
@@ -335,12 +331,13 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     // Only set these if the init was successful.
     window_x = x;
     window_y = y;
+    window_width = w;
+    window_width = h;
 
     // Clean up any garbage in the SDL window.
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 #endif
-    glViewport(0, 0, w, h);
 }
 
 
@@ -468,6 +465,11 @@ void GameWindow::cancel_close() {
 
 bool GameWindow::check_close() {
     return close_requested;
+}
+
+
+std::pair<int, int> GameWindow::get_size() {
+    return std::pair<int, int> (window_width, window_height);
 }
 
 
