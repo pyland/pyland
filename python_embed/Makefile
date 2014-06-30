@@ -29,6 +29,7 @@ all: interpreter wrapper_functions.so
 
 debug: CXXFLAGS += -g
 debug: CXXFLAGS +=  -fno-elide-constructors
+debug: CXXFLAGS +=  -O0
 debug: CPPFLAGS += -DDEBUG
 debug: interpreter wrapper_functions.so
 
