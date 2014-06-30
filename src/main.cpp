@@ -675,7 +675,6 @@ int main ()
 {
    GameWindow window(640, 480, false);
    window.use_context();
-
    // Start OGLES
    init_ogl();
 
