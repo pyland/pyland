@@ -181,7 +181,6 @@ static void draw_map(int map_width, int map_height, float dt)
  ***********************************************************/
 static void init_ogl()
 {
-
   // Set background color and clear buffers
   glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
 
@@ -200,9 +199,7 @@ static void init_ogl()
 
 static void init_model_proj()
 {
-
   //  glViewport(0, 0, 640, 480);
-
   projection_matrix = glm::ortho(0.0f, 640.0f, 0.0f, 480.0f, -1.0f, 1.0f);
 }
 
@@ -260,7 +257,7 @@ static void generate_tileset_coords(int image_height, int image_width)
   int numTilesY = image_height / TILESET_ELEMENT_SIZE;
 
   //Each tile needs 8 floats to describe its position in the image
-  tileSetTexCoords = (GLfloat *) malloc(sizeof(GLfloat)* numTilesX * numTilesY * 4 * 2);
+  tileSetTexCoords = new GLfloat[sizeof(GLfloat)* numTilesX * numTilesY * 4 * 2];
   assert(tileSetTexCoords != 0);
   //TODO free this memory
 
@@ -315,7 +312,7 @@ static void generate_map_texcoords(int map_width, int map_height)
   //holds the map data
   //need 12 float for the 2D texture coordinates
   int num_floats = 12;
-  mapTexCoords = (GLfloat *)malloc(sizeof(GLfloat)*map_height*map_width*num_floats); 
+  mapTexCoords = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
   assert(mapTexCoords != 0);
 
   int x, y;
@@ -369,7 +366,7 @@ static void generate_map_coords(int map_width, int map_height)
   //holds the map data
    //need 18 floats for each coordinate as these hold 3D coordinates
   int num_floats = 18;
-  mapData = (GLfloat *)malloc(sizeof(GLfloat)*map_height*map_width*num_floats); 
+  mapData = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
   assert(mapData != 0);
   float scale = 16.0f;
   //generate the map data
@@ -536,7 +533,7 @@ static void load_tex_images()
    FILE *tex_file1 = NULL;
    int bytes_read, image_sz = IMAGE_SIZE*IMAGE_SIZE*3;
 
-   tex_buf1 =(char *) malloc(image_sz);
+   tex_buf1 = new char[image_sz];
 
    tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
    if(tex_file1 == NULL) {
@@ -586,8 +583,11 @@ static void exit_func(void)
    // clear screen
    glClear( GL_COLOR_BUFFER_BIT );
    
-   // release texture buffers
-   free(tex_buf1);
+   // release buffers
+   delete []tex_buf1;
+   delete []mapData;
+   delete []mapTexCoords;
+   delete []tileSetTexCoords;
 
    printf("\nClosed\n");
 } // exit_func()
