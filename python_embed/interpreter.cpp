@@ -13,8 +13,6 @@
 #include "playerthread.h"
 
 namespace py = boost::python;
-
-std::timed_mutex kill_thread_finish_signal;
 PyInterpreterState *main_interpreter_state;
 
 ///
@@ -24,8 +22,8 @@ PyInterpreterState *main_interpreter_state;
 /// Waiting can be more, but not less than, the required period, assuming that
 /// the user's clock is working as expected.
 ///
-/// @param        lock The mutex to wait on
-/// @param time_period The minimal length to wait on.
+/// @param lock        Mutex to wait on
+/// @param time_period Minimal length of time to wait for
 ///
 bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
     auto end = std::chrono::system_clock::now() + time_period;
@@ -47,13 +45,19 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 }
 
 ///
-/// Kills threads. Currently only supports a single thread.
-/// Uses globals kill_thread_finish_signal and thread_id.
+/// Kills threads that haven't had an API call often enough.
 ///
-void thread_killer(std::vector<PlayerThread> &playerthreads) {
+/// @param finish_signal timed_mutex to wait on. This is used to allow the function
+///                      to go into interruptable sleep. The mutex should be locked
+///                      before calling and until the thread is meant to finish.
+///
+/// @param playerthreads Vector of PlayerThread objects with thread_ids for the
+///                      repective threads.
+///
+void thread_killer(std::timed_mutex &finish_signal, std::vector<PlayerThread> &playerthreads) {
     while (true) {
         // Nonbloking sleep; allows safe quit
-        if (try_lock_for_busywait(kill_thread_finish_signal, std::chrono::milliseconds(100))) {
+        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(100))) {
             break;
         }
 
@@ -65,6 +69,8 @@ void thread_killer(std::vector<PlayerThread> &playerthreads) {
 
                 print_debug << "Attempting to kill thread id " << playerthread.thread_id << "." << std::endl;
 
+                // Set an asynchronous exception.
+                // This is not guaranteed to kill the thread, or to exit gracefully when it does.
                 PyThreadState_SetAsyncExc(playerthread.thread_id, PyExc_SystemError);
             }
             playerthread.set_clean();
@@ -78,10 +84,15 @@ void thread_killer(std::vector<PlayerThread> &playerthreads) {
 ///
 /// A thread function representing a player character.
 ///
-/// @param code        C++ string representing the code to be exeuted.
-/// @param player      Reference to the Player object that moderates execution.
-/// @param working_dir Path, as a string, to inject into Python's sys.path, to allow relative imports.
-///                    This should be the current path, to allow importing our shared object files.
+/// @param code              std::string representing the code to be exeuted
+///
+/// @param player            Player object that moderates execution
+///
+/// @param thread_id_promise Promise allowing the thread to asynchronously return the thread's id,
+///                          according to CPython.
+///
+/// @param working_dir       Path, as a string, to inject into Python's sys.path, to allow relative imports.
+///                          This should be the current path, to allow importing our shared object files
 ///
 void run_player(std::string code,
                 py::api::object player,
@@ -134,10 +145,14 @@ void run_player(std::string code,
 ///
 /// Creates a thread representing a player character.
 ///
-/// @param code        C++ string representing the code to be exeuted.
-/// @param player      Reference to the Player object that moderates execution.
-/// @param working_dir Path, as a string, to inject into Python's sys.path, to allow relative imports.
-///                    This should be the current path, to allow importing our shared object files.
+/// @param code          std::string representing the code to be exeuted
+///
+/// @param player        Reference to the Player instance that moderates execution
+///
+/// @param playerthreads Vector of PlayerThreads for this to (unsafely) add to
+///
+/// @param working_dir   Path, as a string, to inject into Python's sys.path, to allow relative imports.
+///                      This should be the current path, to allow importing our shared object files
 ///
 void spawn_thread(std::string code,
                   Player &player,
@@ -179,6 +194,16 @@ void spawn_thread(std::string code,
     print_debug << "spawn_thread: Created PlayerThread" << std::endl;
 }
 
+///
+/// Simple wrapper around spawn_thread
+///
+/// @param player      Reference to the Player instance that moderates execution
+///
+/// @param playerthreads Vector of PlayerThreads for this to (unsafely) add to
+///
+/// @param working_dir Path, as a string, to inject into Python's sys.path, to allow relative imports.
+///                    This should be the current path, to allow importing our shared object files
+///
 void run_thread (Player &player, std::vector<PlayerThread> &playerthreads, std::string working_dir) {
     spawn_thread(
             "print('--- Inside " + std::to_string(0) + " ---')\n"
@@ -199,7 +224,6 @@ void run_thread (Player &player, std::vector<PlayerThread> &playerthreads, std::
     );   
 }
 
-
 ///
 /// Initialize Python interpreter, spawn threads and do fun stuff.
 ///
@@ -209,10 +233,12 @@ int main(int, char **) {
 
     print_debug << "main: Initialized Python" << std::endl;
 
-    // Produe a locked mutex; unlock to allow thread_killer to die
-    std::vector<PlayerThread> playerthreads;
+    // Produce a locked mutex; unlock to allow thread_killer to die
+    std::timed_mutex kill_thread_finish_signal;
     kill_thread_finish_signal.lock();
-    std::thread kill_thread(thread_killer, std::ref(playerthreads));
+
+    std::vector<PlayerThread> playerthreads;
+    std::thread kill_thread(thread_killer, std::ref(kill_thread_finish_signal), std::ref(playerthreads));
 
     print_debug << "main: Spawned Kill thread" << std::endl;
 
