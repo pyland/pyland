@@ -18,8 +18,8 @@ extern "C" {
 #include <EGL/eglext.h>
 #endif
 
-#include <SDL.h>
-#include <SDL_syswm.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 }
 
 ///
