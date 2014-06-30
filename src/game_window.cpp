@@ -125,14 +125,13 @@ GameWindow::~GameWindow() {
 void GameWindow::init_sdl() {
     int result;
     
-#ifdef USE_GLES
     bcm_host_init();
-#endif
     
 #ifdef GAME_WINDOW_DEBUG
     std::cerr << "Initializing SDL..." << std::endl;
 #endif
-    result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+
+    result = SDL_Init (SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");

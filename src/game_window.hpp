@@ -29,9 +29,7 @@ class InputManager;
 
 
 ///
-/// Sets up OpenGL|ES and handles basic SDL functionality.
-///
-/// Input management is handled in a separate class.
+/// Sets up OpenGL|ES and handles SDL functionality.
 ///
 class GameWindow {
 private:
@@ -113,11 +111,6 @@ private:
     SDL_GLContext sdl_gl_context;
 #endif
 
-    ///
-    /// Mapping of SDL window IDs to GameWindows.
-    ///
-    static std::map<Uint32,GameWindow*> windows;
-    
     ///
     /// Stores X11 display and window information.
     ///
@@ -243,11 +236,6 @@ public:
     /// Swaps the opengl buffers for this window.
     ///
     void swap_buffers();
-
-    ///
-    /// Input manager getter.
-    ///
-    InputManager* get_input_manager();
 };
 
 #endif
