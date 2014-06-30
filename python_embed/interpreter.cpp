@@ -44,6 +44,8 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
     }
 }
 
+std::mutex finish_signal;
+
 ///
 /// Kills threads that haven't had an API call often enough.
 ///
@@ -54,12 +56,18 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 /// @param playerthreads Vector of PlayerThread objects with thread_ids for the
 ///                      repective threads.
 ///
-void thread_killer(std::timed_mutex &finish_signal, std::vector<PlayerThread> &playerthreads) {
+void thread_killer(std::timed_mutex &finish_signal,
+                   std::mutex &playerthreads_editable,
+                   std::vector<PlayerThread> &playerthreads) {
     while (true) {
         // Nonbloking sleep; allows safe quit
-        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(100))) {
+        print_debug << "Starting sleep in kill thread " << "." << std::endl;
+        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(10))) {
             break;
         }
+        print_debug << "Slept in kill thread " << "." << std::endl;
+
+        std::lock_guard<std::mutex> lock(playerthreads_editable);
 
         // Go through the available playerthread objects and kill those that
         // haven't had an API call.
@@ -204,7 +212,7 @@ void spawn_thread(std::string code,
 /// @param working_dir Path, as a string, to inject into Python's sys.path, to allow relative imports.
 ///                    This should be the current path, to allow importing our shared object files
 ///
-void run_thread (Player &player, std::vector<PlayerThread> &playerthreads, std::string working_dir) {
+void run_thread(Player &player, std::vector<PlayerThread> &playerthreads, std::string working_dir) {
     spawn_thread(
             "print('--- Inside " + std::to_string(0) + " ---')\n"
             "player.monologue()\n"
@@ -237,15 +245,22 @@ int main(int, char **) {
     std::timed_mutex kill_thread_finish_signal;
     kill_thread_finish_signal.lock();
 
-    std::vector<PlayerThread> playerthreads;
-    std::thread kill_thread(thread_killer, std::ref(kill_thread_finish_signal), std::ref(playerthreads));
+    std::mutex playerthreads_editable;
+
+    std::vector<PlayerThread> playerthreads = {};
+    std::thread kill_thread(
+        thread_killer,
+        std::ref(kill_thread_finish_signal),
+        std::ref(playerthreads_editable),
+        std::ref(playerthreads)
+    );
 
     print_debug << "main: Spawned Kill thread" << std::endl;
 
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    std::list<Player> all_players =  {Player(Vec2D(0, 0), "John"),Player(Vec2D(0, 0), "Adam")};
+    std::list<Player> all_players = {Player(Vec2D(0, 0), "John"), Player(Vec2D(0, 0), "Adam")};
     std::string working_dir;
 
     // All Python errors should result in a Python traceback    
@@ -268,6 +283,8 @@ int main(int, char **) {
     print_debug << "main: Released GIL " << std::endl;
 
     for (auto p : all_players) {
+        std::lock_guard<std::mutex> lock(playerthreads_editable);
+
         run_thread(p, playerthreads, working_dir);
         print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
     }
