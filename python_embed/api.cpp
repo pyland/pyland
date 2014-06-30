@@ -56,13 +56,18 @@ void Player::run_script() {
 void Player::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
     std::string from_file =
-    // TODO: find a more scalable approach
-    "def move(x):\n\t"
-    "player.move(x)\n"
-    "def monologue(x):\n\t"
-    "player.monologue(x)\n"
-    "north, south, east, west = Vec2D(0, 1), Vec2D(0, -1), Vec2D(1, 0), Vec2D(-1, 0)\n" 
-    "def script(player):\n\t" + read_file() + "\n\treturn script\n";
+        // TODO: find a more scalable approach
+        "def move(x):\n"
+        "    player.move(x)\n"
+    
+        "def monologue():\n"
+        "    player.monologue()\n"
+    
+        "north, south, east, west = Vec2D(0, 1), Vec2D(0, -1), Vec2D(1, 0), Vec2D(-1, 0)\n"
+    
+        "def script(player):\n"
+        "    " + read_file();
+
     print_debug << from_file << std::endl;
     script = py::exec(from_file.c_str(), tempoary_scope);
     script = tempoary_scope["script"];
@@ -77,7 +82,7 @@ std::string Player::read_file() {
         strStream << inFile.rdbuf(); //read the file
         std::string old_text = strStream.str();
         boost::regex replace("\\n");
-        std::string new_text = boost::regex_replace(old_text, replace, "\n\t");
+        std::string new_text = boost::regex_replace(old_text, replace, "\n    ");
         return new_text;
     } else {
         print_debug << "file opening unsuccessful" << std::endl;

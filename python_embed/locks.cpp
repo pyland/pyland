@@ -10,7 +10,7 @@ GIL::GIL() {
 	print_debug << inst << " Aquiring GIL" << std::endl;
 	gilstate = PyGILState_Ensure();
 	// PyEval_AcquireLock();
-	print_debug << inst << " GIL aquired: " << PyGILState_Check() << std::endl;
+	print_debug << inst << " GIL aquired: " << std::endl;
 }
 
 GIL::~GIL() {
