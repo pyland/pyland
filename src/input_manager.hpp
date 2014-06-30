@@ -20,23 +20,27 @@ extern "C" {
 class InputManager {
 private:
     ///
-    /// Set of currently pressed keys (scancodes)
+    /// Set of currently pressed keys (scancodes).
     ///
-    /// Use this when the key's layout is important
+    /// Use this when the key's layout is important.
     ///
     std::set<SDL_Scancode> pressed_keys;
     ///
-    /// Set of currently pressed keys (keycodes)
+    /// Set of currently pressed keys (keycodes).
+    ///
+    /// Use this when the key's character is important.
     ///
     std::set<SDL_Keycode>  pressed_chars;
 
 public:
     ///
-    /// Prepares a new input manager
+    /// Prepares a new input manager.
     ///
     /// @param window The associated window to receive events from.
     ///
     InputManager(GameWindow* window);
+
+    
     
     ~InputManager();
 }
