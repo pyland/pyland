@@ -198,8 +198,8 @@ int main(int, char **) {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    Player player = Player(Vec2D(0, 0), "");
-
+    Player playerJ = Player(Vec2D(0, 0), "");
+    Player playerA = Player(Vec2D(0, 0), "");
     std::string working_dir;
 
     // All Python errors should result in a Python traceback    
@@ -210,7 +210,8 @@ int main(int, char **) {
         sys_module.attr("path").attr("append")(py::str(working_dir));
         py::import("wrapper_functions");
 
-        player = Player(Vec2D(0, 0), "John");
+        playerJ = Player(Vec2D(0, 0), "John");
+        playerA = Player(Vec2D(0, 0), "Adam");
     } catch (py::error_already_set) {
         print_debug << "main: Unexpected error setting path" << std::endl;
         PyErr_Print();
@@ -222,26 +223,43 @@ int main(int, char **) {
     PyEval_ReleaseLock();
     print_debug << "main: Released GIL " << std::endl;
 
-    for (int i = 0; i < 1; ++i) {
-        spawn_thread(
-                "print('--- Inside " + std::to_string(i) + " ---')\n"
-                "player.monologue()\n"
-                "try:\n"
-                "    player.give_script(globals())\n"
-                "    for i in range(4):\n"
-                "        player.run_script()\n"
-                "        import time\n"
-                "        for _ in range(10**i):\n"
-                "           time.sleep(0.01)\n"
-                "except BaseException as e:\n"
-                "    print('Halted with {}.'.format(type(e)))\n"
-                "    raise\n",
-                player,
-                playerthreads,
-                working_dir
-        );
-        print_debug << "main: Spawned PlayerThread " << i << std::endl;
-    }
+    spawn_thread(
+            "print('--- Inside " + std::to_string(0) + " ---')\n"
+            "player.monologue()\n"
+            "try:\n"
+            "    player.give_script(globals())\n"
+            "    for i in range(4):\n"
+            "        player.run_script()\n"
+            "        import time\n"
+            "        for _ in range(10**i):\n"
+            "           time.sleep(0.01)\n"
+            "except BaseException as e:\n"
+            "    print('Halted with {}.'.format(type(e)))\n"
+            "    raise\n",
+            playerJ,
+            playerthreads,
+            working_dir
+    );
+    print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
+
+    spawn_thread(
+            "print('--- Inside " + std::to_string(0) + " ---')\n"
+            "player.monologue()\n"
+            "try:\n"
+            "    player.give_script(globals())\n"
+            "    for i in range(4):\n"
+            "        player.run_script()\n"
+            "        import time\n"
+            "        for _ in range(10**i):\n"
+            "           time.sleep(0.01)\n"
+            "except BaseException as e:\n"
+            "    print('Halted with {}.'.format(type(e)))\n"
+            "    raise\n",
+            playerA,
+            playerthreads,
+            working_dir
+    );
+    print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
 
     for (auto &playerthread : playerthreads) {
         playerthread.thread->join();
