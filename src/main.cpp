@@ -1,4 +1,4 @@
-/*
+/* 
 Copyright (c) 2012, Broadcom Europe Ltd
 All rights reserved.
 
@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     
 #include <cstdio>
 #include <cstdlib>
-
 #include <cmath>
 #include <cassert>
 #include <unistd.h>
