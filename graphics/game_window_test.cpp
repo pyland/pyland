@@ -1,11 +1,9 @@
-
 #include <iostream>
 
 extern "C" {
 #include <SDL.h>
   
 #ifdef USE_GLES
-#include <bcm_host.h>
 #include <GLES2/gl2.h>
 #endif
 
@@ -19,10 +17,6 @@ extern "C" {
 
 int main(int argc, char** argv) {
     std::cerr << "Startup..." << std::endl;
-    
-#ifdef USE_GLES
-    bcm_host_init ();
-#endif
     
     try {
         GameWindow window = GameWindow(640, 400, false);
