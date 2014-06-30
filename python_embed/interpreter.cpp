@@ -103,14 +103,14 @@ void run_player(std::string code,
         // and the main module object is needed to have
         // juicy, juicy introspection and monkey-patching.
         auto main_module = py::import("__main__");
-        auto main_namespace = main_module.attr("__dict__");
+        auto main_namespace = main_module.attr("__dict__").attr("copy")();
 
         // Inject a player; will be instantiated in C++
-        main_module.attr("player") = player;
+        main_namespace["player"] = player;
 
         // Pass the Vec2D class. Should be neater, but it's not obvious how.
         // Currently this gets the class object from an instance object.
-        main_module.attr("Vec2D") = py::object(Vec2D(0, 0)).attr("__class__");
+        main_namespace["Vec2D"] = py::object(Vec2D(0, 0)).attr("__class__");
 
         print_debug << "run_player: Basic setup" << std::endl;
         // Totally a hack. Remove ASA(R)P.
@@ -124,7 +124,7 @@ void run_player(std::string code,
         print_debug << "run_player: Executed code" << std::endl;
     }
     catch (py::error_already_set &) {
-        print_debug << "run_player: Python-side error" << std::endl;
+        print_debexecug << "run_player: Python-side error" << std::endl;
         PyErr_Print();
     }
 
@@ -198,8 +198,8 @@ int main(int, char **) {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    Player playerJ = Player(Vec2D(0, 0), "");
-    Player playerA = Player(Vec2D(0, 0), "");
+    Player playerJ = Player(Vec2D(0, 0), "John");
+    Player playerA = Player(Vec2D(0, 0), "Adam");
     std::string working_dir;
 
     // All Python errors should result in a Python traceback    
@@ -209,10 +209,8 @@ int main(int, char **) {
 
         sys_module.attr("path").attr("append")(py::str(working_dir));
         py::import("wrapper_functions");
-
-        playerJ = Player(Vec2D(0, 0), "John");
-        playerA = Player(Vec2D(0, 0), "Adam");
-    } catch (py::error_already_set) {
+    }
+    catch (py::error_already_set) {
         print_debug << "main: Unexpected error setting path" << std::endl;
         PyErr_Print();
         return 1;
@@ -231,8 +229,8 @@ int main(int, char **) {
             "    for i in range(4):\n"
             "        player.run_script()\n"
             "        import time\n"
-            "        for _ in range(10**i):\n"
-            "           time.sleep(0.01)\n"
+            "        for _ in range(int(10**(i-1))):\n"
+            "           time.sleep(0.001)\n"
             "except BaseException as e:\n"
             "    print('Halted with {}.'.format(type(e)))\n"
             "    raise\n",
@@ -250,8 +248,8 @@ int main(int, char **) {
             "    for i in range(4):\n"
             "        player.run_script()\n"
             "        import time\n"
-            "        for _ in range(10**i):\n"
-            "           time.sleep(0.01)\n"
+            "        for _ in range(int(10**(i-1))):\n"
+            "           time.sleep(0.001)\n"
             "except BaseException as e:\n"
             "    print('Halted with {}.'.format(type(e)))\n"
             "    raise\n",
