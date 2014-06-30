@@ -67,44 +67,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 using namespace std;	
 
-typedef struct
-{
-  uint32_t screen_width;
-  uint32_t screen_height;
-  // OpenGL|ES objects
-  EGLDisplay display;
-  EGLSurface surface;
-  EGLContext context;
-  GLuint tex[6];
-  // model rotation vector and direction
-  GLfloat rot_angle_x_inc;
-  GLfloat rot_angle_y_inc;
-  GLfloat rot_angle_z_inc;
-  // current model rotation angles
-  GLfloat rot_angle_x;
-  GLfloat rot_angle_y;
-  GLfloat rot_angle_z;
-  // current distance from camera
-  GLfloat distance;
-  GLfloat distance_inc;
-  // pointers to texture buffers
-  char *tex_buf1;
-  char *tex_buf2;
-  char *tex_buf3;
-} CUBE_STATE_T;
 
-static  void init_ogl(CUBE_STATE_T *state);
-static void init_model_proj(CUBE_STATE_T *state);
-static void reset_model(CUBE_STATE_T *state);
-static GLfloat inc_and_wrap_angle(GLfloat angle, GLfloat angle_inc);
-static GLfloat inc_and_clip_distance(GLfloat distance, GLfloat distance_inc);
-static void redraw_scene(GameWindow* window, CUBE_STATE_T *state,float dt);
-static void update_model(CUBE_STATE_T *state, float dt);
-static void init_textures(CUBE_STATE_T *state);
-static void load_tex_images(CUBE_STATE_T *state);
+static  void init_ogl();
+static void init_model_proj();
+static void redraw_scene(GameWindow* window, float dt);
+static void update(float dt);
+static void init_textures();
+static void load_tex_images();
 static void exit_func(void);
 static volatile int shutdown;
-static CUBE_STATE_T _state, *state=&_state;
+
 #define VERTEX_POS_INDX 0
 #define VERTEX_TEXCOORD0_INDX 1
 static void draw_map(int image_height, int image_width, float dt);
@@ -113,8 +85,13 @@ GLuint program_obj =0;
 GLuint texture_id = 0;
 const int map_height = 16;
 const int map_width = 16;
+float map_scroll_speed = 1.0f; //1 tile a second
+float map_bottom_x = 0.0;
+float map_bottom_y = 0.0; 
+const int map_display_width = 8;
+const int map_display_height = 8;
 
-
+char* tex_buf1;
 glm::mat4 projection_matrix;
 
 static void init_buffers() {
@@ -123,40 +100,26 @@ static void init_buffers() {
   //vboIds[0] = position
   //vboIds[1] = texture 0
   glGenBuffers(2, vboIds);
-  //  cout << "HERE: " << hex<< glGetError() << endl;
+
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
   glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*18, mapData, GL_STATIC_DRAW);
   
 
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
   glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*12, mapTexCoords, GL_STATIC_DRAW);
-  //  cout << "CODE: " << endl << glGetError() << endl;
-  
 
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
   glEnableVertexAttribArray(VERTEX_POS_INDX);
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
   glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
-  //  cout << "CODE: " << endl << glGetError() << endl;
+
   glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE,0, 0);
   glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
-  //  cout << "HERE NOW : " << hex<< glGetError() << endl;
 
-
-  //  cout << "HERE NOW : " << hex<< glGetError() << endl;
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D,texture_id);
-
-  //p  cout << "CODE: " << endl << glGetError() << endl;
-
-
 }
 
-float map_scroll_speed = 1.0f; //1 tile a second
-float map_bottom_x = 0.0;
-float map_bottom_y = 0.0; 
-const int map_display_width = 8;
-const int map_display_height = 8;
 static void animate(float dt) {
   float map_display_right_x = map_bottom_x + map_display_width;
   float map_display_top_y = map_bottom_y + map_display_height;
@@ -176,45 +139,17 @@ static void animate(float dt) {
 }
 static void draw_map(int map_width, int map_height, float dt)
 {
-
-  //Draw the tiles
-  //TODO, improve efficency
-  //  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  //genera  data 
-  //  glEnableVertexAttribArray(VERTEX_POS_INDX);
-  //glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FLASE, 0, mapData);
-  //  glEnableClientState( GL_VERTEX_ARRAY );
-  //     glVertexPointer(3, GL_FLOAT, 0, mapData );
-  glDisable(GL_CULL_FACE);
-  //            glEnable(GL_CULL_FACE);
-     //   glDrawArrays(GL_TRIANGLES, 0, map_height*map_width*6;
-  //  glEnableClientState(GL_VERTEX_ARRAY);
   animate(dt);
-  //  cout << "HERE" << endl;
+
   glm::mat4 model = glm::mat4(1.0f);
   glm::mat4 translated = glm::translate(model, glm::vec3(map_bottom_x, map_bottom_y, 0.0f));
 
-  //i  glTranslatef(map_bottom_x, map_bottom_y, 0);
-  //  glTranslatef(-10.0f, 0.0f, 0.0f);
   glUseProgram(program_obj);
-  //  glLoadIdentity();
-  //Get modelview and projection matrices
-  //  cout << "ERROR: " << hex << glGetError() << endl;
-  //  glGetFloatv(GL_MODELVIEW_MATRIX, modelview_matrix);
-  //  cout << "ERROR: " << hex << glGetError() << endl;
-  //  for(int i = 0; i < 16; i++){
-  //    if( i % 4 == 0) cout << endl;
-    //    cout << modelview_matrix[i] << " ";
-  //  }
-  //  cout << "NEW ERROR: " << hex << glGetError() << endl;
-  //    glGetFloatv(GL_PROJECTION_MATRIX, projection_matrix);
-
     
   glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
   glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_modelview"), 1, GL_FALSE, glm::value_ptr(translated));
 
-  //  cout << "UNIFORM" << glGetUniformLocation(program_obj, "mat_projection")<< endl;
+
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
   glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, 0);
   glEnableVertexAttribArray(VERTEX_POS_INDX);
@@ -237,40 +172,14 @@ static void draw_map(int map_width, int map_height, float dt)
 
 
   glDrawArrays(GL_TRIANGLES, 0, 6*map_width*map_height);
-  //  cout << endl << "DT: " << dt << endl;
-
-	  //	  glBindAttribLocation(program_obj, 1, "
-
-	  //	  glDrawArrays(GL_TRIANGLES, 0, 3);
-	  /*
-	  int x, y;
-  int count = 0;
-  for(x = 0; x < map_width; x++)
-    {
-      for(y = 0; y < map_height; y++)
-	{	  
-
-	  // draw first 4 vertices
-	       	  glDrawArrays( GL_TRIANGLE_STRIP, count,4);
-	  	  count += 4;
-
-	}
-	}*/
  
 }
 
 /***********************************************************
- * Name: init_ogl
- *
- * Arguments:
- *       CUBE_STATE_T *state - holds OGLES model info
- *
- * Description: Sets the display, OpenGL|ES context and screen stuff
- *
- * Returns: void
+ * Initialise the opengl specifics for the game
  *
  ***********************************************************/
-static void init_ogl(CUBE_STATE_T *state)
+static void init_ogl()
 {
 
   // Set background color and clear buffers
@@ -278,130 +187,54 @@ static void init_ogl(CUBE_STATE_T *state)
 
   // Enable back face culling.
   glEnable(GL_CULL_FACE);
-
-  glMatrixMode(GL_MODELVIEW);
 }
 
 /***********************************************************
  * Name: init_model_proj
- *
- * Arguments:
- *       CUBE_STATE_T *state - holds OGLES model info
- *
+
  * Description: Sets the OpenGL|ES model to default values
  *
  * Returns: void
  *
  ***********************************************************/
 
-static void init_model_proj(CUBE_STATE_T *state)
+static void init_model_proj()
 {
 
   //  glViewport(0, 0, 640, 480);
 
   projection_matrix = glm::ortho(0.0f, 640.0f, 0.0f, 480.0f, -1.0f, 1.0f);
-
-   
-  //  glEnableClientState( GL_VERTEX_ARRAY );
-  //  glVertexPointer(3, GL_SHORT, 0, mapData );
-
-  reset_model(state);
 }
 
-/***********************************************************
- * Name: reset_model
- *
- * Arguments:
- *       CUBE_STATE_T *state - holds OGLES model info
- *
- * Description: Resets the Model projection and rotation direction
- *
- * Returns: void
- *
- ***********************************************************/
-static void reset_model(CUBE_STATE_T *state)
-{
-  // reset model position
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-
-}
 
 /***********************************************************
  * Name: update_model
  *
- * Arguments:
- *       CUBE_STATE_T *state - holds OGLES model info
- *
+
  * Description: Updates model projection to current position/rotation
  *
  * Returns: void
  *
  ***********************************************************/
-static void update_model(CUBE_STATE_T *state, float dt)
+static void update(float dt)
 {
 
   glLoadIdentity();
 }
 
 /***********************************************************
- * Name: inc_and_wrap_angle
- *
- * Arguments:
- *       GLfloat angle     current angle
- *       GLfloat angle_inc angle increment
- *
- * Description:   Increments or decrements angle by angle_inc degrees
- *                Wraps to 0 at 360 deg.
- *
- * Returns: new value of angle
- *
- ***********************************************************/
-static GLfloat inc_and_wrap_angle(GLfloat angle, GLfloat angle_inc)
-{
-  
-  return angle;
-}
-
-/***********************************************************
- * Name: inc_and_clip_distance
- *
- * Arguments:
- *       GLfloat distance     current distance
- *       GLfloat distance_inc distance increment
- *
- * Description:   Increments or decrements distance by distance_inc units
- *                Clips to range
- *
- * Returns: new value of angle
- *
- ***********************************************************/
-static GLfloat inc_and_clip_distance(GLfloat distance, GLfloat distance_inc)
-{
-
-  return distance;
-}
-
-/***********************************************************
  * Name: redraw_scene
  *
- * Arguments:
- *       CUBE_STATE_T *state - holds OGLES model info
- *
+
  * Description:   Draws the model and calls eglSwapBuffers
  *                to render to screen
  *
  * Returns: void
  *
  ***********************************************************/
-static void redraw_scene(GameWindow *window, CUBE_STATE_T *state, float dt)
+static void redraw_scene(GameWindow *window, float dt)
 {
-  // Start with a clear screen
   glClear( GL_COLOR_BUFFER_BIT );
-
-  // Draw first (front) face:
-  // Bind texture surface to current vertices
-  //glBindTexture(GL_TEXTURE_2D, state->tex[0]);
   
   draw_map(16, 16, dt);
 
@@ -438,12 +271,10 @@ static void generate_tileset_coords(int image_height, int image_width)
   //TODo: DIV ZEro HERRE 
 
   //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
-  int x;
-  int y;
   //generate the coordinates for each tile
-  for(x = 0; x < numTilesX; x++)
+  for(int x = 0; x < numTilesX; x++)
     {
-      for(y = 0; y< numTilesY; y++)
+      for(int y = 0; y< numTilesY; y++)
 	{
 	  //bottom left
 	  tileSetTexCoords[x* numTilesY*4*2+y*(4*2)] = tileSetXOffset;
@@ -466,11 +297,6 @@ static void generate_tileset_coords(int image_height, int image_width)
       tileSetXOffset += tileSetXInc;
       tileSetYOffset = 0.0;
     }
-
- 
-
-
-
 }
 
 
@@ -526,27 +352,9 @@ static void generate_map_texcoords(int map_width, int map_height)
 	  mapTexCoords[x*map_height*num_floats + y*num_floats+10] = tileSetPtr[4];
 	  mapTexCoords[x*map_height*num_floats + y*num_floats+11] = tileSetPtr[5];
 
-  
-	}
+ 	}
     }
-
-
-  
 }
-
-/***********************************************************
- * 2        3, 5
- *    * --- * 
- *    |    /|
- *    |   / |
- *    | /   |
- *    *     |
- * --- *
- * 1, 4      6 
- *
- * We want the same winding order for the triangle geometry
- ***********************************************************/
-
 
 /***********************************************************
  * Name: generate_map_coords
@@ -675,7 +483,7 @@ GLuint shader_create(const string vs, const string fs) {
   if(program_obj == 0) {
     cerr << "ERROR FLAG: " << glGetError();
     std::cerr << "ERROR: SHADER PROGRAM CREATION. Could not create program object." << std::endl;
-    return NULL;
+    return 0;
   }
   cout << "PROGRAM: " << program_obj << endl;
   glAttachShader(program_obj, vertex_shader);
@@ -685,7 +493,6 @@ GLuint shader_create(const string vs, const string fs) {
   glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
   glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
 
-
   //Link the program
   glLinkProgram(program_obj);
 
@@ -694,7 +501,6 @@ GLuint shader_create(const string vs, const string fs) {
   
   if(!linked) {
     GLint info_len = 0;
-
     
     glGetProgramiv(program_obj, GL_INFO_LOG_LENGTH, &info_len);
 
@@ -706,10 +512,9 @@ GLuint shader_create(const string vs, const string fs) {
       delete []info_log;
     }
     glDeleteProgram(program_obj);
-    return NULL;
+    return 0;
   }
-   cout << "PROGRAM IS RETURN HERE " << program_obj << endl;
-  //return program
+  
   return program_obj;
 }
 
@@ -725,21 +530,22 @@ GLuint shader_create(const string vs, const string fs) {
  * Returns: void
  *
  ***********************************************************/
-static void load_tex_images(CUBE_STATE_T *state)
+
+static void load_tex_images()
 {
    FILE *tex_file1 = NULL;
    int bytes_read, image_sz = IMAGE_SIZE*IMAGE_SIZE*3;
 
-   state->tex_buf1 =(char *) malloc(image_sz);
+   tex_buf1 =(char *) malloc(image_sz);
 
    tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
    if(tex_file1 == NULL) {
      std::cerr << "ERROR: Couldn't load textures" << endl;
    }
 
-   if (tex_file1 && state->tex_buf1)
+   if (tex_file1 && tex_buf1)
    {
-      bytes_read=fread(state->tex_buf1, 1, image_sz, tex_file1);
+      bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
       assert(bytes_read == image_sz);  // some problem with file?
       fclose(tex_file1);
    }
@@ -749,54 +555,28 @@ static void load_tex_images(CUBE_STATE_T *state)
 /***********************************************************
  * Name: init_textures
  *
-
- * Arguments:
- *       CUBE_STATE_T *state - holds OGLES model info
- *
  * Description:   Initialise OGL|ES texture surfaces to use image
  *                buffers
  *
  * Returns: void
  *
  ***********************************************************/
-static void init_textures(CUBE_STATE_T *state)
+static void init_textures()
 {
   
   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-  load_tex_images(state);
+  load_tex_images();
   glGenTextures(1, &texture_id);
   glBindTexture(GL_TEXTURE_2D, texture_id);
   
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_SIZE, IMAGE_SIZE, 0,
-                GL_RGB, GL_UNSIGNED_BYTE, state->tex_buf1);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
+                GL_RGB, GL_UNSIGNED_BYTE, tex_buf1);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
-   // setup overall texture environment
-   //glTexCoordPointer(2, GL_FLOAT, 0, mapTexCoords);
-   //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-   
-   //glEnable(GL_TEXTURE_2D);
-   /*
-   // load three texture buffers but use them on six OGL|ES texture surfaces
-   load_tex_images(state);
-   glGenTextures(6, &state->tex[0]);
-
-   // setup first texture
-   glBindTexture(GL_TEXTURE_2D, state->tex[0]);
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_SIZE, IMAGE_SIZE, 0,
-                GL_RGB, GL_UNSIGNED_BYTE, state->tex_buf1);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
-
-   // setup overall texture environment
-   glTexCoordPointer(2, GL_FLOAT, 0, mapTexCoords);
-   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-   
-   glEnable(GL_TEXTURE_2D);
-   */
 }
+
 
 //------------------------------------------------------------------------------
 
@@ -806,8 +586,8 @@ static void exit_func(void)
    // clear screen
    glClear( GL_COLOR_BUFFER_BIT );
    
-// release texture buffers
-   free(state->tex_buf1);
+   // release texture buffers
+   free(tex_buf1);
 
    printf("\nClosed\n");
 } // exit_func()
@@ -815,17 +595,10 @@ static void exit_func(void)
 
 static float get_dt() {
 
-  //Hold the current time
+   //Hold the current time
    static float    curr_seconds = 0.0f; //seconds
 
    //Get the current time
-   //   time_t    s;  //seconds
-   //   struct timespec spec;
-
-   //   clock_gettime(CLOCK_REALTIME, &spec);
-   
-   //   s = spec.tv_sec;
-   //   float seconds = spec.tv_nsec / (float)1.0e9; // Convert nanoseconds to seconds
    struct timeval time_data;
    gettimeofday(&time_data, NULL);
    float seconds = time_data.tv_usec /1000000.0f;
@@ -870,12 +643,12 @@ bool init_shaders() {
     frag_src += line + "\n";
 
   GLuint program_obj = shader_create(vert_src, frag_src);
-   cout << "PROGRAM IS DEFFO HERE " << program_obj << endl;
+
   if(program_obj == 0){
     std::cout << "Failed to create the shader" << std::endl;
     return false;
   }
-   cout << "PROGRAM IS DEFFO HERE " << program_obj << endl;
+
   return true;
   
 }
@@ -883,36 +656,26 @@ bool init_shaders() {
 
 int main ()
 {
-  //   bcm_host_init();
-
-   // Clear application state
-   memset( state, 0, sizeof( *state ) );
-   
    GameWindow window(640, 480, false);
    window.use_context();
 
    // Start OGLES
-   init_ogl(state);
-     cout << "CODE: " << glGetError() << endl;
+   init_ogl();
 
    if(!init_shaders())
      return 0;
 
-
-   cout << "PROGRAM C DEFFO HERE " << program_obj << endl;
-   cout << "shaders done";
    generate_tileset_coords(128, 128);
    generate_map_texcoords(map_width, map_height);
 
    // initialise the OGLES texture(s)
-   init_textures(state);
-   cout << "CODE: " << hex << glGetError() << endl;
+   init_textures();
+
    generate_map_coords(map_width, map_height);
    init_buffers();
 
    // Setup the model world
-   init_model_proj(state);
-   int count = 0;
+   init_model_proj();
    float dt = get_dt();
 
    while (!window.check_close())
@@ -920,11 +683,9 @@ int main ()
      //Get the time since the last iteration 
      dt = get_dt(); 
      //         printf("\n%f\n",dt);
-                   update_model(state, dt);
-		   redraw_scene(&window, state, dt);
-		   GameWindow::update();
-	//		count++; 
-		//		if(count == 1000) shutdown = 1;
+     update(dt);
+     redraw_scene(&window, dt);
+     GameWindow::update();
    }
    exit_func();
    return 0;
