@@ -1,8 +1,10 @@
 #include <iostream>
 #include <map>
+#include <utility>
 
 // Include position important.
 #include "game_window.hpp"
+#include "input_manager.hpp"
 
 extern "C" {
 #ifdef USE_GLES
@@ -25,10 +27,7 @@ extern "C" {
 
 
 
-///
-/// Mapping of SDL window IDs to GameWindows.
-///
-static std::map<Uint32,GameWindow*> windows = std::map<Uint32,GameWindow*>();
+std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
 
 
 
@@ -46,6 +45,7 @@ const char* GameWindow::InitException::what() {
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
     close_requested = false;
+    input_manager = new InputManager(this);
     
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
@@ -117,19 +117,22 @@ GameWindow::~GameWindow() {
     if (windows.size() == 0) {
         deinit_sdl();
     }
+
+    delete input_manager;
 }
 
 
 void GameWindow::init_sdl() {
     int result;
     
+#ifdef USE_GLES
     bcm_host_init();
+#endif
     
 #ifdef GAME_WINDOW_DEBUG
     std::cerr << "Initializing SDL..." << std::endl;
 #endif
-
-    result = SDL_Init (SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+    result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");
@@ -332,7 +335,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     window_x = x;
     window_y = y;
     window_width = w;
-    window_width = h;
+    window_height = h;
 
     // Clean up any garbage in the SDL window.
     SDL_RenderClear(renderer);
@@ -370,13 +373,19 @@ void GameWindow::update() {
     SDL_Event event;
     bool close_all = false;
     
+    for (auto pair : windows) {
+        GameWindow* window = pair.second;
+        window->input_manager->clean();
+    }
+    
     while (SDL_PollEvent(&event)) {
+        GameWindow* window;
         switch (event.type) {
         case SDL_QUIT: // Primarily used for killing when we become blind.
             close_all = true;
             break;
         case SDL_WINDOWEVENT:
-            GameWindow* window = windows[event.window.windowID];
+            window = windows[event.window.windowID];
 
             // Instead of reinitialising on every event, do it ater we have
             // scanned the event queue in full.
@@ -399,6 +408,10 @@ void GameWindow::update() {
                 window->change_surface = InitAction::DO_DEINIT;
                 break;
             }
+            break;
+        default:
+            // Let the input manager use the event.
+            InputManager::handle_event(&event);
             break;
         }
     }
@@ -469,7 +482,7 @@ bool GameWindow::check_close() {
 
 
 std::pair<int, int> GameWindow::get_size() {
-    return std::pair<int, int> (window_width, window_height);
+    return std::pair<int, int>(window_width, window_height);
 }
 
 
@@ -494,4 +507,9 @@ void GameWindow::swap_buffers() {
 #ifdef USE_GL
     SDL_GL_SwapWindow(window);
 #endif
+}
+
+
+InputManager* GameWindow::get_input_manager() {
+    return input_manager;
 }

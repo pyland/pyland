@@ -2,6 +2,8 @@
 #define GAME_WINDOW_H
 
 #include <exception>
+#include <map>
+#include <utility>
 
 // Flags to allow code to run on standard OpenGL systems.
 #ifdef USE_GL
@@ -22,11 +24,18 @@ extern "C" {
 #include <SDL2/SDL_syswm.h>
 }
 
+class InputManager;
+
+
+
 ///
-/// Sets up OpenGL|ES and handles SDL functionality.
+/// Sets up OpenGL|ES and handles basic SDL functionality.
+///
+/// Input management is handled in a separate class.
 ///
 class GameWindow {
 private:
+    friend class InputManager;
     ///
     /// Used to say if something needs to be initialized, deinitialized,
     /// or if no action needs to be taken.
@@ -105,10 +114,20 @@ private:
 #endif
 
     ///
+    /// Mapping of SDL window IDs to GameWindows.
+    ///
+    static std::map<Uint32,GameWindow*> windows;
+    
+    ///
     /// Stores X11 display and window information.
     ///
     SDL_SysWMinfo wm_info;
-    
+
+    ///
+    /// Handle all the input separately to all the display setup.
+    ///
+    InputManager* input_manager;
+
     ///
     /// Initialize SDL.
     ///
@@ -224,6 +243,11 @@ public:
     /// Swaps the opengl buffers for this window.
     ///
     void swap_buffers();
+
+    ///
+    /// Input manager getter.
+    ///
+    InputManager* get_input_manager();
 };
 
 #endif

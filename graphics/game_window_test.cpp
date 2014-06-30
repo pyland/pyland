@@ -37,7 +37,8 @@ int main(int argc, char** argv) {
             window.swap_buffers();
             SDL_Delay(0);
             GameWindow::update();
-            // std::cerr << " . ";
+            std::pair<int, int> xy = window.get_size();
+            std::cerr << xy.first << " x " << xy.second << std::endl;
         }
     }
     catch (GameWindow::InitException e) {

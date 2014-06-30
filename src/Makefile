@@ -55,13 +55,16 @@ debug: all
 
 
 
+main.bin: main.o game_window.o input_manager.o
+	$(CXX) -o main.bin main.o game_window.o input_manager.o $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) $(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS)
+
+
+
 game_window.o: game_window.cpp
 	$(CXX) -c -o game_window.o game_window.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
 
-
-
-main.bin: main.o game_window.o
-	$(CXX) -o main.bin main.o game_window.o $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) $(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS)
+input_manager.o: input_manager.cpp
+	$(CXX) -c -o input_manager.o input_manager.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CPPFLAGS)
 
 main.o: main.cpp
 	$(CXX) -c -o main.o main.cpp $(CXXFLAGS) $(CPPFLAGS) $(GRAPHICS_CPPFLAGS)
@@ -69,7 +72,10 @@ main.o: main.cpp
 
 
 clean:
+	$(RM) main.bin
 	$(RM) game_window.o
+	$(RM) input_manager.o
+	$(RM) main.o
 
 .PHONY : clean
 .PHONY : debug
