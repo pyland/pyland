@@ -9,8 +9,12 @@ extern "C" {
 #include <bcm_host.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <GLES2/gl2.h>
 #endif
-
+#ifdef USE_GL
+#include <GLES2/gl2.h>
+#endif
+    
 #include <X11/Xlib.h>
 
 #include <SDL2/SDL.h>
@@ -123,10 +127,12 @@ GameWindow::~GameWindow() {
 void GameWindow::init_sdl() {
     int result;
     
+    bcm_host_init();
+    
 #ifdef GAME_WINDOW_DEBUG
     std::cerr << "Initializing SDL..." << std::endl;
 #endif
-    
+
     result = SDL_Init (SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   
     if (result != 0) {
@@ -334,6 +340,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 #endif
+    glViewport(0, 0, w, h);
 }
 
 
@@ -473,6 +480,8 @@ void GameWindow::use_context() {
 #ifdef USE_GL
     SDL_GL_MakeCurrent(window, sdl_gl_context);
 #endif
+    // In theory, not required:
+    // glViewport(0, 0, w, h);
 }
 
 
