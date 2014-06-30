@@ -149,6 +149,8 @@ void spawn_thread(std::string code,
     std::promise<int64_t> thread_id_promise;
     auto thread_id_future = thread_id_promise.get_future();
 
+    // This seems to be the easy compromise.
+    // http://stackoverflow.com/questions/24477791
     py::api::object player_object = [&player] () {
         GIL lock_gil;
         return py::api::object(boost::ref(player));
