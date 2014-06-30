@@ -245,8 +245,7 @@ int main(int, char **) {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    Player playerJ = Player(Vec2D(0, 0), "John");
-    Player playerA = Player(Vec2D(0, 0), "Adam");
+    std::list<Player> all_players =  {Player(Vec2D(0, 0), "John"),Player(Vec2D(0, 0), "Adam")};
     std::string working_dir;
 
     // All Python errors should result in a Python traceback    
@@ -268,10 +267,10 @@ int main(int, char **) {
     PyEval_ReleaseLock();
     print_debug << "main: Released GIL " << std::endl;
 
-    run_thread(playerJ,playerthreads,working_dir);
-    print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
-    run_thread(playerA,playerthreads,working_dir);
-    print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
+    for (auto p : all_players) {
+        run_thread(p, playerthreads, working_dir);
+        print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
+    }
 
     for (auto &playerthread : playerthreads) {
         playerthread.thread->join();
