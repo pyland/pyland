@@ -2,6 +2,7 @@
 #define GAME_WINDOW_H
 
 #include <exception>
+#include <utility>
 
 // Flags to allow code to run on standard OpenGL systems.
 #ifdef USE_GL

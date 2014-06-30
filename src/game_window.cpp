@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <utility>
 
 // Include position important.
 #include "game_window.hpp"
@@ -332,7 +333,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     window_x = x;
     window_y = y;
     window_width = w;
-    window_width = h;
+    window_height = h;
 
     // Clean up any garbage in the SDL window.
     SDL_RenderClear(renderer);
@@ -469,7 +470,7 @@ bool GameWindow::check_close() {
 
 
 std::pair<int, int> GameWindow::get_size() {
-    return std::pair<int, int> (window_width, window_height);
+    return std::pair<int, int>(window_width, window_height);
 }
 
 
