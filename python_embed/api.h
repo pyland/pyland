@@ -58,7 +58,7 @@ class Player {
         /// since the last check. This will be replaced in order to support
         /// multiple threads.
         ///
-        static long call_number;
+        static uint64_t call_number;
 
         ///
         /// Player constructor

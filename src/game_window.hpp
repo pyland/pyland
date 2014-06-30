@@ -2,6 +2,7 @@
 #define GAME_WINDOW_H
 
 #include <exception>
+#include <utility>
 
 // Flags to allow code to run on standard OpenGL systems.
 #ifdef USE_GL
@@ -215,6 +216,15 @@ public:
     /// Checks whether the window has a close request.
     ///
     bool check_close();
+
+    // WARNING: This method is subject to API changes!
+    ///
+    /// Get the width and height of the window.
+    ///
+    /// Returns the dimensions of the renderable area (excluding window
+    /// borders).
+    ///
+    std::pair<int, int> get_size();
 
     ///
     /// Switches the active opengl context to the one for this window.

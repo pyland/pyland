@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <utility>
 
 // Include position important.
 #include "game_window.hpp"
@@ -10,7 +11,7 @@ extern "C" {
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #endif
-
+    
 #include <X11/Xlib.h>
 
 #include <SDL2/SDL.h>
@@ -121,10 +122,11 @@ GameWindow::~GameWindow() {
 void GameWindow::init_sdl() {
     int result;
     
+    bcm_host_init();
+    
 #ifdef GAME_WINDOW_DEBUG
     std::cerr << "Initializing SDL..." << std::endl;
 #endif
-    
     result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   
     if (result != 0) {
@@ -327,6 +329,8 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     // Only set these if the init was successful.
     window_x = x;
     window_y = y;
+    window_width = w;
+    window_height = h;
 
     // Clean up any garbage in the SDL window.
     SDL_RenderClear(renderer);
@@ -466,6 +470,11 @@ bool GameWindow::check_close() {
 }
 
 
+std::pair<int, int> GameWindow::get_size() {
+    return std::pair<int, int>(window_width, window_height);
+}
+
+
 void GameWindow::use_context() {
 #ifdef USE_GLES
     if (visible) {
@@ -475,6 +484,8 @@ void GameWindow::use_context() {
 #ifdef USE_GL
     SDL_GL_MakeCurrent(window, sdl_gl_context);
 #endif
+    // In theory, not required:
+    // glViewport(0, 0, w, h);
 }
 
 
