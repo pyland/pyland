@@ -26,10 +26,7 @@ extern "C" {
 
 
 
-///
-/// Mapping of SDL window IDs to GameWindows.
-///
-static std::map<Uint32,GameWindow*> windows = std::map<Uint32,GameWindow*>();
+std::map<Uint32,GameWindow*> windows = std::map<Uint32,GameWindow*>();
 
 
 
@@ -47,6 +44,7 @@ const char* GameWindow::InitException::what() {
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
     close_requested = false;
+    input_manager = InputManager(this);
     
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
@@ -124,13 +122,14 @@ GameWindow::~GameWindow() {
 void GameWindow::init_sdl() {
     int result;
     
+#ifdef USE_GLES
     bcm_host_init();
+#endif
     
 #ifdef GAME_WINDOW_DEBUG
     std::cerr << "Initializing SDL..." << std::endl;
 #endif
-
-    result = SDL_Init (SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+    result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");
@@ -401,6 +400,10 @@ void GameWindow::update() {
                 break;
             }
             break;
+        default:
+            // Let the input manager use the event.
+            input_manager.handle_event(event);
+            break;
         }
     }
 
@@ -495,4 +498,9 @@ void GameWindow::swap_buffers() {
 #ifdef USE_GL
     SDL_GL_SwapWindow(window);
 #endif
+}
+
+
+void GameWindow::get_input_manager() {
+    return &input_manager;
 }
