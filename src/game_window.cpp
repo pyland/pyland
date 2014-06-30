@@ -13,8 +13,8 @@ extern "C" {
 
 #include <X11/Xlib.h>
 
-#include <SDL.h>
-#include <SDL_syswm.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 }
 
 
