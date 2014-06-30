@@ -34,50 +34,50 @@ debug: CPPFLAGS += -DDEBUG
 debug: interpreter wrapper_functions.so
 
 interpreter: interpreter.o wrapper_functions.o playerthread.o api.o debug.o locks.o
-    $(CXX) -o interpreter \
-        interpreter.o wrapper_functions.o playerthread.o api.o debug.o locks.o \
-        $(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(LDFLAGS) $(LDLIBS) $(CXXFLAGS)
-    @echo
+	$(CXX) -o interpreter \
+		interpreter.o wrapper_functions.o playerthread.o api.o debug.o locks.o \
+		$(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(LDFLAGS) $(LDLIBS) $(CXXFLAGS)
+	@echo
 
 interpreter.o: interpreter.cpp
-    $(CXX) -c interpreter.cpp \
-        $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-    @echo
+	$(CXX) -c interpreter.cpp \
+		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	@echo
 
 wrapper_functions.o: wrapper_functions.cpp
-    $(CXX) -c wrapper_functions.cpp \
-        $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-    @echo
+	$(CXX) -c wrapper_functions.cpp \
+		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	@echo
 
 wrapper_functions.so: wrapper_functions.cpp
-    $(CXX) -shared -fPIC wrapper_functions.cpp -o wrapper_functions.so \
-        $(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-    @echo
+	$(CXX) -shared -fPIC wrapper_functions.cpp -o wrapper_functions.so \
+		$(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	@echo
 
 playerthread.o: playerthread.cpp api.o
-    $(CXX) -c playerthread.cpp \
-        $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-    @echo
+	$(CXX) -c playerthread.cpp \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	@echo
 
 api.o: api.cpp debug.o
-    $(CXX) -c api.cpp \
-        $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-    @echo
+	$(CXX) -c api.cpp \
+		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	@echo
 
 debug.o: debug.cpp
-    $(CXX) -c debug.cpp \
-        $(CPPFLAGS) $(CXXFLAGS)
-    @echo
+	$(CXX) -c debug.cpp \
+		$(CPPFLAGS) $(CXXFLAGS)
+	@echo
 
 locks.o: locks.cpp
-    $(CXX) -c locks.cpp \
-        $(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-    @echo
+	$(CXX) -c locks.cpp \
+		$(BOOST_CPPFLAGS) $(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	@echo
 
 
 clean:
-    $(RM) interpreter
-    $(RM) wrapper_functions.so
-    $(RM) *.o
+	$(RM) interpreter
+	$(RM) wrapper_functions.so
+	$(RM) *.o
 
 .PHONY : debug
