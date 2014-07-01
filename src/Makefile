@@ -49,7 +49,7 @@ PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 all: main.bin python_embed
 
 python_embed:
-	@COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 $(MAKE) -C python_embed debug
+	@$(MAKE) -C python_embed debug
 
 
 debug: CPPFLAGS += -DDEBUG
