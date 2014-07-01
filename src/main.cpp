@@ -50,6 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/gtc/type_ptr.hpp>
 
 #include "game_window.hpp"
+#include "python_embed/interpreter.h"
 
 #ifdef USE_GLES
 #include "GLES2/gl2.h"
@@ -994,6 +995,9 @@ int main ()
    objects[1].y = 300.0f;
    // Setup the model world
    init_model_proj(&window);
+
+   run_all();
+
    float dt = get_dt();
    int count = 0;
    while (!window.check_close())
