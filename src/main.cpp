@@ -1044,7 +1044,7 @@ int main ()
    // Setup the model world
    init_model_proj(&window);
 
-   //   run_all();
+      run_all();
 
    float dt = get_dt();
    int count = 0;
