@@ -331,16 +331,16 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
 
     visible = true;
     change_surface = InitAction::DO_NOTHING;
+    // Clean up any garbage in the SDL window.
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+#endif
+    
     // Only set these if the init was successful.
     window_x = x;
     window_y = y;
     window_width = w;
     window_height = h;
-
-    // Clean up any garbage in the SDL window.
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-#endif
 }
 
 
