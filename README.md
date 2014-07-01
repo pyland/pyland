@@ -3,7 +3,9 @@ zygote
 
 Raspberry Pi Summer Project
 
-## Install Instructions 
+## Install 
+
+#### Raspberry Pi
 
 ```bash
 git clone https://github.com/heidi-ann/zygote
@@ -15,6 +17,8 @@ COMPILER=g++-4.7 make
 cd python_embed
 COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
+
+#### Desktop
 
 For compiling on desktop, use:
 
