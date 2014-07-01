@@ -31,7 +31,7 @@ debug: CXXFLAGS += -g
 debug: CXXFLAGS +=  -fno-elide-constructors
 debug: CXXFLAGS +=  -O0
 debug: CPPFLAGS += -DDEBUG
-debug: interpreter wrapper_functions.so
+debug: wrapper_functions.so
 
 wrapper_functions.so: wrapper_functions.cpp
 	$(CXX) -shared -fPIC wrapper_functions.cpp -o wrapper_functions.so \
