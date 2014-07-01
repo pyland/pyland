@@ -2,7 +2,7 @@
 #include <boost/python.hpp>
 #include <iostream>
 //#include "api.h"
-#include "main.cpp"
+#include "../main.h"
 
 namespace py = boost::python;
 
