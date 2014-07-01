@@ -762,7 +762,7 @@ static void load_tex_images()
 
    tex_buf1 = new char[image_sz];
 
-   tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
+   tex_file1 = fopen(PATH "../resources/Djenne_128_128.raw", "rb");
    if(tex_file1 == NULL) {
      std::cerr << "ERROR: Couldn't load textures" << endl;
    }
