@@ -274,7 +274,6 @@ void run_all() {
     catch (py::error_already_set) {
         print_debug << "main: Unexpected error setting path" << std::endl;
         PyErr_Print();
-        return 1;
     }
 
     print_debug << "main: Set path" << std::endl;
@@ -304,5 +303,4 @@ void run_all() {
 
     PyEval_RestoreThread(main_thread_state);
 
-    return 0;
 }
