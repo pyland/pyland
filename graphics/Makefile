@@ -49,7 +49,7 @@ game_window_test.o: game_window_test.cpp
 game_window.o: ../src/game_window.cpp
 	$(CXX) -c -o game_window.o ../src/game_window.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
 
-input_manager.o: ../src/game_window.cpp
+input_manager.o: ../src/input_manager.cpp
 	$(CXX) -c -o input_manager.o ../src/input_manager.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
 
 
@@ -58,3 +58,4 @@ clean:
 	- rm -f game_window_test
 	- rm -f game_window_test.o
 	- rm -f game_window.o
+	- rm -f input_manager.o
