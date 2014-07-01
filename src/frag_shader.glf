@@ -1,3 +1,4 @@
+#version 330
 // precision mediump float;
 in vec2 v_texCoord;
 uniform sampler2D s_texture;
