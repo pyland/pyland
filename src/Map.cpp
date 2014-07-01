@@ -1,5 +1,6 @@
 #include "MAP_H"
 
+
 /**
  * Constructor for Map
  */ 
@@ -11,18 +12,18 @@ Map::Map() {
  *Destructor for Map
  */
 Map::~Map() {
-   // clear screen
-   glClear( GL_COLOR_BUFFER_BIT );
+  // clear screen
+  glClear( GL_COLOR_BUFFER_BIT );
    
-   // release buffers
-   delete []tex_buf1;
-   delete []mapData;
-   delete []sprite_data;
-   delete []sprite_tex_data;
-   delete []mapTexCoords;
-   delete []tileSetTexCoords;
+  // release buffers
+  delete []tex_buf1;
+  delete []mapData;
+  delete []sprite_data;
+  delete []sprite_tex_data;
+  delete []mapTexCoords;
+  delete []tileSetTexCoords;
 
-   printf("\nClosed\n");
+  printf("\nClosed\n");
 
 }
 /**
@@ -81,22 +82,22 @@ void Map::init_vbo_buffer() {
  */ 
 void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
 
- #ifdef DEBUG
-   printf("GENERATING TILESET TEXTURE COORDS...");
- #endif
-   //check the tilset image height and widths are multiples of the tiles
-   //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
+#ifdef DEBUG
+  printf("GENERATING TILESET TEXTURE COORDS...");
+#endif
+  //check the tilset image height and widths are multiples of the tiles
+  //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
 
 
-   int numTilesX = image_width/ TILESET_ELEMENT_SIZE;
-   int numTilesY = image_height / TILESET_ELEMENT_SIZE;
+  int numTilesX = image_width/ TILESET_ELEMENT_SIZE;
+  int numTilesY = image_height / TILESET_ELEMENT_SIZE;
 
-   //Each tile needs 8 floats to describe its position in the image
-   tileSetTexCoords = new GLfloat[sizeof(GLfloat)* numTilesX * numTilesY * 4 * 2];
-   assert(tileSetTexCoords != 0);
-   //TODO free this memory
+  //Each tile needs 8 floats to describe its position in the image
+  tileSetTexCoords = new GLfloat[sizeof(GLfloat)* numTilesX * numTilesY * 4 * 2];
+  assert(tileSetTexCoords != 0);
+  //TODO free this memory
 
-     double tileSetXOffset = 0.0;
+  double tileSetXOffset = 0.0;
   double tileSetYOffset = 0.0;
   double tileSetXInc = 1.0 / (double)numTilesX;
   double tileSetYInc = 1.0 / (double)numTilesY;
@@ -194,7 +195,7 @@ void Map::generate_map_coords() {
   printf("GENERATING MAP DATA...");
 #endif
   //holds the map data
-   //need 18 floats for each coordinate as these hold 3D coordinates
+  //need 18 floats for each coordinate as these hold 3D coordinates
   int num_floats = 18;
   mapData = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
   assert(mapData != 0);
@@ -358,34 +359,34 @@ void Map::load_tex_images() {
   FILE *tex_file1, *tex_file2 = NULL;
   int bytes_read, image_sz = IMAGE_SIZE_WIDTH*IMAGE_SIZE_HEIGHT*3;
 
-   tex_buf1 = new char[image_sz];
+  tex_buf1 = new char[image_sz];
 
-   tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
-   if(tex_file1 == NULL) {
-     std::cerr << "ERROR: Couldn't load textures" << endl;
-   }
+  tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
+  if(tex_file1 == NULL) {
+    std::cerr << "ERROR: Couldn't load textures" << endl;
+  }
 
-   if (tex_file1 && tex_buf1)
-   {
+  if (tex_file1 && tex_buf1)
+    {
       bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
       assert(bytes_read == image_sz);  // some problem with file?
       fclose(tex_file1);
-   }
+    }
 
 
-   // tex_buf2 = new char[image_sz];
+  // tex_buf2 = new char[image_sz];
 
-   // tex_file2 = fopen(PATH "../graphics/tiles/assets/characters_1.raw", "rb");
-   // if(tex_file1 == NULL) {
-   //   std::cerr << "ERROR: Couldn't load textures" << endl;
-   // }
+  // tex_file2 = fopen(PATH "../graphics/tiles/assets/characters_1.raw", "rb");
+  // if(tex_file1 == NULL) {
+  //   std::cerr << "ERROR: Couldn't load textures" << endl;
+  // }
 
-   // if (tex_file1 && tex_buf1)
-   // {
-   //    bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
-   //    assert(bytes_read == image_sz);  // some problem with file?
-   //    fclose(tex_file1);
-   // }
+  // if (tex_file1 && tex_buf1)
+  // {
+  //    bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
+  //    assert(bytes_read == image_sz);  // some problem with file?
+  //    fclose(tex_file1);
+  // }
 
 }
 
@@ -401,7 +402,7 @@ void Map::init_textures() {
   glBindTexture(GL_TEXTURE_2D, texture_id);
   
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_SIZE_WIDTH, IMAGE_SIZE_HEIGHT, 0,
-                GL_RGB, GL_UNSIGNED_BYTE, tex_buf1);
+	       GL_RGB, GL_UNSIGNED_BYTE, tex_buf1);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
@@ -456,40 +457,40 @@ bool Map::init_shaders() {
  */
 void Map::render_map() {
 
-   //LEAVE THIS HERE!
-   glDisable(GL_CULL_FACE);
-   glm::mat4 model = glm::mat4(1.0f);
-   glm::mat4 translated = glm::translate(model, glm::vec3(map_bottom_x, map_bottom_y, 0.0f));
+  //LEAVE THIS HERE!
+  glDisable(GL_CULL_FACE);
+  glm::mat4 model = glm::mat4(1.0f);
+  glm::mat4 translated = glm::translate(model, glm::vec3(map_bottom_x, map_bottom_y, 0.0f));
 
-   glUseProgram(program_obj);
+  glUseProgram(program_obj);
 
-   glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
-   glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_modelview"), 1, GL_FALSE, glm::value_ptr(translated));
-
-
-   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
-   glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, 0);
-   glEnableVertexAttribArray(VERTEX_POS_INDX);
+  glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
+  glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_modelview"), 1, GL_FALSE, glm::value_ptr(translated));
 
 
-   glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
-   glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
-   glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
-
-   glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
+  glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+  glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(VERTEX_POS_INDX);
 
 
-   glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
+  glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
+  glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
 
-   glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D,texture_id);
-
-   //set sampler texture to unit 0
-   glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
+  glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
 
 
-   glDrawArrays(GL_TRIANGLES, 0, 6*map_width*map_height);
-   glUseProgram(0);
+  glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D,texture_id);
+
+  //set sampler texture to unit 0
+  glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
+
+
+  glDrawArrays(GL_TRIANGLES, 0, 6*map_width*map_height);
+  glUseProgram(0);
 
 }
 
