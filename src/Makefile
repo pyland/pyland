@@ -4,7 +4,7 @@ RM = - rm -f
 
 CXX      = ${COMPILER}
 CXXFLAGS = -std=c++11 -O3
-CPPFLAGS = -I./
+CPPFLAGS = -I./ -Ipython_embed/
 LDFLAGS  =
 LDLIBS   =
 
@@ -16,7 +16,7 @@ WARN.clang.3.2 := -Weverything
 CXXFLAGS += $(WARN.$(CXX).all) $(WARN.$(CXX).$(4.8))
 
 ifeq ($(PLATFORM),desktop)
-	GL_CPPFLAGS   = $(shell pkg-config gl --cflags)
+	GL_CPPFLAGS = $(shell pkg-config gl --cflags)
 	GL_LDFLAGS  = 
 	GL_LDLIBS   = $(shell pkg-config gl --libs)
 
@@ -25,10 +25,12 @@ ifeq ($(PLATFORM),desktop)
 	GRAPHICS_LDLIBS  = $(GL_LDLIBS)
 	CPPFLAGS += -DUSE_GL
 else
-# Taken from hello_triangle example
-	GLES_CPPFLAGS   = -I/opt/vc/include -I/opt/vc/include/interface/vmcs_host/linux -I/opt/vc/include/interface/vcos/pthreads
-	GLES_LDFLAGS  = -L/opt/vc/lib/
-	GLES_LDLIBS   = -lGLESv2 -lEGL -lbcm_host -lpthread
+	# From hello_triangle
+	GLES_CPPFLAGS  = -I/opt/vc/include
+	GLES_CPPFLAGS += -I/opt/vc/include/interface/vmcs_host/linux
+	GLES_CPPFLAGS += -I/opt/vc/include/interface/vcos/pthreads
+	GLES_LDFLAGS   = -L/opt/vc/lib/
+	GLES_LDLIBS    = -lGLESv2 -lEGL -lbcm_host -lpthread
 
 	GRAPHICS_CPPFLAGS  = $(GLES_CPPFLAGS)
 	GRAPHICS_LDFLAGS = $(GLES_LDFLAGS)
@@ -52,22 +54,37 @@ PYTHON_CPPFLAGS = $(shell python${PYTHON_VERSION}-config --cflags)
 PYTHON_LDFLAGS  = $(shell python${PYTHON_VERSION}-config --ldflags)
 PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 
-BASE_OBJS = \
-	main.o          \
-	game_window.o   \
-	input_manager.o \
-	debug.o
-
-PYTHON_OBJS = \
-	python_embed/interpreter.o       \
-	python_embed/wrapper_functions.o \
-	python_embed/playerthread.o      \
-	python_embed/api.o               \
-	python_embed/locks.o
+# Prevent warnings about -Wstrict-prototypes not being valid for C++
+PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 
 
 
-all: main.bin python_embed/wrapper_functions.so
+### Program Files ###
+
+EXECUTABLE = main.bin
+
+BASE_SOURCES = \
+	main.cpp          \
+	game_window.cpp   \
+	input_manager.cpp \
+	debug.cpp
+
+BASE_OBJS = $(BASE_SOURCES:.cpp=.o)
+
+PYTHON_SOURCES = \
+	python_embed/interpreter.cpp       \
+	python_embed/wrapper_functions.cpp \
+	python_embed/playerthread.cpp      \
+	python_embed/api.cpp               \
+	python_embed/locks.cpp
+
+PYTHON_OBJS = $(PYTHON_SOURCES:.cpp=.o)
+
+
+
+### What to run ###
+
+all: $(EXECUTABLE) $(BASE_SOURCES) $(PYTHON_SOURCES) python_embed/wrapper_functions.so
 
 debug: CXXFLAGS += -g
 debug: CXXFLAGS +=  -fno-elide-constructors
@@ -76,28 +93,35 @@ debug: CPPFLAGS += -DDEBUG
 debug: all
 
 
-main.bin: base python_embed
+$(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
+	@echo "[ Compiling $(EXECUTABLE) ]"
+	@echo
 	$(CXX) -o $@ \
 		$(BASE_OBJS) $(PYTHON_OBJS) \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
 		$(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS) \
 		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS) $(BOOST_LDFLAGS) $(BOOST_LDLIBS)
 
-base: $(BASE_OBJS)
-	$(CXX) -c $^ -o $@ \
-		$(BASE_OBJS) $(PYTHON_OBJS) \
+$(BASE_OBJS): $(BASE_SOURCES)
+	@echo "[ Compiling base object file $@ ]"
+	@echo
+	$(CXX) -c ${basename $@}.cpp -o $@ \
 		$(CXXFLAGS) $(CPPFLAGS) \
 		$(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
 	@echo
 
-python_embed: $(PYTHON_OBJS)
-	$(CXX) -c $^ -o $@ \
+$(PYTHON_OBJS): $(PYTHON_SOURCES)
+	@echo "[ Compiling Python object file $@ ]"
+	@echo
+	$(CXX) -c ${basename $@}.cpp -o $@ \
 		$(CXXFLAGS) $(CPPFLAGS) \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)
 	@echo
 
 python_embed/wrapper_functions.so: python_embed/wrapper_functions.cpp
-	$(CXX) -shared -fPIC $^ -o $@ \
+	@echo "[ Compiling $@ ]"
+	@echo
+	$(CXX) -shared -fPIC $< -o $@ \
 		$(CPPFLAGS) $(CXXFLAGS) \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)
@@ -105,7 +129,7 @@ python_embed/wrapper_functions.so: python_embed/wrapper_functions.cpp
 
 
 clean:
-	$(RM) main.bin
+	$(RM) $(EXECUTABLE)
 	$(RM) python_embed/wrapper_functions.so
 	$(RM) $(BASE_OBJS)
 	$(RM) $(PYTHON_OBJS)

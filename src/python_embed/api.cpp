@@ -6,7 +6,7 @@
 #include <string>
 #include "api.h"
 #include "debug.h"
-#include "../main.h"
+#include "main.h"
 
 namespace py = boost::python;
 
