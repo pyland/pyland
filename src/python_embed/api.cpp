@@ -71,7 +71,9 @@ void Player::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
     std::string from_file =
         // TODO: find a more scalable approach
+        "import time\n"
         "def move(x):\n"
+        "    time.sleep(0.001)\n"
         "    player.move(x)\n"
     
         "def monologue():\n"
