@@ -51,10 +51,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "game_window.hpp"
 
-#include "GLES/gl.h"
+#ifdef USE_GLES
 #include "GLES2/gl2.h"
-#include "EGL/egl.h"
-#include "EGL/eglext.h"
+#endif
+
+#ifdef USE_GL
+#include "GL/gl.h"
+#endif
+
 
 #include "main.h"
 
@@ -825,10 +829,17 @@ return duration.count()/ 1000.0f;
 }
 
 bool init_shaders() {
+#ifdef USE_GLES
   //read in the shaders
-  ifstream vertex_shader_src("vert_shader.glslv");
-  ifstream fragment_shader_src("frag_shader.glslf");
+  ifstream vertex_shader_src("vert_shader.glesv");
+  ifstream fragment_shader_src("frag_shader.glesf");
+#endif
+#ifdef USE_GL
+  //read in the shaders
+  ifstream vertex_shader_src("vert_shader.glv");
+  ifstream fragment_shader_src("frag_shader.glf");
 
+#endif
   if(!vertex_shader_src.good()){
     std::cerr << "Failed to load vertex shader" << endl;
     return false;
