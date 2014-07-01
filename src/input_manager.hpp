@@ -155,13 +155,13 @@ public:
     /// Get the mouse cursor position in pixels from the top-left corner
     /// of the render-area.
     ///
-    std::pair<int,int> InputManager::get_mouse_pixels();
+    std::pair<int,int> get_mouse_pixels();
 
     ///
     /// Get the mouse cursor position as a ratio of the distances
     /// between the top-left corner and bottom-right corner.
     ///
-    std::pair<float,float> InputManager::get_mouse_ratio();
+    std::pair<float,float> get_mouse_ratio();
 };
 
 #endif
