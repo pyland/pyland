@@ -53,14 +53,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "python_embed/interpreter.h"
 
 #ifdef USE_GLES
-#include "GLES/gl.h"
-#include "GLES2/gl2.h"
+
+#include <GLES2/gl2.h>
 
 #endif
 
 #ifdef USE_GL
-
-#include "GL/gl.h"
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
 #endif
 
 
