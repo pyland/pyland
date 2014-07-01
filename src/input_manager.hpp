@@ -25,7 +25,7 @@ private:
     GameWindow* window;
     
     ///
-    /// Set of currently pressed keys (scancodes).
+    /// Set of currently depressed keys (scancodes).
     ///
     /// Use this when the key's layout is important.
     ///
@@ -40,9 +40,35 @@ private:
     std::set<int> released_keys;
 
     ///
+    /// The current x coordinate of the mouse.
+    ///
+    /// Stored in pixels from left of render-area.
+    ///
+    int mouse_x;
+    ///
+    /// The current y coordinate of the mouse.
+    ///
+    /// Stored in pixels from top of render-area.
+    ///
+    int mouse_y;
+
+    ///
+    /// Set of currently depressed mouse buttons.
+    ///
+    std::set<int> held_buttons;
+    ///
+    /// Set of recently pressed mouse buttons.
+    ///
+    std::set<int> pressed_buttons;
+    ///
+    /// Set of recently released mouse buttons.
+    ///
+    std::set<int> released_buttons;
+
+    ///
     /// Code to be run before handling event loops.
     ///
-    /// Clears pressed and released keys.
+    /// Clears pressed and released keys and mouse buttons.
     ///
     void clean();
     
@@ -105,6 +131,25 @@ public:
     /// @param key The keycode of the key.
     ///
     bool is_char_released(int key);
+    
+    ///
+    /// Query whether a mouse button is down.
+    ///
+    /// @param button The button number.
+    ///
+    bool is_mouse_down(int button);
+    ///
+    /// Query whether a mouse button was recently pressed.
+    ///
+    /// @param button The button number.
+    ///
+    bool is_mouse_pressed(int button);
+    ///
+    /// Query whether a mouse button was recently released.
+    ///
+    /// @param button The button number.
+    ///
+    bool is_mouse_released(int button);
 };
 
 #endif
