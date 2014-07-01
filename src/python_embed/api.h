@@ -50,6 +50,7 @@ class Player {
         std::string name;
         boost::python::api::object script;
         std::string read_file();
+        int id;
 
     public:
 
@@ -67,7 +68,7 @@ class Player {
         /// @param name  Name of player  
         /// @return New instance of Player
         ///
-        Player(Vec2D start, std::string name);
+        Player(Vec2D start, std::string name, int id);
 
         ///
         /// Move player relative to current location

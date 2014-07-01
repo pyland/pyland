@@ -62,7 +62,7 @@ void thread_killer(std::timed_mutex &finish_signal,
     while (true) {
         // Nonbloking sleep; allows safe quit
         print_debug << "Starting sleep in kill thread " << "." << std::endl;
-        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(10))) {
+        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(1000))) {
             break;
         }
         print_debug << "Slept in kill thread " << "." << std::endl;
@@ -176,6 +176,7 @@ void spawn_thread(std::string code,
     // http://stackoverflow.com/questions/24477791
     py::api::object player_object = [&player] () {
         GIL lock_gil;
+        print_debug << "spawn_thread: YYYYY" << std::endl;
         return py::api::object(boost::ref(player));
     } ();
 
@@ -260,7 +261,7 @@ void run_all() {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    std::list<Player> all_players = {Player(Vec2D(0, 0), "John"), Player(Vec2D(0, 0), "Adam")};
+    std::list<Player> all_players = {Player(Vec2D(0, 0), "Joshua", 3), Player(Vec2D(0, 0), "Ashley", 2), Player(Vec2D(0, 0), "John", 0), Player(Vec2D(0, 0), "Adam", 1)};
     std::string working_dir;
 
     // All Python errors should result in a Python traceback    
@@ -269,7 +270,7 @@ void run_all() {
         working_dir = boost::filesystem::absolute("./").normalize().string();
 
         sys_module.attr("path").attr("append")(py::str(working_dir));
-        py::import("wrapper_functions");
+        py::import("python_embed.wrapper_functions");
     }
     catch (py::error_already_set) {
         print_debug << "main: Unexpected error setting path" << std::endl;

@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <thread>
 
  //Include GLM
 #define GLM_FORCE_RADIANS
@@ -115,7 +116,7 @@ GLfloat* sprite_tex_data;
 
 char* tex_buf1;
 glm::mat4 projection_matrix;
-const int num_objects = 2;
+const int num_objects = 4;
 
 
 
@@ -356,7 +357,6 @@ static void draw_map(int map_width, int map_height, float dt)
 static void draw_sprites( float dt)
  {
    glm::mat4 model = glm::mat4(1.0f);
-
 
    glUseProgram(program_obj);
 
@@ -761,7 +761,7 @@ static void load_tex_images()
 
    tex_buf1 = new char[image_sz];
 
-   tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
+   tex_file1 = fopen(PATH "../resources/Djenne_128_128.raw", "rb");
    if(tex_file1 == NULL) {
      std::cerr << "ERROR: Couldn't load textures" << endl;
    }
@@ -1042,15 +1042,15 @@ int main ()
    objects[1].x = 300.0f;
    objects[1].y = 300.0f;
    // Setup the model world
-   init_model_proj(&window);
+   //   init_model_proj(&window);
 
-      run_all();
+   std::thread mythread(run_all);
 
    float dt = get_dt();
    int count = 0;
    while (!window.check_close())
    {
-     //     init_model_proj(&window);
+     init_model_proj(&window);
      //Get the time since the last iteration 
      dt = get_dt(); 
      count++;
@@ -1060,5 +1060,6 @@ int main ()
 //     if(count == 100) break;
    }
    exit_func();
+   mythread.join();
    return 0;
 }
