@@ -6,6 +6,7 @@
 #include <string>
 #include "api.h"
 #include "debug.h"
+#include "../main.h"
 
 namespace py = boost::python;
 
@@ -32,8 +33,8 @@ std::string Vec2D::to_string() {
 
 
 
-Player::Player(Vec2D start, std::string name):
-    position(start), script("") {
+Player::Player(Vec2D start, std::string name, int id):
+    position(start), script(""), id(id) {
         this->name = std::string(name);
 }
 
@@ -41,6 +42,19 @@ uint64_t Player::call_number = 0;
 
 void Player::move(Vec2D by) {
     position += by;
+
+    for (int dx=0; dx < by.x; ++dx) {
+        move_object(id, 1);
+    }
+    for (int dx=0; dx < -by.x; ++dx) {
+        move_object(id, 3);
+    }
+    for (int dy=0; dy < by.y; ++dy) {
+        move_object(id, 0);
+    }
+    for (int dy=0; dy < -by.y; ++dy) {
+        move_object(id, 2);
+    }
 }
 
 void Player::monologue() {
@@ -75,7 +89,7 @@ void Player::give_script(py::api::object main_namespace) {
 }
 
 std::string Player::read_file() {
-    std::string loc = name + ".py";
+    std::string loc = "python_embed/" + name + ".py";
     std::ifstream inFile (loc); //open the input file
     if (inFile.is_open()) { 
         std::stringstream strStream;

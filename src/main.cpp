@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <thread>
 
  //Include GLM
 #define GLM_FORCE_RADIANS
@@ -1044,7 +1045,7 @@ int main ()
    // Setup the model world
    init_model_proj(&window);
 
-      run_all();
+   std::thread mythread(run_all);
 
    float dt = get_dt();
    int count = 0;
@@ -1060,5 +1061,6 @@ int main ()
 //     if(count == 100) break;
    }
    exit_func();
+   mythread.join();
    return 0;
 }
