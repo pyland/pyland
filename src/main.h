@@ -68,3 +68,4 @@ static const int worldData[] = {
   0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 };
+void move_object(const int id, const int direction);
