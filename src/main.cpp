@@ -166,7 +166,7 @@ static const int worldData[] = {
 struct Object {
   float x;
   float y;
-} objects[num_objects];
+};
 
 void move_object(const int id, const int direction) {
   if(id > num_objects || id < 0) {

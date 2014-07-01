@@ -3,10 +3,17 @@ NULL=
 RM = - rm -f
 
 CXX      = ${COMPILER}
-CXXFLAGS = -std=c++11 -g -Wall -Wextra -O2
+CXXFLAGS = -std=c++11 -O3
 CPPFLAGS = -I./
 LDFLAGS  =
 LDLIBS   =
+
+WARN.g++.all := -Wall -Wextra -Wconversion
+WARN.g++.4.7 := -Wzero-as-null-pointer-constant
+WARN.g++.4.8 := $(wflags.gcc.4.7)
+WARN.clang.all := -Wall -Wextra
+WARN.clang.3.2 := -Weverything
+CXXFLAGS += $(WARN.$(CXX).all) $(WARN.$(CXX).$(4.8))
 
 ifeq ($(PLATFORM),desktop)
 	GL_CPPFLAGS   = $(shell pkg-config gl --cflags)
@@ -45,45 +52,64 @@ PYTHON_CPPFLAGS = $(shell python${PYTHON_VERSION}-config --cflags)
 PYTHON_LDFLAGS  = $(shell python${PYTHON_VERSION}-config --ldflags)
 PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 
-# Insert all here.
-all: main.bin
+BASE_OBJS = \
+	main.o          \
+	game_window.o   \
+	input_manager.o \
+	debug.o
 
-python_embed:
-	@$(MAKE) -C python_embed debug
+PYTHON_OBJS = \
+	python_embed/interpreter.o       \
+	python_embed/wrapper_functions.o \
+	python_embed/playerthread.o      \
+	python_embed/api.o               \
+	python_embed/locks.o
 
 
+
+all: main.bin python_embed/wrapper_functions.so
+
+debug: CXXFLAGS += -g
+debug: CXXFLAGS +=  -fno-elide-constructors
+debug: CXXFLAGS +=  -O0
 debug: CPPFLAGS += -DDEBUG
 debug: all
 
 
-
-main.bin: main.o python_embed game_window.o input_manager.o
-	$(CXX) -o main.bin main.o game_window.o input_manager.o \
-		python_embed/interpreter.o python_embed/wrapper_functions.o python_embed/playerthread.o \
-		python_embed/api.o python_embed/debug.o python_embed/locks.o \
+main.bin: base python_embed
+	$(CXX) -o $@ \
+		$(BASE_OBJS) $(PYTHON_OBJS) \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
 		$(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS) \
 		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS) $(BOOST_LDFLAGS) $(BOOST_LDLIBS)
 
+base: $(BASE_OBJS)
+	$(CXX) -c $^ -o $@ \
+		$(BASE_OBJS) $(PYTHON_OBJS) \
+		$(CXXFLAGS) $(CPPFLAGS) \
+		$(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
+	@echo
 
+python_embed: $(PYTHON_OBJS)
+	$(CXX) -c $^ -o $@ \
+		$(CXXFLAGS) $(CPPFLAGS) \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)
+	@echo
 
-game_window.o: game_window.cpp
-	$(CXX) -c -o game_window.o game_window.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
-
-input_manager.o: input_manager.cpp
-	$(CXX) -c -o input_manager.o input_manager.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CPPFLAGS)
-
-main.o: main.cpp
-	$(CXX) -c -o main.o main.cpp $(CXXFLAGS) $(CPPFLAGS) $(GRAPHICS_CPPFLAGS)
-
+python_embed/wrapper_functions.so: python_embed/wrapper_functions.cpp
+	$(CXX) -shared -fPIC $^ -o $@ \
+		$(CPPFLAGS) $(CXXFLAGS) \
+		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
+		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)
+	@echo
 
 
 clean:
 	$(RM) main.bin
-	$(RM) game_window.o
-	$(RM) input_manager.o
-	$(RM) main.o
+	$(RM) python_embed/wrapper_functions.so
+	$(RM) $(BASE_OBJS)
+	$(RM) $(PYTHON_OBJS)
+
 
 .PHONY : clean
 .PHONY : debug
-.PHONY : python_embed
