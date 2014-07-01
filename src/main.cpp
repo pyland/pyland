@@ -1042,7 +1042,7 @@ int main ()
    objects[1].x = 300.0f;
    objects[1].y = 300.0f;
    // Setup the model world
-   init_model_proj(&window);
+   //   init_model_proj(&window);
 
    std::thread mythread(run_all);
 
@@ -1050,7 +1050,7 @@ int main ()
    int count = 0;
    while (!window.check_close())
    {
-     //     init_model_proj(&window);
+     init_model_proj(&window);
      //Get the time since the last iteration 
      dt = get_dt(); 
      count++;
