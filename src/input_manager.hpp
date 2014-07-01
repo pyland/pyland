@@ -29,7 +29,7 @@ private:
     ///
     /// Use this when the key's layout is important.
     ///
-    std::set<int> held_keys;
+    std::set<int> down_keys;
     ///
     /// Set of recently pressed keys (scancodes).
     ///
@@ -55,7 +55,7 @@ private:
     ///
     /// Set of currently depressed mouse buttons.
     ///
-    std::set<int> held_buttons;
+    std::set<int> down_buttons;
     ///
     /// Set of recently pressed mouse buttons.
     ///
@@ -98,7 +98,7 @@ public:
     ///
     /// @param key The scancode of the key.
     ///
-    bool is_key_held(int key);
+    bool is_key_down(int key);
     ///
     /// Query whether a key is down, given keycode.
     ///
@@ -106,7 +106,7 @@ public:
     ///
     /// @param key The keycode of the key.
     ///
-    bool is_char_held(int key);
+    bool is_char_down(int key);
     ///
     /// Query whether a key was recently pressed, given scancode.
     ///
@@ -150,6 +150,18 @@ public:
     /// @param button The button number.
     ///
     bool is_mouse_released(int button);
+
+    ///
+    /// Get the mouse cursor position in pixels from the top-left corner
+    /// of the render-area.
+    ///
+    std::pair<int,int> InputManager::get_mouse_pixels();
+
+    ///
+    /// Get the mouse cursor position as a ratio of the distances
+    /// between the top-left corner and bottom-right corner.
+    ///
+    std::pair<float,float> InputManager::get_mouse_ratio();
 };
 
 #endif
