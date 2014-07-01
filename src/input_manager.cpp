@@ -45,7 +45,11 @@ void InputManager::handle_event(SDL_Event* event) {
     switch (event->type) {
     case SDL_KEYDOWN:
     case SDL_KEYUP:
-        manager = GameWindow::windows[event->window.windowID]->input_manager;
+        manager = GameWindow::windows[event->key.windowID]->input_manager;
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+        manager = GameWindow::windows[event->button.windowID]->input_manager;
         break;
     }
     
