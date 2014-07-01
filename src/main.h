@@ -27,45 +27,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 //size of a  tile
 #define TILESET_ELEMENT_SIZE 32
-
-GLfloat * tileSetTexCoords;
-GLfloat * mapData;
-GLfloat * mapTexCoords;
-// Spatial coordinates for the cube
-static const GLbyte quadx[4*3] = {
-   /* FRONT */
-   -10, -10, 0,
-   10, -10,  0,
-   -10,  10, 0,
-   10,  10,  0,
-};
-
-/** Texture coordinates for the quad. */
-static const GLfloat texCoords[ 4 * 2] = {
-   0.f,  0.f,
-   0.f,  1.f,
-   1.f,  0.f,
-   1.f,  1.f,
-};
-
-/** Holds the overall map data */
-static const int worldData[] = {
-  10, 10, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 10, 2, 0, 0, 4,0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 2, 0, 0, 3,0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 2, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-
-};
 void move_object(const int id, const int direction);
