@@ -45,7 +45,8 @@ void InputManager::clean() {
 
 
 void InputManager::handle_event(SDL_Event* event) {
-    InputManager* manager;
+    // NULL Just removes a compile warning.
+    InputManager* manager = NULL;
     switch (event->type) {
     case SDL_KEYDOWN:
     case SDL_KEYUP:
