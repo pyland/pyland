@@ -84,32 +84,32 @@ void InputManager::handle_event(SDL_Event* event) {
 }
 
 
-bool InputManager::is_key_down(int key) {
+bool InputManager::is_scan_down(int key) {
     return (down_keys.count(key) == 1);
 }
 
 
-bool InputManager::is_char_down(int key) {
+bool InputManager::is_key_down(int key) {
     return (down_keys.count(SDL_GetScancodeFromKey(key)) == 1);
 }
 
 
-bool InputManager::is_key_pressed(int key) {
+bool InputManager::is_scan_pressed(int key) {
     return (pressed_keys.count(key) == 1);
 }
 
 
-bool InputManager::is_char_pressed(int key) {
+bool InputManager::is_key_pressed(int key) {
     return (pressed_keys.count(SDL_GetScancodeFromKey(key)) == 1);
 }
 
 
-bool InputManager::is_key_released(int key) {
+bool InputManager::is_scan_released(int key) {
     return (released_keys.count(key) == 1);
 }
 
 
-bool InputManager::is_char_released(int key) {
+bool InputManager::is_key_released(int key) {
     return (released_keys.count(SDL_GetScancodeFromKey(key)) == 1);
 }
 

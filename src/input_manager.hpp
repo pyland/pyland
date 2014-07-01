@@ -98,7 +98,7 @@ public:
     ///
     /// @param key The scancode of the key.
     ///
-    bool is_key_down(int key);
+    bool is_scan_down(int key);
     ///
     /// Query whether a key is down, given keycode.
     ///
@@ -106,31 +106,31 @@ public:
     ///
     /// @param key The keycode of the key.
     ///
-    bool is_char_down(int key);
+    bool is_key_down(int key);
     ///
     /// Query whether a key was recently pressed, given scancode.
     ///
     /// @param key The scancode of the key.
     ///
-    bool is_key_pressed(int key);
+    bool is_scan_pressed(int key);
     ///
     /// Query whether a key was recently pressed, given keycode.
     ///
     /// @param key The keycode of the key.
     ///
-    bool is_char_pressed(int key);
+    bool is_key_pressed(int key);
     ///
     /// Query whether a key was recently released, given scancode.
     ///
     /// @param key The scancode of the key.
     ///
-    bool is_key_released(int key);
+    bool is_scan_released(int key);
     ///
     /// Query whether a key was recently released, given keycode.
     ///
     /// @param key The keycode of the key.
     ///
-    bool is_char_released(int key);
+    bool is_key_released(int key);
     
     ///
     /// Query whether a mouse button is down.
