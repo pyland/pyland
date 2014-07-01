@@ -804,7 +804,7 @@ static void load_tex_images()
 static void init_textures()
 {
   
-  //  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
   load_tex_images();
   glGenTextures(1, &texture_id);
