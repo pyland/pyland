@@ -18,5 +18,5 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
     //     .def_readwrite("x", &Vec2D::x)
     //     .def_readwrite("y", &Vec2D::y);
 
-    def("move_object", &move_object);
+    py::def("move_object", &move_object);
 }
