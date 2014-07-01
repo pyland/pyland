@@ -269,6 +269,8 @@ void GameWindow::init_surface() {
 
 
 void GameWindow::init_surface(int x, int y, int w, int h) {
+    deinit_surface();
+
 #ifdef USE_GLES
     EGLBoolean result;
   
@@ -294,8 +296,6 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     source.y = 0;
     source.width  = w << 16; // (???)
     source.height = h << 16; // (???)
-
-    deinit_surface();
 
     DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
     dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
@@ -329,13 +329,13 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
         throw GameWindow::InitException("Error connecting context to surface");
     }
 
-    visible = true;
-    change_surface = InitAction::DO_NOTHING;
     // Clean up any garbage in the SDL window.
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 #endif
     
+    visible = true;
+    change_surface = InitAction::DO_NOTHING;
     // Only set these if the init was successful.
     window_x = x;
     window_y = y;
@@ -423,7 +423,6 @@ void GameWindow::update() {
         
         // Hacky fix: The events don't quite chronologically work, so
         // check the window position to start any needed surface update.
-#ifdef USE_GLES
         int x, y;
         Window child;
         XTranslateCoordinates(window->wm_info.info.x11.display,
@@ -457,7 +456,6 @@ void GameWindow::update() {
             // Do nothing - hey, I don't like compiler warnings.
             break;
         }
-#endif
         
         if (close_all) {
             window->request_close();
