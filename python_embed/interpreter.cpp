@@ -282,11 +282,12 @@ int main(int, char **) {
     PyEval_ReleaseLock();
     print_debug << "main: Released GIL " << std::endl;
 
-    for (auto p : all_players) {
+    int i = 0;
+    for (auto &player : all_players) {
         std::lock_guard<std::mutex> lock(playerthreads_editable);
 
-        run_thread(p, playerthreads, working_dir);
-        print_debug << "main: Spawned PlayerThread " << 0 << std::endl;
+        run_thread(player, playerthreads, working_dir);
+        print_debug << "main: Spawned PlayerThread " << ++i << std::endl;
     }
 
     for (auto &playerthread : playerthreads) {
