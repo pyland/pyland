@@ -235,7 +235,7 @@ void run_thread(Player &player, std::vector<PlayerThread> &playerthreads, std::s
 ///
 /// Initialize Python interpreter, spawn threads and do fun stuff.
 ///
-int main(int, char **) {
+void run_all() {
     Py_Initialize();
     PyEval_InitThreads();
 

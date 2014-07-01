@@ -46,8 +46,10 @@ PYTHON_LDFLAGS  = $(shell python${PYTHON_VERSION}-config --ldflags)
 PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 
 # Insert all here.
-all: main.bin
+all: main.bin python_embed
 
+python_embed:
+	COMPILER=g++ PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 @$(MAKE) -C python_embed debug
 
 
 debug: CPPFLAGS += -DDEBUG
@@ -79,3 +81,4 @@ clean:
 
 .PHONY : clean
 .PHONY : debug
+.PHONY : python_embed
