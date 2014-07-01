@@ -117,7 +117,11 @@ private:
     /// Mapping of SDL window IDs to GameWindows.
     ///
     static std::map<Uint32,GameWindow*> windows;
-    
+
+    ///
+    /// The currently focused window
+    ///
+    static GameWindow* focused_window;
     ///
     /// Stores X11 display and window information.
     ///

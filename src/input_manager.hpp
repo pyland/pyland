@@ -79,7 +79,7 @@ private:
     ///
     /// @param event An SDL_Event holding the event to process.
     ///
-    static void handle_event(SDL_Event* event);
+    void handle_event(SDL_Event* event);
 
 public:
     ///

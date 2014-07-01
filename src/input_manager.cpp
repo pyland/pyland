@@ -1,3 +1,4 @@
+#include <iostream>
 #include <set>
 
 extern "C" {
@@ -45,41 +46,26 @@ void InputManager::clean() {
 
 
 void InputManager::handle_event(SDL_Event* event) {
-    // NULL Just removes a compile warning.
-    InputManager* manager = NULL;
     switch (event->type) {
     case SDL_KEYDOWN:
-    case SDL_KEYUP:
-        manager = GameWindow::windows[event->key.windowID]->input_manager;
-        break;
-    case SDL_MOUSEBUTTONDOWN:
-    case SDL_MOUSEBUTTONUP:
-        manager = GameWindow::windows[event->button.windowID]->input_manager;
-    case SDL_MOUSEMOTION:
-        manager = GameWindow::windows[event->motion.windowID]->input_manager;
-        break;
-    }
-    
-    switch (event->type) {
-    case SDL_KEYDOWN:
-        manager->down_keys.insert(event->key.keysym.scancode);
-        manager->pressed_keys.insert(event->key.keysym.scancode);
+        down_keys.insert(event->key.keysym.scancode);
+        pressed_keys.insert(event->key.keysym.scancode);
         break;
     case SDL_KEYUP:
-        manager->down_keys.erase(event->key.keysym.scancode);
-        manager->released_keys.insert(event->key.keysym.scancode);
+        down_keys.erase(event->key.keysym.scancode);
+        released_keys.insert(event->key.keysym.scancode);
         break;
     case SDL_MOUSEBUTTONDOWN:
-        manager->down_buttons.insert(event->button.button);
-        manager->pressed_buttons.insert(event->button.button);
+        down_buttons.insert(event->button.button);
+        pressed_buttons.insert(event->button.button);
         break;
     case SDL_MOUSEBUTTONUP:
-        manager->down_buttons.erase(event->button.button);
-        manager->released_buttons.insert(event->button.button);
+        down_buttons.erase(event->button.button);
+        released_buttons.insert(event->button.button);
         break;
     case SDL_MOUSEMOTION:
-        manager->mouse_x = event->motion.x;
-        manager->mouse_y = event->motion.y;
+        mouse_x = event->motion.x;
+        mouse_y = event->motion.y;
         break;
     }
 }
