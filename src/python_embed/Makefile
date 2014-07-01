@@ -25,19 +25,13 @@ PYTHON_CPPFLAGS = $(shell python${PYTHON_VERSION}-config --cflags)
 PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 PYTHON_CXXFLAGS =
 
-all: interpreter wrapper_functions.so
+all: interpreter.o wrapper_functions.o playerthread.o api.o debug.o locks.o wrapper_functions.so
 
 debug: CXXFLAGS += -g
 debug: CXXFLAGS +=  -fno-elide-constructors
 debug: CXXFLAGS +=  -O0
 debug: CPPFLAGS += -DDEBUG
 debug: interpreter wrapper_functions.so
-
-interpreter: interpreter.o wrapper_functions.o playerthread.o api.o debug.o locks.o
-	$(CXX) -o interpreter \
-		interpreter.o wrapper_functions.o playerthread.o api.o debug.o locks.o \
-		$(BOOST_LDLIBS) $(PYTHON_LDLIBS) $(LDFLAGS) $(LDLIBS) $(CXXFLAGS)
-	@echo
 
 wrapper_functions.so: wrapper_functions.cpp
 	$(CXX) -shared -fPIC wrapper_functions.cpp -o wrapper_functions.so \
