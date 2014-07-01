@@ -53,10 +53,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "python_embed/interpreter.h"
 
 #ifdef USE_GLES
+#include "GLES/gl.h"
 #include "GLES2/gl2.h"
+
 #endif
 
 #ifdef USE_GL
+
 #include "GL/gl.h"
 #endif
 
@@ -996,7 +999,7 @@ int main ()
    // Setup the model world
    init_model_proj(&window);
 
-   run_all();
+   //   run_all();
 
    float dt = get_dt();
    int count = 0;
