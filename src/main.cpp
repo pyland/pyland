@@ -358,7 +358,6 @@ static void draw_sprites( float dt)
  {
    glm::mat4 model = glm::mat4(1.0f);
 
-
    glUseProgram(program_obj);
 
    glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
@@ -804,7 +803,7 @@ static void load_tex_images()
 static void init_textures()
 {
   
-  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+  //  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
   load_tex_images();
   glGenTextures(1, &texture_id);
