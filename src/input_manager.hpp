@@ -25,11 +25,11 @@ private:
     GameWindow* window;
     
     ///
-    /// Set of currently pressed keys (scancodes).
+    /// Set of currently depressed keys (scancodes).
     ///
     /// Use this when the key's layout is important.
     ///
-    std::set<int> held_keys;
+    std::set<int> down_keys;
     ///
     /// Set of recently pressed keys (scancodes).
     ///
@@ -40,9 +40,35 @@ private:
     std::set<int> released_keys;
 
     ///
+    /// The current x coordinate of the mouse.
+    ///
+    /// Stored in pixels from left of render-area.
+    ///
+    int mouse_x;
+    ///
+    /// The current y coordinate of the mouse.
+    ///
+    /// Stored in pixels from top of render-area.
+    ///
+    int mouse_y;
+
+    ///
+    /// Set of currently depressed mouse buttons.
+    ///
+    std::set<int> down_buttons;
+    ///
+    /// Set of recently pressed mouse buttons.
+    ///
+    std::set<int> pressed_buttons;
+    ///
+    /// Set of recently released mouse buttons.
+    ///
+    std::set<int> released_buttons;
+
+    ///
     /// Code to be run before handling event loops.
     ///
-    /// Clears pressed and released keys.
+    /// Clears pressed and released keys and mouse buttons.
     ///
     void clean();
     
@@ -53,7 +79,7 @@ private:
     ///
     /// @param event An SDL_Event holding the event to process.
     ///
-    static void handle_event(SDL_Event* event);
+    void handle_event(SDL_Event* event);
 
 public:
     ///
@@ -72,7 +98,7 @@ public:
     ///
     /// @param key The scancode of the key.
     ///
-    bool is_key_held(int key);
+    bool is_scan_down(int key);
     ///
     /// Query whether a key is down, given keycode.
     ///
@@ -80,31 +106,62 @@ public:
     ///
     /// @param key The keycode of the key.
     ///
-    bool is_char_held(int key);
+    bool is_key_down(int key);
     ///
     /// Query whether a key was recently pressed, given scancode.
     ///
     /// @param key The scancode of the key.
     ///
-    bool is_key_pressed(int key);
+    bool is_scan_pressed(int key);
     ///
     /// Query whether a key was recently pressed, given keycode.
     ///
     /// @param key The keycode of the key.
     ///
-    bool is_char_pressed(int key);
+    bool is_key_pressed(int key);
     ///
     /// Query whether a key was recently released, given scancode.
     ///
     /// @param key The scancode of the key.
     ///
-    bool is_key_released(int key);
+    bool is_scan_released(int key);
     ///
     /// Query whether a key was recently released, given keycode.
     ///
     /// @param key The keycode of the key.
     ///
-    bool is_char_released(int key);
+    bool is_key_released(int key);
+    
+    ///
+    /// Query whether a mouse button is down.
+    ///
+    /// @param button The button number.
+    ///
+    bool is_mouse_down(int button);
+    ///
+    /// Query whether a mouse button was recently pressed.
+    ///
+    /// @param button The button number.
+    ///
+    bool is_mouse_pressed(int button);
+    ///
+    /// Query whether a mouse button was recently released.
+    ///
+    /// @param button The button number.
+    ///
+    bool is_mouse_released(int button);
+
+    ///
+    /// Get the mouse cursor position in pixels from the top-left corner
+    /// of the render-area.
+    ///
+    std::pair<int,int> get_mouse_pixels();
+
+    ///
+    /// Get the mouse cursor position as a ratio of the distances
+    /// between the top-left corner and bottom-right corner.
+    ///
+    std::pair<float,float> get_mouse_ratio();
 };
 
 #endif

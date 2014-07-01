@@ -28,6 +28,7 @@ extern "C" {
 
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
+GameWindow* GameWindow::focused_window = NULL;
 
 
 
@@ -110,10 +111,10 @@ GameWindow::~GameWindow() {
     vc_dispmanx_display_close(dispmanDisplay); // (???)
     SDL_DestroyRenderer (renderer);
 #endif
-    SDL_DestroyWindow (window);
-    
     // window_count--;
     windows.erase(SDL_GetWindowID(window));
+    
+    SDL_DestroyWindow (window);
     if (windows.size() == 0) {
         deinit_sdl();
     }
@@ -401,17 +402,23 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 window->change_surface = InitAction::DO_INIT;
+                focused_window = window;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
             case SDL_WINDOWEVENT_MINIMIZED:
             case SDL_WINDOWEVENT_HIDDEN:
                 window->change_surface = InitAction::DO_DEINIT;
+                if (focused_window == window) {
+                    focused_window = NULL;
+                }
                 break;
             }
             break;
         default:
             // Let the input manager use the event.
-            InputManager::handle_event(&event);
+            if (focused_window != NULL) {
+                focused_window->input_manager->handle_event(&event);
+            }
             break;
         }
     }
