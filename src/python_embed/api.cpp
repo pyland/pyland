@@ -73,7 +73,7 @@ void Player::give_script(py::api::object main_namespace) {
         // TODO: find a more scalable approach
         "import time\n"
         "def move(x):\n"
-        "    time.sleep(0.001)\n"
+        "    time.sleep(0.01)\n"
         "    player.move(x)\n"
     
         "def monologue():\n"
