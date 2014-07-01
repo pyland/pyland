@@ -247,7 +247,7 @@ int main(int, char **) {
 
     std::mutex playerthreads_editable;
 
-    std::vector<PlayerThread> playerthreads = {};
+    std::vector<PlayerThread> playerthreads;
     std::thread kill_thread(
         thread_killer,
         std::ref(kill_thread_finish_signal),
