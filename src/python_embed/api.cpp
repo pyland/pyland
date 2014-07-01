@@ -41,6 +41,7 @@ Player::Player(Vec2D start, std::string name, int id):
 uint64_t Player::call_number = 0;
 
 void Player::move(Vec2D by) {
+    ++call_number;
     position += by;
 
     for (int dx=0; dx < by.x; ++dx) {
