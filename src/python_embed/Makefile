@@ -20,8 +20,8 @@ BOOST_LDLIBS    = -l${LIBBOOST_PYTHON} -lboost_filesystem -lboost_system -lboost
 BOOST_CPPFLAGS  =
 BOOST_CXXFLAGS  =
 
-PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --ldflags)
-PYTHON_CPPFLAGS = $(shell python${PYTHON_VERSION}-config --cflags)
+PYTHON_LDLIBS   =  $(shell python${PYTHON_VERSION}-config --ldflags)
+PYTHON_CPPFLAGS =  $(shell python${PYTHON_VERSION}-config --cflags)
 PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 PYTHON_CXXFLAGS =
 
@@ -32,6 +32,7 @@ debug: CXXFLAGS +=  -fno-elide-constructors
 debug: CXXFLAGS +=  -O0
 debug: CPPFLAGS += -DDEBUG
 debug: wrapper_functions.so
+debug: all
 
 wrapper_functions.so: wrapper_functions.cpp
 	$(CXX) -shared -fPIC wrapper_functions.cpp -o wrapper_functions.so \

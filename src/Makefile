@@ -39,14 +39,14 @@ X11_LDLIBS      = $(shell pkg-config x11 --libs)
 
 BOOST_CPPFLAGS  =
 BOOST_LDFLAGS   =
-BOOST_LDLIBS    = -l${LIBBOOST_PYTHON} -lboost_filesystem -lboost_system
+BOOST_LDLIBS    = -l${LIBBOOST_PYTHON} -lboost_filesystem -lboost_system -lboost_regex
 
 PYTHON_CPPFLAGS = $(shell python${PYTHON_VERSION}-config --cflags)
 PYTHON_LDFLAGS  = $(shell python${PYTHON_VERSION}-config --ldflags)
 PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 
 # Insert all here.
-all: main.bin python_embed
+all: main.bin
 
 python_embed:
 	@$(MAKE) -C python_embed debug
@@ -57,8 +57,13 @@ debug: all
 
 
 
-main.bin: main.o game_window.o input_manager.o
-	$(CXX) -o main.bin main.o game_window.o input_manager.o $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) $(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS)
+main.bin: main.o python_embed game_window.o input_manager.o
+	$(CXX) -o main.bin main.o game_window.o input_manager.o \
+		python_embed/interpreter.o python_embed/wrapper_functions.o python_embed/playerthread.o \
+		python_embed/api.o python_embed/debug.o python_embed/locks.o \
+		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
+		$(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS) \
+		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS) $(BOOST_LDFLAGS) $(BOOST_LDLIBS)
 
 
 
