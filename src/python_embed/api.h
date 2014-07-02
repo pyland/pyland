@@ -27,6 +27,7 @@ class Vec2D {
         /// @return New instance of Vec2D
         ///
         Vec2D operator+(Vec2D other);
+        Vec2D operator-(Vec2D other);
 
         ///
         /// In-place addition of Vec2Ds
@@ -35,6 +36,8 @@ class Vec2D {
         /// @return void 
         ///
         void operator+=(Vec2D other);
+        void operator-=(Vec2D other);
+
 
         ///
         /// Convert Vec2D to a std::string

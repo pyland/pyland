@@ -68,6 +68,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "main.h"
 
 #define PATH "./"
+#define GLOBAL_SCALE 2
 
 #define IMAGE1_SIZE_WIDTH 128
 #define IMAGE1_NUM_COMPONENTS 4
@@ -75,9 +76,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
-#define IMAGE2_SIZE_WIDTH 128
+#define IMAGE2_SIZE_WIDTH 192
 #define IMAGE2_NUM_COMPONENTS 4
-#define IMAGE2_SIZE_HEIGHT 240
+#define IMAGE2_SIZE_HEIGHT 128
 
 #ifndef M_PI
 #define M_PI 3.141592654
@@ -110,7 +111,7 @@ const int num_vbo_ids = 4;
 static void draw_map(int image_height, int image_width, float dt);
 GLuint vboIds[num_vbo_ids];
 GLuint program_obj =0;
-GLuint texture_id = 0;
+GLuint texture_ids[2];
 const int map_height = 16;
 const int map_width = 16;
 float map_scroll_speed = 32.0f; //1 tile a second
@@ -122,9 +123,10 @@ const int map_display_height = 8;
 GLfloat* sprite_data;
 GLfloat* sprite_tex_data;
 
-char* tex_buf1, tex_buf2;
+char* tex_buf1;
+char* tex_buf2;
 glm::mat4 projection_matrix;
-const int num_objects = 4;
+const int num_objects = 2;
 
 
 
@@ -149,6 +151,7 @@ static const GLfloat texCoords[ 4 * 2] = {
 };
 
 /** Holds the overall map data */
+//0th tile is top left
 static const int worldData[] = {
   10, 10, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -181,8 +184,8 @@ void move_object(const int id, const int dx, const int dy) {
     cerr << "ERROR: move_object: object id exceeds number of objects. Object id: " << id << endl;
     return;
   } 
-  objects[i].x += dx;
-  objects[i].y += dy;
+  objects[id].x += dx;
+  objects[id].y += dy;
 }
 
 static void init_buffers() {
@@ -229,7 +232,9 @@ static void init_buffers() {
   glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D,texture_id);
+
+  //Bind tiles texture
+  glBindTexture(GL_TEXTURE_2D,texture_ids[0]);
 }
 
 static void animate(float dt) {
@@ -325,7 +330,8 @@ static void draw_map(int map_width, int map_height, float dt)
    glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
 
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D,texture_id);
+   //Bind tiles texture
+   glBindTexture(GL_TEXTURE_2D,texture_ids[0]);
 
    //set sampler texture to unit 0
    glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
@@ -360,7 +366,8 @@ static void draw_sprites( float dt)
    glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
 
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D,texture_id);
+   //Bind characters texture
+   glBindTexture(GL_TEXTURE_2D,texture_ids[1]);
 
    //set sampler texture to unit 0
    glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
@@ -450,7 +457,7 @@ static void draw_sprites( float dt)
   * Name: generate_tilset_coords
   *
   ***********************************************************/
- static void generate_tileset_coords(int image_height, int image_width)
+static void generate_tileset_coords(int image_width, int image_height)
  {
 #ifdef DEBUG
    printf("GENERATING TILESET TEXTURE COORDS...");
@@ -464,44 +471,45 @@ static void draw_sprites( float dt)
    assert(num_tiles_x != 0);
    assert(num_tiles_y != 0);
 
-
    //Each tile needs 8 floats to describe its position in the image
    tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
    assert(tileset_tex_coords != 0);
 
-   
+   //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
+   //so we remap these 
+   //We work from left to right, moving down
    double tileset_offset_x = 0.0;
-   double tileset_offset_y = 0.0;
+   double tileset_offset_y = 1.0;
    double tileset_inc_x = 1.0 / (double)num_tiles_x;
    double tileset_inc_y = 1.0 / (double)num_tiles_y;
    //TODo: DIV ZEro HERRE 
 
    //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
    //generate the coordinates for each tile
-   for(int x = 0; x < num_tiles_x; x++)
+   for(int y = 0; y < num_tiles_y; y++)
      {
-       for(int y = 0; y< num_tiles_y; y++)
+       for(int x = 0; x < num_tiles_x; x++)
 	 {
 	   //bottom left
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y - tileset_inc_y;
 
 	   //top left
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+ 2] =tileset_offset_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y + tileset_inc_y;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y;
 
 	   //bottom right
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+4] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y - tileset_inc_y;
 
 	   //top right
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y + tileset_inc_y;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y;
 
-	   tileset_offset_y += tileset_inc_y;
+	   tileset_offset_x += tileset_inc_x;
 	 }
-       tileset_offset_x += tileset_inc_x;
-       tileset_offset_y = 0.0;
+       tileset_offset_x = 0.0;
+       tileset_offset_y -= tileset_inc_y;
      }
  }
 
@@ -577,7 +585,7 @@ static void generate_map_coords(int map_width, int map_height)
   int num_floats = 18;
   map_data = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
   assert(map_data != 0);
-  float scale = 32.0f;
+  float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
   //generate the map data
   /**
    * Vertex winding order:
@@ -740,8 +748,9 @@ GLuint shader_create(const string vs, const string fs) {
 static void load_tex_images()
 {
   FILE *tex_file1, *tex_file2 = NULL;
-  int bytes_read, image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
-
+  int bytes_read  =0;
+  int image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
+  int image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
   tex_buf1 = new char[image_sz_1];
 
   tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
@@ -787,14 +796,23 @@ static void init_textures()
   //  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
   load_tex_images();
-  glGenTextures(1, &texture_id);
-  glBindTexture(GL_TEXTURE_2D, texture_id);
+  glGenTextures(2, texture_ids);
+  glBindTexture(GL_TEXTURE_2D, texture_ids[0]);
   
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, 0,
                 GL_RGBA, GL_UNSIGNED_BYTE, tex_buf1);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
+  glBindTexture(GL_TEXTURE_2D, texture_ids[1]);
+  
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, 0,
+                GL_RGBA, GL_UNSIGNED_BYTE, tex_buf2);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
+
+
+  
 }
 
 
@@ -889,107 +907,108 @@ bool init_shaders() {
 
   GLuint program_obj = shader_create(vert_src, frag_src);
 
-  if(program_obj == 0){
+  if(program_obj == 0) {
     std::cout << "Failed to create the shader" << std::endl;
     return false;
   }
 
   return true;
 }
+
 void generate_sprite_tex_data() {
 
-  //holds the map data
-  //need 12 float for the 2D texture coordinates
-  int num_floats = 12;
-  sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
-  assert(sprite_tex_data != 0);
+    //holds the map data
+    //need 12 float for the 2D texture coordinates
+    int num_floats = 12;
+    sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
+    assert(sprite_tex_data != 0);
 
-  //generate the map data
+    //generate the map data
 
-  int curr_tile = 13;
-  GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
-  //bottom left
-  sprite_tex_data[0] = tileset_ptr[0];
-  sprite_tex_data[1] = tileset_ptr[1];
+    int curr_tile = 13;
+    GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
+    //bottom left
+    sprite_tex_data[0] = tileset_ptr[0];
+    sprite_tex_data[1] = tileset_ptr[1];
 
-  //top left
-  sprite_tex_data[2] = tileset_ptr[2];
-  sprite_tex_data[3] = tileset_ptr[3];
+    //top left
+    sprite_tex_data[2] = tileset_ptr[2];
+    sprite_tex_data[3] = tileset_ptr[3];
 
-  //bottom right
-  sprite_tex_data[4] = tileset_ptr[4];
-  sprite_tex_data[5] = tileset_ptr[5];
+    //bottom right
+    sprite_tex_data[4] = tileset_ptr[4];
+    sprite_tex_data[5] = tileset_ptr[5];
 
-  //top left
-  sprite_tex_data[6] = tileset_ptr[2];
-  sprite_tex_data[7] = tileset_ptr[3];
+    //top left
+    sprite_tex_data[6] = tileset_ptr[2];
+    sprite_tex_data[7] = tileset_ptr[3];
 
-  //top right
-  sprite_tex_data[8] = tileset_ptr[6];
-  sprite_tex_data[9] = tileset_ptr[7];
-	
-  //bottom right
-  sprite_tex_data[10] = tileset_ptr[4];
-  sprite_tex_data[11] = tileset_ptr[5];
+    //top right
+    sprite_tex_data[8] = tileset_ptr[6];
+    sprite_tex_data[9] = tileset_ptr[7];
+
+    //bottom right
+    sprite_tex_data[10] = tileset_ptr[4];
+    sprite_tex_data[11] = tileset_ptr[5];
 
 }
 
 void generate_sprite_coords() {
-  #ifdef DEBUG
-  printf("GENERATING MAP DATA...");
+#ifdef DEBUG
+    printf("GENERATING MAP DATA...");
 #endif
-  //holds the map data
-   //need 18 floats for each coordinate as these hold 3D coordinates
-  int num_floats = 18;
-  sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
-  assert(sprite_data != 0);
-  float scale = 16.0f;
-  //generate the map data
-  /**
-   * Vertex winding order:
-   * 1, 3   4
-   *  * --- * 
-   *  |     |
-   *  |     | 
-   *  * --- *
-   * 0       2,5
-   */
+    //holds the map data
+    //need 18 floats for each coordinate as these hold 3D coordinates
+    int num_floats = 18;
+    sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+    assert(sprite_data != 0);
+    float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
+    //generate the map data
+    /**
+    * Vertex winding order:
+    * 1, 3   4
+    *  * --- * 
+    *  |     |
+    *  |     | 
+    *  * --- *
+    * 0       2,5
+    */
 
-  //generate one tile's worth of data
-  
-  //bottom left 
-  sprite_data[0] = 0;
-  sprite_data[1] = 0;
-  sprite_data[2] = 0;
-	   
-  //top left
-  sprite_data[3] = 0;
-  sprite_data[4] = (1) * scale;
-  sprite_data[5] = 0;
+    //generate one tile's worth of data
 
-  //bottom right
-  sprite_data[6] = (1) * scale;
-  sprite_data[7] = 0;
-  sprite_data[8] = 0;
-	
-  //top left
-  sprite_data[9] = 0;
-  sprite_data[10] = 1 * scale;
-  sprite_data[11] = 0;
-  
-  //top right
-  sprite_data[12] = 1 * scale;
-  sprite_data[13] = 1 * scale;
-  sprite_data[14] = 0;
+    //bottom left 
+    sprite_data[0] = 0;
+    sprite_data[1] = 0;
+    sprite_data[2] = 0;
+       
+    //top left
+    sprite_data[3] = 0;
+    sprite_data[4] = (1) * scale;
+    sprite_data[5] = 0;
 
-  //bottom right
-  sprite_data[15] = 1 * scale;
-  sprite_data[16] = 0;
-  sprite_data[17] = 0;
+    //bottom right
+    sprite_data[6] = (1) * scale;
+    sprite_data[7] = 0;
+    sprite_data[8] = 0;
+
+    //top left
+    sprite_data[9] = 0;
+    sprite_data[10] = 1 * scale;
+    sprite_data[11] = 0;
+
+    //top right
+    sprite_data[12] = 1 * scale;
+    sprite_data[13] = 1 * scale;
+    sprite_data[14] = 0;
+
+    //bottom right
+    sprite_data[15] = 1 * scale;
+    sprite_data[16] = 0;
+    sprite_data[17] = 0;
 
 
 #ifdef DEBUG
-  printf("DONE.");
+    printf("DONE.");
 #endif
 
 
@@ -997,39 +1016,34 @@ void generate_sprite_coords() {
 
 //==============================================================================
 
-int main ()
-{
-   GameWindow window(640, 480, false);
-   window.use_context();
+int main () {
+    GameWindow window(640, 480, false);
+    window.use_context();
 
-   // Start OGLES
-   init_ogl();
+    // Start OGLES
+    init_ogl();
 
-   if(!init_shaders())
-     return 0;
+    if(!init_shaders())
+        return 0;
 
-   generate_tileset_coords(IMAGE_1SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-   generate_map_texcoords(map_width, map_height);
-   generate_sprite_coords();
-   generate_sprite_tex_data();
+    generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+    generate_map_texcoords(map_width, map_height);
+    generate_sprite_coords();
+    generate_sprite_tex_data();
 
-   // initialise the OGLES texture(s)
-   init_textures();
+    // initialise the OGLES texture(s)
+    init_textures();
 
-   generate_map_coords(map_width, map_height);
-   init_buffers();
-   //   objects[0].x = 330.0f;
-   //   objects[0].y = 330.0f;
-   //   objects[1].x = 300.0f;
-   //   objects[1].y = 300.0f;
+    generate_map_coords(map_width, map_height);
+    init_buffers();
 
-   //   Map map;
-   //   std::thread mythread(run_all);
+    //   Map map;
+    //    std::thread mythread(run_all);
 
-   float dt = get_dt();
-   int count = 0;
-   while (!window.check_close())
-   {
+    float dt = get_dt();
+    int count = 0;
+
+    while (!window.check_close()) {
      init_model_proj(&window);
 
      //Get the time since the last iteration 
@@ -1038,9 +1052,9 @@ int main ()
      update(dt);
      redraw_scene(&window, dt);
      GameWindow::update();
+    }
 
-   }
-   exit_func();
-   //   mythread.join();
-   return 0;
+    exit_func();
+    //    mythread.join();
+    return 0;
 }
