@@ -904,107 +904,108 @@ bool init_shaders() {
 
   GLuint program_obj = shader_create(vert_src, frag_src);
 
-  if(program_obj == 0){
+  if(program_obj == 0) {
     std::cout << "Failed to create the shader" << std::endl;
     return false;
   }
 
   return true;
 }
+
 void generate_sprite_tex_data() {
 
-  //holds the map data
-  //need 12 float for the 2D texture coordinates
-  int num_floats = 12;
-  sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
-  assert(sprite_tex_data != 0);
+    //holds the map data
+    //need 12 float for the 2D texture coordinates
+    int num_floats = 12;
+    sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
+    assert(sprite_tex_data != 0);
 
-  //generate the map data
+    //generate the map data
 
-  int curr_tile = 13;
-  GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
-  //bottom left
-  sprite_tex_data[0] = tileset_ptr[0];
-  sprite_tex_data[1] = tileset_ptr[1];
+    int curr_tile = 13;
+    GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
+    //bottom left
+    sprite_tex_data[0] = tileset_ptr[0];
+    sprite_tex_data[1] = tileset_ptr[1];
 
-  //top left
-  sprite_tex_data[2] = tileset_ptr[2];
-  sprite_tex_data[3] = tileset_ptr[3];
+    //top left
+    sprite_tex_data[2] = tileset_ptr[2];
+    sprite_tex_data[3] = tileset_ptr[3];
 
-  //bottom right
-  sprite_tex_data[4] = tileset_ptr[4];
-  sprite_tex_data[5] = tileset_ptr[5];
+    //bottom right
+    sprite_tex_data[4] = tileset_ptr[4];
+    sprite_tex_data[5] = tileset_ptr[5];
 
-  //top left
-  sprite_tex_data[6] = tileset_ptr[2];
-  sprite_tex_data[7] = tileset_ptr[3];
+    //top left
+    sprite_tex_data[6] = tileset_ptr[2];
+    sprite_tex_data[7] = tileset_ptr[3];
 
-  //top right
-  sprite_tex_data[8] = tileset_ptr[6];
-  sprite_tex_data[9] = tileset_ptr[7];
-	
-  //bottom right
-  sprite_tex_data[10] = tileset_ptr[4];
-  sprite_tex_data[11] = tileset_ptr[5];
+    //top right
+    sprite_tex_data[8] = tileset_ptr[6];
+    sprite_tex_data[9] = tileset_ptr[7];
+
+    //bottom right
+    sprite_tex_data[10] = tileset_ptr[4];
+    sprite_tex_data[11] = tileset_ptr[5];
 
 }
 
 void generate_sprite_coords() {
-  #ifdef DEBUG
-  printf("GENERATING MAP DATA...");
+#ifdef DEBUG
+    printf("GENERATING MAP DATA...");
 #endif
-  //holds the map data
-   //need 18 floats for each coordinate as these hold 3D coordinates
-  int num_floats = 18;
-  sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
-  assert(sprite_data != 0);
-  float scale = 16.0f;
-  //generate the map data
-  /**
-   * Vertex winding order:
-   * 1, 3   4
-   *  * --- * 
-   *  |     |
-   *  |     | 
-   *  * --- *
-   * 0       2,5
-   */
+    //holds the map data
+    //need 18 floats for each coordinate as these hold 3D coordinates
+    int num_floats = 18;
+    sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+    assert(sprite_data != 0);
+    float scale = 16.0f;
+    //generate the map data
+    /**
+    * Vertex winding order:
+    * 1, 3   4
+    *  * --- * 
+    *  |     |
+    *  |     | 
+    *  * --- *
+    * 0       2,5
+    */
 
-  //generate one tile's worth of data
-  
-  //bottom left 
-  sprite_data[0] = 0;
-  sprite_data[1] = 0;
-  sprite_data[2] = 0;
-	   
-  //top left
-  sprite_data[3] = 0;
-  sprite_data[4] = (1) * scale;
-  sprite_data[5] = 0;
+    //generate one tile's worth of data
 
-  //bottom right
-  sprite_data[6] = (1) * scale;
-  sprite_data[7] = 0;
-  sprite_data[8] = 0;
-	
-  //top left
-  sprite_data[9] = 0;
-  sprite_data[10] = 1 * scale;
-  sprite_data[11] = 0;
-  
-  //top right
-  sprite_data[12] = 1 * scale;
-  sprite_data[13] = 1 * scale;
-  sprite_data[14] = 0;
+    //bottom left 
+    sprite_data[0] = 0;
+    sprite_data[1] = 0;
+    sprite_data[2] = 0;
+       
+    //top left
+    sprite_data[3] = 0;
+    sprite_data[4] = (1) * scale;
+    sprite_data[5] = 0;
 
-  //bottom right
-  sprite_data[15] = 1 * scale;
-  sprite_data[16] = 0;
-  sprite_data[17] = 0;
+    //bottom right
+    sprite_data[6] = (1) * scale;
+    sprite_data[7] = 0;
+    sprite_data[8] = 0;
+
+    //top left
+    sprite_data[9] = 0;
+    sprite_data[10] = 1 * scale;
+    sprite_data[11] = 0;
+
+    //top right
+    sprite_data[12] = 1 * scale;
+    sprite_data[13] = 1 * scale;
+    sprite_data[14] = 0;
+
+    //bottom right
+    sprite_data[15] = 1 * scale;
+    sprite_data[16] = 0;
+    sprite_data[17] = 0;
 
 
 #ifdef DEBUG
-  printf("DONE.");
+    printf("DONE.");
 #endif
 
 
@@ -1012,39 +1013,34 @@ void generate_sprite_coords() {
 
 //==============================================================================
 
-int main ()
-{
-   GameWindow window(640, 480, false);
-   window.use_context();
+int main () {
+    GameWindow window(640, 480, false);
+    window.use_context();
 
-   // Start OGLES
-   init_ogl();
+    // Start OGLES
+    init_ogl();
 
-   if(!init_shaders())
-     return 0;
+    if(!init_shaders())
+        return 0;
 
-   generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-   generate_map_texcoords(map_width, map_height);
-   generate_sprite_coords();
-   generate_sprite_tex_data();
+    generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+    generate_map_texcoords(map_width, map_height);
+    generate_sprite_coords();
+    generate_sprite_tex_data();
 
-   // initialise the OGLES texture(s)
-   init_textures();
+    // initialise the OGLES texture(s)
+    init_textures();
 
-   generate_map_coords(map_width, map_height);
-   init_buffers();
-   //   objects[0].x = 330.0f;
-   //   objects[0].y = 330.0f;
-   //   objects[1].x = 300.0f;
-   //   objects[1].y = 300.0f;
+    generate_map_coords(map_width, map_height);
+    init_buffers();
 
-   //   Map map;
-   //   std::thread mythread(run_all);
+    //   Map map;
+    std::thread mythread(run_all);
 
-   float dt = get_dt();
-   int count = 0;
-   while (!window.check_close())
-   {
+    float dt = get_dt();
+    int count = 0;
+
+    while (!window.check_close()) {
      init_model_proj(&window);
 
      //Get the time since the last iteration 
@@ -1053,9 +1049,9 @@ int main ()
      update(dt);
      redraw_scene(&window, dt);
      GameWindow::update();
+    }
 
-   }
-   exit_func();
-   //   mythread.join();
-   return 0;
+    exit_func();
+    mythread.join();
+    return 0;
 }
