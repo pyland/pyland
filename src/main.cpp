@@ -117,7 +117,7 @@ GLfloat* sprite_tex_data;
 
 char* tex_buf1;
 glm::mat4 projection_matrix;
-const int num_objects = 4;
+const int num_objects = 2;
 
 
 
