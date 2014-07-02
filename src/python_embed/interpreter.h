@@ -1,1 +1,1 @@
-void run_all();
+void run_all(int num_objects);

@@ -236,7 +236,7 @@ void run_thread(Player &player, std::vector<PlayerThread> &playerthreads, std::s
 ///
 /// Initialize Python interpreter, spawn threads and do fun stuff.
 ///
-void run_all() {
+void run_all(int num_objects) {
     Py_Initialize();
     PyEval_InitThreads();
 
@@ -261,7 +261,6 @@ void run_all() {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    const int num_objects = 4;
     std::list<Player> all_players;
 
     for (int i = 0; i <= num_objects ; i++) {

@@ -116,7 +116,7 @@ GLfloat* sprite_tex_data;
 
 char* tex_buf1;
 glm::mat4 projection_matrix;
-const int num_objects = 4;
+const int num_objects = 50;
 
 
 
@@ -1016,7 +1016,7 @@ void generate_sprite_coords() {
 
 //==============================================================================
 
-int main ()
+int main (int argc, const char* argv[] )
 {
    GameWindow window(640, 480, false);
    window.use_context();
@@ -1044,7 +1044,8 @@ int main ()
    // Setup the model world
    //   init_model_proj(&window);
 
-   std::thread mythread(run_all);
+   const int num_sprites = argc==2 ? atoi(argv[1]) : 1;
+   std::thread mythread(run_all,num_sprites);
 
    float dt = get_dt();
    int count = 0;
