@@ -457,7 +457,7 @@ static void draw_sprites( float dt)
   * Name: generate_tilset_coords
   *
   ***********************************************************/
- static void generate_tileset_coords(int image_height, int image_width)
+static void generate_tileset_coords(int image_width, int image_height)
  {
 #ifdef DEBUG
    printf("GENERATING TILESET TEXTURE COORDS...");
@@ -471,13 +471,13 @@ static void draw_sprites( float dt)
    assert(num_tiles_x != 0);
    assert(num_tiles_y != 0);
 
-
    //Each tile needs 8 floats to describe its position in the image
    tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
    assert(tileset_tex_coords != 0);
 
    //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
    //so we remap these 
+   //We work from left to right, moving down
    double tileset_offset_x = 0.0;
    double tileset_offset_y = 1.0;
    double tileset_inc_x = 1.0 / (double)num_tiles_x;
@@ -486,9 +486,9 @@ static void draw_sprites( float dt)
 
    //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
    //generate the coordinates for each tile
-   for(int x = 0; x < num_tiles_x; x++)
+   for(int y = 0; y < num_tiles_y; y++)
      {
-       for(int y = 0; y< num_tiles_y; y++)
+       for(int x = 0; x < num_tiles_x; x++)
 	 {
 	   //bottom left
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
@@ -506,10 +506,10 @@ static void draw_sprites( float dt)
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y;
 
-	   tileset_offset_y -= tileset_inc_y;
+	   tileset_offset_x += tileset_inc_x;
 	 }
-       tileset_offset_x += tileset_inc_x;
-       tileset_offset_y = 1.0;
+       tileset_offset_x = 0.0;
+       tileset_offset_y -= tileset_inc_y;
      }
  }
 
@@ -1038,7 +1038,7 @@ int main () {
     init_buffers();
 
     //   Map map;
-    std::thread mythread(run_all);
+    //    std::thread mythread(run_all);
 
     float dt = get_dt();
     int count = 0;
@@ -1055,6 +1055,6 @@ int main () {
     }
 
     exit_func();
-    mythread.join();
+    //    mythread.join();
     return 0;
 }
