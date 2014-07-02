@@ -1,6 +1,5 @@
 import random
-move(north)
-print("JOHN!!")
-for _ in range(2400):
+
+while True:
     move(random.choice([north, south, east, west]))
-monologue()
+

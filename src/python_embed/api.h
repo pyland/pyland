@@ -49,6 +49,7 @@ class Vec2D {
 
 class Player {
     private:
+        Vec2D start;
         Vec2D position;
         std::string name;
         boost::python::api::object script;
@@ -78,7 +79,7 @@ class Player {
         ///
         /// @param by Vec2D representing movement in the axes
         ///
-        void move(Vec2D by);
+        bool move(Vec2D by);
 
         ///
         /// Prints to standard output the name and position of sprite

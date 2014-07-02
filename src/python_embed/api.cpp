@@ -1,5 +1,6 @@
 #include <boost/python.hpp>
 #include <boost/regex.hpp>
+#include <thread>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -15,8 +16,17 @@ enum class TileType {
 };
 
 std::map<int, TileType> tile_to_type({
+    { 8, TileType::WALKABLE},
+    {12, TileType::WALKABLE},
     {64, TileType::WALKABLE},
-    {74, TileType::UNWALKABLE}
+
+    { 2, TileType::UNWALKABLE},
+    {13, TileType::UNWALKABLE},
+    {14, TileType::UNWALKABLE},
+    {21, TileType::UNWALKABLE},
+
+    {57, TileType::KILLER},
+    {74, TileType::KILLER}
 });
 
 namespace py = boost::python;
@@ -54,14 +64,14 @@ std::string Vec2D::to_string() {
 
 
 Player::Player(Vec2D start, std::string name, int id):
-    position(start), script(""), id(id) {
+    start(start), position(start), script(""), id(id) {
         this->name = std::string(name);
         move_object(id, start.x, start.y);
 }
 
 uint64_t Player::call_number = 0;
 
-void Player::move(Vec2D by) {
+bool Player::move(Vec2D by) {
     ++call_number;
     auto cached_position = position;
     position += by;
@@ -81,11 +91,14 @@ void Player::move(Vec2D by) {
         position = cached_position;
     }
     else if (tile == TileType::KILLER) {
-        position = Vec2D(0, 0);
+        position = start;
     }
 
     move_object(id, position.x - cached_position.x, position.y - cached_position.y);
+    return tile != TileType::KILLER;
 }
+
+
 
 void Player::monologue() {
     std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;
@@ -104,8 +117,11 @@ void Player::give_script(py::api::object main_namespace) {
         "import time\n"
         "def move(x):\n"
         "    for _ in range(32):\n"
-        "        player.move(x)\n"
+        "        if not player.move(x):\n"
+        "            time.sleep(1)\n"
+        "            return False\n"
         "        time.sleep(0.01)\n"
+        "    return True\n"
     
         "def monologue():\n"
         "    player.monologue()\n"
