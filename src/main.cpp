@@ -476,9 +476,10 @@ static void draw_sprites( float dt)
    tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
    assert(tileset_tex_coords != 0);
 
-   
+   //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
+   //so we remap these 
    double tileset_offset_x = 0.0;
-   double tileset_offset_y = 0.0;
+   double tileset_offset_y = 1.0;
    double tileset_inc_x = 1.0 / (double)num_tiles_x;
    double tileset_inc_y = 1.0 / (double)num_tiles_y;
    //TODo: DIV ZEro HERRE 
@@ -491,24 +492,24 @@ static void draw_sprites( float dt)
 	 {
 	   //bottom left
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y - tileset_inc_y;
 
 	   //top left
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+ 2] =tileset_offset_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y + tileset_inc_y;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y;
 
 	   //bottom right
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+4] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y - tileset_inc_y;
 
 	   //top right
 	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y + tileset_inc_y;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y;
 
-	   tileset_offset_y += tileset_inc_y;
+	   tileset_offset_y -= tileset_inc_y;
 	 }
        tileset_offset_x += tileset_inc_x;
-       tileset_offset_y = 0.0;
+       tileset_offset_y = 1.0;
      }
  }
 
