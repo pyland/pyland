@@ -112,7 +112,7 @@ dependencies_directories:
 	@mkdir -p dependencies/python_embed
 
 $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
-	@echo -e "${bold}[ Compiling $(EXECUTABLE) ]${normal}"
+	@echo -e "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
 	@echo
 	$(CXX) -o $@ \
 		$(BASE_OBJS) $(PYTHON_OBJS) \
@@ -147,7 +147,7 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp
 	@echo
 
 debug:
-	@echo -e "${bold}Complied in debug${normal}"
+	@echo -e "${bold}${red}Complied in debug${normal}"
 
 
 
