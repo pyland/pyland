@@ -108,6 +108,15 @@ private:
 
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
     DISPMANX_ELEMENT_HANDLE_T dispmanElement;
+    
+    ///
+    /// Overscan compensation (left border pixels)
+    ///
+    static int overscan_left;
+    ///
+    /// Overscan compensation (top border pixels)
+    ///
+    static int overscan_top;
 #endif
 #ifdef USE_GL
     SDL_GLContext sdl_gl_context;
