@@ -954,6 +954,14 @@ int main () {
     }
 
     exit_func();
-    mythread.join();
-    return 0;
+
+    //
+    // Typically one would do
+    //     mythread.join();
+    // but this hangs due to the extra, unkilled threads.
+    //
+    // As a hack, just let it crash.
+    //
+
+    return 1;
 }
