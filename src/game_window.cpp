@@ -25,6 +25,22 @@ extern "C" {
 #define GAME_WINDOW_DEBUG
 #endif
 
+#ifdef USE_GLES
+#ifdef STATIC_OVERSCAN
+#define OVERSCAN_LEFT 24
+#define OVERSCAN_TOP  16
+#else
+#ifndef OVERSCAN_LEFT
+#define OVERSCAN_LEFT 0
+#endif
+#ifndef OVERSCAN_TOP
+#define OVERSCAN_TOP  0
+#endif
+#endif
+int GameWindow::overscan_left = OVERSCAN_LEFT;
+int GameWindow::overscan_top  = OVERSCAN_TOP;
+#endif
+
 
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
@@ -286,8 +302,8 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
   
     // Create EGL window surface.
 
-    destination.x = x;
-    destination.y = y;
+    destination.x = x + GameWindow::overscan_left;
+    destination.y = y + GameWindow::overscan_top;
     destination.width = w;
     destination.height = h;
 #ifdef GAME_WINDOW_DEBUG
