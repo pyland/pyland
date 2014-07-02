@@ -154,22 +154,22 @@ static const GLfloat texCoords[ 4 * 2] = {
 /** Holds the overall map data */
 //0th tile is top left
 static const int worldData[] = {
-    10, 10, 11,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0, 10,  2,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0, 10,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  0,  0,  0,  2,  0,  0,  3,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  0,  0,  0,  2,  0,  3,  3,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-     0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+    11, 11, 11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11, 11,  9,  11,  11,  9,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11, 11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  9,  11,  11,  9,  11,  11,  11,  11,  11,  11,  11,  11,
+    11,  11,  11,  11,  9,  11,  9,  9,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
+     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11
 };
 
 
@@ -268,7 +268,7 @@ static void animate(float dt) {
     if(time_to_next > (1.0f/60.0f)) {
         time_to_next = 0.0f;
         
-        int curr_tile = sequence[i++];
+        int curr_tile = 0;// sequence[i++];
         GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
         //bottom left
         sprite_tex_data[0] = tileset_ptr[0];
@@ -355,7 +355,7 @@ static void draw_sprites(float dt) {
     glActiveTexture(GL_TEXTURE0);
 
     // Bind characters texture
-    glBindTexture(GL_TEXTURE_2D,texture_ids[1]);
+    glBindTexture(GL_TEXTURE_2D,texture_ids[0]);
 
     // set sampler texture to unit 0
     glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
@@ -414,7 +414,7 @@ static void update(float dt) {
  }
 
 
-static void generate_tileset_coords(int image_height, int image_width) {
+static void generate_tileset_coords(int image_width, int image_height) {
 #ifdef DEBUG
     printf("GENERATING TILESET TEXTURE COORDS...");
 #endif
@@ -424,6 +424,7 @@ static void generate_tileset_coords(int image_height, int image_width) {
    assert(TILESET_ELEMENT_SIZE != 0);
    int num_tiles_x = image_width/ TILESET_ELEMENT_SIZE;
    int num_tiles_y = image_height / TILESET_ELEMENT_SIZE;
+   std::cout << num_tiles_x << " " << num_tiles_y << endl;
    assert(num_tiles_x != 0);
    assert(num_tiles_y != 0);
 
@@ -435,7 +436,7 @@ static void generate_tileset_coords(int image_height, int image_width) {
    //so we remap these 
    //We work from left to right, moving down
    double tileset_offset_x = 0.0;
-   double tileset_offset_y = 1.0;
+   double tileset_offset_y = 0.0;
    double tileset_inc_x = 1.0 / (double)num_tiles_x;
    double tileset_inc_y = 1.0 / (double)num_tiles_y;
    //TODo: DIV ZEro HERRE 
@@ -448,7 +449,7 @@ static void generate_tileset_coords(int image_height, int image_width) {
 	 {
 	   //bottom left
 	   tileset_tex_coords[y* num_tiles_x*4*2+x*(4*2)] = tileset_offset_x;
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2 +1] =tileset_offset_y - tileset_inc_y;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2 +1] =tileset_offset_y + tileset_inc_y;
 
 	   //top left
 	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+ 2] =tileset_offset_x;
@@ -456,19 +457,19 @@ static void generate_tileset_coords(int image_height, int image_width) {
 
 	   //bottom right
 	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+4] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+5] = tileset_offset_y - tileset_inc_y;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+5] = tileset_offset_y + tileset_inc_y;
 
 	   //top right
 	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+6] = tileset_offset_x + tileset_inc_x;
 	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y;
 
 	   tileset_offset_x += tileset_inc_x;
-	   for(int i =0 ; i < 8; i++)
-	     cout << " " << 	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+i];
-	   cout << endl;
+	   //	   for(int i =0 ; i < 8; i++)
+	   //	     cout << " " << 	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+i];
+	   //	   cout << endl;
 	 }
        tileset_offset_x = 0.0;
-       tileset_offset_y -= tileset_inc_y;
+       tileset_offset_y += tileset_inc_y;
      }
  }
 
@@ -495,7 +496,7 @@ static void generate_map_texcoords(int map_width, int map_height) {
     // get the tile set coordinates for the particular tile
     for(x = 0; x < map_width; x++) {
         for(y = 0; y < map_height; y++) {
-            int curr_tile = worldData[x*map_height +y];
+	  int curr_tile = worldData[x*map_height +y];
             GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
             //bottom left
             map_tex_coords[x*map_height*num_floats + y*num_floats+0] = tileset_ptr[0];
@@ -955,7 +956,7 @@ int main () {
     init_buffers();
 
     //   Map map;
-    //    std::thread mythread(run_all);
+    std::thread mythread(run_all);
 
     float dt = get_dt();
     int count = 0;
@@ -972,6 +973,6 @@ int main () {
     }
 
     exit_func();
-    //    mythread.join();
+    mythread.join();
     return 0;
 }
