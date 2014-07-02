@@ -68,6 +68,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "main.h"
 
 #define PATH "./"
+#define GLOBAL_SCALE 2
 
 #define IMAGE1_SIZE_WIDTH 128
 #define IMAGE1_NUM_COMPONENTS 4
@@ -150,6 +151,7 @@ static const GLfloat texCoords[ 4 * 2] = {
 };
 
 /** Holds the overall map data */
+//0th tile is top left
 static const int worldData[] = {
   10, 10, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -582,7 +584,7 @@ static void generate_map_coords(int map_width, int map_height)
   int num_floats = 18;
   map_data = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
   assert(map_data != 0);
-  float scale = 32.0f;
+  float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
   //generate the map data
   /**
    * Vertex winding order:
@@ -959,7 +961,7 @@ void generate_sprite_coords() {
     int num_floats = 18;
     sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
     assert(sprite_data != 0);
-    float scale = 16.0f;
+    float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
     //generate the map data
     /**
     * Vertex winding order:
