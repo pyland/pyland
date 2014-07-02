@@ -8,24 +8,16 @@
 #include "debug.h"
 #include "main.h"
 
-std::vector<std::vector<int>> redzones = {
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+enum class TileType {
+    WALKABLE,
+    UNWALKABLE,
+    KILLER
 };
+
+std::map<int, TileType> tile_to_type({
+    {64, TileType::WALKABLE},
+    {74, TileType::UNWALKABLE}
+});
 
 namespace py = boost::python;
 
@@ -76,14 +68,19 @@ void Player::move(Vec2D by) {
     position.x = std::min(std::max(position.x,0),480);
     position.y = std::min(std::max(position.y,0),480);
 
-    int tile_x = position.x / 32;
-    int tile_y = position.y / 32;
-    int tile = redzones[15-tile_y][tile_x];
+    int tile_x = position.x;
+    int tile_y = position.y;
+    TileType tile = std::max({
+        tile_to_type[world_data[(tile_x   ) / 32][(tile_y   ) / 32]],
+        tile_to_type[world_data[(tile_x   ) / 32][(tile_y+31) / 32]],
+        tile_to_type[world_data[(tile_x+31) / 32][(tile_y   ) / 32]],
+        tile_to_type[world_data[(tile_x+31) / 32][(tile_y+31) / 32]],
+    });
 
-    if (tile == 1) {
+    if (tile == TileType::UNWALKABLE) {
         position = cached_position;
     }
-    else if (tile == 2) {
+    else if (tile == TileType::KILLER) {
         position = Vec2D(0, 0);
     }
 
@@ -106,8 +103,9 @@ void Player::give_script(py::api::object main_namespace) {
         // TODO: find a more scalable approach
         "import time\n"
         "def move(x):\n"
-        "    time.sleep(0.01)\n"
-        "    player.move(x)\n"
+        "    for _ in range(32):\n"
+        "        player.move(x)\n"
+        "        time.sleep(0.01)\n"
     
         "def monologue():\n"
         "    player.monologue()\n"

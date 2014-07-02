@@ -143,36 +143,13 @@ static const GLbyte quadx[4*3] = {
      10,  10,   0,
 };
 
-/** Texture coordinates for the quad. */
+/// Texture coordinates for the quad.
 static const GLfloat texCoords[ 4 * 2] = {
     0.f, 0.f,
     0.f, 1.f,
     1.f, 0.f,
     1.f, 1.f,
 };
-
-/** Holds the overall map data */
-//0th tile is top left
-static const int worldData[] = {
-    64, 64, 64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64, 64,  74,  64,  64,  74,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64, 64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  74,  64,  64,  74,  64,  64,  64,  64,  64,  64,  64,  64,
-    64,  64,  64,  64,  74,  64,  74,  74,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
-     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64
-};
-
-
 
 struct Object {
     float x;
@@ -418,59 +395,57 @@ static void generate_tileset_coords(int image_width, int image_height) {
 #ifdef DEBUG
     printf("GENERATING TILESET TEXTURE COORDS...");
 #endif
-   //check the tilset image height and widths are multiples of the tiles
-   //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
+    //check the tilset image height and widths are multiples of the tiles
+    //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
 
-   assert(TILESET_ELEMENT_SIZE != 0);
-   int num_tiles_x = image_width/ TILESET_ELEMENT_SIZE;
-   int num_tiles_y = image_height / TILESET_ELEMENT_SIZE;
-   std::cout << num_tiles_x << " " << num_tiles_y << endl;
-   assert(num_tiles_x != 0);
-   assert(num_tiles_y != 0);
+    assert(TILESET_ELEMENT_SIZE != 0);
+    int num_tiles_x = image_width/ TILESET_ELEMENT_SIZE;
+    int num_tiles_y = image_height / TILESET_ELEMENT_SIZE;
+    std::cout << num_tiles_x << " " << num_tiles_y << endl;
+    assert(num_tiles_x != 0);
+    assert(num_tiles_y != 0);
 
-   //Each tile needs 8 floats to describe its position in the image
-   tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
-   assert(tileset_tex_coords != 0);
+    //Each tile needs 8 floats to describe its position in the image
+    tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
+    assert(tileset_tex_coords != 0);
 
-   //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
-   //so we remap these 
-   //We work from left to right, moving down
-   double tileset_offset_x = 0.0;
-   double tileset_offset_y = 0.0;
-   double tileset_inc_x = 1.0 / (double)num_tiles_x;
-   double tileset_inc_y = 1.0 / (double)num_tiles_y;
-   //TODo: DIV ZEro HERRE 
+    //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
+    //so we remap these 
+    //We work from left to right, moving down
+    double tileset_offset_x = 0.0;
+    double tileset_offset_y = 0.0;
+    double tileset_inc_x = 1.0 / (double)num_tiles_x;
+    double tileset_inc_y = 1.0 / (double)num_tiles_y;
+    //TODo: DIV ZEro HERRE 
 
-   //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
-   //generate the coordinates for each tile
-   for(int y = 0; y < num_tiles_y; y++)
-     {
-       for(int x = 0; x < num_tiles_x; x++)
-	 {
-	   //bottom left
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*(4*2)] = tileset_offset_x;
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2 +1] =tileset_offset_y + tileset_inc_y;
-
-	   //top left
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+ 2] =tileset_offset_x;
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+3] = tileset_offset_y;
-
-	   //bottom right
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+4] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+5] = tileset_offset_y + tileset_inc_y;
-
-	   //top right
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+6] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y;
-
-	   tileset_offset_x += tileset_inc_x;
-	   //	   for(int i =0 ; i < 8; i++)
-	   //	     cout << " " << 	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+i];
-	   //	   cout << endl;
-	 }
-       tileset_offset_x = 0.0;
-       tileset_offset_y += tileset_inc_y;
-     }
+    //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
+    //generate the coordinates for each tile
+    for (int y = 0; y < num_tiles_y; y++) {
+        for (int x = 0; x < num_tiles_x; x++) {
+            //bottom left
+            tileset_tex_coords[y* num_tiles_x*4*2+x*(4*2)] = tileset_offset_x;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2 +1] =tileset_offset_y + tileset_inc_y;
+ 
+            //top left
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+ 2] =tileset_offset_x;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+3] = tileset_offset_y;
+ 
+            //bottom right
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+4] = tileset_offset_x + tileset_inc_x;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+5] = tileset_offset_y + tileset_inc_y;
+ 
+            //top right
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+6] = tileset_offset_x + tileset_inc_x;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y;
+ 
+            tileset_offset_x += tileset_inc_x;
+            //      for(int i =0 ; i < 8; i++)
+            //        cout << " " <<        tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+i];
+            //      cout << endl;
+        }
+        tileset_offset_x = 0.0;
+        tileset_offset_y += tileset_inc_y;
+    }
  }
 
 
@@ -496,7 +471,8 @@ static void generate_map_texcoords(int map_width, int map_height) {
     // get the tile set coordinates for the particular tile
     for(x = 0; x < map_width; x++) {
         for(y = 0; y < map_height; y++) {
-	  int curr_tile = worldData[x*map_height +y];
+            int curr_tile = world_data[x][y];
+
             GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
             //bottom left
             map_tex_coords[x*map_height*num_floats + y*num_floats+0] = tileset_ptr[0];
@@ -853,7 +829,7 @@ void generate_sprite_tex_data() {
     sprite_tex_data[1] = offset_y; //tileset_ptr[1];
 
     //top left
-	sprite_tex_data[2] = offset_x; //tileset_ptr[2];
+    sprite_tex_data[2] = offset_x; //tileset_ptr[2];
       sprite_tex_data[3] = 0.0f; //tileset_ptr[3];
 
     //bottom right
@@ -872,7 +848,7 @@ void generate_sprite_tex_data() {
       sprite_tex_data[10] = offset_x*2.0f;//tileset_ptr[4];
       sprite_tex_data[11] = offset_y;//tileset_ptr[5];
       for(int i =0 ; i< 12; i++)
-	std::cout << " " << sprite_tex_data[i];
+    std::cout << " " << sprite_tex_data[i];
       std::cout << std::endl;
 }
 
