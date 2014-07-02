@@ -303,5 +303,4 @@ void run_all() {
     print_debug << "main: Joined kill_thread" << std::endl;
 
     PyEval_RestoreThread(main_thread_state);
-
 }
