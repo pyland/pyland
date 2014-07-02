@@ -150,6 +150,7 @@ static const GLfloat texCoords[ 4 * 2] = {
 };
 
 /** Holds the overall map data */
+//0th tile is top left
 static const int worldData[] = {
   10, 10, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
