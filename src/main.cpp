@@ -70,7 +70,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define PATH "./"
 
 #define IMAGE_SIZE_WIDTH 128
-#define IMAGE_SIZE_HEIGHT 128
+#define IMAGE_NUM_COMPONENTS 4
+#define IMAGE_SIZE_HEIGHT 240
 #ifndef M_PI
 #define M_PI 3.141592654
 #endif
@@ -441,7 +442,7 @@ static void draw_sprites( float dt)
  static void update(float dt)
  {
 
-   animate(dt);
+   //   animate(dt);
    
  }
 
@@ -594,7 +595,7 @@ static void generate_map_coords(int map_width, int map_height)
   int num_floats = 18;
   mapData = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
   assert(mapData != 0);
-  float scale = 16.0f;
+  float scale = 32.0f;
   //generate the map data
   /**
    * Vertex winding order:
@@ -757,11 +758,11 @@ GLuint shader_create(const string vs, const string fs) {
 static void load_tex_images()
 {
   FILE *tex_file1, *tex_file2 = NULL;
-  int bytes_read, image_sz = IMAGE_SIZE_WIDTH*IMAGE_SIZE_HEIGHT*3;
+  int bytes_read, image_sz = IMAGE_SIZE_WIDTH*IMAGE_SIZE_HEIGHT*IMAGE_NUM_COMPONENTS;
 
    tex_buf1 = new char[image_sz];
 
-   tex_file1 = fopen(PATH "../resources/Djenne_128_128.raw", "rb");
+   tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
    if(tex_file1 == NULL) {
      std::cerr << "ERROR: Couldn't load textures" << endl;
    }
@@ -809,8 +810,8 @@ static void init_textures()
   glGenTextures(1, &texture_id);
   glBindTexture(GL_TEXTURE_2D, texture_id);
   
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_SIZE_WIDTH, IMAGE_SIZE_HEIGHT, 0,
-                GL_RGB, GL_UNSIGNED_BYTE, tex_buf1);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE_SIZE_WIDTH, IMAGE_SIZE_HEIGHT, 0,
+                GL_RGBA, GL_UNSIGNED_BYTE, tex_buf1);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
@@ -1027,7 +1028,7 @@ int main ()
    if(!init_shaders())
      return 0;
 
-   generate_tileset_coords(128, 128);
+   generate_tileset_coords(IMAGE_SIZE_WIDTH, IMAGE_SIZE_HEIGHT);
    generate_map_texcoords(map_width, map_height);
    generate_sprite_coords();
    generate_sprite_tex_data();

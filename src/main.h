@@ -26,5 +26,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 //size of a  tile
-#define TILESET_ELEMENT_SIZE 32
+#define TILESET_ELEMENT_SIZE 16
 void move_object(const int id, const int direction);
