@@ -1041,25 +1041,25 @@ int main ()
    objects[0].y = 330.0f;
    objects[1].x = 300.0f;
    objects[1].y = 300.0f;
-   // Setup the model world
-   //   init_model_proj(&window);
 
-   std::thread mythread(run_all);
+   Map map;
+   //   std::thread mythread(run_all);
 
    float dt = get_dt();
    int count = 0;
    while (!window.check_close())
    {
      init_model_proj(&window);
+
      //Get the time since the last iteration 
      dt = get_dt(); 
-     count++;
+
      update(dt);
      redraw_scene(&window, dt);
      GameWindow::update();
-//     if(count == 100) break;
+
    }
    exit_func();
-   mythread.join();
+   //   mythread.join();
    return 0;
 }
