@@ -154,22 +154,22 @@ static const GLfloat texCoords[ 4 * 2] = {
 /** Holds the overall map data */
 //0th tile is top left
 static const int worldData[] = {
-    11, 11, 11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11, 11,  9,  11,  11,  9,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11, 11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  9,  11,  11,  9,  11,  11,  11,  11,  11,  11,  11,  11,
-    11,  11,  11,  11,  9,  11,  9,  9,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,
-     11,  9,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11,  11
+    64, 64, 64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64, 64,  74,  64,  64,  74,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64, 64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  74,  64,  64,  74,  64,  64,  64,  64,  64,  64,  64,  64,
+    64,  64,  64,  64,  74,  64,  74,  74,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,
+     64,  74,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64
 };
 
 
@@ -228,7 +228,7 @@ static void init_buffers() {
 
 
     glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE,0, 0);
-    glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_TRUE, 0, 0);
 
     glActiveTexture(GL_TEXTURE0);
 
@@ -355,7 +355,7 @@ static void draw_sprites(float dt) {
     glActiveTexture(GL_TEXTURE0);
 
     // Bind characters texture
-    glBindTexture(GL_TEXTURE_2D,texture_ids[0]);
+    glBindTexture(GL_TEXTURE_2D,texture_ids[1]);
 
     // set sampler texture to unit 0
     glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
@@ -843,32 +843,37 @@ void generate_sprite_tex_data() {
 
     //generate the map data
 
-    int curr_tile = 13;
+    int curr_tile = 0;
     GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
-    //bottom left
-    sprite_tex_data[0] = tileset_ptr[0];
-    sprite_tex_data[1] = tileset_ptr[1];
+    double offset_x = 1.0 / (IMAGE2_SIZE_WIDTH /TILESET_ELEMENT_SIZE);
+    double offset_y = 1.0 / (IMAGE2_SIZE_HEIGHT / TILESET_ELEMENT_SIZE);
+
+   //bottom left
+    sprite_tex_data[0] = offset_x; // tileset_ptr[0];
+    sprite_tex_data[1] = offset_y; //tileset_ptr[1];
 
     //top left
-    sprite_tex_data[2] = tileset_ptr[2];
-    sprite_tex_data[3] = tileset_ptr[3];
+	sprite_tex_data[2] = offset_x; //tileset_ptr[2];
+      sprite_tex_data[3] = 0.0f; //tileset_ptr[3];
 
     //bottom right
-    sprite_tex_data[4] = tileset_ptr[4];
-    sprite_tex_data[5] = tileset_ptr[5];
+      sprite_tex_data[4] = offset_x*2.0f;//tileset_ptr[4];
+      sprite_tex_data[5] = offset_y; //tileset_ptr[5];
 
     //top left
-    sprite_tex_data[6] = tileset_ptr[2];
-    sprite_tex_data[7] = tileset_ptr[3];
+      sprite_tex_data[6] = offset_x;//tileset_ptr[2];
+      sprite_tex_data[7] = 0.0f;//tileset_ptr[3];
 
     //top right
-    sprite_tex_data[8] = tileset_ptr[6];
-    sprite_tex_data[9] = tileset_ptr[7];
+      sprite_tex_data[8] = offset_x*2.0f;//tileset_ptr[6];
+      sprite_tex_data[9] = 0.0f;//tileset_ptr[7];
 
     //bottom right
-    sprite_tex_data[10] = tileset_ptr[4];
-    sprite_tex_data[11] = tileset_ptr[5];
-
+      sprite_tex_data[10] = offset_x*2.0f;//tileset_ptr[4];
+      sprite_tex_data[11] = offset_y;//tileset_ptr[5];
+      for(int i =0 ; i< 12; i++)
+	std::cout << " " << sprite_tex_data[i];
+      std::cout << std::endl;
 }
 
 void generate_sprite_coords() {
@@ -932,10 +937,10 @@ void generate_sprite_coords() {
 
 }
 
-//==============================================================================
+
 
 int main () {
-    GameWindow window(640, 480, false);
+  GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
     window.use_context();
 
     // Start OGLES
