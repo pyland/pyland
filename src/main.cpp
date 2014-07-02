@@ -1042,7 +1042,7 @@ int main ()
    objects[1].x = 300.0f;
    objects[1].y = 300.0f;
 
-   Map map;
+   //   Map map;
    //   std::thread mythread(run_all);
 
    float dt = get_dt();
