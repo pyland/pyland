@@ -75,9 +75,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
-#define IMAGE2_SIZE_WIDTH 128
+#define IMAGE2_SIZE_WIDTH 192
 #define IMAGE2_NUM_COMPONENTS 4
-#define IMAGE2_SIZE_HEIGHT 240
+#define IMAGE2_SIZE_HEIGHT 128
 
 #ifndef M_PI
 #define M_PI 3.141592654
@@ -110,7 +110,7 @@ const int num_vbo_ids = 4;
 static void draw_map(int image_height, int image_width, float dt);
 GLuint vboIds[num_vbo_ids];
 GLuint program_obj =0;
-GLuint texture_id = 0;
+GLuint texture_ids[2];
 const int map_height = 16;
 const int map_width = 16;
 float map_scroll_speed = 32.0f; //1 tile a second
@@ -122,7 +122,8 @@ const int map_display_height = 8;
 GLfloat* sprite_data;
 GLfloat* sprite_tex_data;
 
-char* tex_buf1, tex_buf2;
+char* tex_buf1;
+char* tex_buf2;
 glm::mat4 projection_matrix;
 const int num_objects = 4;
 
@@ -181,8 +182,8 @@ void move_object(const int id, const int dx, const int dy) {
     cerr << "ERROR: move_object: object id exceeds number of objects. Object id: " << id << endl;
     return;
   } 
-  objects[i].x += dx;
-  objects[i].y += dy;
+  objects[id].x += dx;
+  objects[id].y += dy;
 }
 
 static void init_buffers() {
@@ -229,7 +230,9 @@ static void init_buffers() {
   glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D,texture_id);
+
+  //Bind tiles texture
+  glBindTexture(GL_TEXTURE_2D,texture_ids[0]);
 }
 
 static void animate(float dt) {
@@ -325,7 +328,8 @@ static void draw_map(int map_width, int map_height, float dt)
    glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
 
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D,texture_id);
+   //Bind tiles texture
+   glBindTexture(GL_TEXTURE_2D,texture_ids[0]);
 
    //set sampler texture to unit 0
    glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
@@ -360,7 +364,8 @@ static void draw_sprites( float dt)
    glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
 
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D,texture_id);
+   //Bind characters texture
+   glBindTexture(GL_TEXTURE_2D,texture_ids[1]);
 
    //set sampler texture to unit 0
    glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
@@ -740,8 +745,9 @@ GLuint shader_create(const string vs, const string fs) {
 static void load_tex_images()
 {
   FILE *tex_file1, *tex_file2 = NULL;
-  int bytes_read, image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
-
+  int bytes_read  =0;
+  int image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
+  int image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
   tex_buf1 = new char[image_sz_1];
 
   tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
@@ -787,14 +793,23 @@ static void init_textures()
   //  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
   load_tex_images();
-  glGenTextures(1, &texture_id);
-  glBindTexture(GL_TEXTURE_2D, texture_id);
+  glGenTextures(2, texture_ids);
+  glBindTexture(GL_TEXTURE_2D, texture_ids[0]);
   
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, 0,
                 GL_RGBA, GL_UNSIGNED_BYTE, tex_buf1);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
+  glBindTexture(GL_TEXTURE_2D, texture_ids[1]);
+  
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, 0,
+                GL_RGBA, GL_UNSIGNED_BYTE, tex_buf2);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
+
+
+  
 }
 
 
@@ -1008,7 +1023,7 @@ int main ()
    if(!init_shaders())
      return 0;
 
-   generate_tileset_coords(IMAGE_1SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+   generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
    generate_map_texcoords(map_width, map_height);
    generate_sprite_coords();
    generate_sprite_tex_data();
