@@ -68,6 +68,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "main.h"
 
 #define PATH "./"
+#define GLOBAL_SCALE 2
 
 #define IMAGE1_SIZE_WIDTH 128
 #define IMAGE1_NUM_COMPONENTS 4
@@ -151,6 +152,7 @@ static const GLfloat texCoords[ 4 * 2] = {
 };
 
 /** Holds the overall map data */
+//0th tile is top left
 static const int worldData[] = {
     10, 10, 11,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -426,41 +428,42 @@ static void generate_tileset_coords(int image_height, int image_width) {
     assert(num_tiles_y != 0);
 
 
-    // Each tile needs 8 floats to describe its position in the image
+    //Each tile needs 8 floats to describe its position in the image
     tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
     assert(tileset_tex_coords != 0);
 
-    
+    //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
+    //so we remap these 
     double tileset_offset_x = 0.0;
-    double tileset_offset_y = 0.0;
+    double tileset_offset_y = 1.0;
     double tileset_inc_x = 1.0 / (double)num_tiles_x;
     double tileset_inc_y = 1.0 / (double)num_tiles_y;
-    // TODO: DIV ZEro HERRE 
+    //TODo: DIV ZEro HERRE 
 
-    // TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
-    // generate the coordinates for each tile
-    for(int x = 0; x < num_tiles_x; x++) {
-        for(int y = 0; y< num_tiles_y; y++) {
-            //bottom left
-            tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
-            tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y;
+    //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
+    //generate the coordinates for each tile
+    for (int x = 0; x < num_tiles_x; x++) {
+        for (int y = 0; y < num_tiles_y; y++) {
+           //bottom left
+           tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
+           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y - tileset_inc_y;
 
-            //top left
-            tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+ 2] =tileset_offset_x;
-            tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y + tileset_inc_y;
+           //top left
+           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+ 2] =tileset_offset_x;
+           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y;
 
-            //bottom right
-            tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+4] = tileset_offset_x + tileset_inc_x;
-            tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y;
+           //bottom right
+           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+4] = tileset_offset_x + tileset_inc_x;
+           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y - tileset_inc_y;
 
-            //top right
-            tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
-            tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y + tileset_inc_y;
+           //top right
+           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
+           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y;
 
-            tileset_offset_y += tileset_inc_y;
+           tileset_offset_y -= tileset_inc_y;
         }
         tileset_offset_x += tileset_inc_x;
-        tileset_offset_y = 0.0;
+        tileset_offset_y = 1.0;
     }
 }
 
@@ -526,27 +529,28 @@ static void generate_map_coords(int map_width, int map_height)
 #ifdef DEBUG
     printf("GENERATING MAP DATA...");
 #endif
-    // holds the map data
-    // need 18 floats for each coordinate as these hold 3D coordinates
+    //holds the map data
+    //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
     map_data = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
     assert(map_data != 0);
-    float scale = 32.0f;
+    float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
     //generate the map data
-    /**
-     * Vertex winding order:
-     * 1, 3   4
-     *  * --- * 
-     *  |     |
-     *  |     | 
-     *  * --- *
-     * 0       2,5
-     */
+    ///
+    /// Vertex winding order:
+    /// 1, 3   4
+    ///  * --- * 
+    ///  |     |
+    ///  |     | 
+    ///  * --- *
+    /// 0       2,5
+    ///
     int x, y;
     for(x = 0; x < map_width; x++) {
         for(y = 0; y < map_height; y++) {
             //generate one tile's worth of data
- 
+
+            
             //bottom left
             map_data[x*map_height*num_floats + y*num_floats+0] = x * scale;
             map_data[x*map_height*num_floats + y*num_floats+1] = y * scale;
@@ -556,7 +560,7 @@ static void generate_map_coords(int map_width, int map_height)
             map_data[x*map_height*num_floats + y*num_floats+3] = x * scale;
             map_data[x*map_height*num_floats + y*num_floats+4] = (y+1) * scale;
             map_data[x*map_height*num_floats + y*num_floats+5] = 0;
- 
+
             //bottom right
             map_data[x*map_height*num_floats + y*num_floats+6] = (x+1) * scale;
             map_data[x*map_height*num_floats + y*num_floats+7] = y * scale;
@@ -566,12 +570,12 @@ static void generate_map_coords(int map_width, int map_height)
             map_data[x*map_height*num_floats + y*num_floats+9] = x * scale;
             map_data[x*map_height*num_floats + y*num_floats+10] = (y+1) * scale;
             map_data[x*map_height*num_floats + y*num_floats+11] = 0;
-         
-             //top right
+        
+            //top right
             map_data[x*map_height*num_floats + y*num_floats+12] = (x+1) * scale;
             map_data[x*map_height*num_floats + y*num_floats+13] = (y+1) * scale;
             map_data[x*map_height*num_floats + y*num_floats+14] = 0;
- 
+
             //bottom right
             map_data[x*map_height*num_floats + y*num_floats+15] = (x+1) * scale;
             map_data[x*map_height*num_floats + y*num_floats+16] = y * scale;
@@ -870,7 +874,7 @@ void generate_sprite_coords() {
     int num_floats = 18;
     sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
     assert(sprite_data != 0);
-    float scale = 16.0f;
+    float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
     //generate the map data
     /**
     * Vertex winding order:
