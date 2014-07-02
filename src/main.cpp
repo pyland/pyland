@@ -491,22 +491,25 @@ static void generate_tileset_coords(int image_width, int image_height)
        for(int x = 0; x < num_tiles_x; x++)
 	 {
 	   //bottom left
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y - tileset_inc_y;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*(4*2)] = tileset_offset_x;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2 +1] =tileset_offset_y - tileset_inc_y;
 
 	   //top left
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+ 2] =tileset_offset_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+ 2] =tileset_offset_x;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+3] = tileset_offset_y;
 
 	   //bottom right
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+4] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y - tileset_inc_y;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+4] = tileset_offset_x + tileset_inc_x;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+5] = tileset_offset_y - tileset_inc_y;
 
 	   //top right
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
-	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+6] = tileset_offset_x + tileset_inc_x;
+	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y;
 
 	   tileset_offset_x += tileset_inc_x;
+	   for(int i =0 ; i < 8; i++)
+	     cout << " " << 	   tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+i];
+	   cout << endl;
 	 }
        tileset_offset_x = 0.0;
        tileset_offset_y -= tileset_inc_y;
