@@ -51,7 +51,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/gtc/type_ptr.hpp>
 
 #include "game_window.hpp"
-#include "python_embed/interpreter.h"
+#include "interpreter.h"
 
 #ifdef USE_GLES
 

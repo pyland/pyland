@@ -3,13 +3,20 @@ NULL=
 RM = - rm -f
 
 CXX      = ${COMPILER}
-CXXFLAGS = -std=c++11 -g -Wall -Wextra -O2
-CPPFLAGS = -I./
+CXXFLAGS = -std=c++11 -O3
+CPPFLAGS = -I./ -Ipython_embed/
 LDFLAGS  =
 LDLIBS   =
 
+WARN.g++.all := -Wall -Wextra -Wconversion
+WARN.g++.4.7 := -Wzero-as-null-pointer-constant
+WARN.g++.4.8 := $(wflags.gcc.4.7)
+WARN.clang.all := -Wall -Wextra
+WARN.clang.3.2 := -Weverything
+CXXFLAGS += $(WARN.$(CXX).all) $(WARN.$(CXX).$(4.8))
+
 ifeq ($(PLATFORM),desktop)
-	GL_CPPFLAGS   = $(shell pkg-config gl --cflags)
+	GL_CPPFLAGS = $(shell pkg-config gl --cflags)
 	GL_LDFLAGS  = 
 	GL_LDLIBS   = $(shell pkg-config gl --libs)
 
@@ -18,10 +25,12 @@ ifeq ($(PLATFORM),desktop)
 	GRAPHICS_LDLIBS  = $(GL_LDLIBS)
 	CPPFLAGS += -DUSE_GL
 else
-# Taken from hello_triangle example
-	GLES_CPPFLAGS   = -I/opt/vc/include -I/opt/vc/include/interface/vmcs_host/linux -I/opt/vc/include/interface/vcos/pthreads
-	GLES_LDFLAGS  = -L/opt/vc/lib/
-	GLES_LDLIBS   = -lGLESv2 -lEGL -lbcm_host -lpthread
+	# From hello_triangle
+	GLES_CPPFLAGS  = -I/opt/vc/include
+	GLES_CPPFLAGS += -I/opt/vc/include/interface/vmcs_host/linux
+	GLES_CPPFLAGS += -I/opt/vc/include/interface/vcos/pthreads
+	GLES_LDFLAGS   = -L/opt/vc/lib/
+	GLES_LDLIBS    = -lGLESv2 -lEGL -lbcm_host -lpthread
 
 	GRAPHICS_CPPFLAGS  = $(GLES_CPPFLAGS)
 	GRAPHICS_LDFLAGS = $(GLES_LDFLAGS)
@@ -45,45 +54,86 @@ PYTHON_CPPFLAGS = $(shell python${PYTHON_VERSION}-config --cflags)
 PYTHON_LDFLAGS  = $(shell python${PYTHON_VERSION}-config --ldflags)
 PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 
-# Insert all here.
-all: main.bin
-
-python_embed:
-	@$(MAKE) -C python_embed debug
+# Prevent warnings about -Wstrict-prototypes not being valid for C++
+PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 
 
+
+### Program Files ###
+
+EXECUTABLE = main.bin
+
+BASE_SOURCES = \
+	main.cpp          \
+	game_window.cpp   \
+	input_manager.cpp \
+	debug.cpp
+
+BASE_OBJS = $(BASE_SOURCES:.cpp=.o)
+
+PYTHON_SOURCES = \
+	python_embed/interpreter.cpp       \
+	python_embed/wrapper_functions.cpp \
+	python_embed/playerthread.cpp      \
+	python_embed/api.cpp               \
+	python_embed/locks.cpp
+
+PYTHON_OBJS = $(PYTHON_SOURCES:.cpp=.o)
+
+
+
+### What to run ###
+
+all: $(EXECUTABLE) $(BASE_SOURCES) $(PYTHON_SOURCES) python_embed/wrapper_functions.so
+
+debug: CXXFLAGS += -g
+debug: CXXFLAGS +=  -fno-elide-constructors
+debug: CXXFLAGS +=  -O0
 debug: CPPFLAGS += -DDEBUG
 debug: all
 
 
-
-main.bin: main.o python_embed game_window.o input_manager.o
-	$(CXX) -o main.bin main.o game_window.o input_manager.o \
-		python_embed/interpreter.o python_embed/wrapper_functions.o python_embed/playerthread.o \
-		python_embed/api.o python_embed/debug.o python_embed/locks.o \
+$(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
+	@echo "[ Compiling $(EXECUTABLE) ]"
+	@echo
+	$(CXX) -o $@ \
+		$(BASE_OBJS) $(PYTHON_OBJS) \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
 		$(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS) \
 		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS) $(BOOST_LDFLAGS) $(BOOST_LDLIBS)
 
+$(BASE_OBJS): $(BASE_SOURCES)
+	@echo "[ Compiling base object file $@ ]"
+	@echo
+	$(CXX) -c ${basename $@}.cpp -o $@ \
+		$(CXXFLAGS) $(CPPFLAGS) \
+		$(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
+	@echo
 
+$(PYTHON_OBJS): $(PYTHON_SOURCES)
+	@echo "[ Compiling Python object file $@ ]"
+	@echo
+	$(CXX) -c ${basename $@}.cpp -o $@ \
+		$(CXXFLAGS) $(CPPFLAGS) \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)
+	@echo
 
-game_window.o: game_window.cpp
-	$(CXX) -c -o game_window.o game_window.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
-
-input_manager.o: input_manager.cpp
-	$(CXX) -c -o input_manager.o input_manager.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CPPFLAGS)
-
-main.o: main.cpp
-	$(CXX) -c -o main.o main.cpp $(CXXFLAGS) $(CPPFLAGS) $(GRAPHICS_CPPFLAGS)
-
+python_embed/wrapper_functions.so: python_embed/wrapper_functions.cpp
+	@echo "[ Compiling $@ ]"
+	@echo
+	$(CXX) -shared -fPIC $< -o $@ \
+		$(CPPFLAGS) $(CXXFLAGS) \
+		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
+		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)
+	@echo
 
 
 clean:
-	$(RM) main.bin
-	$(RM) game_window.o
-	$(RM) input_manager.o
-	$(RM) main.o
+	$(RM) $(EXECUTABLE)
+	$(RM) python_embed/wrapper_functions.so
+	$(RM) $(BASE_OBJS)
+	$(RM) $(PYTHON_OBJS)
+
 
 .PHONY : clean
 .PHONY : debug
-.PHONY : python_embed
