@@ -54,8 +54,8 @@ void Player::move(Vec2D by) {
     ++call_number;
     auto cached_position = position;
     position += by;
-    position.x = std::min(std::max(position.x,0),240);
-    position.y = std::min(std::max(position.y,0),240);
+    position.x = std::min(std::max(position.x,0),480);
+    position.y = std::min(std::max(position.y,0),480);
     move_object(id, position.x - cached_position.x, position.y - cached_position.y);
 }
 
