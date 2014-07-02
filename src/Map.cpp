@@ -22,10 +22,8 @@ Map::~Map() {
   delete []sprite_tex_data;
   delete []mapTexCoords;
   delete []tileSetTexCoords;
-
-  printf("\nClosed\n");
-
 }
+
 /**
  * Function used to generate the necessary Vertex Buffer Objects to
  * hold the map data to achieve more efficient rendering.
@@ -75,6 +73,7 @@ void Map::init_vbo_buffer() {
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D,texture_id);
+
 }
 
 /**
@@ -359,19 +358,19 @@ void Map::load_tex_images() {
   FILE *tex_file1, *tex_file2 = NULL;
   int bytes_read, image_sz = IMAGE_SIZE_WIDTH*IMAGE_SIZE_HEIGHT*3;
 
-  tex_buf1 = new char[image_sz];
+   tex_buf1 = new char[image_sz];
 
-  tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
-  if(tex_file1 == NULL) {
-    std::cerr << "ERROR: Couldn't load textures" << endl;
-  }
+   tex_file1 = fopen(PATH "../resources/Djenne_128_128.raw", "rb");
+   if(tex_file1 == NULL) {
+     std::cerr << "ERROR: Couldn't load textures" << endl;
+   }
 
-  if (tex_file1 && tex_buf1)
-    {
+   if (tex_file1 && tex_buf1)
+   {
       bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
       assert(bytes_read == image_sz);  // some problem with file?
       fclose(tex_file1);
-    }
+   }
 
 
   // tex_buf2 = new char[image_sz];
