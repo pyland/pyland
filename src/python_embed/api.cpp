@@ -16,9 +16,18 @@ Vec2D Vec2D::operator+(Vec2D other) {
     return Vec2D(x + other.x, y + other.y);
 }
 
+Vec2D Vec2D::operator-(Vec2D other) {
+    return Vec2D(x - other.x, y - other.y);
+}
+
 void Vec2D::operator+=(Vec2D other) {
     x += other.x;
     y += other.y;
+}
+
+void Vec2D::operator-=(Vec2D other) {
+    x -= other.x;
+    y -= other.y;
 }
 
 std::ostream& operator<<(std::ostream& out, Vec2D in) {
@@ -36,26 +45,18 @@ std::string Vec2D::to_string() {
 Player::Player(Vec2D start, std::string name, int id):
     position(start), script(""), id(id) {
         this->name = std::string(name);
+        move_object(id, start.x, start.y);
 }
 
 uint64_t Player::call_number = 0;
 
 void Player::move(Vec2D by) {
     ++call_number;
+    auto cached_position = position;
     position += by;
-
-    for (int dx=0; dx < by.x; ++dx) {
-        move_object(id, 1);
-    }
-    for (int dx=0; dx < -by.x; ++dx) {
-        move_object(id, 3);
-    }
-    for (int dy=0; dy < by.y; ++dy) {
-        move_object(id, 0);
-    }
-    for (int dy=0; dy < -by.y; ++dy) {
-        move_object(id, 2);
-    }
+    position.x = min(max(position.x,0),240);
+    position.y = min(max(position.y,0),240);
+    move_object(id, position.x - cached_position.x, position.y - cached_position.y);
 }
 
 void Player::monologue() {
