@@ -1,10 +1,10 @@
 NULL=
-
 RM = - rm -f
 
 CXX       = ${COMPILER}
 CXXFLAGS += -std=c++11 -O3
 CPPFLAGS += -I./ -Ipython_embed/
+CPPFLAGS += -MMD -MP -MF dependencies/$*.d
 LDFLAGS   =
 LDLIBS    =
 
@@ -57,34 +57,42 @@ PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 # Prevent warnings about -Wstrict-prototypes not being valid for C++
 PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 
+bold=\e[1m
+normal=\e[0m
 
 
 ### Program Files ###
 
 EXECUTABLE = main.bin
 
-BASE_SOURCES = \
-	main.cpp          \
-	game_window.cpp   \
-	input_manager.cpp \
-	debug.cpp
+BASE_OBJS = \
+	main.o          \
+	game_window.o   \
+	input_manager.o \
+	debug.o
 
-BASE_OBJS = $(BASE_SOURCES:.cpp=.o)
+PYTHON_OBJS = \
+	python_embed/interpreter.o       \
+	python_embed/wrapper_functions.o \
+	python_embed/playerthread.o      \
+	python_embed/api.o               \
+	python_embed/locks.o
 
-PYTHON_SOURCES = \
-	python_embed/interpreter.cpp       \
-	python_embed/wrapper_functions.cpp \
-	python_embed/playerthread.cpp      \
-	python_embed/api.cpp               \
-	python_embed/locks.cpp
-
-PYTHON_OBJS = $(PYTHON_SOURCES:.cpp=.o)
+PYTHON_SHARED_OBJS = \
+	python_embed/wrapper_functions.so	
 
 
+HEADER_DEPENDS_ROOT = \
+	${EXECUTABLE:.bin=.d}        \
+	${BASE_OBJS:.o=.d}           \
+	${PYTHON_OBJS:.o=.d}         \
+	${PYTHON_SHARED_OBJS:.so=.d}
+
+HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 
 ### What to run ###
 
-all: $(EXECUTABLE) $(BASE_SOURCES) $(PYTHON_SOURCES) python_embed/wrapper_functions.so
+all: dependencies_directories $(EXECUTABLE) python_embed/wrapper_functions.so
 
 debug: CXXFLAGS += -g
 debug: CXXFLAGS +=  -fno-elide-constructors
@@ -92,48 +100,55 @@ debug: CXXFLAGS +=  -O0
 debug: CPPFLAGS += -DDEBUG
 debug: all
 
+dependencies_directories:
+	@mkdir -p dependencies
+	@mkdir -p dependencies/python_embed
 
 $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
-	@echo "[ Compiling $(EXECUTABLE) ]"
+	@echo -e "${bold}[ Compiling $(EXECUTABLE) ]${normal}"
 	@echo
 	$(CXX) -o $@ \
 		$(BASE_OBJS) $(PYTHON_OBJS) \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
 		$(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS) \
 		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS) $(BOOST_LDFLAGS) $(BOOST_LDLIBS)
-
-$(BASE_OBJS): $(BASE_SOURCES)
-	@echo "[ Compiling base object file $@ ]"
 	@echo
-	$(CXX) -c ${basename $@}.cpp -o $@ \
+
+$(BASE_OBJS): %.o : %.cpp
+	@echo -e "${bold}[ Compiling base object file " $*.o "from" $*.cpp " ]${normal}"
+	@echo
+	$(CXX) -c $*.cpp -o $*.o \
 		$(CXXFLAGS) $(CPPFLAGS) \
 		$(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
 	@echo
 
-$(PYTHON_OBJS): $(PYTHON_SOURCES)
-	@echo "[ Compiling Python object file $@ ]"
+$(PYTHON_OBJS): %.o : %.cpp
+	@echo -e "${bold}[ Compiling Python object file " $*.o "from" $.cpp " ]${normal}"
 	@echo
-	$(CXX) -c ${basename $@}.cpp -o $@ \
+	$(CXX) -c $*.cpp -o $*.o \
 		$(CXXFLAGS) $(CPPFLAGS) \
-		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)
+		$(PYTHON_CXXFLAGS) $(PYTHON_CPPFLAGS)
 	@echo
 
-python_embed/wrapper_functions.so: python_embed/wrapper_functions.cpp
-	@echo "[ Compiling $@ ]"
+$(PYTHON_SHARED_OBJS): %.so : %.cpp
+	@echo -e "${bold}[ Compiling " $*.so "from" $*.cpp " ]${normal}"
 	@echo
-	$(CXX) -shared -fPIC $< -o $@ \
-		$(CPPFLAGS) $(CXXFLAGS) \
+	$(CXX) -shared -fPIC $*.cpp -o $*.so \
+		$(CXXFLAGS) $(CPPFLAGS) \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)
 	@echo
 
+debug:
+	@echo -e "${bold}Complied in debug${normal}"
+
+
 
 clean:
-	$(RM) $(EXECUTABLE)
-	$(RM) python_embed/wrapper_functions.so
-	$(RM) $(BASE_OBJS)
-	$(RM) $(PYTHON_OBJS)
+	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
 
+-include ${HEADER_DEPENDS}
 
+.PHONY : all
 .PHONY : clean
 .PHONY : debug
