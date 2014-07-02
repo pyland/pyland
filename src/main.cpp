@@ -418,54 +418,56 @@ static void generate_tileset_coords(int image_height, int image_width) {
 #ifdef DEBUG
     printf("GENERATING TILESET TEXTURE COORDS...");
 #endif
-    // check the tilset image height and widths are multiples of the tiles
-    // assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
+   //check the tilset image height and widths are multiples of the tiles
+   //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
 
-    assert(TILESET_ELEMENT_SIZE != 0);
-    int num_tiles_x = image_width/ TILESET_ELEMENT_SIZE;
-    int num_tiles_y = image_height / TILESET_ELEMENT_SIZE;
-    assert(num_tiles_x != 0);
-    assert(num_tiles_y != 0);
+   assert(TILESET_ELEMENT_SIZE != 0);
+   int num_tiles_x = image_width/ TILESET_ELEMENT_SIZE;
+   int num_tiles_y = image_height / TILESET_ELEMENT_SIZE;
+   assert(num_tiles_x != 0);
+   assert(num_tiles_y != 0);
 
+   //Each tile needs 8 floats to describe its position in the image
+   tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
+   assert(tileset_tex_coords != 0);
 
-    //Each tile needs 8 floats to describe its position in the image
-    tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
-    assert(tileset_tex_coords != 0);
+   //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
+   //so we remap these 
+   //We work from left to right, moving down
+   double tileset_offset_x = 0.0;
+   double tileset_offset_y = 1.0;
+   double tileset_inc_x = 1.0 / (double)num_tiles_x;
+   double tileset_inc_y = 1.0 / (double)num_tiles_y;
+   //TODo: DIV ZEro HERRE 
 
-    //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
-    //so we remap these 
-    double tileset_offset_x = 0.0;
-    double tileset_offset_y = 1.0;
-    double tileset_inc_x = 1.0 / (double)num_tiles_x;
-    double tileset_inc_y = 1.0 / (double)num_tiles_y;
-    //TODo: DIV ZEro HERRE 
+   //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
+   //generate the coordinates for each tile
+   for(int y = 0; y < num_tiles_y; y++)
+     {
+       for(int x = 0; x < num_tiles_x; x++)
+	 {
+	   //bottom left
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y - tileset_inc_y;
 
-    //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
-    //generate the coordinates for each tile
-    for (int x = 0; x < num_tiles_x; x++) {
-        for (int y = 0; y < num_tiles_y; y++) {
-           //bottom left
-           tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
-           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y - tileset_inc_y;
+	   //top left
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+ 2] =tileset_offset_x;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y;
 
-           //top left
-           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+ 2] =tileset_offset_x;
-           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y;
+	   //bottom right
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+4] = tileset_offset_x + tileset_inc_x;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y - tileset_inc_y;
 
-           //bottom right
-           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+4] = tileset_offset_x + tileset_inc_x;
-           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y - tileset_inc_y;
+	   //top right
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y;
 
-           //top right
-           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
-           tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y;
-
-           tileset_offset_y -= tileset_inc_y;
-        }
-        tileset_offset_x += tileset_inc_x;
-        tileset_offset_y = 1.0;
-    }
-}
+	   tileset_offset_x += tileset_inc_x;
+	 }
+       tileset_offset_x = 0.0;
+       tileset_offset_y -= tileset_inc_y;
+     }
+ }
 
 
 ///
@@ -950,7 +952,7 @@ int main () {
     init_buffers();
 
     //   Map map;
-    std::thread mythread(run_all);
+    //    std::thread mythread(run_all);
 
     float dt = get_dt();
     int count = 0;
@@ -967,6 +969,6 @@ int main () {
     }
 
     exit_func();
-    mythread.join();
+    //    mythread.join();
     return 0;
 }
