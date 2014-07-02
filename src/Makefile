@@ -2,11 +2,11 @@ NULL=
 
 RM = - rm -f
 
-CXX      = ${COMPILER}
-CXXFLAGS = -std=c++11 -O3
-CPPFLAGS = -I./ -Ipython_embed/
-LDFLAGS  =
-LDLIBS   =
+CXX       = ${COMPILER}
+CXXFLAGS += -std=c++11 -O3
+CPPFLAGS += -I./ -Ipython_embed/
+LDFLAGS   =
+LDLIBS    =
 
 WARN.g++.all := -Wall -Wextra -Wconversion
 WARN.g++.4.7 := -Wzero-as-null-pointer-constant
