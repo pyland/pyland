@@ -69,9 +69,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define PATH "./"
 
-#define IMAGE_SIZE_WIDTH 128
-#define IMAGE_NUM_COMPONENTS 4
-#define IMAGE_SIZE_HEIGHT 240
+#define IMAGE1_SIZE_WIDTH 128
+#define IMAGE1_NUM_COMPONENTS 4
+#define IMAGE1_SIZE_HEIGHT 240
+
+
+
+#define IMAGE2_SIZE_WIDTH 128
+#define IMAGE2_NUM_COMPONENTS 4
+#define IMAGE2_SIZE_HEIGHT 240
+
 #ifndef M_PI
 #define M_PI 3.141592654
 #endif
@@ -93,7 +100,7 @@ void generate_sprite_tex_data();
  * Move the object, identified by the id, in the specified direction.
  * 0 = move up, 1 = move right, 2 = move down, 3 = move left
  */
-void move_object(const int id, const int direction);
+void move_object(const int id, const int dx, const int dy);
 
 static volatile int shutdown;
 
@@ -115,15 +122,15 @@ const int map_display_height = 8;
 GLfloat* sprite_data;
 GLfloat* sprite_tex_data;
 
-char* tex_buf1;
+char* tex_buf1, tex_buf2;
 glm::mat4 projection_matrix;
 const int num_objects = 2;
 
 
 
-GLfloat * tileSetTexCoords;
-GLfloat * mapData;
-GLfloat * mapTexCoords;
+GLfloat * tileset_tex_coords;
+GLfloat * map_data;
+GLfloat * map_tex_coords;
 // Spatial coordinates for the cube
 static const GLbyte quadx[4*3] = {
    /* FRONT */
@@ -169,40 +176,13 @@ struct Object {
   float y;
 } objects[num_objects];
 
-void move_object(const int id, const int direction) {
+void move_object(const int id, const int dx, const int dy) {
   if(id > num_objects || id < 0) {
-    cerr << "ERROR: mov_object: object id exceeds number of objects. Object id: " << id << endl;
+    cerr << "ERROR: move_object: object id exceeds number of objects. Object id: " << id << endl;
     return;
   } 
-  if(direction < 0 || direction > 3) {
-    cerr << "ERROR: mov_object: direction is not valid " << direction << endl;
-    return;
-  }
- 
-  switch(direction) {
-    //MOVE UP
-  case 0:
-    objects[id].y++;
-    break;
-    //MOVE RIGHT
-  case 1:
-    objects[id].x++;
-   break;
-    //MOVE DOWN
-  case 2:
-    objects[id].y--;
-    break;
-    //MOVE LEFT
-  case 3:
-    objects[id].x--;
-    break;
-  }
-
-  //Wrap
-  if(objects[id].x <0) objects[id].x = 600.0f;
-  if(objects[id].y < 0) objects[id].y = 400.0f;
-  if(objects[id].y > 400.0f) objects[id].y = 0.0f;
-  if(objects[id].x > 600.0f) objects[id].x = 0.0f;
+  objects[i].x += dx;
+  objects[i].y += dy;
 }
 
 static void init_buffers() {
@@ -215,11 +195,11 @@ static void init_buffers() {
   glGenBuffers(num_vbo_ids, vboIds);
 
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
-  glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*18, mapData, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*18, map_data, GL_STATIC_DRAW);
   
 
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[1]);
-  glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*12, mapTexCoords, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*12, map_tex_coords, GL_STATIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, vboIds[2]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*18, sprite_data, GL_STATIC_DRAW);
@@ -284,31 +264,31 @@ static void animate(float dt) {
   if(time_to_next > (1.0f/60.0f)) {
     time_to_next = 0.0f;
     
-    int currTile = sequence[i++];
-    GLfloat *tileSetPtr = &tileSetTexCoords[currTile*8];
+    int curr_tile = sequence[i++];
+    GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
     //bottom left
-    sprite_tex_data[0] = tileSetPtr[0];
-    sprite_tex_data[1] = tileSetPtr[1];
+    sprite_tex_data[0] = tileset_ptr[0];
+    sprite_tex_data[1] = tileset_ptr[1];
 
     //top left
-    sprite_tex_data[2] = tileSetPtr[2];
-    sprite_tex_data[3] = tileSetPtr[3];
+    sprite_tex_data[2] = tileset_ptr[2];
+    sprite_tex_data[3] = tileset_ptr[3];
 
     //bottom right
-    sprite_tex_data[4] = tileSetPtr[4];
-    sprite_tex_data[5] = tileSetPtr[5];
+    sprite_tex_data[4] = tileset_ptr[4];
+    sprite_tex_data[5] = tileset_ptr[5];
 
     //top left
-    sprite_tex_data[6] = tileSetPtr[2];
-    sprite_tex_data[7] = tileSetPtr[3];
+    sprite_tex_data[6] = tileset_ptr[2];
+    sprite_tex_data[7] = tileset_ptr[3];
 
     //top right
-    sprite_tex_data[8] = tileSetPtr[6];
-    sprite_tex_data[9] = tileSetPtr[7];
+    sprite_tex_data[8] = tileset_ptr[6];
+    sprite_tex_data[9] = tileset_ptr[7];
 	
     //bottom right
-    sprite_tex_data[10] = tileSetPtr[4];
-    sprite_tex_data[11] = tileSetPtr[5];
+    sprite_tex_data[10] = tileset_ptr[4];
+    sprite_tex_data[11] = tileset_ptr[5];
     //changing texture coords
     glBindBuffer(GL_ARRAY_BUFFER, vboIds[3]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*12, sprite_tex_data, GL_DYNAMIC_DRAW);
@@ -472,56 +452,58 @@ static void draw_sprites( float dt)
   ***********************************************************/
  static void generate_tileset_coords(int image_height, int image_width)
  {
-
- #ifdef DEBUG
+#ifdef DEBUG
    printf("GENERATING TILESET TEXTURE COORDS...");
- #endif
+#endif
    //check the tilset image height and widths are multiples of the tiles
    //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
 
+   assert(TILESET_ELEMENT_SIZE != 0);
+   int num_tiles_x = image_width/ TILESET_ELEMENT_SIZE;
+   int num_tiles_y = image_height / TILESET_ELEMENT_SIZE;
+   assert(num_tiles_x != 0);
+   assert(num_tiles_y != 0);
 
-   int numTilesX = image_width/ TILESET_ELEMENT_SIZE;
-   int numTilesY = image_height / TILESET_ELEMENT_SIZE;
 
    //Each tile needs 8 floats to describe its position in the image
-   tileSetTexCoords = new GLfloat[sizeof(GLfloat)* numTilesX * numTilesY * 4 * 2];
-   assert(tileSetTexCoords != 0);
-   //TODO free this memory
+   tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
+   assert(tileset_tex_coords != 0);
 
-     double tileSetXOffset = 0.0;
-  double tileSetYOffset = 0.0;
-  double tileSetXInc = 1.0 / (double)numTilesX;
-  double tileSetYInc = 1.0 / (double)numTilesY;
-  //TODo: DIV ZEro HERRE 
+   
+   double tileset_offset_x = 0.0;
+   double tileset_offset_y = 0.0;
+   double tileset_inc_x = 1.0 / (double)num_tiles_x;
+   double tileset_inc_y = 1.0 / (double)num_tiles_y;
+   //TODo: DIV ZEro HERRE 
 
-  //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
-  //generate the coordinates for each tile
-  for(int x = 0; x < numTilesX; x++)
-    {
-      for(int y = 0; y< numTilesY; y++)
-	{
-	  //bottom left
-	  tileSetTexCoords[x* numTilesY*4*2+y*(4*2)] = tileSetXOffset;
-	  tileSetTexCoords[x* numTilesY*4*2+y*4*2 +1] =tileSetYOffset;
+   //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
+   //generate the coordinates for each tile
+   for(int x = 0; x < num_tiles_x; x++)
+     {
+       for(int y = 0; y< num_tiles_y; y++)
+	 {
+	   //bottom left
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*(4*2)] = tileset_offset_x;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2 +1] =tileset_offset_y;
 
-	  //top left
-	  tileSetTexCoords[x* numTilesY*4*2+y*4*2+ 2] =tileSetXOffset;
-	  tileSetTexCoords[x* numTilesY*4*2+y*4*2+3] = tileSetYOffset + tileSetYInc;
+	   //top left
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+ 2] =tileset_offset_x;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+3] = tileset_offset_y + tileset_inc_y;
 
-	  //bottom right
-	  tileSetTexCoords[x* numTilesY*4*2+y*4*2+4] = tileSetXOffset + tileSetXInc;
-	  tileSetTexCoords[x* numTilesY*4*2+y*4*2+5] = tileSetYOffset;
+	   //bottom right
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+4] = tileset_offset_x + tileset_inc_x;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+5] = tileset_offset_y;
 
-	  //top right
-	  tileSetTexCoords[x* numTilesY*4*2+y*4*2+6] = tileSetXOffset + tileSetXInc;
-	  tileSetTexCoords[x* numTilesY*4*2+y*4*2+7] = tileSetYOffset + tileSetYInc;
+	   //top right
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+6] = tileset_offset_x + tileset_inc_x;
+	   tileset_tex_coords[x* num_tiles_y*4*2+y*4*2+7] = tileset_offset_y + tileset_inc_y;
 
-	  tileSetYOffset += tileSetYInc;
-	}
-      tileSetXOffset += tileSetXInc;
-      tileSetYOffset = 0.0;
-    }
-}
+	   tileset_offset_y += tileset_inc_y;
+	 }
+       tileset_offset_x += tileset_inc_x;
+       tileset_offset_y = 0.0;
+     }
+ }
 
 
 /***********************************************************
@@ -539,8 +521,8 @@ static void generate_map_texcoords(int map_width, int map_height)
   //holds the map data
   //need 12 float for the 2D texture coordinates
   int num_floats = 12;
-  mapTexCoords = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
-  assert(mapTexCoords != 0);
+  map_tex_coords = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
+  assert(map_tex_coords != 0);
 
   int x, y;
 
@@ -550,31 +532,31 @@ static void generate_map_texcoords(int map_width, int map_height)
     {
       for(y = 0; y < map_height; y++)
 	{
-	  int currTile = worldData[x*map_height +y];
-	  GLfloat *tileSetPtr = &tileSetTexCoords[currTile*8];
+	  int curr_tile = worldData[x*map_height +y];
+	  GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
 	  //bottom left
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+0] = tileSetPtr[0];
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+1] = tileSetPtr[1];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+0] = tileset_ptr[0];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+1] = tileset_ptr[1];
 
 	  //top left
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+2] = tileSetPtr[2];
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+3] = tileSetPtr[3];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+2] = tileset_ptr[2];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+3] = tileset_ptr[3];
 
 	  //bottom right
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+4] = tileSetPtr[4];
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+5] = tileSetPtr[5];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+4] = tileset_ptr[4];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+5] = tileset_ptr[5];
 
 	  //top left
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+6] = tileSetPtr[2];
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+7] = tileSetPtr[3];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+6] = tileset_ptr[2];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+7] = tileset_ptr[3];
 
 	  //top right
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+8] = tileSetPtr[6];
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+9] = tileSetPtr[7];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+8] = tileset_ptr[6];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+9] = tileset_ptr[7];
 	
 	  //bottom right
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+10] = tileSetPtr[4];
-	  mapTexCoords[x*map_height*num_floats + y*num_floats+11] = tileSetPtr[5];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+10] = tileset_ptr[4];
+	  map_tex_coords[x*map_height*num_floats + y*num_floats+11] = tileset_ptr[5];
 
  	}
     }
@@ -593,8 +575,8 @@ static void generate_map_coords(int map_width, int map_height)
   //holds the map data
    //need 18 floats for each coordinate as these hold 3D coordinates
   int num_floats = 18;
-  mapData = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
-  assert(mapData != 0);
+  map_data = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
+  assert(map_data != 0);
   float scale = 32.0f;
   //generate the map data
   /**
@@ -615,34 +597,34 @@ static void generate_map_coords(int map_width, int map_height)
 
 	  
 	  //bottom left
-	  mapData[x*map_height*num_floats + y*num_floats+0] = x * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+1] = y * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+2] = 0;
+	  map_data[x*map_height*num_floats + y*num_floats+0] = x * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+1] = y * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+2] = 0;
 	   
 	  //top left
-	  mapData[x*map_height*num_floats + y*num_floats+3] = x * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+4] = (y+1) * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+5] = 0;
+	  map_data[x*map_height*num_floats + y*num_floats+3] = x * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+4] = (y+1) * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+5] = 0;
 
 	  //bottom right
-	  mapData[x*map_height*num_floats + y*num_floats+6] = (x+1) * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+7] = y * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+8] = 0;
+	  map_data[x*map_height*num_floats + y*num_floats+6] = (x+1) * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+7] = y * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+8] = 0;
 	
 	  //top left
-	  mapData[x*map_height*num_floats + y*num_floats+9] = x * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+10] = (y+1) * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+11] = 0;
+	  map_data[x*map_height*num_floats + y*num_floats+9] = x * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+10] = (y+1) * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+11] = 0;
   
    	  //top right
-	  mapData[x*map_height*num_floats + y*num_floats+12] = (x+1) * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+13] = (y+1) * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+14] = 0;
+	  map_data[x*map_height*num_floats + y*num_floats+12] = (x+1) * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+13] = (y+1) * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+14] = 0;
 
 	  //bottom right
-	  mapData[x*map_height*num_floats + y*num_floats+15] = (x+1) * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+16] = y * scale;
-	  mapData[x*map_height*num_floats + y*num_floats+17] = 0;
+	  map_data[x*map_height*num_floats + y*num_floats+15] = (x+1) * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+16] = y * scale;
+	  map_data[x*map_height*num_floats + y*num_floats+17] = 0;
 	}
     }
 #ifdef DEBUG
@@ -758,36 +740,34 @@ GLuint shader_create(const string vs, const string fs) {
 static void load_tex_images()
 {
   FILE *tex_file1, *tex_file2 = NULL;
-  int bytes_read, image_sz = IMAGE_SIZE_WIDTH*IMAGE_SIZE_HEIGHT*IMAGE_NUM_COMPONENTS;
+  int bytes_read, image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
 
-   tex_buf1 = new char[image_sz];
+  tex_buf1 = new char[image_sz_1];
 
-   tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
-   if(tex_file1 == NULL) {
-     std::cerr << "ERROR: Couldn't load textures" << endl;
-   }
+  tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
+  if(tex_file1 == NULL) {
+    std::cerr << "ERROR: Couldn't load textures" << endl;
+  }
 
-   if (tex_file1 && tex_buf1)
-   {
-      bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
-      assert(bytes_read == image_sz);  // some problem with file?
+  if (tex_file1 && tex_buf1) {
+      bytes_read=fread(tex_buf1, 1, image_sz_1, tex_file1);
+      assert(bytes_read == image_sz_1);  // some problem with file?
       fclose(tex_file1);
-   }
+    }
 
 
-   // tex_buf2 = new char[image_sz];
+  tex_buf2 = new char[image_sz_2];
 
-   // tex_file2 = fopen(PATH "../graphics/tiles/assets/characters_1.raw", "rb");
-   // if(tex_file1 == NULL) {
-   //   std::cerr << "ERROR: Couldn't load textures" << endl;
-   // }
+  tex_file2 = fopen(PATH "../resources/characters_1.raw", "rb");
+  if(tex_file2 == NULL) {
+    std::cerr << "ERROR: Couldn't load textures" << endl;
+  }
 
-   // if (tex_file1 && tex_buf1)
-   // {
-   //    bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
-   //    assert(bytes_read == image_sz);  // some problem with file?
-   //    fclose(tex_file1);
-   // }
+  if (tex_file2 && tex_buf2) {
+    bytes_read=fread(tex_buf2, 1, image_sz_2, tex_file2);
+    assert(bytes_read == image_sz_2);  // some problem with file?
+    fclose(tex_file2);
+  }
 
 }
   
@@ -810,7 +790,7 @@ static void init_textures()
   glGenTextures(1, &texture_id);
   glBindTexture(GL_TEXTURE_2D, texture_id);
   
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE_SIZE_WIDTH, IMAGE_SIZE_HEIGHT, 0,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, 0,
                 GL_RGBA, GL_UNSIGNED_BYTE, tex_buf1);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
@@ -828,11 +808,11 @@ static void exit_func(void)
    
    // release buffers
    delete []tex_buf1;
-   delete []mapData;
+   delete []map_data;
    delete []sprite_data;
    delete []sprite_tex_data;
-   delete []mapTexCoords;
-   delete []tileSetTexCoords;
+   delete []map_tex_coords;
+   delete []tileset_tex_coords;
 
    printf("\nClosed\n");
 } // exit_func()
@@ -926,31 +906,31 @@ void generate_sprite_tex_data() {
 
   //generate the map data
 
-  int currTile = 13;
-  GLfloat *tileSetPtr = &tileSetTexCoords[currTile*8];
+  int curr_tile = 13;
+  GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
   //bottom left
-  sprite_tex_data[0] = tileSetPtr[0];
-  sprite_tex_data[1] = tileSetPtr[1];
+  sprite_tex_data[0] = tileset_ptr[0];
+  sprite_tex_data[1] = tileset_ptr[1];
 
   //top left
-  sprite_tex_data[2] = tileSetPtr[2];
-  sprite_tex_data[3] = tileSetPtr[3];
+  sprite_tex_data[2] = tileset_ptr[2];
+  sprite_tex_data[3] = tileset_ptr[3];
 
   //bottom right
-  sprite_tex_data[4] = tileSetPtr[4];
-  sprite_tex_data[5] = tileSetPtr[5];
+  sprite_tex_data[4] = tileset_ptr[4];
+  sprite_tex_data[5] = tileset_ptr[5];
 
   //top left
-  sprite_tex_data[6] = tileSetPtr[2];
-  sprite_tex_data[7] = tileSetPtr[3];
+  sprite_tex_data[6] = tileset_ptr[2];
+  sprite_tex_data[7] = tileset_ptr[3];
 
   //top right
-  sprite_tex_data[8] = tileSetPtr[6];
-  sprite_tex_data[9] = tileSetPtr[7];
+  sprite_tex_data[8] = tileset_ptr[6];
+  sprite_tex_data[9] = tileset_ptr[7];
 	
   //bottom right
-  sprite_tex_data[10] = tileSetPtr[4];
-  sprite_tex_data[11] = tileSetPtr[5];
+  sprite_tex_data[10] = tileset_ptr[4];
+  sprite_tex_data[11] = tileset_ptr[5];
 
 }
 
@@ -1028,7 +1008,7 @@ int main ()
    if(!init_shaders())
      return 0;
 
-   generate_tileset_coords(IMAGE_SIZE_WIDTH, IMAGE_SIZE_HEIGHT);
+   generate_tileset_coords(IMAGE_1SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
    generate_map_texcoords(map_width, map_height);
    generate_sprite_coords();
    generate_sprite_tex_data();
@@ -1038,10 +1018,10 @@ int main ()
 
    generate_map_coords(map_width, map_height);
    init_buffers();
-   objects[0].x = 330.0f;
-   objects[0].y = 330.0f;
-   objects[1].x = 300.0f;
-   objects[1].y = 300.0f;
+   //   objects[0].x = 330.0f;
+   //   objects[0].y = 330.0f;
+   //   objects[1].x = 300.0f;
+   //   objects[1].y = 300.0f;
 
    //   Map map;
    //   std::thread mythread(run_all);
