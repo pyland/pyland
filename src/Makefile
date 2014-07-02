@@ -57,8 +57,15 @@ PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 # Prevent warnings about -Wstrict-prototypes not being valid for C++
 PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 
-bold=\e[1m
-normal=\e[0m
+define colorecho
+      @tput setaf 6
+      @echo $1
+      @
+endef
+
+bold   = $(shell tput sgr0)$(shell tput bold)
+normal = $(shell tput sgr0)
+red    = $(shell tput setaf 1)
 
 
 ### Program Files ###
@@ -115,7 +122,7 @@ $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
 	@echo
 
 $(BASE_OBJS): %.o : %.cpp
-	@echo -e "${bold}[ Compiling base object file " $*.o "from" $*.cpp " ]${normal}"
+	@echo -e "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 	@echo
 	$(CXX) -c $*.cpp -o $*.o \
 		$(CXXFLAGS) $(CPPFLAGS) \
@@ -123,7 +130,7 @@ $(BASE_OBJS): %.o : %.cpp
 	@echo
 
 $(PYTHON_OBJS): %.o : %.cpp
-	@echo -e "${bold}[ Compiling Python object file " $*.o "from" $.cpp " ]${normal}"
+	@echo -e "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 	@echo
 	$(CXX) -c $*.cpp -o $*.o \
 		$(CXXFLAGS) $(CPPFLAGS) \
@@ -131,7 +138,7 @@ $(PYTHON_OBJS): %.o : %.cpp
 	@echo
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp
-	@echo -e "${bold}[ Compiling " $*.so "from" $*.cpp " ]${normal}"
+	@echo -e "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 	@echo
 	$(CXX) -shared -fPIC $*.cpp -o $*.so \
 		$(CXXFLAGS) $(CPPFLAGS) \
