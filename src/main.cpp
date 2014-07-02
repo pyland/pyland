@@ -955,7 +955,7 @@ int main () {
     init_buffers();
 
     //   Map map;
-    //    std::thread mythread(run_all);
+    std::thread mythread(run_all);
 
     float dt = get_dt();
     int count = 0;
@@ -972,6 +972,6 @@ int main () {
     }
 
     exit_func();
-    //    mythread.join();
+    mythread.join();
     return 0;
 }
