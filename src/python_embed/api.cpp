@@ -80,13 +80,11 @@ void Player::move(Vec2D by) {
     int tile_y = position.y / 32;
     int tile = redzones[15-tile_y][tile_x];
 
-    switch (tile) {
-        case 0:
-            break;
-        case 1:
-            position = cached_position;
-        case 2:
-            position = Vec2D(0, 0);
+    if (tile == 1) {
+        position = cached_position;
+    }
+    else if (tile == 2) {
+        position = Vec2D(0, 0);
     }
 
     move_object(id, position.x - cached_position.x, position.y - cached_position.y);
