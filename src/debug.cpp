@@ -1,10 +1,10 @@
 #include <string>
 #include <iostream>
 
-std::ostream print_null(NULL);
+static std::ostream print_null(nullptr);
 
 #ifdef DEBUG
-std::ostream &print_debug = std::cout;
+extern std::ostream &print_debug = std::cout;
 #else
-std::ostream &print_debug = print_null;
+extern std::ostream &print_debug = print_null;
 #endif
