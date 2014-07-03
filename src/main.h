@@ -7,7 +7,7 @@ void move_object(const int id, const int dx, const int dy);
 
 /// Holds the overall map data
 //0th tile is top left
-static const std::array<std::array<int, 16>, 16> world_data({{
+static const std::array<std::array<int, 16>, 16> world_data = {{
     {14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14},
     {14,  13,  64,  64,  64,  57,  57,  57,  14,  64,  64,  64,  64,  64,  64,  14},
     {14,  13,  64,  64,  64,  64,  64,  64,  14,  64,  13,  13,  64,  64,  64,  14},
@@ -24,4 +24,4 @@ static const std::array<std::array<int, 16>, 16> world_data({{
     {14,  13,  64,  64,  64,  64,  64,  14,  64,  14,  64,  64,  64,  64,  64,  14},
     {14,  13,  64,  64,  64,  64,  64,  14,  64,  14,  64,  64,  64,  64,  64,  14},
     {14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}
-}});
+}};
