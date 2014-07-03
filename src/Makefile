@@ -68,6 +68,16 @@ normal = $(shell tput sgr0)
 red    = $(shell tput setaf 1)
 
 
+GCC_VERSION = $(shell expr `$(CC) -dumpversion`)
+GCC_MAJOR = $(shell expr `echo $(GCC_VERSION)` | cut -f1 -d.)
+GCC_MINOR = $(shell expr `echo $(GCC_VERSION)` | cut -f2 -d.)
+
+COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr $(GCC_MAJOR) \>= 4 \& $(GCC_MINOR) \>= 9)
+ifeq "$(COMPILER_SUPPORTS_DIAGNOSTICS_COLOR)" "1"
+    CXXFLAGS += -fdiagnostics-color=auto
+endif
+
+-fdiagnostics-color=auto
 ### Program Files ###
 
 EXECUTABLE = main.bin
@@ -112,42 +122,35 @@ dependencies_directories:
 	@mkdir -p dependencies/python_embed
 
 $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
-	@echo -e "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
-	@echo
+	@echo -e "\n${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}\n"
 	$(CXX) -o $@ \
 		$(BASE_OBJS) $(PYTHON_OBJS) \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
 		$(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS) \
 		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS) $(BOOST_LDFLAGS) $(BOOST_LDLIBS)
-	@echo
 
 $(BASE_OBJS): %.o : %.cpp
-	@echo -e "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
-	@echo
+	@echo -e "\n${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
 	$(CXX) -c $*.cpp -o $*.o \
 		$(CXXFLAGS) $(CPPFLAGS) \
 		$(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
 	@echo
 
 $(PYTHON_OBJS): %.o : %.cpp
-	@echo -e "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
-	@echo
+	@echo -e "\n${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
 	$(CXX) -c $*.cpp -o $*.o \
 		$(CXXFLAGS) $(CPPFLAGS) \
 		$(PYTHON_CXXFLAGS) $(PYTHON_CPPFLAGS)
-	@echo
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp
-	@echo -e "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
-	@echo
+	@echo -e "\n${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
 	$(CXX) -shared -fPIC $*.cpp -o $*.so \
 		$(CXXFLAGS) $(CPPFLAGS) \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)
-	@echo
 
 debug:
-	@echo -e "${bold}${red}Complied in debug${normal}"
+	@echo -e "\n${bold}${red}Complied in debug${normal}"
 
 
 
