@@ -3,7 +3,7 @@
 //size of a  tile
 #define TILESET_ELEMENT_SIZE 16
 
-void move_object(const int id, const int dx, const int dy);
+void move_object(const int id, const float dx, const float dy);
 
 /// Holds the overall map data
 //0th tile is top left

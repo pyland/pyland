@@ -192,8 +192,8 @@ public:
     protected:
         const char* message;
     public:
-        InitException (const char* message);
-        virtual const char* what ();
+        InitException(const char* message);
+        virtual const char* what() const noexcept;
     };
 
     ///

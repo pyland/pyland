@@ -44,7 +44,7 @@ int GameWindow::overscan_top  = OVERSCAN_TOP;
 
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
-GameWindow* GameWindow::focused_window = NULL;
+GameWindow* GameWindow::focused_window = nullptr;
 
 
 
@@ -53,9 +53,9 @@ GameWindow::InitException::InitException(const char* message) {
 }
 
 
-const char* GameWindow::InitException::what() {
+const char* GameWindow::InitException::what() const noexcept {
     return message;
-}
+};
 
 
 
@@ -425,14 +425,14 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_HIDDEN:
                 window->change_surface = InitAction::DO_DEINIT;
                 if (focused_window == window) {
-                    focused_window = NULL;
+                    focused_window = nullptr;
                 }
                 break;
             }
             break;
         default:
             // Let the input manager use the event.
-            if (focused_window != NULL) {
+            if (focused_window) {
                 focused_window->input_manager->handle_event(&event);
             }
             break;

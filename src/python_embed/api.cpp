@@ -66,7 +66,7 @@ std::string Vec2D::to_string() {
 Player::Player(Vec2D start, std::string name, int id):
     start(start), position(start), script(""), id(id) {
         this->name = std::string(name);
-        move_object(id, start.x, start.y);
+        move_object(id, float(start.x), float(start.y));
 }
 
 uint64_t Player::call_number = 0;
@@ -94,9 +94,7 @@ bool Player::move(Vec2D by) {
         position = start;
     }
 
-
-
-    move_object(id, position.x - cached_position.x, position.y - cached_position.y);
+    move_object(id, float(position.x - cached_position.x), float(position.y - cached_position.y));
     return tile != TileType::KILLER;
 }
 

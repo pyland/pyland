@@ -4,7 +4,7 @@
 static std::ostream print_null(nullptr);
 
 #ifdef DEBUG
-extern std::ostream &print_debug = std::cout;
+std::ostream &print_debug = std::cout;
 #else
-extern std::ostream &print_debug = print_null;
+std::ostream &print_debug = print_null;
 #endif

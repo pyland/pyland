@@ -269,7 +269,7 @@ GLuint Map::load_shader(GLenum type, const std::string src) {
 
   //Load shader source code
   const char* source = src.c_str();
-  glShaderSource(shader, 1, &source, NULL);
+  glShaderSource(shader, 1, &source, nullptr);
 
   //Compile the shader
   glCompileShader(shader);
@@ -286,7 +286,7 @@ GLuint Map::load_shader(GLenum type, const std::string src) {
     if(info_len > 1) {
       char* info_log = new char[sizeof(char) * info_len];
 
-      glGetShaderInfoLog(shader, info_len, NULL, info_log);
+      glGetShaderInfoLog(shader, info_len, nullptr, info_log);
       std::cerr << "ERROR: SHADER LOADING " << std::endl  << info_log << std::endl;
       delete []info_log;
     }
@@ -301,92 +301,88 @@ GLuint Map::load_shader(GLenum type, const std::string src) {
  * This function crates the Opengl program
  */
 GLuint Map::shader_create(const string vs, const string fs) {
-  GLuint vertex_shader;
-  GLuint fragment_shader;
-  GLint linked;
+    GLuint vertex_shader;
+    GLuint fragment_shader;
+    GLint linked;
 
-  //Load the fragment and vertex shaders
-  vertex_shader = load_shader(GL_VERTEX_SHADER, vs);
-  fragment_shader = load_shader(GL_FRAGMENT_SHADER, fs);
+    //Load the fragment and vertex shaders
+    vertex_shader = load_shader(GL_VERTEX_SHADER, vs);
+    fragment_shader = load_shader(GL_FRAGMENT_SHADER, fs);
 
-  //Create the program object
-  program_obj = glCreateProgram();
+    //Create the program object
+    program_obj = glCreateProgram();
 
-  if(program_obj == 0) {
-    cerr << "ERROR FLAG: " << glGetError();
-    std::cerr << "ERROR: SHADER PROGRAM CREATION. Could not create program object." << std::endl;
-    return 0;
-  }
-  cout << "PROGRAM: " << program_obj << endl;
-  glAttachShader(program_obj, vertex_shader);
-  glAttachShader(program_obj, fragment_shader);
-
-
-  glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
-  glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
-
-  //Link the program
-  glLinkProgram(program_obj);
-
-  //Check to see if we have any log info
-  glGetProgramiv(program_obj, GL_LINK_STATUS, &linked);
-  
-  if(!linked) {
-    GLint info_len = 0;
-    
-    glGetProgramiv(program_obj, GL_INFO_LOG_LENGTH, &info_len);
-
-    if(info_len > 1) {
-      char* info_log = new char[sizeof(char)*info_len];
-
-      glGetProgramInfoLog(program_obj, info_len, NULL, info_log);
-      std::cerr << "ERROR: PROGRAM LINKING " << std::endl  << info_log << std::endl;
-      delete []info_log;
+    if(program_obj == 0) {
+      cerr << "ERROR FLAG: " << glGetError();
+      std::cerr << "ERROR: SHADER PROGRAM CREATION. Could not create program object." << std::endl;
+      return 0;
     }
-    glDeleteProgram(program_obj);
-    return 0;
-  }
-  
-  return program_obj;
+    cout << "PROGRAM: " << program_obj << endl;
+    glAttachShader(program_obj, vertex_shader);
+    glAttachShader(program_obj, fragment_shader);
 
+
+    glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
+    glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
+
+    //Link the program
+    glLinkProgram(program_obj);
+
+    //Check to see if we have any log info
+    glGetProgramiv(program_obj, GL_LINK_STATUS, &linked);
+    
+    if(!linked) {
+      GLint info_len = 0;
+      
+      glGetProgramiv(program_obj, GL_INFO_LOG_LENGTH, &info_len);
+
+      if(info_len > 1) {
+        char* info_log = new char[sizeof(char)*info_len];
+
+        glGetProgramInfoLog(program_obj, info_len, nullptr, info_log);
+        std::cerr << "ERROR: PROGRAM LINKING " << std::endl  << info_log << std::endl;
+        delete []info_log;
+      }
+      glDeleteProgram(program_obj);
+      return 0;
+    }
+    
+    return program_obj;
 }
 
 /** 
  * This function loads the required texture images
  */ 
 void Map::load_tex_images() {
-  FILE *tex_file1, *tex_file2 = NULL;
-  int bytes_read, image_sz = IMAGE_SIZE_WIDTH*IMAGE_SIZE_HEIGHT*3;
+    FILE *tex_file1, *tex_file2 = nullptr;
+    size_t bytes_read, image_sz = IMAGE_SIZE_WIDTH*IMAGE_SIZE_HEIGHT*3;
 
-   tex_buf1 = new char[image_sz];
+    tex_buf1 = new char[image_sz];
 
-   tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
-   if(tex_file1 == NULL) {
-     std::cerr << "ERROR: Couldn't load textures" << endl;
-   }
+    tex_file1 = fopen(PATH "../graphics/tiles/Djenne_128_128.raw", "rb");
+    if (!tex_file1) {
+        std::cerr << "ERROR: Couldn't load textures" << endl;
+    }
 
-   if (tex_file1 && tex_buf1)
-   {
-      bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
-      assert(bytes_read == image_sz);  // some problem with file?
-      fclose(tex_file1);
-   }
+    if (tex_file1 && tex_buf1) {
+        bytes_read = fread(tex_buf1, 1, image_sz, tex_file1);
+        assert(bytes_read == image_sz);  // some problem with file?
+        fclose(tex_file1);
+    }
 
+    // tex_buf2 = new char[image_sz];
 
-   // tex_buf2 = new char[image_sz];
+    // tex_file2 = fopen(PATH "../graphics/tiles/assets/characters_1.raw", "rb");
+    // if (!tex_file1) {
+    //   std::cerr << "ERROR: Couldn't load textures" << endl;
+    // }
 
-   // tex_file2 = fopen(PATH "../graphics/tiles/assets/characters_1.raw", "rb");
-   // if(tex_file1 == NULL) {
-   //   std::cerr << "ERROR: Couldn't load textures" << endl;
-   // }
-
-   // if (tex_file1 && tex_buf1)
-   // {
-   //    bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
-   //    assert(bytes_read == image_sz);  // some problem with file?
-   //    fclose(tex_file1);
-   // }
-
+    // if (tex_file1 && tex_buf1)
+    // {
+    //    bytes_read=fread(tex_buf1, 1, image_sz, tex_file1);
+    //    assert(bytes_read == image_sz);  // some problem with file?
+    //    fclose(tex_file1);
+    // }
 }
 
 /** 
