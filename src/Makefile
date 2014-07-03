@@ -124,30 +124,35 @@ dependencies_directories:
 $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
 	@echo -e "\n${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}\n"
 	$(CXX) -o $@ \
-		$(BASE_OBJS) $(PYTHON_OBJS) \
-		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
-		$(X11_LDFLAGS) $(X11_LDLIBS) $(SDL_LDFLAGS) $(SDL_LDLIBS) \
-		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS) $(BOOST_LDFLAGS) $(BOOST_LDLIBS)
+		$(BASE_OBJS) $(PYTHON_OBJS)            \
+		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
+		$(X11_LDFLAGS) $(X11_LDLIBS)           \
+		$(SDL_LDFLAGS) $(SDL_LDLIBS)           \
+		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS)     \
+		$(BOOST_LDFLAGS) $(BOOST_LDLIBS)       \
+		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp
 	@echo -e "\n${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
 	$(CXX) -c $*.cpp -o $*.o \
-		$(CXXFLAGS) $(CPPFLAGS) \
-		$(SDL_CPPFLAGS) $(GRAPHICS_CPPFLAGS) $(X11_CPPFLAGS)
+		$(SDL_CPPFLAGS)         \
+		$(GRAPHICS_CPPFLAGS)    \
+		$(X11_CPPFLAGS)         \
+		$(CXXFLAGS) $(CPPFLAGS)
 	@echo
 
 $(PYTHON_OBJS): %.o : %.cpp
 	@echo -e "\n${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
 	$(CXX) -c $*.cpp -o $*.o \
-		$(CXXFLAGS) $(CPPFLAGS) \
-		$(PYTHON_CXXFLAGS) $(PYTHON_CPPFLAGS)
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
+		$(CXXFLAGS) $(CPPFLAGS)
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp
 	@echo -e "\n${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
 	$(CXX) -shared -fPIC $*.cpp -o $*.so \
-		$(CXXFLAGS) $(CPPFLAGS) \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
-		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)
+		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
+		$(CXXFLAGS) $(CPPFLAGS)
 
 debug:
 	@echo -e "\n${bold}${red}Complied in debug${normal}"
