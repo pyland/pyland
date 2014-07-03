@@ -16,17 +16,17 @@ enum class TileType {
 };
 
 std::map<int, TileType> tile_to_type({
-    { 8, TileType::WALKABLE},
-    {12, TileType::WALKABLE},
-    {64, TileType::WALKABLE},
+    { 8, TileType::WALKABLE},   // Board
+    {12, TileType::WALKABLE},   // Flowers
+    {64, TileType::WALKABLE},   // Grass
 
-    { 2, TileType::UNWALKABLE},
-    {13, TileType::UNWALKABLE},
-    {14, TileType::UNWALKABLE},
-    {21, TileType::UNWALKABLE},
+    { 2, TileType::UNWALKABLE}, // Edged wall
+    {13, TileType::UNWALKABLE}, // Water
+    {14, TileType::UNWALKABLE}, // Wall
+    {21, TileType::UNWALKABLE}, // Hideous ice
 
-    {57, TileType::KILLER},
-    {74, TileType::KILLER}
+    {57, TileType::KILLER},     // Trapdoor (set)
+    {74, TileType::KILLER}      // Lava
 });
 
 namespace py = boost::python;
@@ -93,6 +93,8 @@ bool Player::move(Vec2D by) {
     else if (tile == TileType::KILLER) {
         position = start;
     }
+
+
 
     move_object(id, position.x - cached_position.x, position.y - cached_position.y);
     return tile != TileType::KILLER;

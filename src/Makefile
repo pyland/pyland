@@ -1,4 +1,8 @@
 NULL=
+define newline
+
+endef
+
 RM = - rm -f
 
 CXX       = ${COMPILER}
@@ -37,6 +41,8 @@ else
 	GRAPHICS_LDLIBS  = $(GLES_LDLIBS)
 	CPPFLAGS += -DUSE_GLES
 endif
+
+
 
 SDL_CPPFLAGS  = $(shell sdl2-config --cflags)
 SDL_LDFLAGS   =
@@ -98,7 +104,6 @@ PYTHON_OBJS = \
 PYTHON_SHARED_OBJS = \
 	python_embed/wrapper_functions.so	
 
-
 HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}        \
 	${BASE_OBJS:.o=.d}           \
@@ -122,7 +127,7 @@ dependencies_directories:
 	@mkdir -p dependencies/python_embed
 
 $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
-	@echo -e "\n${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}\n"
+	@echo "${newline}${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}${newline}"
 	$(CXX) -o $@ \
 		$(BASE_OBJS) $(PYTHON_OBJS)            \
 		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
@@ -133,7 +138,7 @@ $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS)
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp
-	@echo -e "\n${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
+	@echo "${newline}${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}${newline}"
 	$(CXX) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(GRAPHICS_CPPFLAGS)    \
@@ -142,20 +147,20 @@ $(BASE_OBJS): %.o : %.cpp
 	@echo
 
 $(PYTHON_OBJS): %.o : %.cpp
-	@echo -e "\n${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
+	@echo "${newline}${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}${newline}"
 	$(CXX) -c $*.cpp -o $*.o \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp
-	@echo -e "\n${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}\n"
+	@echo "${newline}${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}${newline}"
 	$(CXX) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 debug:
-	@echo -e "\n${bold}${red}Complied in debug${normal}"
+	@echo "${newline}${bold}${red}Complied in debug${normal}"
 
 
 
