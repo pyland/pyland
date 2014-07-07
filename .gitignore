@@ -22,4 +22,6 @@
 *.app
 
 # project specific 
-python_embed/interpreter
+src/python_embed/interpreter
+*main.bin
+*__pycache__/
