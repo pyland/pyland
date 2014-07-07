@@ -2,6 +2,7 @@
 #define GAME_WINDOW_H
 
 #include <exception>
+#include <map>
 #include <utility>
 
 // Flags to allow code to run on standard OpenGL systems.
@@ -23,11 +24,18 @@ extern "C" {
 #include <SDL2/SDL_syswm.h>
 }
 
+class InputManager;
+
+
+
 ///
-/// Sets up OpenGL|ES and handles SDL functionality.
+/// Sets up OpenGL|ES and handles basic SDL functionality.
+///
+/// Input management is handled in a separate class.
 ///
 class GameWindow {
 private:
+    friend class InputManager;
     ///
     /// Used to say if something needs to be initialized, deinitialized,
     /// or if no action needs to be taken.
@@ -100,16 +108,39 @@ private:
 
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
     DISPMANX_ELEMENT_HANDLE_T dispmanElement;
+    
+    ///
+    /// Overscan compensation (left border pixels)
+    ///
+    static int overscan_left;
+    ///
+    /// Overscan compensation (top border pixels)
+    ///
+    static int overscan_top;
 #endif
 #ifdef USE_GL
     SDL_GLContext sdl_gl_context;
 #endif
 
     ///
+    /// Mapping of SDL window IDs to GameWindows.
+    ///
+    static std::map<Uint32,GameWindow*> windows;
+
+    ///
+    /// The currently focused window
+    ///
+    static GameWindow* focused_window;
+    ///
     /// Stores X11 display and window information.
     ///
     SDL_SysWMinfo wm_info;
-    
+
+    ///
+    /// Handle all the input separately to all the display setup.
+    ///
+    InputManager* input_manager;
+
     ///
     /// Initialize SDL.
     ///
@@ -161,8 +192,8 @@ public:
     protected:
         const char* message;
     public:
-        InitException (const char* message);
-        virtual const char* what ();
+        InitException(const char* message);
+        virtual const char* what() const noexcept;
     };
 
     ///
@@ -225,6 +256,11 @@ public:
     /// Swaps the opengl buffers for this window.
     ///
     void swap_buffers();
+
+    ///
+    /// Input manager getter.
+    ///
+    InputManager* get_input_manager();
 };
 
 #endif

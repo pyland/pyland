@@ -27,6 +27,7 @@ class Vec2D {
         /// @return New instance of Vec2D
         ///
         Vec2D operator+(Vec2D other);
+        Vec2D operator-(Vec2D other);
 
         ///
         /// In-place addition of Vec2Ds
@@ -35,6 +36,8 @@ class Vec2D {
         /// @return void 
         ///
         void operator+=(Vec2D other);
+        void operator-=(Vec2D other);
+
 
         ///
         /// Convert Vec2D to a std::string
@@ -46,10 +49,12 @@ class Vec2D {
 
 class Player {
     private:
+        Vec2D start;
         Vec2D position;
         std::string name;
         boost::python::api::object script;
         std::string read_file();
+        int id;
 
     public:
 
@@ -67,14 +72,14 @@ class Player {
         /// @param name  Name of player  
         /// @return New instance of Player
         ///
-        Player(Vec2D start, std::string name);
+        Player(Vec2D start, std::string name, int id);
 
         ///
         /// Move player relative to current location
         ///
         /// @param by Vec2D representing movement in the axes
         ///
-        void move(Vec2D by);
+        bool move(Vec2D by);
 
         ///
         /// Prints to standard output the name and position of sprite

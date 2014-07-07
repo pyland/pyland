@@ -62,7 +62,7 @@ void thread_killer(std::timed_mutex &finish_signal,
     while (true) {
         // Nonbloking sleep; allows safe quit
         print_debug << "Starting sleep in kill thread " << "." << std::endl;
-        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(10))) {
+        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(1000))) {
             break;
         }
         print_debug << "Slept in kill thread " << "." << std::endl;
@@ -176,6 +176,7 @@ void spawn_thread(std::string code,
     // http://stackoverflow.com/questions/24477791
     py::api::object player_object = [&player] () {
         GIL lock_gil;
+        print_debug << "spawn_thread: YYYYY" << std::endl;
         return py::api::object(boost::ref(player));
     } ();
 
@@ -218,11 +219,7 @@ void run_thread(Player &player, std::vector<PlayerThread> &playerthreads, std::s
             "player.monologue()\n"
             "try:\n"
             "    player.give_script(globals())\n"
-            "    for i in range(4):\n"
-            "        player.run_script()\n"
-            "        import time\n"
-            "        for _ in range(int(10**(i-1))):\n"
-            "           time.sleep(0.001)\n"
+            "    player.run_script()\n"
             "except BaseException as e:\n"
             "    print('Halted with {}.'.format(type(e)))\n"
             "    raise\n",
@@ -235,7 +232,7 @@ void run_thread(Player &player, std::vector<PlayerThread> &playerthreads, std::s
 ///
 /// Initialize Python interpreter, spawn threads and do fun stuff.
 ///
-int main(int, char **) {
+void run_all() {
     Py_Initialize();
     PyEval_InitThreads();
 
@@ -260,7 +257,7 @@ int main(int, char **) {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    std::list<Player> all_players = {Player(Vec2D(0, 0), "John"), Player(Vec2D(0, 0), "Adam")};
+    std::list<Player> all_players = {Player(Vec2D(32, 32), "John", 0), Player(Vec2D(448, 448), "Adam", 1)};
     std::string working_dir;
 
     // All Python errors should result in a Python traceback    
@@ -269,12 +266,11 @@ int main(int, char **) {
         working_dir = boost::filesystem::absolute("./").normalize().string();
 
         sys_module.attr("path").attr("append")(py::str(working_dir));
-        py::import("wrapper_functions");
+        py::import("python_embed.wrapper_functions");
     }
     catch (py::error_already_set) {
         print_debug << "main: Unexpected error setting path" << std::endl;
         PyErr_Print();
-        return 1;
     }
 
     print_debug << "main: Set path" << std::endl;
@@ -303,6 +299,4 @@ int main(int, char **) {
     print_debug << "main: Joined kill_thread" << std::endl;
 
     PyEval_RestoreThread(main_thread_state);
-
-    return 0;
 }

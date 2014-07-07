@@ -13,6 +13,7 @@ extern "C" {
 }
 
 #include "game_window.hpp"
+#include "input_manager.hpp"
 
 
 int main(int argc, char** argv) {
@@ -20,6 +21,7 @@ int main(int argc, char** argv) {
     
     try {
         GameWindow window = GameWindow(640, 400, false);
+        InputManager* input_manager = window.get_input_manager();
         window.use_context();
         glClearColor(0.25f, 0.50f, 1.0f, 1.0f);
         float r, g, b;
@@ -37,8 +39,10 @@ int main(int argc, char** argv) {
             window.swap_buffers();
             SDL_Delay(0);
             GameWindow::update();
-            std::pair<int, int> xy = window.get_size();
-            std::cerr << xy.first << " x " << xy.second << std::endl;
+            if (input_manager->is_key_down(SDLK_ESCAPE) && input_manager->is_key_down(SDLK_LSHIFT)) {
+                std::cerr << "Shift+Escape pressed!" << std::endl;
+                break;
+            }
         }
     }
     catch (GameWindow::InitException e) {

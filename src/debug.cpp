@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 
-std::ostream print_null(NULL);
+static std::ostream print_null(nullptr);
 
 #ifdef DEBUG
 std::ostream &print_debug = std::cout;

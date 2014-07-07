@@ -4,6 +4,7 @@
 
 // Include position important.
 #include "game_window.hpp"
+#include "input_manager.hpp"
 
 extern "C" {
 #ifdef USE_GLES
@@ -24,12 +25,26 @@ extern "C" {
 #define GAME_WINDOW_DEBUG
 #endif
 
+#ifdef USE_GLES
+#ifdef STATIC_OVERSCAN
+#define OVERSCAN_LEFT 24
+#define OVERSCAN_TOP  16
+#else
+#ifndef OVERSCAN_LEFT
+#define OVERSCAN_LEFT 0
+#endif
+#ifndef OVERSCAN_TOP
+#define OVERSCAN_TOP  0
+#endif
+#endif
+int GameWindow::overscan_left = OVERSCAN_LEFT;
+int GameWindow::overscan_top  = OVERSCAN_TOP;
+#endif
 
 
-///
-/// Mapping of SDL window IDs to GameWindows.
-///
-static std::map<Uint32,GameWindow*> windows = std::map<Uint32,GameWindow*>();
+
+std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
+GameWindow* GameWindow::focused_window = nullptr;
 
 
 
@@ -38,15 +53,16 @@ GameWindow::InitException::InitException(const char* message) {
 }
 
 
-const char* GameWindow::InitException::what() {
+const char* GameWindow::InitException::what() const noexcept {
     return message;
-}
+};
 
 
 
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
     close_requested = false;
+    input_manager = new InputManager(this);
     
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
@@ -111,26 +127,29 @@ GameWindow::~GameWindow() {
     vc_dispmanx_display_close(dispmanDisplay); // (???)
     SDL_DestroyRenderer (renderer);
 #endif
-    SDL_DestroyWindow (window);
-    
     // window_count--;
     windows.erase(SDL_GetWindowID(window));
+    
+    SDL_DestroyWindow (window);
     if (windows.size() == 0) {
         deinit_sdl();
     }
+
+    delete input_manager;
 }
 
 
 void GameWindow::init_sdl() {
     int result;
     
+#ifdef USE_GLES
     bcm_host_init();
+#endif
     
 #ifdef GAME_WINDOW_DEBUG
     std::cerr << "Initializing SDL..." << std::endl;
 #endif
-
-    result = SDL_Init (SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+    result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");
@@ -267,6 +286,8 @@ void GameWindow::init_surface() {
 
 
 void GameWindow::init_surface(int x, int y, int w, int h) {
+    deinit_surface();
+
 #ifdef USE_GLES
     EGLBoolean result;
   
@@ -281,8 +302,8 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
   
     // Create EGL window surface.
 
-    destination.x = x;
-    destination.y = y;
+    destination.x = x + GameWindow::overscan_left;
+    destination.y = y + GameWindow::overscan_top;
     destination.width = w;
     destination.height = h;
 #ifdef GAME_WINDOW_DEBUG
@@ -292,8 +313,6 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     source.y = 0;
     source.width  = w << 16; // (???)
     source.height = h << 16; // (???)
-
-    deinit_surface();
 
     DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
     dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
@@ -327,6 +346,11 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
         throw GameWindow::InitException("Error connecting context to surface");
     }
 
+    // Clean up any garbage in the SDL window.
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+#endif
+    
     visible = true;
     change_surface = InitAction::DO_NOTHING;
     // Only set these if the init was successful.
@@ -334,11 +358,6 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     window_y = y;
     window_width = w;
     window_height = h;
-
-    // Clean up any garbage in the SDL window.
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-#endif
 }
 
 
@@ -371,13 +390,19 @@ void GameWindow::update() {
     SDL_Event event;
     bool close_all = false;
     
+    for (auto pair : windows) {
+        GameWindow* window = pair.second;
+        window->input_manager->clean();
+    }
+    
     while (SDL_PollEvent(&event)) {
+        GameWindow* window;
         switch (event.type) {
         case SDL_QUIT: // Primarily used for killing when we become blind.
             close_all = true;
             break;
         case SDL_WINDOWEVENT:
-            GameWindow* window = windows[event.window.windowID];
+            window = windows[event.window.windowID];
 
             // Instead of reinitialising on every event, do it ater we have
             // scanned the event queue in full.
@@ -393,12 +418,22 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 window->change_surface = InitAction::DO_INIT;
+                focused_window = window;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
             case SDL_WINDOWEVENT_MINIMIZED:
             case SDL_WINDOWEVENT_HIDDEN:
                 window->change_surface = InitAction::DO_DEINIT;
+                if (focused_window == window) {
+                    focused_window = nullptr;
+                }
                 break;
+            }
+            break;
+        default:
+            // Let the input manager use the event.
+            if (focused_window) {
+                focused_window->input_manager->handle_event(&event);
             }
             break;
         }
@@ -411,7 +446,6 @@ void GameWindow::update() {
         
         // Hacky fix: The events don't quite chronologically work, so
         // check the window position to start any needed surface update.
-#ifdef USE_GLES
         int x, y;
         Window child;
         XTranslateCoordinates(window->wm_info.info.x11.display,
@@ -445,7 +479,6 @@ void GameWindow::update() {
             // Do nothing - hey, I don't like compiler warnings.
             break;
         }
-#endif
         
         if (close_all) {
             window->request_close();
@@ -495,4 +528,9 @@ void GameWindow::swap_buffers() {
 #ifdef USE_GL
     SDL_GL_SwapWindow(window);
 #endif
+}
+
+
+InputManager* GameWindow::get_input_manager() {
+    return input_manager;
 }
