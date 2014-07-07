@@ -85,7 +85,7 @@ BASE_OBJS = \
 	main.o          \
 	game_window.o   \
 	input_manager.o \
-	debug.o
+	debug_print.o
 
 PYTHON_OBJS = \
 	python_embed/interpreter.o       \
@@ -95,7 +95,7 @@ PYTHON_OBJS = \
 	python_embed/locks.o
 
 PYTHON_SHARED_OBJS = \
-	python_embed/wrapper_functions.so	
+	python_embed/wrapper_functions.so
 
 PYTHON_SHARED_OBJS_DEPENDS = \
 	python_embed/api.o	
@@ -151,7 +151,8 @@ $(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
-$(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
+python_embed/wrapper_functions.so: python_embed/api.o
+$(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed
 	@echo; echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
 	$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
@@ -170,6 +171,15 @@ clean:
 
 -include ${HEADER_DEPENDS}
 
+
+### Settings ###
+
 .PHONY : all
 .PHONY : clean
 .PHONY : debug
+
+# This is almost always what you want make to do, but it is not historical practice;
+# so for compatibility, you must explicitly request it.
+#
+# http://www.gnu.org/software/make/manual/make.html#Errors
+.DELETE_ON_ERROR:

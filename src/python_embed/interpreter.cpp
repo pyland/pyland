@@ -7,7 +7,7 @@
 #include <string>
 #include <thread>
 #include "api.h"
-#include "debug.h"
+#include "debug_print.h"
 #include "locks.h"
 #include "make_unique.h"
 #include "playerthread.h"

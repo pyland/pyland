@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 #include "api.h"
-#include "debug.h"
+#include "debug_print.h"
 #include "main.h"
 
 enum class TileType {
