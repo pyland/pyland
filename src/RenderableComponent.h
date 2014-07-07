@@ -27,11 +27,25 @@
 #endif
 
 
-
+///
+/// This class holds all the referrences to the data needed to render
+/// the geometry. The idea is that this data is generated and then put
+/// into this object. Then, when an object is rendered, this object's
+/// information is queried and used in the rendering loops.
+///
+/// For example, each object has a RenderableComponent and then in the
+/// MapViewer render loop, each one is fetched and then used to draw the object
+///
+/// The aim is to separate the rendering code from the object and Map
+/// classes and the logic in these classes so that we reduce code
+/// bloat and needless copy-pasting.
+///
 class RenderableComponent {
   GLfloat* vertex_data;
   GLfloat* texture_data;
-  GLuint vbo_ids[];
+  GLuint vbo_vertex_id;
+  GLuint vbo_texture_id;
+
   GLuint texure_obj_id;
   int width;
   int height;
@@ -48,7 +62,8 @@ class RenderableComponent {
 
 
 public:
-  
+  RenderableComponent();
+  ~RenderableComponent();
   ///
   /// Get a pointer to the vertex data
   ///
@@ -56,8 +71,11 @@ public:
 
   ///
   /// Set the vertex data to use for this component
+  /// @param new_vertex_data The new data to use for ther vertices of this object
+  /// @param the size of the data in bytes
+  /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static geometry
   ///
-  void set_vertex_data(GLfloat* new_vertex_data) { vertex_data = new_vertex_data; }
+  void set_vertex_data(GLfloat* new_vertex_data, int data_size,  bool is_dynamic);
 
   ///
   /// Get a pointer to the texture data
@@ -66,19 +84,23 @@ public:
 
   /// 
   /// Set the texture data to use for this component
-  void set_texture_data(GLfloat* new_texture_data) { texture_data  = new_texture_data; }
+  /// @param new_texture_data The new data to use for ther texture coordinates of this object
+  /// @param data_size The size of the data in bytes
+  /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static 
+  ///
+  void set_texture_data(GLfloat* new_texture_data, int data_size, bool is_dynamic);
 
   ///
   /// Get the width of the component
+  /// @return The width of the component
   /// 
   int get_width() { return width; }
 
   ///
   /// Get the height of the component
+  /// @return The height of the component
   ///
   int get_height() { return height; } 
-
-  
 };
 
 #endif

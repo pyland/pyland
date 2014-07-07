@@ -27,13 +27,19 @@
 #endif
 
 #include "game_window.hpp"
-
+#include "RenderableComponent.h"
 
 
 class Map {
   GLfloat* sprite_data;
   GLfloat* sprite_tex_data;
   GLfloat* tileset_tex_coords;
+
+  /// 
+  /// Object instance to contain data needed to render the map
+  ///
+  RenderableComponent renderable_component;
+  
 
   ///
   /// Vertex Buffer Object Opengl identifiers

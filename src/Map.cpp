@@ -53,7 +53,8 @@
 /**
  * Constructor for Map
  */ 
-Map::Map() {
+Map::Map() : renderable_component() {
+
     // Set background color and clear buffers
     glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
 
@@ -193,7 +194,6 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
         tileset_offset_x = 0.0;
         tileset_offset_y += tileset_inc_y;
     }
-
 }
 
 /**
@@ -207,7 +207,8 @@ void Map::generate_map_texcoords() {
     //holds the map data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
-    map_tex_coords = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
+    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats;
+    map_tex_coords = new GLfloat[data_size]; 
     assert(map_tex_coords);
 
     int x, y;
@@ -244,6 +245,9 @@ void Map::generate_map_texcoords() {
             map_tex_coords[x*map_height*num_floats + y*num_floats+11] = tileset_ptr[5];
         }
     }
+
+    //Set this data in the renderable component
+    renderable_component.set_texture_data(map_tex_coords, data_size, false);
 }
 
 /*
@@ -257,7 +261,8 @@ void Map::generate_map_coords() {
     //holds the map data
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
-    map_data = new GLfloat[sizeof(GLfloat)*map_height*map_width*num_floats]; 
+    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats;
+    map_data = new GLfloat[data_size]; 
     assert(map_data);
     float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
     //generate the map data
@@ -310,6 +315,9 @@ void Map::generate_map_coords() {
 #ifdef DEBUG
     printf("DONE.");
 #endif
+
+    //Set this data in the renderable component
+    renderable_component.set_vertex_data(map_data, data_size, false);
 }
 
 /**
