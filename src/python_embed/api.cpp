@@ -9,6 +9,8 @@
 #include "debug.h"
 #include "main.h"
 
+#define WRAPPING_ENABLED true
+
 enum class TileType {
     WALKABLE,
     UNWALKABLE,
@@ -75,8 +77,10 @@ bool Player::move(Vec2D by) {
     ++call_number;
     auto cached_position = position;
     position += by;
-    position.x = std::min(std::max(position.x,0),480);
-    position.y = std::min(std::max(position.y,0),480);
+    if (not WRAPPING_ENABLED) {
+        position.x = std::min(std::max(position.x,0),480);
+        position.y = std::min(std::max(position.y,0),480);
+    }
 
     int tile_x = position.x;
     int tile_y = position.y;
