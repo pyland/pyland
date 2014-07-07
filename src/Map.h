@@ -1,18 +1,50 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "GLES/gl.h"
-#include "GLES2/gl2.h"
-#include "EGL/egl.h"
-#include "EGL/eglext.h"
+#include <string>
 
 
-deletclass Map {
+//Include GLM
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
+#ifdef USE_GLES
+
+#include <GLES2/gl2.h>
+
+#endif
+
+#ifdef USE_GL
+
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+
+#endif
+
+#include "game_window.hpp"
+
+
+
+class Map {
+  GLfloat* sprite_data;
+  GLfloat* sprite_tex_data;
+  GLfloat* tileset_tex_coords;
   /**
    * Vertex Buffer Object Opengl identifiers
    */
   GLuint vbo_objs[2];
 
+  /**
+   * The reference to the window object in which we render the map.
+   */
+  GameWindow *window;
+  
   /** 
    * The Opengl handle for the shader program currently being used
    */
@@ -62,6 +94,92 @@ deletclass Map {
 
 
   /**
+   * The number of vertex buffer objects 
+   */
+  static const int num_vbo_ids = 4;
+ 
+  /**
+   * Array to hold the vertex buffer object Opengl Ids
+   */
+  GLuint vbo_ids[num_vbo_ids];
+
+  /**
+   * Array to hold the texture object identifiers
+   */
+  GLuint texture_ids[2];
+
+  /**
+   * The speed at which we scroll the map.
+   */
+  static const float map_scroll_speed;
+
+  /**
+   * The far left  x position where we display the map
+   */
+  float map_display_x;
+  /**
+   * The lower y position we are currently displaying the map at.
+   */
+  float map_display_y;
+
+  /**
+   * The width of the map to be displayed on screen.
+   */
+  int map_display_width = 8;
+
+  /**
+   * The height of the map to be displayed on screen
+   */
+  int map_display_height = 8;
+
+  /**
+   * The texture buffer pointers
+   */
+  char* tex_buf[2];
+
+  /**
+   * The number of objects in the map
+   */
+  int num_objects = 2;
+
+  /**
+   * The world data
+   */
+std::array<std::array<int, 16>, 16> world_data = {{
+    {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}},
+    {{14,  64,  14,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
+    {{14,  64,  14,  64,  64,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
+    {{14,  64,  14,  64,  64,  64,  14,  64,  64,  64,  13,  13,  64,  64,  12,  14}},
+    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  64,  13,  13,  13,  64,  12,  14}},
+    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  13,  13,  13,  13,  13,  12,  14}},
+    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  13,  13,  13,  13,  13,  12,  14}},
+    {{14,  64,  57,  64,  64,  14,  64,  64,  64,  64,  13,  14,  14,  14,  12,  14}},
+    {{14,  64,  57,  64,  64,  14,  64,  64,  64,  64,  14,  74,   8,   8,   8,  14}},
+    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  64,  14,  74,   8,   8,   8,  14}},
+    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  14,  57,   8,   8,   8,   8,  14}},
+    {{14,  64,  14,  64,  64,  14,  64,  64,  74,  14,   8,   8,   8,   8,   8,  14}},
+    {{14,  64,  14,  64,  64,  14,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
+    {{14,  64,  14,  14,  14,  14,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
+    {{14,  64,  14,   8,   8,   8,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
+    {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}}
+}};
+
+  /**
+   * The tileset texture coordinates
+   */
+  GLfloat* tileset_text_coords;
+
+  /**
+   * Pointer to the map vertex data
+   */
+  GLfloat* map_data;
+
+  /**
+   * Pointer to the map texture coordinate data
+   */
+  GLfloat* map_tex_coords;
+
+  /**
    * Function used to generate the necessary Vertex Buffer Objects to
    * hold the map data to achieve more efficient rendering.
    */
@@ -92,7 +210,7 @@ deletclass Map {
   /** 
    * This function crates the Opengl program
    */
-  GLuint shader_create(const string vs, const string fs);
+  GLuint shader_create(const std::string vs, const std::string fs);
 
   /** 
    * This function loads the required texture images

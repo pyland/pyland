@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <chrono>
 #include <thread>
 
- //Include GLM
+//Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
@@ -93,7 +93,6 @@ static void update(float dt);
 static void init_textures();
 static void load_tex_images();
 static void exit_func(void);
-
 static void draw_sprites( float dt);
 void generate_sprite_coords();
 void generate_sprite_tex_data();
@@ -151,22 +150,6 @@ std::array<std::array<int, 16>, 16> world_data = {{
 GLfloat * tileset_tex_coords;
 GLfloat * map_data;
 GLfloat * map_tex_coords;
-// Spatial coordinates for the cube
-static const GLbyte quadx[4*3] = {
-    /* FRONT */
-    -10, -10,   0,
-     10, -10,   0,
-    -10,  10,   0,
-     10,  10,   0,
-};
-
-/// Texture coordinates for the quad.
-static const GLfloat texCoords[ 4 * 2] = {
-    0.f, 0.f,
-    0.f, 1.f,
-    1.f, 0.f,
-    1.f, 1.f,
-};
 
 struct Object {
     float x;
@@ -525,8 +508,7 @@ static void generate_map_texcoords(int map_width, int map_height) {
  * Description: This code generates the vertex data for the map
  *
  ***********************************************************/
-static void generate_map_coords(int map_width, int map_height)
-{
+static void generate_map_coords(int map_width, int map_height) {
 #ifdef DEBUG
     printf("GENERATING MAP DATA...");
 #endif
@@ -767,6 +749,7 @@ static void exit_func(void) {
 
     // release buffers
     delete[] tex_buf1;
+    delete[] tex_buf2;
     delete[] map_data;
     delete[] sprite_data;
     delete[] sprite_tex_data;

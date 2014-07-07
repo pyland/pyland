@@ -85,8 +85,9 @@ BASE_OBJS = \
 	main.o          \
 	game_window.o   \
 	input_manager.o \
-	debug.o
-
+	debug.o \
+	MapViewer.o \
+	Map.o
 PYTHON_OBJS = \
 	python_embed/interpreter.o       \
 	python_embed/wrapper_functions.o \
