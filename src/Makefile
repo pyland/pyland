@@ -90,7 +90,8 @@ BASE_OBJS = \
 	Map.o \
 	Api.o \
 	Object.o \
-	RenderableComponent.o
+	RenderableComponent.o \
+	Shader.o
 
 PYTHON_OBJS = \
 	python_embed/interpreter.o       \

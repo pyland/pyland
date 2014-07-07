@@ -26,7 +26,7 @@
 
 #endif
 
-
+#include "Shader.h"
 ///
 /// This class holds all the referrences to the data needed to render
 /// the geometry. The idea is that this data is generated and then put
@@ -41,14 +41,55 @@
 /// bloat and needless copy-pasting.
 ///
 class RenderableComponent {
+  ///
+  /// The buffer holding the vertex data
+  ///
   GLfloat* vertex_data;
+
+  ///
+  /// The size of the vertex data in bytes
+  ///
+  int vertex_data_size;
+
+  ///
+  /// The buffer holding the texture data
+  ///
   GLfloat* texture_data;
+
+  ///
+  /// The size of the texture buffer in bytes
+  ///
+  int texture_data_size;
+
+  ///
+  /// The vertex buffer object identifier for the vertex buffer
+  ///
   GLuint vbo_vertex_id;
+  
+  ///
+  /// The vertex buffer object identifier for the texture buffer
+  ///
   GLuint vbo_texture_id;
 
+  ///
+  /// The texture object identifier for the texture used by this component
+  ///
   GLuint texure_obj_id;
+
+  ///
+  /// The width of this component
+  ///
   int width;
+
+  ///
+  /// The height of this component
+  ///
   int height;
+
+  ///
+  /// The shader used to render this component
+  ///
+  Shader* shader;
 
   ///
   /// The current projection matrix

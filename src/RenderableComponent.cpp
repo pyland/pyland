@@ -17,6 +17,7 @@ RenderableComponent::~RenderableComponent() {
 
 void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_size, bool is_dynamic) { 
   vertex_data = new_vertex_data;
+  vertex_data_size = data_size;
 
   //Set up buffer usage
   GLenum usage = GL_STATIC_DRAW;
@@ -25,7 +26,7 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_siz
   
   //Pass in data to the buffer buffer
   glBindBuffer(GL_ARRAY_BUFFER, vbo_vertex_id);
-  glBufferData(GL_ARRAY_BUFFER, data_size, vertex_data, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertex_data_size, vertex_data, GL_STATIC_DRAW);
 
   //Set the attributes
   glEnableVertexAttribArray(VERTEX_POS_INDX);
@@ -35,7 +36,7 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_siz
 
 void RenderableComponent::set_texture_data(GLfloat* new_texture_data, int data_size, bool is_dynamic) { 
   texture_data = new_texture_data;
-
+  texture_data_size = data_size;
 
   //Set up buffer usage
   GLenum usage = GL_STATIC_DRAW;
@@ -44,7 +45,7 @@ void RenderableComponent::set_texture_data(GLfloat* new_texture_data, int data_s
   
   //Pass in data to the buffer buffer
   glBindBuffer(GL_ARRAY_BUFFER, vbo_texture_id);
-  glBufferData(GL_ARRAY_BUFFER, data_size, texture_data, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, texture_data_size, texture_data, GL_STATIC_DRAW);
 
   //Set the attributes
   glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
