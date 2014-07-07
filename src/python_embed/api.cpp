@@ -10,6 +10,7 @@
 #include "main.h"
 
 #define WRAPPING_ENABLED true
+#define TILESIZE_PIXELS 32
 
 enum class TileType {
     WALKABLE,
@@ -85,10 +86,10 @@ bool Player::move(Vec2D by) {
     int tile_x = position.x;
     int tile_y = position.y;
     TileType tile = std::max({
-        tile_to_type[world_data[(tile_x   ) / 32][(tile_y   ) / 32]],
-        tile_to_type[world_data[(tile_x   ) / 32][(tile_y+31) / 32]],
-        tile_to_type[world_data[(tile_x+31) / 32][(tile_y   ) / 32]],
-        tile_to_type[world_data[(tile_x+31) / 32][(tile_y+31) / 32]],
+        tile_to_type[world_data[tile_x / TILESIZE_PIXELS][tile_y / TILESIZE_PIXELS]],
+        tile_to_type[world_data[tile_x / TILESIZE_PIXELS][(tile_y + TILESIZE_PIXELS-1) / TILESIZE_PIXELS]],
+        tile_to_type[world_data[(tile_x + TILESIZE_PIXELS-1) / TILESIZE_PIXELS][tile_y / TILESIZE_PIXELS]],
+        tile_to_type[world_data[(tile_x + TILESIZE_PIXELS-1) / TILESIZE_PIXELS][(tile_y + TILESIZE_PIXELS-1) / TILESIZE_PIXELS]],
     });
 
     if (tile == TileType::UNWALKABLE) {
