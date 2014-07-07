@@ -8,7 +8,7 @@ COMPILER ?= g++
 WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
-CPPFLAGS ?= -I./ -Ipython_embed/ -MMD -MP -MF dependencies/$*.d
+CPPFLAGS ?= -I./ -Ipython_embed_new/ -MMD -MP -MF dependencies/$*.d
 
 LDFLAGS  ?=
 LDLIBS   ?=
@@ -88,17 +88,16 @@ BASE_OBJS = \
 	debug_print.o
 
 PYTHON_OBJS = \
-	python_embed/interpreter.o       \
-	python_embed/wrapper_functions.o \
-	python_embed/playerthread.o      \
-	python_embed/api.o               \
-	python_embed/locks.o
+	python_embed_new/interpreter.o   \
+	python_embed_new/locks.o         \
+	python_embed_new/playerthread.o  \
+	python_embed_new/thread_killer.o
 
 PYTHON_SHARED_OBJS = \
-	python_embed/wrapper_functions.so
+	python_embed_new/wrapper_functions.so
 
 PYTHON_SHARED_OBJS_DEPENDS = \
-	python_embed/api.o	
+	python_embed_new/api.o	
 
 HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
@@ -111,7 +110,7 @@ HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 
 ### What to run ###
 
-all: $(EXECUTABLE) python_embed/wrapper_functions.so
+all: $(EXECUTABLE) python_embed_new/wrapper_functions.so
 
 debug: CXXFLAGS += -g
 debug: CXXFLAGS +=  -fno-elide-constructors
@@ -122,8 +121,8 @@ debug: all
 dependencies:
 	@mkdir dependencies
 
-dependencies/python_embed: | dependencies
-	@mkdir dependencies/python_embed
+dependencies/python_embed_new: | dependencies
+	@mkdir dependencies/python_embed_new
 
 $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) | dependencies
 	@echo; echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"; echo
@@ -145,14 +144,14 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(CXXFLAGS) $(CPPFLAGS)
 	@echo
 
-$(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
+$(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed_new
 	@echo; echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
 	$(COMPILER) -c $*.cpp -o $*.o \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
-python_embed/wrapper_functions.so: python_embed/api.o
-$(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed
+python_embed_new/wrapper_functions.so: python_embed_new/api.o
+$(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed_new
 	@echo; echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
 	$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
@@ -167,7 +166,7 @@ debug:
 
 clean:
 	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
-	$(RMDIR) dependencies/python_embed dependencies
+	$(RMDIR) dependencies/python_embed_new dependencies
 
 -include ${HEADER_DEPENDS}
 
