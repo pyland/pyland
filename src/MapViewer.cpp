@@ -8,16 +8,15 @@ MapViewer::MapViewer(GameWindow* new_window) {
     std::cerr << "INVALID PASSING NULL GameWindow" << std::endl;
     assert(new_window != NULL);
   }
+
   window = new_window;
 
-  
   // Set background color and clear buffers
   glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
 
   // Leave this here!!!
   // Disable back face culling.
   glDisable(GL_CULL_FACE);
-
 };
 
 MapViewer::~MapViewer() {
@@ -54,8 +53,6 @@ void MapViewer::render_map() {
   map_render_component->set_projection_matrix(projection_matrix);
   map_render_component->set_modelview_matrix(translated);
 
-
-  
   map_render_component->bind_shader();
   
 

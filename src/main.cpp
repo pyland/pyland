@@ -929,7 +929,7 @@ int main (int argc, char* argv[]) {
       use_graphical_window = false;
   }
   //TODO: Support no window
-
+  //Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
 
   GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
   window.use_context();
