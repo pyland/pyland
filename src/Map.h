@@ -31,9 +31,9 @@
 
 
 class Map {
-  GLfloat* sprite_data;
-  GLfloat* sprite_tex_data;
-  GLfloat* tileset_tex_coords;
+  GLfloat* sprite_data = NULL;
+  GLfloat* sprite_tex_data = NULL;
+  GLfloat* tileset_tex_coords = NULL;
 
   /// 
   /// Object instance to contain data needed to render the map
@@ -46,88 +46,73 @@ class Map {
   ///
   GLuint vbo_objs[2];
 
-  ///
-  /// The reference to the window object in which we render the map.
-  ///
-  GameWindow *window;
   
   /// 
   /// The Opengl handle for the shader program currently being used
   ///
-  GLuint program_obj;
+  GLuint program_obj = 0;
 
   /// 
   /// The Opengl handle for the tileset texture
   ///
-  GLuint tileset_obj;
+  GLuint tileset_obj = 0;
 
   ///
   /// The vertex data for the map
   ///
-  GLfloat* map_vertex_data;
+  GLfloat* map_vertex_data = NULL;
 
   /// 
   /// The texture data for the map
   ///
-  GLfloat* map_tex_data;
+  GLfloat* map_tex_data = NULL;
   
   ///
   /// The texture data for the tileset. This is the cached entries
   /// which allow generation of the map texture coordinates for a
   /// particular tile.
   ///
-  GLfloat* tileset_tex_data;
+  GLfloat* tileset_tex_data = NULL;
 
   ///
   /// This is the height of the map in tiles
   /// 
-  int map_height;
+  int map_height = 0;
 
   ///
   /// The width of the map in tiles
   ///
-  int map_width;
-  
-  ///
-  /// The current projection matrix
-  ///
-  glm::mat4 projection_matrix;
-
-  ///
-  /// the current modelview matrix
-  /// 
-  glm::mat4 modelview_matrix;
-
+  int map_width = 0;
 
   ///
   /// The number of vertex buffer objects 
   ///
-  static const int num_vbo_ids = 4;
+  static const int num_vbo_ids = 2;
  
   ///
   /// Array to hold the vertex buffer object Opengl Ids
   ///
-  GLuint vbo_ids[num_vbo_ids];
+  GLuint vbo_ids[num_vbo_ids] = { 0 };
 
   ///
   /// Array to hold the texture object identifiers
   ///
-  GLuint texture_ids[2];
+  GLuint texture_ids[2] = { 0 };
 
   ///
   /// The speed at which we scroll the map.
   ///
-  static const float map_scroll_speed;
+  float map_scroll_speed = 32.0f;
 
   ///
   /// The far left  x position where we display the map
   ///
-  float map_display_x;
+  float map_display_x = 0.0f;
 
   ///
   /// The lower y position we are currently displaying the map at.
   ///
-  float map_display_y;
+  float map_display_y = 0.0f;
 
   ///
   /// The width of the map to be displayed on screen.
@@ -174,17 +159,17 @@ std::array<std::array<int, 16>, 16> world_data = {{
   ///
   /// The tileset texture coordinates
   ///
-  GLfloat* tileset_text_coords;
+  GLfloat* tileset_text_coords = NULL;
 
   ///
   /// Pointer to the map vertex data
   ///
-  GLfloat* map_data;
+  GLfloat* map_data = NULL;
 
   ///
   /// Pointer to the map texture coordinate data
   ///
-  GLfloat* map_tex_coords;
+  GLfloat* map_tex_coords = NULL;
 
   ///
   /// Function used to generate the necessary Vertex Buffer Objects to
@@ -235,15 +220,36 @@ std::array<std::array<int, 16>, 16> world_data = {{
   bool init_shaders();
   
 public: 
-  Map();
+  Map(const std::string map_src);
   ~Map();
 
   ///
-  /// The function used to render the map. Makes the necessary Opengl
-  /// to correctly render the map.
+  /// Gets the RenderableComponent object instance associated with this Map
   ///
-  void render_map();
+  RenderableComponent* get_renderable_component() { return &renderable_component; }
+  
+  ///
+  /// Get the map width
+  ///
+  int get_width() { return map_width; }
 
+  ///
+  /// Get the map height
+  /// 
+  int get_height() { return map_height; }
+
+  ///
+  /// Get the map display lower left x position
+  /// @return the map display far left x position
+  ///
+  float get_display_x() { return map_display_x; }
+
+  ///
+  /// Get the map display bottom y position
+  /// @return the map display bottom y  position
+  ///
+  float get_display_y() { return map_display_y; }
+  
   ///
   /// The function used to update elements on the map.
   ///

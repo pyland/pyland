@@ -50,17 +50,19 @@
 #endif
 
 #define TILESET_ELEMENT_SIZE 16
+
+
 /**
  * Constructor for Map
  */ 
-Map::Map() : renderable_component() {
+Map::Map(const std::string map_src) : renderable_component() {
 
-    // Set background color and clear buffers
-    glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
 
-    // Leave this here!!!
-    // Disable back face culling.
-    glDisable(GL_CULL_FACE);
+  init_shaders();
+  generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+  generate_map_texcoords();
+  //  generate_sprite_tex_data();
+  init_textures();
 }
 
 /** 
@@ -248,6 +250,7 @@ void Map::generate_map_texcoords() {
 
     //Set this data in the renderable component
     renderable_component.set_texture_data(map_tex_coords, data_size, false);
+    renderable_component.set_num_vertices_render(6*map_width*map_height);
 }
 
 /*
@@ -316,106 +319,10 @@ void Map::generate_map_coords() {
     printf("DONE.");
 #endif
 
-    //Set this data in the renderable component
+   //Set this data in the renderable component
     renderable_component.set_vertex_data(map_data, data_size, false);
 }
 
-/**
- * This function loads the shaders
- */ 
-GLuint Map::load_shader(GLenum type, const std::string src) {
-    GLuint shader;
-    GLint compiled = 0;
-    
-    // Create the shader object 
-    shader = glCreateShader(type);
-
-    if(shader == 0) {
-        // Couldn't create the shader
-        return 0;
-    }
-
-    // Load shader source code
-    const char* source = src.c_str();
-    glShaderSource(shader, 1, &source, nullptr);
-
-    // Compile the shader
-    glCompileShader(shader);
-
-    // Check for errors
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-
-    // Handle the errors
-    if(!compiled) {
-        GLint info_len = 0;
-      
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_len);
-      
-        if(info_len > 1) {
-            char* info_log = new char[sizeof(char) * info_len];
-
-            glGetShaderInfoLog(shader, info_len, nullptr, info_log);
-            std::cerr << "ERROR: SHADER LOADING " << std::endl  << info_log << std::endl;
-            delete []info_log;
-        }
-        glDeleteShader(shader);
-        return 0;
-    }
-    return shader;
-
-} 
-
-/** 
- * This function crates the Opengl program
- */
-GLuint Map::shader_create(const std::string vs, const std::string fs) {
-    GLuint vertex_shader;
-    GLuint fragment_shader;
-    GLint linked;
-    
-    //Load the fragment and vertex shaders
-    vertex_shader = load_shader(GL_VERTEX_SHADER, vs);
-    fragment_shader = load_shader(GL_FRAGMENT_SHADER, fs);
-    
-    //Create the program object
-    program_obj = glCreateProgram();
-    
-    if(program_obj == 0) {
-      std::cerr << "ERROR FLAG: " << glGetError();
-      std::cerr << "ERROR: SHADER PROGRAM CREATION. Could not create program object." << std::endl;
-      return 0;
-    }
-
-    glAttachShader(program_obj, vertex_shader);
-    glAttachShader(program_obj, fragment_shader);
-    
-    glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
-    glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
-    
-    //Link the program
-    glLinkProgram(program_obj);
-    
-    //Check to see if we have any log info
-    glGetProgramiv(program_obj, GL_LINK_STATUS, &linked);
-    
-    if(!linked) {
-        GLint info_len = 0;
-        
-        glGetProgramiv(program_obj, GL_INFO_LOG_LENGTH, &info_len);
-        
-        if(info_len > 1) {
-            char* info_log = new char[sizeof(char)*info_len];
-        
-            glGetProgramInfoLog(program_obj, info_len, nullptr, info_log);
-            std::cerr << "ERROR: PROGRAM LINKING " << std::endl  << info_log << std::endl;
-            delete []info_log;
-        }
-        glDeleteProgram(program_obj);
-        return 0;
-    }
-  
-    return program_obj;
-}
 
 /** 
  * This function loads the required texture images
@@ -510,9 +417,11 @@ bool Map::init_shaders() {
     frag_src += line + "\n";
   }
 
-  GLuint program_obj = shader_create(vert_src, frag_src);
+  Shader* shader = new Shader(vert_src, frag_src);
 
-  if (program_obj == 0) {
+  if (!shader->is_loaded()) {
+    delete shader;
+    shader = NULL;
     std::cerr << "Failed to create the shader" << std::endl;
     return false;
   }
@@ -521,54 +430,9 @@ bool Map::init_shaders() {
 
 }
 
-/**
- * The function used to render the map. Makes the necessary Opengl
- * to correctly render the map.
- */
-void Map::render_map() {
-  glClear(GL_COLOR_BUFFER_BIT);
-
-    //LEAVE THIS HERE!
-    glDisable(GL_CULL_FACE);
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 translated = glm::translate(model, glm::vec3(map_display_x, map_display_y, 0.0f));
-
-    glUseProgram(program_obj);
-
-    glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
-    glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_modelview"), 1, GL_FALSE, glm::value_ptr(translated));
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[0]);
-    glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(VERTEX_POS_INDX);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[1]);
-    glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
-
-    glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
-
-    glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
-
-    glActiveTexture(GL_TEXTURE0);
-   //Bind tiles texture
-    glBindTexture(GL_TEXTURE_2D,texture_ids[0]);
-
-   //set sampler texture to unit 0
-    glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6*map_width*map_height);
-    glUseProgram(0);
-
-    window->swap_buffers();
-}
 
 /**
  * The function used to update elements on the map.
  */
 void Map::update_map(float dt) {
-    std::pair<int, int> size = window->get_size();
-    glViewport(0, 0,  size.first, size.second);
-    projection_matrix = glm::ortho(0.0f, (float)(size.first), 0.0f, (float)(size.second), -1.0f, 1.0f);
-
 }

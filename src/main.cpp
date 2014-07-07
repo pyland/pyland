@@ -938,6 +938,7 @@ int main () {
     init_buffers();
 
     //   Map map;
+    //
     std::thread mythread(run_all);
 
     float dt = get_dt();

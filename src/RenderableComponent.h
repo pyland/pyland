@@ -44,67 +44,128 @@ class RenderableComponent {
   ///
   /// The buffer holding the vertex data
   ///
-  GLfloat* vertex_data;
+  GLfloat* vertex_data =NULL;
 
   ///
   /// The size of the vertex data in bytes
   ///
-  int vertex_data_size;
+  int vertex_data_size = 0;
 
+
+  ///
+  /// The number of vertices to render
+  ///
+  int num_vertices_render = 0;
   ///
   /// The buffer holding the texture data
   ///
-  GLfloat* texture_data;
+  GLfloat* texture_data = NULL;
 
   ///
   /// The size of the texture buffer in bytes
   ///
-  int texture_data_size;
+  int texture_data_size = 0;
 
   ///
   /// The vertex buffer object identifier for the vertex buffer
   ///
-  GLuint vbo_vertex_id;
+  GLuint vbo_vertex_id = 0;
   
   ///
   /// The vertex buffer object identifier for the texture buffer
   ///
-  GLuint vbo_texture_id;
+  GLuint vbo_texture_id = 0;
 
   ///
   /// The texture object identifier for the texture used by this component
   ///
-  GLuint texure_obj_id;
+  GLuint texture_obj_id = 0;
 
   ///
   /// The width of this component
   ///
-  int width;
+  int width = 0;
 
   ///
   /// The height of this component
   ///
-  int height;
+  int height = 0;
 
   ///
-  /// The shader used to render this component
+  /// The shader used to render this component. This is a pointer because more than
+  /// one RenderableComponent can have the same shader
   ///
-  Shader* shader;
+  Shader* shader = NULL;
 
   ///
   /// The current projection matrix
   ///
-  glm::mat4 projection_matrix;
+  glm::mat4 projection_matrix = glm::mat4(1.0);
 
   ///
   /// the current modelview matrix
   /// 
-  glm::mat4 modelview_matrix;
+  glm::mat4 modelview_matrix  = glm::mat4(1.0);
 
 
 public:
   RenderableComponent();
   ~RenderableComponent();
+
+  ///
+  /// Get the projection matrix
+  /// @return the projection matrix
+  ///
+  glm::mat4 get_projection_matrix() { return projection_matrix; }
+
+  ///
+  /// Set the projection matrix for this component
+  /// @new_projection_matrix the new matrix
+  ///
+  void set_projection_matrix(glm::mat4 new_projection_matrix) { projection_matrix = new_projection_matrix; }
+
+  ///
+  /// Get the modelview matrix
+  /// @return the modelview matrix for this component
+  ///
+  glm::mat4 get_modelview_matrix() { return modelview_matrix; }
+
+  ///
+  /// Set the modelview matrix for this component
+  /// @param new_modelview_matrix the new modelview matrix
+  /// 
+  void set_modelview_matrix(glm::mat4 new_modelview_matrix) { modelview_matrix = new_modelview_matrix; }
+
+  ///
+  /// Bind the shader program to the Opengl pipeline to use it for rendering
+  ///
+  void bind_shader();
+
+  ///
+  /// Release the shader program from the Opengl pipeline
+  ///
+  void release_shader();
+
+  ///
+  /// Sets the shader to use for this component
+  ///
+  void set_shader(Shader* new_shader) {shader = new_shader; }
+
+  ///
+  /// Gets the shader used by this component
+  ///
+  Shader* get_shader() { return shader; }
+
+  ///
+  /// Bind the vertex buffers 
+  ///
+  void bind_vbos();
+
+  ///
+  /// Release the vertex buffers
+  ///
+  void release_vbos();
+
   ///
   /// Get a pointer to the vertex data
   ///
@@ -142,6 +203,26 @@ public:
   /// @return The height of the component
   ///
   int get_height() { return height; } 
+
+  ///
+  /// Bind the texture objects
+  ///
+  void bind_textures();
+
+  ///
+  /// Release the texture objects
+  ///
+  void release_textures();
+
+  ///
+  /// Get the number of vertices to render
+  ///
+  int get_num_vertices_render() { return num_vertices_render; }
+
+  ///
+  /// Set the number of vertices we need to render
+  ///
+  void set_num_vertices_render(int num_vertices) { num_vertices_render = num_vertices; }
 };
 
 #endif

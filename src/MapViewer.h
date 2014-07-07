@@ -4,10 +4,18 @@
 #include "Map.h"
 
 class MapViewer {
-  Map* map;
+  ///
+  /// The Map we are currently rendering
+  ///
+  Map* map = NULL;
+
+  ///
+  /// The reference to the window object in which we render the map.
+  ///
+  GameWindow *window = NULL;
 
 public:
-  MapViewer();
+  MapViewer(GameWindow* window);
   ~MapViewer();
   
   ///
