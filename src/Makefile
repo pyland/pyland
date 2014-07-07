@@ -87,7 +87,11 @@ BASE_OBJS = \
 	input_manager.o \
 	debug.o \
 	MapViewer.o \
-	Map.o
+	Map.o \
+	Api.o \
+	Object.o \
+	RenderableComponent.o
+
 PYTHON_OBJS = \
 	python_embed/interpreter.o       \
 	python_embed/wrapper_functions.o \
