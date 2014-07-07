@@ -219,11 +219,7 @@ void run_thread(Player &player, std::vector<PlayerThread> &playerthreads, std::s
             "player.monologue()\n"
             "try:\n"
             "    player.give_script(globals())\n"
-            "    for i in range(4):\n"
-            "        player.run_script()\n"
-            "        import time\n"
-            "        for _ in range(int(10**(i-1))):\n"
-            "           time.sleep(0.001)\n"
+            "    player.run_script()\n"
             "except BaseException as e:\n"
             "    print('Halted with {}.'.format(type(e)))\n"
             "    raise\n",
@@ -261,7 +257,7 @@ void run_all() {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    std::list<Player> all_players = {Player(Vec2D(0, 0), "Joshua", 3), Player(Vec2D(0, 0), "Ashley", 2), Player(Vec2D(0, 0), "John", 0), Player(Vec2D(0, 0), "Adam", 1)};
+    std::list<Player> all_players = {Player(Vec2D(32, 32), "John", 0), Player(Vec2D(448, 448), "Adam", 1)};
     std::string working_dir;
 
     // All Python errors should result in a Python traceback    
@@ -303,5 +299,4 @@ void run_all() {
     print_debug << "main: Joined kill_thread" << std::endl;
 
     PyEval_RestoreThread(main_thread_state);
-
 }

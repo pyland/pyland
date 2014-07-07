@@ -1,7 +1,7 @@
-move(north)
-print("ADAM!!")
-for _ in range(1000):
-    move(east)
-for _ in range(1000):
-    move(south)
-monologue()
+import random
+
+direction = random.choice([north, south, east, west])
+
+while True:
+	direction = random.choice([north, south, east, west] + [direction] * 6)
+	move(direction)

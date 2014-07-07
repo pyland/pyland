@@ -108,6 +108,15 @@ private:
 
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
     DISPMANX_ELEMENT_HANDLE_T dispmanElement;
+    
+    ///
+    /// Overscan compensation (left border pixels)
+    ///
+    static int overscan_left;
+    ///
+    /// Overscan compensation (top border pixels)
+    ///
+    static int overscan_top;
 #endif
 #ifdef USE_GL
     SDL_GLContext sdl_gl_context;
@@ -117,7 +126,11 @@ private:
     /// Mapping of SDL window IDs to GameWindows.
     ///
     static std::map<Uint32,GameWindow*> windows;
-    
+
+    ///
+    /// The currently focused window
+    ///
+    static GameWindow* focused_window;
     ///
     /// Stores X11 display and window information.
     ///
@@ -179,8 +192,8 @@ public:
     protected:
         const char* message;
     public:
-        InitException (const char* message);
-        virtual const char* what ();
+        InitException(const char* message);
+        virtual const char* what() const noexcept;
     };
 
     ///

@@ -25,9 +25,26 @@ extern "C" {
 #define GAME_WINDOW_DEBUG
 #endif
 
+#ifdef USE_GLES
+#ifdef STATIC_OVERSCAN
+#define OVERSCAN_LEFT 24
+#define OVERSCAN_TOP  16
+#else
+#ifndef OVERSCAN_LEFT
+#define OVERSCAN_LEFT 0
+#endif
+#ifndef OVERSCAN_TOP
+#define OVERSCAN_TOP  0
+#endif
+#endif
+int GameWindow::overscan_left = OVERSCAN_LEFT;
+int GameWindow::overscan_top  = OVERSCAN_TOP;
+#endif
+
 
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
+GameWindow* GameWindow::focused_window = nullptr;
 
 
 
@@ -36,9 +53,9 @@ GameWindow::InitException::InitException(const char* message) {
 }
 
 
-const char* GameWindow::InitException::what() {
+const char* GameWindow::InitException::what() const noexcept {
     return message;
-}
+};
 
 
 
@@ -110,10 +127,10 @@ GameWindow::~GameWindow() {
     vc_dispmanx_display_close(dispmanDisplay); // (???)
     SDL_DestroyRenderer (renderer);
 #endif
-    SDL_DestroyWindow (window);
-    
     // window_count--;
     windows.erase(SDL_GetWindowID(window));
+    
+    SDL_DestroyWindow (window);
     if (windows.size() == 0) {
         deinit_sdl();
     }
@@ -285,8 +302,8 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
   
     // Create EGL window surface.
 
-    destination.x = x;
-    destination.y = y;
+    destination.x = x + GameWindow::overscan_left;
+    destination.y = y + GameWindow::overscan_top;
     destination.width = w;
     destination.height = h;
 #ifdef GAME_WINDOW_DEBUG
@@ -401,17 +418,23 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 window->change_surface = InitAction::DO_INIT;
+                focused_window = window;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
             case SDL_WINDOWEVENT_MINIMIZED:
             case SDL_WINDOWEVENT_HIDDEN:
                 window->change_surface = InitAction::DO_DEINIT;
+                if (focused_window == window) {
+                    focused_window = nullptr;
+                }
                 break;
             }
             break;
         default:
             // Let the input manager use the event.
-            InputManager::handle_event(&event);
+            if (focused_window) {
+                focused_window->input_manager->handle_event(&event);
+            }
             break;
         }
     }

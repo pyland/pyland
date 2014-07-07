@@ -1,12 +1,36 @@
 #include <boost/python.hpp>
 #include <boost/regex.hpp>
+#include <thread>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include "api.h"
 #include "debug.h"
-#include "../main.h"
+#include "main.h"
+
+#define WRAPPING_ENABLED true
+#define TILESIZE_PIXELS 32
+
+enum class TileType {
+    WALKABLE,
+    UNWALKABLE,
+    KILLER
+};
+
+std::map<int, TileType> tile_to_type({
+    { 8, TileType::WALKABLE},   // Board
+    {12, TileType::WALKABLE},   // Flowers
+    {64, TileType::WALKABLE},   // Grass
+
+    { 2, TileType::UNWALKABLE}, // Edged wall
+    {13, TileType::UNWALKABLE}, // Water
+    {14, TileType::UNWALKABLE}, // Wall
+    {21, TileType::UNWALKABLE}, // Hideous ice
+
+    {57, TileType::KILLER},     // Trapdoor (set)
+    {74, TileType::KILLER}      // Lava
+});
 
 namespace py = boost::python;
 
@@ -16,9 +40,18 @@ Vec2D Vec2D::operator+(Vec2D other) {
     return Vec2D(x + other.x, y + other.y);
 }
 
+Vec2D Vec2D::operator-(Vec2D other) {
+    return Vec2D(x - other.x, y - other.y);
+}
+
 void Vec2D::operator+=(Vec2D other) {
     x += other.x;
     y += other.y;
+}
+
+void Vec2D::operator-=(Vec2D other) {
+    x -= other.x;
+    y -= other.y;
 }
 
 std::ostream& operator<<(std::ostream& out, Vec2D in) {
@@ -34,29 +67,43 @@ std::string Vec2D::to_string() {
 
 
 Player::Player(Vec2D start, std::string name, int id):
-    position(start), script(""), id(id) {
+    start(start), position(start), script(""), id(id) {
         this->name = std::string(name);
+        move_object(id, float(start.x), float(start.y));
 }
 
 uint64_t Player::call_number = 0;
 
-void Player::move(Vec2D by) {
+bool Player::move(Vec2D by) {
     ++call_number;
+    auto cached_position = position;
     position += by;
+    if (not WRAPPING_ENABLED) {
+        position.x = std::min(std::max(position.x,0),480);
+        position.y = std::min(std::max(position.y,0),480);
+    }
 
-    for (int dx=0; dx < by.x; ++dx) {
-        move_object(id, 1);
+    int tile_x = position.x;
+    int tile_y = position.y;
+    TileType tile = std::max({
+        tile_to_type[world_data[tile_x / TILESIZE_PIXELS][tile_y / TILESIZE_PIXELS]],
+        tile_to_type[world_data[tile_x / TILESIZE_PIXELS][(tile_y + TILESIZE_PIXELS-1) / TILESIZE_PIXELS]],
+        tile_to_type[world_data[(tile_x + TILESIZE_PIXELS-1) / TILESIZE_PIXELS][tile_y / TILESIZE_PIXELS]],
+        tile_to_type[world_data[(tile_x + TILESIZE_PIXELS-1) / TILESIZE_PIXELS][(tile_y + TILESIZE_PIXELS-1) / TILESIZE_PIXELS]],
+    });
+
+    if (tile == TileType::UNWALKABLE) {
+        position = cached_position;
     }
-    for (int dx=0; dx < -by.x; ++dx) {
-        move_object(id, 3);
+    else if (tile == TileType::KILLER) {
+        position = start;
     }
-    for (int dy=0; dy < by.y; ++dy) {
-        move_object(id, 0);
-    }
-    for (int dy=0; dy < -by.y; ++dy) {
-        move_object(id, 2);
-    }
+
+    move_object(id, float(position.x - cached_position.x), float(position.y - cached_position.y));
+    return tile != TileType::KILLER;
 }
+
+
 
 void Player::monologue() {
     std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;
@@ -74,8 +121,12 @@ void Player::give_script(py::api::object main_namespace) {
         // TODO: find a more scalable approach
         "import time\n"
         "def move(x):\n"
-        "    time.sleep(0.01)\n"
-        "    player.move(x)\n"
+        "    for _ in range(32):\n"
+        "        if not player.move(x):\n"
+        "            time.sleep(1)\n"
+        "            return False\n"
+        "        time.sleep(0.01)\n"
+        "    return True\n"
     
         "def monologue():\n"
         "    player.monologue()\n"
