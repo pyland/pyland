@@ -66,6 +66,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 #include "main.h"
+#include "MapViewer.h"
+#include "Map.h"
 
 #define PATH "./"
 #define GLOBAL_SCALE 2
@@ -933,41 +935,43 @@ int main (int argc, char* argv[]) {
   window.use_context();
 
   // Start OGLES
-  init_ogl();
+  //  init_ogl();
 
-  if(!init_shaders())
-    return 0;
+  //  if(!init_shaders())
+  //return 0;
 
-  generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-  generate_map_texcoords(map_width, map_height);
-  generate_sprite_coords();
-  generate_sprite_tex_data();
+  //  generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+  //  generate_map_texcoords(map_width, map_height);
+  //  generate_sprite_coords();
+  //  generate_sprite_tex_data();
 
   // initialise the OGLES texture(s)
-  init_textures();
+  //  init_textures();
 
-  generate_map_coords(map_width, map_height);
-  init_buffers();
+  //  generate_map_coords(map_width, map_height);
+  //  init_buffers();
 
-  //   Map map;
-  //
+  Map map("");
+  MapViewer map_viewer(&window);
+  map_viewer.set_map(&map);
   std::thread mythread(run_all);
 
   float dt = get_dt();
   int count = 0;
 
   while (!window.check_close()) {
-    init_model_proj(&window);
+    //    init_model_proj(&window);
 
     //Get the time since the last iteration 
     dt = get_dt(); 
-
-    update(dt);
-    redraw_scene(&window, dt);
+    map_viewer.update_map(dt);
+    map_viewer.render_map();
+    //    update(dt);
+    //    redraw_scene(&window, dt);
     GameWindow::update();
   }
 
-  exit_func();
+  //  exit_func();
 
   //
   // Typically one would do

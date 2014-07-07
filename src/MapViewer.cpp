@@ -25,11 +25,24 @@ MapViewer::~MapViewer() {
 }
 
 void MapViewer::render_map() {
+  if(map == NULL) {
+    std::cerr << "ERROR: MAP is NULL in MapViewer::render_map" << std::endl;
+    return;
+  }
 
   glClear(GL_COLOR_BUFFER_BIT);
 
   RenderableComponent* map_render_component = map->get_renderable_component();
+  if(map_render_component == NULL) {
+    std::cerr << "ERROR: RenderComponent is NULL in MapViewer::render_map" << std::endl;
+    return;
+  }
+
   Shader* shader = map_render_component->get_shader();
+  if(shader == NULL) {
+    std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
+    return;
+  }
 
   std::pair<int, int> size = window->get_size();
   glViewport(0, 0,  size.first, size.second);

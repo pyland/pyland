@@ -56,11 +56,12 @@
  * Constructor for Map
  */ 
 Map::Map(const std::string map_src) : renderable_component() {
-
+  glActiveTexture(GL_TEXTURE0);
 
   init_shaders();
   generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
   generate_map_texcoords();
+  generate_map_coords();
   //  generate_sprite_tex_data();
   init_textures();
 }
@@ -76,64 +77,10 @@ Map::~Map() {
     delete[] tex_buf[0];
     delete[] tex_buf[1];
     delete[] map_data;
-    delete[] sprite_data;
-    delete[] sprite_tex_data;
     delete[] map_tex_coords;
     delete[] tileset_tex_coords;
 
     printf("\nClosed\n");
-}
-/**
- * Function used to generate the necessary Vertex Buffer Objects to
- * hold the map data to achieve more efficient rendering.
- */
-void Map::init_vbo_buffer() {
-    glUseProgram(program_obj);
-
-    //vbo_ids[0] = map geometric data
-    //vbo_ids[1] = tileset
-    //vbo_ids[2] = sprite geometric data
-    //vbo_ids[3] = texture coords for sprite
-    glGenBuffers(num_vbo_ids, vbo_ids);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[0]);
-    glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*18, map_data, GL_STATIC_DRAW);
-
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[1]);
-    glBufferData(GL_ARRAY_BUFFER, map_height*map_width*sizeof(GLfloat)*12, map_tex_coords, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[2]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*18, sprite_data, GL_STATIC_DRAW);
-
-    //changing texture coords
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[3]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*12, sprite_tex_data, GL_DYNAMIC_DRAW);
-
-    //MAPS
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[0]);
-    glEnableVertexAttribArray(VERTEX_POS_INDX);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[1]);
-    glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
-
-
-    //SPRITES
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[2]);
-    glEnableVertexAttribArray(VERTEX_POS_INDX);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[3]);
-    glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
-
-
-    glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_TRUE, 0, nullptr);
-
-    glActiveTexture(GL_TEXTURE0);
-
-    //Bind tiles texture
-    glBindTexture(GL_TEXTURE_2D,texture_ids[0]);
-
 }
 
 /**
@@ -249,8 +196,8 @@ void Map::generate_map_texcoords() {
     }
 
     //Set this data in the renderable component
-    renderable_component.set_texture_data(map_tex_coords, data_size, IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, false);
-    renderable_component.set_num_vertices_render(6*map_width*map_height);
+    renderable_component.set_texture_coords_data(map_tex_coords, data_size, false);
+
 }
 
 /*
@@ -321,13 +268,11 @@ void Map::generate_map_coords() {
 
    //Set this data in the renderable component
     renderable_component.set_vertex_data(map_data, data_size, false);
+    renderable_component.set_num_vertices_render(6*map_width*map_height);
 }
 
-
-/** 
- * This function loads the required texture images
- */ 
-void Map::load_tex_images() {
+void Map::init_textures() {
+    
     FILE *tex_file1, *tex_file2 = nullptr;
     size_t bytes_read = 0;
     size_t image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
@@ -357,30 +302,9 @@ void Map::load_tex_images() {
         assert(bytes_read == image_sz_2);  // some problem with file?
         fclose(tex_file2);
     }
-}
 
-/** 
- * This function performs the required Opengl initializatin for the textures.
- */ 
-void Map::init_textures() {
-    //  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    load_tex_images();
-    glGenTextures(2, texture_ids);
-    glBindTexture(GL_TEXTURE_2D, texture_ids[0]);
-  
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, tex_buf[0]);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
-
-    glBindTexture(GL_TEXTURE_2D, texture_ids[1]);
-  
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, tex_buf[1]);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
-
+    //Set the texture data in the rederable component
+    renderable_component.set_texture_data(tex_buf[0], static_cast<int>(image_sz_1), IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, false);
 }
 
 /**

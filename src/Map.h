@@ -31,8 +31,9 @@
 
 
 class Map {
-  GLfloat* sprite_data = NULL;
-  GLfloat* sprite_tex_data = NULL;
+  ///
+  /// Cache of the tileset texture data for this Map
+  ///
   GLfloat* tileset_tex_coords = NULL;
 
   /// 
@@ -40,23 +41,6 @@ class Map {
   ///
   RenderableComponent renderable_component;
   
-
-  ///
-  /// Vertex Buffer Object Opengl identifiers
-  ///
-  GLuint vbo_objs[2];
-
-  
-  /// 
-  /// The Opengl handle for the shader program currently being used
-  ///
-  GLuint program_obj = 0;
-
-  /// 
-  /// The Opengl handle for the tileset texture
-  ///
-  GLuint tileset_obj = 0;
-
   ///
   /// The vertex data for the map
   ///
@@ -77,27 +61,12 @@ class Map {
   ///
   /// This is the height of the map in tiles
   /// 
-  int map_height = 0;
+  int map_height = 16;
 
   ///
   /// The width of the map in tiles
   ///
-  int map_width = 0;
-
-  ///
-  /// The number of vertex buffer objects 
-  ///
-  static const int num_vbo_ids = 2;
- 
-  ///
-  /// Array to hold the vertex buffer object Opengl Ids
-  ///
-  GLuint vbo_ids[num_vbo_ids] = { 0 };
-
-  ///
-  /// Array to hold the texture object identifiers
-  ///
-  GLuint texture_ids[2] = { 0 };
+  int map_width = 16;
 
   ///
   /// The speed at which we scroll the map.
@@ -172,12 +141,6 @@ std::array<std::array<int, 16>, 16> world_data = {{
   GLfloat* map_tex_coords = NULL;
 
   ///
-  /// Function used to generate the necessary Vertex Buffer Objects to
-  /// hold the map data to achieve more efficient rendering.
-  ///
-  void init_vbo_buffer();
-
-  ///
   /// The function used to generate the cache of tile texture coordinates.
   /// 
   void generate_tileset_coords(int tileset_width, int tileset_height);
@@ -195,30 +158,14 @@ std::array<std::array<int, 16>, 16> world_data = {{
   void generate_map_coords();
 
   ///
-  /// This function loads the shaders
-  /// 
-  GLuint load_shader(GLenum type, const std::string src);
-
-  /// 
-  /// This function crates the Opengl program
-  ///
-  GLuint shader_create(const std::string vs, const std::string fs);
-
-  /// 
-  /// This function loads the required texture images
-  /// 
-  void load_tex_images();
-  
-  /// 
-  /// This function performs the required Opengl initializatin for the textures.
+  /// Initialises the textures
   ///
   void init_textures();
 
   ///
-  /// This function initialises the shader, creating and loading them.
-  /// 
+  /// Initialises this Map's shaders
+  ///
   bool init_shaders();
-  
 public: 
   Map(const std::string map_src);
   ~Map();
@@ -254,6 +201,7 @@ public:
   /// The function used to update elements on the map.
   ///
   void update_map(float dt);
+
 };
 
 #endif
