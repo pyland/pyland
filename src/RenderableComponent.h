@@ -57,14 +57,24 @@ class RenderableComponent {
   ///
   int num_vertices_render = 0;
   ///
-  /// The buffer holding the texture data
+  /// The buffer holding the texture coordinate data
   ///
-  GLfloat* texture_data = NULL;
+  GLfloat* texture_coord_data = NULL;
 
   ///
   /// The size of the texture buffer in bytes
   ///
   int texture_data_size = 0;
+
+  ///
+  /// The texture width in pixels
+  ///
+  int texture_width = 0;
+
+  ///
+  /// The texture height in pixels
+  ///
+  int texture_height = 0;
 
   ///
   /// The vertex buffer object identifier for the vertex buffer
@@ -180,6 +190,20 @@ public:
   void set_vertex_data(GLfloat* new_vertex_data, int data_size,  bool is_dynamic);
 
   ///
+  /// Get a pointer to the texture coordinate data
+  ///
+  GLfloat* get_texture_coord_data() { return texture_data; }
+
+  /// 
+  /// Set the texture coordinate data to use for this component
+  /// @param new_texture_data The new data to use for ther texture coordinates of this object
+  /// @param data_size The size of the data in bytes
+  /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static 
+  ///
+  void set_texture_coord_data(GLfloat* new_texture_data, int data_size, bool is_dynamic);
+
+  
+  ///
   /// Get a pointer to the texture data
   ///
   GLfloat* get_texture_data() { return texture_data; }
@@ -190,7 +214,7 @@ public:
   /// @param data_size The size of the data in bytes
   /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static 
   ///
-  void set_texture_data(GLfloat* new_texture_data, int data_size, bool is_dynamic);
+  void set_texture_data(GLfloat* new_texture_data, int data_size, int new_texture_width, int new_texture_height, bool is_dynamic);
 
   ///
   /// Get the width of the component

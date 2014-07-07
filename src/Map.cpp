@@ -249,7 +249,7 @@ void Map::generate_map_texcoords() {
     }
 
     //Set this data in the renderable component
-    renderable_component.set_texture_data(map_tex_coords, data_size, false);
+    renderable_component.set_texture_data(map_tex_coords, data_size, IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, false);
     renderable_component.set_num_vertices_render(6*map_width*map_height);
 }
 
@@ -425,6 +425,9 @@ bool Map::init_shaders() {
     std::cerr << "Failed to create the shader" << std::endl;
     return false;
   }
+
+  //Set the shader
+  renderable_component.set_shader(shader);
 
   return true;
 

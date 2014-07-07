@@ -916,54 +916,66 @@ void generate_sprite_coords() {
 
 
 
-int main () {
+int main (int argc, char* argv[]) {
+  bool use_graphical_window = true;
+
+  //Determine if the no-window command was sent
+  if(argc == 2) {
+    std::string param = argv[1];
+
+    if(param == "no-window")
+      use_graphical_window = false;
+  }
+  //TODO: Support no window
+
+
   GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
-    window.use_context();
+  window.use_context();
 
-    // Start OGLES
-    init_ogl();
+  // Start OGLES
+  init_ogl();
 
-    if(!init_shaders())
-        return 0;
+  if(!init_shaders())
+    return 0;
 
-    generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-    generate_map_texcoords(map_width, map_height);
-    generate_sprite_coords();
-    generate_sprite_tex_data();
+  generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+  generate_map_texcoords(map_width, map_height);
+  generate_sprite_coords();
+  generate_sprite_tex_data();
 
-    // initialise the OGLES texture(s)
-    init_textures();
+  // initialise the OGLES texture(s)
+  init_textures();
 
-    generate_map_coords(map_width, map_height);
-    init_buffers();
+  generate_map_coords(map_width, map_height);
+  init_buffers();
 
-    //   Map map;
-    //
-    std::thread mythread(run_all);
+  //   Map map;
+  //
+  std::thread mythread(run_all);
 
-    float dt = get_dt();
-    int count = 0;
+  float dt = get_dt();
+  int count = 0;
 
-    while (!window.check_close()) {
-     init_model_proj(&window);
+  while (!window.check_close()) {
+    init_model_proj(&window);
 
-     //Get the time since the last iteration 
-     dt = get_dt(); 
+    //Get the time since the last iteration 
+    dt = get_dt(); 
 
-     update(dt);
-     redraw_scene(&window, dt);
-     GameWindow::update();
-    }
+    update(dt);
+    redraw_scene(&window, dt);
+    GameWindow::update();
+  }
 
-    exit_func();
+  exit_func();
 
-    //
-    // Typically one would do
-    //     mythread.join();
-    // but this hangs due to the extra, unkilled threads.
-    //
-    // As a hack, just let it crash.
-    //
+  //
+  // Typically one would do
+  //     mythread.join();
+  // but this hangs due to the extra, unkilled threads.
+  //
+  // As a hack, just let it crash.
+  //
 
-    return 1;
+  return 1;
 }

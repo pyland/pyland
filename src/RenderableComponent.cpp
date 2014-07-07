@@ -34,9 +34,11 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_siz
   glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 
-void RenderableComponent::set_texture_data(GLfloat* new_texture_data, int data_size, bool is_dynamic) { 
+void RenderableComponent::set_texture_data(GLfloat* new_texture_data, int data_size, int new_texture_width, int new_texture_height, bool is_dynamic) { 
   texture_data = new_texture_data;
   texture_data_size = data_size;
+  texture_height = new_texture_height;
+  texture_width = new_texture_width;
 
   //Set up buffer usage
   GLenum usage = GL_STATIC_DRAW;
@@ -48,9 +50,19 @@ void RenderableComponent::set_texture_data(GLfloat* new_texture_data, int data_s
   glBufferData(GL_ARRAY_BUFFER, texture_data_size, texture_data, usage);
 
   //Set the attributes
-  glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
+  glEnableVertexAttribArray(1 /*VERTEX_TEXCOORD0_INDX */);
 
-  glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  glVertexAttribPointer(1 /*VERTEX_TEXCOORD0_INDX */, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+  glGenTextures(1, &texture_obj_id);
+  glBindTexture(GL_TEXTURE_2D, texture_obj_id);
+  
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
+	       GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
+
+
 }
 
 void RenderableComponent::bind_vbos() {
