@@ -10,6 +10,8 @@ extern "C" {
 
 
 class GameWindow;
+class InputEvent;
+class Callback;
 
 ///
 /// Handles SDL input such that it can be accessed reliably and on
@@ -64,6 +66,11 @@ private:
     /// Set of recently released mouse buttons.
     ///
     std::set<int> released_buttons;
+
+    ///
+    /// Keyboard callback registry.
+    ///
+    CallbackRegistry<void(KeyboardInputEvent)> keyboard_callbacks;
 
     ///
     /// Code to be run before handling event loops.
@@ -162,6 +169,15 @@ public:
     /// between the top-left corner and bottom-right corner.
     ///
     std::pair<float,float> get_mouse_ratio();
+
+    ///
+    /// Registers a callback function for keyboard input event handling.
+    ///
+    /// @param func The function to be called to handle an event.
+    /// @param filter A function returning true if the event should 
+    /// trigger the callback.
+    ///
+    Callback register_keyboard_handler(std::function<void(KeyboardInputEvent)> func, std::function<bool(KeyboardInputEvent)> filter);
 };
 
 #endif
