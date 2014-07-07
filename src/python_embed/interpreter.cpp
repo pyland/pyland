@@ -257,7 +257,7 @@ void run_all() {
     auto main_thread_state = PyThreadState_Get();
     main_interpreter_state = main_thread_state->interp;
 
-    std::list<Player> all_players = {Player(Vec2D(32, 32), "John", 0), Player(Vec2D(448, 448), "Adam", 1)};
+    std::list<Player> all_players = {Player(Vec2D(1, 1), "John", 0), Player(Vec2D(14, 14), "Adam", 1)};
     std::string working_dir;
 
     // All Python errors should result in a Python traceback    

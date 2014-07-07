@@ -69,7 +69,7 @@ std::string Vec2D::to_string() {
 Player::Player(Vec2D start, std::string name, int id):
     start(start), position(start), script(""), id(id) {
         this->name = std::string(name);
-        move_object(id, float(start.x), float(start.y));
+        move_object(id, TILESIZE_PIXELS * float(start.x), TILESIZE_PIXELS * float(start.y));
 }
 
 uint64_t Player::call_number = 0;
@@ -79,18 +79,11 @@ bool Player::move(Vec2D by) {
     auto cached_position = position;
     position += by;
     if (not WRAPPING_ENABLED) {
-        position.x = std::min(std::max(position.x,0),480);
-        position.y = std::min(std::max(position.y,0),480);
+        position.x = std::min(std::max(position.x,0),TILESET_ELEMENT_SIZE);
+        position.y = std::min(std::max(position.y,0),TILESET_ELEMENT_SIZE);
     }
 
-    int tile_x = position.x;
-    int tile_y = position.y;
-    TileType tile = std::max({
-        tile_to_type[world_data[tile_x / TILESIZE_PIXELS][tile_y / TILESIZE_PIXELS]],
-        tile_to_type[world_data[tile_x / TILESIZE_PIXELS][(tile_y + TILESIZE_PIXELS-1) / TILESIZE_PIXELS]],
-        tile_to_type[world_data[(tile_x + TILESIZE_PIXELS-1) / TILESIZE_PIXELS][tile_y / TILESIZE_PIXELS]],
-        tile_to_type[world_data[(tile_x + TILESIZE_PIXELS-1) / TILESIZE_PIXELS][(tile_y + TILESIZE_PIXELS-1) / TILESIZE_PIXELS]],
-    });
+    TileType tile = tile_to_type[world_data[position.x][position.y]];
 
     if (tile == TileType::UNWALKABLE) {
         position = cached_position;
@@ -98,8 +91,9 @@ bool Player::move(Vec2D by) {
     else if (tile == TileType::KILLER) {
         position = start;
     }
-
-    move_object(id, float(position.x - cached_position.x), float(position.y - cached_position.y));
+    float dx = TILESIZE_PIXELS * float(position.x - cached_position.x);
+    float dy = TILESIZE_PIXELS * float(position.y - cached_position.y);
+    move_object(id, dx, dy);
     return tile != TileType::KILLER;
 }
 
@@ -121,11 +115,8 @@ void Player::give_script(py::api::object main_namespace) {
         // TODO: find a more scalable approach
         "import time\n"
         "def move(x):\n"
-        "    for _ in range(32):\n"
-        "        if not player.move(x):\n"
-        "            time.sleep(1)\n"
-        "            return False\n"
-        "        time.sleep(0.01)\n"
+        "    player.move(x)\n"
+        "    time.sleep(0.3)\n"
         "    return True\n"
     
         "def monologue():\n"
