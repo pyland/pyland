@@ -46,6 +46,8 @@ Shader::Shader(const std::string vs, const std::string fs) {
         glDeleteProgram(program_obj);
         return;
     }
+
+    loaded = true;
 }
 
 

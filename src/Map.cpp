@@ -70,9 +70,6 @@ Map::Map(const std::string map_src) : renderable_component() {
  *Destructor for Map
  */
 Map::~Map() {
-    // clear screen
-    glClear( GL_COLOR_BUFFER_BIT );
-
     // release buffers
     delete[] tex_buf[0];
     delete[] tex_buf[1];
@@ -342,7 +339,7 @@ bool Map::init_shaders() {
   }
 
   Shader* shader = new Shader(vert_src, frag_src);
-
+  
   if (!shader->is_loaded()) {
     delete shader;
     shader = NULL;

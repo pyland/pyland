@@ -934,23 +934,6 @@ int main (int argc, char* argv[]) {
   GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
   window.use_context();
 
-  // Start OGLES
-  //  init_ogl();
-
-  //  if(!init_shaders())
-  //return 0;
-
-  //  generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-  //  generate_map_texcoords(map_width, map_height);
-  //  generate_sprite_coords();
-  //  generate_sprite_tex_data();
-
-  // initialise the OGLES texture(s)
-  //  init_textures();
-
-  //  generate_map_coords(map_width, map_height);
-  //  init_buffers();
-
   Map map("");
   MapViewer map_viewer(&window);
   map_viewer.set_map(&map);
