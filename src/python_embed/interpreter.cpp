@@ -219,11 +219,7 @@ void run_thread(Player &player, std::vector<PlayerThread> &playerthreads, std::s
             "player.monologue()\n"
             "try:\n"
             "    player.give_script(globals())\n"
-            "    for i in range(4):\n"
-            "        player.run_script()\n"
-            "        import time\n"
-            "        for _ in range(int(10**(i-1))):\n"
-            "           time.sleep(0.001)\n"
+            "    player.run_script()\n"
             "except BaseException as e:\n"
             "    print('Halted with {}.'.format(type(e)))\n"
             "    raise\n",
