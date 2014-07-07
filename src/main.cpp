@@ -52,7 +52,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "game_window.hpp"
 #include "interpreter.h"
-
+#include "Api.h"
 #ifdef USE_GLES
 
 #include <GLES2/gl2.h>
@@ -97,11 +97,7 @@ static void draw_sprites( float dt);
 void generate_sprite_coords();
 void generate_sprite_tex_data();
 
-///
-/// Move the object, identified by the id, in the specified direction.
-/// 0 = move up, 1 = move right, 2 = move down, 3 = move left
-///
-void move_object(const int id, const int dx, const int dy);
+
 
 static volatile int shutdown;
 

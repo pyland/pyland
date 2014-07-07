@@ -200,7 +200,7 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
  * The function which generates the texture coordinates for the map
  * geometry, using the cached tile coordinates.
  */
-void Map:: generate_map_texcoords() {
+void Map::generate_map_texcoords() {
 #ifdef DEBUG
     printf("GENERATING MAP TEXTURE DATA...");
 #endif
