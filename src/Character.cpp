@@ -27,10 +27,11 @@
 
 
 Character::Character() {
+  init_shaders();
   generate_tex_data();
   generate_vertex_data();
   load_textures();
-  init_shaders();
+
 }
 
 Character::~Character() {

@@ -92,9 +92,6 @@ void MapViewer::render_map() {
     character_render_component->set_modelview_matrix(translated);
     character_render_component->set_projection_matrix(projection_matrix);
 
-
-    character_render_component->bind_vbos();
-    character_render_component->bind_textures();
     character_render_component->bind_shader();
 
 
@@ -109,13 +106,14 @@ void MapViewer::render_map() {
 
     glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(character_render_component->get_modelview_matrix()));
 
+    character_render_component->bind_vbos();
+    character_render_component->bind_textures();
 
     glDrawArrays(GL_TRIANGLES, 0, character_render_component->get_num_vertices_render());
 
-    character_render_component->release_shader();
     character_render_component->release_textures();
     character_render_component->release_vbos();
-
+    character_render_component->release_shader();
   }
 
   window->swap_buffers();

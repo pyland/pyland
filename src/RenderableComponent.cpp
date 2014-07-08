@@ -37,9 +37,9 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_siz
   glBufferData(GL_ARRAY_BUFFER, vertex_data_size, vertex_data, usage);
 
   //Set the attributes
-  glEnableVertexAttribArray(VERTEX_POS_INDX);
+  //  glEnableVertexAttribArray(VERTEX_POS_INDX);
 
-  glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  //glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 
   //Restore previous program
@@ -64,10 +64,10 @@ void RenderableComponent::set_texture_data(char* new_texture_data, int data_size
   glGenTextures(1, &texture_obj_id);
   glBindTexture(GL_TEXTURE_2D, texture_obj_id);
   
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
-	       GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
+  //  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
+  //	       GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
+  //  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+  //  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
   //Restore shader
   glUseProgram(id);
@@ -95,16 +95,16 @@ void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, int
   glBufferData(GL_ARRAY_BUFFER, texture_coords_data_size, texture_coords_data, usage);
 
   //Set the attributes
-  glEnableVertexAttribArray(1 /*VERTEX_TEXCOORD0_INDX */);
+  // glEnableVertexAttribArray(1 /*VERTEX_TEXCOORD0_INDX */);
 
-  glVertexAttribPointer(1 /*VERTEX_TEXCOORD0_INDX */, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  //  glVertexAttribPointer(1 /*VERTEX_TEXCOORD0_INDX */, 3, GL_FLOAT, GL_FALSE, 0, NULL);
   
   //Release shader
   glUseProgram(id);
 }
 
 void RenderableComponent::bind_vbos() {
-
+  
   //Bind the vertex data buffer
   glBindBuffer(GL_ARRAY_BUFFER, vbo_vertex_id);
   glVertexAttribPointer(0 /*VERTEX_POS_INDX*/, 3, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -128,7 +128,11 @@ void RenderableComponent::bind_textures() {
   glActiveTexture(GL_TEXTURE0);
   //Bind tiles texture
   glBindTexture(GL_TEXTURE_2D,texture_obj_id);
-  
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
+	       GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
+
 }
 
 void RenderableComponent::release_textures() {
