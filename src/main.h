@@ -1,7 +1,7 @@
-#include <array>
+#include <amarray>
 
 ///
-/// size of each tile in pixels
+/// number of tile in map
 ///
 #define TILESET_ELEMENT_SIZE 16
 
@@ -16,5 +16,5 @@
 void move_object(const int id, const float dx, const float dy);
 
 /// Holds the overall map data
-//0th tile is top left
+/// 0th tile is top left
 extern std::array<std::array<int, 16>, 16> world_data;
