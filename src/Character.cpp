@@ -1,6 +1,7 @@
 #include "Character.h"
 #include "RenderableComponent.h"
 #include <iostream>
+#include <fstream>
 
 
 #ifdef USE_GLES
@@ -17,16 +18,25 @@
 #endif
 
 #define TILESET_ELEMENT_SIZE 16
-#define IMAGE2_SIZE_WIDTH 198
+#define IMAGE2_SIZE_WIDTH 192
 #define IMAGE2_SIZE_HEIGHT 128
 #define GLOBAL_SCALE 2
+#define IMAGE2_NUM_COMPONENTS 4
+
+
+
 
 Character::Character() {
-
+  generate_tex_data();
+  generate_vertex_data();
+  load_textures();
+  init_shaders();
 }
 
 Character::~Character() {
   delete []sprite_tex_data;
+  delete []sprite_data;
+  delete []tex_buf;
 }
 
 
@@ -37,7 +47,6 @@ void Character::generate_tex_data() {
     return;
   }
   
-
   //holds the texture data
   //need 12 float for the 2D texture coordinates
   int num_floats = 12;
@@ -127,4 +136,86 @@ void Character::generate_vertex_data() {
 
   render_component->set_vertex_data(sprite_data, num_floats, true);
   render_component->set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
+}
+
+void Character::load_textures() {
+
+  RenderableComponent* render_component = get_renderable_component();
+  if(render_component == NULL) {
+    std::cerr << "ERROR in Character::generate_tex_data, render_component is NULL" << std::endl;
+    return;
+  }
+
+
+  FILE *tex_file2 = NULL;
+  size_t bytes_read = 0;
+  size_t image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
+
+  tex_buf = new char[image_sz_2];
+
+  tex_file2 = fopen("../resources/characters_1.raw", "rb");
+  if(tex_file2 == NULL) {
+    std::cerr << "ERROR: Couldn't load textures" << std::endl;
+  }
+
+  if (tex_file2 && tex_buf) {
+    bytes_read = fread(tex_buf, 1, image_sz_2, tex_file2);
+    assert(bytes_read == image_sz_2);  // some problem with file?
+    fclose(tex_file2);
+  }
+  //Set the texture data in the rederable component
+  render_component->set_texture_data(tex_buf, static_cast<int>(image_sz_2), IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, false);
+
+}
+bool Character::init_shaders() {
+#ifdef USE_GLES
+  //read in the shaders
+  std::ifstream vertex_shader_src("vert_shader.glesv");
+  std::ifstream fragment_shader_src("frag_shader.glesf");
+#endif
+#ifdef USE_GL
+  //read in the shaders
+  std::ifstream vertex_shader_src("vert_shader.glv");
+  std::ifstream fragment_shader_src("frag_shader.glf");
+#endif
+
+  if (!vertex_shader_src.good()){
+    std::cerr << "Failed to load vertex shader" << std::endl;
+    return false;
+  }
+    
+  if (!fragment_shader_src.good()) {
+    std::cerr << "Failed to load fragment shader" << std::endl;
+    return false;
+  }
+
+  std::string vert_src, frag_src, line;
+  while (getline(vertex_shader_src, line)) {
+    vert_src += line + "\n";
+  }
+
+  while (getline(fragment_shader_src, line)) {
+    frag_src += line + "\n";
+  }
+
+  Shader* shader = new Shader(vert_src, frag_src);
+  
+  if (!shader->is_loaded()) {
+    delete shader;
+    shader = NULL;
+    std::cerr << "Failed to create the shader" << std::endl;
+    return false;
+  }
+
+  RenderableComponent* render_component = get_renderable_component();
+  if(render_component == NULL) {
+    std::cerr << "ERROR in Character::init_shaders, render_component is NULL" << std::endl;
+    return false;
+  }
+
+  //Set the shader
+  render_component->set_shader(shader);
+
+  return true;
+
 }

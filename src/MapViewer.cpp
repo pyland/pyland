@@ -1,7 +1,9 @@
 #include "MapViewer.h"
 #include "RenderableComponent.h"
 #include "Map.h"
+#include "Character.h"
 
+#include <map>
 #include <iostream>
 MapViewer::MapViewer(GameWindow* new_window) {
   if(new_window == NULL) {
@@ -37,8 +39,8 @@ void MapViewer::render_map() {
     return;
   }
 
-  Shader* shader = map_render_component->get_shader();
-  if(shader == NULL) {
+  Shader* map_shader = map_render_component->get_shader();
+  if(map_shader == NULL) {
     std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
     return;
   }
@@ -57,8 +59,8 @@ void MapViewer::render_map() {
   
 
   //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
-  glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(map_render_component->get_projection_matrix()));
-  glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(map_render_component->get_modelview_matrix()));
+  glUniformMatrix4fv(glGetUniformLocation(map_shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(map_render_component->get_projection_matrix()));
+  glUniformMatrix4fv(glGetUniformLocation(map_shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(map_render_component->get_modelview_matrix()));
 
   //Bind the vertex buffers and textures
   map_render_component->bind_vbos();
@@ -72,6 +74,49 @@ void MapViewer::render_map() {
   map_render_component->release_vbos();
 
   map_render_component->release_shader();
+
+
+  //Draw the characters
+  std::map<int, Character*> characters = *(map->get_characters_map());
+  for(auto it = characters.begin(); it != characters.end(); ++it) {
+    Character* sprite = it->second;
+
+
+    
+    RenderableComponent* character_render_component = sprite->get_renderable_component();
+
+    //Move sprite to the required position
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::vec3 translate = glm::vec3(sprite->get_x_position(), sprite->get_y_position(), 0.0f);
+    glm::mat4 translated = glm::translate(model, translate);
+    character_render_component->set_modelview_matrix(translated);
+    character_render_component->set_projection_matrix(projection_matrix);
+
+
+    character_render_component->bind_vbos();
+    character_render_component->bind_textures();
+    character_render_component->bind_shader();
+
+
+    Shader* shader = character_render_component->get_shader();
+    if(shader == NULL) {
+      std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
+      return;
+    }
+
+    //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
+  glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(character_render_component->get_projection_matrix()));
+
+    glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(character_render_component->get_modelview_matrix()));
+
+
+    glDrawArrays(GL_TRIANGLES, 0, character_render_component->get_num_vertices_render());
+
+    character_render_component->release_shader();
+    character_render_component->release_textures();
+    character_render_component->release_vbos();
+
+  }
 
   window->swap_buffers();
 }

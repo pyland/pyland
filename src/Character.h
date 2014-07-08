@@ -21,7 +21,7 @@
 class Character : public Object {
   GLfloat* sprite_tex_data = NULL;
   GLfloat* sprite_data = NULL;
-  
+  char* tex_buf = NULL;
   int tileset = 0;
  public:
 
@@ -30,6 +30,8 @@ class Character : public Object {
   
   void generate_tex_data();
   void generate_vertex_data();
+  void load_textures();
+  bool init_shaders();
 };
 
 #endif

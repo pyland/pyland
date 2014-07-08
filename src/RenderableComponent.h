@@ -193,7 +193,7 @@ public:
   GLfloat* get_vertex_data() { return vertex_data; }
 
   ///
-  /// Set the vertex data to use for this component
+  /// Set the vertex data to use for this component.
   /// @param new_vertex_data The new data to use for ther vertices of this object
   /// @param the size of the data in bytes
   /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static geometry

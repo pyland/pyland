@@ -40,15 +40,6 @@
 #define IMAGE1_SIZE_HEIGHT 240
 
 
-
-#define IMAGE2_SIZE_WIDTH 192
-#define IMAGE2_NUM_COMPONENTS 4
-#define IMAGE2_SIZE_HEIGHT 128
-
-#ifndef M_PI
-#define M_PI 3.141592654
-#endif
-
 #define TILESET_ELEMENT_SIZE 16
 
 
@@ -72,7 +63,6 @@ Map::Map(const std::string map_src) : renderable_component() {
 Map::~Map() {
     // release buffers
     delete[] tex_buf[0];
-    delete[] tex_buf[1];
     delete[] map_data;
     delete[] map_tex_coords;
     delete[] tileset_tex_coords;
@@ -270,14 +260,14 @@ void Map::generate_map_coords() {
 
 void Map::init_textures() {
     
-    FILE *tex_file1, *tex_file2 = nullptr;
+    FILE *tex_file1 = NULL;
     size_t bytes_read = 0;
     size_t image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
-    size_t image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
+
     tex_buf[0] = new char[image_sz_1];
 
     tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
-    if(tex_file1 == nullptr) {
+    if(tex_file1 == NULL) {
       std::cerr << "ERROR: Couldn't load textures" << std::endl;
     }
 
@@ -286,20 +276,6 @@ void Map::init_textures() {
         assert(bytes_read == image_sz_1);  // some problem with file?
         fclose(tex_file1);
     }
-
-    tex_buf[1] = new char[image_sz_2];
-
-    tex_file2 = fopen(PATH "../resources/characters_1.raw", "rb");
-    if(tex_file2 == nullptr) {
-      std::cerr << "ERROR: Couldn't load textures" << std::endl;
-    }
-
-    if (tex_file2 && tex_buf[1]) {
-        bytes_read = fread(tex_buf[1], 1, image_sz_2, tex_file2);
-        assert(bytes_read == image_sz_2);  // some problem with file?
-        fclose(tex_file2);
-    }
-
     //Set the texture data in the rederable component
     renderable_component.set_texture_data(tex_buf[0], static_cast<int>(image_sz_1), IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, false);
 }

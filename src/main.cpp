@@ -50,6 +50,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
+#include <map>
+
 #include "game_window.hpp"
 #include "interpreter.h"
 #include "Api.h"
@@ -68,6 +71,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "main.h"
 #include "MapViewer.h"
 #include "Map.h"
+#include "Character.h"
+
 
 using namespace std;    
 
@@ -76,10 +81,10 @@ using namespace std;
 static volatile int shutdown;
 const int num_objects = 2;
 
-struct Object {
-    float x;
-    float y;
-} objects[num_objects];
+
+//TODO: Move this out of here, just added to get the sprite python control working again before full
+//object management is done
+  std::map<int, Character*>* characters;
 
 std::array<std::array<int, 16>, 16> world_data = {{
     {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}},
@@ -106,10 +111,11 @@ void move_object(const int id, const float dx, const float dy) {
         cerr << "ERROR: move_object: object id exceeds number of objects. Object id: " << id << endl;
         return;
     } 
-    objects[id].x += dx;
-    objects[id].y += dy;
-}
+    int new_id = id +1;
 
+    (*characters)[new_id]->set_x_position((*characters)[new_id]->get_x_position() + dx);
+    (*characters)[new_id]->set_y_position((*characters)[new_id]->get_y_position() + dy);
+}
 /*
 static void animate(float dt) {
     // animate map
@@ -174,45 +180,6 @@ static void animate(float dt) {
     }
 }
 */
-/*
-static void draw_sprites(float dt) {
-    glm::mat4 model = glm::mat4(1.0f);
-
-    glUseProgram(program_obj);
-
-    glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_projection"), 1, GL_FALSE,glm::value_ptr(projection_matrix));
-
-    glBindBuffer(GL_ARRAY_BUFFER, vboIds[2]);
-    glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(VERTEX_POS_INDX);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vboIds[3]);
-    glVertexAttribPointer(VERTEX_TEXCOORD0_INDX, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(VERTEX_TEXCOORD0_INDX);
-
-    glBindAttribLocation(program_obj, VERTEX_POS_INDX, "a_position");
-
-    glBindAttribLocation(program_obj, VERTEX_TEXCOORD0_INDX, "a_texCoord");
-
-    glActiveTexture(GL_TEXTURE0);
-
-    // Bind characters texture
-    glBindTexture(GL_TEXTURE_2D,texture_ids[1]);
-
-    // set sampler texture to unit 0
-    glUniform1i(glGetUniformLocation(program_obj, "s_texture"), 0);
-
-    for(int i = 0; i< num_objects; i++) {
-        glm::mat4 translated = glm::translate(model, glm::vec3(objects[i].x, objects[i].y, 0.0f));
-        glUniformMatrix4fv(glGetUniformLocation(program_obj, "mat_modelview"), 1, GL_FALSE, glm::value_ptr(translated));
-
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-
-    glUseProgram(0);
-}
-*/
-
 
 static float get_dt() {
     static std::chrono::steady_clock::time_point curr_time = std::chrono::steady_clock::now();
@@ -224,10 +191,7 @@ static float get_dt() {
     curr_time = milliseconds;
     return static_cast<float>(duration.count()) / 1000.0f;
 }
-/*
 
-
-*/
 int main (int argc, char* argv[]) {
   bool use_graphical_window = true;
 
@@ -245,6 +209,23 @@ int main (int argc, char* argv[]) {
   window.use_context();
 
   Map map("");
+
+  characters = map.get_characters_map();
+
+  Character* character1 = new Character();
+  character1->set_id(1);
+  character1->set_name("John");
+  character1->set_script("");
+ 
+  Character* character2 = new Character();
+  character2->set_id(2);
+  character2->set_name("Adam");
+  character2->set_script("");
+ 
+  (*characters)[1] = character1;
+  (*characters)[2] = character2;
+
+  
   MapViewer map_viewer(&window);
   map_viewer.set_map(&map);
   std::thread mythread(run_all);

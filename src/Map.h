@@ -26,11 +26,19 @@
 
 #endif
 
+#include <map>
+
 #include "game_window.hpp"
 #include "RenderableComponent.h"
-
+#include "Object.h"
+#include "Character.h"
 
 class Map {
+  ///
+  /// The characters that are on this map
+  ///
+  std::map<int, Character*> characters;
+
   ///
   /// Cache of the tileset texture data for this Map
   ///
@@ -96,7 +104,7 @@ class Map {
   ///
   /// The texture buffer pointers
   ///
-  char* tex_buf[2];
+  char* tex_buf[1];
 
   ///
   /// The number of objects in the map
@@ -169,6 +177,12 @@ std::array<std::array<int, 16>, 16> world_data = {{
 public: 
   Map(const std::string map_src);
   ~Map();
+
+  ///
+  /// Get the characters to render 
+  ///
+  std::map<int, Character*>* get_characters_map() { return &characters; }
+
 
   ///
   /// Gets the RenderableComponent object instance associated with this Map

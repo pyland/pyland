@@ -4,6 +4,7 @@
 #define  VERTEX_TEXCOORD0_INDX 1
 
 RenderableComponent::RenderableComponent() {
+
   //Generate the vertex buffers
   glGenBuffers(1, &vbo_vertex_id);
   glGenBuffers(1, &vbo_texture_id);
@@ -18,6 +19,13 @@ RenderableComponent::~RenderableComponent() {
 void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_size, bool is_dynamic) { 
   vertex_data = new_vertex_data;
   vertex_data_size = data_size;
+  
+  //Get current shader
+  GLint id;
+  glGetIntegerv(GL_CURRENT_PROGRAM, &id);
+
+  //Bind our shader
+  bind_shader();
 
   //Set up buffer usage
   GLenum usage = GL_STATIC_DRAW;
@@ -32,6 +40,10 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_siz
   glEnableVertexAttribArray(VERTEX_POS_INDX);
 
   glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+
+  //Restore previous program
+  glUseProgram(id);
 }
 
 void RenderableComponent::set_texture_data(char* new_texture_data, int data_size, int new_texture_width, int new_texture_height, bool is_dynamic) { 
@@ -39,6 +51,15 @@ void RenderableComponent::set_texture_data(char* new_texture_data, int data_size
   texture_data_size = data_size;
   texture_height = new_texture_height;
   texture_width = new_texture_width;
+
+  //Get current shader
+  GLint id;
+  glGetIntegerv(GL_CURRENT_PROGRAM, &id);
+
+  //Bind our shader
+  bind_shader();
+
+
 
   glGenTextures(1, &texture_obj_id);
   glBindTexture(GL_TEXTURE_2D, texture_obj_id);
@@ -48,12 +69,21 @@ void RenderableComponent::set_texture_data(char* new_texture_data, int data_size
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
-
+  //Restore shader
+  glUseProgram(id);
 }
 
 void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, int data_size, bool is_dynamic) { 
   texture_coords_data = new_texture_data;
   texture_coords_data_size = data_size;
+
+  //Get current shader
+  GLint id;
+  glGetIntegerv(GL_CURRENT_PROGRAM, &id);
+
+  //Bind our shader
+  bind_shader();
+
 
   //Set up buffer usage
   GLenum usage = GL_STATIC_DRAW;
@@ -68,6 +98,9 @@ void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, int
   glEnableVertexAttribArray(1 /*VERTEX_TEXCOORD0_INDX */);
 
   glVertexAttribPointer(1 /*VERTEX_TEXCOORD0_INDX */, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  
+  //Release shader
+  glUseProgram(id);
 }
 
 void RenderableComponent::bind_vbos() {
