@@ -54,6 +54,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "game_window.hpp"
 #include "interpreter.h"
+#include "print_debug.h"
 
 #ifdef USE_GLES
 
@@ -959,6 +960,8 @@ int main () {
 
     generate_map_coords(map_width, map_height);
     init_buffers();
+
+    print_debug << "STARTING" << std::endl;
 
     //   Map map;
     Interpreter interpreter(boost::filesystem::absolute("./function_wrappers.so").normalize());

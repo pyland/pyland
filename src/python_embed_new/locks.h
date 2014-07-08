@@ -3,6 +3,7 @@
 
 #include <boost/python.hpp>
 #include <mutex>
+#include "print_debug.h"
 
 namespace lock {
     ///
@@ -64,9 +65,17 @@ namespace lock {
 
 
     template <class T>
-    struct Lockable {
-        T items;
-        std::mutex lock;
+    class Lockable {
+        public:
+            Lockable(): items(), lock() {
+                print_debug << "HIHI!" << std::endl;
+            };
+            ~Lockable() {
+                print_debug << "HALP!" << std::endl;
+            };
+
+            T items;
+            std::mutex lock;
     };
 };
 

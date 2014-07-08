@@ -18,9 +18,9 @@ Interpreter::Interpreter(boost::filesystem::path function_wrappers) {
         throw std::runtime_error("Interpreter initialized twice where only a single initialization supported");
     }
 
-    main_thread_state = initialize_python();
+    print_debug << "Interpreter: Started" << std::endl;
 
-    lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> entitythreads;
+    main_thread_state = initialize_python();
 
     thread_killer = std::make_unique<ThreadKiller>(entitythreads);
     print_debug << "Interpreter: Spawned Kill thread" << std::endl;

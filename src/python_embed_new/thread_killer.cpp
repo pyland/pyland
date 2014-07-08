@@ -38,6 +38,8 @@ void thread_killer(std::timed_mutex &finish_signal,
         }
 
         print_debug << "Kill thread woke up" << std::endl;
+        print_debug << "111" << entitythreads.items.size() << std::endl;
+
         std::lock_guard<std::mutex> lock(entitythreads.lock);
 
         // Go through the available entitythread objects and kill those that
@@ -59,7 +61,7 @@ ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThre
 
 		kill_thread_finish_signal.lock();
 
-		std::thread thread2(
+		thread = std::thread(
 			thread_killer,
 			std::ref(kill_thread_finish_signal),
 			std::ref(entitythreads)
