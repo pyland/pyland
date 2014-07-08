@@ -53,7 +53,7 @@ class Player {
         Vec2D position;
         std::string name;
         boost::python::api::object script;
-        std::string read_file();
+        std::string read_file(std::string loc);
         int id;
 
     public:

@@ -1,4 +1,4 @@
-#include <amarray>
+#include <array>
 
 ///
 /// number of tile in map

@@ -111,38 +111,26 @@ void Player::run_script() {
 
 void Player::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
-    std::string from_file =
-        // TODO: find a more scalable approach
-        "import time\n"
-        "def move(x):\n"
-        "    player.move(x)\n"
-        "    time.sleep(0.3)\n"
-        "    return True\n"
-    
-        "def monologue():\n"
-        "    player.monologue()\n"
-    
-        "north, south, east, west = Vec2D(0, 1), Vec2D(0, -1), Vec2D(1, 0), Vec2D(-1, 0)\n"
-    
-        "def script(player):\n"
-        "    " + read_file();
-
-    print_debug << from_file << std::endl;
-    script = py::exec(from_file.c_str(), tempoary_scope);
+    // read users py from file
+    std::string user_py_unparsed = read_file("python_embed/" + name + ".py");
+    // fix indenting
+    boost::regex replace("\\n");
+    std::string user_py = boost::regex_replace(user_py_unparsed, replace, "\n    ");
+    // wrap with our code
+    std::string wrapped_py = read_file("python_embed/py_wrapper.py")+ "\n    " + user_py;
+    print_debug << wrapped_py << std::endl;
+    // evaluate code & extract script function
+    script = py::exec(wrapped_py.c_str(), tempoary_scope);
     script = tempoary_scope["script"];
    // py::import("dis").attr("dis")(script);
 }
 
-std::string Player::read_file() {
-    std::string loc = "python_embed/" + name + ".py";
+std::string Player::read_file(std::string loc) {
     std::ifstream inFile (loc); //open the input file
     if (inFile.is_open()) { 
         std::stringstream strStream;
         strStream << inFile.rdbuf(); //read the file
-        std::string old_text = strStream.str();
-        boost::regex replace("\\n");
-        std::string new_text = boost::regex_replace(old_text, replace, "\n    ");
-        return new_text;
+        return strStream.str();
     } else {
         print_debug << "file opening unsuccessful" << std::endl;
         return "";
