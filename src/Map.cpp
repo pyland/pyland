@@ -67,7 +67,7 @@ Map::~Map() {
     delete[] map_tex_coords;
     delete[] tileset_tex_coords;
 
-    printf("\nClosed\n");
+    std::cout << std::endl << "Closed" << std::endl;
 }
 
 /**

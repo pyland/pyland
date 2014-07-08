@@ -86,10 +86,10 @@ void MapViewer::render_map() {
     RenderableComponent* character_render_component = sprite->get_renderable_component();
 
     //Move sprite to the required position
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 translate = glm::vec3(sprite->get_x_position(), sprite->get_y_position(), 0.0f);
-    glm::mat4 translated = glm::translate(model, translate);
-    character_render_component->set_modelview_matrix(translated);
+    glm::mat4 model1 = glm::mat4(1.0f);
+    glm::vec3 translate1 = glm::vec3(sprite->get_x_position(), sprite->get_y_position(), 0.0f);
+    glm::mat4 translated1 = glm::translate(model1, translate1);
+    character_render_component->set_modelview_matrix(translated1);
     character_render_component->set_projection_matrix(projection_matrix);
 
     character_render_component->bind_shader();

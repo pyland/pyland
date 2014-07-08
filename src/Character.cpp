@@ -38,6 +38,8 @@ Character::~Character() {
   delete []sprite_tex_data;
   delete []sprite_data;
   delete []tex_buf;
+
+  std::cout << "DELETED CHARACTER" << std::endl;
 }
 
 
@@ -84,7 +86,7 @@ void Character::generate_tex_data() {
   sprite_tex_data[10] = offset_x*2.0f;
   sprite_tex_data[11] = offset_y;
 
-  render_component->set_texture_coords_data(sprite_tex_data, num_floats, true);
+  render_component->set_texture_coords_data(sprite_tex_data, num_floats, false);
 } 
 
 void Character::generate_vertex_data() {
@@ -99,10 +101,9 @@ void Character::generate_vertex_data() {
   int num_floats = 18;
   sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
   if(sprite_data == NULL) {
-    std::cerr << "ERROR in Characater::genrate_vertex_data, cannot allocate memory" << std::endl;
+    std::cerr << "ERROR in Characater::generate_vertex_data, cannot allocate memory" << std::endl;
     return;
   }
-  
 
   float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
   //bottom left 
@@ -135,7 +136,7 @@ void Character::generate_vertex_data() {
   sprite_data[16] = 0;
   sprite_data[17] = 0;
 
-  render_component->set_vertex_data(sprite_data, num_floats, true);
+  render_component->set_vertex_data(sprite_data, num_floats, false);
   render_component->set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
 }
 
