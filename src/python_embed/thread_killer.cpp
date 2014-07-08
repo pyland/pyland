@@ -56,7 +56,6 @@ void thread_killer(std::timed_mutex &finish_signal,
     print_debug << "Finished kill thread" << std::endl;
 }
 
-// TODO: Check lifetimes are valid for entitythreads
 ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads) {
 
 		kill_thread_finish_signal.lock();

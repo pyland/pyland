@@ -18,6 +18,7 @@ class Interpreter {
 
     private:
         static std::mutex initialized;
+        
         lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> entitythreads;
         std::unique_ptr<ThreadKiller> thread_killer;
 
