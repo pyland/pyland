@@ -91,7 +91,9 @@ BASE_OBJS = \
 	Api.o \
 	Object.o \
 	RenderableComponent.o \
-	Shader.o
+	ObjectManager.o \
+	Shader.o \
+	Character.o
 
 PYTHON_OBJS = \
 	python_embed/interpreter.o       \

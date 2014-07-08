@@ -69,26 +69,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MapViewer.h"
 #include "Map.h"
 
-#define PATH "./"
-#define GLOBAL_SCALE 2
-
-#define IMAGE1_SIZE_WIDTH 128
-#define IMAGE1_NUM_COMPONENTS 4
-#define IMAGE1_SIZE_HEIGHT 240
-
-
-
-#define IMAGE2_SIZE_WIDTH 192
-#define IMAGE2_NUM_COMPONENTS 4
-#define IMAGE2_SIZE_HEIGHT 128
-
-#ifndef M_PI
-#define M_PI 3.141592654
-#endif
 using namespace std;    
 
 
-
+#define GLOBAL_SCALE 2
 static volatile int shutdown;
 const int num_objects = 2;
 
@@ -241,103 +225,6 @@ static float get_dt() {
     return static_cast<float>(duration.count()) / 1000.0f;
 }
 /*
-
-void generate_sprite_tex_data() {
-
-    //holds the map data
-    //need 12 float for the 2D texture coordinates
-    int num_floats = 12;
-    sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    assert(sprite_tex_data);
-
-    //generate the map data
-
-    int curr_tile = 0;
-    GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
-    GLfloat offset_x = GLfloat(1.0 / (IMAGE2_SIZE_WIDTH  / TILESET_ELEMENT_SIZE));
-    GLfloat offset_y = GLfloat(1.0 / (IMAGE2_SIZE_HEIGHT / TILESET_ELEMENT_SIZE));
-
-   //bottom left
-    sprite_tex_data[0] = offset_x; // tileset_ptr[0];
-    sprite_tex_data[1] = offset_y; //tileset_ptr[1];
-
-    //top left
-    sprite_tex_data[2] = offset_x; //tileset_ptr[2];
-    sprite_tex_data[3] = 0.0f; //tileset_ptr[3];
-
-    //bottom right
-    sprite_tex_data[4] = offset_x*2.0f;//tileset_ptr[4];
-    sprite_tex_data[5] = offset_y; //tileset_ptr[5];
-
-    //top left
-    sprite_tex_data[6] = offset_x;//tileset_ptr[2];
-    sprite_tex_data[7] = 0.0f;//tileset_ptr[3];
-
-    //top right
-    sprite_tex_data[8] = offset_x*2.0f;//tileset_ptr[6];
-    sprite_tex_data[9] = 0.0f;//tileset_ptr[7];
-
-    //bottom right
-    sprite_tex_data[10] = offset_x*2.0f;//tileset_ptr[4];
-    sprite_tex_data[11] = offset_y;//tileset_ptr[5];
-
-    for (int i =0 ; i< 12; i++) {
-        std::cout << " " << sprite_tex_data[i];
-    }
-    std::cout << std::endl;
-    } 
-
-void generate_sprite_coords() {
-#ifdef DEBUG
-    printf("GENERATING MAP DATA...");
-#endif
-    //holds the map data
-    //need 18 floats for each coordinate as these hold 3D coordinates
-    int num_floats = 18;
-    sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    assert(sprite_data);
-    float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
-    //generate the map data
-
-    //generate one tile's worth of data
-
-    //bottom left 
-    sprite_data[0] = 0;
-    sprite_data[1] = 0;
-    sprite_data[2] = 0;
-       
-    //top left
-    sprite_data[3] = 0;
-    sprite_data[4] = (1) * scale;
-    sprite_data[5] = 0;
-
-    //bottom right
-    sprite_data[6] = (1) * scale;
-    sprite_data[7] = 0;
-    sprite_data[8] = 0;
-
-    //top left
-    sprite_data[9] = 0;
-    sprite_data[10] = 1 * scale;
-    sprite_data[11] = 0;
-
-    //top right
-    sprite_data[12] = 1 * scale;
-    sprite_data[13] = 1 * scale;
-    sprite_data[14] = 0;
-
-    //bottom right
-    sprite_data[15] = 1 * scale;
-    sprite_data[16] = 0;
-    sprite_data[17] = 0;
-
-
-#ifdef DEBUG
-    printf("DONE.");
-#endif
-
-
-}
 
 
 */
