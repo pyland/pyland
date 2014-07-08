@@ -2,8 +2,11 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-#include "interpreter.h"
+#include "entitythread.h"
 #include "locks.h"
+#include "print_debug.h"
+#include "thread_killer.h"
+
 
 bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
     auto end = std::chrono::system_clock::now() + time_period;
@@ -25,7 +28,7 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 }
 
 void thread_killer(std::timed_mutex &finish_signal,
-                   Lockable<std::vector<PlayerThread>> &playerthreads) {
+                   lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads) {
 
     while (true) {
         // Nonbloking sleep; allows safe quit
@@ -34,31 +37,31 @@ void thread_killer(std::timed_mutex &finish_signal,
         }
 
         print_debug << "Kill thread woke up" << std::endl;
-        std::lock_guard<std::mutex> lock(playerthreads.lock);
+        std::lock_guard<std::mutex> lock(entitythreads.lock);
 
-        // Go through the available playerthread objects and kill those that
+        // Go through the available entitythread objects and kill those that
         // haven't had an API call.
-        for (auto &playerthread : playerthreads.items) {
-            if (!playerthread.is_dirty()) {
-                GIL lock_gil;
-                playerthread.halt_soft();
+        for (auto &entitythread : entitythreads.items) {
+            if (!entitythread->is_dirty()) {
+                lock::GIL lock_gil;
+                entitythread->halt_soft();
             }
-            playerthread.set_clean();
+            entitythread->set_clean();
         }
     }
 
     print_debug << "Finished kill thread" << std::endl;
 }
 
-ThreadKiller::ThreadKiller(Lockable<std::vector<PlayerThread> playerthreads):
-	playerthreads(playerthreads) {
+ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> entitythreads):
+	entitythreads(entitythreads) {
 
 		kill_thread_finish_signal.lock();
 
 		thread = std::move(std::thread(
 			thread_killer,
 			std::ref(kill_thread_finish_signal),
-			std::ref(playerthreads)
+			std::ref(entitythreads)
 		));
 
 		print_debug << "main: Spawned Kill thread" << std::endl;

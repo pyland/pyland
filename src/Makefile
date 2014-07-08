@@ -85,12 +85,13 @@ BASE_OBJS = \
 	main.o          \
 	game_window.o   \
 	input_manager.o \
-	debug_print.o
+	print_debug.o
 
 PYTHON_OBJS = \
+	python_embed_new/api.o           \
 	python_embed_new/interpreter.o   \
 	python_embed_new/locks.o         \
-	python_embed_new/playerthread.o  \
+	python_embed_new/entitythread.o  \
 	python_embed_new/thread_killer.o
 
 PYTHON_SHARED_OBJS = \
@@ -137,10 +138,14 @@ $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) | dependencies
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
 	@echo; echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
+
+	# TODO: Remove $(PYTHON_CPPFLAGS)
+
 	$(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(GRAPHICS_CPPFLAGS)    \
 		$(X11_CPPFLAGS)         \
+		$(PYTHON_CPPFLAGS)      \
 		$(CXXFLAGS) $(CPPFLAGS)
 	@echo
 

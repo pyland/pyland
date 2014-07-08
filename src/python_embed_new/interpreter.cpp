@@ -1,22 +1,26 @@
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
 #include <mutex>
-#include <playerthread.h>
+#include "api.h"
+#include "entitythread.h"
 #include "interpreter.h"
+#include "locks.h"
+#include "make_unique.h"
+#include "print_debug.h"
+#include "thread_killer.h"
 
-Interpreter::Interpreter(boost::filesystem::path working_directory,
-                         boost::filesystem::path function_wrappers) {
+Interpreter::Interpreter(boost::filesystem::path function_wrappers) {
 
     // Leave locked forever to prove that it's only been locked once
     if (!initialized.try_lock()) {
         throw std::runtime_error("Interpreter initialized twice where only a single initialization supported");
     }
 
-    auto main_interpreter_state = initialize_python();
+    main_thread_state = initialize_python();
 
-    Lockable<std::vector<PlayerThread>> playerthreads;
+    lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> entitythreads;
 
-    thread_killer = make_unique<ThreadKiller>(playerthreads);
+    thread_killer = std::make_unique<ThreadKiller>(entitythreads);
     print_debug << "Interpreter: Spawned Kill thread" << std::endl;
 
     // All Python errors should result in a Python traceback    
@@ -31,26 +35,26 @@ Interpreter::Interpreter(boost::filesystem::path working_directory,
     }
 
     // Release GIL; thread_killer can start killing now
-    // and PlayerThreads can be created without deadlocks
+    // and EntityThreads can be created without deadlocks
     PyEval_ReleaseLock();
 
     print_debug << "Interpreter: Released GIL " << std::endl;
     print_debug << "Interpreter: Interpreter created " << std::endl;
 }
 
-PyInterpreterState *Interpreter::initialize_python() {
+PyThreadState *Interpreter::initialize_python() {
     Py_Initialize();
     PyEval_InitThreads();
 
     print_debug << "Interpreter: Initialized Python" << std::endl;
 
-    return PyThreadState_Get()->interp;
+    return PyThreadState_Get();
 }
 
-void Interpreter::register(Entity entity) {
-    std::lock_guard<std::mutex> lock(playerthreads_editable);
+void Interpreter::register_entity(Entity entity) {
+    std::lock_guard<std::mutex> lock(entitythreads.lock);
 
-    playerthreads.push_back(PlayerThread(entity));
+    entitythreads.items.push_back(std::move(std::make_unique<EntityThread>(this, entity)));
 }
 
 Interpreter::~Interpreter() {
@@ -60,10 +64,10 @@ Interpreter::~Interpreter() {
     // Not acutally needed; thread_killer is dead
     // However, this keeps the guarantees (locked while edited) safe,
     // so is good practice
-    std::lock_guard<std::mutex> lock(playerthreads.lock);
+    std::lock_guard<std::mutex> lock(entitythreads.lock);
 
-    for (auto &playerthread : playerthreads.items) {
-        playerthread.finish();
+    for (auto &entitythread : entitythreads.items) {
+        entitythread->finish();
     }
 
     deinitialize_python();
@@ -76,12 +80,12 @@ void Interpreter::deinitialize_python() {
 
 
 
-py::api::object import_file(boost::filesystem::path filename) {
+py::api::object Interpreter::import_file(boost::filesystem::path filename) {
     auto importlib_machinery_module = py::import("importlib").attr("machinery");
 
     // Get and initialize SourceFileLoader
     auto SourceFileLoader_object = importlib_machinery_module.attr("SourceFileLoader");
     auto loader = SourceFileLoader_object("wrapper_functions", py::str(filename.string()));
 
-    return loader.load_module();
+    return loader.attr("load_module")();
 }

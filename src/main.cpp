@@ -26,6 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 // A rotating cube rendered with OpenGL|ES. Three images used as textures on the cube faces.
+
+#include <boost/filesystem.hpp>
     
 #include <cstdio>
 #include <cstdlib>
@@ -959,7 +961,7 @@ int main () {
     init_buffers();
 
     //   Map map;
-    std::thread mythread(run_all);
+    Interpreter interpreter(boost::filesystem::absolute("./function_wrappers.so").normalize());
 
     float dt = get_dt();
     int count = 0;
@@ -977,13 +979,5 @@ int main () {
 
     exit_func();
 
-    //
-    // Typically one would do
-    //     mythread.join();
-    // but this hangs due to the extra, unkilled threads.
-    //
-    // As a hack, just let it crash.
-    //
-
-    return 1;
+    return 0;
 }

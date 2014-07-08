@@ -1,13 +1,19 @@
-#include <thread>
+#ifndef ENTITYTHREAD_H
+#define ENTITYTHREAD_H
 
-class PlayerThread {
+#include <thread>
+#include "api.h"
+
+class Interpreter;
+
+class EntityThread {
     public:
         ///
-        /// Construct a PlayerThread from a Player object.
+        /// Construct a EntityThread from a Entity object.
         ///
         /// Spawns a new thread.
         ///
-        PlayerThread(Player &player);
+        EntityThread(Interpreter *interpreter, Entity &entity);
 
         ///
         /// Try to nicely kill the thread; avoiding corruption where possible.
@@ -46,13 +52,15 @@ class PlayerThread {
         ///
         /// API calls are passed through to this object.
         /// 
-        Player &player;
+        Entity &entity;
 
         ///
-        /// Thread spawned by this PlayerThread
+        /// Thread spawned by this EntityThread
         ///
         std::unique_ptr<std::thread> thread;
 
+        ///
+        /// Stores the call count from last time clean was called.
         ///
         /// Largest definitely-available integer,
         /// gives contingency because a large number
@@ -60,12 +68,12 @@ class PlayerThread {
         ///
         uint64_t previous_call_number;
 
+        /// 
+        /// Python's nonstandard interpretation of the thread's id.
         ///
-        /// Largest definitely-available integer,
-        /// so can probably hold the given Python int.
-        ///
-        /// Not using unsigned integers as I don't know
-        /// if thread ids can be negative or not.
-        ///
-        int64_t thread_id;
+        /// Used to send asynchronous exceptions to threads. 
+        /// 
+        long thread_id;
 };
+
+#endif

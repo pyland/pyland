@@ -1,22 +1,28 @@
+#ifndef INTERPRETER_H
+#define INTERPRETER_H
+
 #include <boost/filesystem.hpp>
+#include <boost/python.hpp>
 #include <mutex>
 #include "thread_killer.h"
 
+
 class Interpreter {
     public:
-        Interpreter(boost::filesystem::path working_directory,
-                    boost::filesystem::path function_wrappers);
+        static boost::python::api::object import_file(boost::filesystem::path filename);
 
+        Interpreter(boost::filesystem::path function_wrappers);
         ~Interpreter();
-
-        void register(Entity entity);
+        void register_entity(Entity entity);
+        PyThreadState *main_thread_state;
 
     private:
         static std::mutex initialized;
-        Lockable<std::vector<PlayerThread>> playerthreads;
+        lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> entitythreads;
         std::unique_ptr<ThreadKiller> thread_killer;
 
-        PyInterpreterState *Interpreter::initialize_python();
-        py::api::object Interpreter::import_file(boost::filesystem::path filename);
-        void Interpreter::deinitialize_python();
+        PyThreadState *initialize_python();
+        void deinitialize_python();
 };
+
+#endif
