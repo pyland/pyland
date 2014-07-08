@@ -1,13 +1,16 @@
 #ifndef CALLBACK_H
 #define CALLBACK_H
 
-#include <function>
+
 
 ///
 /// On destruction of all instances, the object runs a given function.
 ///
 class Lifeline {
 private:
+    ///
+    /// There is one instance of this class for all clones of the
+    /// container class. Upon destruction, the function is run.
     class FunctionRunner {
     private:
         ///

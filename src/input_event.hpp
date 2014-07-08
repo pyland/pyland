@@ -9,7 +9,9 @@ class InputManager;
 /// Super class for input event description.
 ///
 struct InputEvent {
+public:
     InputManager* manager;
+    InputEvent(InputManager* manager);
 };
 
 

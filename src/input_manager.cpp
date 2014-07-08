@@ -7,6 +7,7 @@ extern "C" {
 
 #include "input_manager.hpp"
 #include "game_window.hpp"
+#include "keyboard_input_event.hpp"
 
 
 
@@ -50,6 +51,7 @@ void InputManager::handle_event(SDL_Event* event) {
     case SDL_KEYDOWN:
         down_keys.insert(event->key.keysym.scancode);
         pressed_keys.insert(event->key.keysym.scancode);
+        keyboard_callbacks.broadcast(KeyboardInputEvent(this, event->key.keysym.scancode, true, true));
         break;
     case SDL_KEYUP:
         down_keys.erase(event->key.keysym.scancode);
@@ -123,4 +125,9 @@ std::pair<int,int> InputManager::get_mouse_pixels() {
 
 std::pair<float,float> InputManager::get_mouse_ratio() {
     return std::pair<float,float>((float)mouse_x, (float)mouse_y);
+}
+
+
+void InputManager::register_keyboard_handler(Callback<void, KeyboardInputEvent> callback) {
+    keyboard_callbacks.register_callback(callback);
 }

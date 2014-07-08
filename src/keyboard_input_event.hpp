@@ -18,12 +18,7 @@ class InputManager;
 ///
 struct KeyboardInputEvent : public InputEvent {
 public:
-    KeyboardInputEvent(InputManager* manager, int scan_code, bool changed) {
-        this.manager   = manager;
-        this.scan_code = scan_code;
-        this.key_code  = SDL_GetKeyFromScancode(scan_code);
-        this.changed   = changed;
-    }
+    KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed);
     int scan_code;
     int key_code;
     bool down;

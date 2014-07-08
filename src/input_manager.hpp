@@ -7,11 +7,16 @@ extern "C" {
 #include <SDL2/SDL.h>
 }
 
+#include "callback.hpp"
+#include "callback_registry.hpp"
+
 
 
 class GameWindow;
 class InputEvent;
-class Callback;
+class KeyboardInputEvent;
+
+
 
 ///
 /// Handles SDL input such that it can be accessed reliably and on
@@ -70,7 +75,7 @@ private:
     ///
     /// Keyboard callback registry.
     ///
-    CallbackRegistry<void(KeyboardInputEvent)> keyboard_callbacks;
+    CallbackRegistry<void,KeyboardInputEvent> keyboard_callbacks;
 
     ///
     /// Code to be run before handling event loops.
@@ -174,10 +179,8 @@ public:
     /// Registers a callback function for keyboard input event handling.
     ///
     /// @param func The function to be called to handle an event.
-    /// @param filter A function returning true if the event should 
-    /// trigger the callback.
     ///
-    Callback register_keyboard_handler(std::function<void(KeyboardInputEvent)> func, std::function<bool(KeyboardInputEvent)> filter);
+    void register_keyboard_handler(Callback<void, KeyboardInputEvent> func);
 };
 
 #endif
