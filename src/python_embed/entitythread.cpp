@@ -25,12 +25,13 @@ void run_entity(py::api::object entity,
     try {
         thread_id_promise.set_value(PyThread_get_thread_ident());
 
-        // TODO: bootstrapper
         auto bootstrapper_module = Interpreter::import_file(bootstrapper_file);
         bootstrapper_module.attr("start")(entity);
     }
     catch (py::error_already_set &) {
         // TODO: catch and nicely handle error
+
+        std::cout << "Thread died or was halted." << std::endl;
         PyErr_Print();
     }
 }
@@ -40,7 +41,7 @@ EntityThread::EntityThread(Interpreter *interpreter, Entity &entity):
 
         // To get thread_id
         std::promise<long> thread_id_promise;
-        auto thread_id_future = thread_id_promise.get_future();
+        thread_id_future = thread_id_promise.get_future();
 
         // This seems to be the easy compromise.
         // http://stackoverflow.com/questions/24477791
@@ -53,21 +54,24 @@ EntityThread::EntityThread(Interpreter *interpreter, Entity &entity):
             run_entity,
             entity_object,
             std::move(thread_id_promise),
-            // TODO: Obvious improvements
+            // TODO: Extract into a more logical place
             boost::filesystem::path("python_embed/scripts/bootstrapper.py"),
             interpreter->main_thread_state->interp
         );
+}
 
-        // TODO: This could easily be asynchronous for
-        // a much faster instantiation.
-        thread_id_future.wait();
+long EntityThread::get_thread_id() {
+    if (thread_id_future.valid()) {
         thread_id = thread_id_future.get();
+    }
+
+    return thread_id;
 }
 
 void EntityThread::halt_soft() {
-    print_debug << "Attempting to kill thread id " << thread_id << "." << std::endl;
+    print_debug << "Attempting to kill thread id " << get_thread_id() << "." << std::endl;
 
-    PyThreadState_SetAsyncExc(thread_id, PyExc_SystemError);
+    PyThreadState_SetAsyncExc(get_thread_id(), PyExc_SystemError);
 }
 
 void EntityThread::halt_hard() {

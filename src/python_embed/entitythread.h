@@ -1,6 +1,7 @@
 #ifndef ENTITYTHREAD_H
 #define ENTITYTHREAD_H
 
+#include <future>
 #include <thread>
 #include "api.h"
 
@@ -14,6 +15,11 @@ class EntityThread {
         /// Spawns a new thread.
         ///
         EntityThread(Interpreter *interpreter, Entity &entity);
+
+        ///
+        /// Get the id of the thread according to CPython.
+        ///
+        long get_thread_id();
 
         ///
         /// Try to nicely kill the thread; avoiding corruption where possible.
@@ -74,6 +80,7 @@ class EntityThread {
         /// Used to send asynchronous exceptions to threads. 
         /// 
         long thread_id;
+        std::future<long> thread_id_future;
 };
 
 #endif
