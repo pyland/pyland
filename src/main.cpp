@@ -964,7 +964,7 @@ int main () {
     print_debug << "STARTING" << std::endl;
 
     //   Map map;
-    Interpreter interpreter(boost::filesystem::absolute("python_embed_new/wrapper_functions.so").normalize());
+    Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
     Entity a_thing(Vec2D(0, 0), "", 0);
     interpreter.register_entity(a_thing);
 

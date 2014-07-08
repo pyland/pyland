@@ -1,13 +1,11 @@
 #include <boost/python.hpp>
 #include <boost/regex.hpp>
-#include <thread>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <string>
 #include "api.h"
-#include "print_debug.h"
 #include "main.h"
+#include "print_debug.h"
 
 enum class TileType {
     WALKABLE,
@@ -63,15 +61,15 @@ std::string Vec2D::to_string() {
 
 
 
-Player::Player(Vec2D start, std::string name, int id):
+Entity::Entity(Vec2D start, std::string name, int id):
     start(start), position(start), script(""), id(id) {
         this->name = std::string(name);
         move_object(id, float(start.x), float(start.y));
 }
 
-uint64_t Player::call_number = 0;
+uint64_t Entity::call_number = 0;
 
-bool Player::move(Vec2D by) {
+bool Entity::move(Vec2D by) {
     ++call_number;
     auto cached_position = position;
     position += by;
@@ -100,35 +98,35 @@ bool Player::move(Vec2D by) {
 
 
 
-void Player::monologue() {
+void Entity::monologue() {
     std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;
 }
 
-void Player::run_script() {
+void Entity::run_script() {
     ++call_number;
     script(py::ptr(this));
 }
 
 
-void Player::give_script(py::api::object main_namespace) {
+void Entity::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
     std::string from_file =
         // TODO: find a more scalable approach
         "import time\n"
         "def move(x):\n"
         "    for _ in range(32):\n"
-        "        if not player.move(x):\n"
+        "        if not entity.move(x):\n"
         "            time.sleep(1)\n"
         "            return False\n"
         "        time.sleep(0.01)\n"
         "    return True\n"
     
         "def monologue():\n"
-        "    player.monologue()\n"
+        "    entity.monologue()\n"
     
         "north, south, east, west = Vec2D(0, 1), Vec2D(0, -1), Vec2D(1, 0), Vec2D(-1, 0)\n"
     
-        "def script(player):\n"
+        "def script(entity):\n"
         "    " + read_file();
 
     print_debug << from_file << std::endl;
@@ -137,17 +135,23 @@ void Player::give_script(py::api::object main_namespace) {
    // py::import("dis").attr("dis")(script);
 }
 
-std::string Player::read_file() {
+std::string Entity::read_file() {
     std::string loc = "python_embed/" + name + ".py";
-    std::ifstream inFile (loc); //open the input file
-    if (inFile.is_open()) { 
+
+    //open the input file
+    std::ifstream in_file(loc);
+
+    if (in_file.is_open()) { 
         std::stringstream strStream;
-        strStream << inFile.rdbuf(); //read the file
+
+        //read the file
+        strStream << in_file.rdbuf();
         std::string old_text = strStream.str();
         boost::regex replace("\\n");
         std::string new_text = boost::regex_replace(old_text, replace, "\n    ");
         return new_text;
-    } else {
+    }
+    else {
         print_debug << "file opening unsuccessful" << std::endl;
         return "";
     }

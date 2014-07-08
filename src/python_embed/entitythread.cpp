@@ -54,7 +54,7 @@ EntityThread::EntityThread(Interpreter *interpreter, Entity &entity):
             entity_object,
             std::move(thread_id_promise),
             // TODO: Obvious improvements
-            boost::filesystem::path("python_embed_new/scripts/bootstrapper.py"),
+            boost::filesystem::path("python_embed/scripts/bootstrapper.py"),
             interpreter->main_thread_state->interp
         );
 

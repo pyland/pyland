@@ -1,3 +1,6 @@
+#ifndef MAKE_UNIQUE_H
+#define MAKE_UNIQUE_H
+
 // Forward port of C++14 make_shared
 
 #include <cstddef>
@@ -48,3 +51,5 @@ namespace std {
         return unique_ptr<T>(new U[sizeof...(Args)]{ std::forward<Args>(args)... });
     }
 }
+
+#endif
