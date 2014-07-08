@@ -97,7 +97,12 @@ bool Player::move(Vec2D by) {
     return tile != TileType::KILLER;
 }
 
-
+bool Player::walkable(Vec2D by) {
+    ++call_number;
+    auto new_position = position + by;
+    TileType tile = tile_to_type[world_data[new_position.x][new_position.y]];
+    return (tile == TileType::WALKABLE);
+}
 
 void Player::monologue() {
     std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;

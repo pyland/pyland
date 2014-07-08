@@ -81,6 +81,8 @@ class Player {
         ///
         bool move(Vec2D by);
 
+        bool walkable(Vec2D by);
+
         ///
         /// Prints to standard output the name and position of sprite
         ///

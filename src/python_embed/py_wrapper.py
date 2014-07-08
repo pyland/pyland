@@ -8,5 +8,8 @@ def move(x):
 def monologue():
     player.monologue()
 
+def walkable(x):
+	return (player.walkable(x))
+
 north, south, east, west = Vec2D(0, 1), Vec2D(0, -1), Vec2D(1, 0), Vec2D(-1, 0)    
 def script(player):
