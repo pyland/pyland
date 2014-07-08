@@ -126,7 +126,10 @@ dependencies/python_embed: | dependencies
 	@mkdir dependencies/python_embed
 
 $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) | dependencies
-	@echo; echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"; echo
+	@echo;\
+	 echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}";\
+	 echo
+
 	$(COMPILER) -o $@ \
 		$(BASE_OBJS) $(PYTHON_OBJS)            \
 		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
@@ -137,27 +140,34 @@ $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) | dependencies
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
-	@echo; echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
+	@echo;\
+	 echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
+	 echo
 
-	# TODO: Remove $(PYTHON_CPPFLAGS)
-
+	# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
+	# This should not cause a large slowdown unless actually included in many files.
 	$(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(GRAPHICS_CPPFLAGS)    \
 		$(X11_CPPFLAGS)         \
 		$(PYTHON_CPPFLAGS)      \
 		$(CXXFLAGS) $(CPPFLAGS)
-	@echo
 
 $(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
-	@echo; echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
+	@echo;\
+	 echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
+	 echo
+
 	$(COMPILER) -c $*.cpp -o $*.o \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 python_embed/wrapper_functions.so: python_embed/api.o
 $(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed
-	@echo; echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
+	@echo;\
+	 echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
+	 echo
+
 	$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
@@ -165,7 +175,9 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed
 		-MF dependencies/$*.sd
 
 debug:
-	@echo; echo "${bold}${red}Complied in debug${normal}"; echo
+	@echo;\
+	 echo "${bold}${red}Complied in debug${normal}";\
+	 echo
 
 
 
