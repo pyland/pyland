@@ -28,10 +28,11 @@ class ThreadKiller {
         void finish();
 
     private:
+
         ///
         /// Mutex for thread to sleep on, allowing interruptable thread sleeps.
         ///
-        std::mutex kill_thread_finish_signal;
+        std::timed_mutex kill_thread_finish_signal;
 
         ///
         /// Thread.

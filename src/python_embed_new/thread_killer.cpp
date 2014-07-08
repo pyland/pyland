@@ -1,4 +1,5 @@
 #include <chrono>
+#include <functional>
 #include <iostream>
 #include <mutex>
 #include <thread>
@@ -46,28 +47,28 @@ void thread_killer(std::timed_mutex &finish_signal,
                 lock::GIL lock_gil;
                 entitythread->halt_soft();
             }
-            entitythread->set_clean();
+            entitythread->clean();
         }
     }
 
     print_debug << "Finished kill thread" << std::endl;
 }
 
-ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> entitythreads):
-	entitythreads(entitythreads) {
+// TODO: Check lifetimes are valid for entitythreads
+ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads) {
 
 		kill_thread_finish_signal.lock();
 
-		thread = std::move(std::thread(
+		std::thread thread2(
 			thread_killer,
 			std::ref(kill_thread_finish_signal),
 			std::ref(entitythreads)
-		));
+		);
 
 		print_debug << "main: Spawned Kill thread" << std::endl;
 }
 
-void finish() {
+void ThreadKiller::finish() {
     kill_thread_finish_signal.unlock();
     thread.join();
 }

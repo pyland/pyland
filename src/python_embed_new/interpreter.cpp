@@ -9,6 +9,8 @@
 #include "print_debug.h"
 #include "thread_killer.h"
 
+std::mutex Interpreter::initialized;
+
 Interpreter::Interpreter(boost::filesystem::path function_wrappers) {
 
     // Leave locked forever to prove that it's only been locked once
