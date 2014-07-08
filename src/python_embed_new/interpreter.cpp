@@ -1,5 +1,7 @@
+#include <algorithm>
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
+#include <map>
 #include <mutex>
 #include "api.h"
 #include "entitythread.h"
@@ -82,12 +84,25 @@ void Interpreter::deinitialize_python() {
 
 
 
-py::api::object Interpreter::import_file(boost::filesystem::path filename) {
-    auto importlib_machinery_module = py::import("importlib").attr("machinery");
 
-    // Get and initialize SourceFileLoader
-    auto SourceFileLoader_object = importlib_machinery_module.attr("SourceFileLoader");
-    auto loader = SourceFileLoader_object("wrapper_functions", py::str(filename.string()));
 
-    return loader.attr("load_module")();
+std::map<std::string, std::string> extension_to_importer = {
+    {".py", "SourceFileLoader"},
+    {".so", "ExtensionFileLoader"}
+};
+
+py::api::object Interpreter::import_file(boost::filesystem::path filename) {    
+    std::string extension = filename.extension().string();
+    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+    auto importer = extension_to_importer.at(extension);
+
+    print_debug << "Interpreter: Importing " << filename << " with " << importer << " (for " << extension << " files)." << std::endl;
+
+    auto importlib_machinery_module = py::import("importlib.machinery");
+
+    // Get and initialize loader
+    auto FileLoader_object = importlib_machinery_module.attr(importer.c_str());
+    auto loader_object = FileLoader_object(filename.stem().string(), filename.string());
+
+    return loader_object.attr("load_module")();
 }

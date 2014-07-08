@@ -3,11 +3,20 @@ import time
 print("Started bootstrapper")
 
 def start(object):
-	print("Started with object", object)
+    print("Started with object", object)
 
-	for _ in range(100):
-		time.sleep(0.1)
+    try:
+    	run()
+    except BaseException as e:
+    	print(e)
+    	raise
 
-		print("Continuing with object", object)
+def run():
+    print("Running with object", object)
+	
+    for _ in range(100):
+        time.sleep(0.1)
 
-	print("Finishing with object", object)
+        print("Continuing with object", object)
+
+    print("Finishing with object", object)

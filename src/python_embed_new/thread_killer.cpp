@@ -67,10 +67,11 @@ ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThre
 			std::ref(entitythreads)
 		);
 
-		print_debug << "main: Spawned Kill thread" << std::endl;
+        print_debug << "main: Spawned Kill thread" << std::endl;
 }
 
-void ThreadKiller::finish() {
+void ThreadKiller::finish() {    
+	print_debug << "main: Stopping Kill thread" << std::endl;
     kill_thread_finish_signal.unlock();
     thread.join();
 }
