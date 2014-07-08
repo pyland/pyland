@@ -88,5 +88,6 @@ void EntityThread::clean() {
 }
 
 void EntityThread::finish() {
+    // TODO: implement clean destruction of EntityThreads
     throw std::runtime_error("EntityThread::finish not implemented");
 }

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <atomic>
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
 #include <map>
@@ -11,12 +12,11 @@
 #include "print_debug.h"
 #include "thread_killer.h"
 
-std::mutex Interpreter::initialized;
+std::atomic_flag Interpreter::initialized = ATOMIC_FLAG_INIT;
 
 Interpreter::Interpreter(boost::filesystem::path function_wrappers) {
 
-    // Leave locked forever to prove that it's only been locked once
-    if (!initialized.try_lock()) {
+    if (initialized.test_and_set()) {
         throw std::runtime_error("Interpreter initialized twice where only a single initialization supported");
     }
 
