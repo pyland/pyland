@@ -38,7 +38,14 @@ int main(int argc, char** argv) {
         glClearColor(0.25f, 0.50f, 1.0f, 1.0f);
         float r, g, b;
         r = g = b = 0.0f;
-        Callback<void, KeyboardInputEvent> callback(callback_function);
+        Callback<void, KeyboardInputEvent> callback([&] (KeyboardInputEvent event) {
+                if (event.key_code == 27) {
+                    callback.unregister_everywhere();
+                }
+                else {
+                    callback_function(event);
+                }
+            });
         input_manager->register_keyboard_handler(callback);
         while (window.check_close() == false) {
             // Little basic colour change test.
@@ -58,6 +65,7 @@ int main(int argc, char** argv) {
                 break;
             }
         }
+	callback.unregister_everywhere();
     }
     catch (GameWindow::InitException e) {
         std::cerr << e.what() << std::endl;

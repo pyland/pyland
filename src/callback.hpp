@@ -48,16 +48,16 @@ protected:
     /// Notify about removal from a registry.
     ///
     void remove_registry(CallbackRegistry<Ret, Args...>* registry);
-
-    ///
-    /// Completely remove the callback from all associated registries.
-    ///
-    void unregister_everywhere();
 public:
     ///
     /// Construct a callback using the specified function.
     Callback(std::function<Ret(Args...)> func);
     ~Callback();
+
+    ///
+    /// Completely remove the callback from all associated registries.
+    ///
+    void unregister_everywhere();
     
     ///
     /// Calls the callback function.

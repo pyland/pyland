@@ -28,6 +28,10 @@ public:
     ///
     void unregister_callback(Callback<Ret, Args...> callback);
     ///
+    /// Unregister a callback, given a pointer to one.
+    ///
+    void unregister_callback(Callback<Ret, Args...>* callback);
+    ///
     /// Unregister a callback, without notifying it.
     ///
     void unregister_callback_no_notify(Callback<Ret, Args...> callback);
