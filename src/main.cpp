@@ -968,5 +968,7 @@ int main () {
     // As a hack, just let it crash.
     //
 
+    // throw std::runtime_error("cannot close nicely");
+
     return 1;
 }
