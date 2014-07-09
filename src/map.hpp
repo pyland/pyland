@@ -29,9 +29,9 @@
 #include <map>
 
 #include "game_window.hpp"
-#include "RenderableComponent.h"
-#include "Object.h"
-#include "Character.h"
+#include "renderable_component.hpp"
+#include "object.hpp"
+#include "character.hpp"
 
 class Map {
   ///

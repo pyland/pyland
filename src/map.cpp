@@ -1,4 +1,5 @@
-#include "Map.h"
+#include "map.hpp"
+#include "game_window.hpp"
 
 
 #include <string>
@@ -26,8 +27,6 @@
 #include <GL/gl.h>
 
 #endif
-
-#include "game_window.hpp"
 
 
 #define VERTEX_POS_INDX 0

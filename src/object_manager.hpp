@@ -1,7 +1,7 @@
 #ifndef OBJECTMANAGER_H
 #define OBJECTMANAGER_H
 
-#include "Object.h"
+#include "object.hpp"
 #include <map>
 
 ///

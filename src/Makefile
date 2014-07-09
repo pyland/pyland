@@ -86,14 +86,14 @@ BASE_OBJS = \
 	game_window.o   \
 	input_manager.o \
 	debug.o \
-	MapViewer.o \
-	Map.o \
-	Api.o \
-	Object.o \
-	RenderableComponent.o \
-	ObjectManager.o \
-	Shader.o \
-	Character.o
+	map_viewer.o \
+	map.o \
+	engine_api.o \
+	object.o \
+	renderable_component.o \
+	object_manager.o \
+	shader.o \
+	character.o
 
 PYTHON_OBJS = \
 	python_embed/interpreter.o       \

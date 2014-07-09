@@ -1,4 +1,4 @@
-#include "RenderableComponent.h"
+#include "renderable_component.hpp"
 
 #define VERTEX_POS_INDX 0
 #define  VERTEX_TEXCOORD0_INDX 1

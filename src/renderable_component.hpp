@@ -1,6 +1,8 @@
 #ifndef RENDERABLE_COMPONENT_H
 #define RENDERABLE_COMPONENT_H
 
+#include "shader.hpp"
+
 #include <string>
 
 //Include GLM
@@ -25,8 +27,6 @@
 #include <GL/gl.h>
 
 #endif
-
-#include "Shader.h"
 ///
 /// This class holds all the referrences to the data needed to render
 /// the geometry. The idea is that this data is generated and then put

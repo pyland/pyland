@@ -1,7 +1,7 @@
 #ifndef MAPVIEWER_H
 #define MAPVIEWER_H
 
-#include "Map.h"
+#include "map.hpp"
 
 class MapViewer {
   ///

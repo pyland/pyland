@@ -1,7 +1,7 @@
-#include "MapViewer.h"
-#include "RenderableComponent.h"
-#include "Map.h"
-#include "Character.h"
+#include "map_viewer.hpp"
+#include "renderable_component.hpp"
+#include "map.hpp"
+#include "character.hpp"
 
 #include <map>
 #include <iostream>

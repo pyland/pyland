@@ -1,7 +1,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "Object.h"
+#include "object.hpp"
 
 #ifdef USE_GLES
 

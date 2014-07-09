@@ -1,7 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "RenderableComponent.h"
+#include "renderable_component.hpp"
 #include <string>
 
 ///

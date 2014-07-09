@@ -55,7 +55,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "game_window.hpp"
 #include "interpreter.h"
-#include "Api.h"
+#include "engine_api.hpp"
+#include "main.hpp"
+#include "map_viewer.hpp"
+#include "map.hpp"
+#include "character.hpp"
+
+
+
 #ifdef USE_GLES
 
 #include <GLES2/gl2.h>
@@ -67,11 +74,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <GL/gl.h>
 #endif
 
-
-#include "main.h"
-#include "MapViewer.h"
-#include "Map.h"
-#include "Character.h"
 
 
 using namespace std;    

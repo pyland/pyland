@@ -1,5 +1,5 @@
-#include "Character.h"
-#include "RenderableComponent.h"
+#include "character.hpp"
+#include "renderable_component.hpp"
 #include <iostream>
 #include <fstream>
 
