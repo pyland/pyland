@@ -2,21 +2,21 @@ import time
 
 print("Started bootstrapper")
 
-def start(object):
-    print("Started with object", object)
+def start(entity):
+    print("Started with entity", entity)
 
     try:
-    	run()
+    	run(entity)
     except BaseException as e:
     	print(e)
     	raise
 
-def run():
-    print("Running with object", object)
+def run(entity):
+    print("Running with entity", entity)
 	
     for _ in range(100):
         time.sleep(0.1)
 
-        print("Continuing with object", object)
+        print("Continuing with entity", entity)
 
-    print("Finishing with object", object)
+    print("Finishing with entity", entity)
