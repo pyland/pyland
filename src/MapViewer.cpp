@@ -52,6 +52,8 @@ void MapViewer::render_map() {
   glm::vec3 translate = glm::vec3(map->get_display_x(), map->get_display_y(), 0.0f);
   glm::mat4 translated = glm::translate(model, translate);
   
+
+
   map_render_component->set_projection_matrix(projection_matrix);
   map_render_component->set_modelview_matrix(translated);
 
@@ -67,7 +69,7 @@ void MapViewer::render_map() {
   map_render_component->bind_textures();
 
 
-  glDrawArrays(GL_TRIANGLES, 0, map_render_component->get_num_vertices_render());
+    glDrawArrays(GL_TRIANGLES, 0, map_render_component->get_num_vertices_render());
  
   //Release the vertex buffers and textures
   map_render_component->release_textures();
@@ -76,15 +78,16 @@ void MapViewer::render_map() {
   map_render_component->release_shader();
 
 
+
+
+
   //Draw the characters
   std::map<int, Character*> characters = *(map->get_characters_map());
   for(auto it = characters.begin(); it != characters.end(); ++it) {
     Character* sprite = it->second;
-
-
     
     RenderableComponent* character_render_component = sprite->get_renderable_component();
-
+    
     //Move sprite to the required position
     glm::mat4 model1 = glm::mat4(1.0f);
     glm::vec3 translate1 = glm::vec3(sprite->get_x_position(), sprite->get_y_position(), 0.0f);
@@ -93,7 +96,6 @@ void MapViewer::render_map() {
     character_render_component->set_projection_matrix(projection_matrix);
 
     character_render_component->bind_shader();
-
 
     Shader* shader = character_render_component->get_shader();
     if(shader == NULL) {
@@ -114,6 +116,7 @@ void MapViewer::render_map() {
     character_render_component->release_textures();
     character_render_component->release_vbos();
     character_render_component->release_shader();
+
   }
 
   window->swap_buffers();

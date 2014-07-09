@@ -147,12 +147,10 @@ void Map::generate_map_texcoords() {
     map_tex_coords = new GLfloat[data_size]; 
     assert(map_tex_coords);
 
-    int x, y;
-
     //generate the map data
     // get the tile set coordinates for the particular tile
-    for(x = 0; x < map_width; x++) {
-        for(y = 0; y < map_height; y++) {
+    for(int x = 0; x < map_width; x++) {
+        for(int y = 0; y < map_height; y++) {
             int curr_tile = world_data[x][y];
 
             GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
@@ -212,9 +210,8 @@ void Map::generate_map_coords() {
     ///  * --- *
     /// 0       2,5
     ///
-    int x, y;
-    for(x = 0; x < map_width; x++) {
-        for(y = 0; y < map_height; y++) {
+    for(int x = 0; x < map_width; x++) {
+        for(int y = 0; y < map_height; y++) {
             //generate one tile's worth of data
 
             //bottom left

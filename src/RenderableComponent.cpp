@@ -2,12 +2,14 @@
 
 #define VERTEX_POS_INDX 0
 #define  VERTEX_TEXCOORD0_INDX 1
-
+#include <iostream>
 RenderableComponent::RenderableComponent() {
 
   //Generate the vertex buffers
   glGenBuffers(1, &vbo_vertex_id);
   glGenBuffers(1, &vbo_texture_id);
+  std::cout << "BUFFERS "<< vbo_vertex_id << std::endl;
+  std::cout << "BUFFERS " << vbo_texture_id << std::endl;
 }
 
 RenderableComponent::~RenderableComponent() {
@@ -19,6 +21,10 @@ RenderableComponent::~RenderableComponent() {
 void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_size, bool is_dynamic) { 
   vertex_data = new_vertex_data;
   vertex_data_size = data_size;
+
+  for(int i = 0; i < data_size/(sizeof(GLfloat)); i++)
+    std::cout << " " << vertex_data[i];
+
   
   //Get current shader
   GLint id;
@@ -76,7 +82,6 @@ void RenderableComponent::set_texture_data(char* new_texture_data, int data_size
 void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, int data_size, bool is_dynamic) { 
   texture_coords_data = new_texture_data;
   texture_coords_data_size = data_size;
-
   //Get current shader
   GLint id;
   glGetIntegerv(GL_CURRENT_PROGRAM, &id);
@@ -114,9 +119,10 @@ void RenderableComponent::bind_vbos() {
   glVertexAttribPointer(1 /* VERTEX_TEXCOORD0_INDX */, 2, GL_FLOAT, GL_FALSE, 0, NULL);
   glEnableVertexAttribArray( 1 /*VERTEX_TEXCOORD0_INDX*/);
 
-  glBindAttribLocation(shader->get_program(), 0 /*VERTEX_POS_INDX*/, "a_position");
+  glBindAttribLocation(shader->get_program(), glGetAttribLocation(shader->get_program(), "a_position") /*VERTEX_POS_INDX*/, "a_position");
 
-  glBindAttribLocation(shader->get_program(), 1/*VERTEX_TEXCOORD0_INDX*/, "a_texCoord");
+  glBindAttribLocation(shader->get_program(), glGetAttribLocation(shader->get_program(), "a_texCoord")
+/*VERTEX_TEXCOORD0_INDX*/, "a_texCoord");
 
 
   //set sampler texture to unit 0
@@ -126,6 +132,7 @@ void RenderableComponent::bind_vbos() {
 }
 void RenderableComponent::bind_textures() {
   glActiveTexture(GL_TEXTURE0);
+
   //Bind tiles texture
   glBindTexture(GL_TEXTURE_2D,texture_obj_id);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
