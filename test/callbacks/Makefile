@@ -42,8 +42,8 @@ debug: all
 
 
 
-main: main.o game_window.o input_manager.o keyboard_input_event.o input_event.o
-	$(CXX) -o main main.o game_window.o input_manager.o keyboard_input_event.o input_event.o $(CXXFLAGS) $(SDL_LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) $(X11_LDLIBS)
+main: main.o game_window.o input_manager.o keyboard_input_event.o input_event.o lifeline.o
+	$(CXX) -o main main.o game_window.o input_manager.o keyboard_input_event.o input_event.o lifeline.o $(CXXFLAGS) $(SDL_LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) $(X11_LDLIBS)
 main.o: main.cpp
 	$(CXX) -c -o main.o main.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS)
 
@@ -63,6 +63,9 @@ input_event.o: $(SOURCE_ROOT)/input_event.cpp
 keyboard_input_event.o: $(SOURCE_ROOT)/keyboard_input_event.cpp
 	$(CXX) -c -o keyboard_input_event.o $(SOURCE_ROOT)/keyboard_input_event.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
 
+lifeline.o: $(SOURCE_ROOT)/lifeline.cpp
+	$(CXX) -c -o lifeline.o $(SOURCE_ROOT)/lifeline.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
+
 
 
 clean:
@@ -71,3 +74,4 @@ clean:
 	- rm -f game_window.o
 	- rm -f input_manager.o
 	- rm -f keyboard_input_event.o
+	- rm -f lifeline.o

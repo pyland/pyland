@@ -1,4 +1,4 @@
-#include <set>
+// File included by callback.hpp
 
 #include "callback_registry.hpp"
 

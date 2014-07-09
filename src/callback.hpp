@@ -2,6 +2,7 @@
 #define CALLBACK_H
 
 #include <set>
+#include <functional>
 #include <utility>
 #include <memory>
 

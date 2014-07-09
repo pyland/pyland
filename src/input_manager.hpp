@@ -2,6 +2,7 @@
 #define INPUT_MANAGER_H
 
 #include <set>
+#include <functional>
 
 extern "C" {
 #include <SDL2/SDL.h>
@@ -9,6 +10,7 @@ extern "C" {
 
 #include "callback.hpp"
 #include "callback_registry.hpp"
+#include "lifeline.hpp"
 
 
 
@@ -76,6 +78,18 @@ private:
     /// Keyboard callback registry.
     ///
     CallbackRegistry<void,KeyboardInputEvent> keyboard_callbacks;
+    ///
+    /// Key press callback registry.
+    ///
+    CallbackRegistry<void,KeyboardInputEvent> key_press_callbacks;
+    ///
+    /// Key down callback registry.
+    ///
+    CallbackRegistry<void,KeyboardInputEvent> key_down_callbacks;
+    ///
+    /// Key release callback registry.
+    ///
+    CallbackRegistry<void,KeyboardInputEvent> key_release_callbacks;
 
     ///
     /// Code to be run before handling event loops.
@@ -92,6 +106,11 @@ private:
     /// @param event An SDL_Event holding the event to process.
     ///
     void handle_event(SDL_Event* event);
+
+    ///
+    /// Run all callbacks, based upon current state information.
+    ///
+    void run_callbacks();
 
 public:
     ///
@@ -178,9 +197,58 @@ public:
     ///
     /// Registers a callback function for keyboard input event handling.
     ///
-    /// @param func The function to be called to handle an event.
+    /// @param callback Callback to be used to handle an event.
     ///
-    void register_keyboard_handler(Callback<void, KeyboardInputEvent> func);
+    void register_keyboard_handler(Callback<void, KeyboardInputEvent> callback);
+    ///
+    /// Registers a callback function for keyboard input event handling.
+    ///
+    /// @param func Callback function to be used to handle an event.
+    /// @return A lifeline which keeps the callback active.
+    ///
+    Lifeline register_keyboard_handler(std::function<void(KeyboardInputEvent)> func);
+
+    ///
+    /// Registers a callback function for key presses.
+    ///
+    /// @param callback Callback to be used to handle an event.
+    ///
+    void register_key_press_handler(Callback<void, KeyboardInputEvent> callback);
+    ///
+    /// Registers a callback function for key presses.
+    ///
+    /// @param func Callback function to be used to handle an event.
+    /// @return A lifeline which keeps the callback active.
+    ///
+    Lifeline register_key_press_handler(std::function<void(KeyboardInputEvent)> func);
+
+    ///
+    /// Registers a callback function for key held down.
+    ///
+    /// @param callback Callback to be used to handle an event.
+    ///
+    void register_key_down_handler(Callback<void, KeyboardInputEvent> callback);
+    ///
+    /// Registers a callback function for key held down.
+    ///
+    /// @param func Callback function to be used to handle an event.
+    /// @return A lifeline which keeps the callback active.
+    ///
+    Lifeline register_key_down_handler(std::function<void(KeyboardInputEvent)> func);
+
+    ///
+    /// Registers a callback function for key releases.
+    ///
+    /// @param callback Callback to be used to handle an event.
+    ///
+    void register_key_release_handler(Callback<void, KeyboardInputEvent> callback);
+    ///
+    /// Registers a callback function for key releases.
+    ///
+    /// @param func Callback function to be used to handle an event.
+    /// @return A lifeline which keeps the callback active.
+    ///
+    Lifeline register_key_release_handler(std::function<void(KeyboardInputEvent)> func);
 };
 
 #endif

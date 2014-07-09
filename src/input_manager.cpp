@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <functional>
 
 extern "C" {
 #include <SDL2/SDL.h>
@@ -8,6 +9,7 @@ extern "C" {
 #include "input_manager.hpp"
 #include "game_window.hpp"
 #include "keyboard_input_event.hpp"
+#include "lifeline.hpp"
 
 
 
@@ -51,7 +53,6 @@ void InputManager::handle_event(SDL_Event* event) {
     case SDL_KEYDOWN:
         down_keys.insert(event->key.keysym.scancode);
         pressed_keys.insert(event->key.keysym.scancode);
-        keyboard_callbacks.broadcast(KeyboardInputEvent(this, event->key.keysym.scancode, true, true));
         break;
     case SDL_KEYUP:
         down_keys.erase(event->key.keysym.scancode);
@@ -69,6 +70,22 @@ void InputManager::handle_event(SDL_Event* event) {
         mouse_x = event->motion.x;
         mouse_y = event->motion.y;
         break;
+    }
+}
+
+
+void InputManager::run_callbacks() {
+    for (int key : pressed_keys) {
+        keyboard_callbacks.broadcast(KeyboardInputEvent(this, key, true, true));
+        key_press_callbacks.broadcast(KeyboardInputEvent(this, key, true, true));
+    }
+    for (int key : released_keys) {
+        keyboard_callbacks.broadcast(KeyboardInputEvent(this, key, false, true));
+        key_release_callbacks.broadcast(KeyboardInputEvent(this, key, false, true));
+    }
+    for (int key : down_keys) {
+        keyboard_callbacks.broadcast(KeyboardInputEvent(this, key, true, false));
+        key_down_callbacks.broadcast(KeyboardInputEvent(this, key, true, false));
     }
 }
 
@@ -130,4 +147,51 @@ std::pair<float,float> InputManager::get_mouse_ratio() {
 
 void InputManager::register_keyboard_handler(Callback<void, KeyboardInputEvent> callback) {
     keyboard_callbacks.register_callback(callback);
+}
+
+Lifeline InputManager::register_keyboard_handler(std::function<void(KeyboardInputEvent)> func) {
+    Callback<void, KeyboardInputEvent> callback(func);
+    keyboard_callbacks.register_callback(callback);
+    return Lifeline([&] () {
+            keyboard_callbacks.unregister_callback(callback);
+        });
+}
+
+
+void InputManager::register_key_press_handler(Callback<void, KeyboardInputEvent> callback) {
+    key_press_callbacks.register_callback(callback);
+}
+
+Lifeline InputManager::register_key_press_handler(std::function<void(KeyboardInputEvent)> func) {
+    Callback<void, KeyboardInputEvent> callback(func);
+    key_press_callbacks.register_callback(callback);
+    return Lifeline([&] () {
+            key_press_callbacks.unregister_callback(callback);
+        });
+}
+
+
+void InputManager::register_key_down_handler(Callback<void, KeyboardInputEvent> callback) {
+    key_down_callbacks.register_callback(callback);
+}
+
+Lifeline InputManager::register_key_down_handler(std::function<void(KeyboardInputEvent)> func) {
+    Callback<void, KeyboardInputEvent> callback(func);
+    key_down_callbacks.register_callback(callback);
+    return Lifeline([&] () {
+            key_down_callbacks.unregister_callback(callback);
+        });
+}
+
+
+void InputManager::register_key_release_handler(Callback<void, KeyboardInputEvent> callback) {
+    key_release_callbacks.register_callback(callback);
+}
+
+Lifeline InputManager::register_key_release_handler(std::function<void(KeyboardInputEvent)> func) {
+    Callback<void, KeyboardInputEvent> callback(func);
+    key_release_callbacks.register_callback(callback);
+    return Lifeline([&] () {
+            key_release_callbacks.unregister_callback(callback);
+        });
 }

@@ -16,13 +16,14 @@ extern "C" {
 #include "game_window.hpp"
 #include "input_manager.hpp"
 #include "callback.hpp"
+#include "lifeline.hpp"
 
 #include "keyboard_input_event.hpp"
 
 
 
-void callback_function (KeyboardInputEvent event) {
-    std::cout << ".";
+void callback_function (const char* action, KeyboardInputEvent event) {
+    std::cout << "\t" << event.scan_code << ":" << action;
     std::cout.flush();
 }
 
@@ -38,15 +39,28 @@ int main(int argc, char** argv) {
         glClearColor(0.25f, 0.50f, 1.0f, 1.0f);
         float r, g, b;
         r = g = b = 0.0f;
-        Callback<void, KeyboardInputEvent> callback([&] (KeyboardInputEvent event) {
+        Callback<void, KeyboardInputEvent> release_callback([&] (KeyboardInputEvent event) {
+                callback_function(".#.", event);
+            });
+        Callback<void, KeyboardInputEvent> down_callback([&] (KeyboardInputEvent event) {
+                callback_function("...", event);
+            });
+        Callback<void, KeyboardInputEvent> press_callback([&] (KeyboardInputEvent event) {
                 if (event.key_code == 27) {
-                    callback.unregister_everywhere();
+                    release_callback.unregister_everywhere();
+                    down_callback.unregister_everywhere();
+                    press_callback.unregister_everywhere();
                 }
                 else {
-                    callback_function(event);
+                    callback_function("._.", event);
                 }
             });
-        input_manager->register_keyboard_handler(callback);
+        Lifeline press_lifeline = input_manager->register_key_press_handler([&] (KeyboardInputEvent event) {
+                callback_function("!!!", event);
+            });
+        input_manager->register_key_release_handler(release_callback);
+        input_manager->register_key_down_handler(down_callback);
+        input_manager->register_key_press_handler(press_callback);
         while (window.check_close() == false) {
             // Little basic colour change test.
             r += 0.001;
@@ -65,7 +79,9 @@ int main(int argc, char** argv) {
                 break;
             }
         }
-	callback.unregister_everywhere();
+	release_callback.unregister_everywhere();
+	down_callback.unregister_everywhere();
+	press_callback.unregister_everywhere();
     }
     catch (GameWindow::InitException e) {
         std::cerr << e.what() << std::endl;
