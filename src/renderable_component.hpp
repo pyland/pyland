@@ -44,7 +44,7 @@ class RenderableComponent {
   ///
   /// The buffer holding the vertex data
   ///
-  GLfloat* vertex_data =NULL;
+  GLfloat* vertex_data = nullptr;
 
   ///
   /// The size of the vertex data in bytes
@@ -60,7 +60,7 @@ class RenderableComponent {
   ///
   /// The buffer holding the texture coordinate data
   ///
-  GLfloat* texture_coords_data = NULL;
+  GLfloat* texture_coords_data = nullptr;
 
   ///
   /// The size of the texture coordinate buffer in bytes
@@ -70,7 +70,7 @@ class RenderableComponent {
   ///
   /// The buffer holding the texture data
   /// 
-  char* texture_data =NULL;
+  char* texture_data = nullptr;
 
   ///
   /// The size of the texture buffer in bytes
@@ -116,7 +116,7 @@ class RenderableComponent {
   /// The shader used to render this component. This is a pointer because more than
   /// one RenderableComponent can have the same shader
   ///
-  Shader* shader = NULL;
+  Shader* shader = nullptr;
 
   ///
   /// The current projection matrix

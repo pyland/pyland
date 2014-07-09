@@ -7,12 +7,12 @@ class MapViewer {
   ///
   /// The Map we are currently rendering
   ///
-  Map* map = NULL;
+  Map* map = nullptr;
 
   ///
   /// The reference to the window object in which we render the map.
   ///
-  GameWindow *window = NULL;
+  GameWindow *window = nullptr;
 
 public:
   MapViewer(GameWindow* window);

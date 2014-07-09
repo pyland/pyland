@@ -256,14 +256,14 @@ void Map::generate_map_coords() {
 
 void Map::init_textures() {
     
-    FILE *tex_file1 = NULL;
+    FILE *tex_file1 = nullptr;
     size_t bytes_read = 0;
     size_t image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
 
     tex_buf[0] = new char[image_sz_1];
 
     tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
-    if(tex_file1 == NULL) {
+    if(tex_file1 == nullptr) {
       std::cerr << "ERROR: Couldn't load textures" << std::endl;
     }
 
@@ -314,7 +314,7 @@ bool Map::init_shaders() {
   
   if (!shader->is_loaded()) {
     delete shader;
-    shader = NULL;
+    shader = nullptr;
     std::cerr << "Failed to create the shader" << std::endl;
     return false;
   }

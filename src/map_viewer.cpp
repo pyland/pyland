@@ -6,9 +6,9 @@
 #include <map>
 #include <iostream>
 MapViewer::MapViewer(GameWindow* new_window) {
-  if(new_window == NULL) {
+  if(new_window == nullptr) {
     std::cerr << "INVALID PASSING NULL GameWindow" << std::endl;
-    assert(new_window != NULL);
+    assert(new_window != nullptr);
   }
 
   window = new_window;
@@ -26,7 +26,7 @@ MapViewer::~MapViewer() {
 }
 
 void MapViewer::render_map() {
-  if(map == NULL) {
+  if(map == nullptr) {
     std::cerr << "ERROR: MAP is NULL in MapViewer::render_map" << std::endl;
     return;
   }
@@ -34,13 +34,13 @@ void MapViewer::render_map() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   RenderableComponent* map_render_component = map->get_renderable_component();
-  if(map_render_component == NULL) {
+  if(map_render_component == nullptr) {
     std::cerr << "ERROR: RenderComponent is NULL in MapViewer::render_map" << std::endl;
     return;
   }
 
   Shader* map_shader = map_render_component->get_shader();
-  if(map_shader == NULL) {
+  if(map_shader == nullptr) {
     std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
     return;
   }
@@ -98,7 +98,7 @@ void MapViewer::render_map() {
     character_render_component->bind_shader();
 
     Shader* shader = character_render_component->get_shader();
-    if(shader == NULL) {
+    if(shader == nullptr) {
       std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
       return;
     }

@@ -42,7 +42,7 @@ class Map {
   ///
   /// Cache of the tileset texture data for this Map
   ///
-  GLfloat* tileset_tex_coords = NULL;
+  GLfloat* tileset_tex_coords = nullptr;
 
   /// 
   /// Object instance to contain data needed to render the map
@@ -52,19 +52,19 @@ class Map {
   ///
   /// The vertex data for the map
   ///
-  GLfloat* map_vertex_data = NULL;
+  GLfloat* map_vertex_data = nullptr;
 
   /// 
   /// The texture data for the map
   ///
-  GLfloat* map_tex_data = NULL;
+  GLfloat* map_tex_data = nullptr;
   
   ///
   /// The texture data for the tileset. This is the cached entries
   /// which allow generation of the map texture coordinates for a
   /// particular tile.
   ///
-  GLfloat* tileset_tex_data = NULL;
+  GLfloat* tileset_tex_data = nullptr;
 
   ///
   /// This is the height of the map in tiles
@@ -136,17 +136,17 @@ std::array<std::array<int, 16>, 16> world_data = {{
   ///
   /// The tileset texture coordinates
   ///
-  GLfloat* tileset_text_coords = NULL;
+  GLfloat* tileset_text_coords = nullptr;
 
   ///
   /// Pointer to the map vertex data
   ///
-  GLfloat* map_data = NULL;
+  GLfloat* map_data = nullptr;
 
   ///
   /// Pointer to the map texture coordinate data
   ///
-  GLfloat* map_tex_coords = NULL;
+  GLfloat* map_tex_coords = nullptr;
 
   ///
   /// The function used to generate the cache of tile texture coordinates.

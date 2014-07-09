@@ -39,12 +39,6 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_siz
   glBindBuffer(GL_ARRAY_BUFFER, vbo_vertex_id);
   glBufferData(GL_ARRAY_BUFFER, vertex_data_size, vertex_data, usage);
 
-  //Set the attributes
-  //  glEnableVertexAttribArray(VERTEX_POS_INDX);
-
-  //glVertexAttribPointer(VERTEX_POS_INDX, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-
   //Restore previous program
   glUseProgram(id);
 }
@@ -96,11 +90,6 @@ void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, int
   glBindBuffer(GL_ARRAY_BUFFER, vbo_texture_id);
   glBufferData(GL_ARRAY_BUFFER, texture_coords_data_size, texture_coords_data, usage);
 
-  //Set the attributes
-  // glEnableVertexAttribArray(1 /*VERTEX_TEXCOORD0_INDX */);
-
-  //  glVertexAttribPointer(1 /*VERTEX_TEXCOORD0_INDX */, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-  
   //Release shader
   glUseProgram(id);
 }
@@ -109,11 +98,11 @@ void RenderableComponent::bind_vbos() {
   
   //Bind the vertex data buffer
   glBindBuffer(GL_ARRAY_BUFFER, vbo_vertex_id);
-  glVertexAttribPointer(0 /*VERTEX_POS_INDX*/, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  glVertexAttribPointer(0 /*VERTEX_POS_INDX*/, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(0 /* VERTEX_POS_INDX */);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo_texture_id);
-  glVertexAttribPointer(1 /* VERTEX_TEXCOORD0_INDX */, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+  glVertexAttribPointer(1 /* VERTEX_TEXCOORD0_INDX */, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray( 1 /*VERTEX_TEXCOORD0_INDX*/);
 
   glBindAttribLocation(shader->get_program(), glGetAttribLocation(shader->get_program(), "a_position") /*VERTEX_POS_INDX*/, "a_position");
@@ -149,7 +138,7 @@ void RenderableComponent::release_vbos() {
 
 
 void RenderableComponent::bind_shader() {
-  if(shader == NULL)
+  if(shader == nullptr)
     return;
   glUseProgram(shader->get_program());
 }

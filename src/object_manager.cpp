@@ -13,7 +13,7 @@ bool ObjectManager::is_valid_object_id(int id) {
 
 bool ObjectManager::add_object(Object* new_object) {
  
-  if(new_object == NULL) {
+  if(new_object == nullptr) {
     std::cerr << "Object cannot be NULL in ObjectManager::add_object" << std::endl;
     return false;
   }
@@ -33,12 +33,12 @@ Object* ObjectManager::get_object(int object_id) {
 
   if(!is_valid_object_id(object_id)) {
     std::cerr << "Object id is invalid in ObjectManager::get_object, id: " << object_id << std::endl;
-    return NULL;
+    return nullptr;
   }
   
   //If the object isn't in the database
   if(objects.find(object_id) == objects.end()) {
-    return NULL;
+    return nullptr;
   }
 
   
