@@ -7,7 +7,7 @@
 #include <string>
 #include "api.h"
 #include "debug.h"
-#include "main.h"
+#include "main.hpp"
 
 #define WRAPPING_ENABLED true
 #define TILESIZE_PIXELS 32
