@@ -64,19 +64,23 @@ namespace lock {
     };
 
 
+
     template <class T>
     class Lockable {
         public:
-            Lockable(): items(), lock() {
-                print_debug << "HIHI!" << std::endl;
-            };
-            ~Lockable() {
-                print_debug << "HALP!" << std::endl;
-            };
+            Lockable(): value(), lock() {};
+            Lockable(T value): value(value), lock() {};
+            ~Lockable() {};
 
-            T items;
+            T value;
             std::mutex lock;
     };
+
+    template<class T, class... Args>
+    Lockable<T> make_lockable(Args &&... args) {
+        return Lockable<T>(new T(std::forward<Args>(args)...));
+    };
+
 };
 
 #endif

@@ -80,9 +80,9 @@ class Entity {
         ///
         /// Move entity relative to current location
         ///
-        /// @param by Vec2D representing movement in the axes
+        // /// @param by Vec2D representing movement in the axes
         ///
-        bool move(Vec2D by);
+        bool move(int x, int y);
 
         ///
         /// Prints to standard output the name and position of sprite

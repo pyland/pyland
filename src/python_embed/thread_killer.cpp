@@ -33,19 +33,20 @@ void thread_killer(std::timed_mutex &finish_signal,
 
     while (true) {
         // Nonbloking sleep; allows safe quit
-        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(1000))) {
+        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(10000))) {
             break;
         }
 
         print_debug << "Kill thread woke up" << std::endl;
-        print_debug << "111" << entitythreads.items.size() << std::endl;
+        print_debug << "111" << entitythreads.value.size() << std::endl;
 
         std::lock_guard<std::mutex> lock(entitythreads.lock);
 
         // Go through the available entitythread objects and kill those that
         // haven't had an API call.
-        for (auto &entitythread : entitythreads.items) {
+        for (auto &entitythread : entitythreads.value) {
             if (!entitythread->is_dirty()) {
+                print_debug << "Killing thread!" << std::endl;
                 lock::GIL lock_gil;
                 entitythread->halt_soft();
             }

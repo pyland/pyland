@@ -37,6 +37,7 @@ namespace lock {
 
     ThreadState::~ThreadState() {   
         {
+            print_debug << "ThreadState: Getting GIL and clearing ThreadState" << std::endl;
             GIL lock_gil;
             PyThreadState_Clear(threadstate);
         }

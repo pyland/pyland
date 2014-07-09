@@ -69,20 +69,18 @@ Entity::Entity(Vec2D start, std::string name, int id):
 
 uint64_t Entity::call_number = 0;
 
-bool Entity::move(Vec2D by) {
+bool Entity::move(int x, int y) {
     ++call_number;
-    auto cached_position = position;
-    position += by;
-    position.x = std::min(std::max(position.x,0),480);
-    position.y = std::min(std::max(position.y,0),480);
 
-    int tile_x = position.x;
-    int tile_y = position.y;
+    auto cached_position = position;
+    position.x = std::min(std::max(position.x + x, 0), 480);
+    position.y = std::min(std::max(position.y + y, 0), 480);
+
     TileType tile = std::max({
-        tile_to_type[world_data[(tile_x   ) / 32][(tile_y   ) / 32]],
-        tile_to_type[world_data[(tile_x   ) / 32][(tile_y+31) / 32]],
-        tile_to_type[world_data[(tile_x+31) / 32][(tile_y   ) / 32]],
-        tile_to_type[world_data[(tile_x+31) / 32][(tile_y+31) / 32]],
+        tile_to_type[world_data[(position.x   ) / 32][(position.y   ) / 32]],
+        tile_to_type[world_data[(position.x   ) / 32][(position.y+31) / 32]],
+        tile_to_type[world_data[(position.x+31) / 32][(position.y   ) / 32]],
+        tile_to_type[world_data[(position.x+31) / 32][(position.y+31) / 32]],
     });
 
     if (tile == TileType::UNWALKABLE) {

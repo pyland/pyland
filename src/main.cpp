@@ -965,8 +965,12 @@ int main () {
 
     //   Map map;
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
-    Entity a_thing(Vec2D(0, 0), "", 0);
+
+    Entity a_thing(Vec2D(100, 100), "", 0);
     interpreter.register_entity(a_thing);
+
+    Entity another_thing(Vec2D(100, 100), "", 1);
+    interpreter.register_entity(another_thing);
 
     float dt = get_dt();
     int count = 0;

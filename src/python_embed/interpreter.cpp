@@ -58,20 +58,19 @@ PyThreadState *Interpreter::initialize_python() {
 void Interpreter::register_entity(Entity entity) {
     std::lock_guard<std::mutex> lock(entitythreads.lock);
 
-    entitythreads.items.push_back(std::move(std::make_unique<EntityThread>(this, entity)));
+    entitythreads.value.push_back(std::move(std::make_unique<EntityThread>(this, entity)));
 }
 
 Interpreter::~Interpreter() {
     thread_killer->finish();
     print_debug << "Interpreter: Finished kill thread" << std::endl;
 
-    // Not acutally needed; thread_killer is dead
-    // However, this keeps the guarantees (locked while edited) safe,
-    // so is good practice
-    std::lock_guard<std::mutex> lock(entitythreads.lock);
-
-    for (auto &entitythread : entitythreads.items) {
-        entitythread->finish();
+    {
+        // Lock not acutally needed; thread_killer is dead
+        // However, this keeps the guarantees (locked while edited) safe,
+        // so is good practice
+        std::lock_guard<std::mutex> lock(entitythreads.lock);
+        entitythreads.value.clear();
     }
 
     deinitialize_python();

@@ -15,6 +15,7 @@ class EntityThread {
         /// Spawns a new thread.
         ///
         EntityThread(Interpreter *interpreter, Entity &entity);
+        ~EntityThread();
 
         ///
         /// Get the id of the thread according to CPython.
@@ -50,8 +51,6 @@ class EntityThread {
         ///
         void clean();
 
-        void finish();
-
     private:
         /// 
         /// Reference to API's wrapped Entity.
@@ -81,6 +80,16 @@ class EntityThread {
         /// 
         long thread_id;
         std::future<long> thread_id_future;
+
+        ///
+        ///
+        ///
+        std::shared_ptr<boost::python::api::object> entity_object;
+
+        ///
+        ///
+        ///
+        void finish();
 };
 
 #endif
