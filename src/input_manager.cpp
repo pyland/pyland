@@ -153,7 +153,10 @@ void InputManager::register_keyboard_handler(Callback<void, KeyboardInputEvent> 
 Lifeline InputManager::register_keyboard_handler(std::function<void(KeyboardInputEvent)> func) {
     Callback<void, KeyboardInputEvent> callback(func);
     keyboard_callbacks.register_callback(callback);
-    return Lifeline([&] () {
+    // return Lifeline([callback] () {
+    //         callback.unregister_everywhere();
+    //     },
+    return Lifeline([this, callback] () {
             keyboard_callbacks.unregister_callback(callback);
         },
         callback_controller);
@@ -167,7 +170,7 @@ void InputManager::register_key_press_handler(Callback<void, KeyboardInputEvent>
 Lifeline InputManager::register_key_press_handler(std::function<void(KeyboardInputEvent)> func) {
     Callback<void, KeyboardInputEvent> callback(func);
     key_press_callbacks.register_callback(callback);
-    return Lifeline([&] () {
+    return Lifeline([this, callback] () {
             key_press_callbacks.unregister_callback(callback);
         },
         callback_controller);
@@ -181,7 +184,7 @@ void InputManager::register_key_down_handler(Callback<void, KeyboardInputEvent> 
 Lifeline InputManager::register_key_down_handler(std::function<void(KeyboardInputEvent)> func) {
     Callback<void, KeyboardInputEvent> callback(func);
     key_down_callbacks.register_callback(callback);
-    return Lifeline([&] () {
+    return Lifeline([this, callback] () {
             key_down_callbacks.unregister_callback(callback);
         },
         callback_controller);
@@ -195,7 +198,7 @@ void InputManager::register_key_release_handler(Callback<void, KeyboardInputEven
 Lifeline InputManager::register_key_release_handler(std::function<void(KeyboardInputEvent)> func) {
     Callback<void, KeyboardInputEvent> callback(func);
     key_release_callbacks.register_callback(callback);
-    return Lifeline([&] () {
+    return Lifeline([this, callback] () {
             key_release_callbacks.unregister_callback(callback);
         },
         callback_controller);

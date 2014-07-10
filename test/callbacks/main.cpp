@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
                 callback_function("...", event);
             });
         Callback<void, KeyboardInputEvent> press_callback([&] (KeyboardInputEvent event) {
-                if (event.key_code == 27) {
+                if (event.key_code == SDLK_ESCAPE) {
                     release_callback.unregister_everywhere();
                     down_callback.unregister_everywhere();
                     press_callback.unregister_everywhere();

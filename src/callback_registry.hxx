@@ -10,14 +10,14 @@
 
 
 template <typename Ret, typename... Args>
-void CallbackRegistry<Ret, Args...>::register_callback(Callback<Ret, Args...> callback) {
+void CallbackRegistry<Ret, Args...>::register_callback(const Callback<Ret, Args...> callback) {
     callbacks.insert(callback);
     callback.add_registry(this);
 }
 
 
 template <typename Ret, typename... Args>
-void CallbackRegistry<Ret, Args...>::unregister_callback(Callback<Ret, Args...> callback) {
+void CallbackRegistry<Ret, Args...>::unregister_callback(const Callback<Ret, Args...> callback) {
 #ifdef CALLBACK_REGISTRY_DEBUG
     std::cerr << "Removing callback " << callback.uid << " from registry " << this << std::endl;
 #endif
@@ -27,7 +27,7 @@ void CallbackRegistry<Ret, Args...>::unregister_callback(Callback<Ret, Args...> 
 
 
 template <typename Ret, typename... Args>
-void CallbackRegistry<Ret, Args...>::unregister_callback(Callback<Ret, Args...>* callback) {
+void CallbackRegistry<Ret, Args...>::unregister_callback(const Callback<Ret, Args...>* callback) {
 #ifdef CALLBACK_REGISTRY_DEBUG
     std::cerr << "Removing callback " << callback->uid << " from registry " << this << std::endl;
 #endif
@@ -37,7 +37,7 @@ void CallbackRegistry<Ret, Args...>::unregister_callback(Callback<Ret, Args...>*
 
 
 template <typename Ret, typename... Args>
-void CallbackRegistry<Ret, Args...>::unregister_callback_no_notify(Callback<Ret, Args...> callback) {
+void CallbackRegistry<Ret, Args...>::unregister_callback_no_notify(const Callback<Ret, Args...> callback) {
     callbacks.erase(callback);
 }
 

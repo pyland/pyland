@@ -43,12 +43,12 @@ protected:
     ///
     /// Notify about addition to a registry.
     ///
-    void add_registry(CallbackRegistry<Ret, Args...>* registry);
+    void add_registry(CallbackRegistry<Ret, Args...>* registry) const;
     
     ///
     /// Notify about removal from a registry.
     ///
-    void remove_registry(CallbackRegistry<Ret, Args...>* registry);
+    void remove_registry(CallbackRegistry<Ret, Args...>* registry) const;
 public:
     ///
     /// Construct a callback using the specified function.
@@ -58,7 +58,7 @@ public:
     ///
     /// Completely remove the callback from all associated registries.
     ///
-    void unregister_everywhere();
+    void unregister_everywhere() const;
     
     ///
     /// Calls the callback function.

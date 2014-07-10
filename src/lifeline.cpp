@@ -18,7 +18,6 @@ Lifeline::Lifeline(std::function<void()> func, LifelineController controller):
 
 
 Lifeline::FunctionRunner::FunctionRunner(std::function<void()> func):
-    allowed(nullptr),
     func(func) {
 }
 
@@ -40,6 +39,6 @@ void Lifeline::disable() {
 }
 
 
-std::shared_ptr<LifelineController> Lifeline::FunctionRunner::attach_controller (LifelineController controller) {
+void Lifeline::FunctionRunner::attach_controller (LifelineController controller) {
     allowed = controller.allowed;
 }

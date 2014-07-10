@@ -45,7 +45,7 @@ private:
         /// Specifies a controller, which may be used to disable the
         /// lifeline.
         ///
-        std::shared_ptr<LifelineController> attach_controller (LifelineController controller);
+        void attach_controller (LifelineController controller);
     };
     ///
     /// Shared pointers will run the destructor when the reference count

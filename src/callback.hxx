@@ -30,19 +30,19 @@ bool Callback<Ret, Args...>::operator<(const Callback<Ret, Args...> other) const
 }
 
 template <typename Ret, typename... Args>
-void Callback<Ret, Args...>::add_registry(CallbackRegistry<Ret, Args...>* registry) {
+void Callback<Ret, Args...>::add_registry(CallbackRegistry<Ret, Args...>* registry) const {
     registries->insert(registry);
 }
 
 
 template <typename Ret, typename... Args>
-void Callback<Ret, Args...>::remove_registry(CallbackRegistry<Ret, Args...>* registry) {
+void Callback<Ret, Args...>::remove_registry(CallbackRegistry<Ret, Args...>* registry) const {
     registries->erase(registry);
 }
 
 
 template <typename Ret, typename... Args>
-void Callback<Ret, Args...>::unregister_everywhere() {
+void Callback<Ret, Args...>::unregister_everywhere() const {
     std::set<CallbackRegistry<Ret, Args...>*> registries_safe = *registries;
     for (CallbackRegistry<Ret, Args...>* registry : registries_safe) {
         registry->unregister_callback(this);
