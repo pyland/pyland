@@ -49,11 +49,37 @@ class Vec2D {
 
 class Player {
     private:
+
+        ///
+        /// starting postiton for this sprite, used to reset location when sprite moves
+        ///
         Vec2D start;
+
+        ///
+        /// current sprite position
+        ///
         Vec2D position;
+
+        /// 
+        /// sprite name
+        ///
         std::string name;
+
+        ///
+        /// script holds the wrapped python script
+        ///
         boost::python::api::object script;
+
+        ///
+        /// Opens files and returns string of its content
+        ///
+        /// @para loc string of name of file
+        ///
         std::string read_file(std::string loc);
+
+        /// 
+        /// ID of sprite
+        ///
         int id;
 
     public:
@@ -81,6 +107,11 @@ class Player {
         ///
         bool move(Vec2D by);
 
+        ///
+        /// checks if player can move by the vector by
+        ///
+        /// @param by Vec2D representing movement in the axes
+        ///
         bool walkable(Vec2D by);
 
         ///
