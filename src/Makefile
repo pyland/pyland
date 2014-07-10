@@ -8,7 +8,9 @@ COMPILER ?= g++
 WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
+CXXFLAGS += ${CXX_EXTRA}
 CPPFLAGS ?= -I./ -Ipython_embed/ -MMD -MP -MF dependencies/$*.d
+CPPFLAGS += ${CPP_EXTRA}
 
 LDFLAGS  ?=
 LDLIBS   ?=
@@ -165,7 +167,7 @@ $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependenc
 		$(BOOST_LDFLAGS) $(BOOST_LDLIBS)         \
 		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS) \
 		$(TINYXML_LDFLAGS) $(TINYXML_LDLIBS)     \
-		$(ZLIB_LDFLAGS) $(ZLIB_LDLIBS)	         \
+		$(ZLIB_LDFLAGS) $(ZLIB_LDLIBS)           \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
@@ -181,9 +183,10 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(X11_CPPFLAGS)         \
 		$(PYTHON_CPPFLAGS)      \
 		$(TINYXML_CPPFLAGS)     \
-		$(ZLIB_CPPFLAGS) 	\
-		$(TMXPARSER_CPPFLAGS) 	\
+		$(ZLIB_CPPFLAGS)        \
+		$(TMXPARSER_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS)
+
 
 $(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
 	@echo;\
