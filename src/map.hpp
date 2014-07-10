@@ -112,6 +112,11 @@ class Map {
     int num_objects = 2;
 
     ///
+    ///The number of layers 
+    ///
+    int num_layers = 0;
+
+    ///
     /// The world data
     ///
     std::array<std::array<int, 16>, 16> world_data = {{

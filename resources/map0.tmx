@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="basictiles_2" tilewidth="16" tileheight="16">
+  <image source="../graphics/tiles/assets/basictiles_2.png" width="128" height="240"/>
+  <tile id="26">
+   <properties>
+    <property name="Collidable" value="True"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="100" height="100">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3TsQ3AIBRDQQYg2X/cpE5FE9mgK07U309cY4wLAAAAAABe92ZWbpoFu+qhR2OPqYceehzbJL2vHmf3mJ93N+l9/+jhf/T1SO+qhx566KFHl5Wb9OjqsbP0vnro0Sy9rx56NEvvq4cezdL76gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQ9wAnjzGMQJwAAA==
+  </data>
+ </layer>
+ <layer name="Layer 2" width="100" height="100">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3W2w2AIBAEQLqx/w79NiaGh3hyzBSgsuxdLAW+d0R/ANNF33H0+4nj7oHVzN5bM59v517J404m8bLdQbbzQAbmkj/SS1rpDCvRV3ah6zDOHNXLlFWms7Ta+eyQnfmGfY3Mv90BALAG/239ZFeXgZzqyYoakT3RUd6gR8968pEpGfT2WP/31Xr3utJHbkALO4M/mtVLfQcAAAAAAAAAAAAAAAAAAAAAAACIcwLR29UQQJwAAA==
+  </data>
+ </layer>
+ <layer name="TILES" width="100" height="100">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3UMQrDMAAEQf/D//9n6sNdIF7szIB6cSt0HHC/s74Ar+eN/S/tgaf59b/lX7yPra9s0tMAgG+cDztvV++rx6r31WPV++qx6n31WPW+eqx6Xz1Wva8eq95Xj1Xvq8eq99Vj1fvqsep99Vj1vnqsel89Vr2vHqveV49V76vHqvfVY9X76rHqffUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6H0A7J7sjkCcAAA=
+  </data>
+ </layer>
+</map>

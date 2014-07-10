@@ -41,24 +41,25 @@
 
 #define TILESET_ELEMENT_SIZE 16
 
-
-/**
- * Constructor for Map
- */ 
 Map::Map(const std::string map_src) : renderable_component() {
-    glActiveTexture(GL_TEXTURE0);
+    //Load the map
+    MapLoader map_loader;
+    map_loader->load_map(map_src);
 
+    //Get each layer of the map
+
+    //Get an object list
+    
+
+
+    //Generate the geometry needed for this map
     init_shaders();
     generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
     generate_map_texcoords();
     generate_map_coords();
-    //  generate_sprite_tex_data();
     init_textures();
 }
 
-/** 
- *Destructor for Map
- */
 Map::~Map() {
     // release buffers
     delete[] tex_buf[0];
