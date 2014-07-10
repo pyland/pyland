@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "lifeline.hpp"
+#include "lifeline_controller.hpp"
 
 
 
@@ -10,29 +11,35 @@ Lifeline::Lifeline(std::function<void()> func):
 }
 
 
+Lifeline::Lifeline(std::function<void()> func, LifelineController controller):
+    runner(std::make_shared<FunctionRunner>(func)) {
+        runner->attach_controller(controller);
+}
+
+
 Lifeline::FunctionRunner::FunctionRunner(std::function<void()> func):
-    func(func),
-    enabled(true) {
+    allowed(nullptr),
+    func(func) {
 }
 
 
 Lifeline::FunctionRunner::~FunctionRunner() {
-    if (enabled) {
+    // OK, This line may need some explaining:
+    // enabled is a boolean value which states whether the individual
+    // lifeline / function runner should be run.
+    // allowed is a shared_ptr which if invalid or references a true
+    // value should allow the function to run.
+    if (enabled && (!allowed || *allowed)) {
         func();
     }
 }
 
 
 void Lifeline::disable() {
-    runner->controller->enabled = false;
+    runner->enabled = false;
 }
 
 
-void Lifeline::Controller::disable() {
-    enabled = false;
-}
-
-
-std::shared_pointer<Controller> Lifeline::get_controller () {
-    return runner->controller;
+std::shared_ptr<LifelineController> Lifeline::FunctionRunner::attach_controller (LifelineController controller) {
+    allowed = controller.allowed;
 }

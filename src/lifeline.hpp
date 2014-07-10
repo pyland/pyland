@@ -4,15 +4,14 @@
 #include <functional>
 #include <memory>
 
-
+class LifelineController;
 
 ///
 /// On destruction of all instances, the object runs a given function.
 ///
 class Lifeline {
 private:
-    class Controller;
-    
+    friend class LifelineController;
     ///
     /// There is one instance of this class for all clones of the
     /// container class. Upon destruction, the function is run.
@@ -23,7 +22,17 @@ private:
         ///
         /// Controls whether the function should be run on destruction.
         ///
-        std::shared_ptr<Controller> controller;
+        /// If valid and false, the function will not run. This is
+        /// controlled by a controller object.
+        ///
+        std::shared_ptr<bool> allowed;
+        ///
+        /// Controls whether the function should be run on destruction.
+        ///
+        /// If false, the function will not run. This is for
+        /// individualistic disabling.
+        ///
+        bool enabled;
         ///
         /// Function to run upon full destruction.
         ///
@@ -31,6 +40,12 @@ private:
     public:
         FunctionRunner(std::function<void()> func);
         ~FunctionRunner();
+
+        ///
+        /// Specifies a controller, which may be used to disable the
+        /// lifeline.
+        ///
+        std::shared_ptr<LifelineController> attach_controller (LifelineController controller);
     };
     ///
     /// Shared pointers will run the destructor when the reference count
@@ -38,24 +53,11 @@ private:
     ///
     std::shared_ptr<FunctionRunner> runner;
 public:
-    class Controller {
-    private:
-        ///
-        /// If true, the lifeline should run its function.
-        ///
-        bool enabled;
-    public:
-        ///
-        /// Stops the function being called on total destruction.
-        ///
-        /// Works in a similar way to Lifeline::disable(), but does not
-        /// require storage of a lifeline to use, thus it can be held
-        /// without inhibiting the lifeline.
-        ///
-        void disable();
-    }
-        
     Lifeline(std::function<void()> func);
+    ///
+    /// Construct a lifeline which can be disabled using a controller.
+    ///
+    Lifeline(std::function<void()> func, LifelineController controller);
     
     ///
     /// Stops the function being called on total destruction.
@@ -65,12 +67,6 @@ public:
     /// was no longer accessible.
     ///
     void disable();
-
-    ///
-    /// Returns a shared pointer to a controller, which can disable the
-    /// lifeline.
-    ///
-    std::shared_pointer<Controller> get_controller ();
 };
     
 #endif

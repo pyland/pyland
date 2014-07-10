@@ -10,6 +10,7 @@ extern "C" {
 #include "game_window.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
+#include "lifeline_controller.hpp"
 
 
 
@@ -19,26 +20,26 @@ extern "C" {
 
 
 
-// Shared static member
-// std::map<Uint32,GameWindow*> GameWindow::windows;
+InputManager::InputManager(GameWindow* window):
+    window(window),
 
+    down_keys(std::set<int>()),
+    pressed_keys(std::set<int>()),
+    released_keys(std::set<int>()),
 
-
-InputManager::InputManager(GameWindow* window) {
-    down_keys = std::set<int>();
-    pressed_keys = std::set<int>();
-    released_keys = std::set<int>();
+    mouse_x(0),
+    mouse_y(0),
     
-    down_buttons = std::set<int>();
-    pressed_buttons = std::set<int>();
-    released_buttons = std::set<int>();
+    down_buttons(std::set<int>()),
+    pressed_buttons(std::set<int>()),
+    released_buttons(std::set<int>()),
 
-    this->window = window;
+    callback_controller(LifelineController()) {
 }
 
 
 InputManager::~InputManager() {
-    // Do nothing special.
+    callback_controller.disable();
 }
 
 
@@ -154,7 +155,8 @@ Lifeline InputManager::register_keyboard_handler(std::function<void(KeyboardInpu
     keyboard_callbacks.register_callback(callback);
     return Lifeline([&] () {
             keyboard_callbacks.unregister_callback(callback);
-        });
+        },
+        callback_controller);
 }
 
 
@@ -167,7 +169,8 @@ Lifeline InputManager::register_key_press_handler(std::function<void(KeyboardInp
     key_press_callbacks.register_callback(callback);
     return Lifeline([&] () {
             key_press_callbacks.unregister_callback(callback);
-        });
+        },
+        callback_controller);
 }
 
 
@@ -180,7 +183,8 @@ Lifeline InputManager::register_key_down_handler(std::function<void(KeyboardInpu
     key_down_callbacks.register_callback(callback);
     return Lifeline([&] () {
             key_down_callbacks.unregister_callback(callback);
-        });
+        },
+        callback_controller);
 }
 
 
@@ -193,5 +197,6 @@ Lifeline InputManager::register_key_release_handler(std::function<void(KeyboardI
     key_release_callbacks.register_callback(callback);
     return Lifeline([&] () {
             key_release_callbacks.unregister_callback(callback);
-        });
+        },
+        callback_controller);
 }

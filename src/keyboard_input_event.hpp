@@ -4,6 +4,7 @@
 
 
 #include <set>
+#include <functional>
 
 #include "SDL2/SDL.h"
 

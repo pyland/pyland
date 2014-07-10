@@ -11,6 +11,7 @@ extern "C" {
 #include "callback.hpp"
 #include "callback_registry.hpp"
 #include "lifeline.hpp"
+#include "lifeline_controller.hpp"
 
 
 
@@ -90,6 +91,11 @@ private:
     /// Key release callback registry.
     ///
     CallbackRegistry<void,KeyboardInputEvent> key_release_callbacks;
+
+    ///
+    /// Upon destruction, lifelines should be disabled.
+    ///
+    LifelineController callback_controller;
 
     ///
     /// Code to be run before handling event loops.
