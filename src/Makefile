@@ -56,13 +56,13 @@ PYTHON_CPPFLAGS ?= $(shell python${PYTHON_VERSION}-config --cflags)
 PYTHON_LDFLAGS  ?= $(shell python${PYTHON_VERSION}-config --ldflags)
 PYTHON_LDLIBS   ?= $(shell python${PYTHON_VERSION}-config --libs)
 
-TINYXML_CPPFLAGS ?=
+TINYXML_CPPFLAGS ?= $(shell pkg-config tinyxml --cflags)
 TINYXML_LDFLAGS  ?=
-TINYXML_LDLIBS   ?= tinyxml
+TINYXML_LDLIBS   ?= $(shell pkg-config tinyxml --libs)
 
-ZLIB_CPPFLAGS  ?=
+ZLIB_CPPFLAGS  ?= $(shell pkg-config zlib --cflags)
 ZLIB_LDFLAGS   ?=
-ZLIB_LDLIBS    ?=  zlib1g
+ZLIB_LDLIBS    ?= $(shell pkg-config zlib --libs)
 
 # Prevent warnings about -Wstrict-prototypes not being valid for C++
 PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
