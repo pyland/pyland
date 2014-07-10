@@ -56,6 +56,14 @@ PYTHON_CPPFLAGS ?= $(shell python${PYTHON_VERSION}-config --cflags)
 PYTHON_LDFLAGS  ?= $(shell python${PYTHON_VERSION}-config --ldflags)
 PYTHON_LDLIBS   ?= $(shell python${PYTHON_VERSION}-config --libs)
 
+TINYXML_CPPFLAGS ?=
+TINYXML_LDFLAGS  ?=
+TINYXML_LDLIBS   ?= tinyxml
+
+ZLIB_CPPFLAGS  ?=
+ZLIB_LDFLAGS   ?=
+ZLIB_LDLIBS    ?=  zlib1g
+
 # Prevent warnings about -Wstrict-prototypes not being valid for C++
 PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 
@@ -142,6 +150,8 @@ $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) | dependencies
 		$(SDL_LDFLAGS) $(SDL_LDLIBS)           \
 		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS)     \
 		$(BOOST_LDFLAGS) $(BOOST_LDLIBS)       \
+		$(TINYXML_LDFLAGS) $(TINYXML_LDLIBS)   \
+		$(ZLIB_LDFLAGS) $(ZLIB_LDLIBS)	       \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
@@ -150,6 +160,8 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(SDL_CPPFLAGS)         \
 		$(GRAPHICS_CPPFLAGS)    \
 		$(X11_CPPFLAGS)         \
+		$(TINYXML_CPPFLAGS)     \
+		$(ZLIB_CPPFLAGS) 	\
 		$(CXXFLAGS) $(CPPFLAGS)
 	@echo
 
