@@ -1,7 +1,7 @@
 NULL=
 
 RM ?= - rm -f
-RMDIR ?= rmdir --ignore-fail-on-non-empty
+RMDIR ?= - rmdir
 
 COMPILER ?= g++
 
@@ -60,9 +60,13 @@ TINYXML_CPPFLAGS ?= $(shell pkg-config tinyxml --cflags)
 TINYXML_LDFLAGS  ?=
 TINYXML_LDLIBS   ?= $(shell pkg-config tinyxml --libs)
 
-ZLIB_CPPFLAGS  ?= $(shell pkg-config zlib --cflags)
-ZLIB_LDFLAGS   ?=
-ZLIB_LDLIBS    ?= $(shell pkg-config zlib --libs)
+ZLIB_CPPFLAGS ?= $(shell pkg-config zlib --cflags)
+ZLIB_LDFLAGS  ?=
+ZLIB_LDLIBS   ?= $(shell pkg-config zlib --libs)
+
+TMXPARSER_CPPFLAGS ?= -I./tmx-parser/TmxParser
+TMXPARSER_LDFLAGS  ?= -L./tmx-parser
+TMXPARSER_LDLIBS   ?= -ltmxparser
 
 # Prevent warnings about -Wstrict-prototypes not being valid for C++
 PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
@@ -95,6 +99,7 @@ BASE_OBJS = \
 	input_manager.o \
 	debug.o \
 	map_viewer.o \
+	map_loader.o \
 	map.o \
 	engine_api.o \
 	object.o \
@@ -135,23 +140,28 @@ debug: CXXFLAGS +=  -O0
 debug: CPPFLAGS += -DDEBUG
 debug: all
 
+tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
+	@echo; echo "${bold}[ Compiling tmx-parser library ]${normal}"; echo
+	$(MAKE) -C tmx-parser -f Makefile.linux
+
 dependencies:
 	@mkdir dependencies
 
 dependencies/python_embed: | dependencies
 	@mkdir dependencies/python_embed
 
-$(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) | dependencies
+$(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
 	@echo; echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"; echo
 	$(COMPILER) -o $@ \
-		$(BASE_OBJS) $(PYTHON_OBJS)            \
-		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
-		$(X11_LDFLAGS) $(X11_LDLIBS)           \
-		$(SDL_LDFLAGS) $(SDL_LDLIBS)           \
-		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS)     \
-		$(BOOST_LDFLAGS) $(BOOST_LDLIBS)       \
-		$(TINYXML_LDFLAGS) $(TINYXML_LDLIBS)   \
-		$(ZLIB_LDFLAGS) $(ZLIB_LDLIBS)	       \
+		$(BASE_OBJS) $(PYTHON_OBJS)              \
+		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS)   \
+		$(X11_LDFLAGS) $(X11_LDLIBS)             \
+		$(SDL_LDFLAGS) $(SDL_LDLIBS)             \
+		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS)       \
+		$(BOOST_LDFLAGS) $(BOOST_LDLIBS)         \
+		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS) \
+		$(TINYXML_LDFLAGS) $(TINYXML_LDLIBS)     \
+		$(ZLIB_LDFLAGS) $(ZLIB_LDLIBS)	         \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
@@ -162,6 +172,7 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(X11_CPPFLAGS)         \
 		$(TINYXML_CPPFLAGS)     \
 		$(ZLIB_CPPFLAGS) 	\
+		$(TMXPARSER_CPPFLAGS) 	\
 		$(CXXFLAGS) $(CPPFLAGS)
 	@echo
 
@@ -188,8 +199,12 @@ clean:
 	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
 	$(RMDIR) dependencies/python_embed dependencies
 
+veryclean: clean
+	$(MAKE) -C tmx-parser -f Makefile.linux clean
+
 -include ${HEADER_DEPENDS}
 
-.PHONY : all
-.PHONY : clean
-.PHONY : debug
+.PHONY: all
+.PHONY: clean
+.PHONY: debug
+.PHONY: veryclean
