@@ -2,8 +2,8 @@
 #define THREAD_KILLER_H
 
 #include <mutex>
-#include "entitythread.h"
-#include "locks.h"
+#include "entitythread.hpp"
+#include "locks.hpp"
 
 
 class ThreadKiller {

@@ -3,7 +3,7 @@
 
 #include <boost/python.hpp>
 #include <mutex>
-#include "print_debug.h"
+#include "print_debug.hpp"
 
 namespace lock {
     ///
@@ -25,8 +25,6 @@ namespace lock {
 
         private:
             GIL(const GIL&);
-            PyGILState_STATE gilstate;
-            static std::mutex global_lock;
             std::string name;
     };
 

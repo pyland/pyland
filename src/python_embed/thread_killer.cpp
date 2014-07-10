@@ -3,10 +3,10 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-#include "entitythread.h"
-#include "locks.h"
-#include "print_debug.h"
-#include "thread_killer.h"
+#include "entitythread.hpp"
+#include "locks.hpp"
+#include "print_debug.hpp"
+#include "thread_killer.hpp"
 
 
 bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {

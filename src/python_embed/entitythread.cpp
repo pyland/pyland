@@ -2,10 +2,13 @@
 #include <boost/python.hpp>
 #include <future>
 #include <thread>
-#include "interpreter.h"
-#include "locks.h"
-#include "make_unique.h"
-#include "print_debug.h"
+#include "entitythread.hpp"
+#include "interpreter.hpp"
+#include "locks.hpp"
+#include "make_unique.hpp"
+#include "print_debug.hpp"
+
+// For PyThread_get_thread_ident
 #include "pythread.h"
 
 namespace py = boost::python;
@@ -17,7 +20,6 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     print_debug << "run_entity: Starting" << std::endl;
 
-    lock::GIL lock_gil("run_entity");
     lock::ThreadState threadstate(main_interpreter_state);
     lock::ThreadGIL lock_thread(threadstate);
 
@@ -25,7 +27,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     try {
         thread_id_promise.set_value(PyThread_get_thread_ident());
-        
+
         auto bootstrapper_module = Interpreter::import_file(bootstrapper_file);
         print_debug << "run_entity: Got bootstrapper" << std::endl;
         bootstrapper_module.attr("start")(*entity_object);
@@ -102,7 +104,7 @@ void EntityThread::finish() {
 EntityThread::~EntityThread() {
     finish();
     print_debug << "EntityThread destroyed" << std::endl;
-    
+
     lock::GIL lock_gil("EntityThread::~EntityThread");
 
     if (!entity_object.unique()) {

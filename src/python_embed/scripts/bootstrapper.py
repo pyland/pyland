@@ -17,7 +17,7 @@ def run(entity):
     print("Running with entity", entity)
 	
     for _ in range(5):
-        time.sleep(0.001)
+        time.sleep(0.1)
 
         import random
         entity.move(random.randint(-1, 1), random.randint(-1, 1))

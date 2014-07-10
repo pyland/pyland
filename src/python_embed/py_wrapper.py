@@ -1,8 +1,9 @@
 import time
 import inspect
 
+# functing wrapping to add delay & check number of arguments
+# TODO: extend this for type checking and providing documentation
 def fun_wrapper (func, delay, args, kwargs):
-	print (func.__name__)
 	if delay:
 		time.sleep(0.1)
 	if len(args) == 0:
@@ -10,6 +11,7 @@ def fun_wrapper (func, delay, args, kwargs):
 	elif len(args) == 1:
 		return func (args[0])
 
+# python API as exposed to the the user
 
 def move(*args, **kwargs):
     return fun_wrapper(player.move, True, args, kwargs)

@@ -14,9 +14,9 @@ Shader::Shader(const std::string vs, const std::string fs) {
     program_obj = glCreateProgram();
     
     if(program_obj == 0) {
-      std::cerr << "ERROR FLAG: " << glGetError();
-      std::cerr << "ERROR: SHADER PROGRAM CREATION. Could not create program object." << std::endl;
-      return;
+        std::cerr << "ERROR FLAG: " << glGetError();
+        std::cerr << "ERROR: SHADER PROGRAM CREATION. Could not create program object." << std::endl;
+        return;
     }
 
     glAttachShader(program_obj, vertex_shader);
@@ -52,9 +52,9 @@ Shader::Shader(const std::string vs, const std::string fs) {
 
 
 Shader::~Shader() {
-  glDeleteShader(fragment_shader);
-  glDeleteShader(vertex_shader);
-  glDeleteProgram(program_obj);  
+    glDeleteShader(fragment_shader);
+    glDeleteShader(vertex_shader);
+    glDeleteProgram(program_obj);  
 }
 
 GLuint Shader::load_shader(GLenum type, const std::string src) {

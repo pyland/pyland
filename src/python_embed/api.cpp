@@ -3,9 +3,9 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "api.h"
+#include "api.hpp"
 #include "main.hpp"
-#include "print_debug.h"
+#include "print_debug.hpp"
 
 #define WRAPPING_ENABLED true
 #define TILESIZE_PIXELS 32

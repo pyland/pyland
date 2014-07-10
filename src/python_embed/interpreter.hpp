@@ -4,7 +4,7 @@
 #include <atomic>
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
-#include "thread_killer.h"
+#include "thread_killer.hpp"
 
 
 class Interpreter {

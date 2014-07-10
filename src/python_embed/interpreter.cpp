@@ -4,13 +4,14 @@
 #include <boost/python.hpp>
 #include <map>
 #include <mutex>
-#include "api.h"
-#include "entitythread.h"
-#include "interpreter.h"
-#include "locks.h"
-#include "make_unique.h"
-#include "print_debug.h"
-#include "thread_killer.h"
+#include <string>
+#include "api.hpp"
+#include "entitythread.hpp"
+#include "interpreter.hpp"
+#include "locks.hpp"
+#include "make_unique.hpp"
+#include "print_debug.hpp"
+#include "thread_killer.hpp"
 
 std::atomic_flag Interpreter::initialized = ATOMIC_FLAG_INIT;
 
