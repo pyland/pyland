@@ -2,8 +2,8 @@
  * Defines the API used for the C++/Python integration
  */
 
-#ifndef API_H
-#define API_H
+#ifndef ENGINE_API_H
+#define ENGINE_API_H
 #include <array>
 
 ///

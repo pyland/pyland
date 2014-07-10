@@ -26,6 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 // A rotating cube rendered with OpenGL|ES. Three images used as textures on the cube faces.
+
+#include <boost/filesystem.hpp>
     
 #include <cstdio>
 #include <cstdlib>
@@ -53,15 +55,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <map>
 
+#include "character.hpp"
+#include "engine_api.hpp"
 #include "game_window.hpp"
 #include "interpreter.h"
-#include "engine_api.hpp"
 #include "main.hpp"
-#include "map_viewer.hpp"
 #include "map.hpp"
-#include "character.hpp"
-
-
+#include "map_viewer.hpp"
+#include "print_debug.h"
 
 #ifdef USE_GLES
 
@@ -227,10 +228,19 @@ int main (int argc, char* argv[]) {
   (*characters)[1] = character1;
   (*characters)[2] = character2;
 
+
+  //   Map map;
+  Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
+
+  Entity a_thing(Vec2D(14, 14), "", 0);
+  interpreter.register_entity(a_thing);
+
+  Entity another_thing(Vec2D(1, 1), "", 1);
+  interpreter.register_entity(another_thing);
+  
   
   MapViewer map_viewer(&window);
   map_viewer.set_map(&map);
-  std::thread mythread(run_all);
 
   float dt = get_dt();
   int count = 0;
@@ -244,15 +254,6 @@ int main (int argc, char* argv[]) {
     GameWindow::update();
   }
 
-  //
-  // Typically one would do
-  //     mythread.join();
-  // but this hangs due to the extra, unkilled threads.
-  //
-  // As a hack, just let it crash.
-  //
-    // throw std::runtime_error("cannot close nicely");
 
-    return 1;
-
+  return 0;
 }

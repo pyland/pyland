@@ -1,3 +1,6 @@
+#ifndef API_H
+#define API_H
+
 #include <boost/python.hpp>
 #include <string>
 
@@ -47,7 +50,7 @@ class Vec2D {
         std::string to_string();
 };
 
-class Player {
+class Entity {
     private:
         Vec2D start;
         Vec2D position;
@@ -66,20 +69,20 @@ class Player {
         static uint64_t call_number;
 
         ///
-        /// Player constructor
+        /// Entity constructor
         ///
         /// @param start Inital position
-        /// @param name  Name of player  
-        /// @return New instance of Player
+        /// @param name  Name of entity  
+        /// @return New instance of Entity
         ///
-        Player(Vec2D start, std::string name, int id);
+        Entity(Vec2D start, std::string name, int id);
 
         ///
-        /// Move player relative to current location
+        /// Move entity relative to current location
         ///
-        /// @param by Vec2D representing movement in the axes
+        // /// @param by Vec2D representing movement in the axes
         ///
-        bool move(Vec2D by);
+        bool move(int x, int y);
 
         bool walkable(Vec2D by);
 
@@ -89,14 +92,14 @@ class Player {
         void monologue();
 
         ///
-        /// Runs the Player's active script
+        /// Runs the Entity's active script
         ///
         /// @see give_script()
         ///
         void run_script();
 
         ///
-        /// Sets player's Python script from a hardcoded file.
+        /// Sets entity's Python script from a hardcoded file.
         /// Takes a namespace to evaluate it in.
         /// 
         /// @param main_namespace The namespace to evaluate the file in.
@@ -104,3 +107,5 @@ class Player {
         ///
         void give_script(boost::python::api::object in);
 };
+
+#endif

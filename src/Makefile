@@ -1,7 +1,7 @@
 NULL=
 
 RM ?= - rm -f
-RMDIR ?= rmdir --ignore-fail-on-non-empty
+RMDIR ?= - rmdir --ignore-fail-on-non-empty
 
 COMPILER ?= g++
 
@@ -82,28 +82,28 @@ endif
 EXECUTABLE = main.bin
 
 BASE_OBJS = \
-	main.o          \
-	game_window.o   \
-	input_manager.o \
-	debug.o \
-	map_viewer.o \
-	map.o \
-	engine_api.o \
-	object.o \
-	renderable_component.o \
+	character.o      \
+	engine_api.o     \
+	game_window.o    \
+	input_manager.o  \
+	main.o           \
+	map.o            \
+	map_viewer.o     \
+	object.o         \
 	object_manager.o \
-	shader.o \
-	character.o
+	print_debug.o    \
+	renderable_component.o \
+	shader.o
 
 PYTHON_OBJS = \
-	python_embed/interpreter.o       \
-	python_embed/wrapper_functions.o \
-	python_embed/playerthread.o      \
-	python_embed/api.o               \
-	python_embed/locks.o
+	python_embed/api.o           \
+	python_embed/interpreter.o   \
+	python_embed/locks.o         \
+	python_embed/entitythread.o  \
+	python_embed/thread_killer.o
 
 PYTHON_SHARED_OBJS = \
-	python_embed/wrapper_functions.so	
+	python_embed/wrapper_functions.so
 
 PYTHON_SHARED_OBJS_DEPENDS = \
 	python_embed/api.o	
@@ -134,7 +134,10 @@ dependencies/python_embed: | dependencies
 	@mkdir dependencies/python_embed
 
 $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) | dependencies
-	@echo; echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"; echo
+	@echo;\
+	 echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}";\
+	 echo
+
 	$(COMPILER) -o $@ \
 		$(BASE_OBJS) $(PYTHON_OBJS)            \
 		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) \
@@ -145,22 +148,34 @@ $(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) | dependencies
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
-	@echo; echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
+	@echo;\
+	 echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
+	 echo
+
+	# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
+	# This should not cause a large slowdown unless actually included in many files.
 	$(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(GRAPHICS_CPPFLAGS)    \
 		$(X11_CPPFLAGS)         \
+		$(PYTHON_CPPFLAGS)      \
 		$(CXXFLAGS) $(CPPFLAGS)
-	@echo
 
 $(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
-	@echo; echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
+	@echo;\
+	 echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
+	 echo
+
 	$(COMPILER) -c $*.cpp -o $*.o \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
-$(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
-	@echo; echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"; echo
+python_embed/wrapper_functions.so: python_embed/api.o
+$(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed
+	@echo;\
+	 echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
+	 echo
+
 	$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
@@ -168,7 +183,9 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies
 		-MF dependencies/$*.sd
 
 debug:
-	@echo; echo "${bold}${red}Complied in debug${normal}"; echo
+	@echo;\
+	 echo "${bold}${red}Complied in debug${normal}";\
+	 echo
 
 
 
@@ -178,6 +195,15 @@ clean:
 
 -include ${HEADER_DEPENDS}
 
+
+### Settings ###
+
 .PHONY : all
 .PHONY : clean
 .PHONY : debug
+
+# This is almost always what you want make to do, but it is not historical practice;
+# so for compatibility, you must explicitly request it.
+#
+# http://www.gnu.org/software/make/manual/make.html#Errors
+.DELETE_ON_ERROR:
