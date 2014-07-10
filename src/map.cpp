@@ -46,14 +46,14 @@
  * Constructor for Map
  */ 
 Map::Map(const std::string map_src) : renderable_component() {
-  glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);
 
-  init_shaders();
-  generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-  generate_map_texcoords();
-  generate_map_coords();
-  //  generate_sprite_tex_data();
-  init_textures();
+    init_shaders();
+    generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+    generate_map_texcoords();
+    generate_map_coords();
+    //  generate_sprite_tex_data();
+    init_textures();
 }
 
 /** 
@@ -249,7 +249,7 @@ void Map::generate_map_coords() {
     printf("DONE.");
 #endif
 
-   //Set this data in the renderable component
+    //Set this data in the renderable component
     renderable_component.set_vertex_data(map_data, data_size, false);
     renderable_component.set_num_vertices_render(6*map_width*map_height);
 }
@@ -264,7 +264,7 @@ void Map::init_textures() {
 
     tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
     if(tex_file1 == nullptr) {
-      std::cerr << "ERROR: Couldn't load textures" << std::endl;
+        std::cerr << "ERROR: Couldn't load textures" << std::endl;
     }
 
     if (tex_file1 && tex_buf[0]) {
@@ -281,48 +281,48 @@ void Map::init_textures() {
  */ 
 bool Map::init_shaders() {
 #ifdef USE_GLES
-  //read in the shaders
-  std::ifstream vertex_shader_src("vert_shader.glesv");
-  std::ifstream fragment_shader_src("frag_shader.glesf");
+    //read in the shaders
+    std::ifstream vertex_shader_src("vert_shader.glesv");
+    std::ifstream fragment_shader_src("frag_shader.glesf");
 #endif
 #ifdef USE_GL
-  //read in the shaders
-  std::ifstream vertex_shader_src("vert_shader.glv");
-  std::ifstream fragment_shader_src("frag_shader.glf");
+    //read in the shaders
+    std::ifstream vertex_shader_src("vert_shader.glv");
+    std::ifstream fragment_shader_src("frag_shader.glf");
 #endif
 
-  if (!vertex_shader_src.good()){
-    std::cerr << "Failed to load vertex shader" << std::endl;
-    return false;
-  }
+    if (!vertex_shader_src.good()){
+        std::cerr << "Failed to load vertex shader" << std::endl;
+        return false;
+    }
     
-  if (!fragment_shader_src.good()) {
-    std::cerr << "Failed to load fragment shader" << std::endl;
-    return false;
-  }
+    if (!fragment_shader_src.good()) {
+        std::cerr << "Failed to load fragment shader" << std::endl;
+        return false;
+    }
 
-  std::string vert_src, frag_src, line;
-  while (getline(vertex_shader_src, line)) {
-    vert_src += line + "\n";
-  }
+    std::string vert_src, frag_src, line;
+    while (getline(vertex_shader_src, line)) {
+        vert_src += line + "\n";
+    }
 
-  while (getline(fragment_shader_src, line)) {
-    frag_src += line + "\n";
-  }
+    while (getline(fragment_shader_src, line)) {
+        frag_src += line + "\n";
+    }
 
-  Shader* shader = new Shader(vert_src, frag_src);
+    Shader* shader = new Shader(vert_src, frag_src);
   
-  if (!shader->is_loaded()) {
-    delete shader;
-    shader = nullptr;
-    std::cerr << "Failed to create the shader" << std::endl;
-    return false;
-  }
+    if (!shader->is_loaded()) {
+        delete shader;
+        shader = nullptr;
+        std::cerr << "Failed to create the shader" << std::endl;
+        return false;
+    }
 
-  //Set the shader
-  renderable_component.set_shader(shader);
+    //Set the shader
+    renderable_component.set_shader(shader);
 
-  return true;
+    return true;
 
 }
 
