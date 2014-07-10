@@ -25,3 +25,4 @@
 src/python_embed/interpreter
 *main.bin
 *__pycache__/
+src/dependencies
