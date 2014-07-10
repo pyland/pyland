@@ -18,6 +18,7 @@ Lifeline::Lifeline(std::function<void()> func, LifelineController controller):
 
 
 Lifeline::FunctionRunner::FunctionRunner(std::function<void()> func):
+    enabled(true),
     func(func) {
 }
 

@@ -55,9 +55,11 @@ int main(int argc, char** argv) {
                     callback_function("._.", event);
                 }
             });
-        Lifeline press_lifeline = input_manager->register_key_press_handler([&] (KeyboardInputEvent event) {
-                callback_function("!!!", event);
-            });
+        {
+            Lifeline press_lifeline = input_manager->register_key_press_handler([&] (KeyboardInputEvent event) {
+                    callback_function("!!!", event);
+                });
+        }
         input_manager->register_key_release_handler(release_callback);
         input_manager->register_key_down_handler(down_callback);
         input_manager->register_key_press_handler(press_callback);
