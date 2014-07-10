@@ -2,7 +2,6 @@ import time
 import inspect
 
 def fun_wrapper (func, delay, args, kwargs):
-	print (func.__name__)
 	if delay:
 		time.sleep(0.1)
 	if len(args) == 0:
