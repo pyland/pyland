@@ -212,7 +212,7 @@ int main (int argc, char* argv[]) {
     GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
     window.use_context();
 
-    Map map("");
+    Map map("../resources/map0.tmx");
 
     characters = map.get_characters_map();
 

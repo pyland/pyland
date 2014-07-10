@@ -1,10 +1,11 @@
-#include "map.hpp"
 #include "game_window.hpp"
-
+#include "map.hpp"
+#include "map_loader.hpp"
 
 #include <string>
 #include <iostream>
 #include <fstream>
+
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -44,7 +45,7 @@
 Map::Map(const std::string map_src) : renderable_component() {
     //Load the map
     MapLoader map_loader;
-    map_loader->load_map(map_src);
+    map_loader.load_map(map_src);
 
     //Get each layer of the map
 

@@ -1,10 +1,11 @@
 #ifndef MAP_LOADER_HPP
 #define MAP_LOADER_HPP
 
-#include <array>
+
 #include <memory>
 #include <string>
 #include <Tmx.h>
+#include <vector>
 
 ///
 /// Class to load a map from a TMX file
@@ -29,12 +30,8 @@ class MapLoader {
     /// Load tilesets from the TMX map
     ///
     void load_tileset();
-    
-    ///
-    /// Array of layers
-    ///
-    std::array<smart_ptr<Layer>> layers;
-    
+
+
     ///
     /// A layer on the map
     ///
@@ -52,15 +49,43 @@ class MapLoader {
         ///
         /// The layer data
         ///
-        shared_ptr<std::array<int>> layer;
+        std::vector<int> layer;
     public:
         Layer(int _width, int _height) : width(_width), height(_height) {}
-        ~Layer();
-    }
+    };
+
+    ///
+    /// An object in the map, different from an Object in the engine
+    ///
+    class MapObject {
+        std::string name = "";
+        int x_position = 0;
+        int y_position = 0;
+
+    public:
+        std::string get_name() { return name; }
+        void set_name(std::string _name) { name = _name; }
+        
+        int get_x_position() { return x_position; }
+        void set_x_position(int x_pos) { x_position = x_pos; }
+        
+        int get_y_positioni() { return y_position; }
+        void set_y_position(int y_pos) { y_position = y_pos; }
+    };
+    
+    ///
+    /// Array of layers
+    ///
+    std::vector<std::shared_ptr<Layer>> layers;
+    
+    ///
+    /// Array of objects
+    ///
+    std::vector<std::shared_ptr<MapObject>> objects;    
  public:
 
-     ///
-     /// Load the TMX map from the source file
+    ///
+    /// Load the TMX map from the source file
     /// 
     bool load_map(const std::string source);
 

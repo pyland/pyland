@@ -1,6 +1,6 @@
 #include "map_loader.hpp"
 
-#include <array>
+
 #include <iostream>
 #include <map>
 #include <memory>
@@ -28,6 +28,10 @@ bool MapLoader::load_map(const std::string source) {
 
     int map_width = map.GetWidth();
     int map_height = map.GetHeight();
+
+    load_objects();
+    load_layers();
+    load_tileset();
     return true;
 }
 
@@ -39,23 +43,25 @@ void MapLoader::load_layers() {
         int num_tiles_y = layer->GetHeight();
         
         //Generate a new layer
-        shared_ptr<Layer> layer_ptr = make_shared<Layer>(num_tiles_x, num_tiles_y);
-        shared_ptr<int> layer_tiles_ptr = make_shared<std::array<int>>
+        std::shared_ptr<Layer> layer_ptr = std::make_shared<Layer>(num_tiles_x, num_tiles_y);
+        layers.push_back(layer_ptr);
         
-
+        //Get the tiles
         for (int y = 0; y < num_tiles_y; ++y) {
             for (int x = 0; x < num_tiles_x; ++x) {
                 //Get the tile identifier
                 int tile_id = layer->GetTileId(x, y);
+                
+                //Add the tile
+                //                layer_ptr.push_back(tile_id);
 
-                std::cout <<"TILEID: " << tile_id << std::endl;
+
+                //                std::cout <<"TILEID: " << tile_id << std::endl;
 
 
                 //Gets the tileset to use for this tile
                 //TODO: We only support one tileset at the moment
                 const Tmx::Tileset* tileset = map.FindTileset(tile_id);
-
-
             } 
         }
     }
@@ -68,6 +74,7 @@ void MapLoader::load_objects() {
         
         //Get all the objects in this object group
         for (int j = 0; j < object_group->GetNumObjects(); ++j) {
+
             //Get an object
             const Tmx::Object* object = object_group->GetObject(j);
             
@@ -78,6 +85,15 @@ void MapLoader::load_objects() {
             int object_y = object->GetY();
             
             std::cout << "OBJECT : " << object->GetName() << std::endl;
+            
+            //Build a MapObject
+            std::shared_ptr<MapObject> map_object = std::make_shared<MapObject>();
+            map_object->set_name(name);
+            map_object->set_x_position(object_x);
+            map_object->set_y_position(object_y);
+
+            //Add it to the objects list
+            objects.push_back(map_object);
         }
     }
 }
@@ -103,23 +119,25 @@ void MapLoader::load_tileset() {
         //We use the tileset properties to define collidable tiles for our collision 
         //detection
         if (tileset->GetTiles().size() > 0) {
-            //Get a tile from the tileset
-            const Tmx::Tile* tile = *(tileset->GetTiles().begin());
-            
-            //Get the properties
-            std::map<std::string, std::string> list = tile->GetProperties().GetList();
-            for (auto iter = list.begin(); iter != list.end(); ++iter){
-                if (iter->first.c_str() == "Collidable") {
-                    if (iter->second.c_str() == "True") {
-                        std::cout << "COLLIDABLE : " << std::endl;
-                    }
+            auto tile_list = tileset->GetTiles();
+            for (auto tile_iter = tile_list.begin(); tile_iter != tile_list.end(); ++tile_iter) {
+                //Get a tile from the tileset
+                const Tmx::Tile* tile = *tile_iter;
+ 
+
+               //Get the properties
+                std::map<std::string, std::string> list = tile->GetProperties().GetList();
+                for (auto iter = list.begin(); iter != list.end(); ++iter){
+                    //                if (iter->first.c_str() == "Collidable") {
+                    //                    if (iter->second.c_str() == "True") {
+                    std::cout << "PROPERTY " << iter->first.c_str() << " " << iter->second.c_str() << std::endl;
+                    //  }
+                    //                }
                 }
+
             }
-            
+             
+
         }
-
-
     }
-
-    
 }
