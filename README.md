@@ -9,7 +9,7 @@ Raspberry Pi Summer Project
 
 ```bash
 git clone https://github.com/heidi-ann/zygote
-sudo apt-get install libx11-dev gdebi
+sudo apt-get install libx11-dev gdebi libtinyxml-dev
 wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2_2.0.3-1_armhf.deb
 sudo gdebi libsdl2_2.0.3-1_armhf.deb 
 cd zygote/src
