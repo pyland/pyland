@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 #include "api.hpp"
-#include "debug.h"
+#include "debug.hpp"
 #include "main.hpp"
 
 #define WRAPPING_ENABLED true
