@@ -1,7 +1,7 @@
 #include <string>
 #include <boost/python.hpp>
 #include <iostream>
-#include "api.h"
+#include "api.hpp"
 
 namespace py = boost::python;
 

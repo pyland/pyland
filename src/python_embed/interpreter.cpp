@@ -6,11 +6,11 @@
 #include <mutex>
 #include <string>
 #include <thread>
-#include "api.h"
+#include "api.hpp"
 #include "debug.h"
-#include "locks.h"
-#include "make_unique.h"
-#include "playerthread.h"
+#include "locks.hpp"
+#include "make_unique.hpp"
+#include "playerthread.hpp"
 
 namespace py = boost::python;
 PyInterpreterState *main_interpreter_state;

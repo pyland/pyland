@@ -1,6 +1,6 @@
 #include <boost/python.hpp>
 #include "debug.h"
-#include "locks.h"
+#include "locks.hpp"
 
 int GIL::i = 0;
 

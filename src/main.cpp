@@ -54,7 +54,7 @@
 #include <map>
 
 #include "game_window.hpp"
-#include "interpreter.h"
+#include "interpreter.hpp"
 #include "engine_api.hpp"
 #include "main.hpp"
 #include "map_viewer.hpp"
