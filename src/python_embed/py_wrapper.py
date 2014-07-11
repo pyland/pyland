@@ -10,9 +10,7 @@ def fun_wrapper (func, delay, args, kwargs):
     if len(args) == 0:
         return func
     elif len(args) == 1:
-        return func (args[0])
-    elif len(args) == 2:
-        return func (args[0],args[1])
+        return func (*args[0])
 
 # python API as exposed to the the user
 
