@@ -3,8 +3,9 @@
 
 
 
-#include <set>
 #include <functional>
+#include <map>
+#include <set>
 
 #include "SDL2/SDL.h"
 
@@ -21,12 +22,13 @@ struct KeyboardInputEvent : public InputEvent {
 public:
     typedef std::function<void(KeyboardInputEvent)> Handler;
     
-    KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed, bool repeated);
+    KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed, bool typed);
     int scan_code;
     int key_code;
+    int character;
     bool down;
     bool changed;
-    bool repeated;
+    bool typed;
 
     // namespace Filter {
     //     static Handler no_repeat(const std::set<int> keys, const Handler handler)
