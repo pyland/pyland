@@ -7,6 +7,7 @@ namespace py = boost::python;
 
 BOOST_PYTHON_MODULE(wrapper_functions) {
     py::class_<Entity, boost::noncopyable>("Entity", py::no_init)
+        .def_readwrite("name",        &Entity::name)
         .def("move",        &Entity::move)
         .def("walkable",    &Entity::walkable)
         .def("monologue",   &Entity::monologue)

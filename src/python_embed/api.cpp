@@ -103,9 +103,9 @@ bool Entity::move(int x, int y) {
     return tile != TileType::KILLER;
 }
 
-bool Entity::walkable(Vec2D by) {
+bool Entity::walkable(int x, int y) {
     ++call_number;
-    auto new_position = position + by;
+    auto new_position = position + Vec2D(x, y);
     TileType tile = tile_to_type[world_data[new_position.x][new_position.y]];
     return tile == TileType::WALKABLE;
 }
