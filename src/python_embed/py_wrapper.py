@@ -1,11 +1,12 @@
-import time
-import inspect
+"""Python wrapper for user scripts """
 
-# functing wrapping to add delay & check number of arguments
-# TODO: extend this for type checking and providing documentation
+import time
+
 def fun_wrapper (func, delay, args, kwargs):
+	"""functing wrapping to add delay & check number of arguments """
 	if delay:
 		time.sleep(0.1)
+	# TODO: extend this for type checking and providing documentation
 	if len(args) == 0:
 		return func
 	elif len(args) == 1:
