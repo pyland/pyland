@@ -63,11 +63,6 @@ class Entity {
         ///
         Vec2D position;
 
-        /// 
-        /// sprite name
-        ///
-        std::string name;
-
         ///
         /// script holds the wrapped python script
         ///
@@ -93,6 +88,11 @@ class Entity {
         /// multiple threads.
         ///
         static uint64_t call_number;
+
+        /// 
+        /// sprite name
+        ///
+        std::string name;
 
         ///
         /// Entity constructor
