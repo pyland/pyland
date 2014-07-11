@@ -62,7 +62,7 @@ void InputManager::handle_event(SDL_Event* event) {
         break;
     case SDL_KEYUP:
         down_keys.erase(event->key.keysym.scancode);
-        released_keys.erase(event->key.keysym.scancode);
+        released_keys.insert(event->key.keysym.scancode);
         break;
     case SDL_MOUSEBUTTONDOWN:
         down_buttons.insert(event->button.button);
