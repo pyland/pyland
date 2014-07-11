@@ -156,7 +156,7 @@ class Entity {
         /// @return
         ///     Whether the area is walkable.
         ///
-        bool walkable(Vec2D by);
+        bool walkable(int x, int y);
 
         ///
         /// Prints to standard output the name and position of entity.
