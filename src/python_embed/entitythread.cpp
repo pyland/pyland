@@ -27,8 +27,11 @@ namespace py = boost::python;
 ///     The Python file that can bootstrap the process, taking an entity, running
 ///     it's files and controling logic (such as handling asynchronous exceptions).
 ///
-/// @param main_interpreter_state
-///     The PyInterpreterState of the main interpreter, allowing creation of a new thread.
+/// @param interpreter_context
+///     The interpreter_context of the main interpreter, allowing creation of a new thread
+///     by access of the interpreter's PyInterpreterState.
+///
+///     Also allows importing files.
 ///
 void run_entity(std::shared_ptr<py::api::object> entity_object,
                 std::promise<long> thread_id_promise,

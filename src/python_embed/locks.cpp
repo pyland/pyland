@@ -35,8 +35,8 @@ namespace lock {
     }
 
 
-    ThreadState::ThreadState(PyInterpreterState *interpreter_state) {
-        threadstate = PyThreadState_New(interpreter_state);
+    ThreadState::ThreadState(InterpreterContext interpreter_context) {
+        threadstate = PyThreadState_New(interpreter_context.get_interpreterstate());
     }
 
     ThreadState::~ThreadState() {   

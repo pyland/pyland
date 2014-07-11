@@ -55,6 +55,9 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 /// @param entitythreads
 ///     Reference to the entitythreads to police.
 ///
+/// @param interpreter_context
+///     An interpreter context to lock on. The GIL is locked on the main thread.
+///
 /// @warning
 ///     Arguments must be passed in a std::reference_wrapper to avoid copies.
 ///

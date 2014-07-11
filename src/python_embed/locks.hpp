@@ -71,7 +71,7 @@ namespace lock {
     /// A RAII lock for PyThreadState creation. Usage:
     ///
     ///     {
-    ///         ThreadState threadstate(interpreter_state);
+    ///         ThreadState threadstate(interpreter_context);
     ///         stuff(thredstate.get_threadstate());
     ///     }
     ///
@@ -81,7 +81,10 @@ namespace lock {
             /// Create a PyThreadState, allowing for easy
             /// constructive locking.
             ///
-            ThreadState(PyInterpreterState *interpreter_state);
+            /// @param interpreter_context
+            ///     An interpreter context to get an InterpreterState from.
+            ///
+            ThreadState(InterpreterContext interpreter_context);
 
             ///
             /// Clear and delete the associated PyThreadState.

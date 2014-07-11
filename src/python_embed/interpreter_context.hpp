@@ -5,12 +5,17 @@
 #include <boost/python.hpp>
 
 ///
-/// TODO
+/// A simple wrapper class for PyThreadState,
+/// used to represent the main thread of an
+/// interpreter, and its interpreter state.
 ///
 class InterpreterContext {
     public:
         ///
-        /// TODO
+        /// Initialize the InterpreterContext.
+        ///
+        /// @param main_thread_state
+        ///     The thread state to spawn.
         ///
         InterpreterContext(PyThreadState *main_thread_state);
 

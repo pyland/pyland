@@ -66,6 +66,14 @@ class Interpreter {
         //PyThreadState *main_thread_state;
 
     private:
+        ///
+        /// An interpreter context used to lock on the current thread
+        /// and to pass to other functions.
+        ///
+        /// Primarily used in register_entity.
+        ///
+        /// @see register_entity
+        ///
         InterpreterContext interpreter_context;
 
         ///
