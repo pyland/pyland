@@ -6,6 +6,12 @@
 #include "locks.hpp"
 
 
+///
+/// Wrapper that keeps a thread to kill threads contained inside
+/// the passed lockable vector. If the contained EntityThread
+/// objects don't call API functions often enough, they will
+/// be killed by this thread.
+///
 class ThreadKiller {
     public:
         ///
@@ -28,7 +34,6 @@ class ThreadKiller {
         void finish();
 
     private:
-
         ///
         /// Mutex for thread to sleep on, allowing interruptable thread sleeps.
         ///
