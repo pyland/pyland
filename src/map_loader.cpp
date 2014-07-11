@@ -7,6 +7,14 @@
 #include <string>
 #include <Tmx.h>
     
+#define IMAGE1_SIZE_WIDTH 128
+#define IMAGE1_NUM_COMPONENTS 4
+#define IMAGE1_SIZE_HEIGHT 240
+
+
+#define TILESET_ELEMENT_SIZE 16
+
+
 ///
 /// See: https://github.com/bjorn/tiled/wiki/TMX-Map-Format
 ///      https://code.google.com/p/tmx-parser
@@ -51,17 +59,12 @@ void MapLoader::load_layers() {
             for (int x = 0; x < num_tiles_x; ++x) {
                 //Get the tile identifier
                 int tile_id = layer->GetTileId(x, y);
-                
-                //Add the tile
-                //                layer_ptr.push_back(tile_id);
-
-
-                //                std::cout <<"TILEID: " << tile_id << std::endl;
-
 
                 //Gets the tileset to use for this tile
-                //TODO: We only support one tileset at the moment
                 const Tmx::Tileset* tileset = map.FindTileset(tile_id);
+
+                //Add the tile to the layer
+                layer_ptr->add_tile(tileset->GetName(), tile_id);                
             } 
         }
     }
@@ -106,16 +109,15 @@ void MapLoader::load_tileset() {
         //Get a tileset
         const Tmx::Tileset *tileset = map.GetTileset(i);
         
-        //Get the image name. This is relative to the TMX file
+        //Get the image name. This is the path relative to the TMX file
         const std::string tileset_name(tileset->GetName().c_str());
         int tileset_width = tileset->GetImage()->GetWidth();
         int tileset_height = tileset->GetImage()->GetHeight();
         
+        //Create a new tileset and add it to the map
+        std::shared_ptr<TileSet> tileset = make_shared<TileSet>(tileset_name, tileset_width, tileset_height);
+        tilesets->push_back(tileset);
 
-        //Now load the image
-        //TODO: Just using .raw at the moment. Use .png in the editor but then use 
-        //      an image converter to convert this to .raw
-        
         //We use the tileset properties to define collidable tiles for our collision 
         //detection
         if (tileset->GetTiles().size() > 0) {
@@ -125,7 +127,8 @@ void MapLoader::load_tileset() {
                 const Tmx::Tile* tile = *tile_iter;
  
 
-               //Get the properties
+                //Get the properties
+                //Used to handle collidable tiles
                 std::map<std::string, std::string> list = tile->GetProperties().GetList();
                 for (auto iter = list.begin(); iter != list.end(); ++iter){
                     //                if (iter->first.c_str() == "Collidable") {
@@ -134,10 +137,8 @@ void MapLoader::load_tileset() {
                     //  }
                     //                }
                 }
-
             }
-             
-
         }
     }
 }
+
