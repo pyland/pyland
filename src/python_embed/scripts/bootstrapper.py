@@ -6,16 +6,16 @@ def start(entity):
     print("Started with entity", entity)
 
     try:
-    	run(entity)
+        run(entity)
     except BaseException as e:
-    	print(e)
-    	raise
+        print(e)
+        raise
 
 def run(entity):
     """Purely for testing"""
 
     print("Running with entity", entity)
-	
+    
     for _ in range(5):
         time.sleep(0.1)
 

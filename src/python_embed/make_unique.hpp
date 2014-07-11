@@ -23,6 +23,9 @@ namespace std {
         static_assert(_Never_true<T>::value, "make_unique forbids T[N]. Please use T[].");
     };
 
+    ///
+    /// Usage equivalent to make_shared
+    ///
     template<class T, class... Args> typename _Unique_if<T>::_Single make_unique(Args&&... args) {
         return unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
@@ -31,6 +34,9 @@ namespace std {
         return unique_ptr<T>(new T);
     }
 
+    ///
+    /// Usage equivalent to make_shared
+    ///
     template<class T> typename _Unique_if<T>::_Runtime make_unique(size_t n) {
         typedef typename remove_extent<T>::type U;
         return unique_ptr<T>(new U[n]());

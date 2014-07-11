@@ -215,7 +215,6 @@ public:
     /// The function used to update elements on the map.
     ///
     void update_map(float dt);
-
 };
 
 #endif

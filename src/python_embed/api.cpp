@@ -7,8 +7,10 @@
 #include "main.hpp"
 #include "print_debug.hpp"
 
+#ifndef
 #define WRAPPING_ENABLED true
 #define TILESIZE_PIXELS 32
+#endif
 
 enum class TileType {
     WALKABLE,
@@ -16,6 +18,7 @@ enum class TileType {
     KILLER
 };
 
+// TODO: Integrate with fun upcoming map stuff.
 std::map<int, TileType> tile_to_type({
     { 8, TileType::WALKABLE},   // Board
     {12, TileType::WALKABLE},   // Flowers
@@ -65,12 +68,10 @@ std::string Vec2D::to_string() {
 
 
 Entity::Entity(Vec2D start, std::string name, int id):
-    start(start), position(start), script(""), id(id) {
+    start(start), position(start), script(""), id(id), call_number(0) {
         this->name = std::string(name);
         move_object(id, TILESIZE_PIXELS * float(start.x), TILESIZE_PIXELS * float(start.y));
 }
-
-uint64_t Entity::call_number = 0;
 
 bool Entity::move(int x, int y) {
     ++call_number;
@@ -78,7 +79,7 @@ bool Entity::move(int x, int y) {
     auto cached_position = position;
     position += Vec2D(x, y);
 
-    if (not WRAPPING_ENABLED) {
+    if (!WRAPPING_ENABLED) {
         position.x = std::min(std::max(position.x, 0), TILESET_ELEMENT_SIZE);
         position.y = std::min(std::max(position.y, 0), TILESET_ELEMENT_SIZE);
     }
@@ -110,12 +111,20 @@ void Entity::monologue() {
     std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;
 }
 
+// WARNING: DEPRECATED
 void Entity::run_script() {
     ++call_number;
     script(py::ptr(this));
 }
 
 
+//  █████   ██████  ██████  ██████  ██████   █████   ████   ██████  ██████  █████
+//  ██  ██  ██      ██  ██  ██  ██  ██      ██      ██  ██    ██    ██      ██  ██
+//  ██  ██  ████    ██████  ██████  ████    ██      ██████    ██    ████    ██  ██
+//  ██  ██  ██      ██      ██ ██   ██      ██      ██  ██    ██    ██      ██  ██
+//  █████   ██████  ██      ██  ██  ██████   █████  ██  ██    ██    ██████  █████
+
+// WARNING: DEPRECATED
 void Entity::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
 
@@ -133,6 +142,7 @@ void Entity::give_script(py::api::object main_namespace) {
    // py::import("dis").attr("dis")(script);
 }
 
+// WARNING: DEPRECATED
 std::string Entity::read_file(std::string loc) {
     //open the input file
     std::ifstream in_file(loc);

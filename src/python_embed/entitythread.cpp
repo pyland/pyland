@@ -13,6 +13,23 @@
 
 namespace py = boost::python;
 
+///
+/// A thread function running a player's daemon.
+///
+/// @param entity_object
+///     Python object to pass to the bootstrapper, which has API calls passed to it.
+///
+/// @param thread_id_promise
+///     Promise allowing the thread to asynchronously return the thread's id,
+///     according to CPython.
+///
+/// @param bootstrapper_file
+///     The Python file that can bootstrap the process, taking an entity, running
+///     it's files and controling logic (such as handling asynchronous exceptions).
+///
+/// @param main_interpreter_state
+///     The PyInterpreterState of the main interpreter, allowing creation of a new thread.
+///
 void run_entity(std::shared_ptr<py::api::object> entity_object,
                 std::promise<long> thread_id_promise,
                 boost::filesystem::path bootstrapper_file,
@@ -20,18 +37,19 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     print_debug << "run_entity: Starting" << std::endl;
 
+    // Register thread with Python, to allow locking
     lock::ThreadState threadstate(main_interpreter_state);
     lock::ThreadGIL lock_thread(threadstate);
 
     print_debug << "run_entity: Stolen GIL" << std::endl;
 
     try {
+        // Asynchronously return thread id to allow killing of this thread
         thread_id_promise.set_value(PyThread_get_thread_ident());
 
+        // Get and run bootstrapper
         auto bootstrapper_module = Interpreter::import_file(bootstrapper_file);
-        print_debug << "run_entity: Got bootstrapper" << std::endl;
         bootstrapper_module.attr("start")(*entity_object);
-        print_debug << "run_entity: Ran" << std::endl;
     }
     catch (py::error_already_set &) {
         // TODO: catch and nicely handle error
@@ -49,7 +67,9 @@ EntityThread::EntityThread(Interpreter *interpreter, Entity &entity):
         std::promise<long> thread_id_promise;
         thread_id_future = thread_id_promise.get_future();
 
-        // This seems to be the easy compromise.
+        // Wrap the object for Python.
+        //
+        // For implementation justifications, see
         // http://stackoverflow.com/questions/24477791
         {
             lock::GIL lock_gil("EntityThread::EntityThread");
@@ -64,11 +84,10 @@ EntityThread::EntityThread(Interpreter *interpreter, Entity &entity):
             boost::filesystem::path("python_embed/scripts/bootstrapper.py"),
             interpreter->main_thread_state->interp
         );
-
-
 }
 
 long EntityThread::get_thread_id() {
+    // TODO: Make thread-safe, if needed
     if (thread_id_future.valid()) {
         thread_id = thread_id_future.get();
     }
