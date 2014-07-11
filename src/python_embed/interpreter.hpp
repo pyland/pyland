@@ -52,7 +52,7 @@ class Interpreter {
         /// @param entity
         ///     The game entity to wrap.
         ///
-        void register_entity(Entity entity);
+        void register_entity(Entity &entity);
 
         ///
         /// The main thread of the spawned interpreter.

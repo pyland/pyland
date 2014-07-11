@@ -65,7 +65,7 @@ PyThreadState *Interpreter::initialize_python() {
     return PyThreadState_Get();
 }
 
-void Interpreter::register_entity(Entity entity) {
+void Interpreter::register_entity(Entity &entity) {
     std::lock_guard<std::mutex> lock(entitythreads.lock);
 
     // Create thread and move to vector.
