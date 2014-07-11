@@ -111,11 +111,6 @@ class Entity {
         ///
         uint64_t call_number;
 
-        /// 
-        /// sprite name
-        ///
-        std::string name;
-
         ///
         /// Construct Entity with a given place, name and id.
         ///
