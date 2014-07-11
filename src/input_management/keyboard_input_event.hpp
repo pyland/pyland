@@ -21,12 +21,16 @@ struct KeyboardInputEvent : public InputEvent {
 public:
     typedef std::function<void(KeyboardInputEvent)> Handler;
     
-    KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed);
+    KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed, bool repeated);
     int scan_code;
     int key_code;
     bool down;
     bool changed;
+    bool repeated;
 
+    // namespace Filter {
+    //     static Handler no_repeat(const std::set<int> keys, const Handler handler)
+    // }
     // static Handler if_key_in(const std::set<int> keys, const Handler handler) {
     //     return [&] (KeyboardInputEvent event) {
     //         if (keys.event.key_code) 

@@ -45,6 +45,13 @@ private:
     ///
     std::set<int> pressed_keys;
     ///
+    /// Set of recently repeated keys (scancodes).
+    ///
+    /// When you hold down a key, often the key will repeat (e.g. in a
+    /// text editor).
+    ///
+    std::set<int> typed_keys;
+    ///
     /// Set of recently released keys (scancodes).
     ///
     std::set<int> released_keys;
@@ -83,6 +90,12 @@ private:
     /// Key press callback registry.
     ///
     CallbackRegistry<void,KeyboardInputEvent> key_press_callbacks;
+    ///
+    /// Key type callback registry.
+    ///
+    /// Like key press, but also accepts auto-repeats.
+    ///
+    CallbackRegistry<void,KeyboardInputEvent> key_type_callbacks;
     ///
     /// Key down callback registry.
     ///
@@ -227,6 +240,24 @@ public:
     /// @return A lifeline which keeps the callback active.
     ///
     Lifeline register_key_press_handler(std::function<void(KeyboardInputEvent)> func);
+
+    ///
+    /// Registers a callback function for key typing.
+    ///
+    /// This triggers according to key repeating when a key is held.
+    ///
+    /// @param callback Callback to be used to handle an event.
+    ///
+    void register_key_type_handler(Callback<void, KeyboardInputEvent> callback);
+    ///
+    /// Registers a callback function for key typing.
+    ///
+    /// This triggers according to key repeating when a key is held.
+    ///
+    /// @param func Callback function to be used to handle an event.
+    /// @return A lifeline which keeps the callback active.
+    ///
+    Lifeline register_key_type_handler(std::function<void(KeyboardInputEvent)> func);
 
     ///
     /// Registers a callback function for key held down.

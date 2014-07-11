@@ -4,10 +4,11 @@
 
 
 
-KeyboardInputEvent::KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed):
+KeyboardInputEvent::KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed, bool repeated):
     InputEvent(manager),
     scan_code(scan_code),
     key_code(SDL_GetKeyFromScancode((SDL_Scancode)scan_code)),
     down(down),
-    changed(changed) {
+    changed(changed),
+    repeated(repeated) {
 }
