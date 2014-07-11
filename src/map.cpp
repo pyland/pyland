@@ -48,7 +48,8 @@ Map::Map(const std::string map_src) : renderable_component() {
     map_loader.load_map(map_src);
 
     //Get the tilesets
-    
+    //TODO: We'll only support one tileset at the moment
+
 
     //Get each layer of the map
 

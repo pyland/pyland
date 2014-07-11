@@ -1,5 +1,8 @@
 #include "map_loader.hpp"
 
+#include "layer.hpp"
+#include "map_object.hpp"
+#include "tileset.hpp"
 
 #include <iostream>
 #include <map>
@@ -24,8 +27,6 @@
 /// can fully parse the files but we don't make use of all of these
 /// attributes and have only parsed them if we need them.
 ///
-
-
 bool MapLoader::load_map(const std::string source) {
     map.ParseFile(source);
 
@@ -62,6 +63,7 @@ void MapLoader::load_layers() {
 
                 //Gets the tileset to use for this tile
                 const Tmx::Tileset* tileset = map.FindTileset(tile_id);
+                if(tileset == nullptr) continue;
 
                 //Add the tile to the layer
                 layer_ptr->add_tile(tileset->GetName(), tile_id);                
@@ -115,8 +117,8 @@ void MapLoader::load_tileset() {
         int tileset_height = tileset->GetImage()->GetHeight();
         
         //Create a new tileset and add it to the map
-        std::shared_ptr<TileSet> tileset = make_shared<TileSet>(tileset_name, tileset_width, tileset_height);
-        tilesets->push_back(tileset);
+        std::shared_ptr<TileSet> map_tileset = std::make_shared<TileSet>(tileset_name, tileset_width, tileset_height);
+        tilesets.push_back(map_tileset);
 
         //We use the tileset properties to define collidable tiles for our collision 
         //detection

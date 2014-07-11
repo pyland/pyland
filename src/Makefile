@@ -98,15 +98,18 @@ BASE_OBJS = \
 	engine_api.o     \
 	game_window.o    \
 	input_manager.o  \
+	layer.o          \
 	main.o           \
 	map.o            \
 	map_loader.o     \
+	map_object.o     \
 	map_viewer.o     \
 	object.o         \
 	object_manager.o \
 	print_debug.o    \
 	renderable_component.o \
-	shader.o
+	shader.o         \
+	tileset.o 
 
 PYTHON_OBJS = \
 	python_embed/api.o           \
