@@ -1,306 +1,111 @@
+#include <algorithm>
+#include <atomic>
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
-#include <chrono>
-#include <future>
-#include <iostream>
+#include <map>
 #include <mutex>
 #include <string>
-#include <thread>
-#include "api.h"
-#include "debug.h"
-#include "locks.h"
-#include "make_unique.h"
-#include "playerthread.h"
+#include "api.hpp"
+#include "entitythread.hpp"
+#include "interpreter.hpp"
+#include "locks.hpp"
+#include "make_unique.hpp"
+#include "print_debug.hpp"
+#include "thread_killer.hpp"
 
-namespace py = boost::python;
-PyInterpreterState *main_interpreter_state;
+std::atomic_flag Interpreter::initialized = ATOMIC_FLAG_INIT;
 
-///
-/// Wrapper function for std::timed_mutex::try_lock_for which works around bugs in
-/// the implementations in certain compilers.
-///
-/// Waiting can be more, but not less than, the required period, assuming that
-/// the user's clock is working as expected.
-///
-/// @param lock        Mutex to wait on
-/// @param time_period Minimal length of time to wait for
-///
-bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
-    auto end = std::chrono::system_clock::now() + time_period;
+Interpreter::Interpreter(boost::filesystem::path function_wrappers) {
 
-    while (true) {
-        // If lock is taken, return true. Otherwise, try to delay
-        if (lock.try_lock_for(end - std::chrono::system_clock::now())) {
-            return true;
-        }
-
-        // If delay has passed, hasn't been locked so return false
-        if (end <= std::chrono::system_clock::now()) {
-            return false;
-        }
-
-        // Make sure not a busy wait on broken compilers
-        std::this_thread::sleep_for(time_period / 100);
-    }
-}
-
-std::mutex finish_signal;
-
-///
-/// Kills threads that haven't had an API call often enough.
-///
-/// @param finish_signal timed_mutex to wait on. This is used to allow the function
-///                      to go into interruptable sleep. The mutex should be locked
-///                      before calling and until the thread is meant to finish.
-///
-/// @param playerthreads Vector of PlayerThread objects with thread_ids for the
-///                      repective threads.
-///
-void thread_killer(std::timed_mutex &finish_signal,
-                   std::mutex &playerthreads_editable,
-                   std::vector<PlayerThread> &playerthreads) {
-    while (true) {
-        // Nonbloking sleep; allows safe quit
-        print_debug << "Starting sleep in kill thread " << "." << std::endl;
-        if (try_lock_for_busywait(finish_signal, std::chrono::milliseconds(1000))) {
-            break;
-        }
-        print_debug << "Slept in kill thread " << "." << std::endl;
-
-        std::lock_guard<std::mutex> lock(playerthreads_editable);
-
-        // Go through the available playerthread objects and kill those that
-        // haven't had an API call.
-        for (auto &playerthread : playerthreads) {
-            if (!playerthread.is_dirty()) {
-                GIL lock_gil;
-
-                print_debug << "Attempting to kill thread id " << playerthread.thread_id << "." << std::endl;
-
-                // Set an asynchronous exception.
-                // This is not guaranteed to kill the thread, or to exit gracefully when it does.
-                PyThreadState_SetAsyncExc(playerthread.thread_id, PyExc_SystemError);
-            }
-            playerthread.set_clean();
-        }
+    if (initialized.test_and_set()) {
+        throw std::runtime_error("Interpreter initialized twice where only a single initialization supported");
     }
 
-    print_debug << "Finished KILLER thread" << std::endl;
-}
+    print_debug << "Interpreter: Started" << std::endl;
 
+    main_thread_state = initialize_python();
 
-///
-/// A thread function representing a player character.
-///
-/// @param code              std::string representing the code to be exeuted
-///
-/// @param player            Player object that moderates execution
-///
-/// @param thread_id_promise Promise allowing the thread to asynchronously return the thread's id,
-///                          according to CPython.
-///
-/// @param working_dir       Path, as a string, to inject into Python's sys.path, to allow relative imports.
-///                          This should be the current path, to allow importing our shared object files
-///
-void run_player(std::string code,
-                py::api::object player,
-                std::promise<int64_t> thread_id_promise,
-                std::string working_dir) {
-
-    print_debug << "run_player: Starting" << std::endl;
-
-    ThreadState threadstate(main_interpreter_state);
-    ThreadGIL lock_thread(threadstate);
-
-    print_debug << "run_player: Stolen GIL" << std::endl;
-
-    try {
-        // Append the working directory to Python's sys.path
-        py::import("sys").attr("path").attr("append")(py::str(working_dir));
-
-        // The main module's namespace is needed to evaluate code
-        // and the main module object is needed to have
-        // juicy, juicy introspection and monkey-patching.
-        auto main_module = py::import("__main__");
-        auto main_namespace = main_module.attr("__dict__").attr("copy")();
-
-        // Inject a player; will be instantiated in C++
-        main_namespace["player"] = player;
-
-        // Pass the Vec2D class. Should be neater, but it's not obvious how.
-        // Currently this gets the class object from an instance object.
-        main_namespace["Vec2D"] = py::object(Vec2D(0, 0)).attr("__class__");
-
-        print_debug << "run_player: Basic setup" << std::endl;
-        // Totally a hack. Remove ASA(R)P.
-        auto py_thread_id = py::import("threading").attr("current_thread")().attr("ident");
-        thread_id_promise.set_value(py::extract<int64_t>(py_thread_id));
-
-        print_debug << "run_player: Gave promise" << std::endl;
-
-        py::exec(code.c_str(), main_namespace);
-
-        print_debug << "run_player: Executed code" << std::endl;
-    }
-    catch (py::error_already_set &) {
-        print_debug << "run_player: Python-side error" << std::endl;
-        PyErr_Print();
-    }
-
-    print_debug << "run_player: Finished" << std::endl;
-}
-
-///
-/// Creates a thread representing a player character.
-///
-/// @param code          std::string representing the code to be exeuted
-///
-/// @param player        Reference to the Player instance that moderates execution
-///
-/// @param playerthreads Vector of PlayerThreads for this to (unsafely) add to
-///
-/// @param working_dir   Path, as a string, to inject into Python's sys.path, to allow relative imports.
-///                      This should be the current path, to allow importing our shared object files
-///
-void spawn_thread(std::string code,
-                  Player &player,
-                  std::vector<PlayerThread> &playerthreads,
-                  std::string working_dir) {
-
-    print_debug << "spawn_thread: Starting" << std::endl;
-
-    std::promise<int64_t> thread_id_promise;
-    auto thread_id_future = thread_id_promise.get_future();
-
-    // This seems to be the easy compromise.
-    // http://stackoverflow.com/questions/24477791
-    py::api::object player_object = [&player] () {
-        GIL lock_gil;
-        print_debug << "spawn_thread: YYYYY" << std::endl;
-        return py::api::object(boost::ref(player));
-    } ();
-
-    auto thread = std::make_unique<std::thread>(
-        run_player,
-        code,
-        player_object,
-        std::move(thread_id_promise),
-        working_dir
-    );
-
-    print_debug << "spawn_thread: Made thread" << std::endl;
-
-    thread_id_future.wait();
-
-    print_debug << "spawn_thread: Got thread ID" << std::endl;
-
-    playerthreads.push_back(PlayerThread(
-        player,
-        std::move(thread),
-        thread_id_future.get()
-    ));
-
-    print_debug << "spawn_thread: Created PlayerThread" << std::endl;
-}
-
-///
-/// Simple wrapper around spawn_thread
-///
-/// @param player      Reference to the Player instance that moderates execution
-///
-/// @param playerthreads Vector of PlayerThreads for this to (unsafely) add to
-///
-/// @param working_dir Path, as a string, to inject into Python's sys.path, to allow relative imports.
-///                    This should be the current path, to allow importing our shared object files
-///
-void run_thread(Player &player, std::vector<PlayerThread> &playerthreads, std::string working_dir) {
-    spawn_thread(
-            "print('--- Inside " + std::to_string(0) + " ---')\n"
-            "player.monologue()\n"
-            "try:\n"
-            "    player.give_script(globals())\n"
-            "    for i in range(4):\n"
-            "        player.run_script()\n"
-            "        import time\n"
-            "        for _ in range(int(10**(i-1))):\n"
-            "           time.sleep(0.001)\n"
-            "except BaseException as e:\n"
-            "    print('Halted with {}.'.format(type(e)))\n"
-            "    raise\n",
-            player,
-            playerthreads,
-            working_dir
-    );   
-}
-
-///
-/// Initialize Python interpreter, spawn threads and do fun stuff.
-///
-void run_all() {
-    Py_Initialize();
-    PyEval_InitThreads();
-
-    print_debug << "main: Initialized Python" << std::endl;
-
-    // Produce a locked mutex; unlock to allow thread_killer to die
-    std::timed_mutex kill_thread_finish_signal;
-    kill_thread_finish_signal.lock();
-
-    std::mutex playerthreads_editable;
-
-    std::vector<PlayerThread> playerthreads;
-    std::thread kill_thread(
-        thread_killer,
-        std::ref(kill_thread_finish_signal),
-        std::ref(playerthreads_editable),
-        std::ref(playerthreads)
-    );
-
-    print_debug << "main: Spawned Kill thread" << std::endl;
-
-    auto main_thread_state = PyThreadState_Get();
-    main_interpreter_state = main_thread_state->interp;
-
-    std::list<Player> all_players = {Player(Vec2D(32, 32), "John", 0), Player(Vec2D(448, 448), "Adam", 1)};
-    std::string working_dir;
+    thread_killer = std::make_unique<ThreadKiller>(entitythreads);
+    print_debug << "Interpreter: Spawned Kill thread" << std::endl;
 
     // All Python errors should result in a Python traceback    
     try {
-        auto sys_module = py::import("sys");
-        working_dir = boost::filesystem::absolute("./").normalize().string();
+        // TODO: decide whether to set sys.path
 
-        sys_module.attr("path").attr("append")(py::str(working_dir));
-        py::import("python_embed.wrapper_functions");
+        // Import to allow conversion of classes, but no need to keep module reference
+        import_file(function_wrappers);
     }
     catch (py::error_already_set) {
-        print_debug << "main: Unexpected error setting path" << std::endl;
         PyErr_Print();
     }
 
-    print_debug << "main: Set path" << std::endl;
-
+    // Release GIL; thread_killer can start killing now
+    // and EntityThreads can be created without deadlocks
     PyEval_ReleaseLock();
-    print_debug << "main: Released GIL " << std::endl;
 
-    int i = 0;
-    for (auto &player : all_players) {
-        std::lock_guard<std::mutex> lock(playerthreads_editable);
+    print_debug << "Interpreter: Released GIL " << std::endl;
+    print_debug << "Interpreter: Interpreter created " << std::endl;
+}
 
-        run_thread(player, playerthreads, working_dir);
-        print_debug << "main: Spawned PlayerThread " << ++i << std::endl;
+PyThreadState *Interpreter::initialize_python() {
+    Py_Initialize();
+    PyEval_InitThreads();
+
+    print_debug << "Interpreter: Initialized Python" << std::endl;
+
+    return PyThreadState_Get();
+}
+
+void Interpreter::register_entity(Entity entity) {
+    std::lock_guard<std::mutex> lock(entitythreads.lock);
+
+    entitythreads.value.push_back(std::move(std::make_unique<EntityThread>(this, entity)));
+}
+
+Interpreter::~Interpreter() {
+    thread_killer->finish();
+    print_debug << "Interpreter: Finished kill thread" << std::endl;
+
+    {
+        // Lock not acutally needed; thread_killer is dead
+        // However, this keeps the guarantees (locked while edited) safe,
+        // so is good practice
+        std::lock_guard<std::mutex> lock(entitythreads.lock);
+        entitythreads.value.clear();
     }
 
-    for (auto &playerthread : playerthreads) {
-        playerthread.thread->join();
-        print_debug << "main: Joined a PlayerThread" << std::endl;
-    }
+    deinitialize_python();
+}
 
-    print_debug << "main: Joined all PlayerThreads" << std::endl;
-
-    kill_thread_finish_signal.unlock();
-    kill_thread.join();
-
-    print_debug << "main: Joined kill_thread" << std::endl;
-
+void Interpreter::deinitialize_python() {
     PyEval_RestoreThread(main_thread_state);
+    print_debug << "Interpreter: Deinitialized Python" << std::endl;
+}
+
+
+
+
+
+std::map<std::string, std::string> extension_to_importer = {
+    {".py", "SourceFileLoader"},
+    {".so", "ExtensionFileLoader"}
+};
+
+py::api::object Interpreter::import_file(boost::filesystem::path filename) {    
+    std::string extension = filename.extension().string();
+    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+    auto importer = extension_to_importer.at(extension);
+
+    print_debug << "Interpreter: Importing " << filename << " with " << importer << " (for " << extension << " files)." << std::endl;
+    auto importlib_machinery_module = py::import("importlib.machinery");
+
+    print_debug << "Interpreter: Imported loader module" << std::endl;
+
+    // Get and initialize loader
+    auto FileLoader_object = importlib_machinery_module.attr(importer.c_str());
+    auto loader_object = FileLoader_object(filename.stem().string(), filename.string());
+
+    print_debug << "Interpreter: Got loader" << std::endl;
+
+    return loader_object.attr("load_module")();
 }

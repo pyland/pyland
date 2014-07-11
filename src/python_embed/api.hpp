@@ -1,3 +1,6 @@
+#ifndef API_H
+#define API_H
+
 #include <boost/python.hpp>
 #include <string>
 
@@ -47,13 +50,39 @@ class Vec2D {
         std::string to_string();
 };
 
-class Player {
+class Entity {
     private:
+
+        ///
+        /// starting postiton for this sprite, used to reset location when sprite moves
+        ///
         Vec2D start;
+
+        ///
+        /// current sprite position
+        ///
         Vec2D position;
+
+        /// 
+        /// sprite name
+        ///
         std::string name;
+
+        ///
+        /// script holds the wrapped python script
+        ///
         boost::python::api::object script;
-        std::string read_file();
+
+        ///
+        /// Opens files and returns string of its content
+        ///
+        /// @para loc string of name of file
+        ///
+        std::string read_file(std::string loc);
+
+        /// 
+        /// ID of sprite
+        ///
         int id;
 
     public:
@@ -66,20 +95,27 @@ class Player {
         static uint64_t call_number;
 
         ///
-        /// Player constructor
+        /// Entity constructor
         ///
         /// @param start Inital position
-        /// @param name  Name of player  
-        /// @return New instance of Player
+        /// @param name  Name of entity  
+        /// @return New instance of Entity
         ///
-        Player(Vec2D start, std::string name, int id);
+        Entity(Vec2D start, std::string name, int id);
 
         ///
-        /// Move player relative to current location
+        /// Move entity relative to current location
+        ///
+        // /// @param by Vec2D representing movement in the axes
+        ///
+        bool move(int x, int y);
+
+        ///
+        /// checks if player can move by the vector by
         ///
         /// @param by Vec2D representing movement in the axes
         ///
-        bool move(Vec2D by);
+        bool walkable(Vec2D by);
 
         ///
         /// Prints to standard output the name and position of sprite
@@ -87,14 +123,14 @@ class Player {
         void monologue();
 
         ///
-        /// Runs the Player's active script
+        /// Runs the Entity's active script
         ///
         /// @see give_script()
         ///
         void run_script();
 
         ///
-        /// Sets player's Python script from a hardcoded file.
+        /// Sets entity's Python script from a hardcoded file.
         /// Takes a namespace to evaluate it in.
         /// 
         /// @param main_namespace The namespace to evaluate the file in.
@@ -102,3 +138,5 @@ class Player {
         ///
         void give_script(boost::python::api::object in);
 };
+
+#endif

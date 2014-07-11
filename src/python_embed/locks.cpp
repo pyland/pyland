@@ -1,47 +1,55 @@
 #include <boost/python.hpp>
-#include "debug.h"
-#include "locks.h"
+#include <mutex>
+#include "locks.hpp"
+#include "print_debug.hpp"
 
-int GIL::i = 0;
+namespace lock {
+    int GIL::i = 0;
 
-GIL::GIL() {
-    inst = i;
-    ++i;
-    print_debug << inst << " Aquiring GIL" << std::endl;
-    gilstate = PyGILState_Ensure();
-    // PyEval_AcquireLock();
-    print_debug << inst << " GIL aquired: " << std::endl;
-}
+    GIL::GIL(std::string name): name(name) {
+        inst = i;
+        ++i;
 
-GIL::~GIL() {
-    print_debug << inst << " Releasing GIL" << std::endl;
-    // PyEval_ReleaseLock();
-    PyGILState_Release(gilstate);
-    print_debug << inst << " GIL released" << std::endl;
-}
-
-
-ThreadGIL::ThreadGIL(ThreadState &threadstate) {
-    PyEval_RestoreThread(threadstate.get_threadstate());
-}
-
-ThreadGIL::~ThreadGIL() {
-    PyEval_SaveThread();
-}
-
-
-ThreadState::ThreadState(PyInterpreterState *interpreter_state) {
-    threadstate = PyThreadState_New(interpreter_state);
-}
-
-ThreadState::~ThreadState() {   
-    {
-        GIL lock_gil;
-        PyThreadState_Clear(threadstate);
+        print_debug << inst << " Aquiring GIL lock  " << name  << std::endl;
+        PyEval_AcquireLock();
+        print_debug << inst << " GIL lock aquired   " << name  << std::endl;
     }
-    PyThreadState_Delete(threadstate);
-}
 
-PyThreadState *ThreadState::get_threadstate() {
-    return threadstate;
-}
+    GIL::GIL(): GIL("") {};
+
+    GIL::~GIL() {
+        print_debug << inst << " Releasing GIL lock " << name  << std::endl;
+        PyEval_ReleaseLock();
+        print_debug << inst << " GIL lock released  " << name  << std::endl;
+    }
+
+
+
+    ThreadGIL::ThreadGIL(ThreadState &threadstate) {
+        PyEval_RestoreThread(threadstate.get_threadstate());
+    }
+
+    ThreadGIL::~ThreadGIL() {
+        PyEval_SaveThread();
+    }
+
+
+    ThreadState::ThreadState(PyInterpreterState *interpreter_state) {
+        threadstate = PyThreadState_New(interpreter_state);
+    }
+
+    ThreadState::~ThreadState() {   
+        {
+            print_debug << "ThreadState: Getting GIL and clearing ThreadState" << std::endl;
+
+            PyGILState_STATE state = PyGILState_Ensure();
+            PyThreadState_Clear(threadstate);
+            PyGILState_Release(state);
+        }
+        PyThreadState_Delete(threadstate);
+    }
+
+    PyThreadState *ThreadState::get_threadstate() {
+        return threadstate;
+    }
+};

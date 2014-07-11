@@ -1,13 +1,14 @@
 #include <boost/python.hpp>
 #include <boost/regex.hpp>
-#include <thread>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <string>
-#include "api.h"
-#include "debug.h"
-#include "main.h"
+#include "api.hpp"
+#include "main.hpp"
+#include "print_debug.hpp"
+
+#define WRAPPING_ENABLED true
+#define TILESIZE_PIXELS 32
 
 enum class TileType {
     WALKABLE,
@@ -63,29 +64,26 @@ std::string Vec2D::to_string() {
 
 
 
-Player::Player(Vec2D start, std::string name, int id):
+Entity::Entity(Vec2D start, std::string name, int id):
     start(start), position(start), script(""), id(id) {
         this->name = std::string(name);
-        move_object(id, float(start.x), float(start.y));
+        move_object(id, TILESIZE_PIXELS * float(start.x), TILESIZE_PIXELS * float(start.y));
 }
 
-uint64_t Player::call_number = 0;
+uint64_t Entity::call_number = 0;
 
-bool Player::move(Vec2D by) {
+bool Entity::move(int x, int y) {
     ++call_number;
-    auto cached_position = position;
-    position += by;
-    position.x = std::min(std::max(position.x,0),480);
-    position.y = std::min(std::max(position.y,0),480);
 
-    int tile_x = position.x;
-    int tile_y = position.y;
-    TileType tile = std::max({
-        tile_to_type[world_data[(tile_x   ) / 32][(tile_y   ) / 32]],
-        tile_to_type[world_data[(tile_x   ) / 32][(tile_y+31) / 32]],
-        tile_to_type[world_data[(tile_x+31) / 32][(tile_y   ) / 32]],
-        tile_to_type[world_data[(tile_x+31) / 32][(tile_y+31) / 32]],
-    });
+    auto cached_position = position;
+    position += Vec2D(x, y);
+
+    if (not WRAPPING_ENABLED) {
+        position.x = std::min(std::max(position.x, 0), TILESET_ELEMENT_SIZE);
+        position.y = std::min(std::max(position.y, 0), TILESET_ELEMENT_SIZE);
+    }
+
+    TileType tile = tile_to_type[world_data[position.x][position.y]];
 
     if (tile == TileType::UNWALKABLE) {
         position = cached_position;
@@ -93,61 +91,60 @@ bool Player::move(Vec2D by) {
     else if (tile == TileType::KILLER) {
         position = start;
     }
+    float dx = TILESIZE_PIXELS * float(position.x - cached_position.x);
+    float dy = TILESIZE_PIXELS * float(position.y - cached_position.y);
 
-    move_object(id, float(position.x - cached_position.x), float(position.y - cached_position.y));
+    move_object(id, dx, dy);
+
     return tile != TileType::KILLER;
 }
 
+bool Entity::walkable(Vec2D by) {
+    ++call_number;
+    auto new_position = position + by;
+    TileType tile = tile_to_type[world_data[new_position.x][new_position.y]];
+    return tile == TileType::WALKABLE;
+}
 
-
-void Player::monologue() {
+void Entity::monologue() {
     std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;
 }
 
-void Player::run_script() {
+void Entity::run_script() {
     ++call_number;
     script(py::ptr(this));
 }
 
 
-void Player::give_script(py::api::object main_namespace) {
+void Entity::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
-    std::string from_file =
-        // TODO: find a more scalable approach
-        "import time\n"
-        "def move(x):\n"
-        "    for _ in range(32):\n"
-        "        if not player.move(x):\n"
-        "            time.sleep(1)\n"
-        "            return False\n"
-        "        time.sleep(0.01)\n"
-        "    return True\n"
-    
-        "def monologue():\n"
-        "    player.monologue()\n"
-    
-        "north, south, east, west = Vec2D(0, 1), Vec2D(0, -1), Vec2D(1, 0), Vec2D(-1, 0)\n"
-    
-        "def script(player):\n"
-        "    " + read_file();
 
-    print_debug << from_file << std::endl;
-    script = py::exec(from_file.c_str(), tempoary_scope);
+    // read users py from file
+    std::string user_py_unparsed = read_file("python_embed/" + name + ".py");
+    // fix indenting
+    boost::regex replace("\\n");
+    std::string user_py = boost::regex_replace(user_py_unparsed, replace, "\n    ");
+    // wrap with our code
+    std::string wrapped_py = read_file("python_embed/py_wrapper.py")+ "\n    " + user_py;
+    print_debug << wrapped_py << std::endl;
+    // evaluate code & extract script function
+    script = py::exec(wrapped_py.c_str(), tempoary_scope);
     script = tempoary_scope["script"];
    // py::import("dis").attr("dis")(script);
 }
 
-std::string Player::read_file() {
-    std::string loc = "python_embed/" + name + ".py";
-    std::ifstream inFile (loc); //open the input file
-    if (inFile.is_open()) { 
-        std::stringstream strStream;
-        strStream << inFile.rdbuf(); //read the file
-        std::string old_text = strStream.str();
-        boost::regex replace("\\n");
-        std::string new_text = boost::regex_replace(old_text, replace, "\n    ");
-        return new_text;
-    } else {
+std::string Entity::read_file(std::string loc) {
+    //open the input file
+    std::ifstream in_file(loc);
+
+    if (in_file.is_open()) { 
+        std::stringstream stringstream;
+
+        //read the file
+        stringstream << in_file.rdbuf();
+        return stringstream.str();
+    }
+    else {
         print_debug << "file opening unsuccessful" << std::endl;
         return "";
     }

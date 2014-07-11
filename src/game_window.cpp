@@ -83,7 +83,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
 			       | SDL_WINDOW_OPENGL
 #endif
                                );
-    if (window == NULL) {
+    if (window == nullptr) {
 #ifdef GAME_WINDOW_DEBUG
         std::cerr << "Failed to create SDL window." << std::endl;
 #endif
@@ -206,7 +206,7 @@ void GameWindow::init_gl() {
     }
 
     // Initialize EGL display connection
-    result = eglInitialize(display, NULL, NULL);
+    result = eglInitialize(display, nullptr, nullptr);
     if (result == EGL_FALSE) {
         eglTerminate(display);
 #ifdef GAME_WINDOW_DEBUG
@@ -328,7 +328,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
     
     EGLSurface new_surface;
-    new_surface = eglCreateWindowSurface(display, config, &nativeWindow, NULL);
+    new_surface = eglCreateWindowSurface(display, config, &nativeWindow, nullptr);
     if (new_surface == EGL_NO_SURFACE) {
 #ifdef GAME_WINDOW_DEBUG
         std::cerr << "Error creating window surface. " << eglGetError() << std::endl;

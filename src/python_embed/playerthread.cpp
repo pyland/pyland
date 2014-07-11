@@ -1,6 +1,6 @@
 #include <thread>
-#include "api.h"
-#include "playerthread.h"
+#include "api.hpp"
+#include "playerthread.hpp"
 
 PlayerThread::PlayerThread(Player &player, std::unique_ptr<std::thread> thread, int64_t thread_id):
     player(player), thread(std::move(thread)), previous_call_number(0), thread_id(thread_id) {}
