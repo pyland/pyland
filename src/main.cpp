@@ -236,7 +236,7 @@ int main (int argc, char* argv[]) {
     Entity a_thing(Vec2D(14, 14), "Adam", 0);
     interpreter.register_entity(a_thing);
 
-    Entity another_thing(Vec2D(1, 1),` "John", 1);
+    Entity another_thing(Vec2D(1, 1), "John", 1);
     interpreter.register_entity(another_thing);
   
   

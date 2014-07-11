@@ -4,7 +4,12 @@
 #include <atomic>
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
+#include <memory>
+#include <vector>
+#include "entitythread.hpp"
+#include "interpreter_context.hpp"
 #include "thread_killer.hpp"
+#include "locks.hpp"
 
 ///
 /// The Python Interpreter singleton.
@@ -15,32 +20,6 @@
 ///
 class Interpreter {
     public:
-        ///
-        /// Convenience function to import a file from a boost::filesystem::path.
-        ///
-        /// This requires an interpreter instance to be running (or at least
-        /// CPython to be started) but does not need a reference to it.
-        ///
-        /// @param filename
-        ///     The path to import. This may be relative, but it is not
-        ///     well defined what path it is relative to, and it is permitted
-        ///     not to give working behaviour in that case.
-        ///
-        ///     The filename must end in .py or .so.
-        ///
-        ///         - If it is .py, it is assumed to be a valid Python file.
-        ///
-        ///         - If it is .so, it is assumed to be a valid Python-importable
-        ///           shared object file. The name to import under is the stem
-        ///           of the path, so these must match.
-        ///
-        ///         - If it is neither, an std::runtime_error is thrown.
-        ///
-        /// @return
-        ///     A Python module object.
-        ///
-        static boost::python::api::object import_file(boost::filesystem::path filename);
-
         ///
         /// Interpreter contructor. Throws if called more than once.
         ///
@@ -84,9 +63,11 @@ class Interpreter {
         ///
         /// @deprecated
         ///
-        PyThreadState *main_thread_state;
+        //PyThreadState *main_thread_state;
 
     private:
+        InterpreterContext interpreter_context;
+
         ///
         /// A flag to ensure that this is a singleton.
         /// Set when an interpreter has been initialized.

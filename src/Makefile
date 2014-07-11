@@ -113,6 +113,7 @@ BASE_OBJS = \
 PYTHON_OBJS = \
 	python_embed/api.o           \
 	python_embed/interpreter.o   \
+	python_embed/interpreter_context.o \
 	python_embed/locks.o         \
 	python_embed/entitythread.o  \
 	python_embed/thread_killer.o

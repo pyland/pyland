@@ -1,28 +1,29 @@
 #include <boost/python.hpp>
 #include <mutex>
+#include "interpreter_context.hpp"
 #include "locks.hpp"
 #include "print_debug.hpp"
+
 
 namespace lock {
     int GIL::i = 0;
 
-    GIL::GIL(std::string name): name(name) {
+    GIL::GIL(InterpreterContext interpreter_context, std::string name): name(name) {
         inst = i;
         ++i;
 
         print_debug << inst << " Aquiring GIL lock  " << name  << std::endl;
-        PyEval_AcquireLock();
+        PyEval_RestoreThread(interpreter_context.get_threadstate());
         print_debug << inst << " GIL lock aquired   " << name  << std::endl;
     }
 
-    GIL::GIL(): GIL("") {};
+    GIL::GIL(InterpreterContext interpreter_context): GIL(interpreter_context, "") {};
 
     GIL::~GIL() {
         print_debug << inst << " Releasing GIL lock " << name  << std::endl;
-        PyEval_ReleaseLock();
+        PyEval_SaveThread();
         print_debug << inst << " GIL lock released  " << name  << std::endl;
     }
-
 
 
     ThreadGIL::ThreadGIL(ThreadState &threadstate) {

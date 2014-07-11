@@ -3,6 +3,7 @@
 
 #include <boost/python.hpp>
 #include <mutex>
+#include "interpreter_context.hpp"
 #include "print_debug.hpp"
 
 namespace lock {
@@ -10,7 +11,7 @@ namespace lock {
     /// A RAII lock for the GIL. Usage:
     ///
     ///     {
-    ///         GIL lock_gil;
+    ///         GIL lock_gil(interpreter_context);
     ///         stuff();
     ///     }
     ///
@@ -19,17 +20,24 @@ namespace lock {
             ///
             /// Lock a GIL. Unlock on destruction.
             ///
+            /// @param interpreter_context
+            ///     An interpreter context to lock on.
+            ///     The GIL is locked on the main thread.
             ///
             /// @param name
             ///     String for debugging.
             ///     Example: "Interpreter initialization"
             ///
-            GIL(std::string name);
+            GIL(InterpreterContext interpreter_context, std::string name);
 
             ///
             /// Lock a GIL. Unlock on destruction.
             ///
-            GIL();
+            /// @param interpreter_context
+            ///     An interpreter context to lock on.
+            ///     The GIL is locked on the main thread.
+            ///
+            GIL(InterpreterContext interpreter_context);
 
             ///
             /// Unlock GIL.

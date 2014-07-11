@@ -1,0 +1,57 @@
+#ifndef INTERPRETER_CONTEXT_H
+#define INTERPRETER_CONTEXT_H
+
+#include <boost/filesystem.hpp>
+#include <boost/python.hpp>
+
+///
+/// TODO
+///
+class InterpreterContext {
+    public:
+        ///
+        /// TODO
+        ///
+        InterpreterContext(PyThreadState *main_thread_state);
+
+        ///
+        /// TODO
+        ///
+        PyThreadState *get_threadstate();
+
+        ///
+        /// TODO
+        ///
+        PyInterpreterState *get_interpreterstate();
+
+        ///
+        /// Convenience function to import a file from a boost::filesystem::path.
+        ///
+        /// @param filename
+        ///     The path to import. This may be relative, but it is not
+        ///     well defined what path it is relative to, and it is permitted
+        ///     not to give working behaviour in that case.
+        ///
+        ///     The filename must end in .py or .so.
+        ///
+        ///         - If it is .py, it is assumed to be a valid Python file.
+        ///
+        ///         - If it is .so, it is assumed to be a valid Python-importable
+        ///           shared object file. The name to import under is the stem
+        ///           of the path, so these must match.
+        ///
+        ///         - If it is neither, an std::runtime_error is thrown.
+        ///
+        /// @return
+        ///     A Python module object.
+        ///
+        boost::python::api::object import_file(boost::filesystem::path filename);
+
+    private:
+        ///
+        /// TODO
+        ///
+        PyThreadState *main_thread_state;
+};
+
+#endif

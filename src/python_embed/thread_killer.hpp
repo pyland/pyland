@@ -1,10 +1,11 @@
 #ifndef THREAD_KILLER_H
 #define THREAD_KILLER_H
 
+#include <memory>
 #include <mutex>
+#include <vector>
 #include "entitythread.hpp"
 #include "locks.hpp"
-
 
 ///
 /// Wrapper that keeps a thread to kill threads contained inside
@@ -26,7 +27,12 @@ class ThreadKiller {
         /// @param entitythreads Lockable container of all threads
         ///                      meant to be killed.
         ///
-        ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads);
+        /// @param interpreter_context
+        ///     An interpreter context to lock the GIL on.
+        ///     The GIL is locked on the main thread.
+        ///
+        ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads,
+                     InterpreterContext interpreter_context);
 
         ///
         /// Halt the thread. Waits untill the thread has finished.
