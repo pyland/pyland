@@ -41,7 +41,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
     print_debug << "run_entity: Starting" << std::endl;
 
     // Register thread with Python, to allow locking
-    lock::ThreadState threadstate(interpreter_context.get_interpreterstate());
+    lock::ThreadState threadstate(interpreter_context);
     lock::ThreadGIL lock_thread(threadstate);
 
     print_debug << "run_entity: Stolen GIL" << std::endl;
