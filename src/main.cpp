@@ -258,7 +258,7 @@ int main (int argc, char* argv[]) {
           << "\tScancode:\t" << event.scan_code 
           << "\tDown:\t" << event.down 
           << "\tChanged:\t" << event.changed
-          << "\Repeated:\t" << event.repeated
+          << "\Typed:\t" << event.typed
           << std::endl;
       });
 
