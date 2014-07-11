@@ -1,3 +1,5 @@
+"""Python wrapper for user scripts """
+
 import time
 
 def fun_wrapper (func, delay, args, kwargs):
