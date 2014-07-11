@@ -281,7 +281,7 @@ int main (int argc, char* argv[]) {
     Lifeline release_lifeline = input_manager->register_key_release_handler(
       [] (KeyboardInputEvent event) {
         print_debug
-          << "Key Press:\tKeycode:\t" << event.key_code 
+          << "Key Release:\tKeycode:\t" << event.key_code 
           << "\tScancode:\t" << event.scan_code 
           << std::endl;
       });
@@ -289,7 +289,7 @@ int main (int argc, char* argv[]) {
     Lifeline down_lifeline = input_manager->register_key_down_handler(
       [] (KeyboardInputEvent event) {
         print_debug
-          << "Key Press:\tKeycode:\t" << event.key_code 
+          << "Key Down:\tKeycode:\t" << event.key_code 
           << "\tScancode:\t" << event.scan_code 
           << std::endl;
       });
