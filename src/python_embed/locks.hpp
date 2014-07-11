@@ -3,6 +3,7 @@
 
 #include <boost/python.hpp>
 #include <mutex>
+#include "interpreter_context.hpp"
 #include "print_debug.hpp"
 
 namespace lock {
@@ -10,7 +11,7 @@ namespace lock {
     /// A RAII lock for the GIL. Usage:
     ///
     ///     {
-    ///         GIL lock_gil;
+    ///         GIL lock_gil(interpreter_context);
     ///         stuff();
     ///     }
     ///
@@ -19,17 +20,24 @@ namespace lock {
             ///
             /// Lock a GIL. Unlock on destruction.
             ///
+            /// @param interpreter_context
+            ///     An interpreter context to lock on.
+            ///     The GIL is locked on the main thread.
             ///
             /// @param name
             ///     String for debugging.
             ///     Example: "Interpreter initialization"
             ///
-            GIL(std::string name);
+            GIL(InterpreterContext interpreter_context, std::string name);
 
             ///
             /// Lock a GIL. Unlock on destruction.
             ///
-            GIL();
+            /// @param interpreter_context
+            ///     An interpreter context to lock on.
+            ///     The GIL is locked on the main thread.
+            ///
+            GIL(InterpreterContext interpreter_context);
 
             ///
             /// Unlock GIL.
@@ -63,7 +71,7 @@ namespace lock {
     /// A RAII lock for PyThreadState creation. Usage:
     ///
     ///     {
-    ///         ThreadState threadstate(interpreter_state);
+    ///         ThreadState threadstate(interpreter_context);
     ///         stuff(thredstate.get_threadstate());
     ///     }
     ///
@@ -73,7 +81,10 @@ namespace lock {
             /// Create a PyThreadState, allowing for easy
             /// constructive locking.
             ///
-            ThreadState(PyInterpreterState *interpreter_state);
+            /// @param interpreter_context
+            ///     An interpreter context to get an InterpreterState from.
+            ///
+            ThreadState(InterpreterContext interpreter_context);
 
             ///
             /// Clear and delete the associated PyThreadState.
