@@ -86,7 +86,7 @@ class EntityThread {
         ///
         /// API calls are passed through to this object.
         /// 
-        Entity entity;
+        Entity &entity;
 
         ///
         /// Thread spawned by this EntityThread.
