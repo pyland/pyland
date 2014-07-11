@@ -58,8 +58,10 @@
 #include "character.hpp"
 #include "engine_api.hpp"
 #include "game_window.hpp"
+#include "input_manager.hpp"
+#include "keyboard_input_event.hpp"
 #include "interpreter.hpp"
-#include "engine_api.hpp"
+#include "lifeline.hpp"
 #include "main.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
@@ -246,6 +248,19 @@ int main (int argc, char* argv[]) {
 
     float dt = get_dt();
     int count = 0;
+
+    InputManager* input_manager = window.get_input_manager();
+
+    Lifeline callback_lifeline = input_manager->register_keyboard_handler(
+      [] (KeyboardInputEvent event) {
+        print_debug
+          << "Keyboard Event:\tKeycode:\t" << event.key_code 
+          << "\tScancode:\t" << event.scan_code 
+          << "\tDown:\t" << event.down 
+          << "\tChanged:\t" << event.changed
+          << std::endl;
+      });
+
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
