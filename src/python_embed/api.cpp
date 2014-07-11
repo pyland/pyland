@@ -7,8 +7,11 @@
 #include "main.hpp"
 #include "print_debug.hpp"
 
-#ifndef
+#ifndef WRAPPING_ENABLED
 #define WRAPPING_ENABLED true
+#endif
+
+#ifndef TILESIZE_PIXELS
 #define TILESIZE_PIXELS 32
 #endif
 
