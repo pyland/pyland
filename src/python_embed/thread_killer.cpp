@@ -8,7 +8,22 @@
 #include "print_debug.hpp"
 #include "thread_killer.hpp"
 
-
+///
+/// Wrapper function for std::timed_mutex::try_lock_for which works around bugs in
+/// the implementations in certain compilers.
+///
+/// Waiting can be more, but not less than, the required period, assuming that
+/// the user's clock is working as expected and that the lock is not acqured.
+///
+/// @param lock
+///     Mutex to wait on.
+///
+/// @param time_period
+///     Minimal length of time to wait for.
+///
+/// @return
+///     Whether the lock has been acquired.
+///
 bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
     auto end = std::chrono::system_clock::now() + time_period;
 
@@ -28,6 +43,25 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
     }
 }
 
+///
+/// A thread to kill threads contained inside the passed lockable vector.
+/// If the contained EntityThread objects don't call API functions often
+/// enough, they will be killed by this thread.
+///
+/// @param finish_signal
+///     A mutex to wait on that will be unlocked when the thread should finish.
+///
+/// @param entitythreads
+///     Reference to the entitythreads to police.
+///
+/// @warning
+///     Arguments must be passed in a std::reference_wrapper to avoid copies.
+///
+/// @warning
+///     The lifetimes of finish_signal and entitythreads are not obvious.
+///     A fair amount of effort was spent making sure this was safe. All
+///     usage should keep this in mind.
+///
 void thread_killer(std::timed_mutex &finish_signal,
                    lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads) {
 
@@ -58,20 +92,22 @@ void thread_killer(std::timed_mutex &finish_signal,
 }
 
 ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads) {
+        // Lock now to prevent early exit
+        kill_thread_finish_signal.lock();
 
-		kill_thread_finish_signal.lock();
-
-		thread = std::thread(
-			thread_killer,
-			std::ref(kill_thread_finish_signal),
-			std::ref(entitythreads)
-		);
+        thread = std::thread(
+            thread_killer,
+            std::ref(kill_thread_finish_signal),
+            std::ref(entitythreads)
+        );
 
         print_debug << "main: Spawned Kill thread" << std::endl;
 }
 
 void ThreadKiller::finish() {    
-	print_debug << "main: Stopping Kill thread" << std::endl;
+    print_debug << "main: Stopping Kill thread" << std::endl;
+
+    // Signal that the thread can quit
     kill_thread_finish_signal.unlock();
     thread.join();
 }

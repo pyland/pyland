@@ -3,7 +3,7 @@ import inspect
 
 # functing wrapping to add delay & check number of arguments
 # TODO: extend this for type checking and providing documentation
-def fun_wrapper (func, delay, args, kwargs):
+def fun_wrapper(func, delay, args, kwargs):
 	if delay:
 		time.sleep(0.1)
 	if len(args) == 0:
