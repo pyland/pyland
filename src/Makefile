@@ -9,7 +9,7 @@ WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sig
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
 CXXFLAGS += ${CXX_EXTRA}
-CPPFLAGS ?= -I./ -Ipython_embed/ -MMD -MP -MF dependencies/$*.d
+CPPFLAGS ?= -I./ -I./input_management -I./python_embed -MMD -MP -MF dependencies/$*.d
 CPPFLAGS += ${CPP_EXTRA}
 
 LDFLAGS  ?=
@@ -99,7 +99,6 @@ BASE_OBJS = \
 	character.o      \
 	engine_api.o     \
 	game_window.o    \
-	input_manager.o  \
 	main.o           \
 	map.o            \
 	map_loader.o     \
@@ -109,6 +108,13 @@ BASE_OBJS = \
 	print_debug.o    \
 	renderable_component.o \
 	shader.o
+
+INPUT_OBJS = \
+	input_management/input_event.o          \
+	input_management/input_manager.o        \
+	input_management/keyboard_input_event.o \
+	input_management/lifeline.o             \
+	input_management/lifeline_controller.o
 
 PYTHON_OBJS = \
 	python_embed/api.o           \
@@ -126,6 +132,7 @@ PYTHON_SHARED_OBJS_DEPENDS = \
 HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${BASE_OBJS:.o=.d}            \
+	${INPUT_OBJS:.o=.d}            \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd}
 
@@ -154,20 +161,23 @@ dependencies:
 dependencies/python_embed: | dependencies
 	@mkdir dependencies/python_embed
 
-$(EXECUTABLE): $(BASE_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
+dependencies/input_management: | dependencies
+	@mkdir dependencies/input_management
+
+$(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
 	@echo;\
          echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}";\
          echo
 	$(COMPILER) -o $@ \
-		$(BASE_OBJS) $(PYTHON_OBJS)              \
-		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS)   \
-		$(X11_LDFLAGS) $(X11_LDLIBS)             \
-		$(SDL_LDFLAGS) $(SDL_LDLIBS)             \
-		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS)       \
-		$(BOOST_LDFLAGS) $(BOOST_LDLIBS)         \
-		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS) \
-		$(TINYXML_LDFLAGS) $(TINYXML_LDLIBS)     \
-		$(ZLIB_LDFLAGS) $(ZLIB_LDLIBS)           \
+		$(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
+		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS)    \
+		$(X11_LDFLAGS) $(X11_LDLIBS)              \
+		$(SDL_LDFLAGS) $(SDL_LDLIBS)              \
+		$(PYTHON_LDFLAGS) $(PYTHON_LDLIBS)        \
+		$(BOOST_LDFLAGS) $(BOOST_LDLIBS)          \
+		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS)  \
+		$(TINYXML_LDFLAGS) $(TINYXML_LDLIBS)      \
+		$(ZLIB_LDFLAGS) $(ZLIB_LDLIBS)            \
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
@@ -185,6 +195,16 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(TINYXML_CPPFLAGS)     \
 		$(ZLIB_CPPFLAGS)        \
 		$(TMXPARSER_CPPFLAGS)   \
+		$(CXXFLAGS) $(CPPFLAGS)
+
+
+$(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
+	@echo;\
+	 echo "${bold}[ Compiling input object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
+	 echo
+
+	$(COMPILER) -c $*.cpp -o $*.o \
+		$(SDL_CPPFLAGS)         \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 
@@ -217,8 +237,8 @@ debug:
 
 
 clean:
-	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
-	$(RMDIR) dependencies/python_embed dependencies
+	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
+	$(RMDIR) dependencies/input_management dependencies/python_embed dependencies
 
 veryclean: clean
 	$(MAKE) -C tmx-parser -f Makefile.linux clean
