@@ -1,6 +1,9 @@
 #include "game_window.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
+#include "layer.hpp"
+#include "map_object.hpp"
+#include "tileset.hpp"
 
 #include <string>
 #include <iostream>
@@ -45,21 +48,22 @@
 Map::Map(const std::string map_src) : renderable_component() {
     //Load the map
     MapLoader map_loader;
-    map_loader.load_map(map_src);
-    //Get the tilesets
-    //TODO: We'll only support one tileset at the moment
+    bool result = map_loader.load_map(map_src);
+    if(!result)  {
+
+        std::cerr << "COULDN't LOAD MAP" << std::endl;
+        return;
+    }
+    
+    //Get the loaded map data
+    map_width = map_loader.get_map_width();
+    map_height = map_loader.get_map_height();
     std::vector<std::shared_ptr<Layer>>& layers = map_loader.get_layers();
     std::vector<std::shared_ptr<TileSet>>& tilesets = map_loader.get_tilesets();
     std::vector<std::shared_ptr<MapObject>>& objects = map_loader.get_objects();
 
-
-    //Load the images for the tilesets
-
-
-    //Get each layer of the map
-    for(auto iter = layers.begin(); iter != layers.end(); ++iter) {
-       
-    }
+    //Get the tilesets
+    //TODO: We'll only support one tileset at the moment
     //Get an object list
     
 
@@ -67,8 +71,8 @@ Map::Map(const std::string map_src) : renderable_component() {
     //Generate the geometry needed for this map
     init_shaders();
     generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-    generate_map_texcoords();
-    generate_map_coords();
+    generate_map_texcoords(layers, tilesets);
+    generate_map_coords(layers, tilesets);
     init_textures();
 }
 
@@ -148,17 +152,61 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
  * The function which generates the texture coordinates for the map
  * geometry, using the cached tile coordinates.
  */
-void Map::generate_map_texcoords() {
+void Map::generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets) {
 #ifdef DEBUG
     printf("GENERATING MAP TEXTURE DATA...");
 #endif
     //holds the map data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
-    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats;
+    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats*layers.size();
     map_tex_coords = new GLfloat[data_size]; 
     assert(map_tex_coords);
 
+    //Get each layer of the map
+    //Start at layer 0
+    int offset = 0;
+    for(auto iter = layers.begin(); iter != layers.end(); ++iter) {
+        auto layer_data = (*iter)->get_layer_data();
+
+
+        //Get all the tiles in the layer, moving from left to right and down 
+        for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
+            int tile_id = tile_data->second;
+            //TODO, stop out of bounds here - if it exceeds the tileset size
+
+            GLfloat *tileset_ptr = &tileset_tex_coords[tile_id*8*2];
+            //bottom left
+            map_tex_coords[offset+0] = tileset_ptr[0];
+            map_tex_coords[offset+1] = tileset_ptr[1];
+
+            //top left
+            map_tex_coords[offset+2] = tileset_ptr[2];
+            map_tex_coords[offset+3] = tileset_ptr[3];
+
+            //bottom right
+            map_tex_coords[offset+4] = tileset_ptr[4];
+            map_tex_coords[offset+5] = tileset_ptr[5];
+
+            //top left
+            map_tex_coords[offset+6] = tileset_ptr[2];
+            map_tex_coords[offset+7] = tileset_ptr[3];
+
+            //top right
+            map_tex_coords[offset+8] = tileset_ptr[6];
+            map_tex_coords[offset+9] = tileset_ptr[7];
+            
+            //bottom right
+            map_tex_coords[offset+10] = tileset_ptr[4];
+            map_tex_coords[offset+11] = tileset_ptr[5];
+            //layer*map_height*map_width*num_floats + x*map_height*num_floats + y*num_floats
+
+            offset += num_floats;
+        }
+        //next layer
+    }
+
+    /*
     //generate the map data
     // get the tile set coordinates for the particular tile
     for(int x = 0; x < map_width; x++) {
@@ -191,7 +239,7 @@ void Map::generate_map_texcoords() {
             map_tex_coords[x*map_height*num_floats + y*num_floats+11] = tileset_ptr[5];
         }
     }
-
+    */
     //Set this data in the renderable component
     renderable_component.set_texture_coords_data(map_tex_coords, data_size, false);
 
@@ -201,17 +249,18 @@ void Map::generate_map_texcoords() {
  * The function which generates the map geometry so that it can be
  * rendered to the screen
  */
-void Map::generate_map_coords() {
+void Map::generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets) {
 #ifdef DEBUG
     printf("GENERATING MAP DATA...");
 #endif
     //holds the map data
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
-    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats;
+    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats*layers.size();
     map_data = new GLfloat[data_size]; 
     assert(map_data);
     float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
+
     //generate the map data
     ///
     /// Vertex winding order:
@@ -222,6 +271,54 @@ void Map::generate_map_coords() {
     ///  * --- *
     /// 0       2,5
     ///
+
+    //For all the layers
+    //Start at layer 0
+    int offset = 0;
+    for(int layer = 0; layer < layers.size(); layer++) {
+
+        //Generate one layer's worth of data
+        for(int y = 0; y < map_height; y++) {
+            for(int x = 0; x < map_width; x++) {
+     
+                //generate one tile's worth of data%
+
+                //bottom left
+                map_data[offset+ 0] = scale * float(x);
+                map_data[offset+ 1] = scale * float(y);
+                map_data[offset+ 2] = 0;
+             
+                //top left
+                map_data[offset+ 3] = scale * float(x);
+                map_data[offset+ 4] = scale * float(y + 1);
+                map_data[offset+ 5] = 0;
+
+                //bottom right
+                map_data[offset+ 6] = scale * float(x + 1);
+                map_data[offset+ 7] = scale * float(y);
+                map_data[offset+ 8] = 0;
+            
+                //top left
+                map_data[offset+ 9]  = scale * float(x);
+                map_data[offset+10] = scale * float(y+1);
+                map_data[offset+11] = 0;
+        
+                //top right
+                map_data[offset+12] = scale * float(x+1);
+                map_data[offset+13] = scale * float(y+1);
+                map_data[offset+14] = 0;
+
+                //bottom right
+                map_data[offset+15] = scale * float(x+1);
+                map_data[offset+16] = scale * float(y);
+                map_data[offset+17] = 0;
+                //layer*map_width*map_height*num_floats + x*map_height*num_floats + y*num_floats
+                offset += num_floats;
+                std::cout << offset << std::endl;
+            }
+        }
+    }
+    /*
     for(int x = 0; x < map_width; x++) {
         for(int y = 0; y < map_height; y++) {
             //generate one tile's worth of data
@@ -256,7 +353,7 @@ void Map::generate_map_coords() {
             map_data[x*map_height*num_floats + y*num_floats+16] = scale * float(y);
             map_data[x*map_height*num_floats + y*num_floats+17] = 0;
         }
-    }
+    }*/
 
 #ifdef DEBUG
     printf("DONE.");
@@ -264,7 +361,7 @@ void Map::generate_map_coords() {
 
     //Set this data in the renderable component
     renderable_component.set_vertex_data(map_data, data_size, false);
-    renderable_component.set_num_vertices_render(6*map_width*map_height);
+    renderable_component.set_num_vertices_render(layers.size()*6*map_width*map_height);
 }
 
 void Map::init_textures() {

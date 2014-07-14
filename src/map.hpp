@@ -1,8 +1,19 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <string>
+#include "character.hpp"
+#include "game_window.hpp"
+#include "layer.hpp"
+#include "map_object.hpp"
+#include "object.hpp"
+#include "renderable_component.hpp"
+#include "tileset.hpp"
 
+#include <array>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -26,12 +37,7 @@
 
 #endif
 
-#include <map>
 
-#include "game_window.hpp"
-#include "renderable_component.hpp"
-#include "object.hpp"
-#include "character.hpp"
 
 class Map {
     ///
@@ -149,7 +155,7 @@ class Map {
     GLfloat* map_data = nullptr;
 
     ///
-    /// Pointer to the map texture coordinate data
+    /// Pointer tno the map texture coordinate data
     ///
     GLfloat* map_tex_coords = nullptr;
 
@@ -162,13 +168,13 @@ class Map {
     /// The function which generates the texture coordinates for the map
     /// geometry, using the cached tile coordinates.
     ///
-    void generate_map_texcoords();
+    void generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets);
   
     ////
     /// The function which generates the map geometry so that it can be
     /// rendered to the screen
     ///
-    void generate_map_coords();
+    void generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets);
 
     ///
     /// Initialises the textures

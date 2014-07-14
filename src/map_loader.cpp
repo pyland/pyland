@@ -35,8 +35,8 @@ bool MapLoader::load_map(const std::string source) {
         return false;
     }
 
-    int map_width = map.GetWidth();
-    int map_height = map.GetHeight();
+    map_width = map.GetWidth();
+    map_height = map.GetHeight();
 
     load_objects();
     load_layers();
