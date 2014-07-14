@@ -63,27 +63,27 @@ void Character::generate_tex_data() {
     GLfloat offset_y = GLfloat(1.0 / (IMAGE2_SIZE_HEIGHT / TILESET_ELEMENT_SIZE));
     std::cout << "OFFSET " << offset_x << std::endl;
     //bottom left
-    sprite_tex_data[0] = offset_x;
+    sprite_tex_data[0] = offset_x*4.0f;
     sprite_tex_data[1] = offset_y;
 
     //top left
-    sprite_tex_data[2] = offset_x;
+    sprite_tex_data[2] = offset_x*4.0f;
     sprite_tex_data[3] = 0.0f; 
 
     //bottom right
-    sprite_tex_data[4] = offset_x*2.0f;
+    sprite_tex_data[4] = offset_x*5.0f;
     sprite_tex_data[5] = offset_y;
 
     //top left
-    sprite_tex_data[6] = offset_x;
+    sprite_tex_data[6] = offset_x*4.0;
     sprite_tex_data[7] = 0.0f;
 
     //top right
-    sprite_tex_data[8] = offset_x*2.0f;
+    sprite_tex_data[8] = offset_x*5.0f;
     sprite_tex_data[9] = 0.0f;
 
     //bottom right
-    sprite_tex_data[10] = offset_x*2.0f;
+    sprite_tex_data[10] = offset_x*5.0f;
     sprite_tex_data[11] = offset_y;
 
     render_component->set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
