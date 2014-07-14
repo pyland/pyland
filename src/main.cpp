@@ -110,6 +110,21 @@ std::array<std::array<int, 16>, 16> world_data = {{
         {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}}
     }};
 
+// TODO: Integrate with fun upcoming map stuff.
+std::map<int, TileType> tile_to_type({
+    { 8, TileType::WALKABLE},   // Board
+    {12, TileType::WALKABLE},   // Flowers
+    {64, TileType::WALKABLE},   // Grass
+
+    { 2, TileType::UNWALKABLE}, // Edged wall
+    {13, TileType::UNWALKABLE}, // Water
+    {14, TileType::UNWALKABLE}, // Wall
+    {21, TileType::UNWALKABLE}, // Hideous ice
+
+    {57, TileType::KILLER},     // Trapdoor (set)
+    {74, TileType::KILLER}      // Lava
+});    
+
 
 void move_object(const int id, const float dx, const float dy) {
     int new_id = id +1;
@@ -194,12 +209,31 @@ static float get_dt() {
 }
 
 
+
+Vec2D get_rand_walkable () {
+    std::uniform_int_distribution<int32_t> random_x(1, 14);
+    std::uniform_int_distribution<int32_t> random_y(1, 14);
+
+    int x = random_x(random_generator);
+    int y = random_y(random_generator);
+
+    while (TileType::WALKABLE != tile_to_type[world_data[x][y]]) {
+        x = random_x(random_generator);
+        y = random_y(random_generator);
+    }
+    
+    return Vec2D(x,y);
+
+}
+
+
 static int maxid = 0;
 void create_character(Interpreter &interpreter, std::map<int, Character *> *characters, int x, int y, std::string name) {
     ++maxid;
 
     print_debug << "Creating character" << std::endl;
 
+    // Registering new character with game engine
     Character* new_character = new Character();
     new_character->set_id(maxid);
     new_character->set_name("John");
@@ -210,9 +244,8 @@ void create_character(Interpreter &interpreter, std::map<int, Character *> *char
 
     print_debug << "Creating character wrapper" << std::endl;
 
-    std::uniform_int_distribution<int32_t> random_x(1, 14);
-    std::uniform_int_distribution<int32_t> random_y(1, 14);
-    Entity *a_thing = new Entity(Vec2D(random_x(random_generator), random_y(random_generator)), name, maxid-1);
+    // Register user controled character
+    Entity *a_thing = new Entity(get_rand_walkable(), name, maxid-1);
 
     print_debug << "Registering character" << std::endl;
 

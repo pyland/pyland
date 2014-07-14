@@ -16,6 +16,12 @@
 ///
 
 void move_object(const int id, const float dx, const float dy);
+enum class TileType {
+    WALKABLE,
+    UNWALKABLE,
+    KILLER
+};
+extern std::map<int, TileType> tile_to_type;
 
 /// Holds the overall map data
 //0th tile is top left
