@@ -162,3 +162,7 @@ std::string Entity::read_file(std::string loc) {
         return "";
     }
 }
+
+void Entity::py_print_debug(std::string text) {
+    print_debug << text << std::endl;
+}

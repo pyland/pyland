@@ -43,7 +43,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
     {
         lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
 
-        PyObject_Print(py::str("WE ARE FIGHTING DREEBAS").ptr(), stdout, 0);
+        //PyObject_Print(py::str("WE ARE FIGHTING DREEBAS").ptr(), stdout, 0);
         print_debug << std::endl;
         PyObject_Print(py::api::object(entity_object->attr("name")).ptr(), stdout, 0);
         print_debug << std::endl;

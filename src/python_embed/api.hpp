@@ -191,6 +191,8 @@ class Entity {
         /// @see run_script()
         ///
         void give_script(boost::python::api::object in);
+
+        void py_print_debug(std::string text);
 };
 
 #endif
