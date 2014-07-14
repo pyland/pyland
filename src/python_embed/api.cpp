@@ -73,7 +73,7 @@ bool Entity::move(int x, int y) {
         position = cached_position;
     }
     else if (tile == TileType::KILLER) {
-        position = start;
+        position = Vec2D(1,1);
     }
     float dx = TILESIZE_PIXELS * float(position.x - cached_position.x);
     float dy = TILESIZE_PIXELS * float(position.y - cached_position.y);
