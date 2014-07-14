@@ -55,6 +55,21 @@ class MapLoader {
     /// Load the TMX map from the source file
     /// 
     bool load_map(const std::string source);
+
+    ///
+    /// Get the tilesets that this map uses
+    ///
+    std::vector<std::shared_ptr<TileSet>>& get_tilesets() {return tilesets; }
+
+    ///
+    /// Get the map's layers
+    ///
+    std::vector<std::shared_ptr<Layer>>& get_layers() { return layers; }
+
+    ///
+    /// Get the objects in the map
+    ///
+    std::vector<std::shared_ptr<MapObject>>& get_objects() { return objects; }
 };
 
 

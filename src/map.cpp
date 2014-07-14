@@ -46,13 +46,20 @@ Map::Map(const std::string map_src) : renderable_component() {
     //Load the map
     MapLoader map_loader;
     map_loader.load_map(map_src);
-
     //Get the tilesets
     //TODO: We'll only support one tileset at the moment
+    std::vector<std::shared_ptr<Layer>>& layers = map_loader.get_layers();
+    std::vector<std::shared_ptr<TileSet>>& tilesets = map_loader.get_tilesets();
+    std::vector<std::shared_ptr<MapObject>>& objects = map_loader.get_objects();
+
+
+    //Load the images for the tilesets
 
 
     //Get each layer of the map
-
+    for(auto iter = layers.begin(); iter != layers.end(); ++iter) {
+       
+    }
     //Get an object list
     
 
