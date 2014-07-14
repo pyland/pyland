@@ -55,6 +55,7 @@
 
 #include "character.hpp"
 #include "engine_api.hpp"
+#include "filters.hpp"
 #include "game_window.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
@@ -254,8 +255,9 @@ int main (int argc, char* argv[]) {
 
     InputManager* input_manager = window.get_input_manager();
 
-    Lifeline callback_lifeline = input_manager->register_keyboard_handler(
-        [] (KeyboardInputEvent event) {
+    Lifeline callback_lifeline = input_manager->register_keyboard_handler(filter(
+        {KEYPRESS, KEY("S")},
+        [&] (KeyboardInputEvent event) {
             print_debug
                 << "Keyboard Event:\tKeycode:\t" << event.key_code 
                 << "\tScancode:\t" << event.scan_code 
@@ -263,42 +265,9 @@ int main (int argc, char* argv[]) {
                 << "\tChanged:\t" << event.changed
                 << "\tRepeated:\t" << event.repeated
                 << std::endl;
-    });
-
-    Lifeline press_lifeline = input_manager->register_key_press_handler(
-        [&] (KeyboardInputEvent event) {
-            print_debug
-                << "Key Press:\tKeycode:\t" << event.key_code 
-                << "\tScancode:\t" << event.scan_code 
-                << std::endl;
-
             create_character(interpreter, characters, maxid, maxid, "Adam");
-    });
-
-    Lifeline type_lifeline = input_manager->register_key_type_handler(
-        [] (KeyboardInputEvent event) {
-            print_debug
-                << "Key Typed:\tKeycode:\t" << event.key_code 
-                << "\tScancode:\t" << event.scan_code 
-                << std::endl;
-    });
-
-    Lifeline release_lifeline = input_manager->register_key_release_handler(
-        [] (KeyboardInputEvent event) {
-            print_debug
-                << "Key Release:\tKeycode:\t" << event.key_code 
-                << "\tScancode:\t" << event.scan_code 
-                << std::endl;
-    });
-    
-    Lifeline down_lifeline = input_manager->register_key_down_handler(
-        [] (KeyboardInputEvent event) {
-            print_debug
-                << "Key Down:\tKeycode:\t" << event.key_code 
-                << "\tScancode:\t" << event.scan_code 
-                << std::endl;
-    });
-
+        }
+    ));
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
