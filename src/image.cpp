@@ -74,12 +74,14 @@ void Image::load_file(const char* filename) {
     // A surface with a known format to blit the loaded image on to.
     SDL_Surface* compatible;
 
-    const int init_flags = IMG_INIT_PNG | IMG_INIT_TIF;
-
-    SDL_Init(0);
-    if (IMG_Init(init_flags) != init_flags) {
-        std::cerr << "Error initialising image subsystem: " << IMG_GetError() << std::endl;
-        throw Image::LoadException("Failed to initialise SDL_image.");
+    if ((IMG_Init(IMG_INIT_JPG) & IMG_INIT_JPG) == 0) {
+        std::cerr << "Warning: Failure initialising image subsystem: " << IMG_GetError() << std::endl;
+    }
+    if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) == 0) {
+        std::cerr << "Warning: Failure initialising image subsystem: " << IMG_GetError() << std::endl;
+    }
+    if ((IMG_Init(IMG_INIT_TIF) & IMG_INIT_TIF) == 0) {
+        std::cerr << "Warning: Failure initialising image subsystem: " << IMG_GetError() << std::endl;
     }
     
     loaded = IMG_Load(filename);
@@ -133,4 +135,8 @@ void Image::load_file(const char* filename) {
     SDL_UnlockSurface(compatible);
 
     SDL_FreeSurface(compatible);
+
+    // Errrrr... There isn't currently any logical place to put an
+    // IMG_Quit()... It's not going to cause any problems, it's just a
+    // bit unclean.
 }
