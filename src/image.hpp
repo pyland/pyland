@@ -5,12 +5,17 @@ extern "C" {
 #include <SDL2/SDL_image.h>
 }
 
+#include "lifeline.hpp"
+
+
 
 ///
 /// Mutable image which can be constructed from a file
 ///
 struct Image {
 private:
+    Lifeline resource_lifeline;
+
     ///
     /// Allocate memory for the pixel array.
     ///

@@ -9,6 +9,7 @@ extern "C" {
 }
 
 #include "image.hpp"
+#include "lifeline.hpp"
 
 
 
@@ -47,7 +48,6 @@ Image::Image(const char* filename, bool opengl) {
 
 
 Image::~Image() {
-    delete pixels;
 }
 
 
@@ -64,7 +64,9 @@ void Image::create_blank(int w, int h) {
         store_height = height;
     }
 
-    pixels = new Pixel[store_width * store_height];
+    Pixel* pixels_local = new Pixel[store_width * store_height];
+    this->pixels = pixels_local;
+    resource_lifeline = Lifeline([pixels_local] () {delete pixels_local;});
 }
 
 
@@ -111,7 +113,6 @@ void Image::load_file(const char* filename) {
 
     if (compatible == nullptr) {
         SDL_FreeSurface(loaded);
-        delete pixels;
         pixels = nullptr;
         throw Image::LoadException("Failed to allocate space.");
     }

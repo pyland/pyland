@@ -10,6 +10,9 @@ extern "C" {
 
 int main() {
     Image image("test.png", true);
+    {
+        Image tempCopy = image;
+    }
 
     for (int y = 0; y < image.store_height; y++) {
         for (int x = 0; x < image.store_width; x++) {

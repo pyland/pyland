@@ -42,8 +42,8 @@ debug: all
 
 
 
-main: main.o image.o 
-	$(CXX) -o main main.o image.o $(CXXFLAGS) $(SDL_LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) $(X11_LDLIBS)
+main: main.o image.o lifeline.o lifeline_controller.o
+	$(CXX) -o main main.o image.o lifeline.o lifeline_controller.o $(CXXFLAGS) $(SDL_LDLIBS) $(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS) $(X11_LDLIBS)
 main.o: main.cpp
 	$(CXX) -c -o main.o main.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS)
 
@@ -51,9 +51,17 @@ main.o: main.cpp
 image.o: $(SOURCE_ROOT)/image.cpp
 	$(CXX) -c -o image.o $(SOURCE_ROOT)/image.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
 
+lifeline.o: $(SOURCE_ROOT)/lifeline.cpp
+	$(CXX) -c -o lifeline.o $(SOURCE_ROOT)/lifeline.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
+
+lifeline_controller.o: $(SOURCE_ROOT)/lifeline_controller.cpp
+	$(CXX) -c -o lifeline_controller.o $(SOURCE_ROOT)/lifeline_controller.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
+
 
 
 clean:
 	- rm -f main
 	- rm -f main.o
 	- rm -f image.o
+	- rm -f lifeline.o
+	- rm -f lifeline_controller.o
