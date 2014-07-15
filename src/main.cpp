@@ -29,19 +29,20 @@
 
 #include <boost/filesystem.hpp>
     
+#include <cassert>
+#include <chrono>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
-
-#include <cmath>
-#include <cassert>
-#include <unistd.h>
 #include <ctime>
-#include <sys/time.h>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <map>
+#include <random>
 #include <string>
-#include <chrono>
+#include <sys/time.h>
 #include <thread>
+#include <unistd.h>
 
 //Include GLM
 #define GLM_FORCE_RADIANS
@@ -52,15 +53,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
-#include <map>
-
 #include "character.hpp"
 #include "engine_api.hpp"
+#include "filters.hpp"
 #include "game_window.hpp"
 #include "input_manager.hpp"
-#include "keyboard_input_event.hpp"
 #include "interpreter.hpp"
+#include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
 #include "main.hpp"
 #include "map.hpp"
@@ -85,7 +84,8 @@ using namespace std;
 
 #define GLOBAL_SCALE 2
 static volatile int shutdown;
-const int num_objects = 2;
+
+static std::mt19937 random_generator;
 
 
 //TODO: Move this out of here, just added to get the sprite python control working again before full
@@ -111,16 +111,27 @@ std::array<std::array<int, 16>, 16> world_data = {{
         {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}}
     }};
 
+// TODO: Integrate with fun upcoming map stuff.
+std::map<int, TileType> tile_to_type({
+    { 8, TileType::WALKABLE},   // Board
+    {12, TileType::WALKABLE},   // Flowers
+    {64, TileType::WALKABLE},   // Grass
+
+    { 2, TileType::UNWALKABLE}, // Edged wall
+    {13, TileType::UNWALKABLE}, // Water
+    {14, TileType::UNWALKABLE}, // Wall
+    {21, TileType::UNWALKABLE}, // Hideous ice
+
+    {57, TileType::KILLER},     // Trapdoor (set)
+    {74, TileType::KILLER}      // Lava
+});    
+
 
 void move_object(const int id, const float dx, const float dy) {
-    if(id > num_objects || id < 0) {
-        cerr << "ERROR: move_object: object id exceeds number of objects. Object id: " << id << endl;
-        return;
-    } 
     int new_id = id +1;
 
-    (*characters)[new_id]->set_x_position((*characters)[new_id]->get_x_position() + dx);
-    (*characters)[new_id]->set_y_position((*characters)[new_id]->get_y_position() + dy);
+    characters->at(new_id)->set_x_position(characters->at(new_id)->get_x_position() + dx);
+    characters->at(new_id)->set_y_position(characters->at(new_id)->get_y_position() + dy);
 }
 /*
   static void animate(float dt) {
@@ -198,6 +209,52 @@ static float get_dt() {
     return static_cast<float>(duration.count()) / 1000.0f;
 }
 
+
+
+Vec2D get_rand_walkable () {
+    std::uniform_int_distribution<int32_t> random_x(1, 14);
+    std::uniform_int_distribution<int32_t> random_y(1, 14);
+
+    int x = random_x(random_generator);
+    int y = random_y(random_generator);
+
+    while (TileType::WALKABLE != tile_to_type[world_data[x][y]]) {
+        x = random_x(random_generator);
+        y = random_y(random_generator);
+    }
+    
+    return Vec2D(x,y);
+
+}
+
+
+static int maxid = 0;
+void create_character(Interpreter &interpreter, std::map<int, Character *> *characters, int x, int y, std::string name) {
+    ++maxid;
+
+    print_debug << "Creating character" << std::endl;
+
+    // Registering new character with game engine
+    Character* new_character = new Character();
+    new_character->set_id(maxid);
+    new_character->set_name("John");
+
+    print_debug << "Adding character" << std::endl;
+
+    (*characters)[maxid] = new_character;
+
+    print_debug << "Creating character wrapper" << std::endl;
+
+    // Register user controled character
+    Entity *a_thing = new Entity(get_rand_walkable(), name, maxid-1);
+
+    print_debug << "Registering character" << std::endl;
+
+    interpreter.register_entity(*a_thing);
+
+    print_debug << "Done!" << std::endl;
+}
+
 int main (int argc, char* argv[]) {
     bool use_graphical_window = true;
 
@@ -218,30 +275,9 @@ int main (int argc, char* argv[]) {
 
     characters = map.get_characters_map();
 
-    Character* character1 = new Character();
-    character1->set_id(1);
-    character1->set_name("John");
-    character1->set_script("");
- 
-    Character* character2 = new Character();
-    character2->set_id(2);
-    character2->set_name("Adam");
-    character2->set_script("");
- 
-    (*characters)[1] = character1;
-    (*characters)[2] = character2;
 
-
-    //   Map map;
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
 
-    Entity a_thing(Vec2D(14, 14), "Adam", 0);
-    interpreter.register_entity(a_thing);
-
-    Entity another_thing(Vec2D(1, 1), "John", 1);
-    interpreter.register_entity(another_thing);
-  
-  
     MapViewer map_viewer(&window);
     map_viewer.set_map(&map);
 
@@ -249,18 +285,22 @@ int main (int argc, char* argv[]) {
     float dt = get_dt();
     int count = 0;
 
+
     InputManager* input_manager = window.get_input_manager();
 
-    Lifeline callback_lifeline = input_manager->register_keyboard_handler(
-      [] (KeyboardInputEvent event) {
-        print_debug
-          << "Keyboard Event:\tKeycode:\t" << event.key_code 
-          << "\tScancode:\t" << event.scan_code 
-          << "\tDown:\t" << event.down 
-          << "\tChanged:\t" << event.changed
-          << std::endl;
-      });
-
+    Lifeline callback_lifeline = input_manager->register_keyboard_handler(filter(
+        {KEYPRESS, KEY("S")},
+        [&] (KeyboardInputEvent event) {
+            print_debug
+                << "Keyboard Event:\tKeycode:\t" << event.key_code 
+                << "\tScancode:\t" << event.scan_code 
+                << "\tDown:\t" << event.down 
+                << "\tChanged:\t" << event.changed
+                << "\tRepeated:\t" << event.repeated
+                << std::endl;
+            create_character(interpreter, characters, maxid, maxid, "Adam");
+        }
+    ));
 
     while (!window.check_close()) {
         //Get the time since the last iteration 

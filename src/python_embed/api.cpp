@@ -6,6 +6,7 @@
 #include "api.hpp"
 #include "main.hpp"
 #include "print_debug.hpp"
+#include <random>
 
 #ifndef WRAPPING_ENABLED
 #define WRAPPING_ENABLED true
@@ -14,27 +15,6 @@
 #ifndef TILESIZE_PIXELS
 #define TILESIZE_PIXELS 32
 #endif
-
-enum class TileType {
-    WALKABLE,
-    UNWALKABLE,
-    KILLER
-};
-
-// TODO: Integrate with fun upcoming map stuff.
-std::map<int, TileType> tile_to_type({
-    { 8, TileType::WALKABLE},   // Board
-    {12, TileType::WALKABLE},   // Flowers
-    {64, TileType::WALKABLE},   // Grass
-
-    { 2, TileType::UNWALKABLE}, // Edged wall
-    {13, TileType::UNWALKABLE}, // Water
-    {14, TileType::UNWALKABLE}, // Wall
-    {21, TileType::UNWALKABLE}, // Hideous ice
-
-    {57, TileType::KILLER},     // Trapdoor (set)
-    {74, TileType::KILLER}      // Lava
-});
 
 namespace py = boost::python;
 
@@ -93,7 +73,7 @@ bool Entity::move(int x, int y) {
         position = cached_position;
     }
     else if (tile == TileType::KILLER) {
-        position = start;
+        position = Vec2D(1,1);
     }
     float dx = TILESIZE_PIXELS * float(position.x - cached_position.x);
     float dy = TILESIZE_PIXELS * float(position.y - cached_position.y);
@@ -103,9 +83,9 @@ bool Entity::move(int x, int y) {
     return tile != TileType::KILLER;
 }
 
-bool Entity::walkable(Vec2D by) {
+bool Entity::walkable(int x, int y) {
     ++call_number;
-    auto new_position = position + by;
+    auto new_position = position + Vec2D(x, y);
     TileType tile = tile_to_type[world_data[new_position.x][new_position.y]];
     return tile == TileType::WALKABLE;
 }
@@ -161,4 +141,8 @@ std::string Entity::read_file(std::string loc) {
         print_debug << "file opening unsuccessful" << std::endl;
         return "";
     }
+}
+
+void Entity::py_print_debug(std::string text) {
+    print_debug << text << std::endl;
 }

@@ -62,6 +62,7 @@ void InputManager::handle_event(SDL_Event* event) {
         break;
     case SDL_KEYUP:
         down_keys.erase(event->key.keysym.scancode);
+        released_keys.insert(event->key.keysym.scancode);
         break;
     case SDL_MOUSEBUTTONDOWN:
         down_buttons.insert(event->button.button);
@@ -86,11 +87,11 @@ void InputManager::run_callbacks() {
         key_press_callbacks.broadcast(event);
         key_type_callbacks.broadcast(event);
     }
-    for (int key : typed_keys) {
-        KeyboardInputEvent event(this, key, true, true, true);
-        keyboard_callbacks.broadcast(event);
-        key_type_callbacks.broadcast(event);
-    }
+    // for (int key : typed_keys) {
+    //     KeyboardInputEvent event(this, key, true, true, true);
+    //     keyboard_callbacks.broadcast(event);
+    //     key_type_callbacks.broadcast(event);
+    // }
     for (int key : released_keys) {
         KeyboardInputEvent event(this, key, false, true, false);
         keyboard_callbacks.broadcast(event);

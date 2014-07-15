@@ -4,6 +4,7 @@
 #include <future>
 #include <thread>
 #include "api.hpp"
+#include "interpreter_context.hpp"
 
 class Interpreter;
 
@@ -19,7 +20,14 @@ class EntityThread {
         ///
         /// Spawns a new thread.
         ///
-        EntityThread(Interpreter *interpreter, Entity &entity);
+        /// @param interpreter_context
+        ///     An interpreter context to lock the GIL on.
+        ///     The GIL is locked on the main thread.
+        ///
+        /// @param entity
+        ///     The entity to construct the daemon for.
+        ///
+        EntityThread(InterpreterContext interpreter_context, Entity &entity);
 
         ///
         /// Close the thread and shut down neatly.
@@ -93,6 +101,14 @@ class EntityThread {
         /// of calls to APIs could occur.
         ///
         uint64_t previous_call_number;
+
+        ///
+        /// The interpreter context to lock on.
+        ///
+        /// This is needed as an attribute as destruction requires
+        /// locking in order to safely destroy Python objects.
+        ///
+        InterpreterContext interpreter_context;
 
         /// 
         /// Python's nonstandard interpretation of the thread's ID.

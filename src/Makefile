@@ -110,6 +110,7 @@ BASE_OBJS = \
 	shader.o
 
 INPUT_OBJS = \
+	input_management/filters.o              \
 	input_management/input_event.o          \
 	input_management/input_manager.o        \
 	input_management/keyboard_input_event.o \
@@ -119,6 +120,7 @@ INPUT_OBJS = \
 PYTHON_OBJS = \
 	python_embed/api.o           \
 	python_embed/interpreter.o   \
+	python_embed/interpreter_context.o \
 	python_embed/locks.o         \
 	python_embed/entitythread.o  \
 	python_embed/thread_killer.o
@@ -132,7 +134,7 @@ PYTHON_SHARED_OBJS_DEPENDS = \
 HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${BASE_OBJS:.o=.d}            \
-	${INPUT_OBJS:.o=.d}            \
+	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd}
 

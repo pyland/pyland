@@ -4,6 +4,7 @@
 #include <mutex>
 #include <thread>
 #include "entitythread.hpp"
+#include "interpreter_context.hpp"
 #include "locks.hpp"
 #include "print_debug.hpp"
 #include "thread_killer.hpp"
@@ -54,6 +55,9 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 /// @param entitythreads
 ///     Reference to the entitythreads to police.
 ///
+/// @param interpreter_context
+///     An interpreter context to lock on. The GIL is locked on the main thread.
+///
 /// @warning
 ///     Arguments must be passed in a std::reference_wrapper to avoid copies.
 ///
@@ -63,7 +67,8 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 ///     usage should keep this in mind.
 ///
 void thread_killer(std::timed_mutex &finish_signal,
-                   lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads) {
+                   lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads,
+                   InterpreterContext interpreter_context) {
 
     while (true) {
         // Nonbloking sleep; allows safe quit
@@ -81,7 +86,7 @@ void thread_killer(std::timed_mutex &finish_signal,
         for (auto &entitythread : entitythreads.value) {
             if (!entitythread->is_dirty()) {
                 print_debug << "Killing thread!" << std::endl;
-                lock::GIL lock_gil("thread_killer");
+                lock::GIL lock_gil(interpreter_context, "thread_killer");
                 entitythread->halt_soft();
             }
             entitythread->clean();
@@ -91,17 +96,20 @@ void thread_killer(std::timed_mutex &finish_signal,
     print_debug << "Finished kill thread" << std::endl;
 }
 
-ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads) {
-        // Lock now to prevent early exit
-        kill_thread_finish_signal.lock();
+ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads,
+                           InterpreterContext interpreter_context) {
 
-        thread = std::thread(
-            thread_killer,
-            std::ref(kill_thread_finish_signal),
-            std::ref(entitythreads)
-        );
+    // Lock now to prevent early exit
+    kill_thread_finish_signal.lock();
 
-        print_debug << "main: Spawned Kill thread" << std::endl;
+    thread = std::thread(
+        thread_killer,
+        std::ref(kill_thread_finish_signal),
+        std::ref(entitythreads),
+        interpreter_context
+    );
+
+    print_debug << "main: Spawned Kill thread" << std::endl;
 }
 
 void ThreadKiller::finish() {    
