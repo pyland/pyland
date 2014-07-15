@@ -67,7 +67,7 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 ///     usage should keep this in mind.
 ///
 void thread_killer(std::timed_mutex &finish_signal,
-                   lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads,
+                   EntityThreads &entitythreads,
                    InterpreterContext interpreter_context) {
 
     while (true) {
@@ -79,24 +79,26 @@ void thread_killer(std::timed_mutex &finish_signal,
         print_debug << "Kill thread woke up" << std::endl;
         print_debug << "111" << entitythreads.value.size() << std::endl;
 
-        std::lock_guard<std::mutex> lock(entitythreads.lock);
+        std::lock_guard<std::mutex> lock(*entitythreads.lock);
 
         // Go through the available entitythread objects and kill those that
         // haven't had an API call.
         for (auto &entitythread : entitythreads.value) {
-            if (!entitythread->is_dirty()) {
-                print_debug << "Killing thread!" << std::endl;
-                lock::GIL lock_gil(interpreter_context, "thread_killer");
-                entitythread->halt_soft();
+            if (auto entitythread_p = entitythread.lock()) {
+                if (!entitythread_p->is_dirty()) {
+                    print_debug << "Killing thread!" << std::endl;
+                    lock::GIL lock_gil(interpreter_context, "thread_killer");
+                    entitythread_p->halt_soft();
+                }
+                entitythread_p->clean();
             }
-            entitythread->clean();
         }
     }
 
     print_debug << "Finished kill thread" << std::endl;
 }
 
-ThreadKiller::ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads,
+ThreadKiller::ThreadKiller(EntityThreads &entitythreads,
                            InterpreterContext interpreter_context) {
 
     // Lock now to prevent early exit
