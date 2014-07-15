@@ -9,6 +9,7 @@
 #include "renderable_component.hpp"
 #include "tileset.hpp"
 
+
 #include <array>
 #include <map>
 #include <memory>
@@ -226,7 +227,6 @@ public:
     /// The function used to update elements on the map.
     ///
     void update_map(float dt);
-
 };
 
 #endif

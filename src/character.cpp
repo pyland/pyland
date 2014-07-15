@@ -1,5 +1,6 @@
 #include "character.hpp"
 #include "renderable_component.hpp"
+#include "print_debug.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -61,29 +62,29 @@ void Character::generate_tex_data() {
 
     GLfloat offset_x = GLfloat(1.0 / (IMAGE2_SIZE_WIDTH  / TILESET_ELEMENT_SIZE));
     GLfloat offset_y = GLfloat(1.0 / (IMAGE2_SIZE_HEIGHT / TILESET_ELEMENT_SIZE));
-    std::cout << "OFFSET " << offset_x << std::endl;
+    print_debug << "OFFSET " << offset_x << std::endl;
     //bottom left
-    sprite_tex_data[0] = offset_x;
+    sprite_tex_data[0] = offset_x*4.0f;
     sprite_tex_data[1] = offset_y;
 
     //top left
-    sprite_tex_data[2] = offset_x;
+    sprite_tex_data[2] = offset_x*4.0f;
     sprite_tex_data[3] = 0.0f; 
 
     //bottom right
-    sprite_tex_data[4] = offset_x*2.0f;
+    sprite_tex_data[4] = offset_x*5.0f;
     sprite_tex_data[5] = offset_y;
 
     //top left
-    sprite_tex_data[6] = offset_x;
+    sprite_tex_data[6] = offset_x*4.0;
     sprite_tex_data[7] = 0.0f;
 
     //top right
-    sprite_tex_data[8] = offset_x*2.0f;
+    sprite_tex_data[8] = offset_x*5.0f;
     sprite_tex_data[9] = 0.0f;
 
     //bottom right
-    sprite_tex_data[10] = offset_x*2.0f;
+    sprite_tex_data[10] = offset_x*5.0f;
     sprite_tex_data[11] = offset_y;
 
     render_component->set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
@@ -137,6 +138,7 @@ void Character::generate_vertex_data() {
     sprite_data[16] = 0;
     sprite_data[17] = depth;
     std::cout << "SPRITES: " << std::endl;
+
     render_component->set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
     render_component->set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
 }

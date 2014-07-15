@@ -3,6 +3,7 @@
 
 #include <boost/python.hpp>
 #include <mutex>
+#include "interpreter_context.hpp"
 #include "print_debug.hpp"
 
 namespace lock {
@@ -10,21 +11,59 @@ namespace lock {
     /// A RAII lock for the GIL. Usage:
     ///
     ///     {
-    ///         GIL lock_gil;
+    ///         GIL lock_gil(interpreter_context);
     ///         stuff();
     ///     }
     ///
     class GIL {
         public:
-            GIL(std::string name);
-            GIL();
+            ///
+            /// Lock a GIL. Unlock on destruction.
+            ///
+            /// @param interpreter_context
+            ///     An interpreter context to lock on.
+            ///     The GIL is locked on the main thread.
+            ///
+            /// @param name
+            ///     String for debugging.
+            ///     Example: "Interpreter initialization"
+            ///
+            GIL(InterpreterContext interpreter_context, std::string name);
+
+            ///
+            /// Lock a GIL. Unlock on destruction.
+            ///
+            /// @param interpreter_context
+            ///     An interpreter context to lock on.
+            ///     The GIL is locked on the main thread.
+            ///
+            GIL(InterpreterContext interpreter_context);
+
+            ///
+            /// Unlock GIL.
+            ///
             ~GIL();
 
+            ///
+            /// Tempoarily public debug ID.
+            ///
+            /// @deprecated
+            ///     Will become private in future.
+            ///
+            /// @deprecated
+            ///     May be removed entirely.
+            ///
             static int i;
             int inst;
 
         private:
-            GIL(const GIL&);
+            // Can't copy locks
+            GIL(const GIL&) = delete;
+
+            ///
+            /// String for debugging.
+            /// Example: "Interpreter initialization"
+            ///
             std::string name;
     };
 
@@ -32,18 +71,43 @@ namespace lock {
     /// A RAII lock for PyThreadState creation. Usage:
     ///
     ///     {
-    ///         ThreadState threadstate(interpreter_state);
+    ///         ThreadState threadstate(interpreter_context);
     ///         stuff(thredstate.get_threadstate());
     ///     }
     ///
     class ThreadState {
         public:
-            ThreadState(PyInterpreterState *interpreter_state);
+            ///
+            /// Create a PyThreadState, allowing for easy
+            /// constructive locking.
+            ///
+            /// @param interpreter_context
+            ///     An interpreter context to get an InterpreterState from.
+            ///
+            ThreadState(InterpreterContext interpreter_context);
+
+            ///
+            /// Clear and delete the associated PyThreadState.
+            ///
             ~ThreadState();
+
+            ///
+            /// Return the PyThreadState.
+            /// As always, this should be opaque. Usage after the
+            /// ThreadState object has finished is undefined behaviour.
+            ///
+            /// @return
+            ///     The associated PyThreadState
+            ///
             PyThreadState *get_threadstate();
 
         private:
-            ThreadState(const ThreadState&);
+            // Can't copy locks
+            ThreadState(const ThreadState&) = delete;
+
+            ///
+            /// Associated PyThreadState.
+            ///
             PyThreadState *threadstate;
     };
 
@@ -57,26 +121,70 @@ namespace lock {
     ///
     class ThreadGIL {
         public:
+            ///
+            /// Lock the thread. Unlock on destruction.
+            ///
             ThreadGIL(ThreadState &);
+
+            ///
+            /// Unlock thread.
+            ///
             ~ThreadGIL();
 
         private:
-            ThreadGIL(const ThreadGIL&);
+            // Can't copy locks
+            ThreadGIL(const ThreadGIL&) = delete;
     };
 
 
-
+    ///
+    /// A wrapper class largely equivalent to pair<T, std::mutex>.
+    ///
+    /// Allows for convenient association of locks to values,
+    /// but does not enforce the lock.
+    ///
     template <class T>
     class Lockable {
         public:
+            ///
+            /// Create lockable object using the default
+            /// initializer for the templated type.
+            ///
             Lockable(): value(), lock() {};
-            Lockable(T value): value(value), lock() {};
-            ~Lockable() {};
 
+            ///
+            /// Create lockable object from an instance
+            /// of the templated type.
+            ///
+            /// @param value
+            ///     Instance of the templated type
+            ///     to associate wrapper with.
+            ///
+            Lockable(T value): value(value), lock() {};
+
+            ///
+            /// The templated type instance.
+            ///
+            /// Before usage, the lock should be taken as
+            /// required by the specific circumstance.
+            ///
             T value;
+
+            ///
+            /// The associated lock.
+            ///
             std::mutex lock;
     };
 
+    ///
+    /// Convenience function in the style of make_shared.
+    ///
+    /// Usage: make_lockable<Type>(arguments...)
+    ///
+    /// @param args...
+    ///     The arguments to be forwarded to the
+    ///     templated type's constructor.
+    ///
     template<class T, class... Args>
     Lockable<T> make_lockable(Args &&... args) {
         return Lockable<T>(new T(std::forward<Args>(args)...));

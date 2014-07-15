@@ -236,9 +236,11 @@ public:
     ///
     bool check_close();
 
-    // WARNING: This method is subject to API changes!
     ///
     /// Get the width and height of the window.
+    ///
+    /// @warning
+    ///     This method is subject to API changes.
     ///
     /// Returns the dimensions of the renderable area (excluding window
     /// borders).

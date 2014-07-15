@@ -3,7 +3,7 @@
 #include <future>
 #include <thread>
 #include "entitythread.hpp"
-#include "interpreter.hpp"
+#include "interpreter_context.hpp"
 #include "locks.hpp"
 #include "make_unique.hpp"
 #include "print_debug.hpp"
@@ -13,25 +13,55 @@
 
 namespace py = boost::python;
 
+///
+/// A thread function running a player's daemon.
+///
+/// @param entity_object
+///     Python object to pass to the bootstrapper, which has API calls passed to it.
+///
+/// @param thread_id_promise
+///     Promise allowing the thread to asynchronously return the thread's id,
+///     according to CPython.
+///
+/// @param bootstrapper_file
+///     The Python file that can bootstrap the process, taking an entity, running
+///     it's files and controling logic (such as handling asynchronous exceptions).
+///
+/// @param interpreter_context
+///     The interpreter_context of the main interpreter, allowing creation of a new thread
+///     by access of the interpreter's PyInterpreterState.
+///
+///     Also allows importing files.
+///
 void run_entity(std::shared_ptr<py::api::object> entity_object,
                 std::promise<long> thread_id_promise,
                 boost::filesystem::path bootstrapper_file,
-                PyInterpreterState *main_interpreter_state) {
+                InterpreterContext interpreter_context) {
 
     print_debug << "run_entity: Starting" << std::endl;
 
-    lock::ThreadState threadstate(main_interpreter_state);
+    {
+        lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
+
+        //PyObject_Print(py::str("WE ARE FIGHTING DREEBAS").ptr(), stdout, 0);
+        print_debug << std::endl;
+        PyObject_Print(py::api::object(entity_object->attr("name")).ptr(), stdout, 0);
+        print_debug << std::endl;
+    }
+
+    // Register thread with Python, to allow locking
+    lock::ThreadState threadstate(interpreter_context);
     lock::ThreadGIL lock_thread(threadstate);
 
     print_debug << "run_entity: Stolen GIL" << std::endl;
 
     try {
+        // Asynchronously return thread id to allow killing of this thread
         thread_id_promise.set_value(PyThread_get_thread_ident());
 
-        auto bootstrapper_module = Interpreter::import_file(bootstrapper_file);
-        print_debug << "run_entity: Got bootstrapper" << std::endl;
+        // Get and run bootstrapper
+        auto bootstrapper_module = interpreter_context.import_file(bootstrapper_file);
         bootstrapper_module.attr("start")(*entity_object);
-        print_debug << "run_entity: Ran" << std::endl;
     }
     catch (py::error_already_set &) {
         // TODO: catch and nicely handle error
@@ -42,17 +72,21 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
     print_debug << "run_entity: Finished" << std::endl;
 }
 
-EntityThread::EntityThread(Interpreter *interpreter, Entity &entity):
-    entity(entity), previous_call_number(entity.call_number) {
+EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entity):
+    entity(entity),
+    previous_call_number(entity.call_number),
+    interpreter_context(interpreter_context) {
 
         // To get thread_id
         std::promise<long> thread_id_promise;
         thread_id_future = thread_id_promise.get_future();
 
-        // This seems to be the easy compromise.
+        // Wrap the object for Python.
+        //
+        // For implementation justifications, see
         // http://stackoverflow.com/questions/24477791
         {
-            lock::GIL lock_gil("EntityThread::EntityThread");
+            lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
             entity_object = std::make_shared<py::api::object>(boost::ref(entity));
         };
 
@@ -62,13 +96,12 @@ EntityThread::EntityThread(Interpreter *interpreter, Entity &entity):
             std::move(thread_id_promise),
             // TODO: Extract into a more logical place
             boost::filesystem::path("python_embed/scripts/bootstrapper.py"),
-            interpreter->main_thread_state->interp
+            interpreter_context
         );
-
-
 }
 
 long EntityThread::get_thread_id() {
+    // TODO: Make thread-safe, if needed
     if (thread_id_future.valid()) {
         thread_id = thread_id_future.get();
     }
@@ -105,7 +138,7 @@ EntityThread::~EntityThread() {
     finish();
     print_debug << "EntityThread destroyed" << std::endl;
 
-    lock::GIL lock_gil("EntityThread::~EntityThread");
+    lock::GIL lock_gil(interpreter_context, "EntityThread::~EntityThread");
 
     if (!entity_object.unique()) {
         throw std::runtime_error("multiple references to entity_object on destruction");

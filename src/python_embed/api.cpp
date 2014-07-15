@@ -6,29 +6,15 @@
 #include "api.hpp"
 #include "main.hpp"
 #include "print_debug.hpp"
+#include <random>
 
+#ifndef WRAPPING_ENABLED
 #define WRAPPING_ENABLED true
+#endif
+
+#ifndef TILESIZE_PIXELS
 #define TILESIZE_PIXELS 32
-
-enum class TileType {
-    WALKABLE,
-    UNWALKABLE,
-    KILLER
-};
-
-std::map<int, TileType> tile_to_type({
-    { 8, TileType::WALKABLE},   // Board
-    {12, TileType::WALKABLE},   // Flowers
-    {64, TileType::WALKABLE},   // Grass
-
-    { 2, TileType::UNWALKABLE}, // Edged wall
-    {13, TileType::UNWALKABLE}, // Water
-    {14, TileType::UNWALKABLE}, // Wall
-    {21, TileType::UNWALKABLE}, // Hideous ice
-
-    {57, TileType::KILLER},     // Trapdoor (set)
-    {74, TileType::KILLER}      // Lava
-});
+#endif
 
 namespace py = boost::python;
 
@@ -65,12 +51,10 @@ std::string Vec2D::to_string() {
 
 
 Entity::Entity(Vec2D start, std::string name, int id):
-    start(start), position(start), script(""), id(id) {
+    start(start), position(start), script(""), id(id), call_number(0) {
         this->name = std::string(name);
         move_object(id, TILESIZE_PIXELS * float(start.x), TILESIZE_PIXELS * float(start.y));
 }
-
-uint64_t Entity::call_number = 0;
 
 bool Entity::move(int x, int y) {
     ++call_number;
@@ -78,7 +62,7 @@ bool Entity::move(int x, int y) {
     auto cached_position = position;
     position += Vec2D(x, y);
 
-    if (not WRAPPING_ENABLED) {
+    if (!WRAPPING_ENABLED) {
         position.x = std::min(std::max(position.x, 0), TILESET_ELEMENT_SIZE);
         position.y = std::min(std::max(position.y, 0), TILESET_ELEMENT_SIZE);
     }
@@ -89,7 +73,7 @@ bool Entity::move(int x, int y) {
         position = cached_position;
     }
     else if (tile == TileType::KILLER) {
-        position = start;
+        position = Vec2D(1,1);
     }
     float dx = TILESIZE_PIXELS * float(position.x - cached_position.x);
     float dy = TILESIZE_PIXELS * float(position.y - cached_position.y);
@@ -99,9 +83,9 @@ bool Entity::move(int x, int y) {
     return tile != TileType::KILLER;
 }
 
-bool Entity::walkable(Vec2D by) {
+bool Entity::walkable(int x, int y) {
     ++call_number;
-    auto new_position = position + by;
+    auto new_position = position + Vec2D(x, y);
     TileType tile = tile_to_type[world_data[new_position.x][new_position.y]];
     return tile == TileType::WALKABLE;
 }
@@ -110,12 +94,20 @@ void Entity::monologue() {
     std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;
 }
 
+// WARNING: DEPRECATED
 void Entity::run_script() {
     ++call_number;
     script(py::ptr(this));
 }
 
 
+//  █████   ██████  ██████  ██████  ██████   █████   ████   ██████  ██████  █████
+//  ██  ██  ██      ██  ██  ██  ██  ██      ██      ██  ██    ██    ██      ██  ██
+//  ██  ██  ████    ██████  ██████  ████    ██      ██████    ██    ████    ██  ██
+//  ██  ██  ██      ██      ██ ██   ██      ██      ██  ██    ██    ██      ██  ██
+//  █████   ██████  ██      ██  ██  ██████   █████  ██  ██    ██    ██████  █████
+
+// WARNING: DEPRECATED
 void Entity::give_script(py::api::object main_namespace) {
     py::api::object tempoary_scope = main_namespace.attr("copy")();
 
@@ -133,6 +125,7 @@ void Entity::give_script(py::api::object main_namespace) {
    // py::import("dis").attr("dis")(script);
 }
 
+// WARNING: DEPRECATED
 std::string Entity::read_file(std::string loc) {
     //open the input file
     std::ifstream in_file(loc);
@@ -148,4 +141,8 @@ std::string Entity::read_file(std::string loc) {
         print_debug << "file opening unsuccessful" << std::endl;
         return "";
     }
+}
+
+void Entity::py_print_debug(std::string text) {
+    print_debug << text << std::endl;
 }

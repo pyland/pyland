@@ -1,26 +1,32 @@
 import time
-
-print("Started bootstrapper")
+import os
 
 def start(entity):
+
+    entity.print_debug("Started bootstrapper")
     print("Started with entity", entity)
+    print("whose name is", entity.name)
+
+    with open("python_embed/scripts/{}.py".format(entity.name)) as file:
+        with open("python_embed/py_wrapper.py") as file_wrapper:
+            function = file_wrapper.read() + file.read()
 
     try:
-    	run(entity)
+        exec(function, dict(entity=entity, **globals()))
     except BaseException as e:
-    	print(e)
-    	raise
+        print(e)
+        raise
 
-def run(entity):
-    """Purely for testing"""
+# def run(entity):
+#     """Purely for testing"""
 
-    print("Running with entity", entity)
-	
-    for _ in range(5):
-        time.sleep(0.1)
+#     print("Running with entity", entity)
 
-        import random
-        entity.move(random.randint(-1, 1), random.randint(-1, 1))
-        print("Continuing with entity", entity)
+#     for _ in range(500):
+#         time.sleep(0.1)
 
-    print("Finishing with entity", entity)
+#         import random
+#         entity.move(random.randint(-1, 1), random.randint(-1, 1))
+#         print("Continuing with entity", entity)
+
+#     print("Finishing with entity", entity)

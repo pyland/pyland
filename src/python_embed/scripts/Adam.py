@@ -8,4 +8,3 @@ while True:
         move(direction)
     else:
         monologue()
-        print ("lets not go there")

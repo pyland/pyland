@@ -439,8 +439,8 @@ void GameWindow::update() {
         }
     }
 
-    // For each open window, do any surface (re/de)initialisation.
-    // Also set (if needed) the close_requests.
+    // Perform updates to windows which may be required following
+    // events, such as reinitializing surface, closing, callbacks.
     for (auto pair : windows) {
         GameWindow* window = pair.second;
         
@@ -479,6 +479,8 @@ void GameWindow::update() {
             // Do nothing - hey, I don't like compiler warnings.
             break;
         }
+        
+        window->input_manager->run_callbacks();
         
         if (close_all) {
             window->request_close();
