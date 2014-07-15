@@ -14,10 +14,12 @@ MapViewer::MapViewer(GameWindow* new_window) {
 
     // Set background color and clear buffers
     glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
-
-    // Leave this here!!!
-    // Disable back face culling.
+    glClear(GL_DEPTH_BUFFER_BIT);
+    // L./eave this here!!!
+    //Disable back face culling.
     glDisable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 };
 
 MapViewer::~MapViewer() {
@@ -30,7 +32,7 @@ void MapViewer::render_map() {
         return;
     }
 
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     RenderableComponent* map_render_component = map->get_renderable_component();
     if(map_render_component == nullptr) {
@@ -46,7 +48,7 @@ void MapViewer::render_map() {
 
     std::pair<int, int> size = window->get_size();
     glViewport(0, 0,  size.first, size.second);
-    glm::mat4 projection_matrix = glm::ortho(0.0f, (float)(size.first), 0.0f, (float)(size.second), -1.0f, 1.0f);
+    glm::mat4 projection_matrix = glm::ortho(0.0f, (float)(size.first), 0.0f, (float)(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     glm::vec3 translate = glm::vec3(map->get_display_x(), map->get_display_y(), 0.0f);
     glm::mat4 translated = glm::translate(model, translate);

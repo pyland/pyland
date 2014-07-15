@@ -28,6 +28,8 @@
 /// attributes and have only parsed them if we need them.
 ///
 bool MapLoader::load_map(const std::string source) {
+
+    std::cout << "LOADING MAP..." << std::endl;
     map.ParseFile(source);
 
     if (map.HasError()) {
@@ -41,6 +43,8 @@ bool MapLoader::load_map(const std::string source) {
     load_objects();
     load_layers();
     load_tileset();
+    
+    std::cout << "DONE" << std::endl;
     return true;
 }
 
@@ -50,7 +54,7 @@ void MapLoader::load_layers() {
         const Tmx::Layer* layer = map.GetLayer(i);
         int num_tiles_x = layer->GetWidth();
         int num_tiles_y = layer->GetHeight();
-        
+
         //Generate a new layer
         std::shared_ptr<Layer> layer_ptr = std::make_shared<Layer>(num_tiles_x, num_tiles_y);
         layers.push_back(layer_ptr);
@@ -63,7 +67,11 @@ void MapLoader::load_layers() {
 
                 //Gets the tileset to use for this tile
                 const Tmx::Tileset* tileset = map.FindTileset(tile_id);
-                if(tileset == nullptr) continue;
+                if(tileset == nullptr) {
+                    //Add the default tile
+                    layer_ptr->add_tile("", tile_id);
+                    continue;
+                }
 
                 //Add the tile to the layer
                 layer_ptr->add_tile(tileset->GetName(), tile_id);                

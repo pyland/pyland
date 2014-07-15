@@ -36,7 +36,7 @@
 #define VERTEX_POS_INDX 0
 #define VERTEX_TEXCOORD0_INDX 1
 #define PATH "./"
-#define GLOBAL_SCALE 2
+#define GLOBAL_SCALE 1
 
 #define IMAGE1_SIZE_WIDTH 128
 #define IMAGE1_NUM_COMPONENTS 4
@@ -166,16 +166,17 @@ void Map::generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  s
     //Get each layer of the map
     //Start at layer 0
     int offset = 0;
+    int layer =0;
     for(auto iter = layers.begin(); iter != layers.end(); ++iter) {
         auto layer_data = (*iter)->get_layer_data();
-
 
         //Get all the tiles in the layer, moving from left to right and down 
         for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
             int tile_id = tile_data->second;
             //TODO, stop out of bounds here - if it exceeds the tileset size
-
-            GLfloat *tileset_ptr = &tileset_tex_coords[tile_id*8*2];
+            if(tile_id == 0)
+                tile_id = 83; //move to default blank tile
+            GLfloat *tileset_ptr = &tileset_tex_coords[tile_id*8];
             //bottom left
             map_tex_coords[offset+0] = tileset_ptr[0];
             map_tex_coords[offset+1] = tileset_ptr[1];
@@ -204,6 +205,7 @@ void Map::generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  s
             offset += num_floats;
         }
         //next layer
+        layer++;
     }
 
     /*
@@ -259,6 +261,7 @@ void Map::generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std:
     int data_size = sizeof(GLfloat)*map_height*map_width*num_floats*layers.size();
     map_data = new GLfloat[data_size]; 
     assert(map_data);
+
     float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
 
     //generate the map data
@@ -275,48 +278,53 @@ void Map::generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std:
     //For all the layers
     //Start at layer 0
     int offset = 0;
+    float layer_offset = -1.0f;
+    float layer_inc = 1.0f / (float)layers.size();
     for(int layer = 0; layer < layers.size(); layer++) {
+        std::cout << "OFFSET " << layer_offset << std::endl;
 
         //Generate one layer's worth of data
         for(int y = 0; y < map_height; y++) {
             for(int x = 0; x < map_width; x++) {
      
-                //generate one tile's worth of data%
+                //generate one tile's worth of data
 
                 //bottom left
                 map_data[offset+ 0] = scale * float(x);
                 map_data[offset+ 1] = scale * float(y);
-                map_data[offset+ 2] = 0;
+                map_data[offset+ 2] = layer_offset;
              
                 //top left
                 map_data[offset+ 3] = scale * float(x);
                 map_data[offset+ 4] = scale * float(y + 1);
-                map_data[offset+ 5] = 0;
+                map_data[offset+ 5] = layer_offset;
 
                 //bottom right
                 map_data[offset+ 6] = scale * float(x + 1);
                 map_data[offset+ 7] = scale * float(y);
-                map_data[offset+ 8] = 0;
+                map_data[offset+ 8] = layer_offset;
             
                 //top left
                 map_data[offset+ 9]  = scale * float(x);
                 map_data[offset+10] = scale * float(y+1);
-                map_data[offset+11] = 0;
+                map_data[offset+11] = layer_offset;
         
                 //top right
                 map_data[offset+12] = scale * float(x+1);
                 map_data[offset+13] = scale * float(y+1);
-                map_data[offset+14] = 0;
+                map_data[offset+14] = layer_offset;
 
                 //bottom right
                 map_data[offset+15] = scale * float(x+1);
                 map_data[offset+16] = scale * float(y);
-                map_data[offset+17] = 0;
+                map_data[offset+17] = layer_offset;
+
                 //layer*map_width*map_height*num_floats + x*map_height*num_floats + y*num_floats
                 offset += num_floats;
-                std::cout << offset << std::endl;
+
             }
         }
+        layer_offset += layer_inc;
     }
     /*
     for(int x = 0; x < map_width; x++) {
