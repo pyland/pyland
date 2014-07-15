@@ -101,12 +101,12 @@ class Map {
     ///
     /// The width of the map to be displayed on screen.
     ///
-    int map_display_width = 8;
+    int map_display_width = 30;
 
     ///
     /// The height of the map to be displayed on screen
     ///
-    int map_display_height = 8;
+    int map_display_height = 30;
 
     ///
     /// The texture buffer pointers
@@ -212,16 +212,53 @@ public:
     int get_height() { return map_height; }
 
     ///
+    /// Get the display width of the map
+    /// @return get the display width of the map
+    ///
+    int get_display_width() { return map_display_width; }
+
+    ///
+    /// Set the display width of the map
+    /// @param display_width the new display width of the map
+    ///
+    void set_display_width(int display_width) { map_display_width = display_width; }
+
+    ///
+    /// Get the display height of the map
+    /// @return get the display height of the map
+    ///
+    int get_display_height() { return map_display_height; }
+
+    ///
+    /// Set the display height of the map
+    /// @param display_width the new display height of the map
+    ///
+    void set_display_height(int display_height) { map_display_height = display_height; }
+
+
+    ///
     /// Get the map display lower left x position
     /// @return the map display far left x position
     ///
     float get_display_x() { return map_display_x; }
 
     ///
+    /// Set the x display position of the map
+    /// @param new_display_x the new display position
+    ///
+    void set_display_x(float new_display_x) { map_display_x = new_display_x; }
+    
+    ///
     /// Get the map display bottom y position
     /// @return the map display bottom y  position
     ///
     float get_display_y() { return map_display_y; }
+
+    ///
+    /// Set the y display position of the map
+    /// @param new_display_y the new display position
+    ///
+    void set_display_y(float new_display_y) { map_display_y = new_display_y; }
   
     ///
     /// The function used to update elements on the map.
