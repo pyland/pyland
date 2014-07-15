@@ -14,11 +14,11 @@ typedef std::function<void (KeyboardInputEvent)> KeyboardHandler;
 
 KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHandler wrapped);
 
-KeyboardFilter KEY(char *key);
-KeyboardFilter KEY(std::initializer_list<char *> keys);
+KeyboardFilter KEY(std::string key);
+KeyboardFilter KEY(std::initializer_list<std::string> keys);
 
-KeyboardFilter MODIFIER(char *modifier);
-KeyboardFilter MODIFIER(std::initializer_list<char *> modifiers);
+KeyboardFilter MODIFIER(std::string modifier);
+KeyboardFilter MODIFIER(std::initializer_list<std::string> modifiers);
 
 KeyboardFilter REJECT(KeyboardFilter filter);
 extern KeyboardFilter KEYHELD;

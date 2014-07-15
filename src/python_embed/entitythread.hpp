@@ -5,13 +5,20 @@
 #include <thread>
 #include "api.hpp"
 #include "interpreter_context.hpp"
+#include "locks.hpp"
 
 class Interpreter;
+class EntityThread;
 
+typedef lock::Lockable<std::vector<std::weak_ptr<EntityThread>>> EntityThreads;
+typedef lock::Lockable<std::shared_ptr<EntityThread>> LockableEntityThread;
 
 ///
 /// Container that abstracts the daemon threads for
 /// the game's entities.
+///
+/// @warning
+///     This needs to be, but is not, thread safe in many places.
 ///
 class EntityThread {
     public:
@@ -51,12 +58,18 @@ class EntityThread {
         ///
         /// Try to nicely kill the thread; avoiding corruption where possible.
         ///
+        /// @warning
+        ///     This needs to be, but is not, totally thread safe.
+        ///
         /// Neither termination nor safety is guaranteed.
         ///
         void halt_soft();
 
         ///
         /// Try to kill the thread without mortal concerns for such things as life and death.
+        ///
+        /// @warning
+        ///     This needs to be, but is not, totally thread safe.
         ///
         /// Neither termination nor safety is guaranteed, although
         /// termination is more likely than with halt_soft.
@@ -65,6 +78,9 @@ class EntityThread {
 
         ///
         /// Check if an API call has been made since last call to clean.
+        ///
+        /// @warning
+        ///     Only supported for usage from the kill thread.
         ///
         /// @return
         ///     Whether an API call has been made since last call to clean.
@@ -75,6 +91,9 @@ class EntityThread {
 
         ///
         /// Remember state when last called, for use with is_dirty.
+        ///
+        /// @warning
+        ///     Only supported for usage from the kill thread.
         ///
         /// @see is_dirty
         ///

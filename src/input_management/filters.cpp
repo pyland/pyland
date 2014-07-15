@@ -26,11 +26,11 @@ KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHa
 }
 
 
-KeyboardFilter KEY(std::initializer_list<char *> keys) {
+KeyboardFilter KEY(std::initializer_list<std::string> keys) {
     std::set<SDL_Keycode> keyset;
 
-    for (char *key : keys) {
-        SDL_Keycode keycode = SDL_GetKeyFromName(key);
+    for (std::string key : keys) {
+        SDL_Keycode keycode = SDL_GetKeyFromName(key.c_str());
         // TODO: Error checking
 
         keyset.insert(keycode);
@@ -42,16 +42,16 @@ KeyboardFilter KEY(std::initializer_list<char *> keys) {
 }
 
 // TODO: Consider efficiency
-KeyboardFilter KEY(char *key) {
+KeyboardFilter KEY(std::string key) {
     return KEY({key});
 }
 
 
-KeyboardFilter MODIFIER(std::initializer_list<char *> modifiers) {
+KeyboardFilter MODIFIER(std::initializer_list<std::string> modifiers) {
     std::set<SDL_Scancode> modifierset;
 
-    for (char *modifier : modifiers) {
-        SDL_Scancode modifiercode = SDL_GetScancodeFromName(modifier);
+    for (std::string modifier : modifiers) {
+        SDL_Scancode modifiercode = SDL_GetScancodeFromName(modifier.c_str());
         // TODO: Error checking
 
         modifierset.insert(modifiercode);
@@ -68,7 +68,7 @@ KeyboardFilter MODIFIER(std::initializer_list<char *> modifiers) {
 }
 
 // TODO: Consider efficiency
-KeyboardFilter MODIFIER(char *modifier) {
+KeyboardFilter MODIFIER(std::string modifier) {
     return MODIFIER({modifier});
 }
 
