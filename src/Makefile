@@ -44,7 +44,7 @@ endif
 
 SDL_CPPFLAGS ?= $(shell sdl2-config --cflags)
 SDL_LDFLAGS  ?=
-SDL_LDLIBS   ?= $(shell sdl2-config --libs)
+SDL_LDLIBS   ?= $(shell sdl2-config --libs) -lSDL2_image
 
 X11_CPPFLAGS ?= $(shell pkg-config x11 --cflags)
 X11_LDFLAGS  ?=
@@ -99,6 +99,7 @@ BASE_OBJS = \
 	character.o      \
 	engine_api.o     \
 	game_window.o    \
+	image.o          \
 	main.o           \
 	map.o            \
 	map_loader.o     \
