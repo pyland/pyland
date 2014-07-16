@@ -100,6 +100,8 @@ BASE_OBJS = \
 	engine_api.o     \
 	game_window.o    \
 	image.o          \
+	lifeline.o       \
+	lifeline_controller.o \
 	main.o           \
 	map.o            \
 	map_loader.o     \
@@ -114,9 +116,7 @@ INPUT_OBJS = \
 	input_management/filters.o              \
 	input_management/input_event.o          \
 	input_management/input_manager.o        \
-	input_management/keyboard_input_event.o \
-	input_management/lifeline.o             \
-	input_management/lifeline_controller.o
+	input_management/keyboard_input_event.o
 
 PYTHON_OBJS = \
 	python_embed/api.o           \
