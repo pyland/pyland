@@ -100,6 +100,7 @@ BASE_OBJS = \
 	engine_api.o     \
 	game_window.o    \
 	image.o          \
+	layer.o          \
 	lifeline.o       \
 	lifeline_controller.o \
 	main.o           \
