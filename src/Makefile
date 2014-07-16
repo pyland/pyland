@@ -105,12 +105,14 @@ BASE_OBJS = \
 	main.o           \
 	map.o            \
 	map_loader.o     \
+	map_object.o     \
 	map_viewer.o     \
 	object.o         \
 	object_manager.o \
 	print_debug.o    \
 	renderable_component.o \
-	shader.o
+	shader.o         \
+	tileset.o 
 
 INPUT_OBJS = \
 	input_management/filters.o              \
