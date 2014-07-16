@@ -1,4 +1,5 @@
 #include "renderable_component.hpp"
+#include "print_debug.hpp"
 
 #define VERTEX_POS_INDX 0
 #define  VERTEX_TEXCOORD0_INDX 1
@@ -8,8 +9,8 @@ RenderableComponent::RenderableComponent() {
     //Generate the vertex buffers
     glGenBuffers(1, &vbo_vertex_id);
     glGenBuffers(1, &vbo_texture_id);
-    std::cout << "BUFFERS "<< vbo_vertex_id << std::endl;
-    std::cout << "BUFFERS " << vbo_texture_id << std::endl;
+    print_debug << "BUFFERS "<< vbo_vertex_id << std::endl;
+    print_debug << "BUFFERS " << vbo_texture_id << std::endl;
 }
 
 RenderableComponent::~RenderableComponent() {

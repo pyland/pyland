@@ -150,7 +150,7 @@ namespace lock {
             /// Create lockable object using the default
             /// initializer for the templated type.
             ///
-            Lockable(): value(), lock() {};
+            Lockable(): value(), lock(std::make_shared<std::mutex>()) {};
 
             ///
             /// Create lockable object from an instance
@@ -160,7 +160,24 @@ namespace lock {
             ///     Instance of the templated type
             ///     to associate wrapper with.
             ///
-            Lockable(T value): value(value), lock() {};
+            Lockable(T value): value(value), lock(std::make_shared<std::mutex>()) {};
+
+            ///
+            /// Create lockable object from an instance
+            /// of the templated type and a premade mutex.
+            ///
+            /// This can be used to give the same lock to
+            /// several objects.
+            ///
+            /// @param value
+            ///     Instance of the templated type
+            ///     to associate wrapper with.
+            ///
+            /// @param lock
+            ///     Premade lock object.
+            ///
+            Lockable(T value, std::shared_ptr<std::mutex> lock):
+                value(value), lock(lock) {};
 
             ///
             /// The templated type instance.
@@ -173,7 +190,7 @@ namespace lock {
             ///
             /// The associated lock.
             ///
-            std::mutex lock;
+            std::shared_ptr<std::mutex> lock;
     };
 
     ///

@@ -31,7 +31,7 @@ class ThreadKiller {
         ///     An interpreter context to lock the GIL on.
         ///     The GIL is locked on the main thread.
         ///
-        ThreadKiller(lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> &entitythreads,
+        ThreadKiller(EntityThreads &entitythreads,
                      InterpreterContext interpreter_context);
 
         ///

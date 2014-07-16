@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 
+#include "input_manager.hpp"
 #include "keyboard_input_event.hpp"
 
 

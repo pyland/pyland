@@ -46,13 +46,26 @@ class Interpreter {
         /// by the Python-side API. This is the canonical way of giving
         /// a daemon to an entity.
         ///
+        /// Returns the thread in a lockable object. This can be used
+        /// to tell the script to perform actions like starting and stopping.
+        ///
+        /// When the thread is discarded, it will be destroyed. This is a
+        /// blocking operation.
+        ///
         /// @deprecated
         ///     Will be changed to accept an ID.
         ///
         /// @param entity
         ///     The game entity to wrap.
         ///
-        void register_entity(Entity entity);
+        /// @return
+        ///     The thread in a lockable object. This can be used to tell
+        ///     the script to perform actions like starting and stopping.
+        ///
+        ///     When the thread is discarded, it will be destroyed. This is
+        ///     a blocking operation. 
+        ///
+        LockableEntityThread register_entity(Entity &entity);
 
         ///
         /// The main thread of the spawned interpreter.
@@ -102,7 +115,7 @@ class Interpreter {
         ///
         /// @see thread_killer
         ///
-        lock::Lockable<std::vector<std::unique_ptr<EntityThread>>> entitythreads;
+        EntityThreads entitythreads;
 
         ///
         /// Internal API to start CPython. Called on creation.

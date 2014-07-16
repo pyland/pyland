@@ -40,6 +40,15 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     print_debug << "run_entity: Starting" << std::endl;
 
+    {
+        lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
+
+        //PyObject_Print(py::str("WE ARE FIGHTING DREEBAS").ptr(), stdout, 0);
+        print_debug << std::endl;
+        PyObject_Print(py::api::object(entity_object->attr("name")).ptr(), stdout, 0);
+        print_debug << std::endl;
+    }
+
     // Register thread with Python, to allow locking
     lock::ThreadState threadstate(interpreter_context);
     lock::ThreadGIL lock_thread(threadstate);

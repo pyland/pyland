@@ -44,7 +44,7 @@ endif
 
 SDL_CPPFLAGS ?= $(shell sdl2-config --cflags)
 SDL_LDFLAGS  ?=
-SDL_LDLIBS   ?= $(shell sdl2-config --libs)
+SDL_LDLIBS   ?= $(shell sdl2-config --libs) -lSDL2_image
 
 X11_CPPFLAGS ?= $(shell pkg-config x11 --cflags)
 X11_LDFLAGS  ?=
@@ -99,6 +99,9 @@ BASE_OBJS = \
 	character.o      \
 	engine_api.o     \
 	game_window.o    \
+	image.o          \
+	lifeline.o       \
+	lifeline_controller.o \
 	main.o           \
 	map.o            \
 	map_loader.o     \
@@ -110,11 +113,10 @@ BASE_OBJS = \
 	shader.o
 
 INPUT_OBJS = \
+	input_management/filters.o              \
 	input_management/input_event.o          \
 	input_management/input_manager.o        \
-	input_management/keyboard_input_event.o \
-	input_management/lifeline.o             \
-	input_management/lifeline_controller.o
+	input_management/keyboard_input_event.o
 
 PYTHON_OBJS = \
 	python_embed/api.o           \
@@ -133,7 +135,7 @@ PYTHON_SHARED_OBJS_DEPENDS = \
 HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${BASE_OBJS:.o=.d}            \
-	${INPUT_OBJS:.o=.d}            \
+	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd}
 

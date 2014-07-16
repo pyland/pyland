@@ -23,8 +23,7 @@ extern "C" {
 
 
 void callback_function (const char* action, KeyboardInputEvent event) {
-    std::cout << "\t" << event.scan_code << ":" << action;
-    std::cout.flush();
+    print_debug << "\t" << event.scan_code << ":" << action;
 }
 
 

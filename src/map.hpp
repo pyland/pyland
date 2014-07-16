@@ -1,6 +1,8 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <array>
+#include <map>
 #include <string>
 
 //Include GLM
@@ -26,7 +28,6 @@
 
 #endif
 
-#include <map>
 
 #include "game_window.hpp"
 #include "renderable_component.hpp"

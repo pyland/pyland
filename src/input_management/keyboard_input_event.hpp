@@ -7,7 +7,7 @@
 #include <map>
 #include <set>
 
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 
 #include "input_event.hpp"
 
@@ -20,7 +20,7 @@ class InputManager;
 ///
 struct KeyboardInputEvent : public InputEvent {
 public:
-    typedef std::function<void(KeyboardInputEvent)> Handler;
+    // typedef std::function<void(KeyboardInputEvent)> Handler;
     
     KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed, bool typed);
     int scan_code;

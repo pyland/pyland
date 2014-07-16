@@ -6,13 +6,25 @@
 
 
 
+Lifeline::Lifeline():
+    runner(nullptr) {
+}
+
 Lifeline::Lifeline(std::function<void()> func):
     runner(std::make_shared<FunctionRunner>(func)) {
 }
 
+Lifeline::Lifeline(void (&func)()):
+    runner(std::make_shared<FunctionRunner>(std::function<void()>(func))) {
+}
 
 Lifeline::Lifeline(std::function<void()> func, LifelineController controller):
     runner(std::make_shared<FunctionRunner>(func)) {
+        runner->attach_controller(controller);
+}
+
+Lifeline::Lifeline(void (&func)(), LifelineController controller):
+    runner(std::make_shared<FunctionRunner>(std::function<void()>(func))) {
         runner->attach_controller(controller);
 }
 
@@ -36,7 +48,9 @@ Lifeline::FunctionRunner::~FunctionRunner() {
 
 
 void Lifeline::disable() {
-    runner->enabled = false;
+    if (runner) {
+        runner->enabled = false;
+    }
 }
 
 

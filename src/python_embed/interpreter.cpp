@@ -65,12 +65,17 @@ PyThreadState *Interpreter::initialize_python() {
     return PyThreadState_Get();
 }
 
-void Interpreter::register_entity(Entity entity) {
-    std::lock_guard<std::mutex> lock(entitythreads.lock);
+LockableEntityThread Interpreter::register_entity(Entity &entity) {
+    std::lock_guard<std::mutex> lock(*entitythreads.lock);
 
     // Create thread and move to vector.
-    auto new_entity = std::make_unique<EntityThread>(interpreter_context, entity);
-    entitythreads.value.push_back(std::move(new_entity));
+    auto new_entity = std::make_shared<EntityThread>(interpreter_context, entity);
+    entitythreads.value.push_back(std::weak_ptr<EntityThread>(new_entity));
+
+    // Return the new EntityThread to allow signals to the thread.
+    // This means that EntityThread needs to be thread-safe for
+    // all approved usages.
+    return LockableEntityThread(new_entity, entitythreads.lock);
 }
 
 Interpreter::~Interpreter() {
@@ -83,7 +88,7 @@ Interpreter::~Interpreter() {
         // Lock not acutally needed; thread_killer is dead
         // However, this keeps the guarantees (locked while edited) safe,
         // so is good practice
-        std::lock_guard<std::mutex> lock(entitythreads.lock);
+        std::lock_guard<std::mutex> lock(*entitythreads.lock);
         entitythreads.value.clear();
     }
 

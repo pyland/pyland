@@ -12,7 +12,8 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("walkable",    &Entity::walkable)
         .def("monologue",   &Entity::monologue)
         .def("run_script",  &Entity::run_script)
-        .def("give_script", &Entity::give_script);
+        .def("give_script", &Entity::give_script)
+        .def("print_debug", &Entity::py_print_debug);
 
     py::class_<Vec2D>("Vec2D", py::init<int, int>())
         .def(py::self + py::other<Vec2D>())
