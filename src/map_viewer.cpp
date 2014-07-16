@@ -125,7 +125,7 @@ void MapViewer::render_map() {
 
 
 void MapViewer::update_map(float dt ) {
-    float map_scroll_speed = 16.0f;
+    /*    float map_scroll_speed = 16.0f;
     // animate map
     float map_display_right_x = map->get_display_x() + map->get_display_width();
     float map_display_top_y = map->get_display_y() + map->get_display_height();
@@ -142,7 +142,7 @@ void MapViewer::update_map(float dt ) {
     if(map_display_top_y > map->get_height()*16.0f) {
         map->set_display_y(0.0f); //wrap round
     }
-
+    */
 
     map->update_map(dt);
 }
