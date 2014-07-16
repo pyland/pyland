@@ -1,8 +1,9 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
-#include <set>
 #include <functional>
+#include <queue>
+#include <set>
 
 extern "C" {
 #include <SDL2/SDL.h>
@@ -81,6 +82,12 @@ private:
     /// Set of recently released mouse buttons.
     ///
     std::set<int> released_buttons;
+
+    ///
+    /// Queue of key events to be sent to callbacks.
+    ///
+    std::queue<KeyboardInputEvent> key_events;
+    
 
     ///
     /// Keyboard callback registry.

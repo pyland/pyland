@@ -23,7 +23,7 @@ extern "C" {
 
 
 void callback_function (const char* action, KeyboardInputEvent event) {
-    print_debug << "\t" << event.scan_code << ":" << action;
+    std::cerr << "\t" << event.scan_code << ":" << action;
 }
 
 
@@ -44,10 +44,14 @@ int main(int argc, char** argv) {
         Callback<void, KeyboardInputEvent> down_callback([&] (KeyboardInputEvent event) {
                 callback_function("...", event);
             });
+        Callback<void, KeyboardInputEvent> type_callback([&] (KeyboardInputEvent event) {
+                callback_function(".*.", event);
+            });
         Callback<void, KeyboardInputEvent> press_callback([&] (KeyboardInputEvent event) {
                 if (event.key_code == SDLK_ESCAPE) {
                     release_callback.unregister_everywhere();
                     down_callback.unregister_everywhere();
+                    type_callback.unregister_everywhere();
                     press_callback.unregister_everywhere();
                 }
                 else {
@@ -61,6 +65,7 @@ int main(int argc, char** argv) {
         }
         input_manager->register_key_release_handler(release_callback);
         input_manager->register_key_down_handler(down_callback);
+        input_manager->register_key_type_handler(type_callback);
         input_manager->register_key_press_handler(press_callback);
         while (window.check_close() == false) {
             // Little basic colour change test.
@@ -82,6 +87,7 @@ int main(int argc, char** argv) {
         }
 	release_callback.unregister_everywhere();
 	down_callback.unregister_everywhere();
+	type_callback.unregister_everywhere();
 	press_callback.unregister_everywhere();
     }
     catch (GameWindow::InitException e) {

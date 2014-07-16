@@ -1,6 +1,7 @@
 #include <iostream>
-#include <set>
 #include <functional>
+#include <queue>
+#include <set>
 
 extern "C" {
 #include <SDL2/SDL.h>
@@ -35,6 +36,8 @@ InputManager::InputManager(GameWindow* window):
     pressed_buttons(std::set<int>()),
     released_buttons(std::set<int>()),
 
+    key_events(std::queue<KeyboardInputEvent>()),
+
     callback_controller(LifelineController()) {
 }
 
@@ -57,10 +60,15 @@ void InputManager::handle_event(SDL_Event* event) {
         if (down_keys.count(event->key.keysym.scancode) == 0) {
             down_keys.insert(event->key.keysym.scancode);
             pressed_keys.insert(event->key.keysym.scancode);
+            key_events.push(KeyboardInputEvent(this, event->key.keysym.scancode, true, true, true));
+        }
+        else {
+            key_events.push(KeyboardInputEvent(this, event->key.keysym.scancode, true, false, true));
         }
         typed_keys.insert(event->key.keysym.scancode);
         break;
     case SDL_KEYUP:
+        key_events.push(KeyboardInputEvent(this, event->key.keysym.scancode, false, true, false));
         down_keys.erase(event->key.keysym.scancode);
         released_keys.insert(event->key.keysym.scancode);
         break;
@@ -81,26 +89,30 @@ void InputManager::handle_event(SDL_Event* event) {
 
 
 void InputManager::run_callbacks() {
-    for (int key : pressed_keys) {
-        KeyboardInputEvent event(this, key, true, true, false);
+    while (!key_events.empty()) {
+        KeyboardInputEvent& event = key_events.front();
         keyboard_callbacks.broadcast(event);
-        key_press_callbacks.broadcast(event);
-        key_type_callbacks.broadcast(event);
-    }
-    // for (int key : typed_keys) {
-    //     KeyboardInputEvent event(this, key, true, true, true);
-    //     keyboard_callbacks.broadcast(event);
-    //     key_type_callbacks.broadcast(event);
-    // }
-    for (int key : released_keys) {
-        KeyboardInputEvent event(this, key, false, true, false);
-        keyboard_callbacks.broadcast(event);
-        key_release_callbacks.broadcast(event);
+        if (event.down) {
+            if (event.changed) {
+                key_press_callbacks.broadcast(event);
+            }
+            key_down_callbacks.broadcast(event);
+            if (event.typed) {
+                key_type_callbacks.broadcast(event);
+            }
+        }
+        else {
+            key_release_callbacks.broadcast(event);
+        }
+        key_events.pop();
     }
     for (int key : down_keys) {
-        KeyboardInputEvent event(this, key, true, false, false);
-        keyboard_callbacks.broadcast(event);
-        key_down_callbacks.broadcast(event);
+        // Don't duplicate events
+        if (pressed_keys.count(key) == 0 && typed_keys.count(key) == 0) {
+            KeyboardInputEvent event(this, key, true, false, false);
+            keyboard_callbacks.broadcast(event);
+            key_down_callbacks.broadcast(event);
+        }
     }
 }
 

@@ -4,7 +4,7 @@ SOURCE_ROOT =../../src
 
 CXX = $(COMPILER)
 CXXFLAGS = -g -Wall -Wextra -O2 -std=c++11
-CPPFLAGS = -I$(SOURCE_ROOT)
+CPPFLAGS = -I$(SOURCE_ROOT) -I$(SOURCE_ROOT)/input_management
 
 SDL_CFLAGS    = $(shell sdl2-config --cflags)
 SDL_LDLIBS    = $(shell sdl2-config --libs)
@@ -51,17 +51,17 @@ main.o: main.cpp
 game_window.o: $(SOURCE_ROOT)/game_window.cpp
 	$(CXX) -c -o game_window.o $(SOURCE_ROOT)/game_window.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
 
-input_manager.o: $(SOURCE_ROOT)/input_manager.cpp
-	$(CXX) -c -o input_manager.o $(SOURCE_ROOT)/input_manager.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
+input_manager.o: $(SOURCE_ROOT)/input_management/input_manager.cpp
+	$(CXX) -c -o input_manager.o $(SOURCE_ROOT)/input_management/input_manager.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
 
 # lifeline.o: $(SOURCE_ROOT)/lifeline.cpp
 # 	$(CXX) -c -o lifeline.o $(SOURCE_ROOT)/lifeline.cpp $(CXXFLAGS) $(CPPFLAGS)
 
-input_event.o: $(SOURCE_ROOT)/input_event.cpp
-	$(CXX) -c -o input_event.o $(SOURCE_ROOT)/input_event.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
+input_event.o: $(SOURCE_ROOT)/input_management/input_event.cpp
+	$(CXX) -c -o input_event.o $(SOURCE_ROOT)/input_management/input_event.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
 
-keyboard_input_event.o: $(SOURCE_ROOT)/keyboard_input_event.cpp
-	$(CXX) -c -o keyboard_input_event.o $(SOURCE_ROOT)/keyboard_input_event.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
+keyboard_input_event.o: $(SOURCE_ROOT)/input_management/keyboard_input_event.cpp
+	$(CXX) -c -o keyboard_input_event.o $(SOURCE_ROOT)/input_management/keyboard_input_event.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)
 
 lifeline.o: $(SOURCE_ROOT)/lifeline.cpp
 	$(CXX) -c -o lifeline.o $(SOURCE_ROOT)/lifeline.cpp $(CXXFLAGS) $(CPPFLAGS) $(SDL_CFLAGS) $(GRAPHICS_CFLAGS) $(X11_CFLAGS)

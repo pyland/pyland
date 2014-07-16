@@ -25,21 +25,22 @@ public:
     KeyboardInputEvent(InputManager* manager, int scan_code, bool down, bool changed, bool typed);
     int scan_code;
     int key_code;
-    int character;
+    ///
+    /// Whether the key is down.
+    ///
     bool down;
+    ///
+    /// Whether the key has changed between up or down.
+    ///
     bool changed;
+    ///
+    /// If the key can be considered as a type-style key press.
+    ///
+    /// This will be true if the key gets pressed, or auto-repeat
+    /// triggers an event. This should not be used to signal the input
+    /// of text data.
+    ///
     bool typed;
-
-    // namespace Filter {
-    //     static Handler no_repeat(const std::set<int> keys, const Handler handler)
-    // }
-    // static Handler if_key_in(const std::set<int> keys, const Handler handler) {
-    //     return [&] (KeyboardInputEvent event) {
-    //         if (keys.event.key_code) 
-                
-    //         return event;
-    //     }
-    // }
 };
 
 
