@@ -127,7 +127,7 @@ std::map<int, TileType> tile_to_type({
 });    
 
 
-void move_object(const int id, const float dx, const float dy) {
+void move_object(const int id, float dx, float dy) {
     int new_id = id +1;
 
     characters->at(new_id)->set_x_position(characters->at(new_id)->get_x_position() + dx);
