@@ -6,7 +6,7 @@ void dialogue (std::string name, std:string text_to_user) {
 } 
 
 void run_challenge() {
-
+    //Coordinates are those from tiled
     // ENGINE_TODO: load map for challenge one, walls around the edges of the map
     dialogue ( "Tom",
         "Welcome to Project Zgyote"
@@ -14,7 +14,7 @@ void run_challenge() {
         "Let's get started, press the S key to create a new character" );
     
     // EVENT_TODO: wait until a new charactor is created, don't allow any further characters to be created
-
+    //HOOK s key...
     dialogue ( "Tom",
         "Well Done, you have made your first charactor, this charactor is called Adam"
         "You can move Adam using arrow keys, try moving Adam to the first red square on the path");
@@ -33,6 +33,7 @@ void run_challenge() {
         "Let's begin, by pressing the R key to run the commands");
 
     // EVENT_TODO: wait until R has been pressed and hence sprite is at (7,84)
+    //wait for sprite to move to (7, 84) - tile step on - trigger tile
 
     dialogue ("Tom",
         "As you can see the move(north) command has moved Adam, north by 1 square"
@@ -40,12 +41,15 @@ void run_challenge() {
         "Once complete, save the file and press R to the run again";
 
     // EVENT_TODO: wait until R has been pressed
+              //if they run the script and it doesn't work, run again
+              //object 1 is the sprite itself - only object
     while (find_obj(1) != Vec2D(12,86)) {
         dialogue ("Tom",
             "That's doesn't seem to have worked"
             "I'll pop you back and you can try again");
-        move_object(7,84);
-        // EVENT_TODO: wait until R has been pressed
+        move_object(7,84); //move player back to start
+        // EVENT_TODO: wait until script has finished
+        //PYTHON: need a way to know if a script is done
     }
 
     dialogue ("Tom",
@@ -106,6 +110,6 @@ void run_challenge() {
     }         
 
     dialogue ("Tom",
-        "Well Done, your've finished challenge 1");
+        "Well Done, you've finished challenge 1");
 
 }
