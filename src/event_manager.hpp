@@ -29,7 +29,6 @@ class EventManager {
     /// pointers so that the next frame becomes the curr frame. Like
     /// double-buffering in graphics.
     ///
-    ///
     std::list<std::function<void ()>>* curr_frame_queue;
 
     ///

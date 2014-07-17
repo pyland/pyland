@@ -338,6 +338,17 @@ int main (int argc, char* argv[]) {
         );
     }
 
+
+
+    ///////////////////////////////
+
+    TESTS
+
+
+    ///////////////////////////////
+
+
+
     while (!window.check_close()) {
         //Get the time since the last iteration 
         dt = get_dt(); 

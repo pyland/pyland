@@ -62,7 +62,7 @@ void EventManager::process_events() {
             //We've locked the queue so it will definitely have an item
             func = curr_frame_queue->front();
             curr_frame_queue->pop_front();
-        }
+        } // Lock released 
 
         //Dispatch the callback
         if(func) {
@@ -81,7 +81,7 @@ void EventManager::add_event(std::function<void ()> func) {
 
         //Add it to the queue
         curr_frame_queue->push_back(func);
-    }
+    } //Lock released
 }
 
 void EventManager::add_timed_event(std::chrono::duration<double> duration, std::function<bool (double)> func) {
@@ -90,7 +90,6 @@ void EventManager::add_timed_event(std::chrono::duration<double> duration, std::
         // a std::lock_guard to manage locking in an exception-safe manner
         std::lock_guard<std::mutex> lock(queue_mutex);
 
-        //Add it to the queue
         //Convert a timed callback to a void lambda
         //We do this by creating a void wrapper lambda and use
         //variable capture to capture the data we need
@@ -101,7 +100,6 @@ void EventManager::add_timed_event(std::chrono::duration<double> duration, std::
                 if(result) {
                     add_timed_event(duration /* - time */, func);
                 } //else, don't need to do anything
-                
-            });
-    }
+        });
+    } // Lock released
 }
