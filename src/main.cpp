@@ -130,8 +130,8 @@ std::map<int, TileType> tile_to_type({
 void move_object(const int id, const float dx, const float dy) {
     int new_id = id +1;
 
-    characters->at(new_id)->set_x_position(characters->at(new_id)->get_x_position() + dx);
-    characters->at(new_id)->set_y_position(characters->at(new_id)->get_y_position() + dy);
+    characters->at(new_id)->set_x_position((int)(characters->at(new_id)->get_x_position() + (int)dx));
+    characters->at(new_id)->set_y_position((int)(characters->at(new_id)->get_y_position() + (int)dy));
 }
 /*
     static void animate(float dt) {
@@ -289,17 +289,17 @@ class CallbackState {
 };
 
 int main (int argc, char* argv[]) {
-    bool use_graphical_window = true;
+    //    bool use_graphical_window = true;
 
     //Determine if the no-window command was sent
-    if (argc == 2) {
+    /*    if (argc == 2) {
         std::string param = argv[1];
 
         if (param == "no-window") {
             use_graphical_window = false;
         }
     }
-
+    */
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
     int map_width = 16, map_height = 16;
@@ -318,7 +318,6 @@ int main (int argc, char* argv[]) {
 
 
     float dt = get_dt();
-    int count = 0;
 
     CallbackState callbackstate(interpreter, characters, "Adam");
 
