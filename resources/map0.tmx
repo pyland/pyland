@@ -18,7 +18,7 @@
    H4sIAAAAAAAAA+3aQYrCMACG0a7degjvf8NhFoNOaMZ0SJrf5j0oSkml9GuqSLYNAAAAAAAAAAAAAAAAAAAAAICZHo0bY5TXuLWHLmPUeuyNK48p99PH0blQe08frc+eWhtN+jp6TcuxevSlx3v3yjZi3GuPls/be15dvUntmo7a92gc92qFDj/O7nF03zc9cvatJunaX7lH7fuy3G4Hjp0xbu/8PtGV77VPpEcWPbLokUWPLHpk0SOLHln0yKJHFj2y6JFFjyx6ZNEjix5Z9MiiRxY9suiRRY8semTRI4seWVbu8deau1mSzuVs9+I1QdK5nKVcY3rbfs+VmXNm1R49xoywao93c6A2Z/bWcbeuSf/vuvVVrHgvJtMjix5Z9Jgv4TctTxpk0SOLHln0yKJHFj2yrPz/ENR8AXA8AjFAnAAA
   </data>
  </layer>
- <layer name="collision layer" width="100" height="100">
+ <layer name="collision layer" width="100" height="100" visible="0">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3WQQqAIBBAUe/R/e/ZfkgYbaZcvAdChG3mYzgGAAAAAAAAAAAAAAAAAAAAAAB/upKLHnHG2R669Jj1eNoXv4nvqbF6FmbP1Mj+e2ZtNKm1OtO4V49aepzlTQ93rR4789ThLHoAAAAAAAAAAAAAAAAAAAAAAMC3bjbiGTRAnAAA
   </data>
