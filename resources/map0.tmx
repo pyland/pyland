@@ -8,19 +8,24 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Tile Layer 1" width="100" height="100">
+ <layer name="ground layer" width="100" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3YIQ6EMBRF0SZj21kBovtfJaNRIIb/2hxxgkHQd1PDaK0NAAAAAAD4+S7mzpl6wK566JHYo+uhhx7bNqneV4+9e/TLczXV+/6jh/uR16N6Vz300EMPPbLcOZMeWT1WVr2vHnokq95XDz2SVe+rhx7JqvfVAwAAAAAAAAAAAAAAAAAAAHjDp0D1mZMcekTTI4seWfTIokcWPbKk9JgBWyRI6YEeifTIokcWPQB4Yj58//qfnn3NgG8AAGBtJ8b5d91AnAAA
+   H4sIAAAAAAAAA+3DAQkAAAwEoQvw/fMOlkPBVVNVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf8B/1j5p0CcAAA=
   </data>
  </layer>
- <layer name="Layer 2" width="100" height="100">
+ <layer name="foliage layer" width="100" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3a0Q3CMAwFwC7BDOy/Id8IBEnAdWPfDQDNy3OUIo4DznfPfgDCZe9x9veTx94Du4k+tyI/35n7TB6vZJKv2h5UWw9UYC65Ir1kls6wE32lC13v7Zb9AEWYo3GVsqq0llmd1w7VmW/o65f5d3YAAOzBvW2d7MYykNM4WTEisyc6yj/o0Wcr+ciUClZ7rP99ze69rqyRGzDDmcE72f9HjuqlvgMAABAl+10aAIBrc1/8TkYAAAAAAD35fRhimTEAAM7g3gkAAFTmnQdiPAAJezf7QJwAAA==
+   H4sIAAAAAAAAA+3aQYrCMACG0a7degjvf8NhFoNOaMZ0SJrf5j0oSkml9GuqSLYNAAAAAAAAAAAAAAAAAAAAAICZHo0bY5TXuLWHLmPUeuyNK48p99PH0blQe08frc+eWhtN+jp6TcuxevSlx3v3yjZi3GuPls/be15dvUntmo7a92gc92qFDj/O7nF03zc9cvatJunaX7lH7fuy3G4Hjp0xbu/8PtGV77VPpEcWPbLokUWPLHpk0SOLHln0yKJHFj2y6JFFjyx6ZNEjix5Z9MiiRxY9suiRRY8semTRI4seWVbu8deau1mSzuVs9+I1QdK5nKVcY3rbfs+VmXNm1R49xoywao93c6A2Z/bWcbeuSf/vuvVVrHgvJtMjix5Z9Jgv4TctTxpk0SOLHln0yKJHFj2yrPz/ENR8AXA8AjFAnAAA
   </data>
  </layer>
- <layer name="TILES" width="100" height="100">
+ <layer name="collision layer" width="100" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3cMQ6DABADQf7B//+ZgspJBRH4gBkpPfKi68iywPXW9gPweN6x99IeuJuz75a7eB1b/7JJnwYAHLHe7Pd07X31SO199UjtffVI7X31SO199UjtffVI7X31SO199UjtffVI7X31SO199UjtffVI7X31SO199UjtffVI7X31SO199UjtffVI7X31SO199QAAAAAAAAAAAAAAANj4dgIAAADO5X8Sur730GMWPWbRYxY9ZtFjFj1mmdJDp82UHmz0mEWPWfSYRQ8A9th7x93999AaAIB/fQBz/TmWQJwAAA==
+   H4sIAAAAAAAAA+3WQQqAIBBAUe/R/e/ZfkgYbaZcvAdChG3mYzgGAAAAAAAAAAAAAAAAAAAAAAB/upKLHnHG2R669Jj1eNoXv4nvqbF6FmbP1Mj+e2ZtNKm1OtO4V49aepzlTQ93rR4789ThLHoAAAAAAAAAAAAAAAAAAAAAAMC3bjbiGTRAnAAA
+  </data>
+ </layer>
+ <layer name="object layer" width="100" height="100" visible="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3BMQEAAADCoPVP7WULoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgBt5RKnmQJwAAA==
   </data>
  </layer>
 </map>
