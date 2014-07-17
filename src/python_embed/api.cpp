@@ -6,14 +6,9 @@
 #include "api.hpp"
 #include "main.hpp"
 #include "print_debug.hpp"
-#include <random>
 
 #ifndef WRAPPING_ENABLED
 #define WRAPPING_ENABLED true
-#endif
-
-#ifndef TILESIZE_PIXELS
-#define TILESIZE_PIXELS 32
 #endif
 
 namespace py = boost::python;
@@ -53,7 +48,7 @@ std::string Vec2D::to_string() {
 Entity::Entity(Vec2D start, std::string name, int id):
     start(start), position(start), script(""), id(id), call_number(0) {
         this->name = std::string(name);
-        move_object(id, TILESIZE_PIXELS * float(start.x), TILESIZE_PIXELS * float(start.y));
+        move_object(id, start.x, start.y);
 }
 
 bool Entity::move(int x, int y) {
@@ -75,8 +70,8 @@ bool Entity::move(int x, int y) {
     else if (tile == TileType::KILLER) {
         position = Vec2D(1,1);
     }
-    float dx = TILESIZE_PIXELS * float(position.x - cached_position.x);
-    float dy = TILESIZE_PIXELS * float(position.y - cached_position.y);
+    int dx = position.x - cached_position.x;
+    int dy = position.y - cached_position.y;
 
     move_object(id, dx, dy);
 

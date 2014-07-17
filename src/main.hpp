@@ -15,7 +15,7 @@
 /// @param dy move in x by dy pixels
 ///
 
-void move_object(const int id, const float dx, const float dy);
+void move_object(const int id, const int dx, const int dy);
 enum class TileType {
     WALKABLE,
     UNWALKABLE,

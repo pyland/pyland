@@ -61,6 +61,7 @@
 #include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
+#include "locks.hpp"
 #include "main.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
@@ -127,7 +128,11 @@ std::map<int, TileType> tile_to_type({
 });    
 
 
-void move_object(const int id, const int dx, const int dy) {
+void move_object(const int id, int dx, int dy) {
+    // TODO: Remove absurd hardcoding
+    dx *= 32;
+    dy *= 32;
+
     int new_id = id +1;
 
     characters->at(new_id)->set_x_position(characters->at(new_id)->get_x_position() + dx);
@@ -229,6 +234,7 @@ Vec2D get_rand_walkable () {
 
 
 // TODO: Unhack this hack
+// TODO: Name properly.
 std::vector<LockableEntityThread> retentitythreads;
 
 static int maxid = 0;
@@ -281,6 +287,33 @@ class CallbackState {
             create_character(interpreter, characters, name);
         }
 
+        void restart(InterpreterContext interpreter_context) {
+            print_debug << "Killing number " << target << std::endl;
+
+            lock::GIL lock_gil(interpreter_context, "Killer");
+
+            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::RESTART);
+            target = 0;
+        }
+
+        void stop(InterpreterContext interpreter_context) {
+            print_debug << "Killing number " << target << std::endl;
+
+            lock::GIL lock_gil(interpreter_context, "Killer");
+
+            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::STOP);
+            target = 0;
+        }
+
+        void kill(InterpreterContext interpreter_context) {
+            print_debug << "Killing number " << target << std::endl;
+
+            lock::GIL lock_gil(interpreter_context, "Killer");
+
+            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::KILL);
+            target = 0;
+        }
+
     private:
         Interpreter &interpreter;
         std::map<int, Character *> *characters;
@@ -317,16 +350,18 @@ int main (int argc, char* argv[]) {
     map_viewer.set_map(&map);
 
 
-    float dt = get_dt();
-    int count = 0;
-
     CallbackState callbackstate(interpreter, characters, "Adam");
 
     InputManager* input_manager = window.get_input_manager();
 
     Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
         {KEYPRESS, KEY("S")},
-        [&] (KeyboardInputEvent event) { callbackstate.spawn(); }
+        [&] (KeyboardInputEvent) { callbackstate.spawn(); }
+    ));
+
+    Lifeline kill_callback = input_manager->register_keyboard_handler(filter(
+        {KEYPRESS, KEY("K")},
+        [&] (KeyboardInputEvent) { callbackstate.stop(interpreter.interpreter_context); }
     ));
 
     std::vector<Lifeline> digit_callbacks;
@@ -334,14 +369,14 @@ int main (int argc, char* argv[]) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
                 {KEYPRESS, KEY(std::to_string(i))},
-                [&, i] (KeyboardInputEvent event) { callbackstate.register_number(i); }
+                [&, i] (KeyboardInputEvent) { callbackstate.register_number(i); }
             ))
         );
     }
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
-        dt = get_dt(); 
+        float dt = get_dt(); 
         map_viewer.update_map(dt);
         map_viewer.render_map();
 

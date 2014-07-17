@@ -22,6 +22,12 @@ typedef lock::Lockable<std::shared_ptr<EntityThread>> LockableEntityThread;
 ///
 class EntityThread {
     public:
+        enum class Signal {
+            RESTART,
+            STOP,
+            KILL
+        };
+
         ///
         /// Construct a EntityThread from a Entity object.
         ///
@@ -63,7 +69,9 @@ class EntityThread {
         ///
         /// Neither termination nor safety is guaranteed.
         ///
-        void halt_soft();
+        /// TODO: Document
+        ///
+        void halt_soft(Signal signal);
 
         ///
         /// Try to kill the thread without mortal concerns for such things as life and death.

@@ -109,8 +109,7 @@ long EntityThread::get_thread_id() {
     return thread_id;
 }
 
-void EntityThread::halt_soft() {
-    print_debug << "Attempting to kill thread." << std::endl;
+void EntityThread::halt_soft(Signal signal) {
     print_debug << "Attempting to kill thread id " << get_thread_id() << "." << std::endl;
 
     PyThreadState_SetAsyncExc(get_thread_id(), PyExc_SystemError);
