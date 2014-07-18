@@ -98,6 +98,7 @@ EXECUTABLE = main.bin
 BASE_OBJS = \
 	character.o      \
 	engine_api.o     \
+	event_manager.o  \
 	game_window.o    \
 	image.o          \
 	layer.o          \

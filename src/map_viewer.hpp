@@ -10,6 +10,10 @@ class MapViewer {
     Map* map = nullptr;
 
     ///
+    /// Object to focus the map on
+    /// 
+    int map_focus_object = 0;
+    ///
     /// The reference to the window object in which we render the map.
     ///
     GameWindow *window = nullptr;
@@ -17,7 +21,24 @@ class MapViewer {
 public:
     MapViewer(GameWindow* window);
     ~MapViewer();
-  
+
+    ///
+    /// Refocus the map back onto the object it is focusses on
+    /// 
+    void refocus_map();
+
+    ///
+    /// Set the id of the object to focus on 
+    /// @param object_id the id of the object to focus the map view on
+    ///  
+    void set_map_focus_object(int object_id);
+
+    ///
+    /// Get the id of the object to focus on
+    /// @return the id of the the object to focs the map on
+    ///
+    int get_map_focus_object() { return map_focus_object; }
+
     ///
     /// Render the currently bound map
     ///

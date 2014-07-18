@@ -42,9 +42,9 @@
 
 class Map {
     ///
-    /// The characters that are on this map
+    /// The ids of the characters that are on this map
     ///
-    std::map<int, Character*> characters;
+    std::vector<int> characters;
 
     ///
     /// Cache of the tileset texture data for this Map
@@ -114,38 +114,6 @@ class Map {
     char* tex_buf[1];
 
     ///
-    /// The number of objects in the map
-    ///
-    int num_objects = 2;
-
-    ///
-    ///The number of layers 
-    ///
-    int num_layers = 0;
-
-    ///
-    /// The world data
-    ///
-    std::array<std::array<int, 16>, 16> world_data = {{
-            {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}},
-            {{14,  64,  14,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
-            {{14,  64,  14,  64,  64,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
-            {{14,  64,  14,  64,  64,  64,  14,  64,  64,  64,  13,  13,  64,  64,  12,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  64,  13,  13,  13,  64,  12,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  13,  13,  13,  13,  13,  12,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  13,  13,  13,  13,  13,  12,  14}},
-            {{14,  64,  57,  64,  64,  14,  64,  64,  64,  64,  13,  14,  14,  14,  12,  14}},
-            {{14,  64,  57,  64,  64,  14,  64,  64,  64,  64,  14,  74,   8,   8,   8,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  64,  14,  74,   8,   8,   8,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  14,  57,   8,   8,   8,   8,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  74,  14,   8,   8,   8,   8,   8,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-            {{14,  64,  14,  14,  14,  14,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-            {{14,  64,  14,   8,   8,   8,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-            {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}}
-        }};
-
-    ///
     /// The tileset texture coordinates
     ///
     GLfloat* tileset_text_coords = nullptr;
@@ -191,11 +159,10 @@ public:
     ~Map();
 
     ///
-    /// Get the characters to render 
+    /// Get the characters that are on this map 
+    // Make this a copy
     ///
-    std::map<int, Character*>* get_characters_map() { return &characters; }
-
-
+    const std::vector<int>& get_characters() { return characters; }
     ///
     /// Gets the RenderableComponent object instance associated with this Map
     ///
