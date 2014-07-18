@@ -8,7 +8,8 @@
 #include <thread>
 
 ///
-/// The event manager class. This is a thread-safe implementation.
+/// The event manager class. This is a thread-safe
+/// implementation.which uses the singleton pattern.
 ///
 class EventManager {
     ///
@@ -53,10 +54,15 @@ class EventManager {
     ///
 
     void add_timed_event(std::chrono::duration<double> duration, std::function<bool (double)> func, std::chrono::steady_clock::time_point start_time);
-public:
+
     EventManager();
     ~EventManager();
-
+public:
+    ///
+    /// Getter for the main global event manager.
+    /// @return a reference to the global event manager
+    ///
+    static EventManager& get_instance();
     ///
     /// Add an event to the event manager
     ///

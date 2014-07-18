@@ -322,7 +322,7 @@ int main (int argc, char* argv[]) {
 
     ///////////////////////////////
 
-    EventManager em;
+    EventManager& em = EventManager::get_instance();
     auto func1 = [] () { std::cout << "FUNC 1" << std::endl;};
     auto func2 = [] () { std::cout << "FUNC 2" << std::endl; };
     auto func3 = [] () { std::cout << "FUNC 3" << std::endl; };

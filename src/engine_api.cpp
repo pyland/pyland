@@ -1,4 +1,5 @@
 #include "engine_api.hpp"
+#include "map_viewer.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
 

@@ -20,6 +20,13 @@ EventManager::~EventManager() {
     delete next_frame_queue;
 }
 
+EventManager& EventManager::get_instance() {
+    //:Lazy instantiation of the global instance
+    static EventManager global_instance;
+    
+    return global_instance;
+}
+
 void EventManager::process_events() {
     //We need to process all the events in the queue
     //Problem is that, when events are being processed, they can add

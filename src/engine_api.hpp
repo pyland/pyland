@@ -4,6 +4,9 @@
 
 #ifndef ENGINE_API_H
 #define ENGINE_API_H
+
+#include "map_viewer.hpp"
+
 #include <array>
 #include <utility>
 #include <vector>
@@ -15,7 +18,12 @@
 
 //Wrap the api calls into a static public class
 class Engine {
+
+    static MapViewer* map_viewer;
 public:
+    static void set_map_viewer(MapViewer* _map_viewer) { map_viewer = _map_viewer; }
+    static MapViewer* get_map_viewer() { return map_viewer;    }
+
     ///
     /// Move sprite onscreen
     ///
