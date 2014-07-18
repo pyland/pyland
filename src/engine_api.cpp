@@ -6,10 +6,11 @@
 #include <memory>
 #include <utility>
 #include <vector>
-
+#include <iostream>
 bool Engine::move_object(int id, int tile_dx, int tile_dy) {
-    
+
     std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(id);
+
     if(object) {
         //Check if a move can be performed
         if(!walkable(object->get_x_position() + tile_dx, object->get_y_position() + tile_dy))

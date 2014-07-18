@@ -182,7 +182,7 @@ void create_character(Interpreter &interpreter, std::string name) {
     ObjectManager::get_instance().add_object(new_character);
 
     print_debug << "Creating character wrapper" << std::endl;
-
+    std::cout<< "ID " << new_character->get_id() <<std::endl;
     // Register user controled character
     // Yes, this is a memory leak. Deal with it.
     Entity *a_thing = new Entity(Vec2D(0, 0), new_character->get_name(), new_character->get_id());

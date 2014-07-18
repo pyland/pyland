@@ -12,7 +12,7 @@ ObjectManager& ObjectManager::get_instance() {
     return global_instance;
     
 }
-int ObjectManager::next_object_id(0);
+int ObjectManager::next_object_id(1);
 int ObjectManager::get_next_id() {
     //make this thread safe
     std::lock_guard<std::mutex> lock(object_manager_mutex);
