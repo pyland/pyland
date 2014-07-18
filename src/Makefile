@@ -116,7 +116,9 @@ INPUT_OBJS = \
 	input_management/filters.o              \
 	input_management/input_event.o          \
 	input_management/input_manager.o        \
-	input_management/keyboard_input_event.o
+	input_management/keyboard_input_event.o \
+	input_management/mouse_input_event.o    \
+	input_management/mouse_state.o
 
 PYTHON_OBJS = \
 	python_embed/api.o           \
