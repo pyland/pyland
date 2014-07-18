@@ -325,7 +325,7 @@ int main (int argc, char* argv[]) {
     InputManager* input_manager = window.get_input_manager();
 
     Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
-        {KEYPRESS, KEY("S")},
+        {KEY_PRESS, KEY("S")},
         [&] (KeyboardInputEvent event) { callbackstate.spawn(); }
     ));
 
@@ -333,7 +333,7 @@ int main (int argc, char* argv[]) {
     for (int i=0; i<10; ++i) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
-                {KEYPRESS, KEY(std::to_string(i))},
+                {KEY_PRESS, KEY(std::to_string(i))},
                 [&, i] (KeyboardInputEvent event) { callbackstate.register_number(i); }
             ))
         );
