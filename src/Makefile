@@ -98,19 +98,23 @@ EXECUTABLE = main.bin
 BASE_OBJS = \
 	character.o      \
 	engine_api.o     \
+	event_manager.o  \
 	game_window.o    \
 	image.o          \
+	layer.o          \
 	lifeline.o       \
 	lifeline_controller.o \
 	main.o           \
 	map.o            \
 	map_loader.o     \
+	map_object.o     \
 	map_viewer.o     \
 	object.o         \
 	object_manager.o \
 	print_debug.o    \
 	renderable_component.o \
-	shader.o
+	shader.o         \
+	tileset.o 
 
 INPUT_OBJS = \
 	input_management/filters.o              \

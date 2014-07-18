@@ -145,8 +145,6 @@ class Entity {
         bool move(int x, int y);
 
         ///
-        /// NOT CURRENTLY SUPPORTED
-        ///
         /// Checks if player can move by the vector given.
         ///
         /// @param by

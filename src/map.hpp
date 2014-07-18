@@ -1,10 +1,20 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include "character.hpp"
+#include "game_window.hpp"
+#include "layer.hpp"
+#include "map_object.hpp"
+#include "object.hpp"
+#include "renderable_component.hpp"
+#include "tileset.hpp"
+
+
 #include <array>
 #include <map>
+#include <memory>
 #include <string>
-
+#include <vector>
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -29,16 +39,12 @@
 #endif
 
 
-#include "game_window.hpp"
-#include "renderable_component.hpp"
-#include "object.hpp"
-#include "character.hpp"
 
 class Map {
     ///
-    /// The characters that are on this map
+    /// The ids of the characters that are on this map
     ///
-    std::map<int, Character*> characters;
+    std::vector<int> characters;
 
     ///
     /// Cache of the tileset texture data for this Map
@@ -95,44 +101,17 @@ class Map {
     ///
     /// The width of the map to be displayed on screen.
     ///
-    int map_display_width = 8;
+    int map_display_width = 30;
 
     ///
     /// The height of the map to be displayed on screen
     ///
-    int map_display_height = 8;
+    int map_display_height = 30;
 
     ///
     /// The texture buffer pointers
     ///
     char* tex_buf[1];
-
-    ///
-    /// The number of objects in the map
-    ///
-    int num_objects = 2;
-
-    ///
-    /// The world data
-    ///
-    std::array<std::array<int, 16>, 16> world_data = {{
-            {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}},
-            {{14,  64,  14,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
-            {{14,  64,  14,  64,  64,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
-            {{14,  64,  14,  64,  64,  64,  14,  64,  64,  64,  13,  13,  64,  64,  12,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  64,  13,  13,  13,  64,  12,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  13,  13,  13,  13,  13,  12,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  13,  13,  13,  13,  13,  12,  14}},
-            {{14,  64,  57,  64,  64,  14,  64,  64,  64,  64,  13,  14,  14,  14,  12,  14}},
-            {{14,  64,  57,  64,  64,  14,  64,  64,  64,  64,  14,  74,   8,   8,   8,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  64,  14,  74,   8,   8,   8,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  64,  14,  57,   8,   8,   8,   8,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  64,  74,  14,   8,   8,   8,   8,   8,  14}},
-            {{14,  64,  14,  64,  64,  14,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-            {{14,  64,  14,  14,  14,  14,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-            {{14,  64,  14,   8,   8,   8,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-            {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}}
-        }};
 
     ///
     /// The tileset texture coordinates
@@ -145,7 +124,7 @@ class Map {
     GLfloat* map_data = nullptr;
 
     ///
-    /// Pointer to the map texture coordinate data
+    /// Pointer tno the map texture coordinate data
     ///
     GLfloat* map_tex_coords = nullptr;
 
@@ -158,13 +137,13 @@ class Map {
     /// The function which generates the texture coordinates for the map
     /// geometry, using the cached tile coordinates.
     ///
-    void generate_map_texcoords();
+    void generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets);
   
     ////
     /// The function which generates the map geometry so that it can be
     /// rendered to the screen
     ///
-    void generate_map_coords();
+    void generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets);
 
     ///
     /// Initialises the textures
@@ -180,11 +159,10 @@ public:
     ~Map();
 
     ///
-    /// Get the characters to render 
+    /// Get the characters that are on this map 
+    // Make this a copy
     ///
-    std::map<int, Character*>* get_characters_map() { return &characters; }
-
-
+    const std::vector<int>& get_characters() { return characters; }
     ///
     /// Gets the RenderableComponent object instance associated with this Map
     ///
@@ -201,16 +179,53 @@ public:
     int get_height() { return map_height; }
 
     ///
+    /// Get the display width of the map
+    /// @return get the display width of the map
+    ///
+    int get_display_width() { return map_display_width; }
+
+    ///
+    /// Set the display width of the map
+    /// @param display_width the new display width of the map
+    ///
+    void set_display_width(int display_width) { map_display_width = display_width; }
+
+    ///
+    /// Get the display height of the map
+    /// @return get the display height of the map
+    ///
+    int get_display_height() { return map_display_height; }
+
+    ///
+    /// Set the display height of the map
+    /// @param display_width the new display height of the map
+    ///
+    void set_display_height(int display_height) { map_display_height = display_height; }
+
+
+    ///
     /// Get the map display lower left x position
     /// @return the map display far left x position
     ///
     float get_display_x() { return map_display_x; }
 
     ///
+    /// Set the x display position of the map
+    /// @param new_display_x the new display position
+    ///
+    void set_display_x(float new_display_x) { map_display_x = new_display_x; }
+    
+    ///
     /// Get the map display bottom y position
     /// @return the map display bottom y  position
     ///
     float get_display_y() { return map_display_y; }
+
+    ///
+    /// Set the y display position of the map
+    /// @param new_display_y the new display position
+    ///
+    void set_display_y(float new_display_y) { map_display_y = new_display_y; }
   
     ///
     /// The function used to update elements on the map.

@@ -107,36 +107,38 @@ void Character::generate_vertex_data() {
     }
 
     float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
+    float depth = 0.0f;
     //bottom left 
     sprite_data[0] = 0;
     sprite_data[1] = 0;
-    sprite_data[2] = 0;
+    sprite_data[2] = depth;
 
     //top left
     sprite_data[3] = 0;
     sprite_data[4] = (1) * scale;
-    sprite_data[5] = 0;
+    sprite_data[5] = depth;
 
     //bottom right
     sprite_data[6] = (1) * scale;
     sprite_data[7] = 0;
-    sprite_data[8] = 0;
+    sprite_data[8] = depth;
 
     //top left
     sprite_data[9] = 0;
     sprite_data[10] = 1 * scale;
-    sprite_data[11] = 0;
+    sprite_data[11] = depth;
 
     //top right
     sprite_data[12] = 1 * scale;
     sprite_data[13] = 1 * scale;
-    sprite_data[14] = 0;
+    sprite_data[14] = depth;
 
     //bottom right
     sprite_data[15] = 1 * scale;
     sprite_data[16] = 0;
-    sprite_data[17] = 0;
-    print_debug << "SPRITES: " << std::endl;
+    sprite_data[17] = depth;
+    std::cout << "SPRITES: " << std::endl;
+
     render_component->set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
     render_component->set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
 }

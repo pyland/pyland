@@ -47,38 +47,40 @@ class Object {
     ///
     std::string script = "";
 
-public:
-    Object();
-    ~Object();
-    ///
-    /// Set the object's x position
-    /// @param x_pos the new x position
-    ///
-    void set_x_position(int x_pos);
-
-    ///
-    /// Get the object's x position
-    /// @return the object's x position
-    ///
-    int get_x_position() { return x_position; }
-
-    ///
-    /// Set the object's y position
-    /// @param y_pos
-    ///
-    void set_y_position(int y_pos);
-
-    ///
-    /// Get the object's y position
-    /// @return the object's y position
-    ///
-    int get_y_position() { return y_position; }
-
     /// 
     /// Set the id of the object
     /// @param new_id the object's id
     ///
     void set_id(int new_id);
+
+public:
+    Object();
+    ~Object();
+
+    ///
+    /// Set the object's x position in tiles
+    /// @param x_pos the new x position in tiles
+    ///
+    void set_x_position(int x_pos);
+
+    ///
+    /// Get the object's x position in tiles
+    /// @return the object's x position in tiles
+    ///
+    int get_x_position() { return x_position; }
+
+    ///
+    /// Set the object's y position in tiles
+    /// @param y_pos
+    ///
+    void set_y_position(int y_pos);
+
+    ///
+    /// Get the object's y position in tiles
+    /// @return the object's y position in tiles
+    ///
+    int get_y_position() { return y_position; }
+
 
     ///
     /// Get the id of the object

@@ -1,9 +1,13 @@
 #include "object.hpp"
+#include "object_manager.hpp"
 
 #include <string>
 
 Object::Object() {
-
+    //Get a new id for the object
+    ObjectManager& object_manager = ObjectManager::get_instance();
+    set_id(object_manager.get_next_id());
+    
 }
 
 Object::~Object() {
