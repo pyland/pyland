@@ -42,9 +42,9 @@
 
 class Map {
     ///
-    /// The characters that are on this map
+    /// The ids of the characters that are on this map
     ///
-    std::map<int, Character*> characters;
+    std::vector<int> characters;
 
     ///
     /// Cache of the tileset texture data for this Map
@@ -191,11 +191,10 @@ public:
     ~Map();
 
     ///
-    /// Get the characters to render 
+    /// Get the characters that are on this map 
+    // Make this a copy
     ///
-    std::map<int, Character*>* get_characters_map() { return &characters; }
-
-
+    const std::vector<int>& get_characters() { return characters; }
     ///
     /// Gets the RenderableComponent object instance associated with this Map
     ///

@@ -47,6 +47,12 @@ class Object {
     ///
     std::string script = "";
 
+    /// 
+    /// Set the id of the object
+    /// @param new_id the object's id
+    ///
+    void set_id(int new_id);
+
 public:
     Object();
     ~Object();
@@ -74,11 +80,6 @@ public:
     ///
     int get_y_position() { return y_position; }
 
-    /// 
-    /// Set the id of the object
-    /// @param new_id the object's id
-    ///
-    void set_id(int new_id);
 
     ///
     /// Get the id of the object
