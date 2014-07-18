@@ -15,7 +15,7 @@ EventManager::EventManager(){
 }
 
 EventManager::~EventManager() {
-    //Free these\
+    //Free these
     delete curr_frame_queue;
     delete next_frame_queue;
 }
@@ -85,6 +85,12 @@ void EventManager::add_event(std::function<void ()> func) {
 }
 
 void EventManager::add_timed_event(std::chrono::duration<double> duration, std::function<bool (double)> func) {
+    std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
+
+    add_timed_event(duration, func, start_time);
+}
+void EventManager::add_timed_event(std::chrono::duration<double> duration, std::function<bool (double)> func, std::chrono::steady_clock::time_point start_time) {
+
     if(func) {
         //Lock released when this lock_guard goes out of scope
         // a std::lock_guard to manage locking in an exception-safe manner
@@ -93,12 +99,20 @@ void EventManager::add_timed_event(std::chrono::duration<double> duration, std::
         //Convert a timed callback to a void lambda
         //We do this by creating a void wrapper lambda and use
         //variable capture to capture the data we need
-        next_frame_queue->push_back([&] () {
-                double percent = 1.0;
+        next_frame_queue->push_back([this, duration, func, start_time] () {
+
+                //Calculate the total time since the initial start time
+                typedef std::chrono::duration<int, std::milli> millisecs_t;
+                std::chrono::steady_clock::time_point curr_time = std::chrono::steady_clock::now();
+                millisecs_t curr_interval(std::chrono::duration_cast<millisecs_t>(curr_time - start_time));
+                
+                //Calculate how far to completion we are. curr_interval is in milliseconds so convert to seconds
+                double percent =  (static_cast<double>(curr_interval.count() /1000.0) / static_cast<double>(duration.count() ));
+
                 //If the result is true, put it on the next frame queue
                 bool result = func(percent);
                 if(result) {
-                    add_timed_event(duration /* - time */, func);
+                    add_timed_event(duration, func, start_time);
                 } //else, don't need to do anything
         });
     } // Lock released

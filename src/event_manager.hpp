@@ -36,6 +36,23 @@ class EventManager {
     ///curr_frame_queue's comment.
     ///
     std::list<std::function<void()>>* next_frame_queue;
+
+    ///
+    /// Add an event with a time duration to run for. e.g. a timer
+    /// This is wrapped in a normal event (like one passed to
+    /// add_event) internally and internally managed.
+    ///
+    /// @param duration The time duration to run the event for 
+    /// @param func a boolean return and double argument
+    /// lambda. Return true to keep it in the queue and return false
+    /// to remove it. The double is intended to be a percentage of
+    /// completion. 0.0 is 0% and 1.0 is 100%. This is calculated
+    /// based on the duration, the current time and the time the event was added to the
+    /// queue 
+    /// @param percentage the percentage of completion
+    ///
+
+    void add_timed_event(std::chrono::duration<double> duration, std::function<bool (double)> func, std::chrono::steady_clock::time_point start_time);
 public:
     EventManager();
     ~EventManager();
@@ -54,7 +71,7 @@ public:
     /// This is wrapped in a normal event (like one passed to
     /// add_event) internally and internally managed.
     ///
-    /// @param duration The time duration to run the event for 
+    /// @param duration The time duration to run the event for in seconds
     /// @param func a boolean return and double argument
     /// lambda. Return true to keep it in the queue and return false
     /// to remove it. The double is intended to be a percentage of
