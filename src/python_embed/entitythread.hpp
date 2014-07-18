@@ -2,6 +2,7 @@
 #define ENTITYTHREAD_H
 
 #include <future>
+#include <map>
 #include <thread>
 #include "api.hpp"
 #include "interpreter_context.hpp"
@@ -21,93 +22,10 @@ typedef lock::Lockable<std::shared_ptr<EntityThread>> LockableEntityThread;
 ///     This needs to be, but is not, thread safe in many places.
 ///
 class EntityThread {
-    public:
-        enum class Signal {
-            RESTART,
-            STOP,
-            KILL
-        };
-
-        ///
-        /// Construct a EntityThread from a Entity object.
-        ///
-        /// Spawns a new thread.
-        ///
-        /// @param interpreter_context
-        ///     An interpreter context to lock the GIL on.
-        ///     The GIL is locked on the main thread.
-        ///
-        /// @param entity
-        ///     The entity to construct the daemon for.
-        ///
-        EntityThread(InterpreterContext interpreter_context, Entity &entity);
-
-        ///
-        /// Close the thread and shut down neatly.
-        ///
-        /// If the thread is not finished, it is killed. This does
-        /// not return until the thread is joined.
-        ///
-        ~EntityThread();
-
-        ///
-        /// Get the ID of the thread according to CPython.
-        ///
-        /// @warning
-        ///     Not thread safe.
-        ///
-        /// @return
-        ///     The ID of the thread according to CPython.
-        ///
-        long get_thread_id();
-
-        ///
-        /// Try to nicely kill the thread; avoiding corruption where possible.
-        ///
-        /// @warning
-        ///     This needs to be, but is not, totally thread safe.
-        ///
-        /// Neither termination nor safety is guaranteed.
-        ///
-        /// TODO: Document
-        ///
-        void halt_soft(Signal signal);
-
-        ///
-        /// Try to kill the thread without mortal concerns for such things as life and death.
-        ///
-        /// @warning
-        ///     This needs to be, but is not, totally thread safe.
-        ///
-        /// Neither termination nor safety is guaranteed, although
-        /// termination is more likely than with halt_soft.
-        ///
-        void halt_hard();
-
-        ///
-        /// Check if an API call has been made since last call to clean.
-        ///
-        /// @warning
-        ///     Only supported for usage from the kill thread.
-        ///
-        /// @return
-        ///     Whether an API call has been made since last call to clean.
-        ///
-        /// @see clean
-        ///
-        bool is_dirty();
-
-        ///
-        /// Remember state when last called, for use with is_dirty.
-        ///
-        /// @warning
-        ///     Only supported for usage from the kill thread.
-        ///
-        /// @see is_dirty
-        ///
-        void clean();
-
     private:
+        // TODO: Comment
+        PyObject *make_base_async_exception(PyObject *base, const char *name);
+
         /// 
         /// Reference to API's wrapped Entity.
         ///
@@ -166,6 +84,98 @@ class EntityThread {
         /// Finish and join the spawned thread.
         ///
         void finish();
+
+    public:
+        // TODO: Comment
+        enum class Signal {
+            RESTART = 100,
+            STOP    = 200,
+            KILL    = 300
+        };
+
+        ///
+        /// Construct a EntityThread from a Entity object.
+        ///
+        /// Spawns a new thread.
+        ///
+        /// @param interpreter_context
+        ///     An interpreter context to lock the GIL on.
+        ///     The GIL is locked on the main thread.
+        ///
+        /// @param entity
+        ///     The entity to construct the daemon for.
+        ///
+        EntityThread(InterpreterContext interpreter_context, Entity &entity);
+
+        ///
+        /// Close the thread and shut down neatly.
+        ///
+        /// If the thread is not finished, it is killed. This does
+        /// not return until the thread is joined.
+        ///
+        ~EntityThread();
+
+        ///
+        /// Get the ID of the thread according to CPython.
+        ///
+        /// @warning
+        ///     Not thread safe.
+        ///
+        /// @return
+        ///     The ID of the thread according to CPython.
+        ///
+        long get_thread_id();
+
+        ///
+        /// Try to nicely kill the thread; avoiding corruption where possible.
+        ///
+        /// @warning
+        ///     This needs to be, but is not, totally thread safe.
+        ///
+        /// Neither termination nor safety isguaranteed.
+        ///
+        /// TODO: Document
+        ///
+        void halt_soft(Signal signal);
+
+        ///
+        /// Try to kill the thread without mortal concerns for such things as life and death.
+        ///
+        /// @warning
+        ///     This needs to be, but is not, totally thread safe.
+        ///
+        /// Neither termination nor safety is guaranteed, although
+        /// termination is more likely than with halt_soft.
+        ///
+        void halt_hard();
+
+        ///
+        /// Check if an API call has been made since last call to clean.
+        ///
+        /// @warning
+        ///     Only supported for usage from the kill thread.
+        ///
+        /// @return
+        ///     Whether an API call has been made since last call to clean.
+        ///
+        /// @see clean
+        ///
+        bool is_dirty();
+
+        ///
+        /// Remember state when last called, for use with is_dirty.
+        ///
+        /// @warning
+        ///     Only supported for usage from the kill thread.
+        ///
+        /// @see is_dirty
+        ///
+        void clean();
+
+        // TODO: Comment
+        PyObject *Py_BaseAsyncException;
+        // TODO: Comment
+        std::map<Signal, PyObject *> signal_to_exception;
 };
 
 #endif

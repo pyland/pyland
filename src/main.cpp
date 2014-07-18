@@ -355,13 +355,21 @@ int main (int argc, char* argv[]) {
     InputManager* input_manager = window.get_input_manager();
 
     Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
-        {KEYPRESS, KEY("S")},
+        {KEYPRESS, KEY("N")},
         [&] (KeyboardInputEvent) { callbackstate.spawn(); }
     ));
 
     Lifeline kill_callback = input_manager->register_keyboard_handler(filter(
         {KEYPRESS, KEY("K")},
+        [&] (KeyboardInputEvent) { callbackstate.kill(interpreter.interpreter_context); }
+    ));
+    Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
+        {KEYPRESS, KEY("S")},
         [&] (KeyboardInputEvent) { callbackstate.stop(interpreter.interpreter_context); }
+    ));
+    Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
+        {KEYPRESS, KEY("R")},
+        [&] (KeyboardInputEvent) { callbackstate.restart(interpreter.interpreter_context); }
     ));
 
     std::vector<Lifeline> digit_callbacks;
