@@ -8,9 +8,13 @@
 MouseInputEvent::MouseInputEvent(InputManager* manager,
                                  MouseState start,
                                  MouseState from,
-                                 MouseState to):
+                                 MouseState to,
+                                 int button):
     InputEvent(manager),
     start(start),
     from(from),
-    to(to) {
+    to(to),
+    button(button),
+    was_down(button == 0 ? false : (((from.buttons >> (button - 1)) & 1) != 0)),
+    down(button == 0 ? false : (((to.buttons >> (button - 1)) & 1) != 0)) {
 }

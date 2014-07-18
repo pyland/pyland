@@ -9,5 +9,5 @@ MouseState::MouseState(int x, int y, int buttons):
 }
 
 bool MouseState::is_down(int button) {
-    return ((buttons >> button) & 1) != 0;
+    return ((buttons >> (button - 1)) & 1) != 0;
 }

@@ -26,11 +26,26 @@ public:
     /// The current state.
     ///
     MouseState to;
+    ///
+    /// The button which is the focus of interest (if any).
+    ///
+    /// One of Button.
+    ///
+    int button;
+    ///
+    /// Whether the button referred to by button was down previously.
+    ///
+    bool was_down;
+    ///
+    /// Whether the button referred to by button is down.
+    ///
+    bool down;
 
     MouseInputEvent(InputManager* manager,
                     MouseState start,
                     MouseState from,
-                    MouseState to);
+                    MouseState to,
+                    int button = 0);
 };
 
 

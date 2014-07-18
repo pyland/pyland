@@ -9,12 +9,19 @@
 #include "keyboard_input_event.hpp"
 #include "print_debug.hpp"
 
-KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHandler wrapped) {
+
+
+///
+/// A template that wraps filters around any event.
+///
+template <class Event>
+static std::function<void (Event)> filter_do(std::initializer_list<std::function<bool (Event)>> filters,
+                                            std::function<void (Event)> wrapped) {
     // Initializer lists have stupid noncopy semantics on copy.
     // Move to a vector to prevent corruption.
-    std::vector<KeyboardFilter> filters_vector(filters); 
+    std::vector<std::function<bool (Event)>> filters_vector(filters); 
 
-    return [filters_vector, wrapped] (KeyboardInputEvent event) {
+    return [filters_vector, wrapped] (Event event) {
         for (auto filter : filters_vector) {
             if (!filter(event)) {
                 return;
@@ -24,6 +31,33 @@ KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHa
         wrapped(event);
     };
 }
+
+
+// Wrap up the template function in nice overloaded functions.
+
+KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHandler wrapped) {
+    return filter_do<KeyboardInputEvent>(filters, wrapped);
+}
+
+MouseHandler filter(std::initializer_list<MouseFilter> filters, MouseHandler wrapped) {
+    return filter_do<MouseInputEvent>(filters, wrapped);
+}
+
+// KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHandler wrapped) {
+//     // Initializer lists have stupid noncopy semantics on copy.
+//     // Move to a vector to prevent corruption.
+//     std::vector<KeyboardFilter> filters_vector(filters); 
+
+//     return [filters_vector, wrapped] (KeyboardInputEvent event) {
+//         for (auto filter : filters_vector) {
+//             if (!filter(event)) {
+//                 return;
+//             }
+//         }
+
+//         wrapped(event);
+//     };
+// }
 
 
 KeyboardFilter KEY(std::initializer_list<std::string> keys) {
@@ -73,24 +107,108 @@ KeyboardFilter MODIFIER(std::string modifier) {
 }
 
 
-KeyboardFilter REJECT(KeyboardFilter filter) {
-    return [filter] (KeyboardInputEvent event) {
+
+MouseFilter MOUSE_BUTTON(std::initializer_list<std::string> buttons) {
+    int button_bits = 0;
+
+    for (std::string button : buttons) {
+        if (button == "left") {
+            button_bits |= MouseState::ButtonMask::LEFT;
+        }
+        else if (button == "middle") {
+            button_bits |= MouseState::ButtonMask::MIDDLE;
+        }
+        else if (button == "right") {
+            button_bits |= MouseState::ButtonMask::RIGHT;
+        }
+    }
+    
+    return [button_bits] (MouseInputEvent event) {
+        return ((event.from.buttons | event.to.buttons) & button_bits) != 0;
+    };
+}
+
+MouseFilter MOUSE_BUTTON(std::string button) {
+    return MOUSE_BUTTON({button});
+}
+
+MouseFilter MOUSE_BUTTON(std::initializer_list<int> buttons) {
+    int button_bits = 0;
+
+    for (int button : buttons) {
+        button_bits |= (1 << button);
+    }
+    
+    return [button_bits] (MouseInputEvent event) {
+        return ((event.from.buttons | event.to.buttons) & button_bits) != 0;
+    };
+}
+
+MouseFilter MOUSE_BUTTON(int button) {
+    return MOUSE_BUTTON({button});
+}
+
+
+
+template<class Event>
+static std::function<bool (Event)> REJECT_do(std::function<bool (Event)> filter) {
+    return [filter] (Event event) {
         return !filter(event);
     };
 }
 
-KeyboardFilter KEYHELD = [] (KeyboardInputEvent event) {
+KeyboardFilter REJECT(KeyboardFilter filter) {
+    return REJECT_do(filter);
+}
+
+MouseFilter REJECT(MouseFilter filter) {
+    return REJECT_do(filter);
+}
+
+// KeyboardFilter REJECT(KeyboardFilter filter) {
+//     return [filter] (KeyboardInputEvent event) {
+//         return !filter(event);
+//     };
+// }
+
+KeyboardFilter KEY_HELD = [] (KeyboardInputEvent event) {
     return event.down;
 };
 
-KeyboardFilter KEYPRESS = [] (KeyboardInputEvent event) {
+KeyboardFilter KEY_PRESS = [] (KeyboardInputEvent event) {
     return event.down && event.changed;
 };
 
-KeyboardFilter KEYREPEAT = [] (KeyboardInputEvent event) {
+KeyboardFilter KEY_REPEAT = [] (KeyboardInputEvent event) {
     return event.down && !event.changed;
 };
 
-KeyboardFilter KEYUP = [] (KeyboardInputEvent event) {
+KeyboardFilter KEY_RELEASE = [] (KeyboardInputEvent event) {
     return !event.down && event.changed;
+};
+
+
+
+MouseFilter MOUSE_HELD = [] (MouseInputEvent event) {
+    return event.to.buttons;
+};
+
+MouseFilter MOUSE_PRESS = [] (MouseInputEvent event) {
+    return (event.to.buttons & ~event.from.buttons) != 0;
+};
+
+MouseFilter MOUSE_RELEASE = [] (MouseInputEvent event) {
+    return (~event.to.buttons & event.from.buttons) != 0;
+};
+
+MouseFilter MOUSE_MOVE = [] (MouseInputEvent event) {
+    return (event.to.x != event.from.x) || (event.to.y != event.from.y);
+};
+
+MouseFilter MOUSE_DRAG = [] (MouseInputEvent event) {
+    return ((event.to.x != event.start.x) || (event.to.y != event.start.y)) && event.start.buttons != 0;
+};
+
+MouseFilter MOUSE_CLICKED = [] (MouseInputEvent event) {
+    return ((event.to.x == event.start.x) && (event.to.y == event.start.y)) && event.start.buttons != 0;
 };

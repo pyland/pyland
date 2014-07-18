@@ -10,6 +10,7 @@ public:
     ///
     class Button {
     public:
+        static const int NONE   = 0;
         static const int LEFT   = 1;
         static const int MIDDLE = 2;
         static const int RIGHT  = 3;

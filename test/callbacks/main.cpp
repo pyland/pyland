@@ -17,6 +17,7 @@ extern "C" {
 #include "input_manager.hpp"
 #include "callback.hpp"
 #include "lifeline.hpp"
+#include "filters.hpp"
 
 #include "keyboard_input_event.hpp"
 #include "mouse_input_event.hpp"
@@ -32,6 +33,7 @@ void mouse_callback_function(MouseInputEvent event) {
     std::cerr << "\tStart:\t" << event.start.x << "\t" << event.start.y << "\t" << event.start.buttons << std::endl;
     std::cerr << "\tFrom:\t"  << event.from.x  << "\t" << event.from.y  << "\t" << event.from.buttons  << std::endl;
     std::cerr << "\tTo:\t"    << event.to.x    << "\t" << event.to.y    << "\t" << event.to.buttons    << std::endl;
+    std::cerr << "\tButton:\t" << event.button << "\t" << event.was_down << "\t" << event.down << std::endl;
 }
 
 
@@ -71,11 +73,13 @@ int main(int argc, char** argv) {
                     callback_function("!!!", event);
                 });
         }
-        Lifeline mouse_lifeline = input_manager->register_mouse_handler(&mouse_callback_function);
         input_manager->register_key_release_handler(release_callback);
         input_manager->register_key_down_handler(down_callback);
         input_manager->register_key_type_handler(type_callback);
         input_manager->register_key_press_handler(press_callback);
+        
+        // Lifeline mouse_lifeline = input_manager->register_mouse_handler(&mouse_callback_function);
+        Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter({MOUSE_CLICKED}, &mouse_callback_function));
         while (window.check_close() == false) {
             // Little basic colour change test.
             r += 0.001;
