@@ -19,11 +19,19 @@ extern "C" {
 #include "lifeline.hpp"
 
 #include "keyboard_input_event.hpp"
+#include "mouse_input_event.hpp"
 
 
 
-void callback_function (const char* action, KeyboardInputEvent event) {
+void callback_function(const char* action, KeyboardInputEvent event) {
     std::cerr << "\t" << event.scan_code << ":" << action;
+}
+
+void mouse_callback_function(MouseInputEvent event) {
+    std::cerr << "Mouse:" << std::endl;
+    std::cerr << "\tStart:\t" << event.start.x << "\t" << event.start.y << "\t" << event.start.buttons << std::endl;
+    std::cerr << "\tFrom:\t"  << event.from.x  << "\t" << event.from.y  << "\t" << event.from.buttons  << std::endl;
+    std::cerr << "\tTo:\t"    << event.to.x    << "\t" << event.to.y    << "\t" << event.to.buttons    << std::endl;
 }
 
 
@@ -63,6 +71,7 @@ int main(int argc, char** argv) {
                     callback_function("!!!", event);
                 });
         }
+        Lifeline mouse_lifeline = input_manager->register_mouse_handler(&mouse_callback_function);
         input_manager->register_key_release_handler(release_callback);
         input_manager->register_key_down_handler(down_callback);
         input_manager->register_key_type_handler(type_callback);
