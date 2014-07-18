@@ -125,7 +125,7 @@ std::map<int, TileType> tile_to_type({
 });    
 */
 
-void move_object(const int id, const float dx, const float dy) {
+void move_object(const int id, int dx, int dy) {
     std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(id);
     if(object) {
         object->set_x_position((int)(object->get_x_position() + (int)dx));

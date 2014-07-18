@@ -3,18 +3,11 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+
 #include "api.hpp"
-#include "main.hpp"
+#include "engine_api.hpp"
 #include "print_debug.hpp"
 #include <random>
-
-#ifndef WRAPPING_ENABLED
-#define WRAPPING_ENABLED true
-#endif
-
-#ifndef TILESIZE_PIXELS
-#define TILESIZE_PIXELS 32
-#endif
 
 namespace py = boost::python;
 
@@ -53,41 +46,24 @@ std::string Vec2D::to_string() {
 Entity::Entity(Vec2D start, std::string name, int id):
     start(start), position(start), script(""), id(id), call_number(0) {
         this->name = std::string(name);
-        move_object(id, TILESIZE_PIXELS * float(start.x), TILESIZE_PIXELS * float(start.y));
+        Engine::move_object(id, start.x, start.y);
 }
 
 bool Entity::move(int x, int y) {
     ++call_number;
 
-    auto cached_position = position;
-    position += Vec2D(x, y);
+    if (Engine::move_object(id, x, y)) {
+        position += Vec2D(x, y);
+        return true;
+    };
 
-    if (!WRAPPING_ENABLED) {
-        position.x = std::min(std::max(position.x, 0), TILESET_ELEMENT_SIZE);
-        position.y = std::min(std::max(position.y, 0), TILESET_ELEMENT_SIZE);
-    }
-
-    TileType tile = tile_to_type[world_data[position.x][position.y]];
-
-    if (tile == TileType::UNWALKABLE) {
-        position = cached_position;
-    }
-    else if (tile == TileType::KILLER) {
-        position = Vec2D(1,1);
-    }
-    float dx = TILESIZE_PIXELS * float(position.x - cached_position.x);
-    float dy = TILESIZE_PIXELS * float(position.y - cached_position.y);
-
-    move_object(id, dx, dy);
-
-    return tile != TileType::KILLER;
+    return false;
 }
 
 bool Entity::walkable(int x, int y) {
     ++call_number;
     auto new_position = position + Vec2D(x, y);
-    TileType tile = tile_to_type[world_data[new_position.x][new_position.y]];
-    return tile == TileType::WALKABLE;
+    return Engine::walkable(new_position.x, new_position.y);
 }
 
 void Entity::monologue() {
