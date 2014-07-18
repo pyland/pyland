@@ -12,19 +12,18 @@ ObjectManager& ObjectManager::get_instance() {
     return global_instance;
     
 }
-
+int ObjectManager::next_object_id(0);
 int ObjectManager::get_next_id() {
     //make this thread safe
     std::lock_guard<std::mutex> lock(object_manager_mutex);
 
     //Return the next object id
-    return next_object_id++;
+    return ObjectManager::next_object_id++;
 }
 
 bool ObjectManager::is_valid_object_id(int id) {
-
-    //Let -1 be an invalid object id
-    if(id > 0)
+    //Let 0 be an invalid object id
+    if(id > 0 && id < ObjectManager::next_object_id)
         return true;
     else
         return false;

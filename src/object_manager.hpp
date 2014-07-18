@@ -24,7 +24,7 @@ class ObjectManager {
     /// to manage. Starts at 1. An invalid object is indicated by an
     /// id of 0.
     /// 
-    int next_object_id;
+    static int next_object_id;
     
     ///
     /// The collection of all the objects the manager is currently managing
@@ -32,6 +32,11 @@ class ObjectManager {
     /// 
     std::map<int, std::shared_ptr<Object>> objects;
 
+
+
+    ObjectManager() {};
+    ~ObjectManager() {};
+public:
     ///
     /// Function to check if a given object id is valid
     /// @param id the identifier to check
@@ -40,9 +45,6 @@ class ObjectManager {
     static bool is_valid_object_id(int id);
 
 
-    ObjectManager() : next_object_id(1){};
-    ~ObjectManager() {};
-public:
     ///
     /// Getter for the main global object manger. This is the manager
     /// used by the majority of the engine

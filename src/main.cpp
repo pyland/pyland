@@ -90,41 +90,7 @@ static volatile int shutdown;
 static std::mt19937 random_generator;
 
 /*
-std::array<std::array<int, 16>, 16> world_data = {{
-    {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}},
-    {{14,  64,  14,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
-    {{14,  64,  14,  64,  64,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
-    {{14,  64,  14,  64,  64,  64,  14,  64,  64,  64,  13,  13,  64,  64,  12,  14}},
-    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  64,  13,  13,  13,  64,  12,  14}},
-    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  13,  13,  13,  13,  13,  12,  14}},
-    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  13,  13,  13,  13,  13,  12,  14}},
-    {{14,  64,  57,  64,  64,  14,  64,  64,  64,  64,  13,  14,  14,  14,  12,  14}},
-    {{14,  64,  57,  64,  64,  14,  64,  64,  64,  64,  14,  74,   8,   8,   8,  14}},
-    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  64,  14,  74,   8,   8,   8,  14}},
-    {{14,  64,  14,  64,  64,  14,  64,  64,  64,  14,  57,   8,   8,   8,   8,  14}},
-    {{14,  64,  14,  64,  64,  14,  64,  64,  74,  14,   8,   8,   8,   8,   8,  14}},
-    {{14,  64,  14,  64,  64,  14,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-    {{14,  64,  14,  14,  14,  14,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-    {{14,  64,  14,   8,   8,   8,  64,  74,  74,  14,   8,   8,   8,   8,   8,  14}},
-    {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}}
-}};
-
-// TODO: Integrate with fun upcoming map stuff.
-std::map<int, TileType> tile_to_type({
-    { 8, TileType::WALKABLE},   // Board
-    {12, TileType::WALKABLE},   // Flowers
-    {64, TileType::WALKABLE},   // Grass
-
-    { 2, TileType::UNWALKABLE}, // Edged wall
-    {13, TileType::UNWALKABLE}, // Water
-    {14, TileType::UNWALKABLE}, // Wall
-    {21, TileType::UNWALKABLE}, // Hideous ice
-
-    {57, TileType::KILLER},     // Trapdoor (set)
-    {74, TileType::KILLER}      // Lava
-});    
-
-    static void animate(float dt) {
+static void animate(float dt) {
     // animate map
     float map_display_right_x = map_bottom_x + map_display_width;
     float map_display_top_y = map_bottom_y + map_display_height;
@@ -198,25 +164,6 @@ static float get_dt() {
     curr_time = milliseconds;
     return static_cast<float>(duration.count()) / 1000.0f;
 }
-
-
-/*
-Vec2D get_rand_walkable () {
-    std::uniform_int_distribution<int32_t> random_x(1, 14);
-    std::uniform_int_distribution<int32_t> random_y(1, 14);
-
-    int x = random_x(random_generator);
-    int y = random_y(random_generator);
-
-    while (TileType::WALKABLE != tile_to_type[world_data[x][y]]) {
-        x = random_x(random_generator);
-        y = random_y(random_generator);
-    }
-    
-    return Vec2D(x,y);
-
-}
-*/
 
 // TODO: Unhack this hack
 std::vector<LockableEntityThread> retentitythreads;
@@ -295,7 +242,9 @@ int main (int argc, char* argv[]) {
 
     MapViewer map_viewer(&window);
     map_viewer.set_map(&map);
-
+    map_viewer.set_map_focus_object(1);
+    Engine::set_map_viewer(&map_viewer);
+    
 
     float dt = get_dt();
 
@@ -333,7 +282,7 @@ int main (int argc, char* argv[]) {
 
     em.add_event(func2);
     em.add_event(func3);
-    em.add_timed_event(std::chrono::duration<double>(10.0), func_t1);
+    em.add_timed_event(std::chrono::duration<double>(0.5), func_t1);
 
     em.process_events();
 
