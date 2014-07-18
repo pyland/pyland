@@ -107,9 +107,9 @@ private:
     ///
     CallbackRegistry<void,KeyboardInputEvent> key_release_callbacks;
     ///
-    /// Keyboard callback registry.
+    /// Mouse callback registry.
     ///
-    CallbackRegistry<void,KeyboardInputEvent> mouse_callbacks;
+    CallbackRegistry<void,MouseInputEvent> mouse_callbacks;
 
     ///
     /// Upon destruction, lifelines should be disabled.

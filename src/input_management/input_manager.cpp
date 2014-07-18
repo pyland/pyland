@@ -28,16 +28,13 @@ InputManager::InputManager(GameWindow* window):
     pressed_keys(std::set<int>()),
     typed_keys(std::set<int>()),
     released_keys(std::set<int>()),
-
-    mouse_x(0),
-    mouse_y(0),
     
-    mouse_start(0, 0, 0);
-    mouse_from(0, 0, 0);
-    mouse_to(0, 0, 0);
+    mouse_start(0, 0, MouseState::ButtonMask::NONE),
+    mouse_from(0, 0, MouseState::ButtonMask::NONE),
+    mouse_to(0, 0, MouseState::ButtonMask::NONE),
     
     key_events(std::queue<KeyboardInputEvent>()),
-    mouse_events(std::queue<KeyboardInputEvent>()),
+    mouse_events(std::queue<MouseInputEvent>()),
 
     callback_controller(LifelineController()) {
 }
@@ -52,9 +49,6 @@ void InputManager::clean() {
     pressed_keys.clear();
     typed_keys.clear();
     released_keys.clear();
-
-    pressed_buttons.clear();
-    released_buttons.clear();
 }
 
 
@@ -77,25 +71,25 @@ void InputManager::handle_event(SDL_Event* event) {
         released_keys.insert(event->key.keysym.scancode);
         break;
     case SDL_MOUSEBUTTONDOWN:
-        down_buttons.insert(event->button.button);
-        pressed_buttons.insert(event->button.button);
         mouse_from = mouse_to;
-        mouse_to = MouseState(this, event->button.x, event->button.y, event->button.button);
-        mouse_events.push(MouseInputEvent(mouse_start, mouse_from, mouse_to));
+        mouse_to = MouseState(event->button.x,
+                              event->button.y,
+                              mouse_from.buttons | (1 << event->button.button));
+        mouse_events.push(MouseInputEvent(this, mouse_start, mouse_from, mouse_to));
         mouse_start = mouse_to;
         break;
     case SDL_MOUSEBUTTONUP:
-        down_buttons.erase(event->button.button);
-        released_buttons.insert(event->button.button);
         mouse_from = mouse_to;
-        mouse_to = MouseState(this, event->button.x, event->button.y, event->button.button);
-        mouse_events.push(MouseInputEvent(mouse_start, mouse_from, mouse_to));
+        mouse_to = MouseState(event->button.x,
+                              event->button.y,
+                              mouse_from.buttons & ~(1 << event->button.button));
+        mouse_events.push(MouseInputEvent(this, mouse_start, mouse_from, mouse_to));
         mouse_start = mouse_to;
         break;
     case SDL_MOUSEMOTION:
         mouse_from = mouse_to;
-        mouse_to = MouseState(this, event->motion.x, event->motion.y, event->motion.button);
-        mouse_events.push(MouseInputEvent(mouse_start, mouse_from, mouse_to));
+        mouse_to = MouseState(event->motion.x, event->motion.y, mouse_from.buttons);
+        mouse_events.push(MouseInputEvent(this, mouse_start, mouse_from, mouse_to));
         break;
     }
 }
@@ -126,6 +120,12 @@ void InputManager::run_callbacks() {
             keyboard_callbacks.broadcast(event);
             key_down_callbacks.broadcast(event);
         }
+    }
+    
+    while (!mouse_events.empty()) {
+        MouseInputEvent& event = mouse_events.front();
+        mouse_callbacks.broadcast(event);
+        mouse_events.pop();
     }
 }
 

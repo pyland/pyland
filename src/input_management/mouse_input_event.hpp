@@ -6,7 +6,7 @@
 
 
 
-public class MouseInputEvent : public InputEvent {
+class MouseInputEvent : public InputEvent {
 public:
     ///
     /// The state just before a mouse button changed state.
@@ -26,6 +26,11 @@ public:
     /// The current state.
     ///
     MouseState to;
+
+    MouseInputEvent(InputManager* manager,
+                    MouseState start,
+                    MouseState from,
+                    MouseState to);
 };
 
 

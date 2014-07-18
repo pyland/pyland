@@ -2,8 +2,12 @@
 
 
 
-MouseState::MouseState(int x, int y, MouseState::ButtonMask buttons):
+MouseState::MouseState(int x, int y, int buttons):
     x(x),
     y(y),
     buttons(buttons) {
+}
+
+bool MouseState::is_down(int button) {
+    return ((buttons >> button) & 1) != 0;
 }

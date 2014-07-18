@@ -3,20 +3,23 @@
 
 
 
-public class MouseState {
+class MouseState {
 public:
     ///
-    /// Enumeration for the different button numbers.
+    /// Pseudo-enumeration for the different button numbers.
     ///
-    enum class Button {
-        LEFT = 1,
-        MIDDLE = 2,
-        RIGHT = 3,
+    class Button {
+    public:
+        static const int LEFT   = 1;
+        static const int MIDDLE = 2;
+        static const int RIGHT  = 3;
     };
-    enum class ButtonMask {
-        LEFT = 1 << Button::LEFT,
-        MIDDLE = 1 << Button::MIDDLE,
-        RIGHT = 1 << Button::RIGHT,
+    class ButtonMask {
+    public:
+        static const int NONE   = 0x0;
+        static const int LEFT   = 0x1;
+        static const int MIDDLE = 0x2;
+        static const int RIGHT  = 0x4;
     };
     ///
     /// The horizontal position of the cursor in pixels from the left
@@ -35,7 +38,9 @@ public:
     ///
     int buttons;
 
-    MouseState(int x, int y, ButtonMask buttons);
+    MouseState(int x, int y, int buttons);
+
+    bool is_down(int button);
 };
 
 
