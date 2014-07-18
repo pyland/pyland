@@ -537,3 +537,8 @@ void GameWindow::swap_buffers() {
 InputManager* GameWindow::get_input_manager() {
     return input_manager;
 }
+
+
+std::pair<float,float> GameWindow::get_ratio_from_pixels(std::pair<int,int> pixels) {
+    return std::pair<float,float>((float)pixels.first / (float)width, (float)pixels.second / (float) height);
+}

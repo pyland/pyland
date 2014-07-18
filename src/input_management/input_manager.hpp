@@ -13,12 +13,12 @@ extern "C" {
 #include "callback_registry.hpp"
 #include "lifeline.hpp"
 #include "lifeline_controller.hpp"
+#include "keyboard_input_event.hpp"
+#include "mouse_input_event.hpp"
 
 
 
 class GameWindow;
-class InputEvent;
-class KeyboardInputEvent;
 
 
 
@@ -58,35 +58,26 @@ private:
     std::set<int> released_keys;
 
     ///
-    /// The current x coordinate of the mouse.
+    /// The state of the mouse just before a mouse button changed state.
     ///
-    /// Stored in pixels from left of render-area.
+    MouseState mouse_start;
     ///
-    int mouse_x;
+    /// The state of the mouse since the last event.
     ///
-    /// The current y coordinate of the mouse.
+    MouseState mouse_from;
     ///
-    /// Stored in pixels from top of render-area.
+    /// The current state of the mouse.
     ///
-    int mouse_y;
-
-    ///
-    /// Set of currently depressed mouse buttons.
-    ///
-    std::set<int> down_buttons;
-    ///
-    /// Set of recently pressed mouse buttons.
-    ///
-    std::set<int> pressed_buttons;
-    ///
-    /// Set of recently released mouse buttons.
-    ///
-    std::set<int> released_buttons;
+    MouseState mouse_to;
 
     ///
     /// Queue of key events to be sent to callbacks.
     ///
     std::queue<KeyboardInputEvent> key_events;
+    ///
+    /// Queue of mouse events to be sent to callbacks.
+    ///
+    std::queue<MouseInputEvent> mouse_events;
     
 
     ///
@@ -94,23 +85,31 @@ private:
     ///
     CallbackRegistry<void,KeyboardInputEvent> keyboard_callbacks;
     ///
+    /// @deprecated
     /// Key press callback registry.
     ///
     CallbackRegistry<void,KeyboardInputEvent> key_press_callbacks;
     ///
+    /// @deprecated
     /// Key type callback registry.
     ///
     /// Like key press, but also accepts auto-repeats.
     ///
     CallbackRegistry<void,KeyboardInputEvent> key_type_callbacks;
     ///
+    /// @deprecated
     /// Key down callback registry.
     ///
     CallbackRegistry<void,KeyboardInputEvent> key_down_callbacks;
     ///
+    /// @deprecated
     /// Key release callback registry.
     ///
     CallbackRegistry<void,KeyboardInputEvent> key_release_callbacks;
+    ///
+    /// Keyboard callback registry.
+    ///
+    CallbackRegistry<void,KeyboardInputEvent> mouse_callbacks;
 
     ///
     /// Upon destruction, lifelines should be disabled.
@@ -147,6 +146,11 @@ public:
     InputManager(GameWindow* window);
 
     ~InputManager();
+
+    ///
+    /// Getter for the associated game window.
+    ///
+    GameWindow* get_window();
 
     ///
     /// Query whether a key is down, given scancode.
@@ -209,14 +213,17 @@ public:
     bool is_mouse_released(int button);
 
     ///
-    /// Get the mouse cursor position in pixels from the top-left corner
+    /// Get the mouse cursor position in pixels from the bottom-left corner
     /// of the render-area.
     ///
     std::pair<int,int> get_mouse_pixels();
 
     ///
     /// Get the mouse cursor position as a ratio of the distances
-    /// between the top-left corner and bottom-right corner.
+    /// between the bottom-left corner and top-right corner.
+    ///
+    /// @return The x ratio is the first value, and the y value is the second.
+    ///         The ratios for x and y are both floats from 0 to 1.
     ///
     std::pair<float,float> get_mouse_ratio();
 
@@ -235,12 +242,14 @@ public:
     Lifeline register_keyboard_handler(std::function<void(KeyboardInputEvent)> func);
 
     ///
+    /// @deprecated
     /// Registers a callback function for key presses.
     ///
     /// @param callback Callback to be used to handle an event.
     ///
     void register_key_press_handler(Callback<void, KeyboardInputEvent> callback);
     ///
+    /// @deprecated
     /// Registers a callback function for key presses.
     ///
     /// @param func Callback function to be used to handle an event.
@@ -249,6 +258,7 @@ public:
     Lifeline register_key_press_handler(std::function<void(KeyboardInputEvent)> func);
 
     ///
+    /// @deprecated
     /// Registers a callback function for key typing.
     ///
     /// This triggers according to key repeating when a key is held.
@@ -257,6 +267,7 @@ public:
     ///
     void register_key_type_handler(Callback<void, KeyboardInputEvent> callback);
     ///
+    /// @deprecated
     /// Registers a callback function for key typing.
     ///
     /// This triggers according to key repeating when a key is held.
@@ -267,12 +278,14 @@ public:
     Lifeline register_key_type_handler(std::function<void(KeyboardInputEvent)> func);
 
     ///
+    /// @deprecated
     /// Registers a callback function for key held down.
     ///
     /// @param callback Callback to be used to handle an event.
     ///
     void register_key_down_handler(Callback<void, KeyboardInputEvent> callback);
     ///
+    /// @deprecated
     /// Registers a callback function for key held down.
     ///
     /// @param func Callback function to be used to handle an event.
@@ -281,18 +294,34 @@ public:
     Lifeline register_key_down_handler(std::function<void(KeyboardInputEvent)> func);
 
     ///
+    /// @deprecated
     /// Registers a callback function for key releases.
     ///
     /// @param callback Callback to be used to handle an event.
     ///
     void register_key_release_handler(Callback<void, KeyboardInputEvent> callback);
     ///
+    /// @deprecated
     /// Registers a callback function for key releases.
     ///
     /// @param func Callback function to be used to handle an event.
     /// @return A lifeline which keeps the callback active.
     ///
     Lifeline register_key_release_handler(std::function<void(KeyboardInputEvent)> func);
+    
+    ///
+    /// Registers a callback function for mouse input event handling.
+    ///
+    /// @param callback Callback to be used to handle an event.
+    ///
+    void register_mouse_handler(Callback<void, MouseInputEvent> callback);
+    ///
+    /// Registers a callback function for mouse input event handling.
+    ///
+    /// @param func Callback function to be used to handle an event.
+    /// @return A lifeline which keeps the callback active.
+    ///
+    Lifeline register_mouse_handler(std::function<void(MouseInputEvent)> func);
 };
 
 #endif

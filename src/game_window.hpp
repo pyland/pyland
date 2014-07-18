@@ -263,6 +263,21 @@ public:
     /// Input manager getter.
     ///
     InputManager* get_input_manager();
+
+    ///
+    /// Convert a pair of pixels coordinates into a pair of ratio
+    /// coordinates of the distance from the bottom-left to the
+    /// top-right.
+    ///
+    /// @param  pixels The coordinates as a pair (x first then y) of
+    ///         integers from the bottom-left.
+    /// @return a pair of floats (x first then y) from 0 to 1
+    ///         representing the fraction of the distance across the
+    ///         window from the bottom-left to the top-right.
+    ///
+    std::pair<float,float> get_ratio_from_pixels(std::pair<int,int> pixels);
 };
+
+
 
 #endif
