@@ -540,5 +540,5 @@ InputManager* GameWindow::get_input_manager() {
 
 
 std::pair<float,float> GameWindow::get_ratio_from_pixels(std::pair<int,int> pixels) {
-    return std::pair<float,float>((float)pixels.first / (float)width, (float)pixels.second / (float) height);
+    return std::pair<float,float>((float)pixels.first / (float)window_width, (float)pixels.second / (float) window_height);
 }
