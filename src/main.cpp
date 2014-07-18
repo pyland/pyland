@@ -55,6 +55,7 @@
 
 #include "character.hpp"
 #include "engine_api.hpp"
+#include "event_manager.hpp"
 #include "filters.hpp"
 #include "game_window.hpp"
 #include "input_manager.hpp"
@@ -64,6 +65,7 @@
 #include "main.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
+#include "object_manager.hpp"
 #include "print_debug.hpp"
 
 #ifdef USE_GLES
@@ -87,11 +89,7 @@ static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
-
-//TODO: Move this out of here, just added to get the sprite python control working again before full
-//object management is done
-std::map<int, Character*>* characters;
-
+/*
 std::array<std::array<int, 16>, 16> world_data = {{
     {{14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14,  14}},
     {{14,  64,  14,  64,  14,  64,  64,  64,  64,  64,  64,  64,  64,  64,  64,  14}},
@@ -126,14 +124,6 @@ std::map<int, TileType> tile_to_type({
     {74, TileType::KILLER}      // Lava
 });    
 
-
-void move_object(const int id, float dx, float dy) {
-    int new_id = id +1;
-
-    characters->at(new_id)->set_x_position(characters->at(new_id)->get_x_position() + dx);
-    characters->at(new_id)->set_y_position(characters->at(new_id)->get_y_position() + dy);
-}
-/*
     static void animate(float dt) {
     // animate map
     float map_display_right_x = map_bottom_x + map_display_width;
@@ -210,7 +200,7 @@ static float get_dt() {
 }
 
 
-
+/*
 Vec2D get_rand_walkable () {
     std::uniform_int_distribution<int32_t> random_x(1, 14);
     std::uniform_int_distribution<int32_t> random_y(1, 14);
@@ -226,31 +216,27 @@ Vec2D get_rand_walkable () {
     return Vec2D(x,y);
 
 }
-
+*/
 
 // TODO: Unhack this hack
 std::vector<LockableEntityThread> retentitythreads;
+void create_character(Interpreter &interpreter, std::string name) {
 
-static int maxid = 0;
-void create_character(Interpreter &interpreter, std::map<int, Character *> *characters, std::string name) {
-    ++maxid;
 
     print_debug << "Creating character" << std::endl;
 
     // Registering new character with game engine
-    Character* new_character = new Character();
-    new_character->set_id(maxid);
+    shared_ptr<Character> new_character = make_shared<Character>();
     new_character->set_name("John");
 
     print_debug << "Adding character" << std::endl;
-
-    (*characters)[maxid] = new_character;
+    ObjectManager::get_instance().add_object(new_character);
 
     print_debug << "Creating character wrapper" << std::endl;
 
     // Register user controled character
     // Yes, this is a memory leak. Deal with it.
-    Entity *a_thing = new Entity(get_rand_walkable(), name, maxid-1);
+    Entity *a_thing = new Entity(Vec2D(0, 0), new_character->get_name(), new_character->get_id());
 
     print_debug << "Registering character" << std::endl;
 
@@ -262,10 +248,8 @@ void create_character(Interpreter &interpreter, std::map<int, Character *> *char
 class CallbackState {
     public:
         CallbackState(Interpreter &interpreter,
-                      std::map<int, Character *> *characters,
                       std::string name):
             interpreter(interpreter),
-            characters(characters),
             name(name),
             target(0) {
         }
@@ -278,28 +262,27 @@ class CallbackState {
         void spawn() {
             print_debug << "Spawning with number " << target << std::endl;
             target = 0;
-            create_character(interpreter, characters, name);
+            create_character(interpreter, name);
         }
 
     private:
         Interpreter &interpreter;
-        std::map<int, Character *> *characters;
         std::string name;
         long long int target;
 };
 
 int main (int argc, char* argv[]) {
-    bool use_graphical_window = true;
+    //    bool use_graphical_window = true;
 
     //Determine if the no-window command was sent
-    if (argc == 2) {
+    /*    if (argc == 2) {
         std::string param = argv[1];
 
         if (param == "no-window") {
             use_graphical_window = false;
         }
     }
-
+    */
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
     int map_width = 16, map_height = 16;
@@ -308,9 +291,6 @@ int main (int argc, char* argv[]) {
 
     Map map("../resources/map0.tmx");
 
-    characters = map.get_characters_map();
-
-
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
 
     MapViewer map_viewer(&window);
@@ -318,9 +298,8 @@ int main (int argc, char* argv[]) {
 
 
     float dt = get_dt();
-    int count = 0;
 
-    CallbackState callbackstate(interpreter, characters, "Adam");
+    CallbackState callbackstate(interpreter, "Adam");
 
     InputManager* input_manager = window.get_input_manager();
 
@@ -339,9 +318,39 @@ int main (int argc, char* argv[]) {
         );
     }
 
+
+
+    ///////////////////////////////
+
+    EventManager em;
+    auto func1 = [] () { std::cout << "FUNC 1" << std::endl;};
+    auto func2 = [] () { std::cout << "FUNC 2" << std::endl; };
+    auto func3 = [] () { std::cout << "FUNC 3" << std::endl; };
+    auto func4 = [] () { std::cout << "FUNC 4" << std::endl; };
+    auto func_t1 = [] (double percent) -> bool { std::cout << "TIMER" << std::endl; if(percent >= 1.0) return false; else return true;  };
+
+    em.add_event(func1);
+
+    em.add_event(func2);
+    em.add_event(func3);
+    em.add_timed_event(std::chrono::duration<double>(10.0), func_t1);
+
+    em.process_events();
+
+    em.add_event(func3);
+
+    em.add_event(func4);
+
+    ///////////////////////////////
+
+
+
     while (!window.check_close()) {
         //Get the time since the last iteration 
         dt = get_dt(); 
+
+        em.process_events();
+
         map_viewer.update_map(dt);
         map_viewer.render_map();
 

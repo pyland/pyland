@@ -15,17 +15,5 @@
 /// @param dy move in x by dy pixels
 ///
 
-void move_object(const int id, const float dx, const float dy);
-enum class TileType {
-    WALKABLE,
-    UNWALKABLE,
-    KILLER
-};
-extern std::map<int, TileType> tile_to_type;
-
-/// Holds the overall map data
-//0th tile is top left
-extern std::array<std::array<int, 16>, 16> world_data;
-
 #endif
 

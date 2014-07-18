@@ -1,9 +1,13 @@
-#include "map_viewer.hpp"
-#include "renderable_component.hpp"
-#include "map.hpp"
 #include "character.hpp"
+#include "map.hpp"
+#include "map_viewer.hpp"
+#include "object_manager.hpp"
+#include "renderable_component.hpp"
+
+
 
 #include <map>
+#include <memory>
 #include <iostream>
 MapViewer::MapViewer(GameWindow* new_window) {
     if(new_window == nullptr) {
@@ -83,15 +87,16 @@ void MapViewer::render_map() {
 
 
     //Draw the characters
-    std::map<int, Character*> characters = *(map->get_characters_map());
+    const std::vector<int>& characters = map->get_characters();
+    ObjectManager& object_manager = ObjectManager::get_instance();
     for(auto it = characters.begin(); it != characters.end(); ++it) {
-        Character* sprite = it->second;
+        std::shared_ptr<Object> sprite = object_manager.get_object(*it);
     
         RenderableComponent* character_render_component = sprite->get_renderable_component();
     
         //Move sprite to the required position
         glm::mat4 model1 = glm::mat4(1.0f);
-        glm::vec3 translate1 = glm::vec3(map->get_display_x() + sprite->get_x_position(), sprite->get_y_position() + map->get_display_y(), 0.0f);
+        glm::vec3 translate1 = glm::vec3(sprite->get_x_position(), sprite->get_y_position(), 0.0f);
         glm::mat4 translated1 = glm::translate(model1, translate1);
         character_render_component->set_modelview_matrix(translated1);
         character_render_component->set_projection_matrix(projection_matrix);
@@ -125,25 +130,6 @@ void MapViewer::render_map() {
 
 
 void MapViewer::update_map(float dt ) {
-    /*    float map_scroll_speed = 16.0f;
-    // animate map
-    float map_display_right_x = map->get_display_x() + map->get_display_width();
-    float map_display_top_y = map->get_display_y() + map->get_display_height();
-
-    // scroll the map towards the top right
-    map->set_display_x(map->get_display_x()+map_scroll_speed*dt);
-    map->set_display_y(map->get_display_y()+map_scroll_speed*dt);
-
-    // perform wrapping
-    if(map_display_right_x > map->get_width()*16.0f) {
-        map->set_display_x(0.0f);//wrap round
-    }
-
-    if(map_display_top_y > map->get_height()*16.0f) {
-        map->set_display_y(0.0f); //wrap round
-    }
-    */
-
     map->update_map(dt);
 }
 
