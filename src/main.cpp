@@ -177,8 +177,11 @@ void create_character(Interpreter &interpreter) {
     // Registering new character with game engine
     shared_ptr<Character> new_character = make_shared<Character>();
     new_character->set_name("John");
-    new_character->set_x_position(4);
-    new_character->set_y_position(15);
+
+    int start_x = 4;
+    int start_y = 15;
+    new_character->set_x_position(start_x);
+    new_character->set_y_position(start_y);
     print_debug << "Adding character" << std::endl;
     ObjectManager::get_instance().add_object(new_character);
     (Engine::get_map_viewer())->get_map()->add_character(new_character->get_id());
@@ -188,7 +191,7 @@ void create_character(Interpreter &interpreter) {
     std::cout<< "ID " << new_character->get_id() <<std::endl;
     // Register user controled character
     // Yes, this is a memory leak. Deal with it.
-    Entity *a_thing = new Entity(Vec2D(0, 0), new_character->get_name(), new_character->get_id());
+    Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_character->get_name(), new_character->get_id());
 
     print_debug << "Registering character" << std::endl;
 

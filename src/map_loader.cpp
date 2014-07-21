@@ -61,7 +61,8 @@ void MapLoader::load_layers() {
         layers.push_back(layer_ptr);
         
         //Get the tiles
-        for (int y = 0; y < num_tiles_y; ++y) {
+        //The TMX le has origin in top left, ours id bottom right
+        for (int y = num_tiles_y - 1; y >= 0; --y) {
             for (int x = 0; x < num_tiles_x; ++x) {
                 //Get the tile identifier
                 int tile_id = layer->GetTileId(x, y);

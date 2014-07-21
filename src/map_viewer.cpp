@@ -124,7 +124,7 @@ void MapViewer::render_map() {
 
             character_render_component->bind_vbos();
             character_render_component->bind_textures();
-            //std::cout << " X " << sprite->get_x_position()*32.0f << " Y " << sprite->get_y_position()*32.0f<< std::endl;
+            //            std::cout << " X " << sprite->get_x_position()*32.0f << " Y " << sprite->get_y_position()*32.0f<< std::endl;
             glDrawArrays(GL_TRIANGLES, 0, character_render_component->get_num_vertices_render());
 
             character_render_component->release_textures();
@@ -151,7 +151,12 @@ void MapViewer::refocus_map() {
     if(object) {
         float object_x = (float)object->get_x_position();
         float object_y = (float)object->get_y_position();
+<<<<<<< HEAD
         //std::cout << "objX: " << object_x << " objY " << object_y << std::endl;
+=======
+
+        //        std::cout << "objX: " << object_x << " objY " << object_y << std::endl;
+>>>>>>> 53887ce2447e6866b5fd3f87b278c1f7cf6aa20b
         //center the map on the object
         float map_width = (float)map->get_width();
         float map_height = (float)map->get_height();
@@ -168,7 +173,7 @@ void MapViewer::refocus_map() {
             //If in scrolling part
             if(object_x + map_display_width /2.0f < map->get_width()){ 
                 map->set_display_x(object_x - map_display_width/ 2.0f);
-            } 
+           } 
             else {
                 map->set_display_x(map_width - map_display_width);
             }
