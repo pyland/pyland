@@ -35,7 +35,7 @@ bool Engine::walkable(int x_pos, int y_pos) {
     int map_height = map_viewer->get_map()->get_height();
 
     //Check bounds
-    if(x_pos < 0 || x_pos >= map_height || y_pos < 0 || y_pos >= map_width) {
+    if(x_pos < 0 || x_pos >= map_width || y_pos < 0 || y_pos >= map_height) {
         return false;
     }
        

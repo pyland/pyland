@@ -54,6 +54,7 @@ void MapViewer::render_map() {
     }
 
     std::pair<int, int> size = window->get_size();
+    //TODO, set the map view correctly
     glScissor(0, 0, size.first, size.second);
     map->set_display_width((int)(size.first/32.0f));
     map->set_display_height((int)(size.second/32.0f));

@@ -59,6 +59,9 @@ Map::Map(const std::string map_src) : renderable_component() {
     //Get the loaded map data
     map_width = map_loader.get_map_width();
     map_height = map_loader.get_map_height();
+
+    std::cout << "MAP LOADING: " <<std::endl;
+    std::cout << "WIDTH: " << map_width << " HEIGHT: " << map_height << std::endl;
     std::vector<std::shared_ptr<Layer>>& layers = map_loader.get_layers();
     std::vector<std::shared_ptr<TileSet>>& tilesets = map_loader.get_tilesets();
     std::vector<std::shared_ptr<MapObject>>& objects = map_loader.get_objects();
