@@ -3,6 +3,7 @@
 #include "object.hpp"
 #include "object_manager.hpp"
 
+#include <cstdlib>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -12,7 +13,6 @@ bool Engine::move_object(int id, int tile_dx, int tile_dy) {
     std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(id);
 
     if(object) {
-
         //Check if a move can be performed
         if(!walkable(object->get_x_position() + tile_dx, object->get_y_position() + tile_dy))
           return false;
@@ -60,11 +60,37 @@ std::vector<int> Engine::get_objects(int x, int y) {
     return objects;
 }
 
-std::pair<int, int> Engine::find_object(int id) {
-    std::pair<int, int> position;
-    return position;
-}
-
 bool Engine::load_map(int map_id) {
     return false;
+}
+
+
+std::pair<int, int> Engine::find_object(int id) {
+
+    if(Engine::map_viewer == nullptr)
+        return std::make_pair<int, int>(-1, -1);
+
+    Map* map = map_viewer->get_map();
+    if(map == nullptr)
+        return std::make_pair<int, int>(-1, -1);
+    
+    //Check the object is on the map
+    auto objects = map->get_characters();
+    for(auto object_id : objects) {
+        if(object_id == id) {
+            //Object is on the map so now get its locationg
+            auto object = ObjectManager::get_instance().get_object(id);
+            return std::make_pair<int, int>(object->get_x_position(), object->get_y_position());
+        }
+    }
+
+    //Not on the map
+    return std::make_pair<int, int>(-1, -1);
+}
+
+bool Engine::open_editor(std::string filename) {
+    //TODO remove this function in the final version
+    
+    system((std::string("emacs -nw python_embed/scripts/") + filename).c_str());
+    return true;
 }
