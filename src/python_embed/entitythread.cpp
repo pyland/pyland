@@ -171,6 +171,10 @@ long EntityThread::get_thread_id() {
     return thread_id;
 }
 
+//
+// TODO:
+// This somehow causes a deadlock sometimes. I don't know why or when.
+//
 PyObject *EntityThread::make_base_async_exception(PyObject *base, const char *name) {
     lock::GIL lock_gil(interpreter_context, "EntityThread::make_base_async_exception");
 
