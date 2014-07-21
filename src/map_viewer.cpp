@@ -124,7 +124,7 @@ void MapViewer::render_map() {
 
             character_render_component->bind_vbos();
             character_render_component->bind_textures();
-            std::cout << " X " << sprite->get_x_position()*32.0f << " Y " << sprite->get_y_position()*32.0f<< std::endl;
+            //std::cout << " X " << sprite->get_x_position()*32.0f << " Y " << sprite->get_y_position()*32.0f<< std::endl;
             glDrawArrays(GL_TRIANGLES, 0, character_render_component->get_num_vertices_render());
 
             character_render_component->release_textures();
@@ -151,7 +151,7 @@ void MapViewer::refocus_map() {
     if(object) {
         float object_x = (float)object->get_x_position();
         float object_y = (float)object->get_y_position();
-        std::cout << "objX: " << object_x << " objY " << object_y << std::endl;
+        //std::cout << "objX: " << object_x << " objY " << object_y << std::endl;
         //center the map on the object
         float map_width = (float)map->get_width();
         float map_height = (float)map->get_height();

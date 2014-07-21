@@ -124,8 +124,8 @@ bool Map::is_walkable(int x_pos, int y_pos) {
 
             //if there is a tile, treat it as blocked
             if(layer->get_tile(x_pos, y_pos) != 0) {
-                walkable = false;
-                std::cout << "COLLIDING" << layer->get_tile(x_pos, y_pos) << std::endl;
+                walkable = true;
+                // std::cout << "COLLIDING" << layer->get_tile(x_pos, y_pos) << std::endl;
                 //We can stop checking further objects and tiles
                 return walkable;
             }
