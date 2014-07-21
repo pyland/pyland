@@ -11,8 +11,8 @@
 class Interpreter;
 class EntityThread;
 
-typedef lock::Lockable<std::vector<std::weak_ptr<EntityThread>>> EntityThreads;
-typedef lock::Lockable<std::shared_ptr<EntityThread>> LockableEntityThread;
+using EntityThreads        = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
+using LockableEntityThread = lock::Lockable<std::shared_ptr<EntityThread>>;
 
 ///
 /// Container that abstracts the daemon threads for
