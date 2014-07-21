@@ -151,12 +151,6 @@ void MapViewer::refocus_map() {
     if(object) {
         float object_x = (float)object->get_x_position();
         float object_y = (float)object->get_y_position();
-<<<<<<< HEAD
-        //std::cout << "objX: " << object_x << " objY " << object_y << std::endl;
-=======
-
-        //        std::cout << "objX: " << object_x << " objY " << object_y << std::endl;
->>>>>>> 53887ce2447e6866b5fd3f87b278c1f7cf6aa20b
         //center the map on the object
         float map_width = (float)map->get_width();
         float map_height = (float)map->get_height();
