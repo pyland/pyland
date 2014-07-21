@@ -66,10 +66,10 @@ PyThreadState *Interpreter::initialize_python() {
 }
 
 LockableEntityThread Interpreter::register_entity(Entity &entity) {
-    std::lock_guard<std::mutex> lock(*entitythreads.lock);
-
     // Create thread and move to vector.
     auto new_entity = std::make_shared<EntityThread>(interpreter_context, entity);
+    
+    std::lock_guard<std::mutex> lock(*entitythreads.lock);
     entitythreads.value.push_back(std::weak_ptr<EntityThread>(new_entity));
 
     // Return the new EntityThread to allow signals to the thread.
