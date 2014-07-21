@@ -59,12 +59,19 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     print_debug << "run_entity: Stolen GIL" << std::endl;
 
+    // Get and run bootstrapper
+    py::api::object bootstrapper_module = interpreter_context.import_file(bootstrapper_file);
+
     // Asynchronously return thread id to allow killing of this thread
+    //
+    // WARNING:
+    // This must be here unless earlier blocks are to be wrapped in the
+    // try, as the kill thread is legally allowed to kill as soon as it
+    // gets the entity, and the entity returns as soon as this promise
+    // is fulfilled. 
+    //
     thread_id_promise.set_value(PyThread_get_thread_ident());
 
-    // Get and run bootstrapper
-    auto bootstrapper_module = interpreter_context.import_file(bootstrapper_file);
-    
     while (true) {
         try {
             bootstrapper_module.attr("start")(
