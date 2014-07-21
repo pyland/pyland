@@ -93,6 +93,11 @@ class Interpreter {
 
     private:
         ///
+        /// Cannot copy interpreters for obvious reasons.
+        ///
+        Interpreter(const Interpreter&) = delete;
+
+        ///
         /// A flag to ensure that this is a singleton.
         /// Set when an interpreter has been initialized.
         ///
