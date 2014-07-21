@@ -3,6 +3,7 @@ NULL=
 RM ?= - rm -f
 RMDIR ?= - rmdir
 
+SILENCER_PREFIX = @
 COMPILER ?= g++
 
 WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion
@@ -174,10 +175,9 @@ dependencies/input_management: | dependencies
 	@mkdir dependencies/input_management
 
 $(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
-	@echo;\
-         echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}";\
-         echo
-	$(COMPILER) -o $@ \
+	@echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
+
+	$(SILENCER_PREFIX) $(COMPILER) -o $@ \
 		$(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
 		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS)    \
 		$(X11_LDFLAGS) $(X11_LDLIBS)              \
@@ -190,13 +190,11 @@ $(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
-	@echo;\
-	 echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
-	 echo
+	@echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
-	# This should not cause a large slowdown unless actually included in many files.
-	$(COMPILER) -c $*.cpp -o $*.o \
+	$(SILENCER_PREFIX) # Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
+	$(SILENCER_PREFIX) # This should not cause a large slowdown unless actually included in many files.
+	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(GRAPHICS_CPPFLAGS)    \
 		$(X11_CPPFLAGS)         \
@@ -208,40 +206,32 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 
 
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
-	@echo;\
-	 echo "${bold}[ Compiling input object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
-	 echo
+	@echo "${bold}[ Compiling input object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	$(COMPILER) -c $*.cpp -o $*.o \
+	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 
 $(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
-	@echo;\
-	 echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
-	 echo
+	@echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	$(COMPILER) -c $*.cpp -o $*.o \
+	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 python_embed/wrapper_functions.so: python_embed/api.o
 $(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed
-	@echo;\
-	 echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}";\
-	 echo
+	@echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
+	$(SILENCER_PREFIX) $(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS) \
 		-MF dependencies/$*.sd
 
 debug:
-	@echo;\
-	 echo "${bold}${red}Complied in debug${normal}";\
-	 echo
+	@echo "${bold}${red}Complied in debug${normal}"
 
 
 
