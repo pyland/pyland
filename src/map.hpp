@@ -42,6 +42,22 @@
 
 class Map {
     ///
+    /// Vector of tilesets
+    ///
+    std::vector<std::shared_ptr<TileSet>> tilesets;
+
+    ///
+    /// Array of layers
+    ///
+    std::vector<std::shared_ptr<Layer>> layers;
+    
+    ///
+    /// Array of objects
+    ///
+    std::vector<std::shared_ptr<MapObject>> objects;    
+
+
+    ///
     /// The ids of the characters that are on this map
     ///
     std::vector<int> characters;
@@ -137,13 +153,13 @@ class Map {
     /// The function which generates the texture coordinates for the map
     /// geometry, using the cached tile coordinates.
     ///
-    void generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets);
+    void generate_map_texcoords();
   
     ////
     /// The function which generates the map geometry so that it can be
     /// rendered to the screen
     ///
-    void generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets);
+    void generate_map_coords();
 
     ///
     /// Initialises the textures
@@ -243,6 +259,11 @@ public:
     /// The function used to update elements on the map.
     ///
     void update_map(float dt);
+
+    ///
+    /// Is this location walkable
+    /// 
+    bool is_walkable(int x_pos, int y_pos);
 };
 
 #endif

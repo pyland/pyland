@@ -54,9 +54,10 @@ void MapLoader::load_layers() {
         const Tmx::Layer* layer = map.GetLayer(i);
         int num_tiles_x = layer->GetWidth();
         int num_tiles_y = layer->GetHeight();
+        std::string name = layer->GetName();
 
         //Generate a new layer
-        std::shared_ptr<Layer> layer_ptr = std::make_shared<Layer>(num_tiles_x, num_tiles_y);
+        std::shared_ptr<Layer> layer_ptr = std::make_shared<Layer>(num_tiles_x, num_tiles_y, name);
         layers.push_back(layer_ptr);
         
         //Get the tiles

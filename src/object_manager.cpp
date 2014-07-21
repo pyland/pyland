@@ -1,4 +1,6 @@
+
 #include "object_manager.hpp"
+#include "object.hpp"
 
 #include <iostream>
 #include <memory>
@@ -10,13 +12,14 @@ ObjectManager& ObjectManager::get_instance() {
     static ObjectManager global_instance;
 
     return global_instance;
-    
+   
 }
 int ObjectManager::next_object_id(1);
-int ObjectManager::get_next_id() {
+
+int ObjectManager::get_next_id(Object* const object) {
     //make this thread safe
     std::lock_guard<std::mutex> lock(object_manager_mutex);
-
+object->set_id(next_object_id);
     //Return the next object id
     return ObjectManager::next_object_id++;
 }

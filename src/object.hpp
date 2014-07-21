@@ -2,6 +2,7 @@
 #define OBJECT_H
 
 #include "renderable_component.hpp"
+#include "walkability.hpp"
 #include <string>
 
 ///
@@ -47,15 +48,33 @@ class Object {
     ///
     std::string script = "";
 
-    /// 
+    ///
+    /// Walkable: determine if the object can be walked over
+    ///
+    Walkability walkability = Walkability::WALKABLE;
+
+
+public:
+    Object();
+    ~Object();
+
+    ///
+    /// DO NOT USE THIS! ONLY THE ENGINE SHOULD USE THIS FUNCTION 
     /// Set the id of the object
     /// @param new_id the object's id
     ///
     void set_id(int new_id);
 
-public:
-    Object();
-    ~Object();
+    ///
+    /// Get the object's walkability
+    ///
+    Walkability get_walkability() { return walkability; }
+
+    ///
+    /// Set the object's walkability
+    /// @param _walkability the walkability of the object
+    ///
+    void set_walkability(Walkability _walkability) { walkability = _walkability; }
 
     ///
     /// Set the object's x position in tiles

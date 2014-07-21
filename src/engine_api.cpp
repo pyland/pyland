@@ -40,8 +40,9 @@ bool Engine::walkable(int x_pos, int y_pos) {
     }
        
     //Check for collidable objects
+    if(!Engine::map_viewer->get_map()->is_walkable(x_pos, y_pos))
+        return false;
 
-    //TODO: make this walkable work
     return true;
 }
 bool Engine::change_tile(int new_id, int x, int y, int layer) {

@@ -177,7 +177,8 @@ void create_character(Interpreter &interpreter, std::string name) {
     // Registering new character with game engine
     shared_ptr<Character> new_character = make_shared<Character>();
     new_character->set_name("John");
-
+    new_character->set_x_position(4);
+    new_character->set_y_position(15);
     print_debug << "Adding character" << std::endl;
     ObjectManager::get_instance().add_object(new_character);
     (Engine::get_map_viewer())->get_map()->add_character(new_character->get_id());

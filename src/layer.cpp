@@ -6,3 +6,9 @@ void Layer::add_tile(const std::string tileset, int tile_id) {
     layer->push_back(std::make_pair(tileset, tile_id));
 
 }
+
+int Layer::get_tile(int x_pos, int y_pos) {
+    //Fetch the tile at the required position
+    int tile_id = (*layer).at(x_pos + y_pos*width).second;
+    return tile_id;
+}

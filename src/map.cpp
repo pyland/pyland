@@ -5,6 +5,7 @@
 #include "map_object.hpp"
 #include "object_manager.hpp"
 #include "tileset.hpp"
+#include "walkability.hpp"
 
 #include <string>
 #include <iostream>
@@ -62,9 +63,9 @@ Map::Map(const std::string map_src) : renderable_component() {
 
     std::cout << "MAP LOADING: " <<std::endl;
     std::cout << "WIDTH: " << map_width << " HEIGHT: " << map_height << std::endl;
-    std::vector<std::shared_ptr<Layer>>& layers = map_loader.get_layers();
-    std::vector<std::shared_ptr<TileSet>>& tilesets = map_loader.get_tilesets();
-    std::vector<std::shared_ptr<MapObject>>& objects = map_loader.get_objects();
+    layers = map_loader.get_layers();
+    tilesets = map_loader.get_tilesets();
+    objects  = map_loader.get_objects();
 
     //Get the tilesets
     //TODO: We'll only support one tileset at the moment
@@ -75,8 +76,8 @@ Map::Map(const std::string map_src) : renderable_component() {
     //Generate the geometry needed for this map
     init_shaders();
     generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-    generate_map_texcoords(layers, tilesets);
-    generate_map_coords(layers, tilesets);
+    generate_map_texcoords();
+    generate_map_coords();
     init_textures();
 }
 
@@ -88,6 +89,50 @@ Map::~Map() {
     delete[] tileset_tex_coords;
 
     std::cout << std::endl << "Closed" << std::endl;
+}
+
+bool Map::is_walkable(int x_pos, int y_pos) {
+    //Default is walkable
+    bool walkable = true;
+
+    //Iterate through all objects
+    for(auto character : characters) {
+        //If its an invalid object
+        if (character == 0)
+            continue;
+
+        std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(character);
+
+        //If we cannot walk on this object
+        if(object) {
+            if(object->get_walkability() == Walkability::BLOCKED) {
+                walkable = false;
+
+                //We can stop checking further objects and tiles
+                return walkable;
+            }
+        }
+    }
+    
+    //Iterate through all tiles
+    for(auto iter = layers.begin(); iter != layers.end(); ++iter) {
+        std::shared_ptr<Layer> layer = *iter;
+    
+        //determine if we can walk on the map
+
+        if(layer->get_name() == "Collisions") {
+
+            //if there is a tile, treat it as blocked
+            if(layer->get_tile(x_pos, y_pos) != 0) {
+                walkable = false;
+                std::cout << "COLLIDING" << layer->get_tile(x_pos, y_pos) << std::endl;
+                //We can stop checking further objects and tiles
+                return walkable;
+            }
+        }
+    }
+
+    return walkable;
 }
 
 void Map::add_character(int character_id) {
@@ -176,7 +221,7 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
  * The function which generates the texture coordinates for the map
  * geometry, using the cached tile coordinates.
  */
-void Map::generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets) {
+void Map::generate_map_texcoords() {
 #ifdef DEBUG
     printf("GENERATING MAP TEXTURE DATA...");
 #endif
@@ -275,7 +320,7 @@ void Map::generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  s
  * The function which generates the map geometry so that it can be
  * rendered to the screen
  */
-void Map::generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets) {
+void Map::generate_map_coords() {
 #ifdef DEBUG
     printf("GENERATING MAP DATA...");
 #endif

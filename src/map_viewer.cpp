@@ -180,7 +180,6 @@ void MapViewer::refocus_map() {
 
         if(object_y - map_display_height/2.0f > 0) {
             if(object_y + map_display_height /2.0f < map->get_height()){ 
-                std::cout << "HERRE "<< map_display_height << std::endl;
                 map->set_display_y(object_y - map_display_height/ 2.0f);
             } 
             else {
@@ -190,7 +189,6 @@ void MapViewer::refocus_map() {
         else {
             map->set_display_y(0.0f);
         }
-        std::cout << "X: " << map->get_display_x() << " Y " << map->get_display_y() << std::endl;
     }
 }
 

@@ -1,10 +1,10 @@
 import random
 
 while True:
-    while(walkable(north)):
-        move(north)
-    while(walkable(south)):
-          move(south)
+    while(walkable(west)):
+        move(west)
+    while(walkable(east)):
+          move(east)
 
 
 
