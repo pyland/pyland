@@ -31,6 +31,15 @@ bool Engine::move_object(int id, int tile_dx, int tile_dy) {
 MapViewer* Engine::map_viewer = nullptr;
 
 bool Engine::walkable(int x_pos, int y_pos) {
+    int map_width = map_viewer->get_map()->get_width();
+    int map_height = map_viewer->get_map()->get_height();
+
+    //Check bounds
+    if(x_pos < 0 || x_pos >= map_height || y_pos < 0 || y_pos >= map_width) {
+        return false;
+    }
+       
+    //Check for collidable objects
 
     //TODO: make this walkable work
     return true;
