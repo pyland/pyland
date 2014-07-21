@@ -169,7 +169,7 @@ static float get_dt() {
 // TODO: Unhack this hack
 // TODO: Name properly.
 std::vector<LockableEntityThread> retentitythreads;
-void create_character(Interpreter &interpreter, std::string name) {
+void create_character(Interpreter &interpreter) {
 
 
     print_debug << "Creating character" << std::endl;
@@ -214,7 +214,7 @@ class CallbackState {
         void spawn() {
             print_debug << "Spawning with number " << target << std::endl;
             target = 0;
-            create_character(interpreter, name);
+            create_character(interpreter);
         }
 
         void restart(InterpreterContext interpreter_context) {
@@ -250,7 +250,7 @@ class CallbackState {
         long long int target;
 };
 
-int main (int argc, char* argv[]) {
+int main(int, char **) {
     //    bool use_graphical_window = true;
 
     //Determine if the no-window command was sent
@@ -310,8 +310,6 @@ int main (int argc, char* argv[]) {
             ))
         );
     }
-
-
 
     ///////////////////////////////
 

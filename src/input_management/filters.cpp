@@ -32,9 +32,7 @@ static std::function<void (Event)> filter_do(std::initializer_list<std::function
     };
 }
 
-
 // Wrap up the template function in nice overloaded functions.
-
 KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHandler wrapped) {
     return filter_do<KeyboardInputEvent>(filters, wrapped);
 }
@@ -149,20 +147,13 @@ MouseFilter MOUSE_BUTTON(int button) {
 }
 
 
-
+// Automatic template deduction applies here; the type "Event" will
+// always be specified in the input function.
 template<class Event>
-static std::function<bool (Event)> REJECT_do(std::function<bool (Event)> filter) {
+static std::function<bool (Event)> REJECT(std::function<bool (Event)> filter) {
     return [filter] (Event event) {
         return !filter(event);
     };
-}
-
-KeyboardFilter REJECT(KeyboardFilter filter) {
-    return REJECT_do(filter);
-}
-
-MouseFilter REJECT(MouseFilter filter) {
-    return REJECT_do(filter);
 }
 
 // KeyboardFilter REJECT(KeyboardFilter filter) {
