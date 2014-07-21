@@ -12,22 +12,23 @@ bool Engine::move_object(int id, int tile_dx, int tile_dy) {
     std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(id);
 
     if(object) {
+
         //Check if a move can be performed
         if(!walkable(object->get_x_position() + tile_dx, object->get_y_position() + tile_dy))
-            return false;
+          return false;
 
         //if there is a map viewer attached
         if(Engine::map_viewer != nullptr) {
             //animate the map if this is the object to focus on
             Engine::map_viewer->refocus_map();
-        }
-
+            }
         //TODO, make this an event movement
         object->set_x_position((int)(object->get_x_position() + (int)tile_dx));
         object->set_y_position((int)(object->get_y_position() + (int)tile_dy));
     }
     return true;
 }
+
 MapViewer* Engine::map_viewer = nullptr;
 
 bool Engine::walkable(int x_pos, int y_pos) {
