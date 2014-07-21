@@ -62,6 +62,7 @@
 #include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
+#include "locks.hpp"
 #include "main.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
@@ -166,6 +167,7 @@ static float get_dt() {
 }
 
 // TODO: Unhack this hack
+// TODO: Name properly.
 std::vector<LockableEntityThread> retentitythreads;
 void create_character(Interpreter &interpreter, std::string name) {
 
@@ -178,9 +180,11 @@ void create_character(Interpreter &interpreter, std::string name) {
 
     print_debug << "Adding character" << std::endl;
     ObjectManager::get_instance().add_object(new_character);
-
+    (Engine::get_map_viewer())->get_map()->add_character(new_character->get_id());
+    
+    (Engine::get_map_viewer())->set_map_focus_object(new_character->get_id());
     print_debug << "Creating character wrapper" << std::endl;
-
+    std::cout<< "ID " << new_character->get_id() <<std::endl;
     // Register user controled character
     // Yes, this is a memory leak. Deal with it.
     Entity *a_thing = new Entity(Vec2D(0, 0), new_character->get_name(), new_character->get_id());
@@ -210,6 +214,33 @@ class CallbackState {
             print_debug << "Spawning with number " << target << std::endl;
             target = 0;
             create_character(interpreter, name);
+        }
+
+        void restart(InterpreterContext interpreter_context) {
+            print_debug << "Killing number " << target << std::endl;
+
+            lock::GIL lock_gil(interpreter_context, "Killer");
+
+            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::RESTART);
+            target = 0;
+        }
+
+        void stop(InterpreterContext interpreter_context) {
+            print_debug << "Killing number " << target << std::endl;
+
+            lock::GIL lock_gil(interpreter_context, "Killer");
+
+            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::STOP);
+            target = 0;
+        }
+
+        void kill(InterpreterContext interpreter_context) {
+            print_debug << "Killing number " << target << std::endl;
+
+            lock::GIL lock_gil(interpreter_context, "Killer");
+
+            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::KILL);
+            target = 0;
         }
 
     private:
@@ -242,10 +273,9 @@ int main (int argc, char* argv[]) {
 
     MapViewer map_viewer(&window);
     map_viewer.set_map(&map);
-    map_viewer.set_map_focus_object(1);
+
     Engine::set_map_viewer(&map_viewer);
     
-
     float dt = get_dt();
 
     CallbackState callbackstate(interpreter, "Adam");
@@ -253,8 +283,21 @@ int main (int argc, char* argv[]) {
     InputManager* input_manager = window.get_input_manager();
 
     Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("N")},
+        [&] (KeyboardInputEvent) { callbackstate.spawn(); }
+    ));
+
+    Lifeline kill_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("K")},
+        [&] (KeyboardInputEvent) { callbackstate.kill(interpreter.interpreter_context); }
+    ));
+    Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("S")},
-        [&] (KeyboardInputEvent event) { callbackstate.spawn(); }
+        [&] (KeyboardInputEvent) { callbackstate.stop(interpreter.interpreter_context); }
+    ));
+    Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("R")},
+        [&] (KeyboardInputEvent) { callbackstate.restart(interpreter.interpreter_context); }
     ));
 
     std::vector<Lifeline> digit_callbacks;
@@ -262,7 +305,7 @@ int main (int argc, char* argv[]) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
                 {KEY_PRESS, KEY(std::to_string(i))},
-                [&, i] (KeyboardInputEvent event) { callbackstate.register_number(i); }
+                [&, i] (KeyboardInputEvent) { callbackstate.register_number(i); }
             ))
         );
     }
@@ -297,9 +340,7 @@ int main (int argc, char* argv[]) {
     while (!window.check_close()) {
         //Get the time since the last iteration 
         dt = get_dt(); 
-
         em.process_events();
-
         map_viewer.update_map(dt);
         map_viewer.render_map();
 

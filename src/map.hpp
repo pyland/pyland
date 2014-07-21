@@ -159,6 +159,18 @@ public:
     ~Map();
 
     ///
+    /// Add a character to the map
+    /// @param character_id the id of the character
+    ///
+    void add_character(int character_id);
+
+    ///
+    /// Remove a character from the map
+    /// @param character_id the id of the character
+    ///
+    void remove_character(int character_id);
+
+    ///
     /// Get the characters that are on this map 
     // Make this a copy
     ///

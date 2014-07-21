@@ -36,15 +36,19 @@ namespace py = boost::python;
 void run_entity(std::shared_ptr<py::api::object> entity_object,
                 std::promise<long> thread_id_promise,
                 boost::filesystem::path bootstrapper_file,
-                InterpreterContext interpreter_context) {
+                InterpreterContext interpreter_context,
+                std::map<EntityThread::Signal, PyObject *> signal_to_exception) {
 
     print_debug << "run_entity: Starting" << std::endl;
+
+    bool waiting = false;
 
     {
         lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
 
         //PyObject_Print(py::str("WE ARE FIGHTING DREEBAS").ptr(), stdout, 0);
         print_debug << std::endl;
+        // Cast to object needed
         PyObject_Print(py::api::object(entity_object->attr("name")).ptr(), stdout, 0);
         print_debug << std::endl;
     }
@@ -55,18 +59,50 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     print_debug << "run_entity: Stolen GIL" << std::endl;
 
-    try {
-        // Asynchronously return thread id to allow killing of this thread
-        thread_id_promise.set_value(PyThread_get_thread_ident());
+    // Asynchronously return thread id to allow killing of this thread
+    thread_id_promise.set_value(PyThread_get_thread_ident());
 
-        // Get and run bootstrapper
-        auto bootstrapper_module = interpreter_context.import_file(bootstrapper_file);
-        bootstrapper_module.attr("start")(*entity_object);
-    }
-    catch (py::error_already_set &) {
-        // TODO: catch and nicely handle error
-        std::cout << "Thread died or was halted." << std::endl;
-        PyErr_Print();
+    // Get and run bootstrapper
+    auto bootstrapper_module = interpreter_context.import_file(bootstrapper_file);
+    
+    while (true) {
+        try {
+            bootstrapper_module.attr("start")(
+                *entity_object,
+                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::RESTART])),
+                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::STOP])),
+                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::KILL])),
+                waiting
+            );
+        }
+        catch (py::error_already_set &) {
+            PyObject *type, *value, *traceback;
+            PyErr_Fetch(&type, &value, &traceback);
+
+            if (!type) {
+                throw std::runtime_error("Unknown Python error");
+            }
+
+            if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::RESTART], type)) {
+                waiting = false;
+                continue;
+            }
+            else if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::STOP], type)) {
+                // Just wait.
+                waiting = true;
+                continue;
+            }
+            else if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::KILL], type)) {
+                // We are done.
+                return;
+            }
+
+            else {
+                // TODO: catch and nicely handle error
+                PyErr_Print();
+                throw;
+            }
+        }
     }
     
     print_debug << "run_entity: Finished" << std::endl;
@@ -75,7 +111,25 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entity):
     entity(entity),
     previous_call_number(entity.call_number),
-    interpreter_context(interpreter_context) {
+    interpreter_context(interpreter_context),
+    // TODO: Consider leaks, which will happen right now
+    Py_BaseAsyncException(make_base_async_exception(PyExc_BaseException, "__main__.BaseAsyncException")),
+
+    // TODO: Consider leaks, which will happen right now
+    signal_to_exception({
+        {
+            EntityThread::Signal::RESTART,
+            make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_RESTART") 
+        }, {
+            EntityThread::Signal::STOP,
+            make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_STOP")
+        }, {
+            EntityThread::Signal::KILL,
+            make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_KILL")
+        }
+    })
+
+    {
 
         // To get thread_id
         std::promise<long> thread_id_promise;
@@ -96,7 +150,8 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
             std::move(thread_id_promise),
             // TODO: Extract into a more logical place
             boost::filesystem::path("python_embed/scripts/bootstrapper.py"),
-            interpreter_context
+            interpreter_context,
+            signal_to_exception
         );
 }
 
@@ -109,11 +164,16 @@ long EntityThread::get_thread_id() {
     return thread_id;
 }
 
-void EntityThread::halt_soft() {
-    print_debug << "Attempting to kill thread." << std::endl;
+PyObject *EntityThread::make_base_async_exception(PyObject *base, const char *name) {
+    lock::GIL lock_gil(interpreter_context, "EntityThread::make_base_async_exception");
+
+    return PyErr_NewException(name, base, nullptr);
+}
+
+void EntityThread::halt_soft(Signal signal) {
     print_debug << "Attempting to kill thread id " << get_thread_id() << "." << std::endl;
 
-    PyThreadState_SetAsyncExc(get_thread_id(), PyExc_SystemError);
+    PyThreadState_SetAsyncExc(get_thread_id(), signal_to_exception[signal]);
 }
 
 void EntityThread::halt_hard() {

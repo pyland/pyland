@@ -1,8 +1,9 @@
 #include "game_window.hpp"
+#include "layer.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
-#include "layer.hpp"
 #include "map_object.hpp"
+#include "object_manager.hpp"
 #include "tileset.hpp"
 
 #include <string>
@@ -84,6 +85,26 @@ Map::~Map() {
     delete[] tileset_tex_coords;
 
     std::cout << std::endl << "Closed" << std::endl;
+}
+
+void Map::add_character(int character_id) {
+    if(ObjectManager::is_valid_object_id(character_id))
+        characters.push_back(character_id);
+}
+
+void Map::remove_character(int character_id) {
+    if(ObjectManager::is_valid_object_id(character_id)){
+        for(auto it = characters.begin(); it != characters.end(); ++it) {
+            //If a valid object
+            if(*it != 0) {
+                //remove it if its the character
+                if(*it == character_id) {
+                    characters.erase(it);       
+                    return;
+                }
+            }
+        }
+    }
 }
 
 /**
