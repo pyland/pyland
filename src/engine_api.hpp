@@ -5,11 +5,11 @@
 #ifndef ENGINE_API_H
 #define ENGINE_API_H
 
-#include "map_viewer.hpp"
-
 #include <array>
 #include <utility>
 #include <vector>
+
+class MapViewer;
 
 ///
 /// size of each tile in pixels
