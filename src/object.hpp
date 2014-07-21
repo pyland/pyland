@@ -35,7 +35,7 @@ class Object {
     ///
     /// The object's id
     ///
-    int id = -1;
+    int id = 0;
   
     ///
     /// The name of the object
