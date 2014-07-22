@@ -1,6 +1,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include "entitythread.hpp"
 #include "object.hpp"
 
 #ifdef USE_GLES
@@ -32,6 +33,8 @@ public:
     void generate_vertex_data();
     void load_textures();
     bool init_shaders();
+
+    LockableEntityThread daemon;
 };
 
 #endif
