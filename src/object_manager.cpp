@@ -58,12 +58,12 @@ std::shared_ptr<Object> ObjectManager::get_object(int object_id) {
 
     if(!is_valid_object_id(object_id)) {
         std::cerr << "Object id is invalid in ObjectManager::get_object, id: " << object_id << std::endl;
-        return nullptr;
+        return std::shared_ptr<Object>();
     }
   
     //If the object isn't in the database
     if(objects.find(object_id) == objects.end()) {
-        return nullptr;
+        return std::shared_ptr<Object>();
     }
 
   

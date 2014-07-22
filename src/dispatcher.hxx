@@ -1,21 +1,24 @@
 #include <functional>
 #include <map>
 
-Dispatcher::CallbackID Dispatcher::register(std::function<bool (Arguments...)> callback) {
+template <typename... Arguments>
+typename Dispatcher<Arguments...>::CallbackID Dispatcher<Arguments...>::register_callback(std::function<bool (Arguments...)> callback) {
     functions[maxid++] = callback;
     return maxid;
 }
 
-void Dispatcher::unregister(Dispatcher::CallbackID callback) {
+template <typename... Arguments>
+void Dispatcher<Arguments...>::unregister(Dispatcher<Arguments...>::CallbackID callback) {
     if (!functions.erase(callback)) {
         throw new std::runtime_error("Nonexistent callback");
     }
 }
 
-void Dispatcher::trigger() {
+template <typename... Arguments>
+void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
     // Do increments inline
     for (auto it = functions.cbegin(); it != functions.cend(); ) {
-        if ((*it)()) {
+        if ((*it)(arguments...)) {
             // Warning:
             // Must be post-increment, and increment
             // must be done before erasing.

@@ -49,25 +49,25 @@ bool Engine::walkable(int x_pos, int y_pos) {
     return true;
 }
 
-bool Engine::change_tile(int new_id, int x, int y, int layer) {
+bool Engine::change_tile(int, int, int, int) {
     return false;
 }
 
-std::vector<int> Engine::get_tiles(int x, int y) {
+std::vector<int> Engine::get_tiles(int, int) {
     std::vector<int> tiles;
     return tiles;
 }
 
 int Engine::get_tile_size() {
-
+    return -1; // TODO
 }
 
-std::vector<int> Engine::get_objects(int x, int y) {
+std::vector<int> Engine::get_objects(int, int) {
     std::vector<int> objects;
     return objects;
 }
 
-bool Engine::load_map(int map_id) {
+bool Engine::load_map(int) {
     return false;
 }
 

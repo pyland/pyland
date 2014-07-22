@@ -5,6 +5,7 @@
 #include <map>
 #include <thread>
 #include "api.hpp"
+#include "dispatcher.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
 
@@ -12,7 +13,24 @@ class Interpreter;
 class EntityThread;
 
 using EntityThreads        = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
-using LockableEntityThread = lock::Lockable<std::shared_ptr<EntityThread>>;
+
+///
+/// A lock::Lockable<std::shared_ptr<EntityThread>>
+/// with additional public event dispatchers.
+///
+class LockableEntityThread : public lock::Lockable<std::shared_ptr<EntityThread>> {
+    public:
+        using lock::Lockable<std::shared_ptr<EntityThread>>::Lockable;
+
+        // TODO: Comment
+        Dispatcher<> event_run;
+        // TODO: Comment
+        Dispatcher<> event_restart;
+        // TODO: Comment
+        Dispatcher<> event_stop;
+        // TODO: Comment
+        Dispatcher<> event_kill;
+};
 
 ///
 /// Container that abstracts the daemon threads for
