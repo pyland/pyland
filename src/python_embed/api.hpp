@@ -161,35 +161,6 @@ class Entity {
         ///
         void monologue();
 
-
-        //  █████   ██████  ██████  ██████  ██████   █████   ████   ██████  ██████  █████
-        //  ██  ██  ██      ██  ██  ██  ██  ██      ██      ██  ██    ██    ██      ██  ██
-        //  ██  ██  ████    ██████  ██████  ████    ██      ██████    ██    ████    ██  ██
-        //  ██  ██  ██      ██      ██ ██   ██      ██      ██  ██    ██    ██      ██  ██
-        //  █████   ██████  ██      ██  ██  ██████   █████  ██  ██    ██    ██████  █████
-
-        ///
-        /// Runs the Entity's active script.
-        ///
-        /// @deprecated
-        ///
-        /// @see give_script()
-        ///
-        void run_script();
-
-        ///
-        /// Sets entity's Python script from a hardcoded file.
-        /// Takes a namespace to evaluate it in.
-        ///
-        /// @deprecated
-        /// 
-        /// @param main_namespace
-        ///     The namespace to evaluate the file in.
-        ///
-        /// @see run_script()
-        ///
-        void give_script(boost::python::api::object in);
-
         void py_print_debug(std::string text);
 };
 
