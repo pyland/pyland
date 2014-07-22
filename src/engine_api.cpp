@@ -8,6 +8,8 @@
 #include <utility>
 #include <vector>
 #include <iostream>
+
+
 bool Engine::move_object(int id, int tile_dx, int tile_dy) {
 
     std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(id);
@@ -74,12 +76,14 @@ bool Engine::load_map(int) {
 
 std::pair<int, int> Engine::find_object(int id) {
 
+    std::string exception_str = "Object Requested could not be found";
+
     if(Engine::map_viewer == nullptr)
-        return std::make_pair<int, int>(-1, -1);
+        throw exception_str;
 
     Map* map = map_viewer->get_map();
     if(map == nullptr)
-        return std::make_pair<int, int>(-1, -1);
+        throw exception_str;
     
     //Check the object is on the map
     auto objects = map->get_characters();
@@ -92,7 +96,7 @@ std::pair<int, int> Engine::find_object(int id) {
     }
 
     //Not on the map
-    return std::make_pair<int, int>(-1, -1);
+    throw exception_str;
 }
 
 bool Engine::open_editor(std::string editor, std::string filename) {
