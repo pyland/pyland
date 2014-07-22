@@ -7,6 +7,7 @@ SILENCER_PREFIX = @
 COMPILER ?= g++
 
 WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion
+WARNINGS += -isystem ./tmx-parser -isystem ./tmx-parser/TmxParser
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
 CXXFLAGS += ${CXX_EXTRA}
@@ -77,9 +78,15 @@ PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 
 ### Colours ###
 
-bold   = $(shell tput bold)
-normal = $(shell tput sgr0)
-red    = $(shell tput setaf 1)
+ifeq "$(NOCOLOR)" "1"
+	bold   =
+	normal =
+	red    =
+else
+	bold   = $(shell tput bold)
+	normal = $(shell tput sgr0)
+	red    = $(shell tput setaf 1)
+endif
 
 
 GCC_VERSION = $(shell expr `$(COMPILER) -dumpversion`)
@@ -160,9 +167,7 @@ debug: CPPFLAGS += -DDEBUG
 debug: all
 
 tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
-	@echo;\
-         echo "${bold}[ Compiling tmx-parser library ]${normal}";\
-         echo
+	@echo "${bold}[ Compiling tmx-parser library ]${normal}"
 	$(MAKE) -C tmx-parser -f Makefile.linux
 
 dependencies:
