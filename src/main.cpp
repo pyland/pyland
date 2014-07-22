@@ -184,9 +184,9 @@ void create_character(Interpreter &interpreter) {
     new_character->set_y_position(start_y);
     print_debug << "Adding character" << std::endl;
     ObjectManager::get_instance().add_object(new_character);
-    (Engine::get_map_viewer())->get_map()->add_character(new_character->get_id());
+    Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
     
-    (Engine::get_map_viewer())->set_map_focus_object(new_character->get_id());
+    Engine::get_map_viewer()->set_map_focus_object(new_character->get_id());
     print_debug << "Creating character wrapper" << std::endl;
     std::cout<< "ID " << new_character->get_id() <<std::endl;
     // Register user controled character

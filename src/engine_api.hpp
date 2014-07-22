@@ -70,12 +70,6 @@ public:
     /// @return a vector of all the objects at that position on the map
     ///
     static std::vector<int> get_objects(int x, int y);
-    ///
-    /// Get the position of the given object in the map
-    /// @param id the id of the object to find
-    /// @return a pair of the (x, y) coordinates
-    ///  
-    static std::pair<int, int> find_object(int id);
 
     ///
     /// Load the map specified by the ap id
@@ -84,5 +78,23 @@ public:
     ///
     static bool load_map(int map_id);
 
+    ///
+    /// Get the locationof hte object in the map, returns (-1, -1) if
+    /// there is the object is not on the map
+    /// @id the id of the object
+    /// @return a pair which is the (x, y) tuple of the object position
+    ///
+    static std::pair<int, int> find_object(int id);
+    
+    ///
+    /// Open a text editor for the user to edit a file
+    ///
+    static bool open_editor(std::string filename);
+
+    ///
+    /// Get the size of a tile in the current map
+    /// @return the size of the tile in pixels - we only support square ones
+    ///
+    static int get_tile_size();
 };
 #endif

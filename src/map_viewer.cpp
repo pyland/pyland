@@ -166,6 +166,7 @@ void MapViewer::refocus_map() {
         //TODO
         //need to handle odd and even width/ height
 
+        float tile_offset = 32.0f / 2.0f;
         //if in scrolling part of map
         if(object_x - map_display_width/2.0f > 0) {
             //If in scrolling part
@@ -173,7 +174,7 @@ void MapViewer::refocus_map() {
                 map->set_display_x(object_x - map_display_width/ 2.0f);
            } 
             else {
-                map->set_display_x(map_width - map_display_width);
+                map->set_display_x(map_width - map_display_width + tile_offset);
             }
         }
         else {
@@ -186,7 +187,7 @@ void MapViewer::refocus_map() {
                 map->set_display_y(object_y - map_display_height/ 2.0f);
             } 
             else {
-                map->set_display_y(map_height- map_display_height);
+                map->set_display_y(map_height- map_display_height + tile_offset);
             }
         }
         else {

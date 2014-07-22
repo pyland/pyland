@@ -94,7 +94,7 @@ Map::~Map() {
 bool Map::is_walkable(int x_pos, int y_pos) {
     //Default is walkable
     bool walkable = true;
-
+    return true;
     //Iterate through all objects
     for(auto character : characters) {
         //If its an invalid object
@@ -119,14 +119,13 @@ bool Map::is_walkable(int x_pos, int y_pos) {
     
         //determine if we can walk on the map
         if(layer->get_name() == "Collisions") {
+
             //if there is a tile, treat it as blocked
             if(layer->get_tile(x_pos, y_pos) != 0) {
                  walkable = false;
                  //We can stop checking further objects and tiles
                  return walkable;
-                 
             }
-
         }
     }
 
