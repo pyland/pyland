@@ -17,14 +17,16 @@ bool Engine::move_object(int id, int tile_dx, int tile_dy) {
         if(!walkable(object->get_x_position() + tile_dx, object->get_y_position() + tile_dy))
           return false;
 
+        //TODO, make this an event movement
+        object->set_x_position(object->get_x_position() + tile_dx);
+        object->set_y_position(object->get_y_position() + tile_dy);
+
         //if there is a map viewer attached
         if(Engine::map_viewer != nullptr) {
             //animate the map if this is the object to focus on
             Engine::map_viewer->refocus_map();
-            }
-        //TODO, make this an event movement
-        object->set_x_position((int)(object->get_x_position() + (int)tile_dx));
-        object->set_y_position((int)(object->get_y_position() + (int)tile_dy));
+        }
+
     }
     return true;
 }
@@ -46,6 +48,7 @@ bool Engine::walkable(int x_pos, int y_pos) {
 
     return true;
 }
+
 bool Engine::change_tile(int new_id, int x, int y, int layer) {
     return false;
 }
@@ -53,6 +56,10 @@ bool Engine::change_tile(int new_id, int x, int y, int layer) {
 std::vector<int> Engine::get_tiles(int x, int y) {
     std::vector<int> tiles;
     return tiles;
+}
+
+int Engine::get_tile_size() {
+
 }
 
 std::vector<int> Engine::get_objects(int x, int y) {

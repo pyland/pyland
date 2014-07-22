@@ -91,6 +91,10 @@ public:
     ///
     static bool open_editor(std::string filename);
 
-
+    ///
+    /// Get the size of a tile in the current map
+    /// @return the size of the tile in pixels - we only support square ones
+    ///
+    static int get_tile_size();
 };
 #endif
