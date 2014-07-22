@@ -98,6 +98,6 @@ std::pair<int, int> Engine::find_object(int id) {
 bool Engine::open_editor(std::string filename) {
     //TODO remove this function in the final version
     
-    system((std::string("emacs -nw python_embed/scripts/") + filename).c_str());
+    system((std::string("nano python_embed/scripts/") + filename).c_str());
     return true;
 }
