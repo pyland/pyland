@@ -226,8 +226,8 @@ void Map::generate_map_texcoords() {
     //holds the map data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
-    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats*layers.size();
-    map_tex_coords = new GLfloat[data_size]; 
+    size_t data_size = sizeof(GLfloat) * map_height * map_width * num_floats * layers.size();
+    map_tex_coords = new GLfloat[data_size];
     assert(map_tex_coords);
 
     //Get each layer of the map
@@ -325,7 +325,7 @@ void Map::generate_map_coords() {
     //holds the map data
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
-    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats*layers.size();
+    size_t data_size = sizeof(GLfloat) * map_height * map_width * num_floats * layers.size();
     map_data = new GLfloat[data_size]; 
     assert(map_data);
 
@@ -346,8 +346,8 @@ void Map::generate_map_coords() {
     //Start at layer 0
     int offset = 0;
     float layer_offset = -1.0f;
-    float layer_inc = 1.0f / (float)layers.size();
-    for(int layer = 0; layer < layers.size(); layer++) {
+    float layer_inc = 1.0f / float(layers.size());
+    for (unsigned int layer = 0; layer < layers.size(); layer++) {
         std::cout << "OFFSET " << layer_offset << std::endl;
 
         //Generate one layer's worth of data
@@ -436,13 +436,12 @@ void Map::generate_map_coords() {
 
     //Set this data in the renderable component
     renderable_component.set_vertex_data(map_data, data_size, false);
-    renderable_component.set_num_vertices_render(layers.size()*6*map_width*map_height);
+    renderable_component.set_num_vertices_render(GLsizei(layers.size() * 6 * map_width * map_height));
 }
 
 void Map::init_textures() {
     
     FILE *tex_file1 = nullptr;
-    size_t bytes_read = 0;
     size_t image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
 
     tex_buf[0] = new char[image_sz_1];
@@ -453,8 +452,10 @@ void Map::init_textures() {
     }
 
     if (tex_file1 && tex_buf[0]) {
-        bytes_read = fread(tex_buf[0], 1, image_sz_1, tex_file1);
-        assert(bytes_read == image_sz_1);  // some problem with file?
+        size_t bytes_read = fread(tex_buf[0], 1, image_sz_1, tex_file1);
+        if (bytes_read != image_sz_1) {
+            throw new std::runtime_error("Problem with file while initializing textures: wrong number of bytes read.");
+        }
         fclose(tex_file1);
     }
     //Set the texture data in the rederable component
@@ -515,5 +516,5 @@ bool Map::init_shaders() {
 /**
  * The function used to update elements on the map.
  */
-void Map::update_map(float dt) {
+void Map::update_map(float) {
 }

@@ -56,8 +56,8 @@ void MapViewer::render_map() {
     std::pair<int, int> size = window->get_size();
     //TODO, set the map view correctly
     glScissor(0, 0, size.first, size.second);
-    map->set_display_width((int)(size.first/32.0f));
-    map->set_display_height((int)(size.second/32.0f));
+    map->set_display_width(size.first / 32);
+    map->set_display_height(size.second / 32);
     glViewport(0, 0,  size.first, size.second);
     glm::mat4 projection_matrix = glm::ortho(0.0f, (float)(size.first), 0.0f, (float)(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
@@ -104,7 +104,11 @@ void MapViewer::render_map() {
     
             //Move sprite to the required position
             glm::mat4 model1 = glm::mat4(1.0f);
-            glm::vec3 translate1 = glm::vec3((sprite->get_x_position()-map->get_display_x())*32.0f, (sprite->get_y_position()-map->get_display_y())*32.0f, 0.0f);
+            glm::vec3 translate1 = glm::vec3(
+                (float(sprite->get_x_position()) - map->get_display_x()) * 32.0f,
+                (float(sprite->get_y_position()) - map->get_display_y()) * 32.0f,
+                0.0f
+            );
             glm::mat4 translated1 = glm::translate(model1, translate1);
             character_render_component->set_modelview_matrix(translated1);
             character_render_component->set_projection_matrix(projection_matrix);
