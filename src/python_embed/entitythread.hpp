@@ -20,7 +20,10 @@ using EntityThreads        = lock::Lockable<std::vector<std::weak_ptr<EntityThre
 ///
 class LockableEntityThread : public lock::Lockable<std::shared_ptr<EntityThread>> {
     public:
-        using lock::Lockable<std::shared_ptr<EntityThread>>::Lockable;
+        //using lock::Lockable<std::shared_ptr<EntityThread>>::Lockable;
+        LockableEntityThread();
+        LockableEntityThread(std::shared_ptr<EntityThread> value);
+        LockableEntityThread(std::shared_ptr<EntityThread> value, std::shared_ptr<std::mutex> lock);
 
         // TODO: Comment
         Dispatcher<> event_run;

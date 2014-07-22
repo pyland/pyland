@@ -38,6 +38,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <random>
 #include <string>
 #include <sys/time.h>
@@ -64,6 +65,7 @@
 #include "lifeline.hpp"
 #include "locks.hpp"
 #include "main.hpp"
+#include "make_unique.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
@@ -86,75 +88,10 @@
 using namespace std;    
 
 
-#define GLOBAL_SCALE 2
+#define GLOBAL_SCALE 1
 static volatile int shutdown;
 
 static std::mt19937 random_generator;
-
-/*
-static void animate(float dt) {
-    // animate map
-    float map_display_right_x = map_bottom_x + map_display_width;
-    float map_display_top_y = map_bottom_y + map_display_height;
-
-    // scroll the map towards the top right
-    map_bottom_x += map_scroll_speed*dt;
-    map_bottom_y += map_scroll_speed*dt;
-
-    // perform wrapping
-    if(map_display_right_x > map_width) {
-    map_bottom_x = 0.0f;//wrap round
-    }
-
-    if(map_display_top_y > map_height) {
-    map_bottom_y = 0.0f; //wrap round
-    }
-
-
-    // animate characters
-    static float time_to_next = 0.0f;
-    static int sequence[] = {1, 2, 3, 5, 7, 9, 11};
-    static int i = 0;
-
-    if(i == sizeof(sequence)/sizeof(int)) {
-    i = 0;
-    }
-
-    time_to_next += dt;
-    if(time_to_next > (1.0f/60.0f)) {
-    time_to_next = 0.0f;
-          
-    int curr_tile = 0;// sequence[i++];
-    GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
-    //bottom left
-    sprite_tex_data[0] = tileset_ptr[0];
-    sprite_tex_data[1] = tileset_ptr[1];
-      
-    //top left
-    sprite_tex_data[2] = tileset_ptr[2];
-    sprite_tex_data[3] = tileset_ptr[3];
-      
-    //bottom right
-    sprite_tex_data[4] = tileset_ptr[4];
-    sprite_tex_data[5] = tileset_ptr[5];
-      
-    //top left
-    sprite_tex_data[6] = tileset_ptr[2];
-    sprite_tex_data[7] = tileset_ptr[3];
-      
-    //top right
-    sprite_tex_data[8] = tileset_ptr[6];
-    sprite_tex_data[9] = tileset_ptr[7];
-          
-    //bottom right
-    sprite_tex_data[10] = tileset_ptr[4];
-    sprite_tex_data[11] = tileset_ptr[5];
-    //changing texture coords
-    glBindBuffer(GL_ARRAY_BUFFER, vboIds[3]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*12, sprite_tex_data, GL_DYNAMIC_DRAW);
-    }
-    }
-*/
 
 static float get_dt() {
     static std::chrono::steady_clock::time_point curr_time = std::chrono::steady_clock::now();
@@ -167,9 +104,6 @@ static float get_dt() {
     return static_cast<float>(duration.count()) / 1000.0f;
 }
 
-// TODO: Unhack this hack
-// TODO: Name properly.
-std::vector<LockableEntityThread> retentitythreads;
 void create_character(Interpreter &interpreter) {
 
 
@@ -196,7 +130,7 @@ void create_character(Interpreter &interpreter) {
 
     print_debug << "Registering character" << std::endl;
 
-    retentitythreads.push_back(interpreter.register_entity(*a_thing));
+    new_character->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
 
     print_debug << "Done!" << std::endl;
 }
@@ -224,27 +158,39 @@ class CallbackState {
         void restart(InterpreterContext interpreter_context) {
             print_debug << "Killing number " << target << std::endl;
 
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            auto active_player = ObjectManager::get_instance().get_object(id);
+
             lock::GIL lock_gil(interpreter_context, "Killer");
 
-            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::RESTART);
+            // TODO: Lock
+            active_player->daemon->value->halt_soft(EntityThread::Signal::RESTART);
             target = 0;
         }
 
         void stop(InterpreterContext interpreter_context) {
             print_debug << "Killing number " << target << std::endl;
 
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            auto active_player = ObjectManager::get_instance().get_object(id);
+
             lock::GIL lock_gil(interpreter_context, "Killer");
 
-            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::STOP);
+            // TODO: Lock
+            active_player->daemon->value->halt_soft(EntityThread::Signal::STOP);
             target = 0;
         }
 
         void kill(InterpreterContext interpreter_context) {
             print_debug << "Killing number " << target << std::endl;
 
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            auto active_player = ObjectManager::get_instance().get_object(id);
+
             lock::GIL lock_gil(interpreter_context, "Killer");
 
-            retentitythreads.at(target).value->halt_soft(EntityThread::Signal::KILL);
+            // TODO: Lock
+            active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
             target = 0;
         }
 

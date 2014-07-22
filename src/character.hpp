@@ -33,8 +33,6 @@ public:
     void generate_vertex_data();
     void load_textures();
     bool init_shaders();
-
-    LockableEntityThread daemon;
 };
 
 #endif
