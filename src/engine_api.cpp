@@ -96,8 +96,11 @@ std::pair<int, int> Engine::find_object(int id) {
 }
 
 bool Engine::open_editor(std::string filename) {
+    print_debug << "XXXYYYZ...." << std::endl; 
     //TODO remove this function in the final version
-    
-    system((std::string("emacs -nw python_embed/scripts/") + filename).c_str());
+    std::string bash_command = "/usr/bin/gedit python_embed/scripts/" + filename;
+    std::thread TEXT_EDIT([] (std::string command) { print_debug << "XXXYYYZZZ" << std::endl; system(command.c_str()); }, bash_command);
+    TEXT_EDIT.detach();
+    // system((std::string("gedit python_embed/scripts/") + filename + " &").c_str());
     return true;
 }

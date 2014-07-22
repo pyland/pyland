@@ -70,6 +70,7 @@
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
 #include "print_debug.hpp"
+#include "challenge1.hpp"
 
 #ifdef USE_GLES
 
@@ -228,7 +229,7 @@ int main(int, char **) {
     
     float dt = get_dt();
 
-    CallbackState callbackstate(interpreter, "Adam");
+    CallbackState callbackstate(interpreter, "John");
 
     InputManager* input_manager = window.get_input_manager();
 
@@ -283,7 +284,7 @@ int main(int, char **) {
 
     ///////////////////////////////
 
-
+    Engine::open_editor("John.py");
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
