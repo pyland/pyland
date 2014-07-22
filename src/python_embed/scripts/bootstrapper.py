@@ -37,6 +37,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
         else:
             break
 
+        break
+
 # def run(entity):
 #     """Purely for testing"""
 
