@@ -89,7 +89,7 @@ public:
     ///
     /// Open a text editor for the user to edit a file
     ///
-    static bool open_editor(std::string filename);
+    static bool open_editor(std::string editor, std::string filename);
 
     ///
     /// Get the size of a tile in the current map

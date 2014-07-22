@@ -254,7 +254,7 @@ class CallbackState {
         long long int target;
 };
 
-int main(int, char **) {
+int main(int argc, const char* argv[]) {
     //    bool use_graphical_window = true;
 
     //Determine if the no-window command was sent
@@ -338,7 +338,15 @@ int main(int, char **) {
 
     ///////////////////////////////
 
-    Engine::open_editor("John.py");
+    std::string editor;
+
+    if (argc == 2) {
+        editor = argv[1];
+    } else {
+        editor = "gedit";
+    };
+
+    Engine::open_editor(editor, "John.py");
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
