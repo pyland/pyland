@@ -159,7 +159,7 @@ class Entity {
         ///
         /// Prints to standard output the name and position of entity.
         ///
-        void monologue();
+        void monologue(); 
 
         void py_print_debug(std::string text);
 };

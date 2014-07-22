@@ -68,6 +68,7 @@
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
 #include "print_debug.hpp"
+#include "challenge1.hpp"
 
 #ifdef USE_GLES
 
@@ -336,7 +337,6 @@ int main(int, char **) {
     em.add_event(func4);
 
     ///////////////////////////////
-
 
 
     while (!window.check_close()) {
