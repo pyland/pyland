@@ -59,7 +59,7 @@ std::vector<int> Engine::get_tiles(int, int) {
 }
 
 int Engine::get_tile_size() {
-
+    return -1; // TODO
 }
 
 std::vector<int> Engine::get_objects(int, int) {
@@ -67,7 +67,7 @@ std::vector<int> Engine::get_objects(int, int) {
     return objects;
 }
 
-bool Engine::load_map(int map_id) {
+bool Engine::load_map(int) {
     return false;
 }
 
