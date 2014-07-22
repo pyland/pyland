@@ -283,7 +283,7 @@ int main(int, char **) {
     
     float dt = get_dt();
 
-    CallbackState callbackstate(interpreter, "Adam");
+    CallbackState callbackstate(interpreter, "John");
 
     InputManager* input_manager = window.get_input_manager();
 
