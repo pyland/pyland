@@ -338,6 +338,7 @@ int main(int, char **) {
 
     ///////////////////////////////
 
+    Engine::open_editor("John.py");
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
