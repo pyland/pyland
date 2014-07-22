@@ -65,10 +65,10 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
     // Asynchronously return thread id to allow killing of this thread
     //
     // WARNING:
-    // This must be here unless earlier blocks are to be wrapped in the
-    // try, as the kill thread is legally allowed to kill as soon as it
-    // gets the entity, and the entity returns as soon as this promise
-    // is fulfilled. 
+    //     This must be here unless earlier blocks are to be wrapped in the
+    //     try, as the kill thread is legally allowed to kill as soon as it
+    //     gets the entity, and the entity returns as soon as this promise
+    //     is fulfilled. 
     //
     thread_id_promise.set_value(PyThread_get_thread_ident());
 
