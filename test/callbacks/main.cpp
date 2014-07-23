@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
         input_manager->register_key_press_handler(press_callback);
         
         // Lifeline mouse_lifeline = input_manager->register_mouse_handler(&mouse_callback_function);
-        Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter({MOUSE_CLICKED}, &mouse_callback_function));
+        Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter({ANY_OF({MOUSE_PRESS, MOUSE_RELEASE})}, &mouse_callback_function));
         while (window.check_close() == false) {
             // Little basic colour change test.
             r += 0.001;

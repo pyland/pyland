@@ -147,14 +147,47 @@ MouseFilter MOUSE_BUTTON(int button) {
 }
 
 
-// Automatic template deduction applies here; the type "Event" will
-// always be specified in the input function.
 template<class Event>
-static std::function<bool (Event)> REJECT(std::function<bool (Event)> filter) {
+static std::function<bool (Event)> REJECT_do(std::function<bool (Event)> filter) {
     return [filter] (Event event) {
         return !filter(event);
     };
 }
+
+KeyboardFilter REJECT(KeyboardFilter filter) {
+    return REJECT_do<KeyboardInputEvent>(filter);
+}
+
+MouseFilter REJECT(MouseFilter filter) {
+    return REJECT_do<MouseInputEvent>(filter);
+}
+
+
+template<class Event>
+static std::function<bool (Event)> ANY_OF_do(std::initializer_list<std::function<bool (Event)>> filters) {
+    // Initializer lists have stupid noncopy semantics on copy.
+    // Move to a vector to prevent corruption.
+    std::vector<std::function<bool (Event)>> filters_vector(filters); 
+
+    return [filters_vector] (Event event) {
+        for (auto filter : filters_vector) {
+            if (filter(event)) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+}
+
+KeyboardFilter ANY_OF(std::initializer_list<KeyboardFilter> filters) {
+    return ANY_OF_do<KeyboardInputEvent>(filters);
+}
+
+MouseFilter ANY_OF(std::initializer_list<MouseFilter> filters) {
+    return ANY_OF_do<MouseInputEvent>(filters);
+}
+
 
 // KeyboardFilter REJECT(KeyboardFilter filter) {
 //     return [filter] (KeyboardInputEvent event) {
