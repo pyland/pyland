@@ -36,6 +36,9 @@ MouseFilter MOUSE_BUTTON(std::initializer_list<int> button);
 KeyboardFilter REJECT(KeyboardFilter filter);
 MouseFilter REJECT(MouseFilter filter);
 
+KeyboardFilter ANY_OF(std::initializer_list<KeyboardFilter> filters);
+MouseFilter ANY_OF(std::initializer_list<MouseFilter> filters);
+
 
 
 extern KeyboardFilter KEY_HELD;

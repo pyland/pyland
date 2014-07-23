@@ -4,9 +4,9 @@ Project Zygote (working title)
 This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectZygote](twitter.com/ProjectZygote).
 
 ## Install 
-May be incomplete and you may require additional packages to the ones listed here
+These install instruction be incomplete and you may require additional packages to the ones listed here
 
-#### Raspberry Pi and Desktop installation
+#### Getting Dependancies (Raspberry Pi and Desktop installations)
 
 ```bash
 git clone https://github.com/heidi-ann/zygote
@@ -27,7 +27,7 @@ For compiling on the Raspberry Pi, use:
 COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
 
-#### Desktop - Unix
+#### Compiling on Desktop - Unix
 
 For compiling on desktop, use:
 ```bash
@@ -36,3 +36,12 @@ PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_pytho
 ```
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
+
+##Usage
+
+Keybindings
+* n - spawn new spirte
+* r - run script for sprite
+* k - kill sprite
+* h - halt current script
+* arrow keys / wasd - move sprite
