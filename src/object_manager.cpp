@@ -1,7 +1,5 @@
-
 #include "object_manager.hpp"
 #include "object.hpp"
-
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -52,20 +50,4 @@ bool ObjectManager::add_object(std::shared_ptr<Object> new_object) {
 
 void ObjectManager::remove_object(int object_id) {
     objects.erase(object_id);
-}
-
-std::shared_ptr<Object> ObjectManager::get_object(int object_id) {
-
-    if(!is_valid_object_id(object_id)) {
-        std::cerr << "Object id is invalid in ObjectManager::get_object, id: " << object_id << std::endl;
-        return std::shared_ptr<Object>();
-    }
-  
-    //If the object isn't in the database
-    if(objects.find(object_id) == objects.end()) {
-        return std::shared_ptr<Object>();
-    }
-
-  
-    return objects[object_id];
 }

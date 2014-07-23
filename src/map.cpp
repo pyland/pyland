@@ -101,7 +101,7 @@ bool Map::is_walkable(int x_pos, int y_pos) {
         if (character == 0)
             continue;
 
-        std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(character);
+        std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(character);
 
         //If we cannot walk on this object
         if(object) {
