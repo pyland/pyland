@@ -87,6 +87,7 @@
 
 using namespace std;    
 
+enum arrow_key {UP, DOWN, LEFT, RIGHT};
 
 #define GLOBAL_SCALE 1
 static volatile int shutdown;
@@ -194,6 +195,26 @@ class CallbackState {
             target = 0;
         }
 
+        void man_move (arrow_key direction) {
+            print_debug << "arrow key pressed " << std::endl;
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            switch (direction) {
+                case (UP):
+                    Engine::move_object(id,0,1);
+                    break;
+                case (DOWN):
+                    Engine::move_object(id,0,-1);
+                    break;
+                case (RIGHT):
+                    Engine::move_object(id,-1,0);
+                    break;
+                case (LEFT):
+                    Engine::move_object(id,1,0);
+                    break;
+            }
+
+        }
+
     private:
         Interpreter &interpreter;
         std::string name;
@@ -251,6 +272,48 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.restart(interpreter.interpreter_context); }
     ));
 
+    //TODO: use 
+
+    Lifeline up_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_REPEAT, KEY("Up")},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
+    ));
+
+    Lifeline down_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_REPEAT, KEY("Down")},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
+    ));
+
+    Lifeline right_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_REPEAT, KEY("Right")},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
+    ));
+
+    Lifeline left_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_REPEAT, KEY("Left")},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
+    ));
+
+    Lifeline up2_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("Up")},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
+    ));
+
+    Lifeline down2_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("Down")},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
+    ));
+
+    Lifeline right2_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("Right")},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
+    ));
+
+    Lifeline left2_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("Left")},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
+    ));
+
     std::vector<Lifeline> digit_callbacks;
     for (int i=0; i<10; ++i) {
         digit_callbacks.push_back(
@@ -306,3 +369,4 @@ int main(int argc, const char* argv[]) {
 
     return 0;
 }
+// 
