@@ -45,9 +45,8 @@ Character::~Character() {
 
 
 void Character::generate_tex_data() {
-    RenderableComponent* render_component = get_renderable_component();
-    if(render_component == NULL) {
-        std::cerr << "ERROR in Character::generate_tex_data, render_component is NULL" << std::endl;
+    if(renderable_component == NULL) {
+        std::cerr << "ERROR in Character::generate_tex_data, renderable_component is NULL" << std::endl;
         return;
     }
   
@@ -87,13 +86,12 @@ void Character::generate_tex_data() {
     sprite_tex_data[10] = offset_x*5.0f;
     sprite_tex_data[11] = offset_y;
 
-    render_component->set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
+    renderable_component->set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
 
 void Character::generate_vertex_data() {
-    RenderableComponent* render_component = get_renderable_component();
-    if(render_component == NULL) {
-        std::cerr << "ERROR in Character::generate_tex_data, render_component is NULL" << std::endl;
+    if(renderable_component == NULL) {
+        std::cerr << "ERROR in Character::generate_tex_data, renderable_component is NULL" << std::endl;
         return;
     }
 
@@ -137,17 +135,14 @@ void Character::generate_vertex_data() {
     sprite_data[15] = 1 * scale;
     sprite_data[16] = 0;
     sprite_data[17] = depth;
-    std::cout << "SPRITES: " << std::endl;
 
-    render_component->set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
-    render_component->set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
+    renderable_component->set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
+    renderable_component->set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
 }
 
 void Character::load_textures() {
-
-    RenderableComponent* render_component = get_renderable_component();
-    if(render_component == NULL) {
-        std::cerr << "ERROR in Character::generate_tex_data, render_component is NULL" << std::endl;
+    if(renderable_component == NULL) {
+        std::cerr << "ERROR in Character::generate_tex_data, renderable_component is NULL" << std::endl;
         return;
     }
 
@@ -169,7 +164,7 @@ void Character::load_textures() {
         fclose(tex_file2);
     }
     //Set the texture data in the rederable component
-    render_component->set_texture_data(tex_buf, static_cast<int>(image_sz_2), IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, false);
+    renderable_component->set_texture_data(tex_buf, static_cast<int>(image_sz_2), IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, false);
 
 }
 bool Character::init_shaders() {
@@ -212,14 +207,13 @@ bool Character::init_shaders() {
         return false;
     }
 
-    RenderableComponent* render_component = get_renderable_component();
-    if(render_component == NULL) {
-        std::cerr << "ERROR in Character::init_shaders, render_component is NULL" << std::endl;
+    if(renderable_component == NULL) {
+        std::cerr << "ERROR in Character::init_shaders, renderable_component is NULL" << std::endl;
         return false;
     }
 
     //Set the shader
-    render_component->set_shader(shader);
+    renderable_component->set_shader(shader);
 
     return true;
 

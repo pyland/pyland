@@ -125,6 +125,14 @@ INPUT_OBJS = \
 	input_management/mouse_input_event.o    \
 	input_management/mouse_state.o
 
+GUI_OBJS = \
+	gui/button.o                 \
+	gui/component.o	             \
+	gui/component_group.o        \
+	gui/gui_manager.o            
+
+
+
 PYTHON_OBJS = \
 	python_embed/api.o           \
 	python_embed/interpreter.o   \
@@ -143,6 +151,7 @@ HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${BASE_OBJS:.o=.d}            \
 	${INPUT_OBJS:.o=.d}           \
+	${GUI_OBJS:.o=.d}             \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd}
 
@@ -168,17 +177,20 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 dependencies:
 	@mkdir dependencies
 
+dependencies/gui: | dependencies
+	@mkdir dependencies/gui
+
 dependencies/python_embed: | dependencies
 	@mkdir dependencies/python_embed
 
 dependencies/input_management: | dependencies
 	@mkdir dependencies/input_management
 
-$(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
+$(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
 	@echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
 
 	$(SILENCER_PREFIX) $(COMPILER) -o $@ \
-		$(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
+		$(BASE_OBJS) $(INPUT_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) \
 		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS)    \
 		$(X11_LDFLAGS) $(X11_LDLIBS)              \
 		$(SDL_LDFLAGS) $(SDL_LDLIBS)              \
@@ -204,6 +216,11 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(TMXPARSER_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS)
 
+$(GUI_OBJS): %.o : %.cpp | dependencies/gui
+	@echo "${bold}[ Compiling gui object files${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}${normal}"
+
+	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+		$(CXXFLAGS) $(CPPFLAGS)
 
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 	@echo "${bold}[ Compiling input object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
@@ -236,7 +253,7 @@ debug:
 
 
 clean:
-	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
+	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(INPUT_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
 	$(RMDIR) dependencies/input_management dependencies/python_embed dependencies
 
 veryclean: clean

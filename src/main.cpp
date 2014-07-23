@@ -58,6 +58,7 @@
 #include "event_manager.hpp"
 #include "filters.hpp"
 #include "game_window.hpp"
+#include "gui/gui_manager.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
@@ -274,9 +275,10 @@ int main(int, char **) {
     Map map("../resources/map0.tmx");
 
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
-
-    MapViewer map_viewer(&window);
+    GUIManager gui_manager;
+    MapViewer map_viewer(&window,&gui_manager);
     map_viewer.set_map(&map);
+    
 
     Engine::set_map_viewer(&map_viewer);
     

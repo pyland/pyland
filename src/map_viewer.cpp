@@ -1,4 +1,5 @@
 #include "character.hpp"
+#include "gui/gui_manager.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
@@ -11,12 +12,16 @@
 #include <memory>
 #include <vector>
 
-MapViewer::MapViewer(GameWindow* new_window) {
+MapViewer::MapViewer(GameWindow* new_window, GUIManager* new_gui_manager) {
     if(new_window == nullptr) {
         std::cerr << "INVALID PASSING NULL GameWindow" << std::endl;
-        assert(new_window != nullptr);
     }
     window = new_window;
+
+    if(new_gui_manager == nullptr) {
+        std::cerr << "INVALID PASSING NULL GUIManager" << std::endl;
+    }    
+    gui_manager = new_gui_manager;
 
     // Set background color and clear buffers
     glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
@@ -133,6 +138,42 @@ void MapViewer::render_map() {
         }
     }
 
+
+
+    //TODO: Hacky method, clean it up
+    RenderableComponent* gui_render_component = gui_manager->get_renderable_component();
+    
+    //Move gui_manager to the required position
+    glm::mat4 model2 = glm::mat4(1.0f);
+    glm::vec3 translate2 = glm::vec3((gui_manager->get_x_position()-map->get_display_x())*32.0f, (gui_manager->get_y_position()-map->get_display_y())*32.0f, 0.0f);
+    glm::mat4 translated2 = glm::translate(model2, translate2);
+    gui_render_component->set_modelview_matrix(translated2);
+    gui_render_component->set_projection_matrix(projection_matrix);
+
+    gui_render_component->bind_shader();
+
+    Shader* gui_shader = gui_render_component->get_shader();
+    if(gui_shader == nullptr) {
+        //        std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
+        window->swap_buffers();
+        return;
+    }
+
+    //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
+    glUniformMatrix4fv(glGetUniformLocation(gui_shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(gui_render_component->get_projection_matrix()));
+
+    glUniformMatrix4fv(glGetUniformLocation(gui_shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(gui_render_component->get_modelview_matrix()));
+
+    gui_render_component->bind_vbos();
+    gui_render_component->bind_textures();
+    //            std::cout << " X " << gui_manager->get_x_position()*32.0f << " Y " << gui_manager ->get_y_position()*32.0f<< std::endl;
+    glDrawArrays(GL_TRIANGLES, 0, gui_render_component->get_num_vertices_render());
+
+    gui_render_component->release_textures();
+    gui_render_component->release_vbos();
+    gui_render_component->release_shader();
+
+
     window->swap_buffers();
 }
 
@@ -194,6 +235,9 @@ void MapViewer::refocus_map() {
 
 void MapViewer::update_map(float dt ) {
     //move the map to the right position
+    if(gui_manager != nullptr) {
+        gui_manager->update_components();
+    }
 
     map->update_map(dt);
 }

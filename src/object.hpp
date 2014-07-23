@@ -12,11 +12,6 @@
 ///
 ///
 class Object {
-  
-    ///
-    /// The object's renderable component
-    ///
-    RenderableComponent renderable_component;
 
     ///
     /// Boolean to indicate if the object has set itself to be renderable
@@ -52,6 +47,12 @@ class Object {
     /// Walkable: determine if the object can be walked over
     ///
     Walkability walkability = Walkability::WALKABLE;
+protected:
+  
+    ///
+    /// The object's renderable component
+    ///
+    RenderableComponent renderable_component;
 
 
 public:

@@ -1,6 +1,7 @@
 #ifndef MAPVIEWER_H
 #define MAPVIEWER_H
 
+#include "gui/gui_manager.hpp"
 #include "map.hpp"
 
 class MapViewer {
@@ -8,6 +9,11 @@ class MapViewer {
     /// The Map we are currently rendering
     ///
     Map* map = nullptr;
+   
+    ///
+    /// The GUI manager this viewer is using
+    ///
+    GUIManager* gui_manager;
 
     ///
     /// Object to focus the map on
@@ -19,7 +25,7 @@ class MapViewer {
     GameWindow *window = nullptr;
 
 public:
-    MapViewer(GameWindow* window);
+    MapViewer(GameWindow* window, GUIManager* manager);
     ~MapViewer();
 
     ///
