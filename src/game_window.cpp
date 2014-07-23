@@ -62,6 +62,10 @@ const char* GameWindow::InitException::what() const noexcept {
 
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
+    window_x = 0;
+    window_y = 0;
+    window_width  = width;
+    window_height = height;
     close_requested = false;
     input_manager = new InputManager(this);
     
