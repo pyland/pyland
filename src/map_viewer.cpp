@@ -59,7 +59,7 @@ void MapViewer::render_map() {
     map->set_display_width(size.first / 32);
     map->set_display_height(size.second / 32);
     glViewport(0, 0,  size.first, size.second);
-    glm::mat4 projection_matrix = glm::ortho(0.0f, (float)(size.first), 0.0f, (float)(size.second), 0.0f, 1.0f);
+    glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     glm::vec3 translate = glm::vec3(-map->get_display_x()*32.0f, -map->get_display_y()*32.0f, 0.0f);
     glm::mat4 translated = glm::translate(model, translate);
