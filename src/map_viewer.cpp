@@ -211,6 +211,7 @@ void MapViewer::set_map_focus_object(int object_id) {
     if(ObjectManager::is_valid_object_id(object_id)) {
         //        const std::vector<int>& characters = map->get_characters();
         map_focus_object = object_id;
+        refocus_map();
         //TODO: add this in again
         //If the object is on the map
         /*        if(std::find(characters.begin(), characters.end(),object_id) != characters.end()) {
