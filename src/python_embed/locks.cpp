@@ -17,7 +17,7 @@ namespace lock {
         print_debug << inst << " GIL lock aquired   " << name  << std::endl;
     }
 
-    GIL::GIL(InterpreterContext interpreter_context): GIL(interpreter_context, "") {};
+    GIL::GIL(InterpreterContext interpreter_context): GIL(interpreter_context, "") {}
 
     GIL::~GIL() {
         print_debug << inst << " Releasing GIL lock " << name  << std::endl;
@@ -53,4 +53,4 @@ namespace lock {
     PyThreadState *ThreadState::get_threadstate() {
         return threadstate;
     }
-};
+}

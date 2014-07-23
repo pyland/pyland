@@ -56,7 +56,7 @@ GameWindow::InitException::InitException(const char* message) {
 
 const char* GameWindow::InitException::what() const noexcept {
     return message;
-};
+}
 
 
 

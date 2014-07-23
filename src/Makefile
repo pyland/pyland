@@ -6,7 +6,7 @@ RMDIR ?= - rmdir
 SILENCER_PREFIX = @
 COMPILER ?= g++
 
-WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion
+WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion -Wpedantic
 WARNINGS += -isystem ./tmx-parser -isystem ./tmx-parser/TmxParser
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
@@ -164,8 +164,9 @@ HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 all: $(EXECUTABLE) python_embed/wrapper_functions.so
 
 debug: CXXFLAGS += -g
-debug: CXXFLAGS +=  -fno-elide-constructors
-debug: CXXFLAGS +=  -O0
+debug: CXXFLAGS += -fno-elide-constructors
+debug: CXXFLAGS += -O0
+debug: CXXFLAGS += -fsanitize=undefined
 debug: CPPFLAGS += -DDEBUG
 debug: all
 
