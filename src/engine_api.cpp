@@ -109,6 +109,7 @@ bool Engine::open_editor(std::string editor, std::string filename) {
     return true;
 }
 
-std::vector<int> get_objects_at(int x_pos, int y_pos) {
-
+std::vector<int> get_objects_at(int /*x_pos*/, int /*y_pos*/) {
+    // TODO
+    throw std::runtime_error("get_objects_at not implemented");
 }
