@@ -322,7 +322,7 @@ int main(int argc, const char* argv[]) {
         editor = "gedit";
     };
 
-    Engine::open_editor(editor, "John.py");
+    Engine::open_editor(editor, "John_1.py");
 
     while (!window.check_close()) {
         //Get the time since the last iteration 

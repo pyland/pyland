@@ -12,7 +12,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
             while waiting:
                 time.sleep(0.05)
 
-            file_name = "python_embed/scripts/{}.py".format(entity.name)
+            file_name = "python_embed/scripts/{}_{}.py".format(entity.name,entity.id)
             entity.print_debug ("reading from file :"+file_name)
             with open(file_name) as file:
                 with open("python_embed/py_wrapper.py") as file_wrapper:
