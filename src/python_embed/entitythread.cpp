@@ -119,6 +119,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
                 throw;
             }
         }
+        waiting = true;
     }
     
     print_debug << "run_entity: Finished" << std::endl;
