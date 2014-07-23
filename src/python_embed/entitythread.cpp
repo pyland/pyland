@@ -50,7 +50,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     print_debug << "run_entity: Starting" << std::endl;
 
-    bool waiting = false;
+    bool waiting = true;
 
     {
         lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
