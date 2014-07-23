@@ -197,11 +197,11 @@ bool Character::init_shaders() {
 
     std::string vert_src, frag_src, line;
     while (getline(vertex_shader_src, line)) {
-        vert_src += line + "\n";
+        vert_src += line + std::string("\n");
     }
 
     while (getline(fragment_shader_src, line)) {
-        frag_src += line + "\n";
+        frag_src += line + std::string("\n");
     }
 
     Shader* shader = new Shader(vert_src, frag_src);
