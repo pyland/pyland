@@ -144,8 +144,9 @@ class CallbackState {
             name(name){
         }
 
-        void register_number(int i) {
-            print_debug << "changing focus to " << i << std::endl;
+        void register_number(int id) {
+            print_debug << "changing focus to " << id << std::endl;
+            Engine::get_map_viewer()->set_map_focus_object(id);
         }
 
         void spawn() {

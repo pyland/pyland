@@ -166,7 +166,7 @@ void MapViewer::refocus_map() {
         //TODO
         //need to handle odd and even width/ height
 
-        float tile_offset = 32.0f / 2.0f;
+        float tile_offset = 0.5f;
         //if in scrolling part of map
         if(object_x - map_display_width/2.0f > 0) {
             //If in scrolling part
@@ -187,7 +187,7 @@ void MapViewer::refocus_map() {
                 map->set_display_y(object_y - map_display_height/ 2.0f);
             } 
             else {
-                map->set_display_y(map_height- map_display_height + tile_offset);
+                map->set_display_y(map_height - map_display_height + tile_offset);
             }
         }
         else {
@@ -211,6 +211,7 @@ void MapViewer::set_map_focus_object(int object_id) {
     if(ObjectManager::is_valid_object_id(object_id)) {
         //        const std::vector<int>& characters = map->get_characters();
         map_focus_object = object_id;
+        refocus_map();
         //TODO: add this in again
         //If the object is on the map
         /*        if(std::find(characters.begin(), characters.end(),object_id) != characters.end()) {

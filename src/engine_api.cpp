@@ -108,3 +108,7 @@ bool Engine::open_editor(std::string editor, std::string filename) {
     // system((std::string("gedit python_embed/scripts/") + filename + std::string(" &")).c_str());
     return true;
 }
+
+std::vector<int> get_objects_at(int x_pos, int y_pos) {
+
+}
