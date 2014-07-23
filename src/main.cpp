@@ -273,22 +273,22 @@ int main(int argc, const char* argv[]) {
     ));
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Up")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Up", "W"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Down")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Down","S"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Right")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Right","D"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Left")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Left","A"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
     ));
 
