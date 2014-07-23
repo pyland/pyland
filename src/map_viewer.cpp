@@ -98,7 +98,7 @@ void MapViewer::render_map() {
     ObjectManager& object_manager = ObjectManager::get_instance();
     for(auto it = characters.begin(); it != characters.end(); ++it) {
         if(*it != 0) {
-            std::shared_ptr<Object> sprite = object_manager.get_object(*it);
+            std::shared_ptr<Object> sprite = object_manager.get_object<Object>(*it);
     
             RenderableComponent* character_render_component = sprite->get_renderable_component();
     
@@ -149,7 +149,7 @@ void MapViewer::refocus_map() {
         return;
     }
         
-    std::shared_ptr<Object> object = object_manager.get_object(map_focus_object);
+    std::shared_ptr<Object> object = object_manager.get_object<Object>(map_focus_object);
 
     //If such an object exists, move the map to it
     if(object) {
@@ -209,9 +209,9 @@ void MapViewer::set_map(Map* new_map) {
 void MapViewer::set_map_focus_object(int object_id) {
     //Set the focus to the object if this is a valid object and it is on the map
     if(ObjectManager::is_valid_object_id(object_id)) {
-        const std::vector<int>& characters = map->get_characters();
+        //        const std::vector<int>& characters = map->get_characters();
         map_focus_object = object_id;
-        
+        //TODO: add this in again
         //If the object is on the map
         /*        if(std::find(characters.begin(), characters.end(),object_id) != characters.end()) {
             //focus on it

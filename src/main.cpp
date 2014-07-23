@@ -159,7 +159,7 @@ class CallbackState {
             print_debug << "Killing number " << target << std::endl;
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object(id);
+            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             lock::GIL lock_gil(interpreter_context, "Killer");
 
@@ -172,7 +172,7 @@ class CallbackState {
             print_debug << "Killing number " << target << std::endl;
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object(id);
+            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             lock::GIL lock_gil(interpreter_context, "Killer");
 
@@ -185,7 +185,7 @@ class CallbackState {
             print_debug << "Killing number " << target << std::endl;
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object(id);
+            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             lock::GIL lock_gil(interpreter_context, "Killer");
 

@@ -12,7 +12,7 @@
 
 bool Engine::move_object(int id, int tile_dx, int tile_dy) {
 
-    std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(id);
+    std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
 
     if(object) {
         //Check if a move can be performed
@@ -90,7 +90,7 @@ std::pair<int, int> Engine::find_object(int id) {
     for(auto object_id : objects) {
         if(object_id == id) {
             //Object is on the map so now get its locationg
-            auto object = ObjectManager::get_instance().get_object(id);
+            auto object = ObjectManager::get_instance().get_object<Object>(id);
             return std::make_pair<int, int>(object->get_x_position(), object->get_y_position());
         }
     }
