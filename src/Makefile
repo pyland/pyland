@@ -96,11 +96,14 @@ else
 	red    = $(shell tput setaf 1)
 endif
 
-COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr $(GCC_MAJOR) \>= 4 \& $(GCC_MINOR) \>= 9)
+COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr $(GCC_MAJOR) \>= 4 \& $(GCC_MINOR) \>= 8)
 ifeq "$(COMPILER_SUPPORTS_DIAGNOSTICS_COLOR)" "1"
     CXXFLAGS += -fdiagnostics-color=auto
+else
+ifeq "$(COMPILER)" "clang++"
+    CXXFLAGS += -fdiagnostics-color=auto
 endif
-
+endif
 
 ### Program Files ###
 
@@ -125,7 +128,7 @@ BASE_OBJS = \
 	print_debug.o    \
 	renderable_component.o \
 	shader.o         \
-	tileset.o        
+	tileset.o
 
 CHALL_OBJS = \
 	challenges/challenge1.o
@@ -261,9 +264,11 @@ debug:
 clean:
 	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(CHALL_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
 	$(RMDIR) dependencies/input_management dependencies/python_embed dependencies
+	@echo "${bold}${red}Made clean${normal}"
 
 veryclean: clean
-	$(MAKE) -C tmx-parser -f Makefile.linux clean
+	-$(MAKE) -C tmx-parser -f Makefile.linux clean
+	@echo "${bold}${red}Made very clean${normal}"
 
 -include ${HEADER_DEPENDS}
 
