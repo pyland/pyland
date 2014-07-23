@@ -99,10 +99,6 @@ endif
 COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr $(GCC_MAJOR) \>= 4 \& $(GCC_MINOR) \>= 8)
 ifeq "$(COMPILER_SUPPORTS_DIAGNOSTICS_COLOR)" "1"
     CXXFLAGS += -fdiagnostics-color=auto
-else
-ifeq "$(COMPILER)" "clang++"
-    CXXFLAGS += -fdiagnostics-color=auto
-endif
 endif
 
 ### Program Files ###
