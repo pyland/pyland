@@ -94,7 +94,7 @@ Map::~Map() {
 bool Map::is_walkable(int x_pos, int y_pos) {
     //Default is walkable
     bool walkable = true;
-    return true;
+    //return true;
     //Iterate through all objects
     for(auto character : characters) {
         //If its an invalid object

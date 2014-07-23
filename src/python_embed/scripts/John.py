@@ -1,6 +1,6 @@
 import random
 
-move(north)
+move(east)
 
 
 
