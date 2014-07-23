@@ -164,7 +164,6 @@ HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 all: $(EXECUTABLE) python_embed/wrapper_functions.so
 
 debug: CXXFLAGS += -g
-debug: CXXFLAGS += -fno-elide-constructors
 debug: CXXFLAGS += -O0
 debug: CXXFLAGS += -fsanitize=undefined
 debug: CPPFLAGS += -DDEBUG
