@@ -45,3 +45,4 @@ Keybindings
 * k - kill sprite
 * h - halt current script
 * arrow keys / wasd - move sprite
+* numbers - move focus to sprite with associated number, numbers are allocated sequentially from 1
