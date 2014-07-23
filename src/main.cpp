@@ -272,45 +272,23 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.restart(interpreter.interpreter_context); }
     ));
 
-    //TODO: use 
-
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_REPEAT, KEY("Up")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Up")},
         [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_REPEAT, KEY("Down")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Down")},
         [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_REPEAT, KEY("Right")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Right")},
         [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_REPEAT, KEY("Left")},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
-    ));
-
-    Lifeline up2_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("Up")},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
-    ));
-
-    Lifeline down2_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("Down")},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
-    ));
-
-    Lifeline right2_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("Right")},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
-    ));
-
-    Lifeline left2_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("Left")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Left")},
         [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
     ));
 
