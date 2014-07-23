@@ -264,7 +264,7 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.kill(interpreter.interpreter_context); }
     ));
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("S")},
+        {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(interpreter.interpreter_context); }
     ));
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
