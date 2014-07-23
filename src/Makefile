@@ -6,7 +6,7 @@ RMDIR ?= - rmdir
 SILENCER_PREFIX = @
 COMPILER ?= g++
 
-WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion -Wpedantic
+WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion -pedantic
 WARNINGS += -isystem ./tmx-parser -isystem ./tmx-parser/TmxParser
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
@@ -165,13 +165,13 @@ all: $(EXECUTABLE) python_embed/wrapper_functions.so
 
 debug: CXXFLAGS += -g
 debug: CXXFLAGS += -O0
-debug: CXXFLAGS += -fsanitize=undefined
+debug: CXXFLAGS += -fsanitize=undefined,address
 debug: CPPFLAGS += -DDEBUG
 debug: all
 
 tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 	@echo "${bold}[ Compiling tmx-parser library ]${normal}"
-	$(MAKE) -C tmx-parser -f Makefile.linux
+	$(MAKE) CXXFLAGS=-fPIC -C tmx-parser -f Makefile.linux
 
 dependencies:
 	@mkdir dependencies
