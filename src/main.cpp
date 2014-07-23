@@ -141,24 +141,18 @@ class CallbackState {
         CallbackState(Interpreter &interpreter,
                       std::string name):
             interpreter(interpreter),
-            name(name),
-            target(0) {
+            name(name){
         }
 
         void register_number(int i) {
-            target *= 10;
-            target += i;
+            print_debug << "changing focus to " << i << std::endl;
         }
 
         void spawn() {
-            print_debug << "Spawning with number " << target << std::endl;
-            target = 0;
             create_character(interpreter);
         }
 
         void restart(InterpreterContext interpreter_context) {
-            print_debug << "Killing number " << target << std::endl;
-
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
@@ -166,11 +160,9 @@ class CallbackState {
 
             // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-            target = 0;
         }
 
         void stop(InterpreterContext interpreter_context) {
-            print_debug << "Killing number " << target << std::endl;
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
@@ -179,11 +171,9 @@ class CallbackState {
 
             // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::STOP);
-            target = 0;
         }
 
         void kill(InterpreterContext interpreter_context) {
-            print_debug << "Killing number " << target << std::endl;
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
@@ -192,7 +182,6 @@ class CallbackState {
 
             // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
-            target = 0;
         }
 
         void man_move (arrow_key direction) {
@@ -218,7 +207,6 @@ class CallbackState {
     private:
         Interpreter &interpreter;
         std::string name;
-        long long int target;
 };
 
 int main(int argc, const char* argv[]) {
@@ -264,7 +252,7 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.kill(interpreter.interpreter_context); }
     ));
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("S")},
+        {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(interpreter.interpreter_context); }
     ));
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
@@ -273,22 +261,22 @@ int main(int argc, const char* argv[]) {
     ));
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Up")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Up", "W"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Down")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Down","S"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Right")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Right","D"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY("Left")},
+        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Left","A"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
     ));
 
