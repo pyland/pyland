@@ -252,6 +252,7 @@ $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
+		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 $(PYTHON_HEADER).unknown:
