@@ -1,3 +1,5 @@
+#include "python_embed_headers.hpp"
+
 #include <string>
 #include <boost/python.hpp>
 #include <iostream>

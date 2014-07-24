@@ -1,3 +1,5 @@
+#include "python_embed_headers.hpp"
+
 #include <algorithm>
 #include <atomic>
 #include <boost/filesystem.hpp>

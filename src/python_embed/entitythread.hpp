@@ -1,6 +1,8 @@
 #ifndef ENTITYTHREAD_H
 #define ENTITYTHREAD_H
 
+#include "python_embed_headers.hpp"
+
 #include <future>
 #include <map>
 #include <thread>
