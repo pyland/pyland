@@ -36,7 +36,7 @@ public:
     ///
     /// Construct the new Layer
     ///
-    Layer(int _width, int _height, std::string _name) : layer(), width(_width), height(_height), name(_name) {}
+    Layer(int _width, int _height, std::string _name) : width(_width), height(_height), name(_name), layer() {}
 
     ///
     /// Add a tile to the layer
