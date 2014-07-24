@@ -21,6 +21,9 @@ MapViewer::MapViewer(GameWindow* new_window) {
     // Set background color and clear buffers
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT);
+    // Disable writing to the alpha channel.
+    // Fixes a bug where EGL layer becomes transparent.
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
     // L./eave this here!!!
     //Disable back face culling.
     glDisable(GL_CULL_FACE);
