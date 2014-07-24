@@ -173,8 +173,8 @@ class Map {
 public: 
 
     Dispatcher<int> event_character_add;
-    PositionDispatcher event_step_on;
-    PositionDispatcher event_step_off;
+    PositionDispatcher<int> event_step_on;
+    PositionDispatcher<int> event_step_off;
 
     Map(const std::string map_src);
     ~Map();

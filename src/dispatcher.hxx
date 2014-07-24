@@ -2,7 +2,9 @@
 #include <map>
 
 template <typename... Arguments>
-typename Dispatcher<Arguments...>::CallbackID Dispatcher<Arguments...>::register_callback(std::function<bool (Arguments...)> callback) {
+typename Dispatcher<Arguments...>::CallbackID
+
+Dispatcher<Arguments...>::register_callback(std::function<bool (Arguments...)> callback) {
     functions[maxid++] = callback;
     return maxid;
 }
@@ -30,23 +32,31 @@ void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
     }
 }
 
-typename PositionDispatcher::CallbackID PositionDispatcher::register_callback( std::pair<int, int> tile, std::function<bool (int)> callback) {
+template <typename... Arguments>
+typename PositionDispatcher<Arguments...>::CallbackID PositionDispatcher<Arguments...>::register_callback(
+
+
+ std::pair<int, int> tile, std::function<bool (Arguments...)> callback) {
+
+
+
+
     callback_map[tile.first][tile.second][maxid++] = callback;
     return maxid;
 }
 
-
-void PositionDispatcher::unregister( std::pair<int, int> tile, PositionDispatcher::CallbackID callback) {
+template <typename... Arguments>
+void PositionDispatcher<Arguments...>::unregister( std::pair<int, int> tile, PositionDispatcher<Arguments...>::CallbackID callback) {
     if (!callback_map[tile.first][tile.second].erase(callback)) {
         throw new std::runtime_error("Nonexistent callback");
     }
 }
 
-
-void PositionDispatcher::trigger(std::pair<int, int> tile, int id) {
+template <typename... Arguments>
+void PositionDispatcher<Arguments...>::trigger(std::pair<int, int> tile, Arguments... arguments) {
     // Do increments inline
     for (auto it = callback_map[tile.first][tile.second].cbegin(); it != callback_map[tile.first][tile.second].cend(); ) {
-        if ((*it).second(id)) {
+        if ((*it).second(arguments...)) {
             // Warning:
             // Must be post-increment, and increment
             // must be done before erasing.
