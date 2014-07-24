@@ -6,7 +6,7 @@ RMDIR ?= - rmdir
 SILENCER_PREFIX = @
 COMPILER ?= g++
 
-WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion
+WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion -pedantic
 WARNINGS += -isystem ./tmx-parser -isystem ./tmx-parser/TmxParser
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
@@ -72,11 +72,19 @@ TMXPARSER_CPPFLAGS ?= -I./tmx-parser/TmxParser
 TMXPARSER_LDFLAGS  ?= -L./tmx-parser
 TMXPARSER_LDLIBS   ?= -ltmxparser
 
+GCC_VERSION = $(shell expr `$(COMPILER) -dumpversion`)
+GCC_MAJOR = $(shell expr `echo $(GCC_VERSION)` | cut -f1 -d.)
+GCC_MINOR = $(shell expr `echo $(GCC_VERSION)` | cut -f2 -d.)
+
 # Prevent warnings about -Wstrict-prototypes not being valid for C++
 PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
 
-
 ### Colours ###
+
+
+ifeq "$(SANITIZE)" "1"
+	CXXFLAGS += -fsanitize=undefined,address
+endif
 
 ifeq "$(NOCOLOR)" "1"
 	bold   =
@@ -87,11 +95,6 @@ else
 	normal = $(shell tput sgr0)
 	red    = $(shell tput setaf 1)
 endif
-
-
-GCC_VERSION = $(shell expr `$(COMPILER) -dumpversion`)
-GCC_MAJOR = $(shell expr `echo $(GCC_VERSION)` | cut -f1 -d.)
-GCC_MINOR = $(shell expr `echo $(GCC_VERSION)` | cut -f2 -d.)
 
 COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr $(GCC_MAJOR) \>= 4 \& $(GCC_MINOR) \>= 9)
 ifeq "$(COMPILER_SUPPORTS_DIAGNOSTICS_COLOR)" "1"
@@ -164,14 +167,17 @@ HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 all: $(EXECUTABLE) python_embed/wrapper_functions.so
 
 debug: CXXFLAGS += -g
-debug: CXXFLAGS +=  -fno-elide-constructors
-debug: CXXFLAGS +=  -O0
+debug: CXXFLAGS += -O0
 debug: CPPFLAGS += -DDEBUG
 debug: all
 
 tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 	@echo "${bold}[ Compiling tmx-parser library ]${normal}"
-	$(MAKE) -C tmx-parser -f Makefile.linux
+	@if [ "$(SANITIZE)" == "1" ]; then \
+		$(MAKE) -C tmx-parser -f Makefile.linux; \
+	else \
+		$(MAKE) CXXFLAGS=-fPIC -C tmx-parser -f Makefile.linux; \
+	fi
 
 dependencies:
 	@mkdir dependencies

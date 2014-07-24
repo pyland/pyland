@@ -157,6 +157,8 @@ class CallbackState {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
+            if (!active_player) { return; }
+
             lock::GIL lock_gil(interpreter_context, "Killer");
 
             // TODO: Lock
@@ -168,6 +170,8 @@ class CallbackState {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
+            if (!active_player) { return; }
+
             lock::GIL lock_gil(interpreter_context, "Killer");
 
             // TODO: Lock
@@ -178,6 +182,8 @@ class CallbackState {
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
+
+            if (!active_player) { return; }
 
             lock::GIL lock_gil(interpreter_context, "Killer");
 

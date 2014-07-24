@@ -1,5 +1,5 @@
 import random
 
-while (True):
+while True:
 	move(east)
 

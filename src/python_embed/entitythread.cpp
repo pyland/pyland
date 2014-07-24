@@ -14,13 +14,13 @@
 namespace py = boost::python;
 
 LockableEntityThread::LockableEntityThread():
-    lock::Lockable<std::shared_ptr<EntityThread>>() {};
+    lock::Lockable<std::shared_ptr<EntityThread>>() {}
 
 LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value):
-    lock::Lockable<std::shared_ptr<EntityThread>>(value) {};
+    lock::Lockable<std::shared_ptr<EntityThread>>(value) {}
 
 LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, std::shared_ptr<std::mutex> lock):
-    lock::Lockable<std::shared_ptr<EntityThread>>(value, lock) {};
+    lock::Lockable<std::shared_ptr<EntityThread>>(value, lock) {}
 
 ///
 /// A thread function running a player's daemon.
