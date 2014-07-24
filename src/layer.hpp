@@ -29,14 +29,14 @@ class Layer {
     ///
     /// The layer data stored as tilesetname, tile id pair
     ///
-    std::shared_ptr<std::vector<std::pair<std::string, int>>> layer = std::make_shared<std::vector<std::pair<std::string, int>>>();
+    std::shared_ptr<std::vector<std::pair<std::string, int>>> layer;
 
 
 public:
     ///
     /// Construct the new Layer
     ///
-    Layer(int _width, int _height, std::string _name) : width(_width), height(_height), name(_name) {}
+    Layer(int _width, int _height, std::string _name) : layer(), width(_width), height(_height), name(_name) {}
 
     ///
     /// Add a tile to the layer
