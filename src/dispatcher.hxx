@@ -20,7 +20,7 @@ template <typename... Arguments>
 void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
     // Do increments inline
     for (auto it = functions.cbegin(); it != functions.cend(); ) {
-        if ((*it)(arguments...)) {
+        if (!(*it)(arguments...)) {
             // Warning:
             // Must be post-increment, and increment
             // must be done before erasing.
@@ -32,6 +32,17 @@ void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
     }
 }
 
+template <typename... Arguments>
+PositionDispatcher<Arguments...>::PositionDispatcher (int x, int y):
+    callback_map(
+        x,
+        std::vector<std::map<CallbackID, std::function<bool (Arguments...)>>>(
+            y,
+            std::map<CallbackID, std::function<bool (Arguments...)>>()
+        )
+    )
+{}
+ 
 template <typename... Arguments>
 typename PositionDispatcher<Arguments...>::CallbackID PositionDispatcher<Arguments...>::register_callback(
         std::pair<int, int> tile, std::function<bool (Arguments...)> callback) {
@@ -49,8 +60,8 @@ void PositionDispatcher<Arguments...>::unregister( std::pair<int, int> tile, Pos
 template <typename... Arguments>
 void PositionDispatcher<Arguments...>::trigger(std::pair<int, int> tile, Arguments... arguments) {
     // Do increments inline
-    for (auto it = callback_map[tile.first][tile.second].cbegin(); it != callback_map[tile.first][tile.second].cend(); ) {
-        if ((*it).second(arguments...)) {
+    for (auto it = callback_map.at(tile.first).at(tile.second).cbegin(); it != callback_map.at(tile.first).at(tile.second).cend(); ) {
+        if (!(*it).second(arguments...)) {
             // Warning:
             // Must be post-increment, and increment
             // must be done before erasing.

@@ -330,6 +330,8 @@ int main(int argc, const char* argv[]) {
 
     Engine::open_editor(editor, "John_1.py");
 
+    init_challenge();
+
     while (!window.check_close()) {
         //Get the time since the last iteration 
         dt = get_dt(); 

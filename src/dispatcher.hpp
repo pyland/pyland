@@ -20,6 +20,7 @@ class Dispatcher {
 template <typename... Arguments>
 class PositionDispatcher {
     public:
+        PositionDispatcher(int x, int y);
         using CallbackID = uint64_t;
         CallbackID register_callback( std::pair<int, int> tile, std::function<bool (Arguments...)> callback);
         void unregister( std::pair<int, int> tile, CallbackID callback);

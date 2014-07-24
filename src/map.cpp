@@ -47,38 +47,46 @@
 
 #define TILESET_ELEMENT_SIZE 16
 
-Map::Map(const std::string map_src) : renderable_component() {
-    //Load the map
-    MapLoader map_loader;
-    bool result = map_loader.load_map(map_src);
-    if(!result)  {
+Map::Map(const std::string map_src):
+    renderable_component(),
+    event_step_on(0, 0),
+    event_step_off(0, 0)
+    {
+        //Load the map
+        MapLoader map_loader;
+        bool result = map_loader.load_map(map_src);
+        if(!result)  {
 
-        std::cerr << "COULDN't LOAD MAP" << std::endl;
-        return;
-    }
-    
-    //Get the loaded map data
-    map_width = map_loader.get_map_width();
-    map_height = map_loader.get_map_height();
+            std::cerr << "COULDN't LOAD MAP" << std::endl;
+            return;
+        }
+        
+        //Get the loaded map data
+        map_width = map_loader.get_map_width();
+        map_height = map_loader.get_map_height();
 
-    std::cout << "MAP LOADING: " <<std::endl;
-    std::cout << "WIDTH: " << map_width << " HEIGHT: " << map_height << std::endl;
-    layers = map_loader.get_layers();
-    tilesets = map_loader.get_tilesets();
-    objects  = map_loader.get_objects();
+        // hack to construct postion dispatcher as we need map diametions 
+        event_step_on = PositionDispatcher<int>(map_width,map_height);
+        event_step_off = PositionDispatcher<int>(map_width,map_height);
 
-    //Get the tilesets
-    //TODO: We'll only support one tileset at the moment
-    //Get an object list
-    
+        std::cout << "MAP LOADING: " <<std::endl;
+        std::cout << "WIDTH: " << map_width << " HEIGHT: " << map_height << std::endl;
+        layers = map_loader.get_layers();
+        tilesets = map_loader.get_tilesets();
+        objects  = map_loader.get_objects();
+
+        //Get the tilesets
+        //TODO: We'll only support one tileset at the moment
+        //Get an object list
+        
 
 
-    //Generate the geometry needed for this map
-    init_shaders();
-    generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-    generate_map_texcoords();
-    generate_map_coords();
-    init_textures();
+        //Generate the geometry needed for this map
+        init_shaders();
+        generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+        generate_map_texcoords();
+        generate_map_coords();
+        init_textures();
 }
 
 Map::~Map() {
