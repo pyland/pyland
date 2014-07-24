@@ -11,7 +11,7 @@ WARNINGS += -isystem ./tmx-parser -isystem ./tmx-parser/TmxParser
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
 CXXFLAGS += ${CXX_EXTRA}
-CPPFLAGS ?= -I./ -I./challenges -I./input_management -I./python_embed -MMD -MP -MF dependencies/$*.d
+CPPFLAGS ?= -I./ -I./challenges -I./input_management -I./gui -I./python_embed -MMD -MP -MF dependencies/$*.d
 CPPFLAGS += ${CPP_EXTRA}
 
 LDFLAGS  ?=
@@ -172,7 +172,6 @@ HEADER_DEPENDS_ROOT = \
 	${CHALLENGE_OBJS:.o=.d}       \
 	${EXECUTABLE:.bin=.d}         \
 	${INPUT_OBJS:.o=.d}           \
-	${PYTHON_HEADER:=.d}          \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd}
 
@@ -198,6 +197,9 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 
 dependencies:
 	@-${MKDIR} dependencies
+
+dependencies/gui: | dependencies
+	@-${MKDIR} dependencies/gui
 
 dependencies/python_embed: | dependencies
 	@-${MKDIR} dependencies/python_embed
@@ -260,7 +262,7 @@ $(PYTHON_HEADER).gch: $(PYTHON_HEADER)
 	@echo "${bold}[ $(COMPILER): Precompiling Python header ${red}$<.gch${normal}${bold} from ${red}$<${normal}${bold} ]${normal}"
 	@$(COMPILER) $< -o $<.gch \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)\
-		$(CXXFLAGS) $(CPPFLAGS) -MF dependencies/$<.d
+		$(CXXFLAGS) $(CPPFLAGS)
 
 # This largely assumes the setup is constant for clang.
 # clang with precompiled headers may work, but is not guaranteed.
