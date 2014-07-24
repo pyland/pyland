@@ -1,5 +1,6 @@
 #include "print_debug.hpp"
 #include "engine_api.hpp"
+#include "map_viewer.hpp"
 
 //TODO: later this will be fetched from the map
 std::vector <std::pair<int, int>> target = { std::make_pair(0,0), std::make_pair(1,0), std::make_pair(2,0), std::make_pair(3,0), std::make_pair(4,0) };
@@ -81,10 +82,11 @@ void init_challenge() {
 
     // ENGINE_TODO: when (Engine::find_object(1) == target[1]) call
     // assume there is a dispatcher on adding objects to event manager
-    
-    GET_MAP()->event_step_on.register_callback(
+
+    Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
         target[1],
         [] (int object_id) {
+            int main_character = 1; //placeholder
             if (object_id == main_character) {
                 intro_coding();
                 return false;

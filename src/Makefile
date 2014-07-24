@@ -233,6 +233,7 @@ $(CHALL_OBJS): %.o : %.cpp | dependencies/challenges
 	@echo "${bold}[ Compiling challenge object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
 	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 
