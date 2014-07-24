@@ -171,6 +171,11 @@ class Map {
     ///
     bool init_shaders();
 public: 
+
+    Dispatcher<int> event_character_add;
+    PositionDispatcher<int> event_step_on;
+    PositionDispatcher<int> event_step_off;
+
     Map(const std::string map_src);
     ~Map();
 
