@@ -21,8 +21,11 @@
 *.out
 *.app
 
-# project specific 
+# project specific
 src/python_embed/interpreter
 *main.bin
 *__pycache__/
 src/dependencies
+src/python_embed/python_embed_headers.hpp.gch
+src/python_embed/python_embed_headers.hpp.pch
+src/python_embed/python_embed_headers.hpp.unknown
