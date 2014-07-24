@@ -27,7 +27,7 @@ class Character : public Object {
 public:
 
     Character();
-    ~Character();
+    virtual ~Character();
   
     void generate_tex_data();
     void generate_vertex_data();

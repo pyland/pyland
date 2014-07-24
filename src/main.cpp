@@ -125,6 +125,7 @@ void create_character(Interpreter &interpreter) {
     Engine::get_map_viewer()->set_map_focus_object(new_character->get_id());
     print_debug << "Creating character wrapper" << std::endl;
     std::cout<< "ID " << new_character->get_id() <<std::endl;
+
     // Register user controled character
     // Yes, this is a memory leak. Deal with it.
     Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_character->get_name(), new_character->get_id());

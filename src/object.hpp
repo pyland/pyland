@@ -59,7 +59,7 @@ class Object {
 
 public:
     Object();
-    ~Object();
+    virtual ~Object();
 
     ///
     /// DO NOT USE THIS! ONLY THE ENGINE SHOULD USE THIS FUNCTION 
