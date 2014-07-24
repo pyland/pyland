@@ -1,9 +1,9 @@
 NULL=
 
-RM ?= - rm -f
-RMDIR ?= - rmdir
+RM ?= rm -f
+RMDIR ?= rmdir
+MKDIR ?= mkdir -p
 
-SILENCER_PREFIX = @
 COMPILER ?= g++
 
 WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion -pedantic
@@ -126,7 +126,7 @@ BASE_OBJS = \
 	shader.o         \
 	tileset.o
 
-CHALL_OBJS = \
+CHALLENGE_OBJS = \
 	challenges/challenge1.o
 
 INPUT_OBJS = \
@@ -152,8 +152,9 @@ PYTHON_SHARED_OBJS_DEPENDS = \
 	python_embed/api.o	
 
 HEADER_DEPENDS_ROOT = \
-	${EXECUTABLE:.bin=.d}         \
 	${BASE_OBJS:.o=.d}            \
+	${CHALLENGE_OBJS:.o=.d}       \
+	${EXECUTABLE:.bin=.d}         \
 	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd}
@@ -179,22 +180,22 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 	fi
 
 dependencies:
-	@mkdir dependencies
+	@-${MKDIR} dependencies
 
 dependencies/python_embed: | dependencies
-	@mkdir dependencies/python_embed
+	@-${MKDIR} dependencies/python_embed
 
 dependencies/challenges: | dependencies
-	@mkdir dependencies/challenges
+	@-${MKDIR} dependencies/challenges
 
 dependencies/input_management: | dependencies
-	@mkdir dependencies/input_management
+	@-${MKDIR} dependencies/input_management
 
-$(EXECUTABLE): $(BASE_OBJS) $(CHALL_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
+$(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
 	@echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -o $@ \
-		$(BASE_OBJS) $(CHALL_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
+	@$(COMPILER) -o $@ \
+		$(BASE_OBJS) $(CHALLENGE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
 		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS)    \
 		$(X11_LDFLAGS) $(X11_LDLIBS)              \
 		$(SDL_LDFLAGS) $(SDL_LDLIBS)              \
@@ -208,9 +209,9 @@ $(EXECUTABLE): $(BASE_OBJS) $(CHALL_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parse
 $(BASE_OBJS): %.o : %.cpp | dependencies
 	@echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	$(SILENCER_PREFIX) # Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
-	$(SILENCER_PREFIX) # This should not cause a large slowdown unless actually included in many files.
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+	@# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
+	@# This should not cause a large slowdown unless actually included in many files.
+	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(GRAPHICS_CPPFLAGS)    \
 		$(X11_CPPFLAGS)         \
@@ -224,21 +225,21 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 	@echo "${bold}[ Compiling input object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(CXXFLAGS) $(CPPFLAGS)
 
-$(CHALL_OBJS): %.o : %.cpp | dependencies/challenges
+$(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
 	@echo "${bold}[ Compiling challenge object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 
 $(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
 	@echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
@@ -246,7 +247,7 @@ python_embed/wrapper_functions.so: python_embed/api.o
 $(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed
 	@echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -shared -fPIC $*.cpp -o $*.so \
+	@$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS) \
@@ -256,14 +257,29 @@ debug:
 	@echo "${bold}${red}Complied in debug${normal}"
 
 
+# Dependency hack to keep away uninteresting errors
+clean: dependencies dependencies/python_embed dependencies/challenges dependencies/input_management
+	@-$(RM) $(EXECUTABLE) 
 
-clean:
-	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(CHALL_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
-	$(RMDIR) dependencies/input_management dependencies/python_embed dependencies
+	@-$(RM) \
+		$(BASE_OBJS)          \
+		$(CHALLENGE_OBJS)     \
+		$(INPUT_OBJS)         \
+		$(PYTHON_OBJS)        \
+		$(PYTHON_SHARED_OBJS)
+
+	@-$(RM) $(HEADER_DEPENDS)
+
+	@-$(RMDIR) \
+		dependencies/challenges       \
+		dependencies/input_management \
+		dependencies/python_embed     \
+		dependencies
+
 	@echo "${bold}${red}Made clean${normal}"
 
 veryclean: clean
-	-$(MAKE) -C tmx-parser -f Makefile.linux clean
+	@-$(MAKE) -C tmx-parser -f Makefile.linux clean
 	@echo "${bold}${red}Made very clean${normal}"
 
 -include ${HEADER_DEPENDS}
