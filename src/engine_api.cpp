@@ -33,7 +33,7 @@ bool Engine::move_object(int id, int tile_dx, int tile_dy) {
 
             //if there is a map viewer attached
             if(Engine::map_viewer != nullptr) {
-                //animate the map if this is the object to focus on
+                //animate the map if this is the object to focus ong
                 Engine::map_viewer->refocus_map();
             }
         }

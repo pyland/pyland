@@ -30,24 +30,23 @@ void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
     }
 }
 
-template <typename... Arguments>
-typename PositionDispatcher<Arguments...>::CallbackID PositionDispatcher<Arguments...>::register_callback( std::pair<int, int> tile, std::function<bool (Arguments...)> callback) {
+typename PositionDispatcher::CallbackID PositionDispatcher::register_callback( std::pair<int, int> tile, std::function<bool (int)> callback) {
     callback_map[tile.first][tile.second][maxid++] = callback;
     return maxid;
 }
 
-template <typename... Arguments>
-void PositionDispatcher<Arguments...>::unregister( std::pair<int, int> tile, PositionDispatcher<Arguments...>::CallbackID callback) {
+
+void PositionDispatcher::unregister( std::pair<int, int> tile, PositionDispatcher::CallbackID callback) {
     if (!callback_map[tile.first][tile.second].erase(callback)) {
         throw new std::runtime_error("Nonexistent callback");
     }
 }
 
-template <typename... Arguments>
-void PositionDispatcher<Arguments...>::trigger(std::pair<int, int> tile, Arguments... arguments) {
+
+void PositionDispatcher::trigger(std::pair<int, int> tile, int id) {
     // Do increments inline
     for (auto it = callback_map[tile.first][tile.second].cbegin(); it != callback_map[tile.first][tile.second].cend(); ) {
-        if ((*it)(arguments...)) {
+        if ((*it).second(id)) {
             // Warning:
             // Must be post-increment, and increment
             // must be done before erasing.
