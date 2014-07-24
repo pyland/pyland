@@ -157,6 +157,8 @@ class CallbackState {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
+            if (!active_player) { return; }
+
             lock::GIL lock_gil(interpreter_context, "Killer");
 
             // TODO: Lock
@@ -168,6 +170,8 @@ class CallbackState {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
+            if (!active_player) { return; }
+
             lock::GIL lock_gil(interpreter_context, "Killer");
 
             // TODO: Lock
@@ -178,6 +182,8 @@ class CallbackState {
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
+
+            if (!active_player) { return; }
 
             lock::GIL lock_gil(interpreter_context, "Killer");
 
@@ -322,7 +328,7 @@ int main(int argc, const char* argv[]) {
         editor = "gedit";
     };
 
-    Engine::open_editor(editor, "John.py");
+    Engine::open_editor(editor, "John_1.py");
 
     while (!window.check_close()) {
         //Get the time since the last iteration 

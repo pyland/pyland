@@ -102,13 +102,14 @@ std::pair<int, int> Engine::find_object(int id) {
 bool Engine::open_editor(std::string editor, std::string filename) {
     print_debug << "XXXYYYZ...." << std::endl; 
     //TODO remove this function in the final version
-    std::string bash_command = editor + " python_embed/scripts/" + filename;
+    std::string bash_command = editor + std::string(" python_embed/scripts/") + filename;
     std::thread TEXT_EDIT([] (std::string command) { print_debug << "XXXYYYZZZ" << std::endl; system(command.c_str()); }, bash_command);
     TEXT_EDIT.detach();
-    // system((std::string("gedit python_embed/scripts/") + filename + " &").c_str());
+    // system((std::string("gedit python_embed/scripts/") + filename + std::string(" &")).c_str());
     return true;
 }
 
-std::vector<int> get_objects_at(int x_pos, int y_pos) {
-
+std::vector<int> get_objects_at(int /*x_pos*/, int /*y_pos*/) {
+    // TODO
+    throw std::runtime_error("get_objects_at not implemented");
 }

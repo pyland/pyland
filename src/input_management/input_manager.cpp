@@ -24,19 +24,19 @@ extern "C" {
 InputManager::InputManager(GameWindow* window):
     window(window),
 
-    down_keys(std::set<int>()),
-    pressed_keys(std::set<int>()),
-    typed_keys(std::set<int>()),
-    released_keys(std::set<int>()),
+    down_keys(),
+    pressed_keys(),
+    typed_keys(),
+    released_keys(),
     
     mouse_start(0, 0, MouseState::ButtonMask::NONE),
     mouse_from(0, 0, MouseState::ButtonMask::NONE),
     mouse_to(0, 0, MouseState::ButtonMask::NONE),
     
-    key_events(std::queue<KeyboardInputEvent>()),
-    mouse_events(std::queue<MouseInputEvent>()),
+    key_events(),
+    mouse_events(),
 
-    callback_controller(LifelineController()) {
+    callback_controller() {
 }
 
 

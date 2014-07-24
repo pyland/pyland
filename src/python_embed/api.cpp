@@ -10,7 +10,7 @@
 
 namespace py = boost::python;
 
-Vec2D::Vec2D(int x, int y): x(x), y(y) {};
+Vec2D::Vec2D(int x, int y): x(x), y(y) {}
 
 Vec2D Vec2D::operator+(Vec2D other) {
     return Vec2D(x + other.x, y + other.y);

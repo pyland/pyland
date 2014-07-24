@@ -83,20 +83,6 @@ class Entity {
         ///
         boost::python::api::object script;
 
-        ///
-        /// Opens files and returns string of its content.
-        ///
-        /// @deprecated
-        ///
-        /// @param loc
-        ///     string of name of file
-        ///
-        std::string read_file(std::string loc);
-
-        /// 
-        /// ID of entity, referring to in-game object that the API calls are passed to.
-        ///
-        int id;
 
     public:
         ///
@@ -104,6 +90,11 @@ class Entity {
         /// will be a deprecated or randomly-generated feature.
         ///
         std::string name;
+        
+        /// 
+        /// ID of entity, referring to in-game object that the API calls are passed to.
+        ///
+        int id;
 
         ///
         /// Incrementing counter used to check if an API call has been made

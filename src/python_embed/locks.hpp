@@ -205,8 +205,7 @@ namespace lock {
     template<class T, class... Args>
     Lockable<T> make_lockable(Args &&... args) {
         return Lockable<T>(new T(std::forward<Args>(args)...));
-    };
-
-};
+    }
+}
 
 #endif

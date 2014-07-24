@@ -486,13 +486,15 @@ bool Map::init_shaders() {
         return false;
     }
 
-    std::string vert_src, frag_src, line;
+    std::string vert_src = "";
+    std::string frag_src = "";
+    std::string line = "";
     while (getline(vertex_shader_src, line)) {
-        vert_src += line + "\n";
+        vert_src += line + std::string("\n");
     }
 
     while (getline(fragment_shader_src, line)) {
-        frag_src += line + "\n";
+        frag_src += line + std::string("\n");
     }
 
     Shader* shader = new Shader(vert_src, frag_src);

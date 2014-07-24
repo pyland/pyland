@@ -2,13 +2,14 @@
 #include "engine_api.hpp"
 
 //TODO: later this will be fetched from the map
-std::vector <std::pair<int, int>> target = { std::make_pair(0,0), std::make_pair(0,0), std::make_pair(0,0), std::make_pair(0,0), std::make_pair(0,0) };
+std::vector <std::pair<int, int>> target = { std::make_pair(0,0), std::make_pair(1,0), std::make_pair(2,0), std::make_pair(3,0), std::make_pair(4,0) };
 
 void dialogue (std::string name, std::string text_to_user) {
     std::cout << name << " : " << text_to_user << std::endl;
 } 
 
 void position_reset (int n) {
+    // EVENT_TODO: wait until R has been pressed
     while (Engine::find_object(1) != target[n]) {
         dialogue ("Tom",
             "That's doesn't seem to have worked"
@@ -25,7 +26,7 @@ void run_challenge() {
     dialogue ( "Tom",
         "Welcome to Project Zgyote"
         "My name is Tom and I am here to help you learn to move around"
-        "Let's get started, press the S key to create a new character" );
+        "Let's get started, press the N key to create a new character" );
     
     // EVENT_TODO: wait until a new charactor is created, don't allow any further characters to be created
     //HOOK s key...
