@@ -2,6 +2,7 @@
 #include "map_viewer.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
+#include "dispatcher.hpp"
 
 #include <cstdlib>
 #include <memory>
