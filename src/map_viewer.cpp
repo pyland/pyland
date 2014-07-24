@@ -19,7 +19,7 @@ MapViewer::MapViewer(GameWindow* new_window) {
     window = new_window;
 
     // Set background color and clear buffers
-    glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT);
     // L./eave this here!!!
     //Disable back face culling.
@@ -27,7 +27,10 @@ MapViewer::MapViewer(GameWindow* new_window) {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_SCISSOR_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+
 
 MapViewer::~MapViewer() {
 
