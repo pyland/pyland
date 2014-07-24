@@ -81,6 +81,17 @@ void init_challenge() {
 
     // ENGINE_TODO: when (Engine::find_object(1) == target[1]) call
     // assume there is a dispatcher on adding objects to event manager
+    
+    GET_MAP()->event_step_on.register_callback(
+        target[1],
+        [] (int object_id) {
+            if (object_id == main_character) {
+                intro_coding();
+                return false;
+            }
+            return true;
+        }
+    );
 }
     
 
