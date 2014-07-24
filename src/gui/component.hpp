@@ -2,12 +2,27 @@
 #define COMPONENT_H
 
 #include <functional>
+#include <memory>
+#include <utility>
+#include <vector>
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+
+#ifdef USE_GL
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#endif
+
 
 ///
 /// A GUI component that is the base class which all renderable
 /// components derive from. It is an abstract base class
 ///
 class Component {
+    std::shared_ptr<GLfloat> vertex_data;
+    std::shared_ptr<GLfloat> texture_data;
     ///
     /// The GUID of the component
     ///
@@ -38,21 +53,21 @@ class Component {
     ///
     std::function<void (void)> on_click_func;
 
-    
-
 public:
     ///
     /// Generates the vertex data for this particular component. This
     /// data is in the local 'object' space and will need to be
     /// transformed by a manager into the global vertex data.
+    /// The pair holds the pointer and then the size of the data in bytes
     ///
-    virtual void generate_vertex_data(Component& component) = 0;
+    virtual std::vector<std::pair<std::shared_ptr<GLfloat>, int>> generate_vertex_data() = 0;
 
     ///
     /// Same as the vertex function but generates texture data
     /// @param component the component to generate the data for 
+    /// The pair holds the pointer and then the size of the data in bytes
     ///
-    virtual void generate_texture_data(Component& component) = 0;
+    virtual std::vector<std::pair<std::shared_ptr<GLfloat>, int>> generate_texture_data() = 0;
 
     ///
     /// Set the on click lambda function for this button
@@ -65,7 +80,6 @@ public:
     /// Clear the handler - replaces with a void lambda that does nothing
     ///
     void clear_on_click();
-
 
     ///
     /// Set the component's id

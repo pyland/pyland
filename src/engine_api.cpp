@@ -86,7 +86,7 @@ std::pair<int, int> Engine::find_object(int id) {
     for(auto object_id : objects) {
         if(object_id == id) {
             //Object is on the map so now get its locationg
-            auto object = ObjectManager::get_instance().get_object(id);
+            auto object = ObjectManager::get_instance().get_object<Object>(id);
             return std::make_pair<int, int>(object->get_x_position(), object->get_y_position());
         }
     }

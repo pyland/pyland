@@ -1,12 +1,6 @@
 #include "component.hpp"
 
-void Component::generate_vertex_data(Component& component) {
-
-}
-
-void Component::generate_texture_data(Component& component) {
-    
-}
+#include <vector>
 
 bool Component::set_on_click(std::function<void (void)> func) {
     on_click_func= func;

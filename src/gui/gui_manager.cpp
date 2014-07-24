@@ -2,6 +2,21 @@
 
 #include <fstream>
 #include <iostream>
+#include <memory>
+#include <utility>
+#include <vector>
+
+#ifdef USE_GLES
+
+#include <GLES2/gl2.h>
+
+#endif
+
+#ifdef USE_GL
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#endif
+
 
 bool GUIManager::parse_components() {
 
@@ -42,7 +57,7 @@ void GUIManager::generate_tex_data() {
     }
 
 //Generate the data
-
+    
     renderable_component.set_texture_coords_data(gui_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
 
@@ -56,8 +71,16 @@ void GUIManager::generate_vertex_data() {
         std::cerr << "ERROR in Characater::generate_vertex_data, cannot allocate memory" << std::endl;
         return;
     }
-    //generate the vertex data
 
+    //generate the vertex data
+    std::vector<std::pair<std::shared_ptr<GLfloat>, int>> components_data = root->generate_vertex_data();
+
+    //calculate data size
+    for(auto component_vertex_data : components_data) {
+        
+    }
+
+    
     renderable_component.set_vertex_data(gui_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
 }
