@@ -249,11 +249,13 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(TMXPARSER_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS)
 
-$(GUI_OBJS): %.o : %.cpp | dependencies/gui
+$(GUI_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/gui
 	@echo "${bold}[ Compiling gui object files${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}${normal}"
 
 	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(PYTHON_INCLUDE_PCH) \
 		$(CXXFLAGS) $(CPPFLAGS)
+
 
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 	@echo "${bold}[ Compiling input object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"

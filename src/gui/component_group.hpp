@@ -2,6 +2,7 @@
 #define COMPONENTGROUP_H
 
 #include "component.hpp"
+#include "python_embed_headers.hpp"
 
 #include <map>
 #include <memory>
