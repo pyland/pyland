@@ -1,3 +1,4 @@
+#include "entitythread.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
 

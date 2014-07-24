@@ -1,11 +1,12 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "entitythread.hpp"
 #include "renderable_component.hpp"
 #include "walkability.hpp"
 #include <memory>
 #include <string>
+
+class LockableEntityThread;
 
 ///
 /// The class to hold an object's information so that the Engine can
