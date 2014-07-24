@@ -23,7 +23,7 @@ class PositionDispatcher {
         using CallbackID = uint64_t;
         CallbackID register_callback( std::pair<int, int> tile, std::function<bool (Arguments...)> callback);
         void unregister( std::pair<int, int> tile, CallbackID callback);
-        // void trigger(Arguments... arguments);
+        void trigger(std::pair<int, int> tile, Arguments... arguments);
 
     private:
         uint64_t maxid = 0;

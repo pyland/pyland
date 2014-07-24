@@ -43,18 +43,18 @@ void PositionDispatcher<Arguments...>::unregister( std::pair<int, int> tile, Pos
     }
 }
 
-// template <typename... Arguments>
-// void PositionDispatcher<Arguments...>::trigger(Arguments... arguments) {
-//     // Do increments inline
-//     for (auto it = functions.cbegin(); it != functions.cend(); ) {
-//         if ((*it)(arguments...)) {
-//             // Warning:
-//             // Must be post-increment, and increment
-//             // must be done before erasing.
-//             functions.erase(it++);
-//         }
-//         else {
-//             ++it;
-//         }
-//     }
-// }
+template <typename... Arguments>
+void PositionDispatcher<Arguments...>::trigger(std::pair<int, int> tile, Arguments... arguments) {
+    // Do increments inline
+    for (auto it = callback_map[tile.first][tile.second].cbegin(); it != callback_map[tile.first][tile.second].cend(); ) {
+        if ((*it)(arguments...)) {
+            // Warning:
+            // Must be post-increment, and increment
+            // must be done before erasing.
+            callback_map[tile.first][tile.second].erase(it++);
+        }
+        else {
+            ++it;
+        }
+    }
+}
