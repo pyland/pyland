@@ -12,9 +12,13 @@ def start(entity, RESTART, STOP, KILL, waiting):
             while waiting:
                 time.sleep(0.05)
 
-            with open("python_embed/scripts/{}.py".format(entity.name)) as file:
+            file_name = "python_embed/scripts/{}_{}.py".format(entity.name,entity.id)
+            entity.print_debug ("reading from file :"+file_name)
+            with open(file_name) as file:
                 with open("python_embed/py_wrapper.py") as file_wrapper:
-                    function = file_wrapper.read() + file.read()
+                    text = file.read()
+                    entity.print_debug(text)
+                    function = file_wrapper.read() + text
 
             exec(function, dict(entity=entity, **globals()))
 

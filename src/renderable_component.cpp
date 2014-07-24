@@ -19,7 +19,7 @@ RenderableComponent::~RenderableComponent() {
     glDeleteBuffers(1, &vbo_texture_id);
 }
 
-void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_size, bool is_dynamic) { 
+void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_size, bool is_dynamic) { 
     vertex_data = new_vertex_data;
     vertex_data_size = data_size;
 
@@ -44,7 +44,7 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, int data_siz
     glUseProgram(id);
 }
 
-void RenderableComponent::set_texture_data(char* new_texture_data, int data_size, int new_texture_width, int new_texture_height, bool is_dynamic) { 
+void RenderableComponent::set_texture_data(char* new_texture_data, int data_size, int new_texture_width, int new_texture_height, bool) { 
     texture_data = new_texture_data;
     texture_data_size = data_size;
     texture_height = new_texture_height;
@@ -71,7 +71,7 @@ void RenderableComponent::set_texture_data(char* new_texture_data, int data_size
     glUseProgram(id);
 }
 
-void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, int data_size, bool is_dynamic) { 
+void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, size_t data_size, bool is_dynamic) { 
     texture_coords_data = new_texture_data;
     texture_coords_data_size = data_size;
     //Get current shader

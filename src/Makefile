@@ -6,11 +6,12 @@ RMDIR ?= - rmdir
 SILENCER_PREFIX = @
 COMPILER ?= g++
 
-WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion
+WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion -pedantic
+WARNINGS += -isystem ./tmx-parser -isystem ./tmx-parser/TmxParser
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
 CXXFLAGS += ${CXX_EXTRA}
-CPPFLAGS ?= -I./ -I./input_management -I./python_embed -MMD -MP -MF dependencies/$*.d
+CPPFLAGS ?= -I./ -I./challenges -I./input_management -I./python_embed -MMD -MP -MF dependencies/$*.d
 CPPFLAGS += ${CPP_EXTRA}
 
 LDFLAGS  ?=
@@ -71,20 +72,29 @@ TMXPARSER_CPPFLAGS ?= -I./tmx-parser/TmxParser
 TMXPARSER_LDFLAGS  ?= -L./tmx-parser
 TMXPARSER_LDLIBS   ?= -ltmxparser
 
-# Prevent warnings about -Wstrict-prototypes not being valid for C++
-PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
-
-
-### Colours ###
-
-bold   = $(shell tput bold)
-normal = $(shell tput sgr0)
-red    = $(shell tput setaf 1)
-
-
 GCC_VERSION = $(shell expr `$(COMPILER) -dumpversion`)
 GCC_MAJOR = $(shell expr `echo $(GCC_VERSION)` | cut -f1 -d.)
 GCC_MINOR = $(shell expr `echo $(GCC_VERSION)` | cut -f2 -d.)
+
+# Prevent warnings about -Wstrict-prototypes not being valid for C++
+PYTHON_CPPFLAGS := $(filter-out -Wstrict-prototypes,$(PYTHON_CPPFLAGS))
+
+### Colours ###
+
+
+ifeq "$(SANITIZE)" "1"
+	CXXFLAGS += -fsanitize=undefined,address
+endif
+
+ifeq "$(NOCOLOR)" "1"
+	bold   =
+	normal =
+	red    =
+else
+	bold   = $(shell tput bold)
+	normal = $(shell tput sgr0)
+	red    = $(shell tput setaf 1)
+endif
 
 COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr $(GCC_MAJOR) \>= 4 \& $(GCC_MINOR) \>= 9)
 ifeq "$(COMPILER_SUPPORTS_DIAGNOSTICS_COLOR)" "1"
@@ -115,7 +125,10 @@ BASE_OBJS = \
 	print_debug.o    \
 	renderable_component.o \
 	shader.o         \
-	tileset.o 
+	tileset.o        
+
+CHALL_OBJS = \
+	challenges/challenge1.o
 
 INPUT_OBJS = \
 	input_management/filters.o              \
@@ -163,16 +176,17 @@ HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 all: $(EXECUTABLE) python_embed/wrapper_functions.so
 
 debug: CXXFLAGS += -g
-debug: CXXFLAGS +=  -fno-elide-constructors
-debug: CXXFLAGS +=  -O0
+debug: CXXFLAGS += -O0
 debug: CPPFLAGS += -DDEBUG
 debug: all
 
 tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
-	@echo;\
-         echo "${bold}[ Compiling tmx-parser library ]${normal}";\
-         echo
-	$(MAKE) -C tmx-parser -f Makefile.linux
+	@echo "${bold}[ Compiling tmx-parser library ]${normal}"
+	@if [ "$(SANITIZE)" == "1" ]; then \
+		$(MAKE) -C tmx-parser -f Makefile.linux; \
+	else \
+		$(MAKE) CXXFLAGS=-fPIC -C tmx-parser -f Makefile.linux; \
+	fi
 
 dependencies:
 	@mkdir dependencies
@@ -183,14 +197,17 @@ dependencies/gui: | dependencies
 dependencies/python_embed: | dependencies
 	@mkdir dependencies/python_embed
 
+dependencies/challenges: | dependencies
+	@mkdir dependencies/challenges
+
 dependencies/input_management: | dependencies
 	@mkdir dependencies/input_management
 
-$(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
+$(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(CHALL_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
 	@echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
 
 	$(SILENCER_PREFIX) $(COMPILER) -o $@ \
-		$(BASE_OBJS) $(INPUT_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) \
+		$(BASE_OBJS) $(INPUT_OBJS) $(CHALL_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) \
 		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS)    \
 		$(X11_LDFLAGS) $(X11_LDLIBS)              \
 		$(SDL_LDFLAGS) $(SDL_LDLIBS)              \
@@ -229,6 +246,12 @@ $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 		$(SDL_CPPFLAGS)         \
 		$(CXXFLAGS) $(CPPFLAGS)
 
+$(CHALL_OBJS): %.o : %.cpp | dependencies/challenges
+	@echo "${bold}[ Compiling challenge object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
+
+	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+		$(CXXFLAGS) $(CPPFLAGS)
+
 
 $(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
 	@echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
@@ -253,7 +276,7 @@ debug:
 
 
 clean:
-	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(INPUT_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
+	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(INPUT_OBJS) $(CHALL_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
 	$(RMDIR) dependencies/input_management dependencies/python_embed dependencies
 
 veryclean: clean

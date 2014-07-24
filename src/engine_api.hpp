@@ -21,7 +21,17 @@ class Engine {
 
     static MapViewer* map_viewer;
 public:
+    ///
+    /// Set the map viewer attached to the engine
+    /// @param _map_viewer the map viewer which is attached to the engine 
+    ///
     static void set_map_viewer(MapViewer* _map_viewer) { map_viewer = _map_viewer; }
+
+
+    ///
+    /// Get the map viewer attached to the engine
+    /// @return a pointer to the map viewer
+    ///
     static MapViewer* get_map_viewer() { return map_viewer;    }
 
     ///
@@ -79,7 +89,7 @@ public:
     static bool load_map(int map_id);
 
     ///
-    /// Get the locationof hte object in the map, returns (-1, -1) if
+    /// Get the locationof hte object in the map, throws exception if
     /// there is the object is not on the map
     /// @id the id of the object
     /// @return a pair which is the (x, y) tuple of the object position
@@ -89,12 +99,34 @@ public:
     ///
     /// Open a text editor for the user to edit a file
     ///
-    static bool open_editor(std::string filename);
+    static bool open_editor(std::string editor, std::string filename);
 
     ///
     /// Get the size of a tile in the current map
     /// @return the size of the tile in pixels - we only support square ones
     ///
     static int get_tile_size();
+
+    ///
+    /// Get a list of objects at this point
+    ///
+    ///
+    static std::vector<int> get_objects_at(int x_pos, int y_pos);
+
+    ///
+    /// Add an object to the map at the given location
+    /// @param object_id the id of the object to add
+    /// @param x_pos the x position of the object
+    /// @param y_pos the y position of the object
+    ///
+    static void add_object(int object_id, int x_pos, int y_pos);
+
+    ///
+    /// Remove an object from the map at a givene location
+    /// @param object_id the id of the object to add
+    /// @param x_pos the x position of the object 
+    /// @param y_pos the y position of the object
+    ///
+    static void remove_object(int object_id, int x_pos, int y_pos);
 };
 #endif

@@ -1,8 +1,10 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "entitythread.hpp"
 #include "renderable_component.hpp"
 #include "walkability.hpp"
+#include <memory>
 #include <string>
 
 ///
@@ -148,6 +150,8 @@ public:
     /// @param can_render true if the object can be rendered and false if not
     ///
     void set_renderable(bool can_render) { renderable = can_render; }
+
+    std::unique_ptr<LockableEntityThread> daemon;
 };
 
 #endif

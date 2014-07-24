@@ -8,25 +8,27 @@
 #include <utility>
 #include <vector>
 #include <iostream>
+
+
 bool Engine::move_object(int id, int tile_dx, int tile_dy) {
 
-    std::shared_ptr<Object> object = ObjectManager::get_instance().get_object(id);
+    std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
 
     if(object) {
         //Check if a move can be performed
-        if(!walkable(object->get_x_position() + tile_dx, object->get_y_position() + tile_dy))
-          return false;
+        if (!walkable(object->get_x_position() + tile_dx, object->get_y_position() + tile_dy)) {
+            return false;
+        } else {
+            //TODO, make this an event movement
+            object->set_x_position(object->get_x_position() + tile_dx);
+            object->set_y_position(object->get_y_position() + tile_dy);
 
-        //TODO, make this an event movement
-        object->set_x_position(object->get_x_position() + tile_dx);
-        object->set_y_position(object->get_y_position() + tile_dy);
-
-        //if there is a map viewer attached
-        if(Engine::map_viewer != nullptr) {
-            //animate the map if this is the object to focus on
-            Engine::map_viewer->refocus_map();
+            //if there is a map viewer attached
+            if(Engine::map_viewer != nullptr) {
+                //animate the map if this is the object to focus on
+                Engine::map_viewer->refocus_map();
+            }
         }
-
     }
     return true;
 }
@@ -49,37 +51,39 @@ bool Engine::walkable(int x_pos, int y_pos) {
     return true;
 }
 
-bool Engine::change_tile(int new_id, int x, int y, int layer) {
+bool Engine::change_tile(int, int, int, int) {
     return false;
 }
 
-std::vector<int> Engine::get_tiles(int x, int y) {
+std::vector<int> Engine::get_tiles(int, int) {
     std::vector<int> tiles;
     return tiles;
 }
 
 int Engine::get_tile_size() {
-
+    return -1; // TODO
 }
 
-std::vector<int> Engine::get_objects(int x, int y) {
+std::vector<int> Engine::get_objects(int, int) {
     std::vector<int> objects;
     return objects;
 }
 
-bool Engine::load_map(int map_id) {
+bool Engine::load_map(int) {
     return false;
 }
 
 
 std::pair<int, int> Engine::find_object(int id) {
 
+    std::string exception_str = "Object Requested could not be found";
+
     if(Engine::map_viewer == nullptr)
-        return std::make_pair<int, int>(-1, -1);
+        throw exception_str;
 
     Map* map = map_viewer->get_map();
     if(map == nullptr)
-        return std::make_pair<int, int>(-1, -1);
+        throw exception_str;
     
     //Check the object is on the map
     auto objects = map->get_characters();
@@ -92,12 +96,20 @@ std::pair<int, int> Engine::find_object(int id) {
     }
 
     //Not on the map
-    return std::make_pair<int, int>(-1, -1);
+    throw exception_str;
 }
 
-bool Engine::open_editor(std::string filename) {
+bool Engine::open_editor(std::string editor, std::string filename) {
+    print_debug << "XXXYYYZ...." << std::endl; 
     //TODO remove this function in the final version
-    
-    system((std::string("emacs -nw python_embed/scripts/") + filename).c_str());
+    std::string bash_command = editor + std::string(" python_embed/scripts/") + filename;
+    std::thread TEXT_EDIT([] (std::string command) { print_debug << "XXXYYYZZZ" << std::endl; system(command.c_str()); }, bash_command);
+    TEXT_EDIT.detach();
+    // system((std::string("gedit python_embed/scripts/") + filename + std::string(" &")).c_str());
     return true;
+}
+
+std::vector<int> get_objects_at(int /*x_pos*/, int /*y_pos*/) {
+    // TODO
+    throw std::runtime_error("get_objects_at not implemented");
 }

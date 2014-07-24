@@ -49,13 +49,13 @@ class RenderableComponent {
     ///
     /// The size of the vertex data in bytes
     ///
-    int vertex_data_size = 0;
+    size_t vertex_data_size = 0;
 
 
     ///
     /// The number of vertices to render
     ///
-    int num_vertices_render = 0;
+    GLsizei num_vertices_render = 0;
 
     ///
     /// The buffer holding the texture coordinate data
@@ -65,7 +65,7 @@ class RenderableComponent {
     ///
     /// The size of the texture coordinate buffer in bytes
     ///
-    int texture_coords_data_size = 0;
+    size_t texture_coords_data_size = 0;
 
     ///
     /// The buffer holding the texture data
@@ -198,7 +198,7 @@ public:
     /// @param the size of the data in bytes
     /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static geometry
     ///
-    void set_vertex_data(GLfloat* new_vertex_data, int data_size,  bool is_dynamic);
+    void set_vertex_data(GLfloat* new_vertex_data, size_t data_size,  bool is_dynamic);
 
     ///
     /// Get a pointer to the texture coordinate data
@@ -211,7 +211,7 @@ public:
     /// @param data_size The size of the data in bytes
     /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static 
     ///
-    void set_texture_coords_data(GLfloat* new_texture_data, int data_size, bool is_dynamic);
+    void set_texture_coords_data(GLfloat* new_texture_data, size_t data_size, bool is_dynamic);
 
   
     ///
@@ -252,12 +252,12 @@ public:
     ///
     /// Get the number of vertices to render
     ///
-    int get_num_vertices_render() { return num_vertices_render; }
+    GLsizei get_num_vertices_render() { return num_vertices_render; }
 
     ///
     /// Set the number of vertices we need to render
     ///
-    void set_num_vertices_render(int num_vertices) { num_vertices_render = num_vertices; }
+    void set_num_vertices_render(GLsizei num_vertices) { num_vertices_render = num_vertices; }
 };
 
 #endif

@@ -55,31 +55,31 @@ void Character::generate_tex_data() {
         return;
     }
 
-    GLfloat offset_x = GLfloat(1.0 / (IMAGE2_SIZE_WIDTH  / TILESET_ELEMENT_SIZE));
-    GLfloat offset_y = GLfloat(1.0 / (IMAGE2_SIZE_HEIGHT / TILESET_ELEMENT_SIZE));
+    GLfloat offset_x = GLfloat(TILESET_ELEMENT_SIZE) / IMAGE2_SIZE_WIDTH;
+    GLfloat offset_y = GLfloat(TILESET_ELEMENT_SIZE) / IMAGE2_SIZE_HEIGHT;
     print_debug << "OFFSET " << offset_x << std::endl;
     //bottom left
-    sprite_tex_data[0] = offset_x*4.0f;
-    sprite_tex_data[1] = offset_y;
+    sprite_tex_data[0]  = offset_x * GLfloat(4.0);
+    sprite_tex_data[1]  = offset_y;
 
     //top left
-    sprite_tex_data[2] = offset_x*4.0f;
-    sprite_tex_data[3] = 0.0f; 
+    sprite_tex_data[2]  = offset_x * GLfloat(4.0);
+    sprite_tex_data[3]  = 0.0f; 
 
     //bottom right
-    sprite_tex_data[4] = offset_x*5.0f;
-    sprite_tex_data[5] = offset_y;
+    sprite_tex_data[4]  = offset_x * GLfloat(5.0);
+    sprite_tex_data[5]  = offset_y;
 
     //top left
-    sprite_tex_data[6] = offset_x*4.0;
-    sprite_tex_data[7] = 0.0f;
+    sprite_tex_data[6]  = offset_x * GLfloat(4.0);
+    sprite_tex_data[7]  = 0.0f;
 
     //top right
-    sprite_tex_data[8] = offset_x*5.0f;
-    sprite_tex_data[9] = 0.0f;
+    sprite_tex_data[8]  = offset_x * GLfloat(5.0);
+    sprite_tex_data[9]  = 0.0f;
 
     //bottom right
-    sprite_tex_data[10] = offset_x*5.0f;
+    sprite_tex_data[10] = offset_x * GLfloat(5.0);
     sprite_tex_data[11] = offset_y;
 
     renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
@@ -135,7 +135,6 @@ void Character::generate_vertex_data() {
 void Character::load_textures() {
 
     FILE *tex_file2 = NULL;
-    size_t bytes_read = 0;
     size_t image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
 
     tex_buf = new char[image_sz_2];
@@ -146,8 +145,10 @@ void Character::load_textures() {
     }
 
     if (tex_file2 && tex_buf) {
-        bytes_read = fread(tex_buf, 1, image_sz_2, tex_file2);
-        assert(bytes_read == image_sz_2);  // some problem with file?
+        size_t bytes_read = fread(tex_buf, 1, image_sz_2, tex_file2);
+        if (bytes_read != image_sz_2) {
+            throw new std::runtime_error("Problems with file; wrong number of bytes read.");
+        }
         fclose(tex_file2);
     }
     //Set the texture data in the rederable component
@@ -178,11 +179,11 @@ bool Character::init_shaders() {
 
     std::string vert_src, frag_src, line;
     while (getline(vertex_shader_src, line)) {
-        vert_src += line + "\n";
+        vert_src += line + std::string("\n");
     }
 
     while (getline(fragment_shader_src, line)) {
-        frag_src += line + "\n";
+        frag_src += line + std::string("\n");
     }
 
     Shader* shader = new Shader(vert_src, frag_src);

@@ -13,6 +13,15 @@
 
 namespace py = boost::python;
 
+LockableEntityThread::LockableEntityThread():
+    lock::Lockable<std::shared_ptr<EntityThread>>() {}
+
+LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value):
+    lock::Lockable<std::shared_ptr<EntityThread>>(value) {}
+
+LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, std::shared_ptr<std::mutex> lock):
+    lock::Lockable<std::shared_ptr<EntityThread>>(value, lock) {}
+
 ///
 /// A thread function running a player's daemon.
 ///
@@ -41,7 +50,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     print_debug << "run_entity: Starting" << std::endl;
 
-    bool waiting = false;
+    bool waiting = true;
 
     {
         lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
@@ -65,10 +74,10 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
     // Asynchronously return thread id to allow killing of this thread
     //
     // WARNING:
-    // This must be here unless earlier blocks are to be wrapped in the
-    // try, as the kill thread is legally allowed to kill as soon as it
-    // gets the entity, and the entity returns as soon as this promise
-    // is fulfilled. 
+    //     This must be here unless earlier blocks are to be wrapped in the
+    //     try, as the kill thread is legally allowed to kill as soon as it
+    //     gets the entity, and the entity returns as soon as this promise
+    //     is fulfilled. 
     //
     thread_id_promise.set_value(PyThread_get_thread_ident());
 
@@ -110,6 +119,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
                 throw;
             }
         }
+        waiting = true;
     }
     
     print_debug << "run_entity: Finished" << std::endl;

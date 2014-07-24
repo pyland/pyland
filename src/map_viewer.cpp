@@ -24,7 +24,7 @@ MapViewer::MapViewer(GameWindow* new_window, GUIManager* new_gui_manager) {
     gui_manager = new_gui_manager;
 
     // Set background color and clear buffers
-    glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT);
     // L./eave this here!!!
     //Disable back face culling.
@@ -32,7 +32,10 @@ MapViewer::MapViewer(GameWindow* new_window, GUIManager* new_gui_manager) {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_SCISSOR_TEST);
-};
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
 
 MapViewer::~MapViewer() {
 
@@ -61,10 +64,10 @@ void MapViewer::render_map() {
     std::pair<int, int> size = window->get_size();
     //TODO, set the map view correctly
     glScissor(0, 0, size.first, size.second);
-    map->set_display_width((int)(size.first/32.0f));
-    map->set_display_height((int)(size.second/32.0f));
+    map->set_display_width(size.first / 32);
+    map->set_display_height(size.second / 32);
     glViewport(0, 0,  size.first, size.second);
-    glm::mat4 projection_matrix = glm::ortho(0.0f, (float)(size.first), 0.0f, (float)(size.second), 0.0f, 1.0f);
+    glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     glm::vec3 translate = glm::vec3(-map->get_display_x()*32.0f, -map->get_display_y()*32.0f, 0.0f);
     glm::mat4 translated = glm::translate(model, translate);
@@ -103,13 +106,17 @@ void MapViewer::render_map() {
     ObjectManager& object_manager = ObjectManager::get_instance();
     for(auto it = characters.begin(); it != characters.end(); ++it) {
         if(*it != 0) {
-            std::shared_ptr<Object> sprite = object_manager.get_object(*it);
+            std::shared_ptr<Object> sprite = object_manager.get_object<Object>(*it);
     
             RenderableComponent* character_render_component = sprite->get_renderable_component();
     
             //Move sprite to the required position
             glm::mat4 model1 = glm::mat4(1.0f);
-            glm::vec3 translate1 = glm::vec3((sprite->get_x_position()-map->get_display_x())*32.0f, (sprite->get_y_position()-map->get_display_y())*32.0f, 0.0f);
+            glm::vec3 translate1 = glm::vec3(
+                (float(sprite->get_x_position()) - map->get_display_x()) * 32.0f,
+                (float(sprite->get_y_position()) - map->get_display_y()) * 32.0f,
+                0.0f
+            );
             glm::mat4 translated1 = glm::translate(model1, translate1);
             character_render_component->set_modelview_matrix(translated1);
             character_render_component->set_projection_matrix(projection_matrix);
@@ -145,7 +152,7 @@ void MapViewer::render_map() {
     
     //Move gui_manager to the required position
     glm::mat4 model2 = glm::mat4(1.0f);
-    glm::vec3 translate2 = glm::vec3((gui_manager->get_x_position()-map->get_display_x())*32.0f, (gui_manager->get_y_position()-map->get_display_y())*32.0f, 0.0f);
+    glm::vec3 translate2 = glm::vec3((float)(gui_manager->get_x_position()-map->get_display_x())*32.0f, (float)(gui_manager->get_y_position()-map->get_display_y())*32.0f, 0.0f);
     glm::mat4 translated2 = glm::translate(model2, translate2);
     gui_render_component->set_modelview_matrix(translated2);
     gui_render_component->set_projection_matrix(projection_matrix);
@@ -186,7 +193,7 @@ void MapViewer::refocus_map() {
         return;
     }
         
-    std::shared_ptr<Object> object = object_manager.get_object(map_focus_object);
+    std::shared_ptr<Object> object = object_manager.get_object<Object>(map_focus_object);
 
     //If such an object exists, move the map to it
     if(object) {
@@ -203,7 +210,7 @@ void MapViewer::refocus_map() {
         //TODO
         //need to handle odd and even width/ height
 
-        float tile_offset = 32.0f / 2.0f;
+        float tile_offset = 0.5f;
         //if in scrolling part of map
         if(object_x - map_display_width/2.0f > 0) {
             //If in scrolling part
@@ -224,7 +231,7 @@ void MapViewer::refocus_map() {
                 map->set_display_y(object_y - map_display_height/ 2.0f);
             } 
             else {
-                map->set_display_y(map_height- map_display_height + tile_offset);
+                map->set_display_y(map_height - map_display_height + tile_offset);
             }
         }
         else {
@@ -249,9 +256,10 @@ void MapViewer::set_map(Map* new_map) {
 void MapViewer::set_map_focus_object(int object_id) {
     //Set the focus to the object if this is a valid object and it is on the map
     if(ObjectManager::is_valid_object_id(object_id)) {
-        const std::vector<int>& characters = map->get_characters();
+        //        const std::vector<int>& characters = map->get_characters();
         map_focus_object = object_id;
-        
+        refocus_map();
+        //TODO: add this in again
         //If the object is on the map
         /*        if(std::find(characters.begin(), characters.end(),object_id) != characters.end()) {
             //focus on it

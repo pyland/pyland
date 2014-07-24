@@ -1,6 +1,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include "entitythread.hpp"
 #include "object.hpp"
 
 #ifdef USE_GLES

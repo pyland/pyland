@@ -31,7 +31,7 @@ std::vector<std::pair<std::shared_ptr<GLfloat>,int>> ComponentGroup::generate_ve
     
     //Go through all the components in this group
     for(auto component : components) {
-        std::vector<std::pair<std::shared_ptr<GLfloat>, int>> component_data = component.generate_texture_data();
+        std::vector<std::pair<std::shared_ptr<GLfloat>, int>> component_data = component.second->generate_texture_data();
         
         //get all the pointers in the component - deals with ComponentGroup children
         for(auto component_vertex_ptr : component_data) {
@@ -48,7 +48,7 @@ std::vector<std::pair<std::shared_ptr<GLfloat>, int>> ComponentGroup::generate_t
     
     //Go through all the components in this group
     for(auto component : components) {
-        std::vector<std::pair<std::shared_ptr<GLfloat>, int>> component_data = component.generate_texture_data();
+        std::vector<std::pair<std::shared_ptr<GLfloat>, int>> component_data = component.second->generate_texture_data();
         
         //get all the pointers in the component - deals with ComponentGroup children
         for(auto component_vertex_ptr : component_data) {

@@ -20,7 +20,7 @@ Image::LoadException::LoadException(const char* message) {
 
 const char* Image::LoadException::what() const noexcept {
     return message;
-};
+}
 
 
 

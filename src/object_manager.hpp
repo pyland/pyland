@@ -72,7 +72,10 @@ public:
     /// Get an object from the object manager
     /// @return the requested object
     ///
-    std::shared_ptr<Object> get_object(int object_id);
+    template <typename R>
+    std::shared_ptr<R> get_object(int object_id);
 };
+
+#include "object_manager.hxx"
 
 #endif
