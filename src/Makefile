@@ -11,7 +11,7 @@ WARNINGS += -isystem ./tmx-parser -isystem ./tmx-parser/TmxParser
 
 CXXFLAGS ?= -std=c++11 -O3 ${WARNINGS}
 CXXFLAGS += ${CXX_EXTRA}
-CPPFLAGS ?= -I./ -I./challenges -I./input_management -I./python_embed -MMD -MP -MF dependencies/$*.d
+CPPFLAGS ?= -I./ -I./challenges -I./input_management -I./gui -I./python_embed -MMD -MP -MF dependencies/$*.d
 CPPFLAGS += ${CPP_EXTRA}
 
 LDFLAGS  ?=
@@ -180,7 +180,6 @@ HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${GUI_OBJS:.o=.d}             \
 	${INPUT_OBJS:.o=.d}           \
-	${PYTHON_HEADER:=.d}          \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd}
 
@@ -208,7 +207,7 @@ dependencies:
 	@-${MKDIR} dependencies
 
 dependencies/gui: | dependencies
-	@mkdir dependencies/gui
+	@-${MKDIR} dependencies/gui
 
 dependencies/python_embed: | dependencies
 	@-${MKDIR} dependencies/python_embed
@@ -252,7 +251,7 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 $(GUI_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/gui
 	@echo "${bold}[ Compiling gui object files${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+	@$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(PYTHON_INCLUDE_PCH) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
@@ -279,7 +278,7 @@ $(PYTHON_HEADER).gch: $(PYTHON_HEADER)
 	@echo "${bold}[ $(COMPILER): Precompiling Python header ${red}$<.gch${normal}${bold} from ${red}$<${normal}${bold} ]${normal}"
 	@$(COMPILER) $< -o $<.gch \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)\
-		$(CXXFLAGS) $(CPPFLAGS) -MF dependencies/$<.d
+		$(CXXFLAGS) $(CPPFLAGS)
 
 # This largely assumes the setup is constant for clang.
 # clang with precompiled headers may work, but is not guaranteed.
@@ -325,6 +324,7 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 	@-$(RM) \
 		$(BASE_OBJS)          \
 		$(CHALLENGE_OBJS)     \
+		$(GUI_OBJS)           \
 		$(INPUT_OBJS)         \
 		$(PYTHON_OBJS)        \
 		$(PYTHON_SHARED_OBJS)
@@ -337,9 +337,6 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 		dependencies/python_embed     \
 		dependencies
 
-clean:
-	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(INPUT_OBJS) $(CHALL_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
-	$(RMDIR) dependencies/input_management dependencies/python_embed dependencies
 	@echo "${bold}${red}Made clean${normal}"
 
 veryclean: clean
