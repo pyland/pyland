@@ -4,6 +4,7 @@
 #include "entitythread.hpp"
 #include "renderable_component.hpp"
 #include "walkability.hpp"
+
 #include <memory>
 #include <string>
 
