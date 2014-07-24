@@ -1,9 +1,9 @@
 NULL=
 
-RM ?= - rm -f
-RMDIR ?= - rmdir
+RM ?= rm -f
+RMDIR ?= rmdir
+MKDIR ?= mkdir -p
 
-SILENCER_PREFIX = @
 COMPILER ?= g++
 
 WARNINGS ?= -Wall -Wextra -Wconversion -Wmissing-braces -Wpointer-arith -Wno-sign-conversion -pedantic
@@ -20,7 +20,7 @@ LDLIBS   ?=
 
 ### Libraries ###
 
-ifeq ($(PLATFORM),desktop)
+ifeq "$(PLATFORM)" "desktop"
 	GL_CPPFLAGS ?= $(shell pkg-config gl --cflags)
 	GL_LDFLAGS  ?= 
 	GL_LDLIBS   ?= $(shell pkg-config gl --libs)
@@ -101,7 +101,6 @@ ifeq "$(COMPILER_SUPPORTS_DIAGNOSTICS_COLOR)" "1"
     CXXFLAGS += -fdiagnostics-color=auto
 endif
 
-
 ### Program Files ###
 
 EXECUTABLE = main.bin
@@ -125,9 +124,9 @@ BASE_OBJS = \
 	print_debug.o    \
 	renderable_component.o \
 	shader.o         \
-	tileset.o        
+	tileset.o
 
-CHALL_OBJS = \
+CHALLENGE_OBJS = \
 	challenges/challenge1.o
 
 INPUT_OBJS = \
@@ -145,6 +144,21 @@ GUI_OBJS = \
 	gui/gui_manager.o            
 
 
+PYTHON_HEADER = python_embed/python_embed_headers.hpp
+PRECOMPILE ?= 1
+
+PRECOMPILED_HEADER_EXTENSION ?= unknown
+
+ifneq "$(PRECOMILE)" "1"
+ifeq "$(findstring g++,$(COMPILER))" "g++"
+	PRECOMPILED_HEADER_EXTENSION = gch
+endif
+
+ifeq "$(findstring clang++,$(COMPILER))" "clang++"
+	PRECOMPILED_HEADER_EXTENSION = pch
+	PYTHON_INCLUDE_PCH = -include-pch python_embed/python_embed_headers.hpp.pch
+endif
+endif
 
 PYTHON_OBJS = \
 	python_embed/api.o           \
@@ -161,10 +175,12 @@ PYTHON_SHARED_OBJS_DEPENDS = \
 	python_embed/api.o	
 
 HEADER_DEPENDS_ROOT = \
-	${EXECUTABLE:.bin=.d}         \
 	${BASE_OBJS:.o=.d}            \
-	${INPUT_OBJS:.o=.d}           \
+	${CHALLENGE_OBJS:.o=.d}       \
+	${EXECUTABLE:.bin=.d}         \
 	${GUI_OBJS:.o=.d}             \
+	${INPUT_OBJS:.o=.d}           \
+	${PYTHON_HEADER:=.d}          \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd}
 
@@ -189,25 +205,25 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 	fi
 
 dependencies:
-	@mkdir dependencies
+	@-${MKDIR} dependencies
 
 dependencies/gui: | dependencies
 	@mkdir dependencies/gui
 
 dependencies/python_embed: | dependencies
-	@mkdir dependencies/python_embed
+	@-${MKDIR} dependencies/python_embed
 
 dependencies/challenges: | dependencies
-	@mkdir dependencies/challenges
+	@-${MKDIR} dependencies/challenges
 
 dependencies/input_management: | dependencies
-	@mkdir dependencies/input_management
+	@-${MKDIR} dependencies/input_management
 
-$(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(CHALL_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
+$(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(INPUT_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
 	@echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -o $@ \
-		$(BASE_OBJS) $(INPUT_OBJS) $(CHALL_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) \
+	@$(COMPILER) -o $@ \
+		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
 		$(GRAPHICS_LDFLAGS) $(GRAPHICS_LDLIBS)    \
 		$(X11_LDFLAGS) $(X11_LDLIBS)              \
 		$(SDL_LDFLAGS) $(SDL_LDLIBS)              \
@@ -219,11 +235,11 @@ $(EXECUTABLE): $(BASE_OBJS) $(INPUT_OBJS) $(CHALL_OBJS) $(GUI_OBJS) $(PYTHON_OBJ
 		$(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
-	@echo "${bold}[ Compiling base object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
+	@echo "${bold}[ Compiling base object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
-	$(SILENCER_PREFIX) # Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
-	$(SILENCER_PREFIX) # This should not cause a large slowdown unless actually included in many files.
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+	@# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
+	@# This should not cause a large slowdown unless actually included in many files.
+	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(GRAPHICS_CPPFLAGS)    \
 		$(X11_CPPFLAGS)         \
@@ -240,31 +256,57 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 		$(CXXFLAGS) $(CPPFLAGS)
 
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
-	@echo "${bold}[ Compiling input object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
+	@echo "${bold}[ Compiling input object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(SDL_CPPFLAGS)         \
 		$(CXXFLAGS) $(CPPFLAGS)
 
-$(CHALL_OBJS): %.o : %.cpp | dependencies/challenges
-	@echo "${bold}[ Compiling challenge object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
+$(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
+	@echo "${bold}[ Compiling challenge object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
+	@$(COMPILER) -c $*.cpp -o $*.o \
+		$(PYTHON_CPPFLAGS)      \
 		$(CXXFLAGS) $(CPPFLAGS)
 
+$(PYTHON_HEADER).unknown:
+	@echo "${bold}[ $(COMPILER): ${RED}Don't know how to precompiling Python header; ignoring.${normal}${bold} ]${normal}"
+	@touch $(PYTHON_HEADER).unknown
 
-$(PYTHON_OBJS): %.o : %.cpp | dependencies/python_embed
-	@echo "${bold}[ Compiling Python object file${red}" $*.o "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
+$(PYTHON_HEADER).gch: $(PYTHON_HEADER)
+	@echo "${bold}[ $(COMPILER): Precompiling Python header ${red}$<.gch${normal}${bold} from ${red}$<${normal}${bold} ]${normal}"
+	@$(COMPILER) $< -o $<.gch \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)\
+		$(CXXFLAGS) $(CPPFLAGS) -MF dependencies/$<.d
 
-	$(SILENCER_PREFIX) $(COMPILER) -c $*.cpp -o $*.o \
-		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
+# This largely assumes the setup is constant for clang.
+# clang with precompiled headers may work, but is not guaranteed.
+$(PYTHON_HEADER).pch: $(PYTHON_HEADER)
+	@echo "${bold}[ $(COMPILER): Precompiling Python header ${red}$<.pch${normal}${bold} from ${red}$<${normal}${bold} ]${normal}"
+	@$(COMPILER) -x c++-header $< -o $<.pch \
+		$$(echo                                       \
+			"$(PYTHON_CPPFLAGS)" "$(PYTHON_CXXFLAGS)" \
+			"$(BOOST_CPPFLAGS)" "$(BOOST_CXXFLAGS)"   \
+			"$(CXXFLAGS)"               \
+		| sed                                         \
+		 	-e 's/-mtune=[^ ]*//g'                  \
+		 	-e 's/-generic//g'                      \
+		 	-e 's/--param=[^ ]*//g'                 \
+		 	-e 's/-M[^ ]*//g'                       \
+		)
+
+$(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/python_embed
+	@echo "${bold}[ Compiling Python object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+
+	@$(COMPILER) -c $*.cpp -o $*.o \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) $(PYTHON_INCLUDE_PCH) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 python_embed/wrapper_functions.so: python_embed/api.o
 $(PYTHON_SHARED_OBJS): %.so : %.cpp | dependencies/python_embed
-	@echo "${bold}[ Compiling Python shared object file${red}" $*.so "${normal}${bold}from${red}" $*.cpp "${normal}${bold}]${normal}"
+	@echo "${bold}[ Compiling Python shared object file ${red}$*.so${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
-	$(SILENCER_PREFIX) $(COMPILER) -shared -fPIC $*.cpp -o $*.so \
+	@$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS) \
@@ -274,13 +316,34 @@ debug:
 	@echo "${bold}${red}Complied in debug${normal}"
 
 
+# Dependency hack to keep away uninteresting errors
+clean: dependencies dependencies/python_embed dependencies/challenges dependencies/input_management
+	@-$(RM) $(EXECUTABLE) 
+
+	@-$(RM) \
+		$(BASE_OBJS)          \
+		$(CHALLENGE_OBJS)     \
+		$(INPUT_OBJS)         \
+		$(PYTHON_OBJS)        \
+		$(PYTHON_SHARED_OBJS)
+
+	@-$(RM) $(HEADER_DEPENDS)
+
+	@-$(RMDIR) \
+		dependencies/challenges       \
+		dependencies/input_management \
+		dependencies/python_embed     \
+		dependencies
 
 clean:
 	$(RM) $(EXECUTABLE) $(PYTHON_SHARED_OBJS) $(BASE_OBJS) $(INPUT_OBJS) $(CHALL_OBJS) $(GUI_OBJS) $(PYTHON_OBJS) $(HEADER_DEPENDS)
 	$(RMDIR) dependencies/input_management dependencies/python_embed dependencies
+	@echo "${bold}${red}Made clean${normal}"
 
 veryclean: clean
-	$(MAKE) -C tmx-parser -f Makefile.linux clean
+	@-$(RM) $(PYTHON_HEADER).gch $(PYTHON_HEADER).pch
+	@-$(MAKE) -C tmx-parser -f Makefile.linux clean
+	@echo "${bold}${red}Made very clean${normal}"
 
 -include ${HEADER_DEPENDS}
 

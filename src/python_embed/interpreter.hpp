@@ -1,6 +1,8 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
+#include "python_embed_headers.hpp"
+
 #include <atomic>
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
