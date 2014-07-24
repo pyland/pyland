@@ -2,6 +2,7 @@
 #include "map_viewer.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
+#include "dispatcher.hpp"
 
 #include <cstdlib>
 #include <memory>
@@ -19,13 +20,21 @@ bool Engine::move_object(int id, int tile_dx, int tile_dy) {
         if (!walkable(object->get_x_position() + tile_dx, object->get_y_position() + tile_dy)) {
             return false;
         } else {
+            // trigger any waiting events on leaving 
+            std::pair<int,int> leave_tile = std::make_pair(object->get_x_position(), object->get_y_position());
+            get_map_viewer()->get_map()->event_step_off.trigger(leave_tile, id);
+
             //TODO, make this an event movement
             object->set_x_position(object->get_x_position() + tile_dx);
             object->set_y_position(object->get_y_position() + tile_dy);
 
+            //trigger any waiting events on arriving
+            std::pair<int,int> arrive_tile = std::make_pair(object->get_x_position(), object->get_y_position());
+            get_map_viewer()->get_map()->event_step_on.trigger(arrive_tile, id);
+
             //if there is a map viewer attached
             if(Engine::map_viewer != nullptr) {
-                //animate the map if this is the object to focus on
+                //animate the map if this is the object to focus ong
                 Engine::map_viewer->refocus_map();
             }
         }

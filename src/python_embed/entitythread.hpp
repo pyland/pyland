@@ -14,7 +14,7 @@
 class Interpreter;
 class EntityThread;
 
-using EntityThreads        = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
+using EntityThreads = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
 
 ///
 /// A lock::Lockable<std::shared_ptr<EntityThread>>

@@ -1,8 +1,9 @@
 #include "print_debug.hpp"
 #include "engine_api.hpp"
+#include "map_viewer.hpp"
 
 //TODO: later this will be fetched from the map
-std::vector <std::pair<int, int>> target = { std::make_pair(0,0), std::make_pair(1,0), std::make_pair(2,0), std::make_pair(3,0), std::make_pair(4,0) };
+std::vector <std::pair<int, int>> target = { std::make_pair(4,15), std::make_pair(5,15), std::make_pair(6,15), std::make_pair(7,15), std::make_pair(8,15) };
 
 void dialogue (std::string name, std::string text_to_user) {
     std::cout << name << " : " << text_to_user << std::endl;
@@ -31,7 +32,17 @@ void incr_scale2() {
         "Run it and see how it goes" );
 
     // ENGINE_TODO: when (Engine::find_object(1) == target[4]) call
-    //init_challenge2() 
+    Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
+        target[5],
+        [] (int object_id) {
+            int main_character = 1; //placeholder
+            if (object_id == main_character) {
+                std::cout << "challenge completed" << std::endl;
+                return false;
+            }
+            return true;
+        }
+    ); 
 }
 
 void incr_scale() {
@@ -42,7 +53,17 @@ void incr_scale() {
         "We will have to move Adam 10 times to the east");
 
     // ENGINE_TODO: when (Engine::find_object(1) == target[3]) call
-    incr_scale2(); 
+    Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
+        target[4],
+        [] (int object_id) {
+            int main_character = 1; //placeholder
+            if (object_id == main_character) {
+                incr_scale2();
+                return false;
+            }
+            return true;
+        }
+    );
 }
 
 void first_user_program() {
@@ -53,7 +74,19 @@ void first_user_program() {
         "Once complete, save the file and press R to the run again");
 
     // ENGINE_TODO: when (Engine::find_object(1) == target[3]) call
-    incr_scale(); 
+    Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
+        target[3],
+        [] (int object_id) {
+            int main_character = 1; //placeholder
+            if (object_id == main_character) {
+                incr_scale();
+                return false;
+            }
+            return true;
+        }
+    ); 
+
+
 }
 void intro_coding() {
     dialogue ( "Tom",
@@ -67,7 +100,18 @@ void intro_coding() {
         "Let's begin, by pressing the R key to run the commands");
    
     // ENGINE_TODO: when (Engine::find_object(1) == target[2]) call
-    first_user_program(); 
+
+    Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
+        target[2],
+        [] (int object_id) {
+            int main_character = 1; //placeholder
+            if (object_id == main_character) {
+                first_user_program();
+                return false;
+            }
+            return true;
+        }
+    );
 }
 
 void init_challenge() {
@@ -81,8 +125,21 @@ void init_challenge() {
 
     // ENGINE_TODO: when (Engine::find_object(1) == target[1]) call
     // assume there is a dispatcher on adding objects to event manager
+
+    Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
+        target[1],
+        [] (int object_id) {
+            int main_character = 1; //placeholder
+            if (object_id == main_character) {
+                intro_coding();
+                return false;
+            }
+            return true;
+        }
+    );
 }
-    
+
+// void call_on_step (std::pair<int,int> tile, int id, )    
 
 
 
