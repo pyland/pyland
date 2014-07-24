@@ -34,13 +34,7 @@ void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
 
 template <typename... Arguments>
 typename PositionDispatcher<Arguments...>::CallbackID PositionDispatcher<Arguments...>::register_callback(
-
-
- std::pair<int, int> tile, std::function<bool (Arguments...)> callback) {
-
-
-
-
+        std::pair<int, int> tile, std::function<bool (Arguments...)> callback) {
     callback_map[tile.first][tile.second][maxid++] = callback;
     return maxid;
 }
