@@ -1,5 +1,5 @@
+#include <iostream>
 #include <memory>
-
 
 template <typename R>
 std::shared_ptr<R> ObjectManager::get_object(int object_id) {
