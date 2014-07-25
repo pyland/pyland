@@ -121,7 +121,6 @@ BASE_OBJS = \
 	map_viewer.o     \
 	object.o         \
 	object_manager.o \
-	print_debug.o    \
 	renderable_component.o \
 	shader.o         \
 	tileset.o

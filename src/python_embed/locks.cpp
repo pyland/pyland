@@ -1,10 +1,10 @@
 #include "python_embed_headers.hpp"
 
 #include <boost/python.hpp>
+#include <glog/logging.h>
 #include <mutex>
 #include "interpreter_context.hpp"
 #include "locks.hpp"
-#include "print_debug.hpp"
 
 
 namespace lock {
@@ -14,17 +14,17 @@ namespace lock {
         inst = i;
         ++i;
 
-        print_debug << inst << " Aquiring GIL lock  " << name  << std::endl;
+        LOG(INFO) << inst << " Aquiring GIL lock  " << name;
         PyEval_RestoreThread(interpreter_context.get_threadstate());
-        print_debug << inst << " GIL lock aquired   " << name  << std::endl;
+        LOG(INFO) << inst << " GIL lock aquired   " << name;
     }
 
     GIL::GIL(InterpreterContext interpreter_context): GIL(interpreter_context, "") {}
 
     GIL::~GIL() {
-        print_debug << inst << " Releasing GIL lock " << name  << std::endl;
+        LOG(INFO) << inst << " Releasing GIL lock " << name;
         PyEval_SaveThread();
-        print_debug << inst << " GIL lock released  " << name  << std::endl;
+        LOG(INFO) << inst << " GIL lock released  " << name;
     }
 
 
@@ -43,7 +43,7 @@ namespace lock {
 
     ThreadState::~ThreadState() {   
         {
-            print_debug << "ThreadState: Getting GIL and clearing ThreadState" << std::endl;
+            LOG(INFO) << "ThreadState: Getting GIL and clearing ThreadState";
 
             PyGILState_STATE state = PyGILState_Ensure();
             PyThreadState_Clear(threadstate);

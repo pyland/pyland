@@ -29,11 +29,11 @@
 ///
 bool MapLoader::load_map(const std::string source) {
 
-    std::cout << "LOADING MAP..." << std::endl;
+    LOG(INFO) << "Loading map";
     map.ParseFile(source);
 
     if (map.HasError()) {
-        std::cerr << "ERROR" << map.GetErrorCode() << " " << map.GetErrorText().c_str() << std::endl;
+        LOG(ERROR) << map.GetErrorCode() << " " << map.GetErrorText().c_str();
         return false;
     }
 
@@ -44,7 +44,6 @@ bool MapLoader::load_map(const std::string source) {
     load_layers();
     load_tileset();
     
-    std::cout << "DONE" << std::endl;
     return true;
 }
 
@@ -99,7 +98,7 @@ void MapLoader::load_objects() {
             int object_x = object->GetX();
             int object_y = object->GetY();
             
-            std::cout << "OBJECT : " << object->GetName() << std::endl;
+            LOG(INFO) << "Loading object: " << object->GetName();
             
             //Build a MapObject
             std::shared_ptr<MapObject> map_object = std::make_shared<MapObject>();
@@ -141,14 +140,15 @@ void MapLoader::load_tileset() {
 
                 //Get the properties
                 //Used to handle collidable tiles
-                std::map<std::string, std::string> list = tile->GetProperties().GetList();
-                for (auto iter = list.begin(); iter != list.end(); ++iter){
-                    //                if (iter->first.c_str() == "Collidable") {
-                    //                    if (iter->second.c_str() == "True") {
-                    std::cout << "PROPERTY " << iter->first.c_str() << " " << iter->second.c_str() << std::endl;
-                    //  }
-                    //                }
-                }
+                // TODO: This
+                // std::map<std::string, std::string> list = tile->GetProperties().GetList();
+                // for (auto iter = list.begin(); iter != list.end(); ++iter){
+                //     if (iter->first.c_str() == "Collidable") {
+                //         if (iter->second.c_str() == "True") {
+                //             LOG(INFO) << "Property " << iter->first.c_str() << " " << iter->second.c_str();
+                //         }
+                //     }
+                // }
             }
         }
     }

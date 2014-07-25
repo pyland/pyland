@@ -1,12 +1,12 @@
 #include <chrono>
 #include <functional>
+#include <glog/logging.h>
 #include <iostream>
 #include <mutex>
 #include <thread>
 #include "entitythread.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
-#include "print_debug.hpp"
 #include "thread_killer.hpp"
 
 ///
@@ -76,8 +76,8 @@ void thread_killer(std::timed_mutex &finish_signal,
             break;
         }
 
-        print_debug << "Kill thread woke up" << std::endl;
-        print_debug << "111" << entitythreads.value.size() << std::endl;
+        LOG(INFO) << "Kill thread woke up";
+        LOG(INFO) << "111" << entitythreads.value.size();
 
         std::lock_guard<std::mutex> lock(*entitythreads.lock);
 
@@ -86,7 +86,7 @@ void thread_killer(std::timed_mutex &finish_signal,
         for (auto &entitythread : entitythreads.value) {
             if (auto entitythread_p = entitythread.lock()) {
                 if (!entitythread_p->is_dirty()) {
-                    print_debug << "Killing thread!" << std::endl;
+                    LOG(INFO) << "Killing thread!";
                     lock::GIL lock_gil(interpreter_context, "thread_killer");
                     entitythread_p->halt_soft(EntityThread::Signal::KILL);
                 }
@@ -95,7 +95,7 @@ void thread_killer(std::timed_mutex &finish_signal,
         }
     }
 
-    print_debug << "Finished kill thread" << std::endl;
+    LOG(INFO) << "Finished kill thread";
 }
 
 ThreadKiller::ThreadKiller(EntityThreads &entitythreads,
@@ -111,11 +111,11 @@ ThreadKiller::ThreadKiller(EntityThreads &entitythreads,
         interpreter_context
     );
 
-    print_debug << "main: Spawned Kill thread" << std::endl;
+    LOG(INFO) << "main: Spawned Kill thread";
 }
 
 void ThreadKiller::finish() {    
-    print_debug << "main: Stopping Kill thread" << std::endl;
+    LOG(INFO) << "main: Stopping Kill thread";
 
     // Signal that the thread can quit
     kill_thread_finish_signal.unlock();

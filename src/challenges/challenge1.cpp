@@ -1,4 +1,5 @@
-#include "print_debug.hpp"
+#include <glog/logging.h>
+
 #include "engine_api.hpp"
 #include "map_viewer.hpp"
 #include "challenge1.hpp"
@@ -7,6 +8,7 @@
 std::vector <std::pair<int, int>> target = { std::make_pair(4,15), std::make_pair(5,15), std::make_pair(6,15), std::make_pair(7,15), std::make_pair(8,15), std::make_pair(9,15), std::make_pair(10,15) };
 
 void dialogue (std::string name, std::string text_to_user) {
+    // TODO: Use rendered fonts
     std::cout << name << " : " << text_to_user << std::endl;
 } 
 
@@ -135,7 +137,8 @@ void incr_scale2() {
         [] (int object_id) {
             int main_character = 1; //placeholder
             if (object_id == main_character) {
-                std::cout << "challenge completed" << std::endl;
+                // TODO: ...?
+                dialogue("", "challenge completed");
                 return false;
             }
             return true;

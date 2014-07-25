@@ -8,7 +8,6 @@
 
 #include "api.hpp"
 #include "engine_api.hpp"
-#include "print_debug.hpp"
 
 namespace py = boost::python;
 
@@ -68,10 +67,11 @@ bool Entity::walkable(int x, int y) {
 }
 
 void Entity::monologue() {
+    // TODO: Hook up to proper speaking.
     std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;
 }
 
 
 void Entity::py_print_debug(std::string text) {
-    print_debug << text << std::endl;
+    LOG(INFO) << text;
 }

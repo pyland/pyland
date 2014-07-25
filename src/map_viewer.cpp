@@ -13,8 +13,7 @@
 
 MapViewer::MapViewer(GameWindow* new_window) {
     if(new_window == nullptr) {
-        std::cerr << "INVALID PASSING NULL GameWindow" << std::endl;
-        assert(new_window != nullptr);
+        LOG(ERROR) << "MapViewer::MapViewer: GameWindow should not be null";
     }
     window = new_window;
 
@@ -41,7 +40,7 @@ MapViewer::~MapViewer() {
 
 void MapViewer::render_map() {
     if(map == nullptr) {
-        std::cerr << "ERROR: MAP is NULL in MapViewer::render_map" << std::endl;
+        LOG(ERROR) << "MapViewer::render_map: Map should not be null";
         return;
     }
 
@@ -49,13 +48,13 @@ void MapViewer::render_map() {
 
     RenderableComponent* map_render_component = map->get_renderable_component();
     if(map_render_component == nullptr) {
-        std::cerr << "ERROR: RenderComponent is NULL in MapViewer::render_map" << std::endl;
+        LOG(ERROR) << "MapViewer::render_map: RenderComponent should not be null ";
         return;
     }
 
     Shader* map_shader = map_render_component->get_shader();
     if(map_shader == nullptr) {
-        std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
+        LOG(ERROR) << "MapViewer::render_map: Shader should not be null";
         return;
     }
 
@@ -123,7 +122,7 @@ void MapViewer::render_map() {
 
             Shader* shader = character_render_component->get_shader();
             if(shader == nullptr) {
-                std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
+                LOG(ERROR) << "MapViewer::render_map: Shader (character_render_component->get_shader()) should not be null";
                 return;
             }
 
@@ -134,7 +133,7 @@ void MapViewer::render_map() {
 
             character_render_component->bind_vbos();
             character_render_component->bind_textures();
-            //            std::cout << " X " << sprite->get_x_position()*32.0f << " Y " << sprite->get_y_position()*32.0f<< std::endl;
+            // LOG(INFO) << " X " << sprite->get_x_position()*32.0f << " Y " << sprite->get_y_position()*32.0f;
             glDrawArrays(GL_TRIANGLES, 0, character_render_component->get_num_vertices_render());
 
             character_render_component->release_textures();
@@ -151,7 +150,7 @@ void MapViewer::refocus_map() {
     ObjectManager& object_manager = ObjectManager::get_instance();
 
     if(map_focus_object == 0) {
-        std::cout << "NULL" << std::endl;
+        LOG(ERROR) << "MapViewer::refocus_map: map_focus_object should not be null";
         return;
     }
         
@@ -226,7 +225,7 @@ void MapViewer::set_map_focus_object(int object_id) {
             }*/
     }
     else {
-        std::cout << "INVALID FOCUS OBJECT" << std::endl;
+        LOG(ERROR) << "MapViewer::set_map_focus_object: Invalid focus object";
     }
 }
 

@@ -5,6 +5,7 @@
 #include "dispatcher.hpp"
 
 #include <cstdlib>
+#include <glog/logging.h>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -109,12 +110,11 @@ std::pair<int, int> Engine::find_object(int id) {
 }
 
 bool Engine::open_editor(std::string editor, std::string filename) {
-    print_debug << "XXXYYYZ...." << std::endl; 
+    LOG(INFO) << "Opening editor";
     //TODO remove this function in the final version
     std::string bash_command = editor + std::string(" python_embed/scripts/") + filename;
-    std::thread TEXT_EDIT([] (std::string command) { print_debug << "XXXYYYZZZ" << std::endl; system(command.c_str()); }, bash_command);
+    std::thread TEXT_EDIT([] (std::string command) { system(command.c_str()); }, bash_command);
     TEXT_EDIT.detach();
-    // system((std::string("gedit python_embed/scripts/") + filename + std::string(" &")).c_str());
     return true;
 }
 

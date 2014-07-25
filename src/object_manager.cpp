@@ -1,5 +1,6 @@
-#include "object_manager.hpp"
 #include "object.hpp"
+#include "object_manager.hpp"
+#include <glog/logging.h>
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -33,13 +34,13 @@ bool ObjectManager::is_valid_object_id(int id) {
 bool ObjectManager::add_object(std::shared_ptr<Object> new_object) {
  
     if(!new_object) {
-        std::cerr << "Object cannot be NULL in ObjectManager::add_object" << std::endl;
+        LOG(ERROR) << "ObjectManager::add_object: Object cannot be null.";
         return false;
     }
   
     int object_id = new_object->get_id();
     if(!is_valid_object_id(object_id)) {
-        std::cerr << "Object id is invalid in ObjectManager::add_object, id: " << object_id << std::endl;
+        LOG(ERROR) << "ObjectManager::add_object: Object id is invalid; id: " << object_id;
         return false;
     }
   

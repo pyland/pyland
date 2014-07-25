@@ -36,6 +36,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <glog/logging.h>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -69,7 +70,6 @@
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
-#include "print_debug.hpp"
 #include "challenge1.hpp"
 
 #ifdef USE_GLES
@@ -108,7 +108,7 @@ static float get_dt() {
 void create_character(Interpreter &interpreter) {
 
 
-    print_debug << "Creating character" << std::endl;
+    LOG(INFO) << "Creating character";
 
     // Registering new character with game engine
     shared_ptr<Character> new_character = make_shared<Character>();
@@ -118,23 +118,23 @@ void create_character(Interpreter &interpreter) {
     int start_y = 15;
     new_character->set_x_position(start_x);
     new_character->set_y_position(start_y);
-    print_debug << "Adding character" << std::endl;
+    LOG(INFO) << "Adding character";
     ObjectManager::get_instance().add_object(new_character);
     Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
     
     Engine::get_map_viewer()->set_map_focus_object(new_character->get_id());
-    print_debug << "Creating character wrapper" << std::endl;
-    std::cout<< "ID " << new_character->get_id() <<std::endl;
+    LOG(INFO) << "Creating character wrapper";
+    LOG(INFO) << "ID " << new_character->get_id();
 
     // Register user controled character
     // Yes, this is a memory leak. Deal with it.
     Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_character->get_name(), new_character->get_id());
 
-    print_debug << "Registering character" << std::endl;
+    LOG(INFO) << "Registering character";
 
     new_character->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
 
-    print_debug << "Done!" << std::endl;
+    LOG(INFO) << "Done!";
 }
 
 class CallbackState {
@@ -146,7 +146,7 @@ class CallbackState {
         }
 
         void register_number(int id) {
-            print_debug << "changing focus to " << id << std::endl;
+            LOG(INFO) << "changing focus to " << id;
             Engine::get_map_viewer()->set_map_focus_object(id);
         }
 
@@ -193,7 +193,7 @@ class CallbackState {
         }
 
         void man_move (arrow_key direction) {
-            print_debug << "arrow key pressed " << std::endl;
+            LOG(INFO) << "arrow key pressed";
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             switch (direction) {
                 case (UP):
@@ -298,28 +298,7 @@ int main(int argc, const char* argv[]) {
         );
     }
 
-    ///////////////////////////////
-
-    EventManager& em = EventManager::get_instance();
-    auto func1 = [] () { std::cout << "FUNC 1" << std::endl;};
-    auto func2 = [] () { std::cout << "FUNC 2" << std::endl; };
-    auto func3 = [] () { std::cout << "FUNC 3" << std::endl; };
-    auto func4 = [] () { std::cout << "FUNC 4" << std::endl; };
-    auto func_t1 = [] (double percent) -> bool { std::cout << "TIMER" << std::endl; if(percent >= 1.0) return false; else return true;  };
-
-    em.add_event(func1);
-
-    em.add_event(func2);
-    em.add_event(func3);
-    em.add_timed_event(std::chrono::duration<double>(0.5), func_t1);
-
-    em.process_events();
-
-    em.add_event(func3);
-
-    em.add_event(func4);
-
-    ///////////////////////////////
+    EventManager &em = EventManager::get_instance();
 
     std::string editor;
 
