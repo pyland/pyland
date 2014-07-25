@@ -4,6 +4,7 @@
 #include "map_object.hpp"
 #include "tileset.hpp"
 
+#include <glog/logging.h>
 #include <iostream>
 #include <map>
 #include <memory>

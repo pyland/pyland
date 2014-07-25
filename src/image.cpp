@@ -78,13 +78,13 @@ void Image::load_file(const char* filename) {
     SDL_Surface* compatible;
 
     if ((IMG_Init(IMG_INIT_JPG) & IMG_INIT_JPG) == 0) {
-        LOG(WARN) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
+        LOG(WARNING) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
     }
     if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) == 0) {
-        LOG(WARN) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
+        LOG(WARNING) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
     }
     if ((IMG_Init(IMG_INIT_TIF) & IMG_INIT_TIF) == 0) {
-        LOG(WARN) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
+        LOG(WARNING) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
     }
     
     loaded = IMG_Load(filename);
@@ -93,7 +93,7 @@ void Image::load_file(const char* filename) {
         std::stringstream error_message;
         error_message << "Error loading image \"" << filename << "\" " << IMG_GetError();
 
-        throw Image::LoadException(error_message.str());
+        throw Image::LoadException(error_message.str().c_str());
     }
     
     // The surface is a strip of pixels, so it can be used for flipping.

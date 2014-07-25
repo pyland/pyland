@@ -439,7 +439,7 @@ void GameWindow::update() {
                 window->init_surface();
             }
             catch (InitException e) {
-                LOG(WARN) << "Surface reinit failed: " << e.what();
+                LOG(WARNING) << "Surface reinit failed: " << e.what();
             }
             break;
         case InitAction::DO_DEINIT:

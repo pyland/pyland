@@ -3,6 +3,8 @@
 #include <boost/python.hpp>
 #include <boost/regex.hpp>
 #include <fstream>
+#include <glog/logging.h>
+#include <iostream>
 #include <sstream>
 #include <string>
 

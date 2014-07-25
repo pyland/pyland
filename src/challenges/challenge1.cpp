@@ -1,4 +1,5 @@
 #include <glog/logging.h>
+#include <iostream>
 
 #include "engine_api.hpp"
 #include "map_viewer.hpp"
