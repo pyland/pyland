@@ -201,7 +201,7 @@ void MapViewer::refocus_map() {
             map->set_display_y(0.0f);
         }
     } else {
-        std::cerr << "NOPE" << std::endl;
+        LOG(INFO) << "MapViewer::refocus_map: No objects have focus.";
     }
 }
 

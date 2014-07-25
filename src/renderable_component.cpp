@@ -9,8 +9,8 @@ RenderableComponent::RenderableComponent() {
     //Generate the vertex buffers
     glGenBuffers(1, &vbo_vertex_id);
     glGenBuffers(1, &vbo_texture_id);
-    LOG(INFO) << "RenderableComponent::RenderableComponent: Buffers "<< vbo_vertex_id << std::endl;
-    LOG(INFO) << "RenderableComponent::RenderableComponent: Buffers " << vbo_texture_id << std::endl;
+    LOG(INFO) << "RenderableComponent::RenderableComponent: Buffers "<< vbo_vertex_id;
+    LOG(INFO) << "RenderableComponent::RenderableComponent: Buffers " << vbo_texture_id;
 }
 
 RenderableComponent::~RenderableComponent() {

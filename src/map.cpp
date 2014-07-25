@@ -59,7 +59,7 @@ Map::Map(const std::string map_src):
         bool result = map_loader.load_map(map_src);
         if(!result)  {
 
-            LOG(ERROR) << "Couldn't load map" << std::endl;
+            LOG(ERROR) << "Couldn't load map";
             return;
         }
         
@@ -356,7 +356,7 @@ void Map::generate_map_coords() {
     float layer_offset = -1.0f;
     float layer_inc = 1.0f / float(layers.size());
     for (unsigned int layer = 0; layer < layers.size(); layer++) {
-        LOG(INFO) << "Map::generate_map_coords: Layer offset of " << layer_offset << std::endl;
+        LOG(INFO) << "Map::generate_map_coords: Layer offset of " << layer_offset;
 
         //Generate one layer's worth of data
         for(int y = 0; y < map_height; y++) {

@@ -51,7 +51,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
                 InterpreterContext interpreter_context,
                 std::map<EntityThread::Signal, PyObject *> signal_to_exception) {
 
-    LOG(INFO) << "run_entity: Starting" << std::endl;
+    LOG(INFO) << "run_entity: Starting";
 
     bool waiting = true;
 
@@ -66,7 +66,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
     lock::ThreadState threadstate(interpreter_context);
     lock::ThreadGIL lock_thread(threadstate);
 
-    LOG(INFO) << "run_entity: Stolen GIL" << std::endl;
+    LOG(INFO) << "run_entity: Stolen GIL";
 
     // Get and run bootstrapper
     py::api::object bootstrapper_module = interpreter_context.import_file(bootstrapper_file);
@@ -122,7 +122,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
         waiting = true;
     }
     
-    LOG(INFO) << "run_entity: Finished" << std::endl;
+    LOG(INFO) << "run_entity: Finished";
 }
 
 EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entity):
@@ -192,7 +192,7 @@ PyObject *EntityThread::make_base_async_exception(PyObject *base, const char *na
 }
 
 void EntityThread::halt_soft(Signal signal) {
-    LOG(INFO) << "Attempting to kill thread id " << get_thread_id() << "." << std::endl;
+    LOG(INFO) << "Attempting to kill thread id " << get_thread_id() << ".";
 
     PyThreadState_SetAsyncExc(get_thread_id(), signal_to_exception[signal]);
 }
@@ -217,7 +217,7 @@ void EntityThread::finish() {
 
 EntityThread::~EntityThread() {
     finish();
-    LOG(INFO) << "EntityThread destroyed" << std::endl;
+    LOG(INFO) << "EntityThread destroyed";
 
     lock::GIL lock_gil(interpreter_context, "EntityThread::~EntityThread");
 

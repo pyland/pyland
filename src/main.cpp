@@ -215,7 +215,6 @@ class CallbackState {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             Vec2D location =  Engine::find_object(id);
             std::cout << "You are at " << location.to_string() <<std::endl;
-
         }
 
     private:
