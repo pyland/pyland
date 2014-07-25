@@ -19,9 +19,9 @@ bool Engine::move_object(int id, Vec2D move_by) {
     if(object) {
         //Check if a move can be performed
         Vec2D new_loco = Vec2D(object->get_x_position() + move_by.x, object->get_y_position() + move_by.y);
-        LOG(INFO) << "Trying to walk to " << new_loco.x << " " << new_loco.y;
-        LOG(INFO) << get_map_viewer()->get_map()->blocker[new_loco.x][new_loco.y];
-        if ((!walkable(new_loco)) || (get_map_viewer()->get_map()->blocker[new_loco.x][new_loco.y] != 0)) {
+        VLOG(2) << "Trying to walk to " << new_loco.x << " " << new_loco.y << ".\n"
+                << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(new_loco.x).at(new_loco.y);
+        if ((!walkable(new_loco)) || (get_map_viewer()->get_map()->blocker.at(new_loco.x).at(new_loco.y) != 0)) {
             return false;
         } else {
             // trigger any waiting events on leaving 

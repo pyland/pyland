@@ -81,7 +81,7 @@ Map::Map(const std::string map_src):
         //Get the tilesets
         //TODO: We'll only support one tileset at the moment
         //Get an object list
-        blocker = std::vector<std::vector<int>>(map_width, std::vector<int>(map_height,0));
+        blocker = std::vector<std::vector<int>>(map_width, std::vector<int>(map_height, 0));
 
 
         //Generate the geometry needed for this map

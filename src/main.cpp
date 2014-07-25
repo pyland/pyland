@@ -237,6 +237,9 @@ int main(int argc, const char* argv[]) {
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
 
+    google::InitGoogleLogging(argv[0]);
+    google::InstallFailureSignalHandler();
+
     int map_width = 16, map_height = 16;
     GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
     window.use_context();

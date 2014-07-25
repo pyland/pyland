@@ -48,7 +48,6 @@ std::string Vec2D::to_string() {
 Entity::Entity(Vec2D start, std::string name, int id):
     start(start), script(""), id(id), call_number(0) {
         this->name = std::string(name);
-        Engine::move_object(id, start);
 }
 
 bool Entity::move(int x, int y) {
