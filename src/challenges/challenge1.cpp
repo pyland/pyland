@@ -4,7 +4,7 @@
 #include "challenge1.hpp"
 
 //TODO: later this will be fetched from the map
-std::vector <std::pair<int, int>> target = { std::make_pair(4,15), std::make_pair(5,15), std::make_pair(6,15), std::make_pair(7,15), std::make_pair(8,15), std::make_pair(9,15), std::make_pair(10,15) };
+std::vector <std::pair<int, int>> target = { std::make_pair(4,15), std::make_pair(24,15), std::make_pair(114,14), std::make_pair(1499,15), std::make_pair(8,15), std::make_pair(9,15), std::make_pair(10,15) };
 
 void Chal1::dialogue (std::string name, std::string text_to_user) {
     std::cout << name << " : " << text_to_user << std::endl;
