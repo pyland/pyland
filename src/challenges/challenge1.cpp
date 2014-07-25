@@ -22,9 +22,11 @@ void dialogue (std::string name, std::string text_to_user) {
 //     }
 // }
 
-void init_challenge() {
+void init_challenge(std::string editor) {
     //Coordinates are those from tiled
     // ENGINE_TODO: load map for challenge one, walls around the edges of the map
+
+    Engine::open_editor(editor, "John_1.py");
     dialogue ( "Tom",
         "Welcome to Project Zgyote \n"
         "My name is Tom and I am here to help you learn to move around \n"
