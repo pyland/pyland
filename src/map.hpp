@@ -276,6 +276,7 @@ public:
         public:
             Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker);
             ~Blocker();
+            Blocker(const Map::Blocker::Blocker &other);
             Vec2D tile;
             std::vector <std::vector<int>>* blocker;
     };

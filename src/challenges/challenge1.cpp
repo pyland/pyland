@@ -40,7 +40,9 @@ Challenge::Challenge(std::string editor):
     // ENGINE_TODO: when (Engine::find_object(1) == target[1]) call
     // assume there is a dispatcher on adding objects to event manager
 
-    Map::Blocker mytestblocker = Engine::get_map_viewer()->get_map()->block_tile(Vec2D(5,15));
+
+    // TODO: THIS IS A MEMORY LEAK. FIX IT LATER.
+    new Map::Blocker(Engine::get_map_viewer()->get_map()->block_tile(Vec2D(5,15)));
 
 
     Engine::get_map_viewer()->get_map()->event_step_on.register_callback(

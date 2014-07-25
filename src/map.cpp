@@ -528,15 +528,27 @@ void Map::update_map(float) {
 Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
     tile(tile), blocker(blocker) {
         (*blocker)[tile.x][tile.y]++;
-        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y << " is " << (*blocker)[tile.x][tile.y];
+
+        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+          << " increased from " << (*blocker)[tile.x][tile.y] - 1
+          << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
-// Map::Blocker::Blocker(const Map::Blocker::Blocker &other) {
+Map::Blocker::Blocker(const Map::Blocker::Blocker &other):
+    tile(other.tile), blocker(other.blocker) {
+        (*blocker)[tile.x][tile.y]++;
 
-// }
+        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+          << " increased from " << (*blocker)[tile.x][tile.y] - 1
+          << " to " << (*blocker)[tile.x][tile.y] << ".";
+}
 
 Map::Blocker::~Blocker() {
-    (*blocker)[tile.x][tile.y] = (*blocker)[tile.x][tile.y] -1 ;
+    (*blocker)[tile.x][tile.y] = (*blocker)[tile.x][tile.y] - 1 ;
+
+    LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+      << " decreased from " << (*blocker)[tile.x][tile.y] + 1
+      << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
 Map::Blocker Map::block_tile (Vec2D tile) {
