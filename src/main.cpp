@@ -107,7 +107,6 @@ static float get_dt() {
 
 void create_character(Interpreter &interpreter) {
 
-
     print_debug << "Creating character" << std::endl;
 
     // Registering new character with game engine
@@ -341,8 +340,9 @@ int main(int argc, const char* argv[]) {
         editor = "gedit";
     };
 
-    callbackstate.spawn();
     Chal1 challenge1 = Chal1(editor);
+
+    callbackstate.spawn();
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
