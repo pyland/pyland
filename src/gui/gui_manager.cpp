@@ -19,6 +19,11 @@
 #include <GL/gl.h>
 #endif
 
+#define TILESET_ELEMENT_SIZE 16
+#define IMAGE2_SIZE_WIDTH 192
+#define IMAGE2_SIZE_HEIGHT 128
+#define GLOBAL_SCALE 2
+#define IMAGE2_NUM_COMPONENTS 4
 
 void GUIManager::parse_components() {
 
@@ -137,13 +142,14 @@ void GUIManager::generate_vertex_data() {
 
 void GUIManager::load_textures() {
 
-    /*
+
     FILE *tex_file2 = NULL;
     size_t bytes_read = 0;
     size_t image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
 
     tex_buf = new char[image_sz_2];
 
+    //TODO: use the actual gui texture
     tex_file2 = fopen("../resources/characters_1.raw", "rb");
     if(tex_file2 == NULL) {
         std::cerr << "ERROR: Couldn't load textures" << std::endl;
@@ -153,9 +159,9 @@ void GUIManager::load_textures() {
         bytes_read = fread(tex_buf, 1, image_sz_2, tex_file2);
         assert(bytes_read == image_sz_2);  // some problem with file?
         fclose(tex_file2);
-        }*/
+    }
     //Set the texture data in the rederable component
-    //    renderable_component.set_texture_data(tex_buf, static_cast<int>(image_sz_2), IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, false);
+    renderable_component.set_texture_data(tex_buf, static_cast<int>(image_sz_2), IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, false);
 
 }
 bool GUIManager::init_shaders() {
