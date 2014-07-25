@@ -328,7 +328,8 @@ int main(int argc, const char* argv[]) {
     } else {
         editor = "gedit";
     };
-
+    
+    callbackstate.spawn();
     Chal1 challenge1 = Chal1(editor);
 
     while (!window.check_close()) {
