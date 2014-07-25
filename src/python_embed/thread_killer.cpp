@@ -88,7 +88,7 @@ void thread_killer(std::timed_mutex &finish_signal,
                 if (!entitythread_p->is_dirty()) {
                     print_debug << "Killing thread!" << std::endl;
                     lock::GIL lock_gil(interpreter_context, "thread_killer");
-                    entitythread_p->halt_soft(EntityThread::Signal::KILL);
+                    entitythread_p->halt_soft(EntityThread::Signal::STOP);
                 }
                 entitythread_p->clean();
             }

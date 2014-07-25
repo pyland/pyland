@@ -54,7 +54,7 @@ void Chal1::intro_coding() {
         "Well Done, now we are going look at a new way of walking \n");
 
     // PY_TODO: open text editor window with c1_sample1.py
-    Engine::open_editor(editor, "John_1.py");
+    //Engine::open_editor(editor, "John_1.py");
 
     dialogue ("Tom",
         "This text is used to control the movement of the Adam \n"
