@@ -38,6 +38,10 @@ ComponentGroup::~ComponentGroup() {
 
 std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
    std::vector<std::pair<GLfloat*, int>> group_data;
+
+    //Add this components data
+    group_data.push_back(vertex_data);
+
     
     //Go through all the components in this group
     for(auto component : components) {
@@ -80,7 +84,10 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
             //add to this group
             group_data.push_back(component_data_pair);
         }
+        
     }
+
+
 
     return group_data;
 }
@@ -88,7 +95,9 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
 
     std::vector<std::pair<GLfloat*, int>> group_data;
     
-    //Go through all the components in this group
+    group_data.push_back(std::make_pair(texture_data,);
+
+   //Go through all the components in this group
     for(auto component_pair : components) {
         std::vector<std::pair<GLfloat*, int>> component_data = component_pair.second->generate_texture_data();
         

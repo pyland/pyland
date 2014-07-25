@@ -336,28 +336,7 @@ int main(int argc, const char* argv[]) {
         );
     }
 
-    ///////////////////////////////
-
     EventManager& em = EventManager::get_instance();
-    auto func1 = [] () { std::cout << "FUNC 1" << std::endl;};
-    auto func2 = [] () { std::cout << "FUNC 2" << std::endl; };
-    auto func3 = [] () { std::cout << "FUNC 3" << std::endl; };
-    auto func4 = [] () { std::cout << "FUNC 4" << std::endl; };
-    auto func_t1 = [] (double percent) -> bool { std::cout << "TIMER" << std::endl; if(percent >= 1.0) return false; else return true;  };
-
-    em.add_event(func1);
-
-    em.add_event(func2);
-    em.add_event(func3);
-    em.add_timed_event(std::chrono::duration<double>(0.5), func_t1);
-
-    em.process_events();
-
-    em.add_event(func3);
-
-    em.add_event(func4);
-
-    ///////////////////////////////
 
     std::string editor;
 

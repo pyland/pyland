@@ -164,7 +164,7 @@ void MapViewer::render_map() {
 
     Shader* gui_shader = gui_render_component->get_shader();
     if(gui_shader == nullptr) {
-        //        std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
+        std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
         window->swap_buffers();
         return;
     }
