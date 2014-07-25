@@ -7,6 +7,7 @@
 #include "object_manager.hpp"
 #include "tileset.hpp"
 #include "walkability.hpp"
+#include "print_debug.hpp"
 
 #include <string>
 #include <iostream>
@@ -79,7 +80,7 @@ Map::Map(const std::string map_src):
         //Get the tilesets
         //TODO: We'll only support one tileset at the moment
         //Get an object list
-        
+        blocker = std::vector<std::vector<int>>(map_width, std::vector<int>(map_height,0));
 
 
         //Generate the geometry needed for this map
@@ -88,6 +89,7 @@ Map::Map(const std::string map_src):
         generate_map_texcoords();
         generate_map_coords();
         init_textures();
+
 }
 
 Map::~Map() {
@@ -528,3 +530,24 @@ bool Map::init_shaders() {
  */
 void Map::update_map(float) {
 }
+
+Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
+    tile(tile), blocker(blocker) {
+        (*blocker)[tile.x][tile.y]++;
+        print_debug << "block at tile " << tile.x << " " <<tile.y << " is " << (*blocker)[tile.x][tile.y] << std::endl;
+}
+
+// Map::Blocker::Blocker(const Map::Blocker::Blocker &other) {
+
+// }
+
+Map::Blocker::~Blocker() {
+    (*blocker)[tile.x][tile.y] = (*blocker)[tile.x][tile.y] -1 ;
+}
+
+Map::Blocker Map::block_tile (Vec2D tile) {
+    return Blocker(tile, &blocker);
+}
+
+
+

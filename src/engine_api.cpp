@@ -3,6 +3,7 @@
 #include "object.hpp"
 #include "object_manager.hpp"
 #include "dispatcher.hpp"
+#include "print_debug.hpp"
 
 #include <cstdlib>
 #include <memory>
@@ -17,7 +18,10 @@ bool Engine::move_object(int id, Vec2D move_by) {
 
     if(object) {
         //Check if a move can be performed
-        if (!walkable(Vec2D(object->get_x_position() + move_by.x, object->get_y_position() + move_by.y))) {
+        Vec2D new_loco = Vec2D(object->get_x_position() + move_by.x, object->get_y_position() + move_by.y);
+        print_debug << "Trying to walk to " << new_loco.x << " " << new_loco.y << std::endl;
+        print_debug << get_map_viewer()->get_map()->blocker[new_loco.x][new_loco.y] << std::endl;
+        if ((!walkable(new_loco)) || (get_map_viewer()->get_map()->blocker[new_loco.x][new_loco.y] != 0)) {
             return false;
         } else {
             // trigger any waiting events on leaving 
