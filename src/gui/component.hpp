@@ -21,6 +21,7 @@
 /// components derive from. It is an abstract base class
 ///
 class Component {
+protected:
     std::shared_ptr<GLfloat> vertex_data;
     std::shared_ptr<GLfloat> texture_data;
     ///
@@ -113,6 +114,7 @@ public:
     ///
     /// Get the height of the component relative to its parent
     /// @return the height
+
     ///
     float get_height() { return height; }
 
