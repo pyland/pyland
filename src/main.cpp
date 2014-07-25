@@ -212,6 +212,13 @@ class CallbackState {
 
         }
 
+        void monologue () {
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            std::pair<int,int> location =  Engine::find_object(id);
+            std::cout << "You are at (" << location.first << "," << location.second << ")" <<std::endl;
+
+        }
+
     private:
         Interpreter &interpreter;
         std::string name;
@@ -288,6 +295,11 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
     ));
 
+    Lifeline monologue_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_PRESS}), KEY("M")},
+        [&] (KeyboardInputEvent) { callbackstate.monologue(); }
+    ));
+
     std::vector<Lifeline> digit_callbacks;
     for (int i=0; i<10; ++i) {
         digit_callbacks.push_back(
@@ -328,7 +340,7 @@ int main(int argc, const char* argv[]) {
     } else {
         editor = "gedit";
     };
-    
+
     callbackstate.spawn();
     Chal1 challenge1 = Chal1(editor);
 
