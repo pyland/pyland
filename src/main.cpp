@@ -55,6 +55,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "api.hpp"
 #include "character.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
@@ -106,8 +107,6 @@ static float get_dt() {
 }
 
 void create_character(Interpreter &interpreter) {
-
-
     LOG(INFO) << "Creating character";
 
     // Registering new character with game engine
@@ -197,18 +196,25 @@ class CallbackState {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             switch (direction) {
                 case (UP):
-                    Engine::move_object(id,0,1);
+                    Engine::move_object(id,Vec2D(0,1));
                     break;
                 case (DOWN):
-                    Engine::move_object(id,0,-1);
+                    Engine::move_object(id,Vec2D(0,-1));
                     break;
                 case (RIGHT):
-                    Engine::move_object(id,-1,0);
+                    Engine::move_object(id,Vec2D(-1,0));
                     break;
                 case (LEFT):
-                    Engine::move_object(id,1,0);
+                    Engine::move_object(id,Vec2D(1,0));
                     break;
             }
+
+        }
+
+        void monologue () {
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            Vec2D location =  Engine::find_object(id);
+            std::cout << "You are at " << location.to_string() <<std::endl;
 
         }
 
@@ -231,6 +237,7 @@ int main(int argc, const char* argv[]) {
     */
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
+
     int map_width = 16, map_height = 16;
     GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
     window.use_context();
@@ -288,6 +295,11 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
     ));
 
+    Lifeline monologue_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_PRESS}), KEY("M")},
+        [&] (KeyboardInputEvent) { callbackstate.monologue(); }
+    ));
+
     std::vector<Lifeline> digit_callbacks;
     for (int i=0; i<10; ++i) {
         digit_callbacks.push_back(
@@ -308,7 +320,9 @@ int main(int argc, const char* argv[]) {
         editor = "gedit";
     };
 
-    init_challenge(editor);
+
+    Challenge challenge1 = Challenge(editor);
+    callbackstate.spawn();
 
     while (!window.check_close()) {
         //Get the time since the last iteration 

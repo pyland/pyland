@@ -63,7 +63,8 @@ void MapViewer::render_map() {
     glScissor(0, 0, size.first, size.second);
     map->set_display_width(size.first / 32);
     map->set_display_height(size.second / 32);
-    glViewport(0, 0,  size.first, size.second);
+    glViewport(0, 0, size.first, size.second);
+    refocus_map();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     glm::vec3 translate = glm::vec3(-map->get_display_x()*32.0f, -map->get_display_y()*32.0f, 0.0f);
@@ -150,7 +151,7 @@ void MapViewer::refocus_map() {
     ObjectManager& object_manager = ObjectManager::get_instance();
 
     if(map_focus_object == 0) {
-        LOG(ERROR) << "MapViewer::refocus_map: map_focus_object should not be null";
+        LOG(INFO) << "MapViewer::refocus_map: No focus.";
         return;
     }
         
@@ -158,6 +159,7 @@ void MapViewer::refocus_map() {
 
     //If such an object exists, move the map to it
     if(object) {
+        
         float object_x = (float)object->get_x_position();
         float object_y = (float)object->get_y_position();
         //center the map on the object
@@ -198,6 +200,8 @@ void MapViewer::refocus_map() {
         else {
             map->set_display_y(0.0f);
         }
+    } else {
+        std::cerr << "NOPE" << std::endl;
     }
 }
 
@@ -211,12 +215,13 @@ void MapViewer::set_map(Map* new_map) {
     map = new_map;
 }
 
-void MapViewer::set_map_focus_object(int object_id) {
+void MapViewer::set_map_focus_object(int object_id) { 
     //Set the focus to the object if this is a valid object and it is on the map
     if(ObjectManager::is_valid_object_id(object_id)) {
         //        const std::vector<int>& characters = map->get_characters();
         map_focus_object = object_id;
         refocus_map();
+
         //TODO: add this in again
         //If the object is on the map
         /*        if(std::find(characters.begin(), characters.end(),object_id) != characters.end()) {

@@ -1,3 +1,4 @@
+#include "api.hpp"
 #include "game_window.hpp"
 #include "layer.hpp"
 #include "map.hpp"
@@ -6,6 +7,7 @@
 #include "object_manager.hpp"
 #include "tileset.hpp"
 #include "walkability.hpp"
+#include "print_debug.hpp"
 
 #include <fstream>
 #include <glog/logging.h>
@@ -50,8 +52,8 @@
 
 Map::Map(const std::string map_src):
     renderable_component(),
-    event_step_on(0, 0),
-    event_step_off(0, 0)
+    event_step_on(Vec2D(0, 0)),
+    event_step_off(Vec2D(0, 0))
     {
         //Load the map
         MapLoader map_loader;
@@ -67,8 +69,8 @@ Map::Map(const std::string map_src):
         map_height = map_loader.get_map_height();
 
         // hack to construct postion dispatcher as we need map diametions 
-        event_step_on = PositionDispatcher<int>(map_width,map_height);
-        event_step_off = PositionDispatcher<int>(map_width,map_height);
+        event_step_on = PositionDispatcher<int>(Vec2D(map_width,map_height));
+        event_step_off = PositionDispatcher<int>(Vec2D(map_width,map_height));
 
         LOG(INFO) << "Map loading: ";
         LOG(INFO) << "Map width: " << map_width << " Map height: " << map_height;
@@ -80,7 +82,7 @@ Map::Map(const std::string map_src):
         //Get the tilesets
         //TODO: We'll only support one tileset at the moment
         //Get an object list
-        
+        blocker = std::vector<std::vector<int>>(map_width, std::vector<int>(map_height,0));
 
 
         //Generate the geometry needed for this map
@@ -89,6 +91,7 @@ Map::Map(const std::string map_src):
         generate_map_texcoords();
         generate_map_coords();
         init_textures();
+
 }
 
 Map::~Map() {
@@ -522,3 +525,24 @@ bool Map::init_shaders() {
  */
 void Map::update_map(float) {
 }
+
+Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
+    tile(tile), blocker(blocker) {
+        (*blocker)[tile.x][tile.y]++;
+        print_debug << "block at tile " << tile.x << " " <<tile.y << " is " << (*blocker)[tile.x][tile.y] << std::endl;
+}
+
+// Map::Blocker::Blocker(const Map::Blocker::Blocker &other) {
+
+// }
+
+Map::Blocker::~Blocker() {
+    (*blocker)[tile.x][tile.y] = (*blocker)[tile.x][tile.y] -1 ;
+}
+
+Map::Blocker Map::block_tile (Vec2D tile) {
+    return Blocker(tile, &blocker);
+}
+
+
+

@@ -170,11 +170,13 @@ class Map {
     /// Initialises this Map's shaders
     ///
     bool init_shaders();
+
 public: 
 
     Dispatcher<int> event_character_add;
     PositionDispatcher<int> event_step_on;
     PositionDispatcher<int> event_step_off;
+    std::vector <std::vector<int>> blocker;
 
     Map(const std::string map_src);
     ~Map();
@@ -269,6 +271,16 @@ public:
     /// Is this location walkable
     /// 
     bool is_walkable(int x_pos, int y_pos);
+
+    class Blocker {
+        public:
+            Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker);
+            ~Blocker();
+            Vec2D tile;
+            std::vector <std::vector<int>>* blocker;
+    };
+
+    Blocker block_tile (Vec2D tile);
 };
 
 #endif

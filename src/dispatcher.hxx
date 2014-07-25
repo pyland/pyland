@@ -33,11 +33,11 @@ void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
 }
 
 template <typename... Arguments>
-PositionDispatcher<Arguments...>::PositionDispatcher (int x, int y):
+PositionDispatcher<Arguments...>::PositionDispatcher (Vec2D location):
     callback_map(
-        x,
+        location.x,
         std::vector<std::map<CallbackID, std::function<bool (Arguments...)>>>(
-            y,
+            location.y,
             std::map<CallbackID, std::function<bool (Arguments...)>>()
         )
     )
@@ -45,27 +45,27 @@ PositionDispatcher<Arguments...>::PositionDispatcher (int x, int y):
  
 template <typename... Arguments>
 typename PositionDispatcher<Arguments...>::CallbackID PositionDispatcher<Arguments...>::register_callback(
-        std::pair<int, int> tile, std::function<bool (Arguments...)> callback) {
-    callback_map[tile.first][tile.second][maxid++] = callback;
+        Vec2D tile, std::function<bool (Arguments...)> callback) {
+    callback_map[tile.x][tile.y][maxid++] = callback;
     return maxid;
 }
 
 template <typename... Arguments>
-void PositionDispatcher<Arguments...>::unregister( std::pair<int, int> tile, PositionDispatcher<Arguments...>::CallbackID callback) {
-    if (!callback_map[tile.first][tile.second].erase(callback)) {
+void PositionDispatcher<Arguments...>::unregister( Vec2D tile, PositionDispatcher<Arguments...>::CallbackID callback) {
+    if (!callback_map[tile.x][tile.y].erase(callback)) {
         throw new std::runtime_error("Nonexistent callback");
     }
 }
 
 template <typename... Arguments>
-void PositionDispatcher<Arguments...>::trigger(std::pair<int, int> tile, Arguments... arguments) {
+void PositionDispatcher<Arguments...>::trigger(Vec2D tile, Arguments... arguments) {
     // Do increments inline
-    for (auto it = callback_map.at(tile.first).at(tile.second).cbegin(); it != callback_map.at(tile.first).at(tile.second).cend(); ) {
+    for (auto it = callback_map.at(tile.x).at(tile.y).cbegin(); it != callback_map.at(tile.x).at(tile.y).cend(); ) {
         if (!(*it).second(arguments...)) {
             // Warning:
             // Must be post-increment, and increment
             // must be done before erasing.
-            callback_map[tile.first][tile.second].erase(it++);
+            callback_map[tile.x][tile.y].erase(it++);
         }
         else {
             ++it;
