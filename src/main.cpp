@@ -193,7 +193,7 @@ class CallbackState {
         }
 
         void man_move (arrow_key direction) {
-            LOG(INFO) << "arrow key pressed";
+            VLOG(3) << "arrow key pressed";
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             switch (direction) {
                 case (UP):
