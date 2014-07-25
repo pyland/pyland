@@ -54,6 +54,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "api.hpp"
 #include "character.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
@@ -196,16 +197,16 @@ class CallbackState {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             switch (direction) {
                 case (UP):
-                    Engine::move_object(id,0,1);
+                    Engine::move_object(id,Vec2D(0,1));
                     break;
                 case (DOWN):
-                    Engine::move_object(id,0,-1);
+                    Engine::move_object(id,Vec2D(0,-1));
                     break;
                 case (RIGHT):
-                    Engine::move_object(id,-1,0);
+                    Engine::move_object(id,Vec2D(-1,0));
                     break;
                 case (LEFT):
-                    Engine::move_object(id,1,0);
+                    Engine::move_object(id,Vec2D(1,0));
                     break;
             }
 
@@ -213,8 +214,8 @@ class CallbackState {
 
         void monologue () {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            std::pair<int,int> location =  Engine::find_object(id);
-            std::cout << "You are at (" << location.first << "," << location.second << ")" <<std::endl;
+            Vec2D location =  Engine::find_object(id);
+            std::cout << "You are at " << location.to_string() <<std::endl;
 
         }
 
@@ -340,7 +341,9 @@ int main(int argc, const char* argv[]) {
         editor = "gedit";
     };
 
+
     Chal1 challenge1 = Chal1(editor);
+    Challenge challenge1 = Challenge(editor);
 
     callbackstate.spawn();
 

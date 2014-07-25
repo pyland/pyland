@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <map>
+#include "api.hpp"
 
 template <typename... Arguments>
 class Dispatcher {
@@ -20,11 +21,11 @@ class Dispatcher {
 template <typename... Arguments>
 class PositionDispatcher {
     public:
-        PositionDispatcher(int x, int y);
+        PositionDispatcher(Vec2D location);
         using CallbackID = uint64_t;
-        CallbackID register_callback( std::pair<int, int> tile, std::function<bool (Arguments...)> callback);
-        void unregister( std::pair<int, int> tile, CallbackID callback);
-        void trigger(std::pair<int, int> tile, Arguments... arguments);
+        CallbackID register_callback( Vec2D tile, std::function<bool (Arguments...)> callback);
+        void unregister( Vec2D tile, CallbackID callback);
+        void trigger( Vec2D tile, Arguments... arguments);
 
     private:
         uint64_t maxid = 0;

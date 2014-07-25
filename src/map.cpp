@@ -1,3 +1,4 @@
+#include "api.hpp"
 #include "game_window.hpp"
 #include "layer.hpp"
 #include "map.hpp"
@@ -49,8 +50,8 @@
 
 Map::Map(const std::string map_src):
     renderable_component(),
-    event_step_on(0, 0),
-    event_step_off(0, 0)
+    event_step_on(Vec2D(0, 0)),
+    event_step_off(Vec2D(0, 0))
     {
         //Load the map
         MapLoader map_loader;
@@ -66,8 +67,8 @@ Map::Map(const std::string map_src):
         map_height = map_loader.get_map_height();
 
         // hack to construct postion dispatcher as we need map diametions 
-        event_step_on = PositionDispatcher<int>(map_width,map_height);
-        event_step_off = PositionDispatcher<int>(map_width,map_height);
+        event_step_on = PositionDispatcher<int>(Vec2D(map_width,map_height));
+        event_step_off = PositionDispatcher<int>(Vec2D(map_width,map_height));
 
         std::cout << "MAP LOADING: " <<std::endl;
         std::cout << "WIDTH: " << map_width << " HEIGHT: " << map_height << std::endl;

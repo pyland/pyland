@@ -1,6 +1,6 @@
-class Chal1 {
+class Challenge {
     public:
-        Chal1(std::string editor);
+        Challenge(std::string editor);
     private:
         std::string editor;
         void intro_coding();
