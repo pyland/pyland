@@ -44,5 +44,6 @@ Keybindings
 * r - run script for sprite
 * k - kill sprite
 * h - halt current script
+* m - print the focus sprites location
 * arrow keys / wasd - move sprite
 * numbers - move focus to sprite with associated number, numbers are allocated sequentially from 1
