@@ -6,7 +6,7 @@
 //TODO: later this will be fetched from the map
 std::vector <std::pair<int, int>> target = { std::make_pair(4,15), std::make_pair(5,15), std::make_pair(6,15), std::make_pair(7,15), std::make_pair(8,15), std::make_pair(9,15), std::make_pair(10,15) };
 
-void dialogue (std::string name, std::string text_to_user) {
+void Chal1::dialogue (std::string name, std::string text_to_user) {
     std::cout << name << " : " << text_to_user << std::endl;
 } 
 
@@ -22,11 +22,11 @@ void dialogue (std::string name, std::string text_to_user) {
 //     }
 // }
 
-void init_challenge(std::string editor) {
+Chal1::Chal1(std::string editor):
+    editor(editor) {
+
     //Coordinates are those from tiled
     // ENGINE_TODO: load map for challenge one, walls around the edges of the map
-
-    Engine::open_editor(editor, "John_1.py");
     dialogue ( "Tom",
         "Welcome to Project Zgyote \n"
         "My name is Tom and I am here to help you learn to move around \n"
@@ -38,7 +38,7 @@ void init_challenge(std::string editor) {
 
     Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
         target[1],
-        [] (int object_id) {
+        [&] (int object_id) {
             int main_character = 1; //placeholder
             if (object_id == main_character) {
                 intro_coding();
@@ -49,11 +49,12 @@ void init_challenge(std::string editor) {
     );
 }
 
-void intro_coding() {
+void Chal1::intro_coding() {
     dialogue ( "Tom",
         "Well Done, now we are going look at a new way of walking \n");
 
     // PY_TODO: open text editor window with c1_sample1.py
+    Engine::open_editor(editor, "John_1.py");
 
     dialogue ("Tom",
         "This text is used to control the movement of the Adam \n"
@@ -64,7 +65,7 @@ void intro_coding() {
 
     Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
         target[2],
-        [] (int object_id) {
+        [&] (int object_id) {
             int main_character = 1; //placeholder
             if (object_id == main_character) {
                 first_user_program();
@@ -75,7 +76,7 @@ void intro_coding() {
     );
 }
 
-void first_user_program() {
+void Chal1::first_user_program() {
 
     dialogue ("Tom",
         "As you can see the move(north) command has moved Adam, north by 1 square \n"
@@ -85,7 +86,7 @@ void first_user_program() {
     // ENGINE_TODO: when (Engine::find_object(1) == target[3]) call
     Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
         target[3],
-        [] (int object_id) {
+        [&] (int object_id) {
             int main_character = 1; //placeholder
             if (object_id == main_character) {
                 incr_scale();
@@ -98,7 +99,7 @@ void first_user_program() {
 
 }
 
-void incr_scale() {
+void Chal1::incr_scale() {
 
     dialogue ("Tom",
         "Well Done, your getting the hang of this now \n"
@@ -108,7 +109,7 @@ void incr_scale() {
     // ENGINE_TODO: when (Engine::find_object(1) == target[3]) call
     Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
         target[4],
-        [] (int object_id) {
+        [&] (int object_id) {
             int main_character = 1; //placeholder
             if (object_id == main_character) {
                 incr_scale2();
@@ -119,7 +120,7 @@ void incr_scale() {
     );
 }
 
-void incr_scale2() {
+void Chal1::incr_scale2() {
 
     dialogue ("Tom",
         "That was exhausting ! \n"
@@ -132,7 +133,7 @@ void incr_scale2() {
     // ENGINE_TODO: when (Engine::find_object(1) == target[4]) call
     Engine::get_map_viewer()->get_map()->event_step_on.register_callback(
         target[5],
-        [] (int object_id) {
+        [&] (int object_id) {
             int main_character = 1; //placeholder
             if (object_id == main_character) {
                 std::cout << "challenge completed" << std::endl;
