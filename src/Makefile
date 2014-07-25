@@ -267,7 +267,8 @@ $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
 	@echo "${bold}[ Compiling challenge object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
-		$(PYTHON_CPPFLAGS)      \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
+		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 $(PYTHON_HEADER).unknown:
