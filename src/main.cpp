@@ -342,7 +342,6 @@ int main(int argc, const char* argv[]) {
     };
 
 
-    Chal1 challenge1 = Chal1(editor);
     Challenge challenge1 = Challenge(editor);
 
     callbackstate.spawn();
