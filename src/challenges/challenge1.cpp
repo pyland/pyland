@@ -6,7 +6,7 @@
 //TODO: later this will be fetched from the map
 std::vector <std::pair<int, int>> target = { std::make_pair(4,15), std::make_pair(24,15), std::make_pair(114,14), std::make_pair(1499,15), std::make_pair(8,15), std::make_pair(9,15), std::make_pair(10,15) };
 
-void Chal1::dialogue (std::string name, std::string text_to_user) {
+void Challenge::dialogue (std::string name, std::string text_to_user) {
     std::cout << name << " : " << text_to_user << std::endl;
 } 
 
@@ -22,7 +22,7 @@ void Chal1::dialogue (std::string name, std::string text_to_user) {
 //     }
 // }
 
-Chal1::Chal1(std::string editor):
+Challenge::Challenge(std::string editor):
     editor(editor) {
 
     //Coordinates are those from tiled
@@ -49,7 +49,7 @@ Chal1::Chal1(std::string editor):
     );
 }
 
-void Chal1::intro_coding() {
+void Challenge::intro_coding() {
     dialogue ( "Tom",
         "Well Done, now we are going look at a new way of walking \n");
 
@@ -76,7 +76,7 @@ void Chal1::intro_coding() {
     );
 }
 
-void Chal1::first_user_program() {
+void Challenge::first_user_program() {
 
     dialogue ("Tom",
         "As you can see the move(north) command has moved Adam, north by 1 square \n"
@@ -99,7 +99,7 @@ void Chal1::first_user_program() {
 
 }
 
-void Chal1::incr_scale() {
+void Challenge::incr_scale() {
 
     dialogue ("Tom",
         "Well Done, your getting the hang of this now \n"
@@ -120,7 +120,7 @@ void Chal1::incr_scale() {
     );
 }
 
-void Chal1::incr_scale2() {
+void Challenge::incr_scale2() {
 
     dialogue ("Tom",
         "That was exhausting ! \n"

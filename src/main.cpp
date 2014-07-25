@@ -342,7 +342,7 @@ int main(int argc, const char* argv[]) {
     };
 
     callbackstate.spawn();
-    Chal1 challenge1 = Chal1(editor);
+    Challenge challenge1 = Challenge(editor);
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
