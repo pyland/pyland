@@ -7,7 +7,6 @@
 #include "object_manager.hpp"
 #include "tileset.hpp"
 #include "walkability.hpp"
-#include "print_debug.hpp"
 
 #include <fstream>
 #include <glog/logging.h>
@@ -529,7 +528,7 @@ void Map::update_map(float) {
 Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
     tile(tile), blocker(blocker) {
         (*blocker)[tile.x][tile.y]++;
-        print_debug << "block at tile " << tile.x << " " <<tile.y << " is " << (*blocker)[tile.x][tile.y] << std::endl;
+        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y << " is " << (*blocker)[tile.x][tile.y];
 }
 
 // Map::Blocker::Blocker(const Map::Blocker::Blocker &other) {

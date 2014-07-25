@@ -4,7 +4,6 @@
 #include "api.hpp"
 #include "challenge1.hpp"
 #include "engine_api.hpp"
-#include "print_debug.hpp"
 #include "map_viewer.hpp"
 
 //TODO: later this will be fetched from the map
