@@ -2,7 +2,7 @@
 
 #include <vector>
 
-Component::Componenet() {
+Component::Component() {
 
 }
 

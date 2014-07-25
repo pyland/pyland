@@ -40,31 +40,45 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
    std::vector<std::pair<GLfloat*, int>> group_data;
     
     //Go through all the components in this group
-    for(auto component_pair : components) {
-        std::vector<std::pair<GLfloat*, int>> component_data = component_pair.second->generate_texture_data();
+    for(auto component : components) {
+        std::vector<std::pair<GLfloat*, int>> component_vector = component.second->generate_texture_data();
         
         //get all the pointers in the component - deals with ComponentGroup children
-        for(auto component_vertex_ptr : component_data) {
+        for(auto component_data_pair : component_vector) {
             //comvert this into this component's local spacd
 
             //Calcuate how far to translate this component
             int pixel_offset_x = 0; 
-            float component_x_offset = component_pair.second->get_x_offset();
+            float component_x_offset = component.second->get_x_offset();
             int pixel_offset_y = 0 ;
-            float component_y_offset = component_pair.second->get_y_offset();
+            float component_y_offset = component.second->get_y_offset();
 
-            pixel_offset_x = (float)width_pixels * component_x_offset;
-            pixel_offset_y = (float)height_pixels * component_y_offset;
 
-            //Translate it
-            glm::mat4 transform = glm::mat4(1.0);
-            glm::vec4 translate = glm::vec4((float)pixel_offset_x, (float)pixel_offset_y, 0.0f, 0.0f);
+            pixel_offset_x =(int)((float)width_pixels * component_x_offset);
+            pixel_offset_y = (int)((float)height_pixels * component_y_offset);
 
+            //Translation matrix
+            glm::mat4 transform_matrix = glm::mat4(1.0);
+            glm::vec3 translate_vector = glm::vec3((float)pixel_offset_x, (float)pixel_offset_y, 0.0f);
+            transform_matrix = glm::translate(transform_matrix, translate_vector);
+
+            int size_data = component_data_pair.second;
+            GLfloat* component_vertices = component_data_pair.first;
+            int num_dimensions = 3;
             //translate each vertex
-            
+            for(int i = 0; i < size_data; i+=num_dimensions) {
+                //Translate the vertex
+                glm::vec4 vertex = glm::vec4(component_vertices[i], component_vertices[i+1], component_vertices[i+2], 0.0f);
+                vertex = transform_matrix*  vertex;
+
+                //Put the data back
+                component_vertices[i] = vertex.x;
+                component_vertices[i+1] = vertex.y;
+                component_vertices[i+2] = vertex.z;
+            }
             
             //add to this group
-            group_data.push_back(component_vertex_ptr);
+            group_data.push_back(component_data_pair);
         }
     }
 
@@ -81,6 +95,7 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
         //get all the pointers in the component - deals with ComponentGroup children
         for(auto component_vertex_ptr : component_data) {
             //add to this group
+            //no translation is needed
             group_data.push_back(component_vertex_ptr);
         }
     }

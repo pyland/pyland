@@ -24,19 +24,19 @@ class Component {
 protected:
     
     ///
-    /// The Opengl vertex data for this component in its local 'object' space
+    /// The Opengl vertex data for this component, transformed into world space
     ///
     GLfloat* vertex_data;
 
     ///
-    /// The Opengl texture data for this component 
+    /// The Opengl texture data for this component
     ///
     GLfloat* texture_data;
 
     ///
     /// A pointer to the parent
     ///
-    std::weak_pr<Component> parent;
+    //    std::weak_pr<Component> parent;
 
     ///
     /// The GUID of the component

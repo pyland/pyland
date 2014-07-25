@@ -15,8 +15,8 @@
 std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     delete []vertex_data;
     int num_floats = 18;
-    int scale = 32;
-
+    float scale = 32.0f;
+    vertex_data = new GLfloat[sizeof(GLfloat)*num_floats];
     //Generate coordinates in our local object space
     //bottom left 
     vertex_data[0] = 0;
@@ -48,9 +48,10 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     vertex_data[16] = 0;
     vertex_data[17] = 0;
 
-    
+    std::vector<std::pair<GLfloat*, int>> vertices;
+    vertices.push_back(std::make_pair(vertex_data, num_floats));
+    return vertices;
 
-    vertex_data = new GLfloat[sizeof(GLfloat)*num_floats];
 }
 
 std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
@@ -59,7 +60,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
 
     GLfloat offset_x = GLfloat(16.0f);
     GLfloat offset_y = GLfloat(16.0f);
-
+    texture_data = new GLfloat[sizeof(GLfloat)*num_floats];
     //bottom left
     texture_data[0]  = offset_x * GLfloat(4.0);
     texture_data[1]  = offset_y;
@@ -84,6 +85,8 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
     texture_data[10] = offset_x * GLfloat(5.0);
     texture_data[11] = offset_y;
 
-    texture_data = new GLfloat[sizeof(GLfloat)*num_floats];
+    std::vector<std::pair<GLfloat*, int>> texture_coords;
+    texture_coords.push_back(std::make_pair(texture_data, num_floats));
+    return texture_coords;
 }
 
