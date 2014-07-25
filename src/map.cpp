@@ -534,7 +534,7 @@ Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
           << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
-Map::Blocker::Blocker(const Map::Blocker::Blocker &other):
+Map::Blocker::Blocker(const Map::Blocker &other):
     tile(other.tile), blocker(other.blocker) {
         (*blocker)[tile.x][tile.y]++;
 
