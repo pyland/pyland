@@ -31,7 +31,7 @@ std::shared_ptr<Component> root;
 ///
 /// Parse all the components and generate the vertex and texture data
 ///
-bool  parse_components();
+void  parse_components();
 
 void generate_tex_data();
 void generate_vertex_data();

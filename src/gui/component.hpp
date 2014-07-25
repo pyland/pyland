@@ -22,8 +22,8 @@
 ///
 class Component {
 protected:
-    std::shared_ptr<GLfloat> vertex_data;
-    std::shared_ptr<GLfloat> texture_data;
+    GLfloat* vertex_data;
+    GLfloat* texture_data;
     ///
     /// The GUID of the component
     ///
@@ -61,14 +61,14 @@ public:
     /// transformed by a manager into the global vertex data.
     /// The pair holds the pointer and then the size of the data in bytes
     ///
-    virtual std::vector<std::pair<std::shared_ptr<GLfloat>, int>> generate_vertex_data() = 0;
+    virtual std::vector<std::pair<GLfloat*, int>> generate_vertex_data() = 0;
 
     ///
     /// Same as the vertex function but generates texture data
     /// @param component the component to generate the data for 
     /// The pair holds the pointer and then the size of the data in bytes
     ///
-    virtual std::vector<std::pair<std::shared_ptr<GLfloat>, int>> generate_texture_data() = 0;
+    virtual std::vector<std::pair<GLfloat*, int>> generate_texture_data() = 0;
 
     ///
     /// Set the on click lambda function for this button

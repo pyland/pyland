@@ -54,14 +54,14 @@ public:
     /// transformed by a manager into the global vertex data.
     /// The pair holds the pointer and then the size of the data in bytes
     ///
-    std::vector<std::pair<std::shared_ptr<GLfloat>, int>> generate_vertex_data();
+    std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
 
     ///
     /// Same as the vertex function but generates texture data
     /// @param component the component to generate the data for 
     /// The pair holds the pointer and then the size of the data in bytes
     ///
-    std::vector<std::pair<std::shared_ptr<GLfloat>, int>> generate_texture_data();
+    std::vector<std::pair<GLfloat*, int>> generate_texture_data();
 
 };
 #endif

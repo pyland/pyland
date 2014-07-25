@@ -35,9 +35,9 @@ void set_text(std::string _text) { text = _text; }
 ///
 std::string get_text() { return text; }
 
-std::vector<std::pair<std::shared_ptr<GLfloat>, int>> generate_vertex_data();
+std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
 
-std::vector<std::pair<std::shared_ptr<GLfloat>, int>> generate_texture_data();
+std::vector<std::pair<GLfloat*, int>> generate_texture_data();
 
 };
 

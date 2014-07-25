@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -19,16 +20,15 @@
 #endif
 
 
-bool GUIManager::parse_components() {
+void GUIManager::parse_components() {
 
 
     //Now generate the needed rendering data
-
+    
 
     generate_tex_data();
     generate_vertex_data();
     load_textures();
-
 }
 
 void GUIManager::update_components() {
@@ -48,14 +48,40 @@ GUIManager::~GUIManager() {
 
 
 void GUIManager::generate_tex_data() {
-    //holds the texture data
-    //need 12 float for the 2D texture coordinates
-    gui_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
+    
+    //delete it if its already allocated
+    delete []gui_tex_data; 
 
-    //TODO: this is a remnant from C, update to catch exception
-    if(gui_tex_data == NULL) {
-        std::cerr << "ERROR in GUIManager::generate_tex_data, cannot allocate memory" << std::endl;
+    //generate the texture data data
+    std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
+
+    //calculate data size
+    long num_floats = 0;
+    for(auto component_texture_data : components_data) {
+        num_floats += component_texture_data.second;
+    }
+
+    //Create a buffer for the data
+    try {
+        gui_tex_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+    }
+    catch(std::bad_alloc& ba) {
+        std::cerr << "ERROR: bad_alloc caught in GUIManager::generate_tex_data()" << ba.what() << std::endl;
         return;
+    }
+
+
+    int gui_tex_data_offset = 0;
+
+    //Extract the data
+    for(auto component_texture_data : components_data) {
+        GLfloat* texture_coords = component_texture_data.first;
+        size_t texture_coords_size = size_t(component_texture_data.second);
+
+        //copy data into buffer
+        std::memcpy(&gui_tex_data[gui_tex_data_offset],texture_coords, texture_coords_size);
+
+        gui_tex_data_offset += component_texture_data.second;
     }
 
 //Generate the data
@@ -63,8 +89,9 @@ void GUIManager::generate_tex_data() {
 } 
 
 void GUIManager::generate_vertex_data() {
-
-
+    
+    //Delete the data if its already allocated
+    delete []gui_data;
 
     //TODO: this is a remnant from C, update to catch exception
     if(gui_data == NULL) {
@@ -73,7 +100,7 @@ void GUIManager::generate_vertex_data() {
     }
 
     //generate the vertex data
-    std::vector<std::pair<std::shared_ptr<GLfloat>, int>> components_data = root->generate_vertex_data();
+    std::vector<std::pair<GLfloat*, int>> components_data = root->generate_vertex_data();
 
     //calculate data size
     long num_floats = 0;
@@ -82,20 +109,30 @@ void GUIManager::generate_vertex_data() {
     }
 
     //Create a buffer for the data
-    gui_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    
+    try {
+        gui_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+    }
+    catch(std::bad_alloc& ba) {
+        std::cerr << "ERROR: bad_alloc caught in GUIManager::generate_vertex_data()" << ba.what() << std::endl;
+        return;
+    }
+
+
+    int gui_data_offset = 0;
     //Extract the data
     for(auto component_vertex_data : components_data) {
-        std::shared_ptr<GLfloat> vertices = component_vertex_data.first;
-
+        GLfloat* vertices = component_vertex_data.first;
+        size_t vertices_size = size_t(component_vertex_data.second);
 
         //copy data into buffer
-        
+        std::memcpy(&gui_data[gui_data_offset], vertices, vertices_size);
+
+        gui_data_offset += component_vertex_data.second;
     }
 
     
     renderable_component.set_vertex_data(gui_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
+    renderable_component.set_num_vertices_render(GLsizei(num_floats/3));//GL_TRIANGLES being used
 }
 
 void GUIManager::load_textures() {
