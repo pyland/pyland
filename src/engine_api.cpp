@@ -21,7 +21,7 @@ bool Engine::move_object(int id, Vec2D move_by) {
             return false;
         } else {
             // trigger any waiting events on leaving 
-            std::pair<int,int> leave_tile = std::make_pair(object->get_x_position(), object->get_y_position());
+            Vec2D leave_tile = Vec2D(object->get_x_position(), object->get_y_position());
             get_map_viewer()->get_map()->event_step_off.trigger(leave_tile, id);
 
             //TODO, make this an event movement
@@ -29,7 +29,7 @@ bool Engine::move_object(int id, Vec2D move_by) {
             object->set_y_position(object->get_y_position() + move_by.y);
 
             //trigger any waiting events on arriving
-            std::pair<int,int> arrive_tile = std::make_pair(object->get_x_position(), object->get_y_position());
+            Vec2D arrive_tile = Vec2D(object->get_x_position(), object->get_y_position());
             get_map_viewer()->get_map()->event_step_on.trigger(arrive_tile, id);
 
             //if there is a map viewer attached

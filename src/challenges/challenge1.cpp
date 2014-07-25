@@ -1,10 +1,11 @@
-#include "print_debug.hpp"
-#include "engine_api.hpp"
-#include "map_viewer.hpp"
+#include "api.hpp"
 #include "challenge1.hpp"
+#include "engine_api.hpp"
+#include "print_debug.hpp"
+#include "map_viewer.hpp"
 
 //TODO: later this will be fetched from the map
-std::vector <std::pair<int, int>> target = { std::make_pair(4,15), std::make_pair(24,15), std::make_pair(114,14), std::make_pair(1499,15), std::make_pair(8,15), std::make_pair(9,15), std::make_pair(10,15) };
+std::vector <Vec2D> target = { Vec2D(4,15), Vec2D(24,15), Vec2D(114,14), Vec2D(1499,15), Vec2D(8,15), Vec2D(9,15), Vec2D(10,15) };
 
 void Challenge::dialogue (std::string name, std::string text_to_user) {
     std::cout << name << " : " << text_to_user << std::endl;
