@@ -1,5 +1,6 @@
 #include "gui_manager.hpp"
 
+#include <new>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -49,24 +50,23 @@ GUIManager::~GUIManager() {
 void GUIManager::generate_tex_data() {
     //holds the texture data
     //need 12 float for the 2D texture coordinates
-    int num_floats = 12;
     gui_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
+
+    //TODO: this is a remnant from C, update to catch exception
     if(gui_tex_data == NULL) {
         std::cerr << "ERROR in GUIManager::generate_tex_data, cannot allocate memory" << std::endl;
         return;
     }
 
 //Generate the data
-    
     renderable_component.set_texture_coords_data(gui_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
 
 void GUIManager::generate_vertex_data() {
 
-    //holds the character vertex data
-    //need 18 floats for each coordinate as these hold 3D coordinates
-    int num_floats = 18;
-    gui_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+
+
+    //TODO: this is a remnant from C, update to catch exception
     if(gui_data == NULL) {
         std::cerr << "ERROR in Characater::generate_vertex_data, cannot allocate memory" << std::endl;
         return;
@@ -76,7 +76,20 @@ void GUIManager::generate_vertex_data() {
     std::vector<std::pair<std::shared_ptr<GLfloat>, int>> components_data = root->generate_vertex_data();
 
     //calculate data size
+    long num_floats = 0;
     for(auto component_vertex_data : components_data) {
+        num_floats += component_vertex_data.second;
+    }
+
+    //Create a buffer for the data
+    gui_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+    
+    //Extract the data
+    for(auto component_vertex_data : components_data) {
+        std::shared_ptr<GLfloat> vertices = component_vertex_data.first;
+
+
+        //copy data into buffer
         
     }
 
