@@ -18,6 +18,15 @@
 #include <GL/gl.h>
 #endif
 
+//Include GLM
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 ComponentGroup::ComponentGroup() {
 
@@ -31,11 +40,29 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
    std::vector<std::pair<GLfloat*, int>> group_data;
     
     //Go through all the components in this group
-    for(auto component : components) {
-        std::vector<std::pair<GLfloat*, int>> component_data = component.second->generate_texture_data();
+    for(auto component_pair : components) {
+        std::vector<std::pair<GLfloat*, int>> component_data = component_pair.second->generate_texture_data();
         
         //get all the pointers in the component - deals with ComponentGroup children
         for(auto component_vertex_ptr : component_data) {
+            //comvert this into this component's local spacd
+
+            //Calcuate how far to translate this component
+            int pixel_offset_x = 0; 
+            float component_x_offset = component_pair.second->get_x_offset();
+            int pixel_offset_y = 0 ;
+            float component_y_offset = component_pair.second->get_y_offset();
+
+            pixel_offset_x = (float)width_pixels * component_x_offset;
+            pixel_offset_y = (float)height_pixels * component_y_offset;
+
+            //Translate it
+            glm::mat4 transform = glm::mat4(1.0);
+            glm::vec4 translate = glm::vec4((float)pixel_offset_x, (float)pixel_offset_y, 0.0f, 0.0f);
+
+            //translate each vertex
+            
+            
             //add to this group
             group_data.push_back(component_vertex_ptr);
         }
@@ -48,8 +75,8 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
     std::vector<std::pair<GLfloat*, int>> group_data;
     
     //Go through all the components in this group
-    for(auto component : components) {
-        std::vector<std::pair<GLfloat*, int>> component_data = component.second->generate_texture_data();
+    for(auto component_pair : components) {
+        std::vector<std::pair<GLfloat*, int>> component_data = component_pair.second->generate_texture_data();
         
         //get all the pointers in the component - deals with ComponentGroup children
         for(auto component_vertex_ptr : component_data) {
@@ -60,12 +87,12 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
 
     return group_data;
 }
-void ComponentGroup::add_component(std::shared_ptr<Component> component) {
+void ComponentGroup::add(std::shared_ptr<Component> component) {
     components[component->get_id()] = component;
 }
 
 
-void ComponentGroup::remove_component(int component_id) {
+void ComponentGroup::remove(int component_id) {
     components.erase(component_id);
 }
 

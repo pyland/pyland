@@ -20,24 +20,24 @@
 
 
 class Button : public Component {
-std::string text;
+    std::string text;
 public:
     
-///
-/// Set the text for the button
-/// @param _text the button text
-///
-void set_text(std::string _text) { text = _text; }
+    ///
+    /// Set the text for the button
+    /// @param _text the button text
+    ///
+    void set_text(std::string _text) { text = _text; }
             
-///
-///o Get the button's text
-/// @return the text
-///
-std::string get_text() { return text; }
+    ///
+    ///o Get the button's text
+    /// @return the text
+    ///
+    std::string get_text() { return text; }
 
-std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
+    std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
 
-std::vector<std::pair<GLfloat*, int>> generate_texture_data();
+    std::vector<std::pair<GLfloat*, int>> generate_texture_data();
 
 };
 

@@ -20,7 +20,7 @@
 class GUIManager : public Object {
     GLfloat* gui_tex_data;
     GLfloat* gui_data;
-    GLfloat* tex_buf;
+    char* tex_buf;
 
 
 ///

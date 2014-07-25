@@ -27,13 +27,13 @@ public:
     /// Add a component to the component group
     /// @param component the component to add the the group
     ///
-    void add_component(std::shared_ptr<Component> component);
+    void add(std::shared_ptr<Component> component);
 
     ///
     /// Remove a component from the group
     /// @param component_id the id of the component
     ///
-    void remove_component(int component_id);
+    void remove(int component_id);
 
     ///
     /// Get a component shared_ptr by id

@@ -12,7 +12,7 @@
     * Neither the name of the copyright holder nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
-
+n
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -54,12 +54,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "button.hpp"
 #include "character.hpp"
+#include "component.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
 #include "game_window.hpp"
-#include "gui/gui_manager.hpp"
+#include "gui_manager.hpp"
+#include "gui_window.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
@@ -72,6 +75,7 @@
 #include "object_manager.hpp"
 #include "print_debug.hpp"
 #include "challenge1.hpp"
+
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -237,7 +241,41 @@ int main(int argc, const char* argv[]) {
     Map map("../resources/map0.tmx");
 
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
+
+    //BUILD the GUI
     GUIManager gui_manager;
+    
+    std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
+    std::shared_ptr<Button> run_button = std::make_shared<Button>();
+    run_button->set_text("Run");
+    run_button->set_on_click([] () { std::cout << "CLICKED run" << std::endl; });
+    run_button->set_width(1.0f);
+    run_button->set_height(0.2f);
+    run_button->set_y_offset(0.0f);
+    run_button->set_x_offset(0.0f);
+
+    std::shared_ptr<Button> stop_button = std::make_shared<Button>();
+    stop_button->set_text("Stop");
+    stop_button->set_on_click([] () { std::cout << "CLICKED stop" << std::endl; });
+    stop_button->set_width(1.0f);
+    stop_button->set_height(0.2f);
+    stop_button->set_y_offset(0.3f);
+    stop_button->set_x_offset(0.0f);
+
+    std::shared_ptr<Button> restart_button = std::make_shared<Button>();
+    restart_button->set_text("Restart");
+    restart_button->set_on_click([] () { std::cout << "CLICKED restart" << std::endl; });
+    restart_button->set_width(1.0f);
+    restart_button->set_height(0.2f);
+    restart_button->set_y_offset(0.7f);
+    restart_button->set_x_offset(0.0f);
+ 
+    sprite_window->add(run_button);
+    sprite_window->add(stop_button);
+    sprite_window->add(restart_button);
+    
+    gui_manager.set_root(sprite_window);
+
     MapViewer map_viewer(&window,&gui_manager);
     map_viewer.set_map(&map);
     
@@ -334,7 +372,7 @@ int main(int argc, const char* argv[]) {
     init_challenge();
 
     while (!window.check_close()) {
-        //Get the time since the last iteration 
+        //Goet the time since the last iteration 
         dt = get_dt(); 
         em.process_events();
         map_viewer.update_map(dt);

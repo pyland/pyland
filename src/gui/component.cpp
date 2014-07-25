@@ -1,7 +1,15 @@
-
 #include "component.hpp"
 
 #include <vector>
+
+Component::Componenet() {
+
+}
+
+Component::~Component() {
+    delete []vertex_data;
+    delete []texture_data;
+}
 
 bool Component::set_on_click(std::function<void (void)> func) {
     on_click_func= func;

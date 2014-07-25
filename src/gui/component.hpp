@@ -22,8 +22,22 @@
 ///
 class Component {
 protected:
+    
+    ///
+    /// The Opengl vertex data for this component in its local 'object' space
+    ///
     GLfloat* vertex_data;
+
+    ///
+    /// The Opengl texture data for this component 
+    ///
     GLfloat* texture_data;
+
+    ///
+    /// A pointer to the parent
+    ///
+    std::weak_pr<Component> parent;
+
     ///
     /// The GUID of the component
     ///
@@ -38,6 +52,18 @@ protected:
     /// Height of the component relative to the parent
     ///
     float height;
+
+    ///
+    /// The width of the component in pixels - used to generate the
+    /// vertex data
+    ///
+    int width_pixels;
+
+    ///
+    /// The height of the component in pixels - used to generate the
+    /// vertex data
+    ///
+    int height_pixels;
 
     ///
     /// The x offset of the component relative to the parent
@@ -55,6 +81,8 @@ protected:
     std::function<void (void)> on_click_func;
 
 public:
+    Component();
+    ~Component();
     ///
     /// Generates the vertex data for this particular component. This
     /// data is in the local 'object' space and will need to be

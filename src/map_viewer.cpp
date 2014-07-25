@@ -155,9 +155,9 @@ void MapViewer::render_map() {
     
     //Move gui_manager to the required position
     glm::mat4 model2 = glm::mat4(1.0f);
-    glm::vec3 translate2 = glm::vec3(((float)gui_manager->get_x_position()-map->get_display_x())*32.0f, ((float)gui_manager->get_y_position()-map->get_display_y())*32.0f, 0.0f);
-    glm::mat4 translated2 = glm::translate(model2, translate2);
-    gui_render_component->set_modelview_matrix(translated2);
+    //    glm::vec3 translate2 = glm::vec3(((float)gui_manager->get_x_position()-map->get_display_x())*32.0f, ((float)gui_manager->get_y_position()-map->get_display_y())*32.0f, 0.0f);
+    //    glm::mat4 translated2 = glm::translate(model2, translate2);
+    gui_render_component->set_modelview_matrix(model2);
     gui_render_component->set_projection_matrix(projection_matrix);
 
     gui_render_component->bind_shader();

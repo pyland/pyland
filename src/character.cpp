@@ -57,7 +57,7 @@ void Character::generate_tex_data() {
 
     GLfloat offset_x = GLfloat(TILESET_ELEMENT_SIZE) / IMAGE2_SIZE_WIDTH;
     GLfloat offset_y = GLfloat(TILESET_ELEMENT_SIZE) / IMAGE2_SIZE_HEIGHT;
-    print_debug << "OFFSET " << offset_x << std::endl;
+
     //bottom left
     sprite_tex_data[0]  = offset_x * GLfloat(4.0);
     sprite_tex_data[1]  = offset_y;
