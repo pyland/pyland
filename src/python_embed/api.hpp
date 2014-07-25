@@ -72,12 +72,7 @@ class Entity {
         /// Starting postiton for this entity, used to reset location when entity dies.
         ///
         Vec2D start;
-
-        ///
-        /// Current position in tiles, from bottom-left.
-        ///
-        Vec2D position;
-
+        
         ///
         /// The wrapped python script.
         ///

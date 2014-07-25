@@ -45,7 +45,7 @@ std::string Vec2D::to_string() {
 
 
 Entity::Entity(Vec2D start, std::string name, int id):
-    start(start), position(start), script(""), id(id), call_number(0) {
+    start(start), script(""), id(id), call_number(0) {
         this->name = std::string(name);
         Engine::move_object(id, start.x, start.y);
 }
@@ -54,7 +54,6 @@ bool Entity::move(int x, int y) {
     ++call_number;
 
     if (Engine::move_object(id, x, y)) {
-        position += Vec2D(x, y);
         return true;
     };
 
@@ -63,12 +62,14 @@ bool Entity::move(int x, int y) {
 
 bool Entity::walkable(int x, int y) {
     ++call_number;
-    auto new_position = position + Vec2D(x, y);
+    auto curr_position = Engine::find_object(id);
+    auto new_position = Vec2D(curr_position.first, curr_position.second) + Vec2D(x, y);
     return Engine::walkable(new_position.x, new_position.y);
 }
 
 void Entity::monologue() {
-    std::cout << "I am " << name << " and I am standing at " << position << "!" << std::endl;
+    auto curr_position = Engine::find_object(id);
+    std::cout << "I am " << name << " and I am standing at " << Vec2D(curr_position.first, curr_position.second) << "!" << std::endl;
 }
 
 
