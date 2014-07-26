@@ -1,5 +1,5 @@
 #include <cstring>
-#include <exception>
+#include <stdexcept>
 #include <glog/logging.h>
 #include <iostream>
 #include <new>
