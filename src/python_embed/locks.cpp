@@ -29,11 +29,15 @@ namespace lock {
 
 
     ThreadGIL::ThreadGIL(ThreadState &threadstate) {
+        LOG(INFO) << " Aquiring Thread GIL lock";
         PyEval_RestoreThread(threadstate.get_threadstate());
+        LOG(INFO) << " Thread GIL lock aquired";
     }
 
     ThreadGIL::~ThreadGIL() {
+        LOG(INFO) << " Releasing Thread GIL lock";
         PyEval_SaveThread();
+        LOG(INFO) << " Thread GIL lock released";
     }
 
 

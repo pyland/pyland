@@ -67,8 +67,7 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 ///     usage should keep this in mind.
 ///
 void thread_killer(std::timed_mutex &finish_signal,
-                   EntityThreads &entitythreads,
-                   InterpreterContext interpreter_context) {
+                   EntityThreads &entitythreads) {
 
     while (true) {
         // Nonbloking sleep; allows safe quit
@@ -87,7 +86,6 @@ void thread_killer(std::timed_mutex &finish_signal,
             if (auto entitythread_p = entitythread.lock()) {
                 if (!entitythread_p->is_dirty()) {
                     LOG(INFO) << "Killing thread!";
-                    lock::GIL lock_gil(interpreter_context, "thread_killer");
                     entitythread_p->halt_soft(EntityThread::Signal::STOP);
                 }
                 entitythread_p->clean();
@@ -98,8 +96,7 @@ void thread_killer(std::timed_mutex &finish_signal,
     LOG(INFO) << "Finished kill thread";
 }
 
-ThreadKiller::ThreadKiller(EntityThreads &entitythreads,
-                           InterpreterContext interpreter_context) {
+ThreadKiller::ThreadKiller(EntityThreads &entitythreads) {
 
     // Lock now to prevent early exit
     kill_thread_finish_signal.lock();
@@ -107,8 +104,7 @@ ThreadKiller::ThreadKiller(EntityThreads &entitythreads,
     thread = std::thread(
         thread_killer,
         std::ref(kill_thread_finish_signal),
-        std::ref(entitythreads),
-        interpreter_context
+        std::ref(entitythreads)
     );
 
     LOG(INFO) << "main: Spawned Kill thread";

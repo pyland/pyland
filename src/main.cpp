@@ -155,41 +155,32 @@ class CallbackState {
             create_character(interpreter);
         }
 
-        void restart(InterpreterContext interpreter_context) {
+        void restart() {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             if (!active_player) { return; }
 
-            lock::GIL lock_gil(interpreter_context, "Killer");
-
-            // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::RESTART);
         }
 
-        void stop(InterpreterContext interpreter_context) {
+        void stop() {
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             if (!active_player) { return; }
 
-            lock::GIL lock_gil(interpreter_context, "Killer");
-
-            // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::STOP);
         }
 
-        void kill(InterpreterContext interpreter_context) {
+        void kill() {
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             if (!active_player) { return; }
 
-            lock::GIL lock_gil(interpreter_context, "Killer");
-
-            // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
         }
 
@@ -268,15 +259,15 @@ int main(int argc, const char* argv[]) {
 
     Lifeline kill_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("K")},
-        [&] (KeyboardInputEvent) { callbackstate.kill(interpreter.interpreter_context); }
+        [&] (KeyboardInputEvent) { callbackstate.kill(); }
     ));
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("H")},
-        [&] (KeyboardInputEvent) { callbackstate.stop(interpreter.interpreter_context); }
+        [&] (KeyboardInputEvent) { callbackstate.stop(); }
     ));
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("R")},
-        [&] (KeyboardInputEvent) { callbackstate.restart(interpreter.interpreter_context); }
+        [&] (KeyboardInputEvent) { callbackstate.restart(); }
     ));
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(

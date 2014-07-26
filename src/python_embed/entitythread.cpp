@@ -55,35 +55,37 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
 
     bool waiting = true;
 
-    {
-        lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
-
-        // Cast to object needed
-        PyObject_Print(py::api::object(entity_object->attr("name")).ptr(), stdout, 0);
-    }
-
     // Register thread with Python, to allow locking
     lock::ThreadState threadstate(interpreter_context);
-    lock::ThreadGIL lock_thread(threadstate);
 
-    LOG(INFO) << "run_entity: Stolen GIL";
+    std::unique_ptr<py::api::object> bootstrapper_module;
 
-    // Get and run bootstrapper
-    py::api::object bootstrapper_module = interpreter_context.import_file(bootstrapper_file);
+    {
+        lock::ThreadGIL lock_thread(threadstate);
 
-    // Asynchronously return thread id to allow killing of this thread
-    //
-    // WARNING:
-    //     This must be here unless earlier blocks are to be wrapped in the
-    //     try, as the kill thread is legally allowed to kill as soon as it
-    //     gets the entity, and the entity returns as soon as this promise
-    //     is fulfilled. 
-    //
-    thread_id_promise.set_value(PyThread_get_thread_ident());
+        LOG(INFO) << "run_entity: Stolen GIL";
+
+        // Get and run bootstrapper
+        bootstrapper_module = std::make_unique<py::api::object>(
+            interpreter_context.import_file(bootstrapper_file)
+        );
+
+        // Asynchronously return thread id to allow killing of this thread
+        //
+        // WARNING:
+        //     This causes subtle race conditions, as setting this requires
+        //     the GIL and the thread killer takes the GIL.
+        //
+        //     BE CAREFUL.
+        //
+        thread_id_promise.set_value(PyThread_get_thread_ident());
+    }
 
     while (true) {
         try {
-            bootstrapper_module.attr("start")(
+            lock::ThreadGIL lock_thread(threadstate);
+
+            bootstrapper_module->attr("start")(
                 *entity_object,
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::RESTART])),
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::STOP])),
@@ -92,6 +94,8 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
             );
         }
         catch (py::error_already_set &) {
+            lock::ThreadGIL lock_thread(threadstate);
+
             PyObject *type, *value, *traceback;
             PyErr_Fetch(&type, &value, &traceback);
 
@@ -192,14 +196,18 @@ PyObject *EntityThread::make_base_async_exception(PyObject *base, const char *na
 }
 
 void EntityThread::halt_soft(Signal signal) {
-    LOG(INFO) << "Attempting to kill thread id " << get_thread_id() << ".";
+    auto thread_id = get_thread_id();
 
-    PyThreadState_SetAsyncExc(get_thread_id(), signal_to_exception[signal]);
+    lock::GIL lock_gil(interpreter_context, "EntityThread::halt_soft");
+
+    PyThreadState_SetAsyncExc(thread_id, signal_to_exception[signal]);
 }
 
 void EntityThread::halt_hard() {
     // TODO: everything!!!
     throw std::runtime_error("hard halting not implemented");
+
+    lock::GIL lock_gil(interpreter_context, "EntityThread::halt_hard");
 }
 
 bool EntityThread::is_dirty() {

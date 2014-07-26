@@ -26,7 +26,7 @@ Interpreter::Interpreter(boost::filesystem::path function_wrappers):
     //     This can be dangerous!
     interpreter_context(initialize_python()) {
 
-        thread_killer = std::make_unique<ThreadKiller>(entitythreads, interpreter_context);
+        thread_killer = std::make_unique<ThreadKiller>(entitythreads);
         LOG(INFO) << "Interpreter: Spawned Kill thread";
 
         // All Python errors should result in a Python traceback    
