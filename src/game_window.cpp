@@ -45,15 +45,10 @@ std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>(
 GameWindow* GameWindow::focused_window = nullptr;
 
 
-
-GameWindow::InitException::InitException(const char* message) {
-    this->message = message;
-}
-
-
-const char* GameWindow::InitException::what() const noexcept {
-    return message;
-}
+// Need to inherit constructors manually.
+// NOTE: This will, and are required to, copy the message.
+GameWindow::InitException::InitException(const char *message): std::runtime_error(message) {}
+GameWindow::InitException::InitException(const std::string &message): std::runtime_error(message) {}
 
 
 

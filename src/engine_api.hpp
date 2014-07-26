@@ -90,7 +90,7 @@ public:
     static bool load_map(int map_id);
 
     ///
-    /// Get the locationof hte object in the map, throws exception if
+    /// Get the locationof tte object in the map, throws exception if
     /// there is the object is not on the map
     /// @id the id of the object
     /// @return a pair which is the (x, y) tuple of the object position

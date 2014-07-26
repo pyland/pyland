@@ -34,7 +34,7 @@ bool MapLoader::load_map(const std::string source) {
     map.ParseFile(source);
 
     if (map.HasError()) {
-        LOG(ERROR) << map.GetErrorCode() << " " << map.GetErrorText().c_str();
+        LOG(ERROR) << map.GetErrorCode() << " " << map.GetErrorText();
         return false;
     }
 
@@ -94,7 +94,7 @@ void MapLoader::load_objects() {
             const Tmx::Object* object = object_group->GetObject(j);
             
             //Get object properties
-            const std::string name = object->GetName().c_str();
+            const std::string name = object->GetName();
 
             int object_x = object->GetX();
             int object_y = object->GetY();
@@ -122,7 +122,7 @@ void MapLoader::load_tileset() {
         const Tmx::Tileset *tileset = map.GetTileset(i);
         
         //Get the image name. This is the path relative to the TMX file
-        const std::string tileset_name(tileset->GetName().c_str());
+        const std::string tileset_name(tileset->GetName());
         int tileset_width = tileset->GetImage()->GetWidth();
         int tileset_height = tileset->GetImage()->GetHeight();
         

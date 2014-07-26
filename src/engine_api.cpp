@@ -88,16 +88,15 @@ bool Engine::load_map(int) {
 
 
 Vec2D Engine::find_object(int id) {
-
-    std::string exception_str = "Object Requested could not be found";
-
-    if(Engine::map_viewer == nullptr)
-        throw exception_str;
+    if (!Engine::map_viewer) {
+        throw std::runtime_error("Object Requested could not be found");
+    }
 
     Map* map = map_viewer->get_map();
-    if(map == nullptr)
-        throw exception_str;
-    
+    if (!map) {
+        throw std::runtime_error("Object Requested could not be found");
+    }
+
     //Check the object is on the map
     auto objects = map->get_characters();
     for(auto object_id : objects) {
@@ -109,7 +108,7 @@ Vec2D Engine::find_object(int id) {
     }
 
     //Not on the map
-    throw exception_str;
+    throw std::runtime_error("Object is not in the map");
 }
 
 bool Engine::open_editor(std::string editor, std::string filename) {

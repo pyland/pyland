@@ -188,12 +188,10 @@ public:
     /// Used when SDL or EGL code fails to initialize, reinitialize, or
     /// deinitialize.
     ///
-    class InitException: public std::exception {
-    protected:
-        const char* message;
+    class InitException: public std::runtime_error {
     public:
-        InitException(const char* message);
-        virtual const char* what() const noexcept;
+        InitException(const char  *message);
+        InitException(const std::string &message);
     };
 
     ///

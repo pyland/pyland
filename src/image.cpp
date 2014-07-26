@@ -13,15 +13,11 @@ extern "C" {
 #include "lifeline.hpp"
 
 
+// Need to inherit constructors manually.
+// NOTE: This will, and are required to, copy the message.
+Image::LoadException::LoadException(const char  *message): std::runtime_error(message) {}
+Image::LoadException::LoadException(const std::string &message): std::runtime_error(message) {}
 
-Image::LoadException::LoadException(const char* message) {
-    this->message = message;
-}
-
-
-const char* Image::LoadException::what() const noexcept {
-    return message;
-}
 
 
 
@@ -93,7 +89,7 @@ void Image::load_file(const char* filename) {
         std::stringstream error_message;
         error_message << "Error loading image \"" << filename << "\" " << IMG_GetError();
 
-        throw Image::LoadException(error_message.str().c_str());
+        throw Image::LoadException(error_message.str());
     }
     
     // The surface is a strip of pixels, so it can be used for flipping.
