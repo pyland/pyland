@@ -55,7 +55,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "api.hpp"
-#include "challenge.hpp"
 #include "character.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
@@ -72,6 +71,10 @@
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
 
+// Include challenges
+// TODO: Rearchitechture
+#include "challenge.hpp"
+#include "long_walk_challenge.hpp"
 
 // Choose between GLES and GL
 #ifdef USE_GLES
@@ -315,15 +318,16 @@ int main(int argc, const char* argv[]) {
 
     std::string editor;
 
-    if (argc == 2) {
+    if (argc >= 2) {
         editor = argv[1];
     } else {
         editor = "gedit";
     };
 
 
-    Challenge challenge1 = Challenge(editor);
+    LongWalkChallenge long_walk_challenge(editor);
     callbackstate.spawn();
+    long_walk_challenge.start();
 
     while (!window.check_close()) {
         //Get the time since the last iteration 

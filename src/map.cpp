@@ -551,7 +551,7 @@ Map::Blocker::~Blocker() {
       << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
-Map::Blocker Map::block_tile (Vec2D tile) {
+Map::Blocker Map::block_tile(Vec2D tile) {
     return Blocker(tile, &blocker);
 }
 

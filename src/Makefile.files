@@ -27,7 +27,8 @@ BASE_OBJS = \
 
 
 CHALLENGE_OBJS = \
-	challenges/challenge1.o
+	challenges/challenge.o \
+	challenges/long_walk_challenge.o
 
 
 HEADER_DEPENDS_ROOT = \

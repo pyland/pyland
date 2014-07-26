@@ -281,7 +281,7 @@ public:
             std::vector <std::vector<int>>* blocker;
     };
 
-    Blocker block_tile (Vec2D tile);
+    Blocker block_tile(Vec2D tile);
 };
 
 #endif
