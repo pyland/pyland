@@ -61,8 +61,8 @@ void MapViewer::render_map() {
     std::pair<int, int> size = window->get_size();
     //TODO, set the map view correctly
     glScissor(0, 0, size.first, size.second);
-    map->set_display_width(size.first / 32);
-    map->set_display_height(size.second / 32);
+    map->set_display_width(float(size.first) / 32.0f);
+    map->set_display_height(float(size.second) / 32.0f);
     glViewport(0, 0, size.first, size.second);
     refocus_map();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
@@ -146,6 +146,85 @@ void MapViewer::render_map() {
     window->swap_buffers();
 }
 
+/// 
+/// Take a line of a given size (length) and a point offset on that line (point):
+/// 
+/// ← length    →
+/// ├───────•───┤
+/// ← point →
+/// 
+/// Also takes a display of a given size (bound):
+/// 
+/// ← bound→
+/// ┼─────────────┼
+/// 
+/// If bound == length:
+/// 
+///     It places the boxes over eachother:
+/// 
+///     ┼─────────────┼
+///     ├─────────•───┤
+///
+/// If length > bound:
+/// 
+///     It centres the box on the point:
+/// 
+///            ┼─────────────┼
+///     ├─────────────•───┤
+/// 
+///     Then moves the box inside the bounds, if needed:
+/// 
+///         ┼─────────────┼
+///     ├─────────────•───┤
+/// 
+/// If bound > length:
+/// 
+///     It centres the line inside the box:
+/// 
+///     ┼─────────────┼
+///           |•────────┤
+/// 
+///     It then moves the line inside the box, if needed:
+/// 
+///     ┼─────────────┼
+///         |•────────┤
+/// 
+/// Then it returns the distance from the start of length to the start of bound:
+/// 
+///     For example,
+/// 
+///         ────→
+///             ┼─────────────┼
+///         ├─────────────•───┤
+/// 
+///     which is positive, or
+/// 
+///         ←────
+///         ┼─────────────┼
+///             |•────────┤
+/// 
+///     which is negative.
+/// 
+
+float centre_point_in_range(float point, float length, float bound) {
+    // First case is a subset of the other two
+    // and both cases have same first step.
+    float bound_offset = point - bound / 2.0f;
+
+    // Crop to valid range: bound inside length or length inside bound
+    // Note order of min/max
+    if (length > bound) {
+        // bound_offset positive by no more than | length - bound |
+        bound_offset = std::min(std::max(bound_offset, 0.0f), length - bound);
+    }
+    else if (bound > length) {
+        // bound_offset negative by no more than | length - bound |
+        bound_offset = std::max(std::min(bound_offset, 0.0f), length - bound);
+    }
+
+    return bound_offset;
+}
+
 void MapViewer::refocus_map() {
     //Get the object
     ObjectManager& object_manager = ObjectManager::get_instance();
@@ -159,47 +238,19 @@ void MapViewer::refocus_map() {
 
     //If such an object exists, move the map to it
     if(object) {
-        
-        float object_x = (float)object->get_x_position();
-        float object_y = (float)object->get_y_position();
-        //center the map on the object
-        float map_width = (float)map->get_width();
-        float map_height = (float)map->get_height();
-        float map_display_width = (float)map->get_display_width();
-        float map_display_height = (float)map->get_display_height();
-        //Move the map to focus on the player
-        //We wrap to stop the map moving off the view
+        map->set_display_x(centre_point_in_range(
+            // half-tile offset to take centre of character
+            /*point*/  float(object->get_x_position()) + 0.5f,
+            /*length*/ float(map->get_width()),
+            /*bound*/  map->get_display_width()
+        ));
 
-        //TODO
-        //need to handle odd and even width/ height
-
-        float tile_offset = 0.5f;
-        //if in scrolling part of map
-        if(object_x - map_display_width/2.0f > 0) {
-            //If in scrolling part
-            if(object_x + map_display_width /2.0f < map->get_width()){ 
-                map->set_display_x(object_x - map_display_width/ 2.0f);
-           } 
-            else {
-                map->set_display_x(map_width - map_display_width + tile_offset);
-            }
-        }
-        else {
-            //not scrolling part
-            map->set_display_x(0.0f);
-        }
-
-        if(object_y - map_display_height/2.0f > 0) {
-            if(object_y + map_display_height /2.0f < map->get_height()){ 
-                map->set_display_y(object_y - map_display_height/ 2.0f);
-            } 
-            else {
-                map->set_display_y(map_height - map_display_height + tile_offset);
-            }
-        }
-        else {
-            map->set_display_y(0.0f);
-        }
+        map->set_display_y(centre_point_in_range(
+            // half-tile offset to take centre of character
+            /*point*/  float(object->get_y_position()) + 0.5f,
+            /*length*/ float(map->get_height()),
+            /*bound*/  map->get_display_height()
+        ));
     } else {
         LOG(INFO) << "MapViewer::refocus_map: No objects have focus.";
     }

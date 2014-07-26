@@ -117,12 +117,12 @@ class Map {
     ///
     /// The width of the map to be displayed on screen.
     ///
-    int map_display_width = 30;
+    float map_display_width = 30;
 
     ///
     /// The height of the map to be displayed on screen
     ///
-    int map_display_height = 30;
+    float map_display_height = 30;
 
     ///
     /// The texture buffer pointers
@@ -217,25 +217,25 @@ public:
     /// Get the display width of the map
     /// @return get the display width of the map
     ///
-    int get_display_width() { return map_display_width; }
+    float get_display_width() { return map_display_width; }
 
     ///
     /// Set the display width of the map
     /// @param display_width the new display width of the map
     ///
-    void set_display_width(int display_width) { map_display_width = display_width; }
+    void set_display_width(float display_width) { map_display_width = display_width; }
 
     ///
     /// Get the display height of the map
     /// @return get the display height of the map
     ///
-    int get_display_height() { return map_display_height; }
+    float get_display_height() { return map_display_height; }
 
     ///
     /// Set the display height of the map
     /// @param display_width the new display height of the map
     ///
-    void set_display_height(int display_height) { map_display_height = display_height; }
+    void set_display_height(float display_height) { map_display_height = display_height; }
 
 
     ///
