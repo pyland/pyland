@@ -28,7 +28,6 @@
 // A rotating cube rendered with OpenGL|ES. Three images used as textures on the cube faces.
 
 #include <boost/filesystem.hpp>
-    
 #include <cassert>
 #include <chrono>
 #include <cmath>
@@ -56,6 +55,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "api.hpp"
+#include "challenge.hpp"
 #include "character.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
@@ -71,12 +71,11 @@
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
-#include "challenge1.hpp"
 
+
+// Choose between GLES and GL
 #ifdef USE_GLES
-
 #include <GLES2/gl2.h>
-
 #endif
 
 #ifdef USE_GL
