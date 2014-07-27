@@ -46,6 +46,17 @@ class Shader {
     GLuint load_shader(GLenum type, const std::string src);
 
 public:
+    ///
+    /// Represents a failure when loading the shader.
+    ///
+    class LoadException: public std::exception {
+    protected:
+        const char* message;
+    public:
+        LoadException(const char* message);
+        virtual const char* what() const noexcept;
+    };
+    
     /// 
     /// This function creates the Opengl program
     /// @param vs The source file for the vertex source
@@ -66,5 +77,18 @@ public:
     /// @return the Opengl program object identifier
     ///
     GLuint get_program() { return program_obj; }
+
+    ///
+    /// Wrapper around glBindAttribLocation
+    ///
+    /// @param location The location index.
+    /// @param variable The variable name to bind the location to.
+    ///
+    void bind_location_to_attribute(GLuint location, const char* variable);
+
+    ///
+    /// Wrapper around glLinkProgram
+    ///
+    void link();
 };
 #endif

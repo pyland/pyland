@@ -1,29 +1,75 @@
 #include "shader.hpp"
 
 #include <iostream>
+#include <fstream>
 #include <string>
+
+
+
+static char* load_file(std::string filename) {
+    char* content;
+    std::ifstream file;
+    
+    file.open(filename);
+    
+    // If you even need [more than] 2GiB, you are doing something
+    // seriously wrong.
+    file.seekg(0, std::ios_base::end);
+    int file_size = (int)file.tellg();
+    file.seekg(0, std::ios_base::beg);
+    
+    content = new char[file_size+1];
+    file.read(content, file_size);
+    if (file.gcount() != file_size) {
+        std::cerr << "Unable to load shader file \"" << filename << "\".";
+        throw Shader::LoadException("Unable to load shader file");
+    }
+    
+    file.close();
+
+    // Add null terminator.
+    content[file_size] = '\0';
+    
+    return content;
+}
+
+
+
+Shader::LoadException::LoadException(const char* message) {
+    this->message = message;
+}
+
+
+const char* Shader::LoadException::what() const noexcept {
+    return message;
+};
+
+
 
 Shader::Shader(const std::string vs, const std::string fs) {
     GLint linked;
+
+    char* vs_src = load_file(vs);
+    char* fs_src = load_file(fs);
     
     //Load the fragment and vertex shaders
-    vertex_shader = load_shader(GL_VERTEX_SHADER, vs);
-    fragment_shader = load_shader(GL_FRAGMENT_SHADER, fs);
-    
+    vertex_shader = load_shader(GL_VERTEX_SHADER, vs_src);
+    fragment_shader = load_shader(GL_FRAGMENT_SHADER, fs_src);
+
+    delete vs_src;
+    delete fs_src;
+
     //Create the program object
     program_obj = glCreateProgram();
     
     if(program_obj == 0) {
-        std::cerr << "ERROR FLAG: " << glGetError();
+        std::cerr << "ERROR FLAG: " << std::hex << glGetError();
         std::cerr << "ERROR: SHADER PROGRAM CREATION. Could not create program object." << std::endl;
-        return;
+        throw Shader::LoadException("Unable to create shader program");
     }
 
     glAttachShader(program_obj, vertex_shader);
     glAttachShader(program_obj, fragment_shader);
-    
-    glBindAttribLocation(program_obj,0 /* VERTEX_POS_INDX */, "a_position");
-    glBindAttribLocation(program_obj, 1/*VERTEX_TEXCOORD0_INDX*/, "a_texCoord");
     
     //Link the program
     glLinkProgram(program_obj);
@@ -43,8 +89,10 @@ Shader::Shader(const std::string vs, const std::string fs) {
             std::cerr << "ERROR: PROGRAM LINKING " << std::endl  << info_log << std::endl;
             delete []info_log;
         }
+        glDeleteShader(fragment_shader);
+        glDeleteShader(vertex_shader);
         glDeleteProgram(program_obj);
-        return;
+        throw Shader::LoadException("Unable to link shader program");
     }
 
     loaded = true;
@@ -56,6 +104,7 @@ Shader::~Shader() {
     glDeleteShader(vertex_shader);
     glDeleteProgram(program_obj);  
 }
+
 
 GLuint Shader::load_shader(GLenum type, const std::string src) {
     GLuint shader;
@@ -82,9 +131,9 @@ GLuint Shader::load_shader(GLenum type, const std::string src) {
     // Handle the errors
     if(!compiled) {
         GLint info_len = 0;
-      
+        
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_len);
-      
+        
         if(info_len > 1) {
             char* info_log = new char[sizeof(char) * info_len];
 
@@ -99,3 +148,12 @@ GLuint Shader::load_shader(GLenum type, const std::string src) {
 
 } 
 
+
+void Shader::bind_location_to_attribute(GLuint location, const char* variable) {
+    glBindAttribLocation(program_obj, location, variable);
+}
+
+
+void Shader::link() {
+    glLinkProgram(program_obj);
+}
