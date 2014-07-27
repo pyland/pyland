@@ -1,6 +1,8 @@
 #ifndef API_H
 #define API_H
 
+#include "python_embed_headers.hpp"
+
 #include <boost/python.hpp>
 #include <string>
 
@@ -70,12 +72,7 @@ class Entity {
         /// Starting postiton for this entity, used to reset location when entity dies.
         ///
         Vec2D start;
-
-        ///
-        /// Current position in tiles, from bottom-left.
-        ///
-        Vec2D position;
-
+        
         ///
         /// The wrapped python script.
         ///
@@ -83,20 +80,6 @@ class Entity {
         ///
         boost::python::api::object script;
 
-        ///
-        /// Opens files and returns string of its content.
-        ///
-        /// @deprecated
-        ///
-        /// @param loc
-        ///     string of name of file
-        ///
-        std::string read_file(std::string loc);
-
-        /// 
-        /// ID of entity, referring to in-game object that the API calls are passed to.
-        ///
-        int id;
 
     public:
         ///
@@ -104,6 +87,11 @@ class Entity {
         /// will be a deprecated or randomly-generated feature.
         ///
         std::string name;
+        
+        /// 
+        /// ID of entity, referring to in-game object that the API calls are passed to.
+        ///
+        int id;
 
         ///
         /// Incrementing counter used to check if an API call has been made
@@ -159,36 +147,7 @@ class Entity {
         ///
         /// Prints to standard output the name and position of entity.
         ///
-        void monologue();
-
-
-        //  █████   ██████  ██████  ██████  ██████   █████   ████   ██████  ██████  █████
-        //  ██  ██  ██      ██  ██  ██  ██  ██      ██      ██  ██    ██    ██      ██  ██
-        //  ██  ██  ████    ██████  ██████  ████    ██      ██████    ██    ████    ██  ██
-        //  ██  ██  ██      ██      ██ ██   ██      ██      ██  ██    ██    ██      ██  ██
-        //  █████   ██████  ██      ██  ██  ██████   █████  ██  ██    ██    ██████  █████
-
-        ///
-        /// Runs the Entity's active script.
-        ///
-        /// @deprecated
-        ///
-        /// @see give_script()
-        ///
-        void run_script();
-
-        ///
-        /// Sets entity's Python script from a hardcoded file.
-        /// Takes a namespace to evaluate it in.
-        ///
-        /// @deprecated
-        /// 
-        /// @param main_namespace
-        ///     The namespace to evaluate the file in.
-        ///
-        /// @see run_script()
-        ///
-        void give_script(boost::python::api::object in);
+        void monologue(); 
 
         void py_print_debug(std::string text);
 };

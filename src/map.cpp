@@ -1,13 +1,17 @@
+#include "api.hpp"
 #include "game_window.hpp"
+#include "layer.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
-#include "layer.hpp"
 #include "map_object.hpp"
+#include "object_manager.hpp"
 #include "tileset.hpp"
+#include "walkability.hpp"
 
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <glog/logging.h>
+#include <iostream>
+#include <string>
 
 //Include GLM
 #define GLM_FORCE_RADIANS
@@ -45,35 +49,48 @@
 
 #define TILESET_ELEMENT_SIZE 16
 
-Map::Map(const std::string map_src) : renderable_component() {
-    //Load the map
-    MapLoader map_loader;
-    bool result = map_loader.load_map(map_src);
-    if(!result)  {
+Map::Map(const std::string map_src):
+    renderable_component(),
+    event_step_on(Vec2D(0, 0)),
+    event_step_off(Vec2D(0, 0))
+    {
+        //Load the map
+        MapLoader map_loader;
+        bool result = map_loader.load_map(map_src);
+        if(!result)  {
 
-        std::cerr << "COULDN't LOAD MAP" << std::endl;
-        return;
-    }
-    
-    //Get the loaded map data
-    map_width = map_loader.get_map_width();
-    map_height = map_loader.get_map_height();
-    std::vector<std::shared_ptr<Layer>>& layers = map_loader.get_layers();
-    std::vector<std::shared_ptr<TileSet>>& tilesets = map_loader.get_tilesets();
-    std::vector<std::shared_ptr<MapObject>>& objects = map_loader.get_objects();
+            LOG(ERROR) << "Couldn't load map";
+            return;
+        }
+        
+        //Get the loaded map data
+        map_width = map_loader.get_map_width();
+        map_height = map_loader.get_map_height();
 
-    //Get the tilesets
-    //TODO: We'll only support one tileset at the moment
-    //Get an object list
-    
+        // hack to construct postion dispatcher as we need map diametions 
+        event_step_on = PositionDispatcher<int>(Vec2D(map_width,map_height));
+        event_step_off = PositionDispatcher<int>(Vec2D(map_width,map_height));
+
+        LOG(INFO) << "Map loading: ";
+        LOG(INFO) << "Map width: " << map_width << " Map height: " << map_height;
+
+        layers = map_loader.get_layers();
+        tilesets = map_loader.get_tilesets();
+        objects  = map_loader.get_objects();
+
+        //Get the tilesets
+        //TODO: We'll only support one tileset at the moment
+        //Get an object list
+        blocker = std::vector<std::vector<int>>(map_width, std::vector<int>(map_height, 0));
 
 
-    //Generate the geometry needed for this map
-    init_shaders();
-    generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
-    generate_map_texcoords(layers, tilesets);
-    generate_map_coords(layers, tilesets);
-    init_textures();
+        //Generate the geometry needed for this map
+        init_shaders();
+        generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+        generate_map_texcoords();
+        generate_map_coords();
+        init_textures();
+
 }
 
 Map::~Map() {
@@ -83,16 +100,76 @@ Map::~Map() {
     delete[] map_tex_coords;
     delete[] tileset_tex_coords;
 
-    std::cout << std::endl << "Closed" << std::endl;
+    LOG(INFO) << "Map destructed";
+}
+
+bool Map::is_walkable(int x_pos, int y_pos) {
+    //Default is walkable
+    bool walkable = true;
+    //return true;
+    //Iterate through all objects
+    for(auto character : characters) {
+        //If its an invalid object
+        if (character == 0)
+            continue;
+
+        std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(character);
+
+        //If we cannot walk on this object
+        if(object) {
+            if(object->get_walkability() == Walkability::BLOCKED) {
+                walkable = false;
+
+                //We can stop checking further objects and tiles
+                return walkable;
+            }
+        }
+    }
+
+    //Iterate through all tiles
+    for(auto layer : layers ) {
+    
+        //determine if we can walk on the map
+        if(layer->get_name() == "Collisions") {
+
+            //if there is a tile, treat it as blocked
+            if(layer->get_tile(x_pos, y_pos) != 0) {
+                 walkable = false;
+                 //We can stop checking further objects and tiles
+                 return walkable;
+            }
+        }
+    }
+
+    return walkable;
+}
+
+void Map::add_character(int character_id) {
+    if(ObjectManager::is_valid_object_id(character_id))
+        characters.push_back(character_id);
+}
+
+void Map::remove_character(int character_id) {
+    if(ObjectManager::is_valid_object_id(character_id)){
+        for(auto it = characters.begin(); it != characters.end(); ++it) {
+            //If a valid object
+            if(*it != 0) {
+                //remove it if its the character
+                if(*it == character_id) {
+                    characters.erase(it);       
+                    return;
+                }
+            }
+        }
+    }
 }
 
 /**
  * The function used to generate the cache of tile texture coordinates.
  */ 
 void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
-#ifdef DEBUG
-    printf("GENERATING TILESET TEXTURE COORDS...");
-#endif
+    LOG(INFO) << "Generating tileset texture coords";
+
     //check the tilset image height and widths are multiples of the tiles
     //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
 
@@ -100,7 +177,7 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
 
     int num_tiles_x = tileset_width  / TILESET_ELEMENT_SIZE;
     int num_tiles_y = tileset_height / TILESET_ELEMENT_SIZE;
-    std::cout << num_tiles_x << " " << num_tiles_y << std::endl;
+    LOG(INFO) << "Tileset size: " << num_tiles_x << " " << num_tiles_y;
 
     assert(num_tiles_x);
     assert(num_tiles_y);
@@ -152,15 +229,14 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
  * The function which generates the texture coordinates for the map
  * geometry, using the cached tile coordinates.
  */
-void Map::generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets) {
-#ifdef DEBUG
-    printf("GENERATING MAP TEXTURE DATA...");
-#endif
+void Map::generate_map_texcoords() {
+    LOG(INFO) << "Generating map texture data";
+
     //holds the map data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
-    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats*layers.size();
-    map_tex_coords = new GLfloat[data_size]; 
+    size_t data_size = sizeof(GLfloat) * map_height * map_width * num_floats * layers.size();
+    map_tex_coords = new GLfloat[data_size];
     assert(map_tex_coords);
 
     //Get each layer of the map
@@ -251,14 +327,13 @@ void Map::generate_map_texcoords(std::vector<std::shared_ptr<Layer>>& layers,  s
  * The function which generates the map geometry so that it can be
  * rendered to the screen
  */
-void Map::generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std::vector<std::shared_ptr<TileSet>>& tilesets) {
-#ifdef DEBUG
-    printf("GENERATING MAP DATA...");
-#endif
+void Map::generate_map_coords() {
+    LOG(INFO) << "Generating map coordinate data";
+
     //holds the map data
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
-    int data_size = sizeof(GLfloat)*map_height*map_width*num_floats*layers.size();
+    size_t data_size = sizeof(GLfloat) * map_height * map_width * num_floats * layers.size();
     map_data = new GLfloat[data_size]; 
     assert(map_data);
 
@@ -279,9 +354,9 @@ void Map::generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std:
     //Start at layer 0
     int offset = 0;
     float layer_offset = -1.0f;
-    float layer_inc = 1.0f / (float)layers.size();
-    for(int layer = 0; layer < layers.size(); layer++) {
-        std::cout << "OFFSET " << layer_offset << std::endl;
+    float layer_inc = 1.0f / float(layers.size());
+    for (unsigned int layer = 0; layer < layers.size(); layer++) {
+        LOG(INFO) << "Map::generate_map_coords: Layer offset of " << layer_offset;
 
         //Generate one layer's worth of data
         for(int y = 0; y < map_height; y++) {
@@ -363,31 +438,28 @@ void Map::generate_map_coords(std::vector<std::shared_ptr<Layer>>& layers,  std:
         }
     }*/
 
-#ifdef DEBUG
-    printf("DONE.");
-#endif
-
     //Set this data in the renderable component
     renderable_component.set_vertex_data(map_data, data_size, false);
-    renderable_component.set_num_vertices_render(layers.size()*6*map_width*map_height);
+    renderable_component.set_num_vertices_render(GLsizei(layers.size() * 6 * map_width * map_height));
 }
 
 void Map::init_textures() {
     
     FILE *tex_file1 = nullptr;
-    size_t bytes_read = 0;
     size_t image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
 
     tex_buf[0] = new char[image_sz_1];
 
     tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
     if(tex_file1 == nullptr) {
-        std::cerr << "ERROR: Couldn't load textures" << std::endl;
+        LOG(ERROR) << "Couldn't load textures";
     }
 
     if (tex_file1 && tex_buf[0]) {
-        bytes_read = fread(tex_buf[0], 1, image_sz_1, tex_file1);
-        assert(bytes_read == image_sz_1);  // some problem with file?
+        size_t bytes_read = fread(tex_buf[0], 1, image_sz_1, tex_file1);
+        if (bytes_read != image_sz_1) {
+            throw std::runtime_error("Problem with file while initializing textures: wrong number of bytes read.");
+        }
         fclose(tex_file1);
     }
     //Set the texture data in the rederable component
@@ -410,7 +482,7 @@ bool Map::init_shaders() {
     catch (std::exception e) {
         delete shader;
         shader = nullptr;
-        std::cerr << "Failed to create the shader" << std::endl;
+        LOG(ERROR) << "Failed to create the shader";
         return false;
     }
     
@@ -424,5 +496,38 @@ bool Map::init_shaders() {
 /**
  * The function used to update elements on the map.
  */
-void Map::update_map(float dt) {
+void Map::update_map(float) {
 }
+
+Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
+    tile(tile), blocker(blocker) {
+        (*blocker)[tile.x][tile.y]++;
+
+        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+          << " increased from " << (*blocker)[tile.x][tile.y] - 1
+          << " to " << (*blocker)[tile.x][tile.y] << ".";
+}
+
+Map::Blocker::Blocker(const Map::Blocker &other):
+    tile(other.tile), blocker(other.blocker) {
+        (*blocker)[tile.x][tile.y]++;
+
+        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+          << " increased from " << (*blocker)[tile.x][tile.y] - 1
+          << " to " << (*blocker)[tile.x][tile.y] << ".";
+}
+
+Map::Blocker::~Blocker() {
+    (*blocker)[tile.x][tile.y] = (*blocker)[tile.x][tile.y] - 1 ;
+
+    LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+      << " decreased from " << (*blocker)[tile.x][tile.y] + 1
+      << " to " << (*blocker)[tile.x][tile.y] << ".";
+}
+
+Map::Blocker Map::block_tile(Vec2D tile) {
+    return Blocker(tile, &blocker);
+}
+
+
+

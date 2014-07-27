@@ -1,0 +1,95 @@
+BOOST_CPPFLAGS =
+BOOST_CXXFLAGS =
+BOOST_LDFLAGS  =
+BOOST_LDLIBS   = \
+	-l${LIBBOOST_PYTHON} \
+	-lboost_filesystem   \
+	-lboost_system       \
+	-lboost_regex
+
+
+
+GCC_VERSION = $(shell expr `$(COMPILER) -dumpversion`)
+GCC_MAJOR = $(shell expr `echo $(GCC_VERSION)` | cut -f1 -d.)
+GCC_MINOR = $(shell expr `echo $(GCC_VERSION)` | cut -f2 -d.)
+
+
+
+GLOG_CPPFLAGS = $(shell pkg-config libglog --cflags)
+GLOG_CXXFLAGS =
+GLOG_LDFLAGS  = 
+GLOG_LDLIBS   = $(shell pkg-config libglog --libs)
+
+
+
+ifeq "$(PLATFORM)" "desktop"
+	GL_CPPFLAGS = $(shell pkg-config gl --cflags)
+	GL_CXXFLAGS =
+	GL_LDFLAGS  = 
+	GL_LDLIBS   = $(shell pkg-config gl --libs)
+
+	GRAPHICS_CPPFLAGS = $(GL_CPPFLAGS)
+	GRAPHICS_CXXFLAGS =
+	GRAPHICS_LDFLAGS  = $(GL_LDFLAGS)
+	GRAPHICS_LDLIBS   = $(GL_LDLIBS)
+	CPPFLAGS += -DUSE_GL
+else
+	# From hello_triangle
+	GLES_CPPFLAGS = \
+		-I/opt/vc/include \
+		-I/opt/vc/include/interface/vmcs_host/linux \
+		-I/opt/vc/include/interface/vcos/pthreads
+
+	GLES_CXXFLAGS =
+	GLES_LDFLAGS  = -L/opt/vc/lib/
+	GLES_LDLIBS   = -lGLESv2 -lEGL -lbcm_host -lpthread
+
+	GRAPHICS_CPPFLAGS = $(GLES_CPPFLAGS)
+	GRAPHICS_CXXFLAGS =
+	GRAPHICS_LDFLAGS  = $(GLES_LDFLAGS)
+	GRAPHICS_LDLIBS   = $(GLES_LDLIBS)
+	CPPFLAGS += -DUSE_GLES
+endif
+
+
+
+# Filter to prevent warnings about -Wstrict-prototypes not being valid for C++
+PYTHON_CPPFLAGS = $(filter-out -Wstrict-prototypes,$(shell python${PYTHON_VERSION}-config --cflags))
+PYTHON_CXXFLAGS =
+PYTHON_LDFLAGS  = $(shell python${PYTHON_VERSION}-config --ldflags)
+PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
+
+
+
+SDL_CPPFLAGS = $(shell sdl2-config --cflags)
+SDL_CXXFLAGS =
+SDL_LDFLAGS  =
+SDL_LDLIBS   = $(shell sdl2-config --libs) -lSDL2_image
+
+
+
+TINYXML_CPPFLAGS = $(shell pkg-config tinyxml --cflags)
+TINYXML_CXXFLAGS =
+TINYXML_LDFLAGS  =
+TINYXML_LDLIBS   = $(shell pkg-config tinyxml --libs)
+
+
+
+TMXPARSER_CPPFLAGS = -I./tmx-parser/TmxParser
+TMXPARSER_CXXFLAGS =
+TMXPARSER_LDFLAGS  = -L./tmx-parser
+TMXPARSER_LDLIBS   = -ltmxparser
+
+
+
+X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
+X11_CXXFLAGS =
+X11_LDFLAGS  =
+X11_LDLIBS   = $(shell pkg-config x11 --libs)
+
+
+
+ZLIB_CPPFLAGS = $(shell pkg-config zlib --cflags)
+ZLIB_CXXFLAGS =
+ZLIB_LDFLAGS  =
+ZLIB_LDLIBS   = $(shell pkg-config zlib --libs)

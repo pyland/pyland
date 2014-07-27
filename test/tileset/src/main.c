@@ -322,10 +322,8 @@ static void redraw_scene(CUBE_STATE_T *state)
  ***********************************************************/
 static void generate_tileset_coords(int image_height, int image_width)
 {
+  LOG(INFO) << "Generating tileset texture coords";
 
-#ifdef DEBUG
-  printf("GENERATING TILESET TEXTURE COORDS...");
-#endif
   //check the tilset image height and widths are multiples of the tiles
   //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
     
@@ -369,14 +367,6 @@ static void generate_tileset_coords(int image_height, int image_width)
        tileSetXOffset += tileSetXInc;
        tileSetYOffset = 0.0;
     }
-
-#ifdef DEBUG
-  printf("DONE.\n");
-#endif
-
-
-
-
 }
 
 
@@ -388,10 +378,7 @@ static void generate_tileset_coords(int image_height, int image_width)
  ***********************************************************/
 static void generate_map_texcoords(int map_width, int map_height)
 {
-
-#ifdef DEBUG
-  printf("GENERATING MAP TEXTURE DATA...");
-  #endif
+  LOG(INFO) << "Generating map texture data";
   //holds the map data
   //need 8 float for the 2D texture coordinates
   mapTexCoords = (GLfloat *)malloc(sizeof(GLfloat)*map_height*map_width*8); 
@@ -423,11 +410,6 @@ static void generate_map_texcoords(int map_width, int map_height)
 	  
 	}
     }
-#ifdef DEBUG
-  printf("DONE.");
-#endif
-
-  
 }
 
 /***********************************************************
@@ -451,9 +433,8 @@ static void generate_map_texcoords(int map_width, int map_height)
  ***********************************************************/
 static void generate_map_coords(int map_width, int map_height)
 {
-  #ifdef DEBUG
-  printf("GENERATING MAP DATA...");
-  #endif
+  LOG(INFO) << "Generating map data";
+
   //holds the map data
   //need 12 shorts for each coordinate as these hold 3D coordinates
   mapData = (GLfloat *)malloc(sizeof(GLfloat)*map_height*map_width*6*2); 
@@ -487,10 +468,6 @@ static void generate_map_coords(int map_width, int map_height)
 	    mapData[x*map_height*12 + y*12+11] = 0;
 	    	}
     }
-#ifdef DEBUG
-  printf("DONE.");
-#endif
-
 }
 
 static void draw_map(int map_width, int map_height)
@@ -580,8 +557,6 @@ static void load_tex_images(CUBE_STATE_T *state)
    }
 }
 
-//------------------------------------------------------------------------------
-
 static void exit_func(void)
 // Function to be passed to atexit().
 {
@@ -597,11 +572,7 @@ static void exit_func(void)
 
    // release texture buffers
    free(state->tex_buf1);
-
-   printf("\nClosed\n");
-} // exit_func()
-
-//==============================================================================
+}
 
 int main ()
 {

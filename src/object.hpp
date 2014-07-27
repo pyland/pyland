@@ -2,7 +2,11 @@
 #define OBJECT_H
 
 #include "renderable_component.hpp"
+#include "walkability.hpp"
+#include <memory>
 #include <string>
+
+class LockableEntityThread;
 
 ///
 /// The class to hold an object's information so that the Engine can
@@ -35,7 +39,7 @@ class Object {
     ///
     /// The object's id
     ///
-    int id = -1;
+    int id = 0;
   
     ///
     /// The name of the object
@@ -47,15 +51,33 @@ class Object {
     ///
     std::string script = "";
 
-    /// 
+    ///
+    /// Walkable: determine if the object can be walked over
+    ///
+    Walkability walkability = Walkability::WALKABLE;
+
+
+public:
+    Object();
+    virtual ~Object();
+
+    ///
+    /// DO NOT USE THIS! ONLY THE ENGINE SHOULD USE THIS FUNCTION 
     /// Set the id of the object
     /// @param new_id the object's id
     ///
     void set_id(int new_id);
 
-public:
-    Object();
-    ~Object();
+    ///
+    /// Get the object's walkability
+    ///
+    Walkability get_walkability() { return walkability; }
+
+    ///
+    /// Set the object's walkability
+    /// @param _walkability the walkability of the object
+    ///
+    void set_walkability(Walkability _walkability) { walkability = _walkability; }
 
     ///
     /// Set the object's x position in tiles
@@ -128,6 +150,8 @@ public:
     /// @param can_render true if the object can be rendered and false if not
     ///
     void set_renderable(bool can_render) { renderable = can_render; }
+
+    std::unique_ptr<LockableEntityThread> daemon;
 };
 
 #endif

@@ -7,7 +7,6 @@
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "keyboard_input_event.hpp"
-#include "print_debug.hpp"
 
 
 
@@ -32,9 +31,7 @@ static std::function<void (Event)> filter_do(std::initializer_list<std::function
     };
 }
 
-
 // Wrap up the template function in nice overloaded functions.
-
 KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHandler wrapped) {
     return filter_do<KeyboardInputEvent>(filters, wrapped);
 }
@@ -149,7 +146,6 @@ MouseFilter MOUSE_BUTTON(int button) {
 }
 
 
-
 template<class Event>
 static std::function<bool (Event)> REJECT_do(std::function<bool (Event)> filter) {
     return [filter] (Event event) {
@@ -158,12 +154,39 @@ static std::function<bool (Event)> REJECT_do(std::function<bool (Event)> filter)
 }
 
 KeyboardFilter REJECT(KeyboardFilter filter) {
-    return REJECT_do(filter);
+    return REJECT_do<KeyboardInputEvent>(filter);
 }
 
 MouseFilter REJECT(MouseFilter filter) {
-    return REJECT_do(filter);
+    return REJECT_do<MouseInputEvent>(filter);
 }
+
+
+template<class Event>
+static std::function<bool (Event)> ANY_OF_do(std::initializer_list<std::function<bool (Event)>> filters) {
+    // Initializer lists have stupid noncopy semantics on copy.
+    // Move to a vector to prevent corruption.
+    std::vector<std::function<bool (Event)>> filters_vector(filters); 
+
+    return [filters_vector] (Event event) {
+        for (auto filter : filters_vector) {
+            if (filter(event)) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+}
+
+KeyboardFilter ANY_OF(std::initializer_list<KeyboardFilter> filters) {
+    return ANY_OF_do<KeyboardInputEvent>(filters);
+}
+
+MouseFilter ANY_OF(std::initializer_list<MouseFilter> filters) {
+    return ANY_OF_do<MouseInputEvent>(filters);
+}
+
 
 // KeyboardFilter REJECT(KeyboardFilter filter) {
 //     return [filter] (KeyboardInputEvent event) {

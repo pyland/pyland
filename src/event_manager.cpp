@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <functional>
+#include <glog/logging.h>
 #include <iostream>
 #include <list>
 #include <mutex>
@@ -76,7 +77,7 @@ void EventManager::process_events() {
             func();
         }
         else {
-            std::cerr << "ERROR in event_manager.cpp in processing, no function" << std::endl;
+            LOG(ERROR) << "ERROR in event_manager.cpp in processing, no function";
         }
     }
 }

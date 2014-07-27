@@ -1,6 +1,8 @@
 #ifndef INTERPRETER_CONTEXT_H
 #define INTERPRETER_CONTEXT_H
 
+#include "python_embed_headers.hpp"
+
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
 

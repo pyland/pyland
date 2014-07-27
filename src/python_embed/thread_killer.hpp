@@ -31,8 +31,7 @@ class ThreadKiller {
         ///     An interpreter context to lock the GIL on.
         ///     The GIL is locked on the main thread.
         ///
-        ThreadKiller(EntityThreads &entitythreads,
-                     InterpreterContext interpreter_context);
+        ThreadKiller(EntityThreads &entitythreads);
 
         ///
         /// Halt the thread. Waits untill the thread has finished.

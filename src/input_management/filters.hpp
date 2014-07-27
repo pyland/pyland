@@ -9,12 +9,11 @@
 #include "input_manager.hpp"
 #include "keyboard_input_event.hpp"
 
-typedef std::function<bool (KeyboardInputEvent)> KeyboardFilter;
-typedef std::function<void (KeyboardInputEvent)> KeyboardHandler;
+using KeyboardFilter  = std::function<bool (KeyboardInputEvent)>;
+using KeyboardHandler = std::function<void (KeyboardInputEvent)>;
 
-
-typedef std::function<bool (MouseInputEvent)> MouseFilter;
-typedef std::function<void (MouseInputEvent)> MouseHandler;
+using MouseFilter  = std::function<bool (MouseInputEvent)>;
+using MouseHandler = std::function<void (MouseInputEvent)>;
 
 
 KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHandler wrapped);
@@ -36,6 +35,9 @@ MouseFilter MOUSE_BUTTON(std::initializer_list<int> button);
 
 KeyboardFilter REJECT(KeyboardFilter filter);
 MouseFilter REJECT(MouseFilter filter);
+
+KeyboardFilter ANY_OF(std::initializer_list<KeyboardFilter> filters);
+MouseFilter ANY_OF(std::initializer_list<MouseFilter> filters);
 
 
 

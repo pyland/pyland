@@ -1,10 +1,11 @@
 #ifndef LOCKS_H
 #define LOCKS_H
 
+#include "python_embed_headers.hpp"
+
 #include <boost/python.hpp>
 #include <mutex>
 #include "interpreter_context.hpp"
-#include "print_debug.hpp"
 
 namespace lock {
     ///
@@ -205,8 +206,7 @@ namespace lock {
     template<class T, class... Args>
     Lockable<T> make_lockable(Args &&... args) {
         return Lockable<T>(new T(std::forward<Args>(args)...));
-    };
-
-};
+    }
+}
 
 #endif

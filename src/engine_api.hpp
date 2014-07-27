@@ -5,11 +5,12 @@
 #ifndef ENGINE_API_H
 #define ENGINE_API_H
 
-#include "map_viewer.hpp"
-
 #include <array>
+#include "api.hpp"
 #include <utility>
 #include <vector>
+
+class MapViewer;
 
 ///
 /// size of each tile in pixels
@@ -21,17 +22,27 @@ class Engine {
 
     static MapViewer* map_viewer;
 public:
+    ///
+    /// Set the map viewer attached to the engine
+    /// @param _map_viewer the map viewer which is attached to the engine 
+    ///
     static void set_map_viewer(MapViewer* _map_viewer) { map_viewer = _map_viewer; }
+
+
+    ///
+    /// Get the map viewer attached to the engine
+    /// @return a pointer to the map viewer
+    ///
     static MapViewer* get_map_viewer() { return map_viewer;    }
 
     ///
     /// Move sprite onscreen
     ///
     /// @param id ID of sprite to move 
-    /// @param dx move in x by dx pixels
-    /// @param dy move in x by dy pixels
+    /// @param dx move in x by dx tiles
+    /// @param dy move in x by dy tiles
     ///
-    static bool move_object(int id, int tile_dx, int tile_dy);
+    static bool move_object(int id, Vec2D move_by);
 
     ///
     /// Determine if a location can be walked on
@@ -39,7 +50,7 @@ public:
     /// @param y_pos the y position to test
     /// @return true if the position can be walked on, false if not
     ///
-    static bool walkable(int x_pos, int y_pos);
+    static bool walkable(Vec2D location);
 
     ///
     /// Change the tile in the map in the given layer at the provided position
@@ -49,7 +60,7 @@ public:
     /// @param layer the layer of the tile to change
     /// @return indicates if the operation completed successfully
     ///
-    static bool change_tile(int new_id, int x, int y, int layer);
+    static bool change_tile(int new_id, Vec2D location, int layer);
 
     ///
     /// Gets the ids of the tiles at this location. Layer 0 is the first
@@ -61,7 +72,7 @@ public:
     /// as the first element. A 0 is stored for a layer if there is no
     /// tile there
     ///
-    static std::vector<int> get_tiles(int x, int y);
+    static std::vector<int> get_tiles(Vec2D location);
 
     ///
     /// Get the objects at the given map position if any, empty if no objects
@@ -69,13 +80,7 @@ public:
     /// @param y the y position on the map
     /// @return a vector of all the objects at that position on the map
     ///
-    static std::vector<int> get_objects(int x, int y);
-    ///
-    /// Get the position of the given object in the map
-    /// @param id the id of the object to find
-    /// @return a pair of the (x, y) coordinates
-    ///  
-    static std::pair<int, int> find_object(int id);
+    static std::vector<int> get_objects(Vec2D location);
 
     ///
     /// Load the map specified by the ap id
@@ -84,5 +89,45 @@ public:
     ///
     static bool load_map(int map_id);
 
+    ///
+    /// Get the locationof tte object in the map, throws exception if
+    /// there is the object is not on the map
+    /// @id the id of the object
+    /// @return a pair which is the (x, y) tuple of the object position
+    ///
+    static Vec2D find_object(int id);
+    
+    ///
+    /// Open a text editor for the user to edit a file
+    ///
+    static bool open_editor(std::string editor, std::string filename);
+
+    ///
+    /// Get the size of a tile in the current map
+    /// @return the size of the tile in pixels - we only support square ones
+    ///
+    static int get_tile_size();
+
+    ///
+    /// Get a list of objects at this point
+    ///
+    ///
+    static std::vector<int> get_objects_at(Vec2D location);
+
+    ///
+    /// Add an object to the map at the given location
+    /// @param object_id the id of the object to add
+    /// @param x_pos the x position of the object
+    /// @param y_pos the y position of the object
+    ///
+    static void add_object(int object_id, Vec2D location);
+
+    ///
+    /// Remove an object from the map at a givene location
+    /// @param object_id the id of the object to add
+    /// @param x_pos the x position of the object 
+    /// @param y_pos the y position of the object
+    ///
+    static void remove_object(int object_id, Vec2D location);
 };
 #endif

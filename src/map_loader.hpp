@@ -78,23 +78,25 @@ class MapLoader {
     ///
     int get_map_height() { return map_height; }
 
+    ///THESE NEED to be copies
+
     ///
     /// Get the tilesets that this map uses
     /// @return a vector of the tilesets, referenced by shared_ptrs
     ///
-    std::vector<std::shared_ptr<TileSet>>& get_tilesets() {return tilesets; }
+    std::vector<std::shared_ptr<TileSet>> get_tilesets() {return tilesets; }
 
     ///
     /// Get the map's layers
     /// @return a vector of the layers, referenced by shared_ptrs
     ///
-    std::vector<std::shared_ptr<Layer>>& get_layers() { return layers; }
+    std::vector<std::shared_ptr<Layer>> get_layers() { return layers; }
 
     ///
     /// Get the objects in the map
     /// @return a vector of the objects in the map, referenced by shared_ptrs
     ///
-    std::vector<std::shared_ptr<MapObject>>& get_objects() { return objects; }
+    std::vector<std::shared_ptr<MapObject>> get_objects() { return objects; }
 };
 
 

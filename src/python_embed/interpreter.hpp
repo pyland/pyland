@@ -1,6 +1,8 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
+#include "python_embed_headers.hpp"
+
 #include <atomic>
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
@@ -78,7 +80,6 @@ class Interpreter {
         ///
         //PyThreadState *main_thread_state;
 
-    private:
         ///
         /// An interpreter context used to lock on the current thread
         /// and to pass to other functions.
@@ -87,7 +88,16 @@ class Interpreter {
         ///
         /// @see register_entity
         ///
+        /// @warning
+        ///     Potentially only temporarily public.
+        ///
         InterpreterContext interpreter_context;
+
+    private:
+        ///
+        /// Cannot copy interpreters for obvious reasons.
+        ///
+        Interpreter(const Interpreter&) = delete;
 
         ///
         /// A flag to ensure that this is a singleton.

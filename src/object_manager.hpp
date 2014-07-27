@@ -2,10 +2,10 @@
 #define OBJECTMANAGER_H
 
 #include "object.hpp"
-
 #include <map>
 #include <memory>
 #include <mutex>
+
 ///
 /// This class holds the database of all the objects in the game. It
 /// manages the objects and is used to unload them.
@@ -32,8 +32,6 @@ class ObjectManager {
     /// 
     std::map<int, std::shared_ptr<Object>> objects;
 
-
-
     ObjectManager() {};
     ~ObjectManager() {};
 public:
@@ -55,8 +53,9 @@ public:
     ///
     /// Gets a new, globally unique id for an object. Starts at  as 0
     /// indicates an invalid identifier for an object
+    /// @param object the object to set the id for
     ///
-    int get_next_id();
+    int get_next_id(Object* const object);
     
     ///
     /// Add an object to the object manager to manage
@@ -73,7 +72,10 @@ public:
     /// Get an object from the object manager
     /// @return the requested object
     ///
-    std::shared_ptr<Object> get_object(int object_id);
+    template <typename R>
+    std::shared_ptr<R> get_object(int object_id);
 };
+
+#include "object_manager.hxx"
 
 #endif

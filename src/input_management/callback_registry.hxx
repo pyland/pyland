@@ -1,11 +1,8 @@
+#include <glog/logging.h>
+#include <iostream>
+#include <memory>
 #include <set>
 #include <utility>
-#include <memory>
-#include <iostream>
-
-#ifdef DEBUG
-#define CALLBACK_REGISTRY_DEBUG
-#endif
 
 
 
@@ -18,9 +15,7 @@ void CallbackRegistry<Ret, Args...>::register_callback(const Callback<Ret, Args.
 
 template <typename Ret, typename... Args>
 void CallbackRegistry<Ret, Args...>::unregister_callback(const Callback<Ret, Args...> callback) {
-#ifdef CALLBACK_REGISTRY_DEBUG
-    std::cerr << "Removing callback " << callback.uid << " from registry " << this << std::endl;
-#endif
+    LOG(INFO) << "Removing callback " << callback.uid << " from registry " << this;
     callbacks.erase(callback);
     callback.remove_registry(this);
 }
@@ -28,9 +23,7 @@ void CallbackRegistry<Ret, Args...>::unregister_callback(const Callback<Ret, Arg
 
 template <typename Ret, typename... Args>
 void CallbackRegistry<Ret, Args...>::unregister_callback(const Callback<Ret, Args...>* callback) {
-#ifdef CALLBACK_REGISTRY_DEBUG
-    std::cerr << "Removing callback " << callback->uid << " from registry " << this << std::endl;
-#endif
+    LOG(INFO) << "Removing callback " << callback->uid << " from registry " << this;
     callbacks.erase(*callback);
     callback->remove_registry(this);
 }

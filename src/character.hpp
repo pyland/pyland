@@ -1,6 +1,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include "entitythread.hpp"
 #include "object.hpp"
 
 #ifdef USE_GLES
@@ -26,7 +27,7 @@ class Character : public Object {
 public:
 
     Character();
-    ~Character();
+    virtual ~Character();
   
     void generate_tex_data();
     void generate_vertex_data();

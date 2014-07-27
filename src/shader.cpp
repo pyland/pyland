@@ -1,5 +1,6 @@
 #include "shader.hpp"
 
+#include <glog/logging.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -63,8 +64,8 @@ Shader::Shader(const std::string vs, const std::string fs) {
     program_obj = glCreateProgram();
     
     if(program_obj == 0) {
-        std::cerr << "ERROR FLAG: " << std::hex << glGetError();
-        std::cerr << "ERROR: SHADER PROGRAM CREATION. Could not create program object." << std::endl;
+        LOG(ERROR) << "Shader creation: Could not create program object.";
+        LOG(ERROR) << "Flag: " << glGetError();
         throw Shader::LoadException("Unable to create shader program");
     }
 
@@ -86,7 +87,7 @@ Shader::Shader(const std::string vs, const std::string fs) {
             char* info_log = new char[sizeof(char)*info_len];
         
             glGetProgramInfoLog(program_obj, info_len, nullptr, info_log);
-            std::cerr << "ERROR: PROGRAM LINKING " << std::endl  << info_log << std::endl;
+            LOG(ERROR) << "Program linking:\n" << info_log;
             delete []info_log;
         }
         glDeleteShader(fragment_shader);
@@ -138,7 +139,7 @@ GLuint Shader::load_shader(GLenum type, const std::string src) {
             char* info_log = new char[sizeof(char) * info_len];
 
             glGetShaderInfoLog(shader, info_len, nullptr, info_log);
-            std::cerr << "ERROR: SHADER LOADING " << std::endl  << info_log << std::endl;
+            LOG(ERROR) << "Shader loading failed:\n"<< info_log;
             delete []info_log;
         }
         glDeleteShader(shader);
