@@ -173,47 +173,25 @@ void Character::load_textures() {
 
 }
 bool Character::init_shaders() {
+    Shader* shader;
+    try {
 #ifdef USE_GLES
-    //read in the shaders
-    std::ifstream vertex_shader_src("vert_shader.glesv");
-    std::ifstream fragment_shader_src("frag_shader.glesf");
+        shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
 #endif
 #ifdef USE_GL
-    //read in the shaders
-    std::ifstream vertex_shader_src("vert_shader.glv");
-    std::ifstream fragment_shader_src("frag_shader.glf");
+        shader = new Shader("vert_shader.glv", "frag_shader.glf");
 #endif
-
-    if (!vertex_shader_src.good()){
-        std::cerr << "Failed to load vertex shader" << std::endl;
-        return false;
     }
-    
-    if (!fragment_shader_src.good()) {
-        std::cerr << "Failed to load fragment shader" << std::endl;
-        return false;
-    }
-
-    std::string vert_src, frag_src, line;
-    while (getline(vertex_shader_src, line)) {
-        vert_src += line + "\n";
-    }
-
-    while (getline(fragment_shader_src, line)) {
-        frag_src += line + "\n";
-    }
-
-    Shader* shader = new Shader(vert_src, frag_src);
-  
-    if (!shader->is_loaded()) {
+    catch (std::exception e) {
         delete shader;
-        shader = NULL;
+        shader = nullptr;
         std::cerr << "Failed to create the shader" << std::endl;
         return false;
     }
 
     RenderableComponent* render_component = get_renderable_component();
-    if(render_component == NULL) {
+    if(render_component == nullptr) {
+        delete shader;
         std::cerr << "ERROR in Character::init_shaders, render_component is NULL" << std::endl;
         return false;
     }
