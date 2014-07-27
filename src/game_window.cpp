@@ -20,6 +20,11 @@ extern "C" {
 #include <SDL2/SDL_syswm.h>
 }
 
+#include "callback.hpp"
+#include "callback_registry.hpp"
+#include "lifeline.hpp"
+#include "lifeline_controller.hpp"
+
 
 
 #ifdef DEBUG
@@ -56,12 +61,17 @@ GameWindow::InitException::InitException(const char* message) {
 
 const char* GameWindow::InitException::what() const noexcept {
     return message;
-};
+}
 
 
 
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
+    resizing = false;
+    window_x = 0;
+    window_y = 0;
+    window_width  = width;
+    window_height = height;
     close_requested = false;
     input_manager = new InputManager(this);
     
@@ -136,6 +146,8 @@ GameWindow::~GameWindow() {
         deinit_sdl();
     }
 
+    callback_controller.disable();
+    
     delete input_manager;
 }
 
@@ -413,6 +425,7 @@ void GameWindow::update() {
                 window->request_close();
                 break;
             case SDL_WINDOWEVENT_RESIZED:
+                window->resizing = true;
             case SDL_WINDOWEVENT_MOVED:
             case SDL_WINDOWEVENT_RESTORED:
             case SDL_WINDOWEVENT_MAXIMIZED:
@@ -431,13 +444,12 @@ void GameWindow::update() {
                 break;
             }
             break;
-        default:
-            // Let the input manager use the event.
-            if (focused_window) {
-                focused_window->input_manager->handle_event(&event);
-            }
-            break;
         }
+        // Let the input manager use the event (even if we used it).
+        if (focused_window) {
+            focused_window->input_manager->handle_event(&event);
+        }
+        break;
     }
 
     // Perform updates to windows which may be required following
@@ -480,7 +492,11 @@ void GameWindow::update() {
             // Do nothing - hey, I don't like compiler warnings.
             break;
         }
-        
+
+        if (window->resizing) {
+            window->resize_callbacks.broadcast(window);
+            window->resizing = false;
+        }
         window->input_manager->run_callbacks();
         
         if (close_all) {
@@ -541,4 +557,18 @@ InputManager* GameWindow::get_input_manager() {
 
 std::pair<float,float> GameWindow::get_ratio_from_pixels(std::pair<int,int> pixels) {
     return std::pair<float,float>((float)pixels.first / (float)window_width, (float)pixels.second / (float) window_height);
+}
+
+
+void GameWindow::register_resize_handler(Callback<void, GameWindow*> callback) {
+    resize_callbacks.register_callback(callback);
+}
+
+Lifeline GameWindow::register_resize_handler(std::function<void(GameWindow*)> func) {
+    Callback<void, GameWindow*> callback(func);
+    resize_callbacks.register_callback(callback);
+    return Lifeline([this, callback] () {
+            resize_callbacks.unregister_callback(callback);
+        },
+        callback_controller);
 }
