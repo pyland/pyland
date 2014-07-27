@@ -13,7 +13,7 @@ extern "C" {
 
 
 ///
-/// Mutable image which can be constructed from a file
+/// Mutable RGBA image which can be constructed from a file
 ///
 struct Image {
 private:
@@ -45,26 +45,47 @@ public:
     ///
     struct Pixel {
     public:
-        Pixel();
         Uint8 r;
         Uint8 g;
         Uint8 b;
         Uint8 a;
+        
+        Pixel();
     };
-
-    /*
+    
     ///
-    /// A row of pixels.
+    /// Flipped pixel wrapper
     ///
-    struct PixelRow {
-    private:
-        Pixel* pixels;
+    struct Flipper {
     public:
-        inline Pixel& operator[](int x) {
-            return *(&pixels[x]);
+        ///
+        /// Negative value. jump = - store_width.
+        ///
+        int jump;
+        ///
+        /// Pointer to bottom-left corner of pixel data.
+        ///
+        /// Equivilant to [(store_height - 1) * store_width].
+        ///
+        Pixel* pixels;
+        Flipper();
+        ///
+        /// Initialises the pixel array and jump value.
+        ///
+        /// @param w store_width
+        /// @param h store_height
+        /// @param p non-flipped pixels
+        Flipper(int w, int h, Pixel* p);
+        ///
+        /// Index a row in the flipped image.
+        ///
+        /// Note, that with increasing y, this goes back in the array.
+        ///
+        inline Pixel* operator[](int y) {
+            return &pixels[y * jump];
         }
     };
-    */
+    Flipper flipped_pixels;
     
     ///
     /// Width of the used image area.
@@ -98,8 +119,15 @@ public:
     ///
     bool flipped;
 
+    ///
+    /// Create an empty image (everything initialised to defaults).
+    ///
+    Image();
     Image(const char* filename, bool opengl = true);
+    Image(int width, int height, bool opengl = true);
     ~Image();
+
+    void clear(Uint32 colour, Uint32 mask);
 
     ///
     /// Index a row in the image.

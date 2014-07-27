@@ -23,6 +23,17 @@ const char* Image::LoadException::what() const noexcept {
 };
 
 
+Image::Flipper::Flipper():
+    jump(0),
+    pixels(nullptr) {
+}
+
+Image::Flipper::Flipper(int w, int h, Pixel* p):
+    jump(-w),
+    pixels(&p[w*(h-1)]) {
+}
+
+
 
 Image::Pixel::Pixel():
     r(0),
@@ -32,6 +43,10 @@ Image::Pixel::Pixel():
 }
 
 
+
+Image::Image():
+    flipped_pixels(Flipper(0,0,nullptr)) {
+}
 
 Image::Image(const char* filename, bool opengl) {
     if (opengl) {
@@ -44,6 +59,19 @@ Image::Image(const char* filename, bool opengl) {
     }
 
     load_file(filename);
+}
+
+Image::Image(int width, int height, bool opengl) {
+    if (opengl) {
+        power_of_two = true;
+        flipped = true;
+    }
+    else {
+        power_of_two = false;
+        flipped = false;
+    }
+
+    create_blank(width, height);
 }
 
 
@@ -66,6 +94,7 @@ void Image::create_blank(int w, int h) {
 
     Pixel* pixels_local = new Pixel[store_width * store_height];
     this->pixels = pixels_local;
+    flipped_pixels = Flipper(store_width, store_height, pixels);
     resource_lifeline = Lifeline([pixels_local] () {delete pixels_local;});
 }
 
@@ -93,7 +122,7 @@ void Image::load_file(const char* filename) {
         throw Image::LoadException("Failed to load from file");
     }
     
-    // The surface is a strip of pixels, so it can be used for flipping.
+    // This surface has a known format.
     compatible = SDL_CreateRGBSurface(0, // Unsed
                                       loaded->w,
                                       loaded->h,
@@ -140,4 +169,25 @@ void Image::load_file(const char* filename) {
     // Errrrr... There isn't currently any logical place to put an
     // IMG_Quit()... It's not going to cause any problems, it's just a
     // bit unclean.
+}
+
+
+void Image::clear(Uint32 colour, Uint32 mask) {
+    Uint32 invmask = ~mask;
+    Uint8 ri = (invmask >> 24) & 0xff;
+    Uint8 gi = (invmask >> 16) & 0xff;
+    Uint8 bi = (invmask >>  8) & 0xff;
+    Uint8 ai = (invmask >>  0) & 0xff;
+    Uint8 rc = (colour  >> 24) & 0xff;
+    Uint8 gc = (colour  >> 16) & 0xff;
+    Uint8 bc = (colour  >>  8) & 0xff;
+    Uint8 ac = (colour  >>  0) & 0xff;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            (*this)[y][x].r = rc | ((*this)[y][x].r & ri);
+            (*this)[y][x].g = gc | ((*this)[y][x].g & gi);
+            (*this)[y][x].b = bc | ((*this)[y][x].b & bi);
+            (*this)[y][x].a = ac | ((*this)[y][x].a & ai);
+        }
+    }
 }
