@@ -4,6 +4,8 @@
 #include <map>
 #include <memory>
 
+#include <glog/logging.h>
+
 extern "C" {
 #include <SDL2/SDL_ttf.h>
 
@@ -24,10 +26,6 @@ extern "C" {
 #include "callback.hpp"
 
 
-
-#ifdef DEBUG
-#define TEXT_DEBUG
-#endif
 
 // NOTE:
 //   Text can be rendered less directly by defining
@@ -168,9 +166,7 @@ void Text::render() {
         }
         // Check that we aren't going to chase our tailes trying to fit an unfittable word.
         if (line[0] == '\0' && ctext[w] != ' ') {
-#ifdef TEXT_DEBUG
-            std::cerr << "Error rendering text: A word is too long." << std::endl;
-#endif
+            LOG(WARN) << "Cannot render text: A word is too long.";
             throw Text::RenderException("A word is too long");
         }
         // Render line
@@ -178,9 +174,8 @@ void Text::render() {
         black.r = black.g = black.b = black.a = 0;
         SDL_Color white;
         white.r = white.g = white.b = white.a = 255;
-#ifdef TEXT_DEBUG
-        std::cerr << "Rendering: \"" << line << "\"." << std::endl;
-#endif
+        LOG(INFO) << "Rendering line of text: \"" << line << "\".";
+        
         SDL_Surface* rendered_line;
         if (smooth) {
             rendered_line = TTF_RenderUTF8_Shaded(font.font, line, white, black);
@@ -243,9 +238,7 @@ void Text::render() {
         SDL_FreeSurface(rendered_line);
         line_number++;
         if (y < line_height) {
-#ifdef TEXT_DEBUG
-            std::cerr << "Text overflow." << std::endl;
-#endif
+            LOG(WARN) << "Text overflow.";
             break;
         }
     }
@@ -262,7 +255,7 @@ void Text::generate_texture() {
     glGenTextures(1, &texture);
 
     if (texture == 0) {
-        std::cerr << "Error rendering text: Unable to generate GL texture." << std::endl;
+        LOG(ERROR) << "Error rendering text: Unable to generate GL texture.";
         throw Text::RenderException("Unable to generate GL texture");
     }
 
@@ -279,14 +272,11 @@ void Text::generate_vbo() {
     if (dirty) {
         return;
     }
-#ifdef TEXT_DEBUG
-    std::cerr << "Recreating VBO" << std::endl;
-#endif
     if (vbo == 0) {
         // Create VBO.
         glGenBuffers(1, &vbo);
         if (vbo == 0) {
-            std::cerr << "Error rendering text: Unable to generate GL VBO." << std::endl;
+            LOG(ERROR) << "Error rendering text: Unable to generate GL VBO.";
             throw Text::RenderException("Unable to generate GL VBO");
         }
     }
@@ -402,7 +392,7 @@ void Text::display() {
             generate_vbo();
         }
         catch (Text::RenderException e) {
-            std::cerr << e.what() << std::endl;
+            LOG(WARN) << e.what();
             return;
         }
     }

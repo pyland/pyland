@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <glog/logging.h>
+
 extern "C" {
 #include "SDL2/SDL_ttf.h"
 }
@@ -24,7 +26,7 @@ TextFont::TextFont(Typeface face, int size) {
     TTF_Font* font = TTF_OpenFont(face.filename.c_str(), size);
 
     if (font == nullptr) {
-        std::cerr << "Unable to open font from file \"" << face.filename << "\" at size " << size << ": " << TTF_GetError() << std::endl;
+        LOG(ERROR) << "Unable to open font from file \"" << face.filename << "\" at size " << size << ": " << TTF_GetError();
         throw TextFont::LoadException("Unable to open font");
     }
 

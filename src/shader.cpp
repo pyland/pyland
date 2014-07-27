@@ -22,7 +22,7 @@ static char* load_file(std::string filename) {
     content = new char[file_size+1];
     file.read(content, file_size);
     if (file.gcount() != file_size) {
-        std::cerr << "Unable to load shader file \"" << filename << "\".";
+        LOG(ERROR) << "Unable to load shader file \"" << filename << "\".";
         throw Shader::LoadException("Unable to load shader file");
     }
     

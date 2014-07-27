@@ -1,6 +1,8 @@
 #include <exception>
 #include <iostream>
 
+#include <glog/logging.h>
+
 extern "C" {
 #include <SDL2/SDL_ttf.h>
 }
@@ -23,7 +25,7 @@ const char* Typeface::LoadException::what() const noexcept {
 Typeface::Typeface(std::string filename):
     filename(filename) {
     if (!TTF_WasInit() && TTF_Init() == -1) {
-        std::cerr << "Failure initializing SDL_ttf: " << TTF_GetError() << std::endl;
+        LOG(ERROR) << "Failure initializing SDL_ttf: " << TTF_GetError();
         throw Typeface::LoadException("Failure initializing SDL_ttf");
     }
 }
