@@ -31,7 +31,11 @@ COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 
 For compiling on desktop, use:
 ```bash
-#Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
+# Set both PYTHON_VERSION and LIBBOOST_PYTHON.
+# LIBBOOST_PYTHON is typically boost_python-py32 or boost_python3.
+#
+# Set COMPILER to the most recent g++ or clang++ version available,
+# but at least g++-4.7 or a recent clang++. Plain "g++" is the default.
 PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
 
