@@ -112,7 +112,7 @@ private:
     CallbackRegistry<void,MouseInputEvent> mouse_callbacks;
 
     ///
-    /// Upon destruction, lifelines should be disabled.
+    /// Upon destruction, callback lifelines should be disabled.
     ///
     LifelineController callback_controller;
 

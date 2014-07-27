@@ -54,6 +54,9 @@ void InputManager::clean() {
 
 void InputManager::handle_event(SDL_Event* event) {
     int button, buttons, button_find;
+    // Used to change the coordinate system of some events to
+    // bottom-left originating.
+    int height_inv = window->get_size().second - 1;
     switch (event->type) {
     case SDL_KEYDOWN:
         if (down_keys.count(event->key.keysym.scancode) == 0) {
@@ -74,7 +77,7 @@ void InputManager::handle_event(SDL_Event* event) {
     case SDL_MOUSEBUTTONDOWN:
         mouse_from = mouse_to;
         mouse_to = MouseState(event->button.x,
-                              event->button.y,
+                              height_inv - event->button.y,
                               mouse_from.buttons | (1 << (event->button.button - 1)));
         mouse_events.push(MouseInputEvent(this, mouse_start, mouse_from, mouse_to, event->button.button));
         mouse_start = mouse_to;
@@ -82,14 +85,16 @@ void InputManager::handle_event(SDL_Event* event) {
     case SDL_MOUSEBUTTONUP:
         mouse_from = mouse_to;
         mouse_to = MouseState(event->button.x,
-                              event->button.y,
+                              height_inv - event->button.y,
                               mouse_from.buttons & ~(1 << (event->button.button - 1)));
         mouse_events.push(MouseInputEvent(this, mouse_start, mouse_from, mouse_to, event->button.button));
         mouse_start = mouse_to;
         break;
     case SDL_MOUSEMOTION:
         mouse_from = mouse_to;
-        mouse_to = MouseState(event->motion.x, event->motion.y, mouse_from.buttons);
+        mouse_to = MouseState(event->motion.x,
+                              height_inv - event->motion.y,
+                              mouse_from.buttons);
         button = 0;
         for (buttons = mouse_to.buttons, button_find = 1;
              buttons != 0;
