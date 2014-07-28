@@ -9,6 +9,8 @@
 #include <GL/gl.h>
 #endif
 
+
+#include <iostream>
 std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     delete []vertex_data;
     int num_floats = 18;
@@ -48,7 +50,7 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     vertex_data[17] = 0;
 
     size_vertex_data = num_floats;
-
+    std::cout << "WINDOW " << std::endl;
     std::vector<std::pair<GLfloat*, int>> vertices;
     vertices.push_back(std::make_pair(vertex_data, num_floats));
     return vertices;

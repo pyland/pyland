@@ -28,10 +28,6 @@ class GUIManager : public Object {
 ///
 std::shared_ptr<Component> root;
 
-///
-/// Parse all the components and generate the vertex and texture data
-///
-void  parse_components();
 
 void generate_tex_data();
 void generate_vertex_data();
@@ -41,6 +37,10 @@ public:
 GUIManager();
 ~GUIManager();
 void update_components();
+///
+/// Parse all the components and generate the vertex and texture data
+///
+void  parse_components();
 
 ///
 /// Set the root component of the component tree

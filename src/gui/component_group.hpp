@@ -65,7 +65,9 @@ public:
 
     ///
     /// This function is called by generate vertex data (See Call Super on wikipedia)
-    /// to generate the vertex data for this actual component
+    /// to generate the vertex data for this actual component. We need to also
+    /// enumerate all the components in this group and so this behaviour is common to
+    /// all subclasses.
     /// @param component the component to generate the data for 
     /// The pair holds the pointer and then the size of the data in bytes
     ///

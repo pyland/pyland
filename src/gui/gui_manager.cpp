@@ -29,11 +29,13 @@ void GUIManager::parse_components() {
 
 
     //Now generate the needed rendering data
-    
+        std::cout << "Generating data::::::::::" << std::endl;
 
     generate_tex_data();
     generate_vertex_data();
     load_textures();
+
+        std::cout << "DONE    ::::::::::" << std::endl;
 }
 
 void GUIManager::update_components() {
@@ -42,7 +44,7 @@ void GUIManager::update_components() {
 
 
 
-GUIManager::GUIManager() {
+GUIManager::GUIManager() : gui_tex_data(nullptr), gui_data(nullptr), tex_buf(nullptr){
 }
 
 GUIManager::~GUIManager() {
@@ -88,7 +90,7 @@ void GUIManager::generate_tex_data() {
 
         gui_tex_data_offset += component_texture_data.second;
     }
-
+    std::cout << "DONE WITH SETTING TEX COORDS" << std::endl;
 //Generate the data
     renderable_component.set_texture_coords_data(gui_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
@@ -97,12 +99,6 @@ void GUIManager::generate_vertex_data() {
     
     //Delete the data if its already allocated
     delete []gui_data;
-
-    //TODO: this is a remnant from C, update to catch exception
-    if(gui_data == NULL) {
-        std::cerr << "ERROR in Characater::generate_vertex_data, cannot allocate memory" << std::endl;
-        return;
-    }
 
     //generate the vertex data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_vertex_data();
@@ -143,7 +139,7 @@ void GUIManager::generate_vertex_data() {
 void GUIManager::load_textures() {
 
 
-    FILE *tex_file2 = NULL;
+    FILE *tex_file2 = nullptr;
     size_t bytes_read = 0;
     size_t image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
 
@@ -151,7 +147,7 @@ void GUIManager::load_textures() {
 
     //TODO: use the actual gui texture
     tex_file2 = fopen("../resources/characters_1.raw", "rb");
-    if(tex_file2 == NULL) {
+    if(tex_file2 == nullptr) {
         std::cerr << "ERROR: Couldn't load textures" << std::endl;
     }
 
@@ -199,7 +195,7 @@ bool GUIManager::init_shaders() {
   
     if (!shader->is_loaded()) {
         delete shader;
-        shader = NULL;
+        shader = nullptr;
         std::cerr << "Failed to create the shader" << std::endl;
         return false;
     }

@@ -50,7 +50,7 @@ void Character::generate_tex_data() {
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
     sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    if(sprite_tex_data == NULL) {
+    if(sprite_tex_data == nullptr) {
         std::cerr << "ERROR in Character::generate_tex_data, cannot allocate memory" << std::endl;
         return;
     }
@@ -91,7 +91,7 @@ void Character::generate_vertex_data() {
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
     sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    if(sprite_data == NULL) {
+    if(sprite_data == nullptr) {
         std::cerr << "ERROR in Characater::generate_vertex_data, cannot allocate memory" << std::endl;
         return;
     }

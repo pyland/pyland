@@ -275,6 +275,7 @@ int main(int argc, const char* argv[]) {
     sprite_window->add(restart_button);
     
     gui_manager.set_root(sprite_window);
+    gui_manager.parse_components();
 
     MapViewer map_viewer(&window,&gui_manager);
     map_viewer.set_map(&map);

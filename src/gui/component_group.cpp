@@ -87,6 +87,7 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
             group_data.push_back(component_data_pair);
         }
     }
+    std::cout << "GROUPING HERE" << std::endl;
     return group_data;
 }
 

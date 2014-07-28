@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <utility>
 #include <vector>
 
@@ -23,7 +24,7 @@
 ///
 class Component {
 protected:
-    
+    std::mutex component_mutex;
     ///
     /// The Opengl vertex data for this component, transformed into world space
     ///
@@ -90,7 +91,11 @@ protected:
     /// The lambda function that is called when the button is clicked
     ///
     std::function<void (void)> on_click_func;
-
+    
+    ///
+    /// Get the next unique identifier for the component - starting at 1.
+    ///
+    int get_new_id();
 public:
     Component();
     ~Component();

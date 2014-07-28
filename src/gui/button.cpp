@@ -53,7 +53,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     return vertices;
 
 }
-
+#include <iostream>
 std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
     delete []texture_data;
     int num_floats = 12;
@@ -84,7 +84,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
     //bottom right
     texture_data[10] = offset_x * GLfloat(5.0);
     texture_data[11] = offset_y;
-
+    std::cout << "BUTTON" << std::endl;
     std::vector<std::pair<GLfloat*, int>> texture_coords;
     texture_coords.push_back(std::make_pair(texture_data, num_floats));
     return texture_coords;
