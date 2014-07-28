@@ -300,7 +300,15 @@ void Text::generate_texture() {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
+#ifdef USE_GL
     glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
+#endif
+#ifdef USE_GLES
+    // For some STUPID reason, GL ES seems to be forcing me to waster
+    // RGB channels for padding, on a system with little memory.
+    // Look into this later.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
+#endif
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
