@@ -19,14 +19,25 @@ class MapViewer;
 /// size of each tile in pixels
 ///
 #define TILESET_ELEMENT_SIZE 16
+
+/// 
+/// default python editor, used as long as another isn't passed as command line arg
 #define DEFAULT_PY_EDITOR "gedit"
 
-//Wrap the api calls into a static public class
+// Class wrapping the API calls into a static public class
 class Engine {
 private:
 
+    /// 
+    /// name of editor used for python editing
+    ///
     static std::string editor;
+
     static MapViewer* map_viewer;
+
+    /// 
+    /// pointer for text box 
+    ///
     static Text* dialogue_box;
 
 public:
@@ -107,6 +118,7 @@ public:
     
     ///
     /// Open a text editor for the user to edit a file
+    /// @param filename name of file in scripts directory
     ///
     static bool open_editor(std::string filename);
 
@@ -138,7 +150,10 @@ public:
     ///
     static void remove_object(int object_id, Vec2D location);
 
-    static void set_editor(std::string editor);
+    ///
+    /// set the text editor, opened by the challenges
+    ///
+    static void set_editor(std::string _editor) {editor = _editor; }
 
     static void set_dialogue_box(Text* _dialogue_box) {dialogue_box = _dialogue_box; }
 

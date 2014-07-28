@@ -132,10 +132,6 @@ bool Engine::open_editor(std::string filename) {
     return true;
 }
 
-void Engine::set_editor(std::string new_editor) {
-    editor = new_editor;
-}
-
 
 std::vector<int> get_objects_at(Vec2D) {
     // TODO
