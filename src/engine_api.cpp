@@ -5,31 +5,35 @@
 #include "dispatcher.hpp"
 
 #include <cstdlib>
+#include <glog/logging.h>
 #include <memory>
 #include <utility>
 #include <vector>
 #include <iostream>
 
 
-bool Engine::move_object(int id, int tile_dx, int tile_dy) {
+bool Engine::move_object(int id, Vec2D move_by) {
 
     std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
 
     if(object) {
         //Check if a move can be performed
-        if (!walkable(object->get_x_position() + tile_dx, object->get_y_position() + tile_dy)) {
+        Vec2D new_loco = Vec2D(object->get_x_position() + move_by.x, object->get_y_position() + move_by.y);
+        VLOG(2) << "Trying to walk to " << new_loco.x << " " << new_loco.y << ".\n"
+                << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(new_loco.x).at(new_loco.y);
+        if ((!walkable(new_loco)) || (get_map_viewer()->get_map()->blocker.at(new_loco.x).at(new_loco.y) != 0)) {
             return false;
         } else {
             // trigger any waiting events on leaving 
-            std::pair<int,int> leave_tile = std::make_pair(object->get_x_position(), object->get_y_position());
+            Vec2D leave_tile = Vec2D(object->get_x_position(), object->get_y_position());
             get_map_viewer()->get_map()->event_step_off.trigger(leave_tile, id);
 
             //TODO, make this an event movement
-            object->set_x_position(object->get_x_position() + tile_dx);
-            object->set_y_position(object->get_y_position() + tile_dy);
+            object->set_x_position(object->get_x_position() + move_by.x);
+            object->set_y_position(object->get_y_position() + move_by.y);
 
             //trigger any waiting events on arriving
-            std::pair<int,int> arrive_tile = std::make_pair(object->get_x_position(), object->get_y_position());
+            Vec2D arrive_tile = Vec2D(object->get_x_position(), object->get_y_position());
             get_map_viewer()->get_map()->event_step_on.trigger(arrive_tile, id);
 
             //if there is a map viewer attached
@@ -44,36 +48,36 @@ bool Engine::move_object(int id, int tile_dx, int tile_dy) {
 
 MapViewer* Engine::map_viewer = nullptr;
 
-bool Engine::walkable(int x_pos, int y_pos) {
+bool Engine::walkable(Vec2D location) {
     int map_width = map_viewer->get_map()->get_width();
     int map_height = map_viewer->get_map()->get_height();
 
     //Check bounds
-    if(x_pos < 0 || x_pos >= map_width || y_pos < 0 || y_pos >= map_height) {
+    if(location.x < 0 || location.x >= map_width || location.y < 0 || location.y >= map_height) {
         return false;
     }
        
     //Check for collidable objects
-    if(!Engine::map_viewer->get_map()->is_walkable(x_pos, y_pos))
+    if(!Engine::map_viewer->get_map()->is_walkable(location.x, location.y))
         return false;
 
     return true;
 }
 
-bool Engine::change_tile(int, int, int, int) {
+bool Engine::change_tile(int, Vec2D, int) {
     return false;
 }
 
-std::vector<int> Engine::get_tiles(int, int) {
+std::vector<int> Engine::get_tiles(Vec2D) {
     std::vector<int> tiles;
     return tiles;
 }
 
 int Engine::get_tile_size() {
-    return -1; // TODO
+    throw std::runtime_error("get_tile_size not supported");
 }
 
-std::vector<int> Engine::get_objects(int, int) {
+std::vector<int> Engine::get_objects(Vec2D) {
     std::vector<int> objects;
     return objects;
 }
@@ -83,42 +87,40 @@ bool Engine::load_map(int) {
 }
 
 
-std::pair<int, int> Engine::find_object(int id) {
-
-    std::string exception_str = "Object Requested could not be found";
-
-    if(Engine::map_viewer == nullptr)
-        throw exception_str;
+Vec2D Engine::find_object(int id) {
+    if (!Engine::map_viewer) {
+        throw std::runtime_error("Object Requested could not be found");
+    }
 
     Map* map = map_viewer->get_map();
-    if(map == nullptr)
-        throw exception_str;
-    
+    if (!map) {
+        throw std::runtime_error("Object Requested could not be found");
+    }
+
     //Check the object is on the map
     auto objects = map->get_characters();
     for(auto object_id : objects) {
         if(object_id == id) {
             //Object is on the map so now get its locationg
             auto object = ObjectManager::get_instance().get_object<Object>(id);
-            return std::make_pair<int, int>(object->get_x_position(), object->get_y_position());
+            return Vec2D(object->get_x_position(), object->get_y_position());
         }
     }
 
     //Not on the map
-    throw exception_str;
+    throw std::runtime_error("Object is not in the map");
 }
 
 bool Engine::open_editor(std::string editor, std::string filename) {
-    print_debug << "XXXYYYZ...." << std::endl; 
+    LOG(INFO) << "Opening editor";
     //TODO remove this function in the final version
     std::string bash_command = editor + std::string(" python_embed/scripts/") + filename;
-    std::thread TEXT_EDIT([] (std::string command) { print_debug << "XXXYYYZZZ" << std::endl; system(command.c_str()); }, bash_command);
+    std::thread TEXT_EDIT([] (std::string command) { system(command.c_str()); }, bash_command);
     TEXT_EDIT.detach();
-    // system((std::string("gedit python_embed/scripts/") + filename + std::string(" &")).c_str());
     return true;
 }
 
-std::vector<int> get_objects_at(int /*x_pos*/, int /*y_pos*/) {
+std::vector<int> get_objects_at(Vec2D) {
     // TODO
     throw std::runtime_error("get_objects_at not implemented");
 }

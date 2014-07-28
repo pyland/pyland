@@ -1,12 +1,12 @@
 #include <chrono>
 #include <functional>
+#include <glog/logging.h>
 #include <iostream>
 #include <mutex>
 #include <thread>
 #include "entitythread.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
-#include "print_debug.hpp"
 #include "thread_killer.hpp"
 
 ///
@@ -26,16 +26,16 @@
 ///     Whether the lock has been acquired.
 ///
 bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
-    auto end = std::chrono::system_clock::now() + time_period;
+    auto end = std::chrono::steady_clock::now() + time_period;
 
     while (true) {
         // If lock is taken, return true. Otherwise, try to delay
-        if (lock.try_lock_for(end - std::chrono::system_clock::now())) {
+        if (lock.try_lock_for(end - std::chrono::steady_clock::now())) {
             return true;
         }
 
         // If delay has passed, hasn't been locked so return false
-        if (end <= std::chrono::system_clock::now()) {
+        if (end <= std::chrono::steady_clock::now()) {
             return false;
         }
 
@@ -67,8 +67,7 @@ bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time
 ///     usage should keep this in mind.
 ///
 void thread_killer(std::timed_mutex &finish_signal,
-                   EntityThreads &entitythreads,
-                   InterpreterContext interpreter_context) {
+                   EntityThreads &entitythreads) {
 
     while (true) {
         // Nonbloking sleep; allows safe quit
@@ -76,8 +75,8 @@ void thread_killer(std::timed_mutex &finish_signal,
             break;
         }
 
-        print_debug << "Kill thread woke up" << std::endl;
-        print_debug << "111" << entitythreads.value.size() << std::endl;
+        LOG(INFO) << "Kill thread woke up";
+        LOG(INFO) << "111" << entitythreads.value.size();
 
         std::lock_guard<std::mutex> lock(*entitythreads.lock);
 
@@ -86,20 +85,18 @@ void thread_killer(std::timed_mutex &finish_signal,
         for (auto &entitythread : entitythreads.value) {
             if (auto entitythread_p = entitythread.lock()) {
                 if (!entitythread_p->is_dirty()) {
-                    print_debug << "Killing thread!" << std::endl;
-                    lock::GIL lock_gil(interpreter_context, "thread_killer");
-                    entitythread_p->halt_soft(EntityThread::Signal::KILL);
+                    LOG(INFO) << "Killing thread!";
+                    entitythread_p->halt_soft(EntityThread::Signal::STOP);
                 }
                 entitythread_p->clean();
             }
         }
     }
 
-    print_debug << "Finished kill thread" << std::endl;
+    LOG(INFO) << "Finished kill thread";
 }
 
-ThreadKiller::ThreadKiller(EntityThreads &entitythreads,
-                           InterpreterContext interpreter_context) {
+ThreadKiller::ThreadKiller(EntityThreads &entitythreads) {
 
     // Lock now to prevent early exit
     kill_thread_finish_signal.lock();
@@ -107,15 +104,14 @@ ThreadKiller::ThreadKiller(EntityThreads &entitythreads,
     thread = std::thread(
         thread_killer,
         std::ref(kill_thread_finish_signal),
-        std::ref(entitythreads),
-        interpreter_context
+        std::ref(entitythreads)
     );
 
-    print_debug << "main: Spawned Kill thread" << std::endl;
+    LOG(INFO) << "main: Spawned Kill thread";
 }
 
 void ThreadKiller::finish() {    
-    print_debug << "main: Stopping Kill thread" << std::endl;
+    LOG(INFO) << "main: Stopping Kill thread";
 
     // Signal that the thread can quit
     kill_thread_finish_signal.unlock();

@@ -27,13 +27,13 @@ class LockableEntityThread : public lock::Lockable<std::shared_ptr<EntityThread>
         LockableEntityThread(std::shared_ptr<EntityThread> value);
         LockableEntityThread(std::shared_ptr<EntityThread> value, std::shared_ptr<std::mutex> lock);
 
-        // TODO: Comment
+        // TODO: Rearchitechture
         Dispatcher<> event_run;
-        // TODO: Comment
+        // TODO: Rearchitechture
         Dispatcher<> event_restart;
-        // TODO: Comment
+        // TODO: Rearchitechture
         Dispatcher<> event_stop;
-        // TODO: Comment
+        // TODO: Rearchitechture
         Dispatcher<> event_kill;
 };
 
@@ -46,7 +46,21 @@ class LockableEntityThread : public lock::Lockable<std::shared_ptr<EntityThread>
 ///
 class EntityThread {
     private:
-        // TODO: Comment
+        ///
+        /// Private shortcut to making exceptions which can
+        /// be thrown inside the Python-running thread in order
+        /// to control it.
+        ///
+        /// The PyObject is created with a single reference count
+        /// and this must be manually decreased before the object
+        /// is thrown away.
+        ///
+        /// @param base
+        ///     The base class, a BaseException subclass, to subclass.
+        ///
+        /// @param name
+        ///     The name to give the new object.
+        ///
         PyObject *make_base_async_exception(PyObject *base, const char *name);
 
         /// 
@@ -109,11 +123,20 @@ class EntityThread {
         void finish();
 
     public:
-        // TODO: Comment
+        ///
+        /// Names for all of the exception types that can send signals
+        /// to the running Python threads.
+        ///
+        /// RESTART: Stop and then start the process, whether or not it's already running.
+        ///
+        /// STOP: Stop the process and keep it in standby.
+        ///
+        /// KILL: Finish usage of the process, and terminate permanantly.
+        ///
         enum class Signal {
-            RESTART = 100,
-            STOP    = 200,
-            KILL    = 300
+            RESTART,
+            STOP,
+            KILL
         };
 
         ///
@@ -150,14 +173,18 @@ class EntityThread {
         long get_thread_id();
 
         ///
-        /// Try to nicely kill the thread; avoiding corruption where possible.
+        /// Try to nicely kill the thread, or send another signal,
+        /// avoiding corruption where possible.
         ///
         /// @warning
         ///     This needs to be, but is not, totally thread safe.
         ///
         /// Neither termination nor safety isguaranteed.
         ///
-        /// TODO: Document
+        /// @param signal
+        ///     The operation to perform.
+        ///
+        /// @see Signal
         ///
         void halt_soft(Signal signal);
 
@@ -195,9 +222,15 @@ class EntityThread {
         ///
         void clean();
 
-        // TODO: Comment
+        ///
+        /// The base exception all Signal exceptions derive from.
+        ///
         PyObject *Py_BaseAsyncException;
-        // TODO: Comment
+
+        ///
+        /// A map of all signals (not Py_BaseAsyncException) that can
+        /// be sent to threads, and their corresponding exception.
+        ///
         std::map<Signal, PyObject *> signal_to_exception;
 };
 

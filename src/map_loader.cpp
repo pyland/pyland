@@ -4,6 +4,7 @@
 #include "map_object.hpp"
 #include "tileset.hpp"
 
+#include <glog/logging.h>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -29,11 +30,11 @@
 ///
 bool MapLoader::load_map(const std::string source) {
 
-    std::cout << "LOADING MAP..." << std::endl;
+    LOG(INFO) << "Loading map";
     map.ParseFile(source);
 
     if (map.HasError()) {
-        std::cerr << "ERROR" << map.GetErrorCode() << " " << map.GetErrorText().c_str() << std::endl;
+        LOG(ERROR) << map.GetErrorCode() << " " << map.GetErrorText();
         return false;
     }
 
@@ -44,7 +45,6 @@ bool MapLoader::load_map(const std::string source) {
     load_layers();
     load_tileset();
     
-    std::cout << "DONE" << std::endl;
     return true;
 }
 
@@ -94,12 +94,12 @@ void MapLoader::load_objects() {
             const Tmx::Object* object = object_group->GetObject(j);
             
             //Get object properties
-            const std::string name = object->GetName().c_str();
+            const std::string name = object->GetName();
 
             int object_x = object->GetX();
             int object_y = object->GetY();
             
-            std::cout << "OBJECT : " << object->GetName() << std::endl;
+            LOG(INFO) << "Loading object: " << object->GetName();
             
             //Build a MapObject
             std::shared_ptr<MapObject> map_object = std::make_shared<MapObject>();
@@ -122,7 +122,7 @@ void MapLoader::load_tileset() {
         const Tmx::Tileset *tileset = map.GetTileset(i);
         
         //Get the image name. This is the path relative to the TMX file
-        const std::string tileset_name(tileset->GetName().c_str());
+        const std::string tileset_name(tileset->GetName());
         int tileset_width = tileset->GetImage()->GetWidth();
         int tileset_height = tileset->GetImage()->GetHeight();
         
@@ -136,19 +136,20 @@ void MapLoader::load_tileset() {
             auto tile_list = tileset->GetTiles();
             for (auto tile_iter = tile_list.begin(); tile_iter != tile_list.end(); ++tile_iter) {
                 //Get a tile from the tileset
-                const Tmx::Tile* tile = *tile_iter;
+                //const Tmx::Tile* tile = *tile_iter;
  
 
                 //Get the properties
                 //Used to handle collidable tiles
-                std::map<std::string, std::string> list = tile->GetProperties().GetList();
-                for (auto iter = list.begin(); iter != list.end(); ++iter){
-                    //                if (iter->first.c_str() == "Collidable") {
-                    //                    if (iter->second.c_str() == "True") {
-                    std::cout << "PROPERTY " << iter->first.c_str() << " " << iter->second.c_str() << std::endl;
-                    //  }
-                    //                }
-                }
+                // TODO: This
+                // std::map<std::string, std::string> list = tile->GetProperties().GetList();
+                // for (auto iter = list.begin(); iter != list.end(); ++iter){
+                //     if (iter->first.c_str() == "Collidable") {
+                //         if (iter->second.c_str() == "True") {
+                //             LOG(INFO) << "Property " << iter->first.c_str() << " " << iter->second.c_str();
+                //         }
+                //     }
+                // }
             }
         }
     }

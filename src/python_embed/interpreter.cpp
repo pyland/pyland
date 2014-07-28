@@ -4,6 +4,7 @@
 #include <atomic>
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
+#include <glog/logging.h>
 #include <mutex>
 #include <string>
 #include "api.hpp"
@@ -12,7 +13,6 @@
 #include "interpreter_context.hpp"
 #include "locks.hpp"
 #include "make_unique.hpp"
-#include "print_debug.hpp"
 #include "thread_killer.hpp"
 
 
@@ -26,13 +26,11 @@ Interpreter::Interpreter(boost::filesystem::path function_wrappers):
     //     This can be dangerous!
     interpreter_context(initialize_python()) {
 
-        thread_killer = std::make_unique<ThreadKiller>(entitythreads, interpreter_context);
-        print_debug << "Interpreter: Spawned Kill thread" << std::endl;
+        thread_killer = std::make_unique<ThreadKiller>(entitythreads);
+        LOG(INFO) << "Interpreter: Spawned Kill thread";
 
         // All Python errors should result in a Python traceback    
         try {
-            // TODO: decide whether to set sys.path
-
             // Import to allow conversion of classes, but no need to keep module reference
             interpreter_context.import_file(function_wrappers);
         }
@@ -44,7 +42,7 @@ Interpreter::Interpreter(boost::filesystem::path function_wrappers):
         // Release GIL; thread_killer can start killing now
         // and EntityThreads can be created without deadlocks
         PyEval_ReleaseLock();
-        print_debug << "Interpreter: Interpreter created " << std::endl;
+        LOG(INFO) << "Interpreter: Interpreter created ";
 }
 
 // WARNING:
@@ -62,7 +60,7 @@ PyThreadState *Interpreter::initialize_python() {
     Py_Initialize();
     PyEval_InitThreads();
 
-    print_debug << "Interpreter: Initialized Python" << std::endl;
+    LOG(INFO) << "Interpreter: Initialized Python";
 
     return PyThreadState_Get();
 }
@@ -83,7 +81,7 @@ LockableEntityThread Interpreter::register_entity(Entity &entity) {
 Interpreter::~Interpreter() {
     // Join killer
     thread_killer->finish();
-    print_debug << "Interpreter: Finished kill thread" << std::endl;
+    LOG(INFO) << "Interpreter: Finished kill thread";
 
     // Exorcise daemons
     {
@@ -100,5 +98,5 @@ Interpreter::~Interpreter() {
 
 void Interpreter::deinitialize_python() {
     PyEval_RestoreThread(interpreter_context.get_threadstate());
-    print_debug << "Interpreter: Deinitialized Python" << std::endl;
+    LOG(INFO) << "Interpreter: Deinitialized Python";
 }

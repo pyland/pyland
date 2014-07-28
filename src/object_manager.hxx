@@ -1,3 +1,4 @@
+#include <glog/logging.h>
 #include <iostream>
 #include <memory>
 
@@ -5,7 +6,7 @@ template <typename R>
 std::shared_ptr<R> ObjectManager::get_object(int object_id) {
 
     if(!is_valid_object_id(object_id)) {
-        std::cerr << "Object id is invalid in ObjectManager::get_object, id: " << object_id << std::endl;
+        LOG(ERROR) << "ObjectManager::get_object: Object id is invalid; id: " << object_id;
         return nullptr;
     }
   

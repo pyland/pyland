@@ -3,12 +3,13 @@
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
 #include <future>
+#include <glog/logging.h>
 #include <thread>
+
 #include "entitythread.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
 #include "make_unique.hpp"
-#include "print_debug.hpp"
 
 // For PyThread_get_thread_ident
 #include "pythread.h"
@@ -50,42 +51,41 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
                 InterpreterContext interpreter_context,
                 std::map<EntityThread::Signal, PyObject *> signal_to_exception) {
 
-    print_debug << "run_entity: Starting" << std::endl;
+    LOG(INFO) << "run_entity: Starting";
 
     bool waiting = true;
 
-    {
-        lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
-
-        //PyObject_Print(py::str("WE ARE FIGHTING DREEBAS").ptr(), stdout, 0);
-        print_debug << std::endl;
-        // Cast to object needed
-        PyObject_Print(py::api::object(entity_object->attr("name")).ptr(), stdout, 0);
-        print_debug << std::endl;
-    }
-
     // Register thread with Python, to allow locking
     lock::ThreadState threadstate(interpreter_context);
-    lock::ThreadGIL lock_thread(threadstate);
 
-    print_debug << "run_entity: Stolen GIL" << std::endl;
+    std::unique_ptr<py::api::object> bootstrapper_module;
 
-    // Get and run bootstrapper
-    py::api::object bootstrapper_module = interpreter_context.import_file(bootstrapper_file);
+    {
+        lock::ThreadGIL lock_thread(threadstate);
 
-    // Asynchronously return thread id to allow killing of this thread
-    //
-    // WARNING:
-    //     This must be here unless earlier blocks are to be wrapped in the
-    //     try, as the kill thread is legally allowed to kill as soon as it
-    //     gets the entity, and the entity returns as soon as this promise
-    //     is fulfilled. 
-    //
-    thread_id_promise.set_value(PyThread_get_thread_ident());
+        LOG(INFO) << "run_entity: Stolen GIL";
+
+        // Get and run bootstrapper
+        bootstrapper_module = std::make_unique<py::api::object>(
+            interpreter_context.import_file(bootstrapper_file)
+        );
+
+        // Asynchronously return thread id to allow killing of this thread
+        //
+        // WARNING:
+        //     This causes subtle race conditions, as setting this requires
+        //     the GIL and the thread killer takes the GIL.
+        //
+        //     BE CAREFUL.
+        //
+        thread_id_promise.set_value(PyThread_get_thread_ident());
+    }
 
     while (true) {
         try {
-            bootstrapper_module.attr("start")(
+            lock::ThreadGIL lock_thread(threadstate);
+
+            bootstrapper_module->attr("start")(
                 *entity_object,
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::RESTART])),
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::STOP])),
@@ -94,6 +94,8 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
             );
         }
         catch (py::error_already_set &) {
+            lock::ThreadGIL lock_thread(threadstate);
+
             PyObject *type, *value, *traceback;
             PyErr_Fetch(&type, &value, &traceback);
 
@@ -116,7 +118,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
             }
 
             else {
-                // TODO: catch and nicely handle error
+                // TODO: nicely handle error
                 PyErr_Print();
                 throw;
             }
@@ -124,17 +126,16 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
         waiting = true;
     }
     
-    print_debug << "run_entity: Finished" << std::endl;
+    LOG(INFO) << "run_entity: Finished";
 }
 
 EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entity):
     entity(entity),
     previous_call_number(entity.call_number),
     interpreter_context(interpreter_context),
-    // TODO: Consider leaks, which will happen right now
+
     Py_BaseAsyncException(make_base_async_exception(PyExc_BaseException, "__main__.BaseAsyncException")),
 
-    // TODO: Consider leaks, which will happen right now
     signal_to_exception({
         {
             EntityThread::Signal::RESTART,
@@ -167,7 +168,7 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
             run_entity,
             entity_object,
             std::move(thread_id_promise),
-            // TODO: Extract into a more logical place
+            // TODO: Extract path into a more logical place
             boost::filesystem::path("python_embed/scripts/bootstrapper.py"),
             interpreter_context,
             signal_to_exception
@@ -175,7 +176,6 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
 }
 
 long EntityThread::get_thread_id() {
-    // TODO: Make thread-safe, if needed
     if (thread_id_future.valid()) {
         thread_id = thread_id_future.get();
     }
@@ -183,10 +183,7 @@ long EntityThread::get_thread_id() {
     return thread_id;
 }
 
-//
-// TODO:
-// This somehow causes a deadlock sometimes. I don't know why or when.
-//
+
 PyObject *EntityThread::make_base_async_exception(PyObject *base, const char *name) {
     lock::GIL lock_gil(interpreter_context, "EntityThread::make_base_async_exception");
 
@@ -194,14 +191,18 @@ PyObject *EntityThread::make_base_async_exception(PyObject *base, const char *na
 }
 
 void EntityThread::halt_soft(Signal signal) {
-    print_debug << "Attempting to kill thread id " << get_thread_id() << "." << std::endl;
+    auto thread_id = get_thread_id();
 
-    PyThreadState_SetAsyncExc(get_thread_id(), signal_to_exception[signal]);
+    lock::GIL lock_gil(interpreter_context, "EntityThread::halt_soft");
+
+    PyThreadState_SetAsyncExc(thread_id, signal_to_exception[signal]);
 }
 
 void EntityThread::halt_hard() {
     // TODO: everything!!!
     throw std::runtime_error("hard halting not implemented");
+
+    lock::GIL lock_gil(interpreter_context, "EntityThread::halt_hard");
 }
 
 bool EntityThread::is_dirty() {
@@ -219,13 +220,18 @@ void EntityThread::finish() {
 
 EntityThread::~EntityThread() {
     finish();
-    print_debug << "EntityThread destroyed" << std::endl;
+    LOG(INFO) << "EntityThread destroyed";
 
     lock::GIL lock_gil(interpreter_context, "EntityThread::~EntityThread");
 
     if (!entity_object.unique()) {
         throw std::runtime_error("multiple references to entity_object on destruction");
     }
+
+    for (auto signal_exception : signal_to_exception) {
+        Py_DECREF(signal_exception.second);
+    }
+    Py_DECREF(Py_BaseAsyncException);
 
     entity_object.reset();
 }

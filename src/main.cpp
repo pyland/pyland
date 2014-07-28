@@ -28,14 +28,13 @@ n
 // A rotating cube rendered with OpenGL|ES. Three images used as textures on the cube faces.
 
 #include <boost/filesystem.hpp>
-    
 #include <cassert>
-#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <glog/logging.h>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -54,6 +53,7 @@ n
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "api.hpp"
 #include "button.hpp"
 #include "character.hpp"
 #include "component.hpp"
@@ -73,9 +73,17 @@ n
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
-#include "print_debug.hpp"
-#include "challenge1.hpp"
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
 
+
+// Include challenges
+// TODO: Rearchitechture
+#include "challenge.hpp"
+#include "long_walk_challenge.hpp"
+
+// Choose between GLES and GL
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -97,21 +105,8 @@ static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
-static float get_dt() {
-    static std::chrono::steady_clock::time_point curr_time = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point milliseconds = std::chrono::steady_clock::now();   
-
-    typedef std::chrono::duration<int, std::milli> millisecs_t;
-    millisecs_t duration(std::chrono::duration_cast<millisecs_t>(milliseconds - curr_time));
-
-    curr_time = milliseconds;
-    return static_cast<float>(duration.count()) / 1000.0f;
-}
-
 void create_character(Interpreter &interpreter) {
-
-
-    print_debug << "Creating character" << std::endl;
+    LOG(INFO) << "Creating character";
 
     // Registering new character with game engine
     shared_ptr<Character> new_character = make_shared<Character>();
@@ -121,23 +116,23 @@ void create_character(Interpreter &interpreter) {
     int start_y = 15;
     new_character->set_x_position(start_x);
     new_character->set_y_position(start_y);
-    print_debug << "Adding character" << std::endl;
+    LOG(INFO) << "Adding character";
     ObjectManager::get_instance().add_object(new_character);
     Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
     
     Engine::get_map_viewer()->set_map_focus_object(new_character->get_id());
-    print_debug << "Creating character wrapper" << std::endl;
-    std::cout<< "ID " << new_character->get_id() <<std::endl;
+    LOG(INFO) << "Creating character wrapper";
+    LOG(INFO) << "ID " << new_character->get_id();
 
     // Register user controled character
     // Yes, this is a memory leak. Deal with it.
     Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_character->get_name(), new_character->get_id());
 
-    print_debug << "Registering character" << std::endl;
+    LOG(INFO) << "Registering character";
 
     new_character->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
 
-    print_debug << "Done!" << std::endl;
+    LOG(INFO) << "Done!";
 }
 
 class CallbackState {
@@ -149,7 +144,7 @@ class CallbackState {
         }
 
         void register_number(int id) {
-            print_debug << "changing focus to " << id << std::endl;
+            LOG(INFO) << "changing focus to " << id;
             Engine::get_map_viewer()->set_map_focus_object(id);
         }
 
@@ -157,68 +152,66 @@ class CallbackState {
             create_character(interpreter);
         }
 
-        void restart(InterpreterContext interpreter_context) {
+        void restart() {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             if (!active_player) { return; }
 
-            lock::GIL lock_gil(interpreter_context, "Killer");
-
-            // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::RESTART);
         }
 
-        void stop(InterpreterContext interpreter_context) {
+        void stop() {
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             if (!active_player) { return; }
 
-            lock::GIL lock_gil(interpreter_context, "Killer");
-
-            // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::STOP);
         }
 
-        void kill(InterpreterContext interpreter_context) {
+        void kill() {
 
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 
             if (!active_player) { return; }
 
-            lock::GIL lock_gil(interpreter_context, "Killer");
-
-            // TODO: Lock
             active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
         }
 
         void man_move (arrow_key direction) {
-            print_debug << "arrow key pressed " << std::endl;
+            VLOG(3) << "arrow key pressed";
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             switch (direction) {
                 case (UP):
-                    Engine::move_object(id,0,1);
+                    Engine::move_object(id,Vec2D(0,1));
                     break;
                 case (DOWN):
-                    Engine::move_object(id,0,-1);
+                    Engine::move_object(id,Vec2D(0,-1));
                     break;
                 case (RIGHT):
-                    Engine::move_object(id,-1,0);
+                    Engine::move_object(id,Vec2D(-1,0));
                     break;
                 case (LEFT):
-                    Engine::move_object(id,1,0);
+                    Engine::move_object(id,Vec2D(1,0));
                     break;
             }
 
+        }
+
+        void monologue () {
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            Vec2D location =  Engine::find_object(id);
+            std::cout << "You are at " << location.to_string() <<std::endl;
         }
 
     private:
         Interpreter &interpreter;
         std::string name;
 };
+
 
 int main(int argc, const char* argv[]) {
     //    bool use_graphical_window = true;
@@ -234,6 +227,10 @@ int main(int argc, const char* argv[]) {
     */
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
+
+    google::InitGoogleLogging(argv[0]);
+    google::InstallFailureSignalHandler();
+
     int map_width = 16, map_height = 16;
     GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
     window.use_context();
@@ -282,49 +279,43 @@ int main(int argc, const char* argv[]) {
     
 
     Engine::set_map_viewer(&map_viewer);
-    
-    float dt = get_dt();
 
     CallbackState callbackstate(interpreter, "John");
 
     InputManager* input_manager = window.get_input_manager();
 
-    Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("N")},
-        [&] (KeyboardInputEvent) { callbackstate.spawn(); }
-    ));
-
-    Lifeline kill_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("K")},
-        [&] (KeyboardInputEvent) { callbackstate.kill(interpreter.interpreter_context); }
-    ));
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("H")},
-        [&] (KeyboardInputEvent) { callbackstate.stop(interpreter.interpreter_context); }
+        [&] (KeyboardInputEvent) { callbackstate.stop(); }
     ));
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("R")},
-        [&] (KeyboardInputEvent) { callbackstate.restart(interpreter.interpreter_context); }
+        [&] (KeyboardInputEvent) { callbackstate.restart(); }
     ));
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Up", "W"})},
+        {ANY_OF({KEY_HELD}), KEY({"Up", "W"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Down","S"})},
+        {ANY_OF({KEY_HELD}), KEY({"Down","S"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Right","D"})},
+        {ANY_OF({KEY_HELD}), KEY({"Right","D"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_REPEAT,KEY_PRESS}), KEY({"Left","A"})},
+        {ANY_OF({KEY_HELD}), KEY({"Left","A"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
+    ));
+
+    Lifeline monologue_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_PRESS}), KEY("M")},
+        [&] (KeyboardInputEvent) { callbackstate.monologue(); }
     ));
 
     std::vector<Lifeline> digit_callbacks;
@@ -337,27 +328,33 @@ int main(int argc, const char* argv[]) {
         );
     }
 
-    EventManager& em = EventManager::get_instance();
+    EventManager &em = EventManager::get_instance();
+
+    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont myfont(mytype, 14);
+    Text mytext(&window, myfont, true);
+    mytext.set_text("John");
+    mytext.move(100, 100);
+    mytext.resize(400, 50);
 
     std::string editor;
 
-    if (argc == 2) {
+    if (argc >= 2) {
         editor = argv[1];
     } else {
         editor = "gedit";
     };
 
-    Engine::open_editor(editor, "John_1.py");
 
-    init_challenge();
+    LongWalkChallenge long_walk_challenge(editor);
+    callbackstate.spawn();
+    long_walk_challenge.start();
 
     while (!window.check_close()) {
-        //Goet the time since the last iteration 
-        dt = get_dt(); 
         em.process_events();
-        map_viewer.update_map(dt);
         map_viewer.render_map();
-
+        mytext.display();
+        window.swap_buffers();
         GameWindow::update();
     }
 

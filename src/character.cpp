@@ -1,6 +1,6 @@
 #include "character.hpp"
 #include "renderable_component.hpp"
-#include "print_debug.hpp"
+#include <glog/logging.h>
 #include <iostream>
 #include <fstream>
 
@@ -32,15 +32,15 @@ Character::Character() {
     generate_tex_data();
     generate_vertex_data();
     load_textures();
-    std::cout << "CHARACTER CREATED" << std::endl;
+    LOG(INFO) << "Character initialized";
 }
 
 Character::~Character() {
-    delete []sprite_tex_data;
-    delete []sprite_data;
-    delete []tex_buf;
+    delete[] sprite_tex_data;
+    delete[] sprite_data;
+    delete[] tex_buf;
 
-    std::cout << "DELETED CHARACTER" << std::endl;
+    LOG(INFO) << "Character destructed";
 }
 
 
@@ -51,7 +51,7 @@ void Character::generate_tex_data() {
     int num_floats = 12;
     sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
     if(sprite_tex_data == nullptr) {
-        std::cerr << "ERROR in Character::generate_tex_data, cannot allocate memory" << std::endl;
+        LOG(ERROR) << "ERROR in Character::generate_tex_data, cannot allocate memory";
         return;
     }
 
@@ -86,13 +86,12 @@ void Character::generate_tex_data() {
 } 
 
 void Character::generate_vertex_data() {
-
     //holds the character vertex data
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
     sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
     if(sprite_data == nullptr) {
-        std::cerr << "ERROR in Characater::generate_vertex_data, cannot allocate memory" << std::endl;
+        LOG(ERROR) << "Characater::generate_vertex_data: cannot allocate memory";
         return;
     }
 
@@ -105,26 +104,26 @@ void Character::generate_vertex_data() {
 
     //top left
     sprite_data[3] = 0;
-    sprite_data[4] = (1) * scale;
+    sprite_data[4] = scale;
     sprite_data[5] = depth;
 
     //bottom right
-    sprite_data[6] = (1) * scale;
+    sprite_data[6] = scale;
     sprite_data[7] = 0;
     sprite_data[8] = depth;
 
     //top left
     sprite_data[9] = 0;
-    sprite_data[10] = 1 * scale;
+    sprite_data[10] = scale;
     sprite_data[11] = depth;
 
     //top right
-    sprite_data[12] = 1 * scale;
-    sprite_data[13] = 1 * scale;
+    sprite_data[12] = scale;
+    sprite_data[13] = scale;
     sprite_data[14] = depth;
 
     //bottom right
-    sprite_data[15] = 1 * scale;
+    sprite_data[15] = scale;
     sprite_data[16] = 0;
     sprite_data[17] = depth;
 
@@ -133,15 +132,15 @@ void Character::generate_vertex_data() {
 }
 
 void Character::load_textures() {
+    FILE *tex_file2 = nullptr;
 
-    FILE *tex_file2 = NULL;
     size_t image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
 
     tex_buf = new char[image_sz_2];
 
     tex_file2 = fopen("../resources/characters_1.raw", "rb");
-    if(tex_file2 == NULL) {
-        std::cerr << "ERROR: Couldn't load textures" << std::endl;
+    if(tex_file2 == nullptr) {
+        LOG(ERROR) << "Character::load_textures: Couldn't load textures";
     }
 
     if (tex_file2 && tex_buf) {
@@ -156,42 +155,19 @@ void Character::load_textures() {
 
 }
 bool Character::init_shaders() {
+    Shader* shader = nullptr;
+    try {
 #ifdef USE_GLES
-    //read in the shaders
-    std::ifstream vertex_shader_src("vert_shader.glesv");
-    std::ifstream fragment_shader_src("frag_shader.glesf");
+        shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
 #endif
 #ifdef USE_GL
-    //read in the shaders
-    std::ifstream vertex_shader_src("vert_shader.glv");
-    std::ifstream fragment_shader_src("frag_shader.glf");
+        shader = new Shader("vert_shader.glv", "frag_shader.glf");
 #endif
-
-    if (!vertex_shader_src.good()){
-        std::cerr << "Failed to load vertex shader" << std::endl;
-        return false;
     }
-    
-    if (!fragment_shader_src.good()) {
-        std::cerr << "Failed to load fragment shader" << std::endl;
-        return false;
-    }
-
-    std::string vert_src, frag_src, line;
-    while (getline(vertex_shader_src, line)) {
-        vert_src += line + std::string("\n");
-    }
-
-    while (getline(fragment_shader_src, line)) {
-        frag_src += line + std::string("\n");
-    }
-
-    Shader* shader = new Shader(vert_src, frag_src);
-  
-    if (!shader->is_loaded()) {
+    catch (std::exception e) {
         delete shader;
-        shader = NULL;
-        std::cerr << "Failed to create the shader" << std::endl;
+        shader = nullptr;
+        LOG(ERROR) << "Failed to create the shader";
         return false;
     }
 

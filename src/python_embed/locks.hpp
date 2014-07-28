@@ -6,7 +6,6 @@
 #include <boost/python.hpp>
 #include <mutex>
 #include "interpreter_context.hpp"
-#include "print_debug.hpp"
 
 namespace lock {
     ///

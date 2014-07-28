@@ -1,13 +1,16 @@
 #include <algorithm>
 #include <functional>
 #include <initializer_list>
-#include <SDL2/SDL.h>
+#include <stdexcept>
 #include <vector>
+
+extern "C" {
+#include <SDL2/SDL.h>
+}
 
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "keyboard_input_event.hpp"
-#include "print_debug.hpp"
 
 
 
@@ -63,7 +66,9 @@ KeyboardFilter KEY(std::initializer_list<std::string> keys) {
 
     for (std::string key : keys) {
         SDL_Keycode keycode = SDL_GetKeyFromName(key.c_str());
-        // TODO: Error checking
+        if (keycode == SDLK_UNKNOWN) {
+            throw std::runtime_error("unrecognized key: " + key);
+        }
 
         keyset.insert(keycode);
     }
@@ -73,7 +78,6 @@ KeyboardFilter KEY(std::initializer_list<std::string> keys) {
     };
 }
 
-// TODO: Consider efficiency
 KeyboardFilter KEY(std::string key) {
     return KEY({key});
 }
@@ -84,7 +88,9 @@ KeyboardFilter MODIFIER(std::initializer_list<std::string> modifiers) {
 
     for (std::string modifier : modifiers) {
         SDL_Scancode modifiercode = SDL_GetScancodeFromName(modifier.c_str());
-        // TODO: Error checking
+        if (modifiercode == SDL_SCANCODE_UNKNOWN) {
+            throw std::runtime_error("unrecognized modifier: " + modifier);
+        }
 
         modifierset.insert(modifiercode);
     }
@@ -99,7 +105,6 @@ KeyboardFilter MODIFIER(std::initializer_list<std::string> modifiers) {
     };
 }
 
-// TODO: Consider efficiency
 KeyboardFilter MODIFIER(std::string modifier) {
     return MODIFIER({modifier});
 }
@@ -204,7 +209,7 @@ KeyboardFilter KEY_PRESS = [] (KeyboardInputEvent event) {
 };
 
 KeyboardFilter KEY_REPEAT = [] (KeyboardInputEvent event) {
-    return event.down && !event.changed;
+    return event.typed;
 };
 
 KeyboardFilter KEY_RELEASE = [] (KeyboardInputEvent event) {

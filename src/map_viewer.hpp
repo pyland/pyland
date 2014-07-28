@@ -49,12 +49,6 @@ public:
     /// Render the currently bound map
     ///
     void render_map();
-  
-    ///
-    /// Update the map and any objects in it
-    /// @param dt The time delta between the current frame and the previous frame
-    ///
-    void update_map(float dt);
 
     ///
     /// Set the map that the viewer is managing

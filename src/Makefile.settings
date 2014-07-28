@@ -1,0 +1,98 @@
+NULL=
+
+RM = rm -f
+RMDIR = rmdir
+MKDIR = mkdir -p
+
+COMPILER = g++
+
+WARNINGS = \
+	-Wall -Wextra          \
+	-Wconversion           \
+	-Wmissing-braces       \
+	-Wpointer-arith        \
+	-Wno-sign-conversion   \
+	-pedantic              \
+	-isystem ./tmx-parser  \
+	-isystem ./tmx-parser/TmxParser
+
+CXXFLAGS = \
+	-std=c++11  \
+	-O3         \
+	${WARNINGS} \
+	${CXX_EXTRA}
+
+CPPFLAGS = \
+	-I./                  \
+	-I./challenges        \
+	-I./input_management  \
+	-I./gui               \
+	-I./python_embed      \
+	-MMD -MP              \
+	-MF dependencies/$*.d \
+	${CPP_EXTRA}
+
+LDFLAGS =
+LDLIBS  =
+
+
+
+#
+# Catches some undefined behaviour.
+#
+
+ifeq "$(SANITIZE)" "1"
+	CXXFLAGS += -fsanitize=undefined,address
+endif
+
+
+
+#
+# Turn on fancy usage of colours!
+#
+
+ifeq "$(NOCOLOR)" "1"
+	bold   =
+	normal =
+	red    =
+else
+	bold   = $(shell tput bold)
+	normal = $(shell tput sgr0)
+	red    = $(shell tput setaf 1)
+endif
+
+COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr "$(GCC_MAJOR)" \>= 4 \& "$(GCC_MINOR)" \>= 9)
+ifeq "$(COMPILER_SUPPORTS_DIAGNOSTICS_COLOR)" "1"
+    CXXFLAGS += -fdiagnostics-color=auto
+endif
+
+
+#
+# Try and enable precompiling of headers if confident
+# or using clang (which is assumed in-date)
+#
+
+PRECOMPILE ?= 1
+PRECOMPILED_HEADER_EXTENSION ?= unknown
+
+ifneq "$(PRECOMILE)" "1"
+ifeq "$(findstring g++,$(COMPILER))" "g++"
+	PRECOMPILED_HEADER_EXTENSION = gch
+endif
+
+ifeq "$(findstring clang++,$(COMPILER))" "clang++"
+	PRECOMPILED_HEADER_EXTENSION = pch
+	PYTHON_INCLUDE_PCH = -include-pch $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION)
+endif
+endif
+
+
+
+#
+# This is almost always what you want make to do, but it is not historical practice;
+# so for compatibility, you must explicitly request it.
+#
+# http://www.gnu.org/software/make/manual/make.html#Errors
+#
+
+.DELETE_ON_ERROR:

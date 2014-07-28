@@ -1,4 +1,4 @@
-#include <exception>
+#include <glog/logging.h>
 #include <iostream>
 #include <map>
 #include <utility>
@@ -20,11 +20,12 @@ extern "C" {
 #include <SDL2/SDL_syswm.h>
 }
 
+#include "callback.hpp"
+#include "callback_registry.hpp"
+#include "lifeline.hpp"
+#include "lifeline_controller.hpp"
 
 
-#ifdef DEBUG
-#define GAME_WINDOW_DEBUG
-#endif
 
 #ifdef USE_GLES
 #ifdef STATIC_OVERSCAN
@@ -48,20 +49,16 @@ std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>(
 GameWindow* GameWindow::focused_window = nullptr;
 
 
-
-GameWindow::InitException::InitException(const char* message) {
-    this->message = message;
-}
-
-
-const char* GameWindow::InitException::what() const noexcept {
-    return message;
-}
+// Need to inherit constructors manually.
+// NOTE: This will, and are required to, copy the message.
+GameWindow::InitException::InitException(const char *message): std::runtime_error(message) {}
+GameWindow::InitException::InitException(const std::string &message): std::runtime_error(message) {}
 
 
 
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
+    resizing = false;
     window_x = 0;
     window_y = 0;
     window_width  = width;
@@ -89,9 +86,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
 #endif
                                );
     if (window == nullptr) {
-#ifdef GAME_WINDOW_DEBUG
-        std::cerr << "Failed to create SDL window." << std::endl;
-#endif
+        LOG(ERROR) << "Failed to create SDL window.";
         deinit_sdl();
         throw GameWindow::InitException("Failed to create SDL window");
     }
@@ -140,6 +135,8 @@ GameWindow::~GameWindow() {
         deinit_sdl();
     }
 
+    callback_controller.disable();
+    
     delete input_manager;
 }
 
@@ -151,9 +148,7 @@ void GameWindow::init_sdl() {
     bcm_host_init();
 #endif
     
-#ifdef GAME_WINDOW_DEBUG
-    std::cerr << "Initializing SDL..." << std::endl;
-#endif
+    LOG(INFO) << "Initializing SDL...";
     result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   
     if (result != 0) {
@@ -162,23 +157,17 @@ void GameWindow::init_sdl() {
 
     SDL_VERSION(&wm_info.version);
     
-#ifdef GAME_WINDOW_DEBUG
-    std::cerr << "SDL initialized." << std::endl;
-#endif
+    LOG(INFO) << "SDL initialized.";
 }
 
 
 void GameWindow::deinit_sdl() {
-#ifdef GAME_WINDOW_DEBUG
-    std::cerr << "Deinitializing SDL..." << std::endl;
-#endif
+    LOG(INFO) << "Deinitializing SDL...";
     
     // Should always work.
     SDL_Quit ();
     
-#ifdef GAME_WINDOW_DEBUG
-    std::cerr << "SDL deinitialized." << std::endl;
-#endif
+    LOG(INFO) << "SDL deinitialized.";
 }
 
 
@@ -204,9 +193,6 @@ void GameWindow::init_gl() {
 
     display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     if (display == EGL_NO_DISPLAY) {
-#ifdef GAME_WINDOW_DEBUG
-        std::cerr << "Error getting display." << std::endl;
-#endif
         throw GameWindow::InitException("Error getting display");
     }
 
@@ -214,9 +200,6 @@ void GameWindow::init_gl() {
     result = eglInitialize(display, nullptr, nullptr);
     if (result == EGL_FALSE) {
         eglTerminate(display);
-#ifdef GAME_WINDOW_DEBUG
-        std::cerr << "Error initializing display connection." << std::endl;
-#endif
         throw GameWindow::InitException("Error initializing display connection");
     }
 
@@ -224,9 +207,6 @@ void GameWindow::init_gl() {
     result = eglChooseConfig(display, attribute_list, &config, 1, &configCount);
     if (result == EGL_FALSE) {
         eglTerminate(display);
-#ifdef GAME_WINDOW_DEBUG
-        std::cerr << "Error getting frame buffer configuration." << std::endl;
-#endif
         throw GameWindow::InitException("Error getting frame buffer configuration");
     }
 
@@ -235,10 +215,7 @@ void GameWindow::init_gl() {
     // Create EGL rendering context
     context = eglCreateContext(display, config, EGL_NO_CONTEXT, context_attributes);
     if (context == EGL_NO_CONTEXT) {
-    eglTerminate(display);
-#ifdef GAME_WINDOW_DEBUG
-        std::cerr << "Error creating rendering context." << std::endl;
-#endif
+        eglTerminate(display);
         throw GameWindow::InitException("Error creating rendering context");
     }
 
@@ -301,9 +278,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
   
     static EGL_DISPMANX_WINDOW_T nativeWindow;
 
-#ifdef GAME_WINDOW_DEBUG
-    std::cerr << "Initializing window surface." << std::endl;
-#endif
+    LOG(INFO) << "Initializing window surface.";
   
     // Create EGL window surface.
 
@@ -311,9 +286,9 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     destination.y = y + GameWindow::overscan_top;
     destination.width = w;
     destination.height = h;
-#ifdef GAME_WINDOW_DEBUG
-    std::cerr << "New surface: " << w << "x" << h << " at (" << x << "," << y <<")." << std::endl;;
-#endif
+
+    LOG(INFO) << "New surface: " << w << "x" << h << " at (" << x << "," << y << ").";
+
     source.x = 0;
     source.y = 0;
     source.width  = w << 16; // (???)
@@ -335,19 +310,16 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     EGLSurface new_surface;
     new_surface = eglCreateWindowSurface(display, config, &nativeWindow, nullptr);
     if (new_surface == EGL_NO_SURFACE) {
-#ifdef GAME_WINDOW_DEBUG
-        std::cerr << "Error creating window surface. " << eglGetError() << std::endl;
-#endif
-        throw GameWindow::InitException("Error creating window surface");
+        std::stringstream hex_error_code;
+        hex_error_code << std::hex << eglGetError();
+
+        throw GameWindow::InitException("Error creating window surface: " + hex_error_code.str());
     }
     surface = new_surface;
 
     // Connect the context to the surface.
     result = eglMakeCurrent(display, surface, surface, context);
     if (result == EGL_FALSE) {
-#ifdef GAME_WINDOW_DEBUG
-        std::cerr << "Error connecting context to surface." << std::endl;
-#endif
         throw GameWindow::InitException("Error connecting context to surface");
     }
 
@@ -379,9 +351,6 @@ void GameWindow::deinit_surface() {
         eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         result = eglDestroySurface(display, surface);
         if (result == EGL_FALSE) {
-#ifdef GAME_WINDOW_DEBUG
-            std::cerr << "Error destroying window surface." << std::endl;
-#endif
             throw GameWindow::InitException("Error destroying window surface");
         }
     }
@@ -417,6 +386,7 @@ void GameWindow::update() {
                 window->request_close();
                 break;
             case SDL_WINDOWEVENT_RESIZED:
+                window->resizing = true;
             case SDL_WINDOWEVENT_MOVED:
             case SDL_WINDOWEVENT_RESTORED:
             case SDL_WINDOWEVENT_MAXIMIZED:
@@ -435,13 +405,12 @@ void GameWindow::update() {
                 break;
             }
             break;
-        default:
-            // Let the input manager use the event.
-            if (focused_window) {
-                focused_window->input_manager->handle_event(&event);
-            }
-            break;
         }
+        // Let the input manager use the event (even if we used it).
+        if (focused_window) {
+            focused_window->input_manager->handle_event(&event);
+        }
+        break;
     }
 
     // Perform updates to windows which may be required following
@@ -462,9 +431,7 @@ void GameWindow::update() {
                               &y,
                               &child);
         if ((window->window_x != x || window->window_y != y) && window->visible) {
-#ifdef GAME_WINDOW_DEBUG
-            std::cerr << "Need surface reinit." << std::endl;
-#endif
+            LOG(INFO) << "Need surface reinit.";
             window->change_surface = InitAction::DO_INIT;
         }
         
@@ -474,7 +441,7 @@ void GameWindow::update() {
                 window->init_surface();
             }
             catch (InitException e) {
-                std::cerr << "Surface reinit failed: " << e.what() << std::endl;
+                LOG(WARNING) << "Surface reinit failed: " << e.what();
             }
             break;
         case InitAction::DO_DEINIT:
@@ -484,7 +451,11 @@ void GameWindow::update() {
             // Do nothing - hey, I don't like compiler warnings.
             break;
         }
-        
+
+        if (window->resizing) {
+            window->resize_callbacks.broadcast(window);
+            window->resizing = false;
+        }
         window->input_manager->run_callbacks();
         
         if (close_all) {
@@ -545,4 +516,18 @@ InputManager* GameWindow::get_input_manager() {
 
 std::pair<float,float> GameWindow::get_ratio_from_pixels(std::pair<int,int> pixels) {
     return std::pair<float,float>((float)pixels.first / (float)window_width, (float)pixels.second / (float) window_height);
+}
+
+
+void GameWindow::register_resize_handler(Callback<void, GameWindow*> callback) {
+    resize_callbacks.register_callback(callback);
+}
+
+Lifeline GameWindow::register_resize_handler(std::function<void(GameWindow*)> func) {
+    Callback<void, GameWindow*> callback(func);
+    resize_callbacks.register_callback(callback);
+    return Lifeline([this, callback] () {
+            resize_callbacks.unregister_callback(callback);
+        },
+        callback_controller);
 }

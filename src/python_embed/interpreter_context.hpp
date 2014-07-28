@@ -22,12 +22,18 @@ class InterpreterContext {
         InterpreterContext(PyThreadState *main_thread_state);
 
         ///
-        /// TODO
+        /// Get the PyThreadState associated with the main C thread.
+        ///
+        /// @return
+        ///     The PyThreadState associated with the main C thread.
         ///
         PyThreadState *get_threadstate();
 
         ///
-        /// TODO
+        /// Get the PyInterpreterState state for the Interpreter instance.
+        ///
+        /// @return
+        ///     The PyInterpreterState state for the Interpreter instance.
         ///
         PyInterpreterState *get_interpreterstate();
 
@@ -56,7 +62,7 @@ class InterpreterContext {
 
     private:
         ///
-        /// TODO
+        /// The PyThreadState associated with the main C thread.
         ///
         PyThreadState *main_thread_state;
 };

@@ -1,7 +1,7 @@
 #ifndef GAME_WINDOW_H
 #define GAME_WINDOW_H
 
-#include <exception>
+#include <stdexcept>
 #include <map>
 #include <utility>
 
@@ -23,6 +23,11 @@ extern "C" {
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 }
+
+#include "callback.hpp"
+#include "callback_registry.hpp"
+#include "lifeline.hpp"
+#include "lifeline_controller.hpp"
 
 class InputManager;
 
@@ -81,6 +86,11 @@ private:
     /// Keeps track of whether the surface is visible (i.e. exists)
     ///
     bool visible;
+
+    ///
+    /// If the window is being resized (true only during an update).
+    ///
+    bool resizing;
 
     ///
     /// Whether ths window is waiting to close
@@ -142,6 +152,15 @@ private:
     InputManager* input_manager;
 
     ///
+    /// Callback registry for window resizes.
+    ///
+    CallbackRegistry<void,GameWindow*> resize_callbacks;
+    ///
+    /// Upon destruction, callback lifelines should be disabled.
+    ///
+    LifelineController callback_controller;
+    
+    ///
     /// Initialize SDL.
     ///
     void init_sdl();
@@ -188,12 +207,10 @@ public:
     /// Used when SDL or EGL code fails to initialize, reinitialize, or
     /// deinitialize.
     ///
-    class InitException: public std::exception {
-    protected:
-        const char* message;
+    class InitException: public std::runtime_error {
     public:
-        InitException(const char* message);
-        virtual const char* what() const noexcept;
+        InitException(const char  *message);
+        InitException(const std::string &message);
     };
 
     ///
@@ -276,6 +293,20 @@ public:
     ///         window from the bottom-left to the top-right.
     ///
     std::pair<float,float> get_ratio_from_pixels(std::pair<int,int> pixels);
+
+    ///
+    /// Registers a callback function for window resize handling.
+    ///
+    /// @param callback Callback to be used to handle the resize.
+    ///
+    void register_resize_handler(Callback<void, GameWindow*> callback);
+    ///
+    /// Registers a callback function for window resize handling.
+    ///
+    /// @param func Callback function to be used to handle the resize.
+    /// @return A lifeline which keeps the callback active.
+    ///
+    Lifeline register_resize_handler(std::function<void(GameWindow*)> func);
 };
 
 
