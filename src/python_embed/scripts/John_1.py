@@ -1,9 +1,4 @@
 """
-▞▀▖ ▜                ▗▌        ▞▀▖ ▌   ▞▀▖ ▞▀▖ ▞▀▖ ▜▘ ▛▀▘ ▜▘ ▛▀▘ ▛▀▖
-▌   ▐  ▝▀▖ ▞▀▘ ▞▀▘    ▌ ▐▌     ▌   ▌   ▙▄▌ ▚▄  ▚▄  ▐  ▙▄  ▐  ▙▄  ▌ ▌
-▌ ▖ ▐  ▞▀▌ ▝▀▖ ▝▀▖    ▌ ▗▖     ▌ ▖ ▌   ▌ ▌ ▖ ▌ ▖ ▌ ▐  ▌   ▐  ▌   ▌ ▌
-▝▀   ▘ ▝▀▘ ▀▀  ▀▀    ▝▀ ▝▘     ▝▀  ▀▀▘ ▘ ▘ ▝▀  ▝▀  ▀▘ ▘   ▀▘ ▀▀▘ ▀▀ 
-
 This is a program. You will be using these to do most of the game.
 
 The point of this game is to show you how powerful programming is in
