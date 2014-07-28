@@ -288,7 +288,7 @@ int main(int argc, const char* argv[]) {
 
     EventManager &em = EventManager::get_instance();
 
-    Typeface mytype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
+    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
     TextFont myfont(mytype, 14);
     Text mytext(&window, myfont, true);
     mytext.set_text("John");
