@@ -43,7 +43,7 @@ Shader::LoadException::LoadException(const char* message) {
 
 const char* Shader::LoadException::what() const noexcept {
     return message;
-};
+}
 
 
 
