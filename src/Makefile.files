@@ -23,7 +23,8 @@ BASE_OBJS = \
 	object_manager.o \
 	renderable_component.o \
 	shader.o         \
-	tileset.o
+	tileset.o        \
+	time.o
 
 
 CHALLENGE_OBJS = \
