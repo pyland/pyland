@@ -2,7 +2,7 @@
 #define TEXT_FONT_H
 
 #include <memory>
-#include <exception>
+#include <stdexcept>
 
 extern "C" {
 #include <SDL2/SDL_ttf.h>
@@ -32,12 +32,10 @@ public:
     ///
     /// Represents a failure in loading
     ///
-    class LoadException: public std::exception {
-    protected:
-        const char* message;
+    class LoadException: public std::runtime_error {
     public:
-        LoadException(const char* message);
-        virtual const char* what() const noexcept;
+        LoadException(const char  *message);
+        LoadException(const std::string &message);
     };
     
     TextFont(Typeface face, int size);

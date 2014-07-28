@@ -1,4 +1,4 @@
-#include <exception>
+#include <stdexcept>
 #include <iostream>
 
 #include <glog/logging.h>
@@ -11,15 +11,10 @@ extern "C" {
 
 
 
-Typeface::LoadException::LoadException(const char* message) {
-    this->message = message;
-}
-
-
-const char* Typeface::LoadException::what() const noexcept {
-    return message;
-}
-
+// Need to inherit constructors manually.
+// NOTE: This will, and are required to, copy the message.
+Typeface::LoadException::LoadException(const char *message): std::runtime_error(message) {}
+Typeface::LoadException::LoadException(const std::string &message): std::runtime_error(message) {}
 
 
 Typeface::Typeface(std::string filename):

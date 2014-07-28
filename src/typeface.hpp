@@ -2,7 +2,7 @@
 #define TYPEFACE_H
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
 
 
@@ -23,12 +23,10 @@ public:
     ///
     /// Represents a failure in loading
     ///
-    class LoadException: public std::exception {
-    protected:
-        const char* message;
+    class LoadException: public std::runtime_error {
     public:
-        LoadException(const char* message);
-        virtual const char* what() const noexcept;
+        LoadException(const char  *message);
+        LoadException(const std::string &message);
     };
     
     Typeface(std::string filename);

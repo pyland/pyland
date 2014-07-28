@@ -13,6 +13,8 @@ extern "C" {
 #endif
 }
 
+#include <stdexcept>
+
 #include "text_font.hpp"
 #include "image.hpp"
 #include "callback.hpp"
@@ -112,12 +114,10 @@ public:
     ///
     /// Represents a failure when rendering or drawing.
     ///
-    class RenderException: public std::exception {
-    protected:
-        const char* message;
+    class RenderException: public std::runtime_error {
     public:
-        RenderException(const char* message);
-        virtual const char* what() const noexcept;
+        RenderException(const char  *message);
+        RenderException(const std::string &message);
     };
     
     Text(GameWindow* window, TextFont font, bool smooth = false);
