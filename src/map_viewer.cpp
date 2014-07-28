@@ -256,12 +256,6 @@ void MapViewer::refocus_map() {
     }
 }
 
-void MapViewer::update_map(float dt ) {
-    //move the map to the right position
-
-    map->update_map(dt);
-}
-
 void MapViewer::set_map(Map* new_map) {
     map = new_map;
 }

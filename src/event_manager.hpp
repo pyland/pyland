@@ -1,11 +1,12 @@
 #ifndef EVENT_MANAGER_H
 #define EVENT_MANAGER_H
 
-#include <chrono>
 #include <functional>
 #include <list>
 #include <mutex>
 #include <thread>
+
+#include "game_time.hpp"
 
 ///
 /// The event manager class. This is a thread-safe
@@ -53,7 +54,14 @@ class EventManager {
     /// @param percentage the percentage of completion
     ///
 
-    void add_timed_event(std::chrono::duration<double> duration, std::function<bool (double)> func, std::chrono::steady_clock::time_point start_time);
+    ///
+    /// This deals with keeping track of 
+    ///
+    GameTime time;
+
+    void add_timed_event(GameTime::duration duration,
+                         std::function<bool (double)> func,
+                         GameTime::time_point start_time);
 
     EventManager();
     ~EventManager();
@@ -84,7 +92,7 @@ public:
     /// completion. 0.0 is 0% and 1.0 is 100%. This is calculated
     /// based on the duration, the current time and the time the event was added to the
     /// queue 
-    void add_timed_event(std::chrono::duration<double> duration, std::function<bool (double)> func);
+    void add_timed_event(GameTime::duration duration, std::function<bool (double)> func);
     
     ///
     /// Processes all events in the current frame queue

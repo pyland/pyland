@@ -261,11 +261,6 @@ public:
     /// @param new_display_y the new display position
     ///
     void set_display_y(float new_display_y) { map_display_y = new_display_y; }
-  
-    ///
-    /// The function used to update elements on the map.
-    ///
-    void update_map(float dt);
 
     ///
     /// Is this location walkable

@@ -43,6 +43,3 @@ class PositionDispatcher {
 #include "dispatcher.hxx"
 
 #endif
-
-
-

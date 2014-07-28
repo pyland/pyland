@@ -29,7 +29,6 @@
 
 #include <boost/filesystem.hpp>
 #include <cassert>
-#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -96,17 +95,6 @@ enum arrow_key {UP, DOWN, LEFT, RIGHT};
 static volatile int shutdown;
 
 static std::mt19937 random_generator;
-
-static float get_dt() {
-    static std::chrono::steady_clock::time_point curr_time = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point milliseconds = std::chrono::steady_clock::now();   
-
-    typedef std::chrono::duration<int, std::milli> millisecs_t;
-    millisecs_t duration(std::chrono::duration_cast<millisecs_t>(milliseconds - curr_time));
-
-    curr_time = milliseconds;
-    return static_cast<float>(duration.count()) / 1000.0f;
-}
 
 void create_character(Interpreter &interpreter) {
     LOG(INFO) << "Creating character";
@@ -245,8 +233,6 @@ int main(int argc, const char* argv[]) {
     map_viewer.set_map(&map);
 
     Engine::set_map_viewer(&map_viewer);
-    
-    float dt = get_dt();
 
     CallbackState callbackstate(interpreter, "John");
 
@@ -322,9 +308,7 @@ int main(int argc, const char* argv[]) {
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
-        dt = get_dt(); 
         em.process_events();
-        map_viewer.update_map(dt);
         map_viewer.render_map();
 
         GameWindow::update();
