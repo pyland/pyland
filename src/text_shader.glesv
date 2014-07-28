@@ -1,0 +1,12 @@
+attribute vec2 position;
+attribute vec2 texture_coord;
+varying vec2 f_texture_coord;
+
+void main() {
+  gl_Position.xy = position;
+  gl_Position.z  = 0.0;
+  gl_Position.w  = 1.0;
+  
+  f_texture_coord = texture_coord;
+}
+
