@@ -18,7 +18,7 @@ TextFont::LoadException::LoadException(const char* message) {
 
 const char* TextFont::LoadException::what() const noexcept {
     return message;
-};
+}
 
 
 

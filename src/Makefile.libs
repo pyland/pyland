@@ -64,7 +64,7 @@ PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 SDL_CPPFLAGS = $(shell sdl2-config --cflags)
 SDL_CXXFLAGS =
 SDL_LDFLAGS  =
-SDL_LDLIBS   = $(shell sdl2-config --libs) -lSDL2_image
+SDL_LDLIBS   = $(shell sdl2-config --libs) -lSDL2_image -lSDL2_ttf
 
 
 

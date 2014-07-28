@@ -18,7 +18,7 @@ Typeface::LoadException::LoadException(const char* message) {
 
 const char* Typeface::LoadException::what() const noexcept {
     return message;
-};
+}
 
 
 

@@ -80,7 +80,7 @@ Text::RenderException::RenderException(const char* message) {
 
 const char* Text::RenderException::what() const noexcept {
     return message;
-};
+}
 
 
 
@@ -108,8 +108,8 @@ void Text::render() {
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
     int lost_lines = 0;
-    
-    int length = text.length();
+
+    int length = (int)text.length();
     // Entire text.
     const char* ctext = text.c_str();
     
@@ -123,7 +123,7 @@ void Text::render() {
     for (int t = 0; t < length; t++) {
         int line_width;
         // Word indexing.
-        int w;
+        int w = 0;
         // Stores the (from the beginning) a word in ctext (copy).
         line[0] = '\0';
         // Points to the end of the last successfully fitting word in
@@ -167,7 +167,7 @@ void Text::render() {
                     // We're going to have to cut a word in half.
 
                     // Swapped-out character
-                    int c;
+                    char c;
                     int left = 0;
                     int right = l - t;
                     // Search index within line.
