@@ -1,8 +1,12 @@
 #include <algorithm>
 #include <functional>
 #include <initializer_list>
-#include <SDL2/SDL.h>
+#include <stdexcept>
 #include <vector>
+
+extern "C" {
+#include <SDL2/SDL.h>
+}
 
 #include "filters.hpp"
 #include "input_manager.hpp"
