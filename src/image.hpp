@@ -1,7 +1,7 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include <exception>
+#include <stdexcept>
 
 extern "C" {
 #include <SDL2/SDL.h>
