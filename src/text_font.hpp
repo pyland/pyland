@@ -1,5 +1,5 @@
-#ifndef FONT_H
-#define FONT_H
+#ifndef TEXT_FONT_H
+#define TEXT_FONT_H
 
 #include <memory>
 #include <exception>
