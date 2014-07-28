@@ -256,13 +256,13 @@ void Text::render() {
             }
             for (int x = 0; x < rendered_line->w; x++) {
 #ifdef TEXT_SAFE_SURFACE
-                image.flipped_pixels[yi][x].r = (((Uint32*)compatible->pixels)[(y*jump + x)]);
+                image.flipped_pixels[yi][x].a = (((Uint32*)compatible->pixels)[(y*jump + x)]);
 #else
                 if (_smooth) {
-                    image.flipped_pixels[yi][x].r =(((Uint8*)rendered_line->pixels)[(y*jump + x)]);
+                    image.flipped_pixels[yi][x].a =(((Uint8*)rendered_line->pixels)[(y*jump + x)]);
                 }
                 else {
-                    image.flipped_pixels[yi][x].r = (((Uint8*)rendered_line->pixels)[(y*jump + x)]) ? 255 : 0;
+                    image.flipped_pixels[yi][x].a = (((Uint8*)rendered_line->pixels)[(y*jump + x)]) ? 255 : 0;
                 }
 #endif
             }
@@ -300,7 +300,7 @@ void Text::generate_texture() {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
