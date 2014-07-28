@@ -129,5 +129,7 @@ public:
     /// @param y_pos the y position of the object
     ///
     static void remove_object(int object_id, Vec2D location);
+
+    
 };
 #endif

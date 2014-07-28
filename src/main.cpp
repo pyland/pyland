@@ -69,6 +69,9 @@
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
 
 // Include challenges
 // TODO: Rearchitechture
@@ -203,6 +206,7 @@ class CallbackState {
         std::string name;
 };
 
+
 int main(int argc, const char* argv[]) {
     //    bool use_graphical_window = true;
 
@@ -284,6 +288,13 @@ int main(int argc, const char* argv[]) {
 
     EventManager &em = EventManager::get_instance();
 
+    Typeface mytype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
+    TextFont myfont(mytype, 14);
+    Text mytext(&window, myfont, true);
+    mytext.set_text("John");
+    mytext.move(100, 100);
+    mytext.resize(400, 50);
+
     std::string editor;
 
     if (argc >= 2) {
@@ -301,7 +312,8 @@ int main(int argc, const char* argv[]) {
         //Get the time since the last iteration 
         em.process_events();
         map_viewer.render_map();
-
+        mytext.display();
+        window.swap_buffers();
         GameWindow::update();
     }
 
