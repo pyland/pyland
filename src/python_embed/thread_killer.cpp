@@ -26,16 +26,16 @@
 ///     Whether the lock has been acquired.
 ///
 bool try_lock_for_busywait(std::timed_mutex &lock, std::chrono::nanoseconds time_period) {
-    auto end = std::chrono::system_clock::now() + time_period;
+    auto end = std::chrono::steady_clock::now() + time_period;
 
     while (true) {
         // If lock is taken, return true. Otherwise, try to delay
-        if (lock.try_lock_for(end - std::chrono::system_clock::now())) {
+        if (lock.try_lock_for(end - std::chrono::steady_clock::now())) {
             return true;
         }
 
         // If delay has passed, hasn't been locked so return false
-        if (end <= std::chrono::system_clock::now()) {
+        if (end <= std::chrono::steady_clock::now()) {
             return false;
         }
 
