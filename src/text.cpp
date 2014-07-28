@@ -456,11 +456,12 @@ void Text::display() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glDisable(GL_DEPTH_TEST);
 
     // Position data.
-    glVertexAttribPointer(SHADER_LOCATION_POSITION, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
+    glVertexAttribPointer(SHADER_LOCATION_POSITION, 2, GL_FLOAT, GL_FALSE, 4 * (GLsizei)sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
     // Texture data.
-    glVertexAttribPointer(SHADER_LOCATION_TEXTURE, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+    glVertexAttribPointer(SHADER_LOCATION_TEXTURE, 2, GL_FLOAT, GL_FALSE, 4 * (GLsizei)sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
     // glBindAttriLocation(program, PROGRAM_LOCATION_POSITION, SHADER_VARIABLE_POSITION);
     // glBindAttriLocation(program, PROGRAM_LOCATION_TEXTURE , SHADER_VARIABLE_TEXTURE);
     glUniform4fv(glGetUniformLocation(shader->get_program(), "colour"), 1, rgba);
@@ -477,4 +478,5 @@ void Text::display() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);
+    glEnable(GL_DEPTH_TEST);
 }
