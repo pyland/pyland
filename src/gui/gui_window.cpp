@@ -8,9 +8,8 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
-#endif
 
-std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_vertex_data() {
+std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     delete []vertex_data;
     int num_floats = 18;
     float scale = 500.0f;
@@ -48,12 +47,13 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_vertex_data() {
     vertex_data[16] = 0;
     vertex_data[17] = 0;
 
+    size_vertex_data = num_floats;
+
     std::vector<std::pair<GLfloat*, int>> vertices;
     vertices.push_back(std::make_pair(vertex_data, num_floats));
     return vertices;
 }
-
-std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_texture_data() {
+std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
     delete []texture_data;
     int num_floats = 12;
 
@@ -85,6 +85,8 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_texture_data() {
     //bottom right
     texture_data[10] = offset_x * GLfloat(5.0);
     texture_data[11] = offset_y;
+
+    size_texture_data = num_floats;
 
     std::vector<std::pair<GLfloat*, int>> texture_coords;
     texture_coords.push_back(std::make_pair(texture_data, num_floats));

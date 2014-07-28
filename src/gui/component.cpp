@@ -1,8 +1,11 @@
 #include "component.hpp"
 
 #include <vector>
-
-Component::Component() {
+Component::Component() : vertex_data(nullptr), texture_data(nullptr),
+                  size_vertex_data(0), size_texture_data(0),
+                  id(0), width(0.0f), height(0.0f),
+                  width_pixels(0),height_pixels(0),
+                  x_offset(0.0f), y_offset(0.0f) {
 
 }
 

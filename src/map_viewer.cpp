@@ -183,7 +183,6 @@ void MapViewer::render_map() {
     gui_render_component->release_vbos();
     gui_render_component->release_shader();
 
-
     window->swap_buffers();
 }
 

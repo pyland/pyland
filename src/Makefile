@@ -141,6 +141,7 @@ GUI_OBJS = \
 	gui/button.o                 \
 	gui/component.o	             \
 	gui/component_group.o        \
+	gui/gui_window.o             \
 	gui/gui_manager.o            
 
 

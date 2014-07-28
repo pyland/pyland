@@ -1,6 +1,7 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+#include <cstddef>
 #include <functional>
 #include <memory>
 #include <utility>
@@ -27,6 +28,16 @@ protected:
     /// The Opengl vertex data for this component, transformed into world space
     ///
     GLfloat* vertex_data;
+
+    ///
+    /// The number of bytes in the vertex data
+    ///
+    int size_vertex_data;
+
+    ///
+    /// The size of the texture data in bytes
+    ///
+    int size_texture_data;
 
     ///
     /// The Opengl texture data for this component
