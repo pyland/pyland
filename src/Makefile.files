@@ -24,7 +24,7 @@ BASE_OBJS = \
 	renderable_component.o \
 	shader.o         \
 	tileset.o        \
-	time.o
+	game_time.o
 
 
 CHALLENGE_OBJS = \
