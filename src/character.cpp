@@ -173,7 +173,7 @@ void Character::load_textures() {
 
 }
 bool Character::init_shaders() {
-    Shader* shader;
+    Shader* shader = nullptr;
     try {
 #ifdef USE_GLES
         shader = new Shader("vert_shader.glesv", "frag_shader.glesf");

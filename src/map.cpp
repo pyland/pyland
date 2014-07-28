@@ -470,7 +470,7 @@ void Map::init_textures() {
  * This function initialises the shader, creating and loading them.
  */ 
 bool Map::init_shaders() {
-    Shader* shader;
+    Shader* shader = nullptr;
     try {
 #ifdef USE_GLES
         shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
