@@ -136,7 +136,7 @@ void MapLoader::load_tileset() {
             auto tile_list = tileset->GetTiles();
             for (auto tile_iter = tile_list.begin(); tile_iter != tile_list.end(); ++tile_iter) {
                 //Get a tile from the tileset
-                const Tmx::Tile* tile = *tile_iter;
+                //const Tmx::Tile* tile = *tile_iter;
  
 
                 //Get the properties
