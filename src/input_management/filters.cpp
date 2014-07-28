@@ -209,7 +209,7 @@ KeyboardFilter KEY_PRESS = [] (KeyboardInputEvent event) {
 };
 
 KeyboardFilter KEY_REPEAT = [] (KeyboardInputEvent event) {
-    return event.down && !event.changed;
+    return event.typed;
 };
 
 KeyboardFilter KEY_RELEASE = [] (KeyboardInputEvent event) {
