@@ -518,13 +518,6 @@ bool Map::init_shaders() {
 
 }
 
-
-/**
- * The function used to update elements on the map.
- */
-void Map::update_map(float) {
-}
-
 Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
     tile(tile), blocker(blocker) {
         (*blocker)[tile.x][tile.y]++;

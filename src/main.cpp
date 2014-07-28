@@ -97,17 +97,6 @@ static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
-static float get_dt() {
-    static std::chrono::steady_clock::time_point curr_time = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point milliseconds = std::chrono::steady_clock::now();   
-
-    typedef std::chrono::duration<int, std::milli> millisecs_t;
-    millisecs_t duration(std::chrono::duration_cast<millisecs_t>(milliseconds - curr_time));
-
-    curr_time = milliseconds;
-    return static_cast<float>(duration.count()) / 1000.0f;
-}
-
 void create_character(Interpreter &interpreter) {
     LOG(INFO) << "Creating character";
 
@@ -321,7 +310,6 @@ int main(int argc, const char* argv[]) {
     while (!window.check_close()) {
         //Get the time since the last iteration 
         em.process_events();
-        map_viewer.update_map(get_dt());
         map_viewer.render_map();
 
         GameWindow::update();
