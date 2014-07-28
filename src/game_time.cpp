@@ -27,6 +27,9 @@ GameTime::time_point GameTime::time() {
     auto real_time = std::chrono::steady_clock::now();
     auto real_time_difference = real_time - time_at_last_tick;
 
+    // Ignore the potential for inaccuracy;
+    // the point is that everything will be inaccurate the
+    // same way so actual (microsecond) jitter isn't really important.
     passed_time += std::chrono::duration_cast<duration>(
         real_time_difference * double(game_seconds_per_real_second)
     );
