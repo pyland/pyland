@@ -1,16 +1,16 @@
 #include <chrono>
 
 #include "accessor.hpp"
-#include "time.hpp"
+#include "game_time.hpp"
 
-Time::Time():
+GameTime::GameTime():
 	game_seconds_per_real_second(
 		1,
 		Accessor<float>::default_getter,
 		[this] (float value) { time(); return value; }
 	) {}
 
-Time::duration Time::time() {
+GameTime::duration GameTime::time() {
 	auto real_time = std::chrono::steady_clock::now();
 	auto real_time_difference = real_time - time_at_last_tick;
 
