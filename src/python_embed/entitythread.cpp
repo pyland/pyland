@@ -118,7 +118,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
             }
 
             else {
-                // TODO: catch and nicely handle error
+                // TODO: nicely handle error
                 PyErr_Print();
                 throw;
             }
@@ -133,10 +133,9 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
     entity(entity),
     previous_call_number(entity.call_number),
     interpreter_context(interpreter_context),
-    // TODO: Consider leaks, which will happen right now
+
     Py_BaseAsyncException(make_base_async_exception(PyExc_BaseException, "__main__.BaseAsyncException")),
 
-    // TODO: Consider leaks, which will happen right now
     signal_to_exception({
         {
             EntityThread::Signal::RESTART,
@@ -169,7 +168,7 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
             run_entity,
             entity_object,
             std::move(thread_id_promise),
-            // TODO: Extract into a more logical place
+            // TODO: Extract path into a more logical place
             boost::filesystem::path("python_embed/scripts/bootstrapper.py"),
             interpreter_context,
             signal_to_exception
@@ -177,7 +176,6 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
 }
 
 long EntityThread::get_thread_id() {
-    // TODO: Make thread-safe, if needed
     if (thread_id_future.valid()) {
         thread_id = thread_id_future.get();
     }
@@ -185,10 +183,7 @@ long EntityThread::get_thread_id() {
     return thread_id;
 }
 
-//
-// TODO:
-// This somehow causes a deadlock sometimes. I don't know why or when.
-//
+
 PyObject *EntityThread::make_base_async_exception(PyObject *base, const char *name) {
     lock::GIL lock_gil(interpreter_context, "EntityThread::make_base_async_exception");
 
@@ -232,6 +227,11 @@ EntityThread::~EntityThread() {
     if (!entity_object.unique()) {
         throw std::runtime_error("multiple references to entity_object on destruction");
     }
+
+    for (auto signal_exception : signal_to_exception) {
+        Py_DECREF(signal_exception.second);
+    }
+    Py_DECREF(Py_BaseAsyncException);
 
     entity_object.reset();
 }

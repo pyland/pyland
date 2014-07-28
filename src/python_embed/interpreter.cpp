@@ -31,8 +31,6 @@ Interpreter::Interpreter(boost::filesystem::path function_wrappers):
 
         // All Python errors should result in a Python traceback    
         try {
-            // TODO: decide whether to set sys.path
-
             // Import to allow conversion of classes, but no need to keep module reference
             interpreter_context.import_file(function_wrappers);
         }
