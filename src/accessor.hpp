@@ -29,7 +29,7 @@ class Accessor {
             return *this;
         }
 
-        operator T() { return getter(value); }
+        operator T() const { return getter(value); }
 
     private:
         Accessor(const Accessor&);
