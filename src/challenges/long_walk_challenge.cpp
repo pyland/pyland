@@ -43,7 +43,7 @@ std::map<std::string, std::vector<Vec2D>> targets = {
     }}
 };
 
-LongWalkChallenge::LongWalkChallenge(std::string editor, Text* text_displayer): Challenge(editor,text_displayer) {
+LongWalkChallenge::LongWalkChallenge(Text* text_displayer): Challenge(text_displayer) {
     auto *map = Engine::get_map_viewer()->get_map();
 
     // Set up blocking walls
@@ -75,7 +75,7 @@ LongWalkChallenge::LongWalkChallenge(std::string editor, Text* text_displayer): 
 
             // TODO: Hook into keybinding and enable here
             // ... somehow!
-            Engine::open_editor(editor, "John_1.py");
+            Engine::open_editor("John_1.py");
 
             wall_path_medium_blockers.clear();
             return false;

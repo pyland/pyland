@@ -121,7 +121,7 @@ Vec2D Engine::find_object(int id) {
     throw std::runtime_error("Object is not in the map");
 }
 
-bool Engine::open_editor(std::string editor, std::string filename) {
+bool Engine::open_editor(std::string filename) {
     LOG(INFO) << "Opening editor";
     //TODO remove this function in the final version
     std::string bash_command = editor + std::string(" python_embed/scripts/") + filename;
@@ -130,7 +130,14 @@ bool Engine::open_editor(std::string editor, std::string filename) {
     return true;
 }
 
+void Engine::set_editor(std::string new_editor) {
+    editor = new_editor;
+}
+
+
 std::vector<int> get_objects_at(Vec2D) {
     // TODO
     throw std::runtime_error("get_objects_at not implemented");
 }
+
+std::string Engine::editor = DEFAULT_PY_EDITOR;

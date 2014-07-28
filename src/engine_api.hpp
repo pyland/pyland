@@ -16,10 +16,12 @@ class MapViewer;
 /// size of each tile in pixels
 ///
 #define TILESET_ELEMENT_SIZE 16
+#define DEFAULT_PY_EDITOR "gedit"
 
 //Wrap the api calls into a static public class
 class Engine {
 
+    static std::string editor;
     static MapViewer* map_viewer;
 public:
     ///
@@ -100,7 +102,7 @@ public:
     ///
     /// Open a text editor for the user to edit a file
     ///
-    static bool open_editor(std::string editor, std::string filename);
+    static bool open_editor(std::string filename);
 
     ///
     /// Get the size of a tile in the current map
@@ -130,6 +132,6 @@ public:
     ///
     static void remove_object(int object_id, Vec2D location);
 
-    
+    static void set_editor(std::string editor);
 };
 #endif

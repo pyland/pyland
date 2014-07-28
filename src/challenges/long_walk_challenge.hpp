@@ -13,7 +13,7 @@
 
 class LongWalkChallenge : public Challenge {
     public:
-        LongWalkChallenge(std::string editor, Text* text_displayer);
+        LongWalkChallenge(Text* text_displayer);
 
         virtual void start();
         virtual void finish();

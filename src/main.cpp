@@ -298,13 +298,10 @@ int main(int argc, const char* argv[]) {
     std::string editor;
 
     if (argc >= 2) {
-        editor = argv[1];
-    } else {
-        editor = "gedit";
+        Engine::set_editor(argv[1]);
     };
 
-
-    LongWalkChallenge long_walk_challenge(editor, &mytext);
+    LongWalkChallenge long_walk_challenge(&mytext);
     callbackstate.spawn();
     long_walk_challenge.start();
 
