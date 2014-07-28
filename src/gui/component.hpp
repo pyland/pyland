@@ -142,7 +142,6 @@ public:
     /// @param _width the width
     ///
     void set_width(float _width) { width = _width; }
-
     ///
     /// Get the width of the component relative to its parent
     /// @return the width

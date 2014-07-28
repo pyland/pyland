@@ -47,7 +47,7 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
     
     //Go through all the components in this group
     for(auto component : components) {
-        std::vector<std::pair<GLfloat*, int>> component_vector = component.second->generate_texture_data();
+        std::vector<std::pair<GLfloat*, int>> component_vector = component.second->generate_vertex_data();
         
         //get all the pointers in the component - deals with ComponentGroup children
         for(auto component_data_pair : component_vector) {
@@ -60,9 +60,9 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
             float component_y_offset = component.second->get_y_offset();
 
 
-            pixel_offset_x =(int)((float)width_pixels * component_x_offset);
-            pixel_offset_y = (int)((float)height_pixels * component_y_offset);
-
+            pixel_offset_x =(int)((float)500 /*width_pixels */ * component_x_offset);
+            pixel_offset_y = (int)((float)200/*height_pixels */* component_y_offset);
+            std::cout << "PIXEL " << pixel_offset_x << "  " << pixel_offset_y << std::endl;
             //Translation matrix
             glm::mat4 transform_matrix = glm::mat4(1.0);
             glm::vec3 translate_vector = glm::vec3((float)pixel_offset_x, (float)pixel_offset_y, 0.0f);
@@ -74,9 +74,10 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
             //translate each vertex
             for(int i = 0; i < size_data; i+=num_dimensions) {
                 //Translate the vertex
-                glm::vec4 vertex = glm::vec4(component_vertices[i], component_vertices[i+1], component_vertices[i+2], 0.0f);
-                vertex = transform_matrix*  vertex;
-
+                glm::vec4 vertex = glm::vec4(component_vertices[i], component_vertices[i+1], component_vertices[i+2], 1.0f);
+            std::cout << "VERTEX: " << vertex.x << " Y " << vertex.y << "  z " << vertex.z << std::endl;    
+            vertex = transform_matrix*  vertex;
+                std::cout << "NEW VERTEX: " << vertex.x << " Y " << vertex.y << "  z " << vertex.z << std::endl;
                 //Put the data back
                 component_vertices[i] = vertex.x;
                 component_vertices[i+1] = vertex.y;
@@ -97,7 +98,7 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
 
    //Call the implementation of this class  to generate it's data
    generate_this_texture_data();
-
+   std::cout << "GETTING COMPONENTS " << std::endl;
     //Add this components data
    group_data.push_back(std::make_pair(texture_data, size_texture_data));
 

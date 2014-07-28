@@ -85,8 +85,14 @@ void GUIManager::generate_tex_data() {
         GLfloat* texture_coords = component_texture_data.first;
         size_t texture_coords_size = size_t(component_texture_data.second);
 
+        std::cout <<" COMPONENT" << std::endl;
+for(int i = 0; i < texture_coords_size; i++)
+            std::cout << texture_coords[i] << std::endl;    
+        
+
+
         //copy data into buffer
-        std::memcpy(&gui_tex_data[gui_tex_data_offset],texture_coords, texture_coords_size);
+        std::copy(texture_coords, &texture_coords[texture_coords_size], &gui_tex_data[gui_tex_data_offset]);
 
         gui_tex_data_offset += component_texture_data.second;
     }
@@ -124,14 +130,15 @@ void GUIManager::generate_vertex_data() {
     for(auto component_vertex_data : components_data) {
         GLfloat* vertices = component_vertex_data.first;
         size_t vertices_size = size_t(component_vertex_data.second);
-
+        
         //copy data into buffer
-        std::memcpy(&gui_data[gui_data_offset], vertices, vertices_size);
+        std::copy(vertices, &vertices[vertices_size], &gui_data[gui_data_offset]);
 
         gui_data_offset += component_vertex_data.second;
     }
 
-    
+    //        for(int i = 0; i < num_floats; i++)
+    //      std::cout << gui_data[i] << std::endl;    
     renderable_component.set_vertex_data(gui_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(GLsizei(num_floats/3));//GL_TRIANGLES being used
 }
