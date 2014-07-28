@@ -48,6 +48,8 @@ bool Engine::move_object(int id, Vec2D move_by) {
 }
 
 MapViewer* Engine::map_viewer = nullptr;
+Text* Engine::dialogue_box = nullptr;
+
 
 bool Engine::walkable(Vec2D location) {
     int map_width = map_viewer->get_map()->get_width();
@@ -141,3 +143,10 @@ std::vector<int> get_objects_at(Vec2D) {
 }
 
 std::string Engine::editor = DEFAULT_PY_EDITOR;
+
+void Engine::print_dialogue(std::string name, std::string text) {
+    std::string text_to_display = name + " : " + text;
+    (*dialogue_box).set_text(text_to_display);
+    (*dialogue_box).display();
+    std::cout << name << "  says:\n" << text_to_display << std::endl;
+}

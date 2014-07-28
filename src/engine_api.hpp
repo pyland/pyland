@@ -9,6 +9,9 @@
 #include "api.hpp"
 #include <utility>
 #include <vector>
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
 
 class MapViewer;
 
@@ -20,9 +23,12 @@ class MapViewer;
 
 //Wrap the api calls into a static public class
 class Engine {
+private:
 
     static std::string editor;
     static MapViewer* map_viewer;
+    static Text* dialogue_box;
+
 public:
     ///
     /// Set the map viewer attached to the engine
@@ -133,5 +139,9 @@ public:
     static void remove_object(int object_id, Vec2D location);
 
     static void set_editor(std::string editor);
+
+    static void set_dialogue_box(Text* _dialogue_box) {dialogue_box = _dialogue_box; }
+
+    static void print_dialogue(std::string name, std::string text);
 };
 #endif

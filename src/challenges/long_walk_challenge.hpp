@@ -13,8 +13,7 @@
 
 class LongWalkChallenge : public Challenge {
     public:
-        LongWalkChallenge(Text* text_displayer);
-
+    	LongWalkChallenge();
         virtual void start();
         virtual void finish();
 

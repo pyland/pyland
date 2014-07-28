@@ -294,6 +294,7 @@ int main(int argc, const char* argv[]) {
     mytext.set_text("John");
     mytext.move(100, 100);
     mytext.resize(800, 80);
+    Engine::set_dialogue_box(&mytext);
 
     std::string editor;
 
@@ -301,7 +302,7 @@ int main(int argc, const char* argv[]) {
         Engine::set_editor(argv[1]);
     };
 
-    LongWalkChallenge long_walk_challenge(&mytext);
+    LongWalkChallenge long_walk_challenge = LongWalkChallenge();
     callbackstate.spawn();
     long_walk_challenge.start();
 
