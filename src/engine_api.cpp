@@ -17,11 +17,12 @@ bool Engine::move_object(int id, Vec2D move_by) {
     std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
 
     if(object) {
+
         //Check if a move can be performed
         Vec2D new_loco = Vec2D(object->get_x_position() + move_by.x, object->get_y_position() + move_by.y);
         VLOG(2) << "Trying to walk to " << new_loco.x << " " << new_loco.y << ".\n"
                 << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(new_loco.x).at(new_loco.y);
-        if ((!walkable(new_loco)) || (get_map_viewer()->get_map()->blocker.at(new_loco.x).at(new_loco.y) != 0)) {
+        if (!walkable(new_loco)) {
             return false;
         } else {
             // trigger any waiting events on leaving 
@@ -54,12 +55,21 @@ bool Engine::walkable(Vec2D location) {
 
     //Check bounds
     if(location.x < 0 || location.x >= map_width || location.y < 0 || location.y >= map_height) {
+        VLOG(2) << "Cannot move to requested tile due to map bounds";
         return false;
     }
        
     //Check for collidable objects
-    if(!Engine::map_viewer->get_map()->is_walkable(location.x, location.y))
+    if(!Engine::map_viewer->get_map()->is_walkable(location.x, location.y)) {
+        VLOG(2) << "Cannot move to requested tile due to collidable objects";
         return false;
+    }
+
+    //check for tile blockers
+    if (get_map_viewer()->get_map()->blocker.at(location.x).at(location.y) != 0) {
+        VLOG(2) << "Cannot move to requested tile due to tile blocker";
+        return false;
+    }
 
     return true;
 }
