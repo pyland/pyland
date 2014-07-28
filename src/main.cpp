@@ -245,8 +245,6 @@ int main(int argc, const char* argv[]) {
     map_viewer.set_map(&map);
 
     Engine::set_map_viewer(&map_viewer);
-    
-    float dt = get_dt();
 
     CallbackState callbackstate(interpreter, "John");
 
@@ -322,9 +320,8 @@ int main(int argc, const char* argv[]) {
 
     while (!window.check_close()) {
         //Get the time since the last iteration 
-        dt = get_dt(); 
         em.process_events();
-        map_viewer.update_map(dt);
+        map_viewer.update_map(get_dt());
         map_viewer.render_map();
 
         GameWindow::update();
