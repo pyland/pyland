@@ -276,7 +276,7 @@ void Text::render() {
             break;
         }
     }
-    delete line;
+    delete[] line;
     generate_texture();
     dirty = false;
 }
