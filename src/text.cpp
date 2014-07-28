@@ -131,7 +131,7 @@ void Text::render() {
         int ll = 0;
 
         // Line indexing.
-        for (int l = t; l < length; l++) { // t++
+        for (int l = t; l < length; l++) {
             // Find word end.
             for (w = l; w < length && (ctext[w] != ' ' && ctext[w] != '\n'); w++);
             // Copy word into line.
@@ -144,11 +144,10 @@ void Text::render() {
             if (line_width < width) {
                 // Mark current position as valid.
                 ll = l - t;
-                // t = l;
                 // If this is the end of a line, or whole text, stop.
                 if (ctext[w] == '\n' || ctext[w] == '\0') {
                     t = l;
-                    // line[ll] = '\0';
+                    // Note the string is already null terminated.
                     break;
                 }
                 else {
@@ -157,17 +156,56 @@ void Text::render() {
                 }
             }
             else {
-                // As the line overflows with the current l, set the
-                // text index to the last fit.
-                t += ll; // t = l;
+                if (ll > 0) {
+                    // There are some fittable words.
+                    // As the line overflows with the current l, set the
+                    // text index to the last fit.
+                    t += ll;
+                }
+                else {
+                    // There are no separators to break on.
+                    // We're going to have to cut a word in half.
+
+                    // Swapped-out character
+                    int c;
+                    int left = 0;
+                    int right = l - t;
+                    // Search index within line.
+                    int ls;
+                    ll = 0;
+                    for (ls = (right + left) / 2; ls != ll; ls = (right + left) / 2) {
+                        ll = ls;
+                        c = line[ls];
+                        line[ls] = 0;
+                        TTF_SizeUTF8(font.font, line, &line_width, NULL);
+                        if (line_width <= width) {
+                            left = ls;
+                        }
+                        else {
+                            right = ls;
+                        }
+                        line[ls] = c;
+                    }
+                    // Don't skip the non-separating character.
+                    t += ll - 1;
+                }
+                // Null terminate for rendering.
                 line[ll] = '\0';
                 break;
             }
         }
-        // Check that we aren't going to chase our tailes trying to fit an unfittable word.
-        if (line[0] == '\0' && ctext[w] != ' ') {
-            LOG(WARN) << "Cannot render text: A word is too long.";
-            throw Text::RenderException("A word is too long");
+        if (line[0] == '\0') {
+            // Check that we aren't going to chase our tailes trying to fit an unfittable character.
+            if (ctext[w] != '\n') {
+                LOG(WARNING) << "Cannot render text: character too large.";
+                delete line;
+                throw Text::RenderException("A word is too long");
+            }
+            else {
+                // It's a blank line.
+                line_number++;
+                continue;
+            }
         }
         // Render line
         SDL_Color black;
@@ -238,10 +276,11 @@ void Text::render() {
         SDL_FreeSurface(rendered_line);
         line_number++;
         if (y < line_height) {
-            LOG(WARN) << "Text overflow.";
+            LOG(WARNING) << "Text overflow.";
             break;
         }
     }
+    delete line;
     generate_texture();
     dirty = false;
 }
@@ -392,7 +431,7 @@ void Text::display() {
             generate_vbo();
         }
         catch (Text::RenderException e) {
-            LOG(WARN) << e.what();
+            LOG(WARNING) << e.what();
             return;
         }
     }
