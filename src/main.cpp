@@ -293,7 +293,7 @@ int main(int argc, const char* argv[]) {
     Text mytext(&window, myfont, true);
     mytext.set_text("John");
     mytext.move(100, 100);
-    mytext.resize(400, 50);
+    mytext.resize(800, 80);
 
     std::string editor;
 
