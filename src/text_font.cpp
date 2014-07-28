@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 
 #include <glog/logging.h>
 
@@ -10,16 +11,10 @@ extern "C" {
 #include "typeface.hpp"
 
 
-
-TextFont::LoadException::LoadException(const char* message) {
-    this->message = message;
-}
-
-
-const char* TextFont::LoadException::what() const noexcept {
-    return message;
-}
-
+// Need to inherit constructors manually.
+// NOTE: This will, and are required to, copy the message.
+TextFont::LoadException::LoadException(const char *message): std::runtime_error(message) {}
+TextFont::LoadException::LoadException(const std::string &message): std::runtime_error(message) {}
 
 
 TextFont::TextFont(Typeface face, int size) {

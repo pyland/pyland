@@ -3,6 +3,7 @@
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 #include <string>
 
 
@@ -36,14 +37,10 @@ static char* load_file(std::string filename) {
 
 
 
-Shader::LoadException::LoadException(const char* message) {
-    this->message = message;
-}
-
-
-const char* Shader::LoadException::what() const noexcept {
-    return message;
-}
+// Need to inherit constructors manually.
+// NOTE: This will, and are required to, copy the message.
+Shader::LoadException::LoadException(const char *message): std::runtime_error(message) {}
+Shader::LoadException::LoadException(const std::string &message): std::runtime_error(message) {}
 
 
 

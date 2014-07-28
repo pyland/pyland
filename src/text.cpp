@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <stdexcept>
 
 #include <glog/logging.h>
 
@@ -73,15 +74,10 @@ static void load_program(GameWindow* window) {
 
 
 
-Text::RenderException::RenderException(const char* message) {
-    this->message = message;
-}
-
-
-const char* Text::RenderException::what() const noexcept {
-    return message;
-}
-
+// Need to inherit constructors manually.
+// NOTE: This will, and are required to, copy the message.
+Text::RenderException::RenderException(const char *message): std::runtime_error(message) {}
+Text::RenderException::RenderException(const std::string &message): std::runtime_error(message) {}
 
 
 Text::Text(GameWindow* window, TextFont font, bool smooth):

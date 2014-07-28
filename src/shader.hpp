@@ -1,6 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <stdexcept>
 
 #ifdef USE_GLES
 
@@ -49,12 +50,10 @@ public:
     ///
     /// Represents a failure when loading the shader.
     ///
-    class LoadException: public std::exception {
-    protected:
-        const char* message;
+    class LoadException: public std::runtime_error {
     public:
-        LoadException(const char* message);
-        virtual const char* what() const noexcept;
+        LoadException(const char  *message);
+        LoadException(const std::string &message);
     };
     
     /// 
