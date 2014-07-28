@@ -7,10 +7,13 @@
 #include "challenge.hpp"
 #include "dispatcher.hpp"
 #include "map.hpp"
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
 
 class LongWalkChallenge : public Challenge {
     public:
-        LongWalkChallenge(std::string editor);
+        LongWalkChallenge(std::string editor, Text* text_displayer);
 
         virtual void start();
         virtual void finish();

@@ -289,7 +289,7 @@ int main(int argc, const char* argv[]) {
     EventManager &em = EventManager::get_instance();
 
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 14);
+    TextFont myfont(mytype, 18);
     Text mytext(&window, myfont, true);
     mytext.set_text("John");
     mytext.move(100, 100);
@@ -304,7 +304,7 @@ int main(int argc, const char* argv[]) {
     };
 
 
-    LongWalkChallenge long_walk_challenge(editor);
+    LongWalkChallenge long_walk_challenge(editor, &mytext);
     callbackstate.spawn();
     long_walk_challenge.start();
 

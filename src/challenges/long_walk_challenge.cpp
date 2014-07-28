@@ -43,7 +43,7 @@ std::map<std::string, std::vector<Vec2D>> targets = {
     }}
 };
 
-LongWalkChallenge::LongWalkChallenge(std::string editor): Challenge(editor) {
+LongWalkChallenge::LongWalkChallenge(std::string editor, Text* text_displayer): Challenge(editor,text_displayer) {
     auto *map = Engine::get_map_viewer()->get_map();
 
     // Set up blocking walls
