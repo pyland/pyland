@@ -41,7 +41,7 @@ dependencies/input_management: | dependencies
 
 #
 # Executables
-#
+# DO NOT RE-ORDER - tmx parser must come before tinyxml in ldlibs
 
 $(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
 	@echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
