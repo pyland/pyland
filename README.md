@@ -1,12 +1,12 @@
 Project Zygote (working title)
 ==============================
 
-This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectZygote](twitter.com/ProjectZygote).
+This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectZygote](http://twitter.com/ProjectZygote).
 
 ## Install 
-These install instruction be incomplete and you may require additional packages to the ones listed here
+These install instructions may be incomplete and you may require additional packages to the ones listed here
 
-#### Getting Dependancies (Raspberry Pi and Desktop installations)
+#### Getting Dependancies (Raspberry Pi)
 
 ```bash
 git clone https://github.com/heidi-ann/zygote
@@ -16,6 +16,13 @@ wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2_2.0.3-1_armhf.deb
 sudo gdebi libsdl2_2.0.3-1_armhf.deb
 wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2-image_2.0.0-1_armhf.deb
 sudo gdebi libsdl2-image_2.0.0-1_armhf.deb
+wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2-ttf_2.0.12-1_armhf.deb
+sudo gdebi libsdl2-ttf_2.0.12-1_armhf.deb
+wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog0_0.3.3-1_armhf.deb
+sudo gdebi libgoogle-glog0_0.3.3-1_armhf.deb
+wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog-dev_0.3.3-1_armhf.deb
+sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
+
 cd zygote/src
 ```
 
