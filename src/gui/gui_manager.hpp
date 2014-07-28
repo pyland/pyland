@@ -1,9 +1,14 @@
 #ifndef GUI_MANAGER_H
 #define GUI_MANAGER_H
 
-#include "component.hpp"
-#include "object.hpp"
 
+#include "component.hpp"
+#include "input_manager.hpp"
+#include "callback.hpp"
+#include "lifeline.hpp"
+#include "filters.hpp"
+#include "mouse_input_event.hpp"
+#include "object.hpp"
 
 #include <memory>
 
@@ -36,6 +41,8 @@ bool init_shaders();
 public:
 GUIManager();
 ~GUIManager();
+
+    void mouse_callback_function(MouseInputEvent event);
 void update_components();
 ///
 /// Parse all the components and generate the vertex and texture data

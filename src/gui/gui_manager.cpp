@@ -27,16 +27,11 @@
 #define IMAGE2_NUM_COMPONENTS 4
 
 void GUIManager::parse_components() {
-
-
     //Now generate the needed rendering data
-        std::cout << "Generating data::::::::::" << std::endl;
-
     generate_tex_data();
     generate_vertex_data();
     load_textures();
-init_shaders();
-        std::cout << "DONE    ::::::::::" << std::endl;
+    init_shaders();
 }
 
 void GUIManager::update_components() {
@@ -45,7 +40,8 @@ void GUIManager::update_components() {
 
 
 
-GUIManager::GUIManager() : gui_tex_data(nullptr), gui_data(nullptr), tex_buf(nullptr){
+GUIManager::GUIManager() : gui_tex_data(nullptr), gui_data(nullptr), tex_buf(nullptr) {
+
 }
 
 GUIManager::~GUIManager() {

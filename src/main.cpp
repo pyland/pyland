@@ -241,6 +241,8 @@ int main(int argc, const char* argv[]) {
 
     //BUILD the GUI
     GUIManager gui_manager;
+
+    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
     
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
