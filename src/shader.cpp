@@ -57,8 +57,8 @@ Shader::Shader(const std::string vs, const std::string fs) {
     vertex_shader = load_shader(GL_VERTEX_SHADER, vs_src);
     fragment_shader = load_shader(GL_FRAGMENT_SHADER, fs_src);
 
-    delete vs_src;
-    delete fs_src;
+    delete[] vs_src;
+    delete[] fs_src;
 
     //Create the program object
     program_obj = glCreateProgram();
