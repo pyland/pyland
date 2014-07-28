@@ -173,14 +173,14 @@ void Image::load_file(const char* filename) {
 
 void Image::clear(Uint32 colour, Uint32 mask) {
     Uint32 invmask = ~mask;
-    Uint8 ri = (invmask >> 24) & 0xff;
-    Uint8 gi = (invmask >> 16) & 0xff;
-    Uint8 bi = (invmask >>  8) & 0xff;
-    Uint8 ai = (invmask >>  0) & 0xff;
-    Uint8 rc = (colour  >> 24) & 0xff;
-    Uint8 gc = (colour  >> 16) & 0xff;
-    Uint8 bc = (colour  >>  8) & 0xff;
-    Uint8 ac = (colour  >>  0) & 0xff;
+    Uint8 ri = (Uint8)(invmask >> 24);
+    Uint8 gi = (Uint8)(invmask >> 16);
+    Uint8 bi = (Uint8)(invmask >>  8);
+    Uint8 ai = (Uint8)(invmask >>  0);
+    Uint8 rc = (Uint8)(colour  >> 24);
+    Uint8 gc = (Uint8)(colour  >> 16);
+    Uint8 bc = (Uint8)(colour  >>  8);
+    Uint8 ac = (Uint8)(colour  >>  0);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             (*this)[y][x].r = rc | ((*this)[y][x].r & ri);
