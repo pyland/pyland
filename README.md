@@ -11,7 +11,7 @@ These install instructions may be incomplete and you may require additional pack
 ```bash
 git clone https://github.com/heidi-ann/zygote
 sudo apt-get install libx11-dev gdebi libtinyxml-dev zlib1g-dev mesa-common-dev mesa-utils mesa-utils-extra build-essential gedit
-g++-4.7 libsdl2-image-dev
+g++-4.7 libsdl2-image-dev  
 wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2_2.0.3-1_armhf.deb
 sudo gdebi libsdl2_2.0.3-1_armhf.deb
 wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2-image_2.0.0-1_armhf.deb
@@ -35,6 +35,11 @@ COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
 
 #### Compiling on Desktop - Unix
+
+For desktop, you will need the packages listed above, many of which can be found on the repos e.g. 
+```bash
+sudo apt-get install libsdl2-ttf-dev 
+```
 
 For compiling on desktop, use:
 ```bash
