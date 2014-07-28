@@ -74,7 +74,7 @@ std::vector<int> Engine::get_tiles(Vec2D) {
 }
 
 int Engine::get_tile_size() {
-    return -1; // TODO
+    throw std::runtime_error("get_tile_size not supported");
 }
 
 std::vector<int> Engine::get_objects(Vec2D) {
