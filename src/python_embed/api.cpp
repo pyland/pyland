@@ -52,12 +52,10 @@ Entity::Entity(Vec2D start, std::string name, int id):
 
 bool Entity::move(int x, int y) {
     ++call_number;
+    Engine::move_object(id, Vec2D(x, y));
 
-    if (Engine::move_object(id, Vec2D(x, y))) {
-        return true;
-    };
-
-    return false;
+    // TODO: Fix this!
+    return true;
 }
 
 bool Entity::walkable(int x, int y) {

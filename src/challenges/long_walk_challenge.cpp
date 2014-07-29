@@ -43,7 +43,7 @@ std::map<std::string, std::vector<Vec2D>> targets = {
     }}
 };
 
-LongWalkChallenge::LongWalkChallenge(std::string editor): Challenge(editor) {
+LongWalkChallenge::LongWalkChallenge() {
     auto *map = Engine::get_map_viewer()->get_map();
 
     // Set up blocking walls
@@ -59,23 +59,23 @@ LongWalkChallenge::LongWalkChallenge(std::string editor): Challenge(editor) {
     map->event_step_on.register_callback(
         targets.at("treasure:path:medium").front(),
         [&] (int) {
-            dialogue ("TREASURE",
-                "▞▀▖      ▗       ▐     ▛▀▖                   ▐    \n"
-                "▙▄▌▛▀▖▞▀▖▄ ▞▀▖▛▀▖▜▀    ▌ ▌▞▀▖▞▀▖▌ ▌▛▚▀▖▞▀▖▛▀▖▜▀ ▐▌\n"
-                "▌ ▌▌ ▌▌ ▖▐ ▛▀ ▌ ▌▐ ▖   ▌ ▌▌ ▌▌ ▖▌ ▌▌▐ ▌▛▀ ▌ ▌▐ ▖▗▖\n"
-                "▘ ▘▘ ▘▝▀ ▀▘▝▀▘▘ ▘ ▀    ▀▀ ▝▀ ▝▀ ▝▀▘▘▝ ▘▝▀▘▘ ▘ ▀ ▝▘\n"
-                "                                                  \n"
-                "▛▀▖                     ▐                ▌        \n"
-                "▙▄▘▙▀▖▞▀▖▞▀▘▞▀▘   ▞▀▖   ▜▀ ▞▀▖   ▞▀▖▞▀▖▞▀▌▞▀▖     \n"
-                "▌  ▌  ▛▀ ▝▀▖▝▀▖   ▛▀    ▐ ▖▌ ▌   ▌ ▖▌ ▌▌ ▌▛▀      \n"
-                "▘  ▘  ▝▀▘▀▀ ▀▀    ▝▀▘    ▀ ▝▀    ▝▀ ▝▀ ▝▀▘▝▀▘     \n"
-            );
+            // Engine::print_dialogue ("TREASURE",
+            //     "▞▀▖      ▗       ▐     ▛▀▖                   ▐    \n"
+            //     "▙▄▌▛▀▖▞▀▖▄ ▞▀▖▛▀▖▜▀    ▌ ▌▞▀▖▞▀▖▌ ▌▛▚▀▖▞▀▖▛▀▖▜▀ ▐▌\n"
+            //     "▌ ▌▌ ▌▌ ▖▐ ▛▀ ▌ ▌▐ ▖   ▌ ▌▌ ▌▌ ▖▌ ▌▌▐ ▌▛▀ ▌ ▌▐ ▖▗▖\n"
+            //     "▘ ▘▘ ▘▝▀ ▀▘▝▀▘▘ ▘ ▀    ▀▀ ▝▀ ▝▀ ▝▀▘▘▝ ▘▝▀▘▘ ▘ ▀ ▝▘\n"
+            //     "                                                  \n"
+            //     "▛▀▖                     ▐                ▌        \n"
+            //     "▙▄▘▙▀▖▞▀▖▞▀▘▞▀▘   ▞▀▖   ▜▀ ▞▀▖   ▞▀▖▞▀▖▞▀▌▞▀▖     \n"
+            //     "▌  ▌  ▛▀ ▝▀▖▝▀▖   ▛▀    ▐ ▖▌ ▌   ▌ ▖▌ ▌▌ ▌▛▀      \n"
+            //     "▘  ▘  ▝▀▘▀▀ ▀▀    ▝▀▘    ▀ ▝▀    ▝▀ ▝▀ ▝▀▘▝▀▘     \n"
+            // );
 
             // TODO: Add wall-lowering callback to "e"
 
             // TODO: Hook into keybinding and enable here
             // ... somehow!
-            Engine::open_editor(editor, "John_1.py");
+            Engine::open_editor("John_1.py");
 
             wall_path_medium_blockers.clear();
             return false;
@@ -94,7 +94,7 @@ LongWalkChallenge::LongWalkChallenge(std::string editor): Challenge(editor) {
 
     // Set up interaction triggers
     auto room_exit_first_lambda = [&] (int) {
-        dialogue ("Tom",
+        Engine::print_dialogue ("Tom",
             "Well, hello!\n"
             "I heard there was treasure to the right...\n"
             "You should look for it! It's probably really close!\n"
@@ -127,14 +127,15 @@ LongWalkChallenge::LongWalkChallenge(std::string editor): Challenge(editor) {
         map->event_step_on.register_callback(
             finish_location,
             [&] (int) {
-                dialogue("Game",
-                    "▄▄▄    ▄▄▄                              ▄▄      ▄▄  ▄▄▄▄▄▄   ▄▄▄   ▄▄     ▄▄\n" 
-                    " ██▄  ▄██                               ██      ██  ▀▀██▀▀   ███   ██     ██\n" 
-                    "  ██▄▄██    ▄████▄   ██    ██           ▀█▄ ██ ▄█▀    ██     ██▀█  ██     ██\n" 
-                    "   ▀██▀    ██▀  ▀██  ██    ██            ██ ██ ██     ██     ██ ██ ██     ██\n" 
-                    "    ██     ██    ██  ██    ██            ███▀▀███     ██     ██  █▄██     ▀▀\n" 
-                    "    ██     ▀██▄▄██▀  ██▄▄▄███            ███  ███   ▄▄██▄▄   ██   ███     ▄▄\n" 
-                    "    ▀▀       ▀▀▀▀     ▀▀▀▀ ▀▀            ▀▀▀  ▀▀▀   ▀▀▀▀▀▀   ▀▀   ▀▀▀     ▀▀\n" 
+                Engine::print_dialogue("Game",
+                    "You Win, Well Done !"
+                    // "▄▄▄    ▄▄▄                              ▄▄      ▄▄  ▄▄▄▄▄▄   ▄▄▄   ▄▄     ▄▄\n" 
+                    // " ██▄  ▄██                               ██      ██  ▀▀██▀▀   ███   ██     ██\n" 
+                    // "  ██▄▄██    ▄████▄   ██    ██           ▀█▄ ██ ▄█▀    ██     ██▀█  ██     ██\n" 
+                    // "   ▀██▀    ██▀  ▀██  ██    ██            ██ ██ ██     ██     ██ ██ ██     ██\n" 
+                    // "    ██     ██    ██  ██    ██            ███▀▀███     ██     ██  █▄██     ▀▀\n" 
+                    // "    ██     ▀██▄▄██▀  ██▄▄▄███            ███  ███   ▄▄██▄▄   ██   ███     ▄▄\n" 
+                    // "    ▀▀       ▀▀▀▀     ▀▀▀▀ ▀▀            ▀▀▀  ▀▀▀   ▀▀▀▀▀▀   ▀▀   ▀▀▀     ▀▀\n" 
                 );
                 return true;
             }
@@ -145,12 +146,10 @@ LongWalkChallenge::LongWalkChallenge(std::string editor): Challenge(editor) {
 }
 
 void LongWalkChallenge::start() {
-    dialogue ( "Tom",
-        "Welcome to Project Zgyote \n"
+    Engine::print_dialogue ( "Tom",
+        "Welcome to Level 1. The aim of this level to reach the green markers. You win when you reach the last one.\n"
         "My name is Tom and I am here to help you learn to move around \n"
-        "You can move Adam using arrow keys.\n"
-        "\n"
-        "Hey... why don't you come out here?\n"
+        "You can move your character using arrow keys. Take a walk and look for the first green marker\n"
     );
 }
 

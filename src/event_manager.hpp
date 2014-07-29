@@ -55,7 +55,8 @@ class EventManager {
     ///
 
     ///
-    /// This deals with keeping track of 
+    /// This deals with keeping track of the game's time,
+    /// and allowing the speed of time to be varied.
     ///
     GameTime time;
 

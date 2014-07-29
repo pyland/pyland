@@ -410,7 +410,6 @@ void GameWindow::update() {
         if (focused_window) {
             focused_window->input_manager->handle_event(&event);
         }
-        break;
     }
 
     // Perform updates to windows which may be required following

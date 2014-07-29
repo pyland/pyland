@@ -69,6 +69,9 @@
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
 
 // Include challenges
 // TODO: Rearchitechture
@@ -92,6 +95,9 @@ using namespace std;
 enum arrow_key {UP, DOWN, LEFT, RIGHT};
 
 #define GLOBAL_SCALE 1
+#define TEXT_BORDER_WIDTH 20
+#define TEXT_HEIGHT 80
+
 static volatile int shutdown;
 
 static std::mt19937 random_generator;
@@ -203,6 +209,7 @@ class CallbackState {
         std::string name;
 };
 
+
 int main(int argc, const char* argv[]) {
     //    bool use_graphical_window = true;
 
@@ -284,16 +291,31 @@ int main(int argc, const char* argv[]) {
 
     EventManager &em = EventManager::get_instance();
 
+    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont myfont(mytype, 18);
+    Text mytext(&window, myfont, true);
+    mytext.set_text("John");
+    // referring to top left corner of text window
+    mytext.move(TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
+    auto window_size = window.get_size();
+    mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
+    Engine::set_dialogue_box(&mytext);
+
+    std::function<void(GameWindow*)> func = [&] (GameWindow* game_window) { 
+        LOG(INFO) << "text window resizing"; 
+        auto window_size = (*game_window).get_size();
+        mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
+    };
+
+    Lifeline text_lifeline = window.register_resize_handler(func);
+
     std::string editor;
 
     if (argc >= 2) {
-        editor = argv[1];
-    } else {
-        editor = "gedit";
+        Engine::set_editor(argv[1]);
     };
 
-
-    LongWalkChallenge long_walk_challenge(editor);
+    LongWalkChallenge long_walk_challenge = LongWalkChallenge();
     callbackstate.spawn();
     long_walk_challenge.start();
 
@@ -301,7 +323,8 @@ int main(int argc, const char* argv[]) {
         //Get the time since the last iteration 
         em.process_events();
         map_viewer.render_map();
-
+        mytext.display();
+        window.swap_buffers();
         GameWindow::update();
     }
 

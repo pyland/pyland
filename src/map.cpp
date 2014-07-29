@@ -1,14 +1,3 @@
-#include "api.hpp"
-#include "game_window.hpp"
-#include "image.hpp"
-#include "layer.hpp"
-#include "map.hpp"
-#include "map_loader.hpp"
-#include "map_object.hpp"
-#include "object_manager.hpp"
-#include "tileset.hpp"
-#include "walkability.hpp"
-
 #include <fstream>
 #include <glog/logging.h>
 #include <iostream>
@@ -25,17 +14,23 @@
 
 
 #ifdef USE_GLES
-
 #include <GLES2/gl2.h>
-
 #endif
 
 #ifdef USE_GL
-
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
-
 #endif
+
+
+#include "api.hpp"
+#include "layer.hpp"
+#include "map.hpp"
+#include "map_loader.hpp"
+#include "object.hpp"
+#include "object_manager.hpp"
+#include "walkability.hpp"
+
 
 
 #define VERTEX_POS_INDX 0
@@ -44,7 +39,6 @@
 #define GLOBAL_SCALE 2
 
 #define IMAGE1_NUM_COMPONENTS 4
-
 
 #define TILESET_ELEMENT_SIZE 16
 

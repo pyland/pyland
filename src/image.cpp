@@ -97,7 +97,7 @@ void Image::create_blank(int w, int h) {
     Pixel* pixels_local = new Pixel[store_width * store_height];
     this->pixels = pixels_local;
     flipped_pixels = Flipper(store_width, store_height, pixels);
-    resource_lifeline = Lifeline([pixels_local] () {delete pixels_local;});
+    resource_lifeline = Lifeline([pixels_local] () {delete[] pixels_local;});
 }
 
 

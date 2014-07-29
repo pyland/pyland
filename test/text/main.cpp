@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
         input_manager->register_key_type_handler(type_callback);
         input_manager->register_key_press_handler(press_callback);
 
-        Typeface typeface("font.ttf");
+        Typeface typeface("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
         TextFont font(typeface, 16);
         Text text(&window, font, true);
         text.move(100, 400);
