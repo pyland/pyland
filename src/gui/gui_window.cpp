@@ -89,7 +89,7 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
     texture_data[11] = offset_y;
 
     size_texture_data = num_floats;
-    std::cout << "WINDOW " << std::endl;
+
     std::vector<std::pair<GLfloat*, int>> texture_coords;
     texture_coords.push_back(std::make_pair(texture_data, num_floats));
     return texture_coords;

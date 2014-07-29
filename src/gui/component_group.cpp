@@ -75,9 +75,9 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
             for(int i = 0; i < size_data; i+=num_dimensions) {
                 //Translate the vertex
                 glm::vec4 vertex = glm::vec4(component_vertices[i], component_vertices[i+1], component_vertices[i+2], 1.0f);
-            std::cout << "VERTEX: " << vertex.x << " Y " << vertex.y << "  z " << vertex.z << std::endl;    
-            vertex = transform_matrix*  vertex;
-                std::cout << "NEW VERTEX: " << vertex.x << " Y " << vertex.y << "  z " << vertex.z << std::endl;
+
+                vertex = transform_matrix*  vertex;
+
                 //Put the data back
                 component_vertices[i] = vertex.x;
                 component_vertices[i+1] = vertex.y;
@@ -88,7 +88,6 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
             group_data.push_back(component_data_pair);
         }
     }
-    std::cout << "GROUPING HERE" << std::endl;
     return group_data;
 }
 
@@ -98,7 +97,7 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
 
    //Call the implementation of this class  to generate it's data
    generate_this_texture_data();
-   std::cout << "GETTING COMPONENTS " << std::endl;
+
     //Add this components data
    group_data.push_back(std::make_pair(texture_data, size_texture_data));
 

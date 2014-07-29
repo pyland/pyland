@@ -214,17 +214,6 @@ class CallbackState {
 
 
 int main(int argc, const char* argv[]) {
-    //    bool use_graphical_window = true;
-
-    //Determine if the no-window command was sent
-    /*    if (argc == 2) {
-        std::string param = argv[1];
-
-        if (param == "no-window") {
-            use_graphical_window = false;
-        }
-    }
-    */
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
 
@@ -243,6 +232,7 @@ int main(int argc, const char* argv[]) {
     GUIManager gui_manager;
 
     void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
+
     
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
@@ -319,6 +309,9 @@ int main(int argc, const char* argv[]) {
         {ANY_OF({KEY_PRESS}), KEY("M")},
         [&] (KeyboardInputEvent) { callbackstate.monologue(); }
     ));
+
+    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {(gui_manager.*mouse_callback_function) (event);}));
+
 
     std::vector<Lifeline> digit_callbacks;
     for (int i=0; i<10; ++i) {

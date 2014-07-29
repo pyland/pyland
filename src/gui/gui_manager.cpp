@@ -38,7 +38,10 @@ void GUIManager::update_components() {
     
 }
 
+void GUIManager::mouse_callback_function(MouseInputEvent event) {
+    std::cout << " CALLED" << std::endl;
 
+}
 
 GUIManager::GUIManager() : gui_tex_data(nullptr), gui_data(nullptr), tex_buf(nullptr) {
 
@@ -82,19 +85,13 @@ void GUIManager::generate_tex_data() {
         GLfloat* texture_coords = component_texture_data.first;
         size_t texture_coords_size = size_t(component_texture_data.second);
 
-        std::cout <<" COMPONENT" << std::endl;
-for(int i = 0; i < texture_coords_size; i++)
-            std::cout << texture_coords[i] << std::endl;    
-        
-
-
         //copy data into buffer
         std::copy(texture_coords, &texture_coords[texture_coords_size], &gui_tex_data[gui_tex_data_offset]);
 
         gui_tex_data_offset += component_texture_data.second;
     }
-    std::cout << "DONE WITH SETTING TEX COORDS" << std::endl;
-//Generate the data
+
+    //Generate the data
     renderable_component.set_texture_coords_data(gui_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
 
@@ -134,8 +131,6 @@ void GUIManager::generate_vertex_data() {
         gui_data_offset += component_vertex_data.second;
     }
 
-    //        for(int i = 0; i < num_floats; i++)
-    //      std::cout << gui_data[i] << std::endl;    
     renderable_component.set_vertex_data(gui_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(GLsizei(num_floats/3));//GL_TRIANGLES being used
 }
