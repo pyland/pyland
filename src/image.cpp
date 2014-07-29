@@ -80,6 +80,7 @@ void Image::create_blank(int w, int h) {
     width = w;
     height = h;
 
+#ifdef IMAGE_ENABLE_POWER_OF_TWO
     if (power_of_two) {
         for (store_width  = 1; store_width  < width ; store_width  <<= 1);
         for (store_height = 1; store_height < height; store_height <<= 1);
@@ -88,6 +89,10 @@ void Image::create_blank(int w, int h) {
         store_width  = width;
         store_height = height;
     }
+#else
+    store_width  = width;
+    store_height = height;
+#endif
 
     Pixel* pixels_local = new Pixel[store_width * store_height];
     this->pixels = pixels_local;

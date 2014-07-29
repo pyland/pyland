@@ -21,8 +21,9 @@
 *.out
 *.app
 
-# Emacs generated files
+# Emacs auto-generated files
 \#*\#
+
 # project specific
 src/python_embed/interpreter
 *main.bin

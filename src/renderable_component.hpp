@@ -1,6 +1,7 @@
 #ifndef RENDERABLE_COMPONENT_H
 #define RENDERABLE_COMPONENT_H
 
+#include "image.hpp"
 #include "shader.hpp"
 
 #include <string>
@@ -68,24 +69,9 @@ class RenderableComponent {
     size_t texture_coords_data_size = 0;
 
     ///
-    /// The buffer holding the texture data
-    /// 
-    char* texture_data = nullptr;
-
+    /// Image containing all texture image data and metadata.
     ///
-    /// The size of the texture buffer in bytes
-    ///
-    int texture_data_size = 0;
-
-    ///
-    /// The texture width in pixels
-    ///
-    int texture_width = 0;
-
-    ///
-    /// The texture height in pixels
-    ///
-    int texture_height = 0;
+    Image* texture_image;
 
     ///
     /// The vertex buffer object identifier for the vertex buffer
@@ -213,19 +199,12 @@ public:
     ///
     void set_texture_coords_data(GLfloat* new_texture_data, size_t data_size, bool is_dynamic);
 
-  
     ///
-    /// Get a pointer to the texture data
+    /// Set the texture image data and metadata of this component.
     ///
-    char* get_texture_data() { return texture_data; }
-
-    /// 
-    /// Set the texture data to use for this component
-    /// @param new_texture_data The new data to use for ther texture coordinates of this object
-    /// @param data_size The size of the data in bytes
-    /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static 
+    /// @param image An Image containing the texture data and metadata.
     ///
-    void set_texture_data(char* new_texture_data, int data_size, int new_texture_width, int new_texture_height, bool is_dynamic);
+    void set_texture_image(Image* image);        
 
     ///
     /// Get the width of the component

@@ -120,7 +120,7 @@ class Map {
     ///
     /// The texture buffer pointers
     ///
-    char* tex_buf[1];
+    Image texture_images[1];
 
     ///
     /// The tileset texture coordinates
@@ -140,7 +140,7 @@ class Map {
     ///
     /// The function used to generate the cache of tile texture coordinates.
     /// 
-    void generate_tileset_coords(int tileset_width, int tileset_height);
+    void generate_tileset_coords(Image* texture_image);
 
     ///
     /// The function which generates the texture coordinates for the map

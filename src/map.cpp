@@ -38,9 +38,7 @@
 #define PATH "./"
 #define GLOBAL_SCALE 2
 
-#define IMAGE1_SIZE_WIDTH 128
 #define IMAGE1_NUM_COMPONENTS 4
-#define IMAGE1_SIZE_HEIGHT 240
 
 #define TILESET_ELEMENT_SIZE 16
 
@@ -81,16 +79,16 @@ Map::Map(const std::string map_src):
 
         //Generate the geometry needed for this map
         init_shaders();
-        generate_tileset_coords(IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT);
+        init_textures();
+        generate_tileset_coords(&texture_images[0]);
         generate_map_texcoords();
         generate_map_coords();
-        init_textures();
 
 }
 
 Map::~Map() {
+    // texture_images stored within struct, implicit destruction.
     // release buffers
-    delete[] tex_buf[0];
     delete[] map_data;
     delete[] map_tex_coords;
     delete[] tileset_tex_coords;
@@ -162,7 +160,7 @@ void Map::remove_character(int character_id) {
 /**
  * The function used to generate the cache of tile texture coordinates.
  */ 
-void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
+void Map::generate_tileset_coords(Image* texture_image) {
     LOG(INFO) << "Generating tileset texture coords";
 
     //check the tilset image height and widths are multiples of the tiles
@@ -170,8 +168,8 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
 
     assert(TILESET_ELEMENT_SIZE != 0);
 
-    int num_tiles_x = tileset_width  / TILESET_ELEMENT_SIZE;
-    int num_tiles_y = tileset_height / TILESET_ELEMENT_SIZE;
+    int num_tiles_x = texture_image->width / TILESET_ELEMENT_SIZE;
+    int num_tiles_y = texture_image->height / TILESET_ELEMENT_SIZE;
     LOG(INFO) << "Tileset size: " << num_tiles_x << " " << num_tiles_y;
 
     assert(num_tiles_x);
@@ -183,11 +181,11 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
 
     //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
     //so we remap these 
-    //We work from left to right, moving down
+    GLfloat tileset_inc_x = GLfloat(texture_image->width) / GLfloat(texture_image->store_width) / static_cast<GLfloat>(num_tiles_x);
+    GLfloat tileset_inc_y = GLfloat(texture_image->height) / GLfloat(texture_image->store_height) / static_cast<GLfloat>(num_tiles_y);
+    //We work from left to right, moving down the gl texture
     GLfloat tileset_offset_x = 0.0;
-    GLfloat tileset_offset_y = 0.0;
-    GLfloat tileset_inc_x = GLfloat(1.0) / static_cast<GLfloat>(num_tiles_x);
-    GLfloat tileset_inc_y = GLfloat(1.0) / static_cast<GLfloat>(num_tiles_y);
+    GLfloat tileset_offset_y = GLfloat(num_tiles_y - 1) * tileset_inc_y;
     //TODo: DIV ZEro HERRE 
 
     //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
@@ -195,20 +193,20 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
     for (int y = 0; y < num_tiles_y; y++) {
         for (int x = 0; x < num_tiles_x; x++) {
             //bottom left
-            tileset_tex_coords[y* num_tiles_x*4*2+x*(4*2)]  = tileset_offset_x;
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2 +1] = tileset_offset_y + tileset_inc_y;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+0] = tileset_offset_x;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+1] = tileset_offset_y;
  
             //top left
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+ 2] = tileset_offset_x;
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+3]  = tileset_offset_y;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+2] = tileset_offset_x;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+3] = tileset_offset_y + tileset_inc_y;
  
             //bottom right
             tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+4] = tileset_offset_x + tileset_inc_x;
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+5] = tileset_offset_y + tileset_inc_y;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+5] = tileset_offset_y;
  
             //top right
             tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+6] = tileset_offset_x + tileset_inc_x;
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y;
+            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y + tileset_inc_y;
  
             tileset_offset_x += tileset_inc_x;
             //      for(int i =0 ; i < 8; i++)
@@ -216,7 +214,7 @@ void Map::generate_tileset_coords(int tileset_width, int tileset_height) {
             //      cout << endl;
         }
         tileset_offset_x = 0.0;
-        tileset_offset_y += tileset_inc_y;
+        tileset_offset_y -= tileset_inc_y;
     }
 }
 
@@ -241,13 +239,18 @@ void Map::generate_map_texcoords() {
     for(auto iter = layers.begin(); iter != layers.end(); ++iter) {
         auto layer_data = (*iter)->get_layer_data();
 
+        if ((*iter)->get_name() == "Collisions") {
+            continue;
+        }
         //Get all the tiles in the layer, moving from left to right and down 
         for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
+            std::string tileset_name = tile_data->first;
             int tile_id = tile_data->second;
-            //TODO, stop out of bounds here - if it exceeds the tileset size
-            if(tile_id == 0)
-                tile_id = 83; //move to default blank tile
-            GLfloat *tileset_ptr = &tileset_tex_coords[tile_id*8];
+            if (tileset_name == "") {
+                tile_id = 119; //move to default blank tile
+            }
+
+            GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8];
             //bottom left
             map_tex_coords[offset+0] = tileset_ptr[0];
             map_tex_coords[offset+1] = tileset_ptr[1];
@@ -356,6 +359,28 @@ void Map::generate_map_coords() {
         //Generate one layer's worth of data
         for(int y = 0; y < map_height; y++) {
             for(int x = 0; x < map_width; x++) {
+                // If it is a blank tile, draw it as a zero-area dot out of the way (hack).
+                // if (layers[layer]->get_tile(x, y) == 0) {
+                //     map_data[offset+0] =
+                //         map_data[offset+1] =
+                //         map_data[offset+3] =
+                //         map_data[offset+4] =
+                //         map_data[offset+6] =
+                //         map_data[offset+7] =
+                //         map_data[offset+9] =
+                //         map_data[offset+10] =
+                //         map_data[offset+12] =
+                //         map_data[offset+13] =
+                //         map_data[offset+15] =
+                //         map_data[offset+16] = scale * float(-1.0);
+                //     map_data[offset+2] =
+                //         map_data[offset+5] =
+                //         map_data[offset+8] =
+                //         map_data[offset+11] =
+                //         map_data[offset+14] =
+                //         map_data[offset+17] = layer_offset;
+                //     continue;
+                // }
      
                 //generate one tile's worth of data
 
@@ -439,26 +464,10 @@ void Map::generate_map_coords() {
 }
 
 void Map::init_textures() {
-    
-    FILE *tex_file1 = nullptr;
-    size_t image_sz_1 = IMAGE1_SIZE_WIDTH*IMAGE1_SIZE_HEIGHT*IMAGE1_NUM_COMPONENTS;
+    texture_images[0] = Image("../resources/basictiles_2.png");
 
-    tex_buf[0] = new char[image_sz_1];
-
-    tex_file1 = fopen(PATH "../resources/basictiles_2.raw", "rb");
-    if(tex_file1 == nullptr) {
-        LOG(ERROR) << "Couldn't load textures";
-    }
-
-    if (tex_file1 && tex_buf[0]) {
-        size_t bytes_read = fread(tex_buf[0], 1, image_sz_1, tex_file1);
-        if (bytes_read != image_sz_1) {
-            throw std::runtime_error("Problem with file while initializing textures: wrong number of bytes read.");
-        }
-        fclose(tex_file1);
-    }
     //Set the texture data in the rederable component
-    renderable_component.set_texture_data(tex_buf[0], static_cast<int>(image_sz_1), IMAGE1_SIZE_WIDTH, IMAGE1_SIZE_HEIGHT, false);
+    renderable_component.set_texture_image(&texture_images[0]);
 }
 
 /**

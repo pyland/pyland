@@ -4,6 +4,7 @@
 #include "map.hpp"
 #include "renderable_component.hpp"
 #include "walkability.hpp"
+
 #include <memory>
 #include <string>
 
@@ -16,26 +17,12 @@ class LockableEntityThread;
 ///
 ///
 class Object {
-private:  
-    ///
-    /// The object's renderable component
-    ///
-    RenderableComponent renderable_component;
 
+private:  
     ///
     /// Boolean to indicate if the object has set itself to be renderable
     ///
     bool renderable = true;
-    
-    ///
-    /// The x position of the object
-    ///
-    double x_position = 0;
-
-    ///
-    /// The y position of the object
-    ///
-    double y_position = 0;
   
     ///
     /// The object's id
@@ -48,33 +35,30 @@ private:
     std::string name = "";
 
     ///
-    /// The python script to run for this object
-    ///
-    std::string script = "";
-
-    ///
     /// Walkable: determine if the object can be walked over
     ///
     Walkability walkability = Walkability::WALKABLE;
+protected:
+  
+    ///
+    /// The object's renderable component
+    ///
+    RenderableComponent renderable_component;
+    
+    ///
+    /// The x position of the object
+    ///
+    double x_position = 0;
 
     ///
-    /// Tiles that the object is blocking, probably
-    /// by standing on.
+    /// The y position of the object
     ///
-    std::map<std::string, Map::Blocker> blocked_tiles;
-
-    ///
-    /// Utility function to make map replace less awful.
-    ///
-    void blocked_set(std::string key, Map::Blocker value);
+    double y_position = 0;
 
 public:
     Object();
-    virtual ~Object() = default;
-
-    // TODO: Comment
-    void set_state_on_moving_start(Vec2D target);
-    void set_state_on_moving_finish();
+    //= default not supported in g++-4.8
+    virtual ~Object();
 
     ///
     /// DO NOT USE THIS! ONLY THE ENGINE SHOULD USE THIS FUNCTION 
@@ -138,18 +122,6 @@ public:
     /// @return the name of the object
     std::string get_name() { return name; }
   
-    ///
-    /// Set the python script to use for this object
-    /// @param new_script the script to use for the object
-    ///
-    void set_script(std::string new_script);
-  
-    ///
-    /// Get the python script to be used for this object
-    /// @return the script to use for the object
-    ///
-    std::string get_script() { return script; }
-
     ///
     /// Get the renderable component
     /// @return the renderable component for this object

@@ -43,11 +43,11 @@ dependencies/input_management: | dependencies
 # Executables
 # DO NOT RE-ORDER - tmx parser must come before tinyxml in ldlibs
 
-$(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
+$(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
 	@echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
 
 	@$(COMPILER) -o $@ \
-		$(BASE_OBJS) $(CHALLENGE_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
+		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
@@ -87,6 +87,18 @@ $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
 		$(SDL_CPPFLAGS)  $(SDL_CXXFLAGS)  \
 		$(CPPFLAGS)      $(CXXFLAGS)
+
+
+$(GUI_OBJS): %.o : %.cpp | dependencies/gui
+	@echo "${bold}[ Compiling gui object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+
+	@$(COMPILER) -c $*.cpp -o $*.o \
+		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
+		$(PYTHON_CPPFLAGS)    $(PYTHON_CXXFLAGS)    \
+		$(SDL_CPPFLAGS)  $(SDL_CXXFLAGS)  \
+		$(CPPFLAGS)      $(CXXFLAGS)
+
+
 
 $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
 	@echo "${bold}[ Compiling challenge object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"

@@ -12,7 +12,7 @@
     * Neither the name of the copyright holder nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
-
+n
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -54,11 +54,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "api.hpp"
+#include "button.hpp"
 #include "character.hpp"
+#include "component.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
 #include "game_window.hpp"
+#include "gui_manager.hpp"
+#include "gui_window.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
@@ -73,12 +77,14 @@
 #include "text_font.hpp"
 #include "text.hpp"
 
+
 // Include challenges
 // TODO: Rearchitechture
 #include "challenge.hpp"
 #include "long_walk_challenge.hpp"
 
 // Choose between GLES and GL
+
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
 #endif
@@ -211,17 +217,6 @@ class CallbackState {
 
 
 int main(int argc, const char* argv[]) {
-    //    bool use_graphical_window = true;
-
-    //Determine if the no-window command was sent
-    /*    if (argc == 2) {
-        std::string param = argv[1];
-
-        if (param == "no-window") {
-            use_graphical_window = false;
-        }
-    }
-    */
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
 
@@ -236,12 +231,59 @@ int main(int argc, const char* argv[]) {
 
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
 
-    MapViewer map_viewer(&window);
-    map_viewer.set_map(&map);
+    //BUILD the GUI
+    GUIManager gui_manager;
 
-    Engine::set_map_viewer(&map_viewer);
+    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
+
+    //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
+    Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont buttonfont(buttontype, 18);
+    Text stoptext(&window, buttonfont, true);
+    Text runtext(&window, buttonfont, true);
+    stoptext.set_text("Stop");
+    runtext.set_text("Run");
+    // referring to top left corner of text window
+    stoptext.move(105, 240 + 20);
+    runtext.move(5, 240 + 20);
+    stoptext.resize(window.get_size().first-20, 80 + 20);
+    runtext.resize(window.get_size().first-20, 80 + 20);
+
 
     CallbackState callbackstate(interpreter, "John");
+
+
+    
+    std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
+    sprite_window->set_width_pixels(300);
+    sprite_window->set_height_pixels(300);
+    std::shared_ptr<Button> run_button = std::make_shared<Button>();
+    run_button->set_text("Run");
+    run_button->set_on_click([&] () { LOG(ERROR) << "RUN"; callbackstate.restart(); });
+    run_button->set_width(0.2f);
+    run_button->set_height(0.2f);
+    run_button->set_y_offset(0.8f);
+    run_button->set_x_offset(0.0f);
+
+    std::shared_ptr<Button> stop_button = std::make_shared<Button>();
+    stop_button->set_text("Stop");
+    stop_button->set_on_click([&] () {LOG(ERROR) << "STOP";  callbackstate.stop(); });
+    stop_button->set_width(0.2f);
+    stop_button->set_height(0.2f);
+    stop_button->set_y_offset(0.8f);
+    stop_button->set_x_offset(0.3f);
+ 
+    sprite_window->add(run_button);
+    sprite_window->add(stop_button);
+    
+    gui_manager.set_root(sprite_window);
+    gui_manager.parse_components();
+
+    MapViewer map_viewer(&window,&gui_manager);
+    map_viewer.set_map(&map);
+    
+
+    Engine::set_map_viewer(&map_viewer);
 
     InputManager* input_manager = window.get_input_manager();
 
@@ -278,6 +320,9 @@ int main(int argc, const char* argv[]) {
         {ANY_OF({KEY_PRESS}), KEY("M")},
         [&] (KeyboardInputEvent) { callbackstate.monologue(); }
     ));
+
+    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {(gui_manager.*mouse_callback_function) (event);}));
+
 
     std::vector<Lifeline> digit_callbacks;
     for (int i=0; i<10; ++i) {
@@ -319,11 +364,20 @@ int main(int argc, const char* argv[]) {
     callbackstate.spawn();
     long_walk_challenge.start();
 
+    TextFont big_font(mytype, 50);
+    Text cursor(&window, big_font, true);
+    cursor.move(0, 0);
+    cursor.resize(50, 50);
+    cursor.set_text("<");
+    Lifeline cursor_lifeline = input_manager->register_mouse_handler(filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {cursor.move(event.to.x, event.to.y+25);}));
+        
     while (!window.check_close()) {
-        //Get the time since the last iteration 
         em.process_events();
         map_viewer.render_map();
         mytext.display();
+        stoptext.display();
+        runtext.display();
+        cursor.display();
         window.swap_buffers();
         GameWindow::update();
     }

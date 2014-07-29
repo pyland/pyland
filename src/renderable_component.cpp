@@ -1,4 +1,5 @@
 #include <glog/logging.h>
+#include "image.hpp"
 #include "renderable_component.hpp"
 
 #define VERTEX_POS_INDX 0
@@ -44,11 +45,8 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_
     glUseProgram(id);
 }
 
-void RenderableComponent::set_texture_data(char* new_texture_data, int data_size, int new_texture_width, int new_texture_height, bool) { 
-    texture_data = new_texture_data;
-    texture_data_size = data_size;
-    texture_height = new_texture_height;
-    texture_width = new_texture_width;
+void RenderableComponent::set_texture_image(Image* image) { 
+    texture_image = image;
 
     //Get current shader
     GLint id;
@@ -62,6 +60,10 @@ void RenderableComponent::set_texture_data(char* new_texture_data, int data_size
     glGenTextures(1, &texture_obj_id);
     glBindTexture(GL_TEXTURE_2D, texture_obj_id);
   
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_image->store_width, texture_image->store_height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, (void*)texture_image->pixels);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
     //  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
     //	       GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
     //  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
@@ -122,10 +124,10 @@ void RenderableComponent::bind_textures() {
 
     //Bind tiles texture
     glBindTexture(GL_TEXTURE_2D,texture_obj_id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_image->store_width, texture_image->store_height, 0,
+    //              GL_RGBA, GL_UNSIGNED_BYTE, (void*)texture_image->pixels);
+    // glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+    // glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
 }
 
