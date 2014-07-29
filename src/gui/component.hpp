@@ -121,6 +121,7 @@ protected:
     /// Get the next unique identifier for the component - starting at 1.
     ///
     int get_new_id();
+
 public:
     Component();
     ~Component();

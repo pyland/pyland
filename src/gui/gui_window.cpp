@@ -58,33 +58,33 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
     delete []texture_data;
     int num_floats = 12;
 
-    GLfloat offset_x = GLfloat( 2.0f/ 16.0f);
-    GLfloat offset_y = GLfloat(2.0f/ 16.0f);
+    GLfloat offset_x = (GLfloat)1.0f;// GLfloat( 2.0f/ 16.0f);
+    GLfloat offset_y = (GLfloat)1.0f;//GLfloat(2.0f/ 16.0f);
 
     texture_data = new GLfloat[sizeof(GLfloat)*num_floats];
 
     //bottom left
-    texture_data[0]  = offset_x * GLfloat(4.0);
+    texture_data[0]  = offset_x; //* GLfloat(4.0);
     texture_data[1]  = offset_y;
 
     //top left
-    texture_data[2]  = offset_x * GLfloat(4.0);
+    texture_data[2]  = offset_x;// * GLfloat(4.0);
     texture_data[3]  = 0.0f; 
 
     //bottom right
-    texture_data[4]  = offset_x * GLfloat(5.0);
+    texture_data[4]  = offset_x;// * GLfloat(5.0);
     texture_data[5]  = offset_y;
 
     //top left
-    texture_data[6]  = offset_x * GLfloat(4.0);
+    texture_data[6]  = offset_x;// * GLfloat(4.0);
     texture_data[7]  = 0.0f;
 
     //top right
-    texture_data[8]  = offset_x * GLfloat(5.0);
+    texture_data[8]  = offset_x;// * GLfloat(5.0);
     texture_data[9]  = 0.0f;
 
     //bottom right
-    texture_data[10] = offset_x * GLfloat(5.0);
+    texture_data[10] = offset_x;// * GLfloat(5.0);
     texture_data[11] = offset_y;
 
     size_texture_data = num_floats;
