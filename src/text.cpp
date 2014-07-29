@@ -117,7 +117,7 @@ void Text::render() {
     image = Image(width, height, true);
     
     // Line of text.
-    char* line = new char[length];
+    char* line = new char[length+1];
 
     image.clear(0x00000000, 0xffffffff);
     // Text indexing.
