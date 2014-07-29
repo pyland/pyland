@@ -69,6 +69,10 @@ Shader::Shader(const std::string vs, const std::string fs) {
     glAttachShader(program_obj, vertex_shader);
     glAttachShader(program_obj, fragment_shader);
     
+    // Temporary hack before restructuring.
+    glBindAttribLocation(program_obj,0 /* VERTEX_POS_INDX */, "a_position");
+    glBindAttribLocation(program_obj, 1/*VERTEX_TEXCOORD0_INDX*/, "a_texCoord");
+    
     //Link the program
     glLinkProgram(program_obj);
     
