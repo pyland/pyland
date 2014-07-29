@@ -7,14 +7,19 @@
 #include "text_font.hpp"
 #include "text.hpp"
 
+class InputManager;
+
 class Challenge {
     public:
         // TODO: Make the editor part of the core
         // engine, not the challenge class
-        virtual ~Challenge() = default;
+        Challenge(InputManager *input_manager);
+        virtual ~Challenge();
 
         virtual void start() = 0;
         virtual void finish() = 0;
+
+    	InputManager *input_manager;
 };
 
 #endif

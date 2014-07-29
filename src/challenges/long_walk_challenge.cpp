@@ -6,6 +6,9 @@
 
 #include "api.hpp"
 #include "challenge.hpp"
+#include "event_manager.hpp"
+#include "filters.hpp"
+#include "input_manager.hpp"
 #include "long_walk_challenge.hpp"
 #include "engine_api.hpp"
 #include "map_viewer.hpp"
@@ -23,19 +26,19 @@ std::map<std::string, std::vector<Vec2D>> targets = {
         Vec2D(  24, 29-14)
     }},
     {"wall:path:medium", {
-        Vec2D(  30, 29-13),
-        Vec2D(  30, 29-14),
-        Vec2D(  30, 29-15),
-        Vec2D(  30, 29-16)
+        Vec2D(  31, 29-13),
+        Vec2D(  31, 29-14),
+        Vec2D(  31, 29-15),
+        Vec2D(  31, 29-16)
     }},
     {"treasure:path:long", {
         Vec2D( 114, 29-15)
     }},
     {"wall:path:long", {
-        Vec2D( 115, 29-13),
-        Vec2D( 115, 29-14),
-        Vec2D( 115, 29-15),
-        Vec2D( 115, 29-16)
+        Vec2D( 116, 29-13),
+        Vec2D( 116, 29-14),
+        Vec2D( 116, 29-15),
+        Vec2D( 116, 29-16)
     }},
     {"end", {
         Vec2D(1499, 29-14),
@@ -43,7 +46,7 @@ std::map<std::string, std::vector<Vec2D>> targets = {
     }}
 };
 
-LongWalkChallenge::LongWalkChallenge() {
+LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(input_manager) {
     auto *map = Engine::get_map_viewer()->get_map();
 
     // Set up blocking walls
@@ -55,29 +58,61 @@ LongWalkChallenge::LongWalkChallenge() {
         wall_path_long_blockers.push_back(map->block_tile(wall_location));
     }
 
+    // Set up notifications about walls
+    for (auto wall_location : targets.at("wall:path:medium")) {
+        wall_path_medium_callbacks.push_back(map->event_step_on.register_callback(
+            wall_location + Vec2D(-1, 0),
+            [&] (int) {
+                Engine::print_dialogue("Tom", "Get the treasure and press \"e\" to view it!\n");
+
+                EventManager::get_instance().add_event([&] () {
+                    auto *map = Engine::get_map_viewer()->get_map();
+                    for (auto callback : wall_path_medium_callbacks) {
+                        map->event_step_on.unregister(callback);
+                    }
+                });
+
+                return false;
+            }
+        ));
+    }
+
+    for (auto wall_location : targets.at("wall:path:long")) {
+        wall_path_long_callbacks.push_back(map->event_step_on.register_callback(
+            wall_location + Vec2D(-1, 0),
+            [&] (int) {
+                Engine::print_dialogue("Tom", "Hey... you missed the treasure!\n");
+
+                EventManager::get_instance().add_event([&] () {
+                    auto *map = Engine::get_map_viewer()->get_map();
+                    for (auto callback : wall_path_long_callbacks) {
+                        map->event_step_on.unregister(callback);
+                    }
+                });
+
+                return false;
+            }
+        ));
+    }
+
     // Set up treasure chest triggers
     map->event_step_on.register_callback(
         targets.at("treasure:path:medium").front(),
         [&] (int) {
-            // Engine::print_dialogue ("TREASURE",
-            //     "▞▀▖      ▗       ▐     ▛▀▖                   ▐    \n"
-            //     "▙▄▌▛▀▖▞▀▖▄ ▞▀▖▛▀▖▜▀    ▌ ▌▞▀▖▞▀▖▌ ▌▛▚▀▖▞▀▖▛▀▖▜▀ ▐▌\n"
-            //     "▌ ▌▌ ▌▌ ▖▐ ▛▀ ▌ ▌▐ ▖   ▌ ▌▌ ▌▌ ▖▌ ▌▌▐ ▌▛▀ ▌ ▌▐ ▖▗▖\n"
-            //     "▘ ▘▘ ▘▝▀ ▀▘▝▀▘▘ ▘ ▀    ▀▀ ▝▀ ▝▀ ▝▀▘▘▝ ▘▝▀▘▘ ▘ ▀ ▝▘\n"
-            //     "                                                  \n"
-            //     "▛▀▖                     ▐                ▌        \n"
-            //     "▙▄▘▙▀▖▞▀▖▞▀▘▞▀▘   ▞▀▖   ▜▀ ▞▀▖   ▞▀▖▞▀▖▞▀▌▞▀▖     \n"
-            //     "▌  ▌  ▛▀ ▝▀▖▝▀▖   ▛▀    ▐ ▖▌ ▌   ▌ ▖▌ ▌▌ ▌▛▀      \n"
-            //     "▘  ▘  ▝▀▘▀▀ ▀▀    ▝▀▘    ▀ ▝▀    ▝▀ ▝▀ ▝▀▘▝▀▘     \n"
-            // );
+            Engine::print_dialogue ("Tom",
+                "Who new treasure was so close?\n"
+                "\n"
+                "To open it up and see what's inside, press \"e\".\n"
+            );
 
-            // TODO: Add wall-lowering callback to "e"
+            editor_lifeline = this->input_manager->register_keyboard_handler(filter(
+                {ANY_OF({KEY_HELD}), KEY({"E"})},
+                [&] (KeyboardInputEvent) {
+                    Engine::open_editor("John_1.py");
+                    wall_path_medium_blockers.clear();
+                }
+            ));
 
-            // TODO: Hook into keybinding and enable here
-            // ... somehow!
-            Engine::open_editor("John_1.py");
-
-            wall_path_medium_blockers.clear();
             return false;
         }
     );
@@ -100,12 +135,14 @@ LongWalkChallenge::LongWalkChallenge() {
             "You should look for it! It's probably really close!\n"
         );
 
-        // Erase the callbacks
-        auto *map = Engine::get_map_viewer()->get_map();
-        for (auto callback : room_exit_first_callback) {
-            map->event_step_on.unregister(callback);
-        }
-        room_exit_first_callback.clear();
+        EventManager::get_instance().add_event([&] () {
+            // Erase the callbacks
+            auto *map = Engine::get_map_viewer()->get_map();
+            for (auto callback : room_exit_first_callback) {
+                map->event_step_on.unregister(callback);
+            }
+            room_exit_first_callback.clear();
+        });
 
         // Don't want to repeat, but it
         // doesn't really matter what is returned
@@ -139,7 +176,7 @@ LongWalkChallenge::LongWalkChallenge() {
                 );
                 return true;
             }
-                                                                                   
+
             // TODO: FINISH SOMEHOW!!
         );
     }

@@ -315,7 +315,7 @@ int main(int argc, const char* argv[]) {
         Engine::set_editor(argv[1]);
     };
 
-    LongWalkChallenge long_walk_challenge = LongWalkChallenge();
+    LongWalkChallenge long_walk_challenge(input_manager);
     callbackstate.spawn();
     long_walk_challenge.start();
 

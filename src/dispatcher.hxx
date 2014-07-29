@@ -5,7 +5,7 @@ template <typename... Arguments>
 typename Dispatcher<Arguments...>::CallbackID
 
 Dispatcher<Arguments...>::register_callback(std::function<bool (Arguments...)> callback) {
-    functions[maxid++] = callback;
+    functions[++maxid] = callback;
     return maxid;
 }
 
@@ -41,7 +41,7 @@ PositionDispatcher<Arguments...>::PositionDispatcher (Vec2D location):
 template <typename... Arguments>
 typename PositionDispatcher<Arguments...>::CallbackID PositionDispatcher<Arguments...>::register_callback(
         Vec2D tile, std::function<bool (Arguments...)> callback) {
-    callback_map[tile.x][tile.y][maxid++] = callback;
+    callback_map[tile.x][tile.y][++maxid] = callback;
     return std::make_pair(tile, maxid);
 }
 
