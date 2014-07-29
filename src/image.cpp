@@ -154,7 +154,7 @@ void Image::load_file(const char* filename) {
     SDL_FreeSurface(loaded);
     
     try {
-        create_blank(loaded->w, loaded->h);
+        create_blank(compatible->w, compatible->h);
     }
     catch (std::bad_alloc& e) {
         LOG(ERROR) << "Error loading image \"" << filename << "\": " << e.what();
