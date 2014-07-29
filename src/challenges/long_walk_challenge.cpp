@@ -147,11 +147,9 @@ LongWalkChallenge::LongWalkChallenge() {
 
 void LongWalkChallenge::start() {
     Engine::print_dialogue ( "Tom",
-        "Welcome to Project Zgyote \n"
+        "Welcome to Level 1. The aim of this level to reach the green markers. You win when you reach the last one.\n"
         "My name is Tom and I am here to help you learn to move around \n"
-        "You can move Adam using arrow keys.\n"
-        "\n"
-        "Hey... why don't you come out here?\n"
+        "You can move your character using arrow keys. Take a walk and look for the first green marker\n"
     );
 }
 
