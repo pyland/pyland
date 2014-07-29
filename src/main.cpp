@@ -364,12 +364,20 @@ int main(int argc, const char* argv[]) {
     callbackstate.spawn();
     long_walk_challenge.start();
 
+    TextFont big_font(mytype, 50);
+    Text cursor(&window, big_font, true);
+    cursor.move(0, 0);
+    cursor.resize(50, 50);
+    cursor.set_text("<");
+    Lifeline cursor_lifeline = input_manager->register_mouse_handler(filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {cursor.move(event.to.x, event.to.y+25);}));
+        
     while (!window.check_close()) {
         em.process_events();
         map_viewer.render_map();
         mytext.display();
         stoptext.display();
         runtext.display();
+        cursor.display();
         window.swap_buffers();
         GameWindow::update();
     }
