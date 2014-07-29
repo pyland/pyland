@@ -37,18 +37,15 @@ void Engine::move_object(int id, Vec2D move_by) {
 
     // Motion
     EventManager::get_instance().add_timed_event(
-        GameTime::duration(0.08),
-        [move_by, target, id] (double completion) {
+        GameTime::duration(0.07),
+        [location, target, id] (double completion) {
             std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
             if (!object) { return false; }
 
-            // TODO: Animate
+            object->set_x_position(location.x * (1-completion) + target.x * completion);
+            object->set_y_position(location.y * (1-completion) + target.y * completion);
 
             if (completion == 1.0) {
-                // TODO: Remove
-                object->set_x_position(object->get_x_position() + move_by.x);
-                object->set_y_position(object->get_y_position() + move_by.y);
-
                 object->set_state_on_moving_finish();
 
                 // TODO: Make this only focus if the character

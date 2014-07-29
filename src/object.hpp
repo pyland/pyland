@@ -30,12 +30,12 @@ private:
     ///
     /// The x position of the object
     ///
-    int x_position = 0;
+    double x_position = 0;
 
     ///
     /// The y position of the object
     ///
-    int y_position = 0;
+    double y_position = 0;
   
     ///
     /// The object's id
@@ -99,24 +99,26 @@ public:
     /// @param x_pos the new x position in tiles
     ///
     void set_x_position(int x_pos);
+    void set_x_position(double x_pos);
 
     ///
     /// Get the object's x position in tiles
     /// @return the object's x position in tiles
     ///
-    int get_x_position() { return x_position; }
+    double get_x_position() { return x_position; }
 
     ///
     /// Set the object's y position in tiles
     /// @param y_pos
     ///
     void set_y_position(int y_pos);
+    void set_y_position(double y_pos);
 
     ///
     /// Get the object's y position in tiles
     /// @return the object's y position in tiles
     ///
-    int get_y_position() { return y_position; }
+    double get_y_position() { return y_position; }
 
 
     ///

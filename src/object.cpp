@@ -18,19 +18,32 @@ void Object::blocked_set(std::string key, Map::Blocker value) {
 
 
 Object::Object() {
-    //Get a new id for the object
+    // Get a new id for the object
     ObjectManager& object_manager = ObjectManager::get_instance();
     object_manager.get_next_id(this);
 
-    Vec2D position(x_position, y_position);
-    blocked_set("stood on", Engine::get_map_viewer()->get_map()->block_tile(position));
+    // Starting positions should be integral
+    assert(trunc(x_position) == x_position);
+    assert(trunc(y_position) == y_position);
+
+    blocked_set("stood on", Engine::get_map_viewer()->get_map()->block_tile(
+        Vec2D(int(x_position), int(y_position))
+    ));
 }
 
 void Object::set_x_position(int x_pos) {
+    x_position = double(x_pos);
+}
+
+void Object::set_x_position(double x_pos) {
     x_position = x_pos;
 }
 
 void Object::set_y_position(int y_pos) {
+    y_position = double(y_pos);
+}
+
+void Object::set_y_position(double y_pos) {
     y_position = y_pos;
 }
 
