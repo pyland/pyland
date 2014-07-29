@@ -60,6 +60,10 @@ void RenderableComponent::set_texture_image(Image* image) {
     glGenTextures(1, &texture_obj_id);
     glBindTexture(GL_TEXTURE_2D, texture_obj_id);
   
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_image->store_width, texture_image->store_height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, (void*)texture_image->pixels);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
     //  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
     //	       GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
     //  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
@@ -120,10 +124,10 @@ void RenderableComponent::bind_textures() {
 
     //Bind tiles texture
     glBindTexture(GL_TEXTURE_2D,texture_obj_id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_image->store_width, texture_image->store_height, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, (void*)texture_image->pixels);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_image->store_width, texture_image->store_height, 0,
+    //              GL_RGBA, GL_UNSIGNED_BYTE, (void*)texture_image->pixels);
+    // glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
+    // glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
 }
 
