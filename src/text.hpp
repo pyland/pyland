@@ -35,7 +35,11 @@ private:
     ///
     /// If true, the text needs to be re-rendered.
     ///
-    bool dirty;
+    bool dirty_texture;
+    ///
+    /// If true, the text vbo needs to be re-configured.
+    ///
+    bool dirty_vbo;
     ///
     /// The text that need to be rendered.
     ///

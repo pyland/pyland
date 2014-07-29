@@ -81,14 +81,19 @@ Text::RenderException::RenderException(const std::string &message): std::runtime
 
 
 Text::Text(GameWindow* window, TextFont font, bool smooth):
-    dirty(true),
+    dirty_texture(true),
+    dirty_vbo(true),
     text(""),
     smooth(smooth),
+    width(0),
+    height(0),
+    x(0),
+    y(0),
     texture(0),
     vbo(0),
     font(font),
     window(window),
-    resize_callback([this] (GameWindow*) {this->dirty = true;}) {
+    resize_callback([this] (GameWindow*) {this->dirty_vbo = true;}) {
         rgba[0] = rgba[1] = rgba[2] = rgba[3] = 1.0f;
         window->register_resize_handler(resize_callback);
 }
@@ -120,7 +125,7 @@ void Text::render() {
         int line_width;
         // Word indexing.
         int w = 0;
-        // Stores the (from the beginning) a word in ctext (copy).
+        // Stores (from the beginning) a word in ctext (copy).
         line[0] = '\0';
         // Points to the end of the last successfully fitting word in
         // line.
@@ -276,9 +281,11 @@ void Text::render() {
             break;
         }
     }
+    
     delete[] line;
     generate_texture();
-    dirty = false;
+    dirty_texture = false;
+    dirty_vbo = true;
 }
 
 
@@ -312,7 +319,7 @@ void Text::generate_texture() {
 
 
 void Text::generate_vbo() {
-    if (dirty) {
+    if (dirty_texture) {
         return;
     }
     if (vbo == 0) {
@@ -367,12 +374,14 @@ void Text::generate_vbo() {
     
     glBufferData(GL_ARRAY_BUFFER, sizeof(vbo_data), vbo_data, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    dirty_vbo = false;
 }
 
 
 void Text::set_text(std::string text) {
     this->text = text;
-    dirty = true;
+    dirty_texture = true;
 }
 
 
@@ -380,7 +389,8 @@ void Text::resize(int w, int h) {
     if (width != w || height != h) {
         width = w;
         height = h;
-        dirty = true;
+        dirty_texture = true;
+        dirty_vbo = true;
     }
 }
 
@@ -392,17 +402,18 @@ void Text::resize(float w, float h) {
     if (width != iw || height != ih) {
         width = iw;
         height = ih;
-        dirty = true;
+        dirty_texture = true;
+        dirty_vbo = true;
     }
 }
 
 
 void Text::move(int x, int y) {
     if (this->x != x || this->y != y) {
-        this->x = x;
-        this->y = y;
-        generate_vbo();
+        dirty_vbo = true;
     }
+    this->x = x;
+    this->y = y;
     // std::pair<int,int> window_size = window->get_size();
     // display((float)x / (float)window_size.first,
     //         (float)y / (float)window_size.second,
@@ -418,7 +429,7 @@ void Text::move(float x, float y) {
     if (this->x != ix || this->y != iy) {
         this->x = ix;
         this->y = iy;
-        generate_vbo();
+        dirty_vbo = true;
     }
     // std::pair<int,int> window_size = window->get_size();
     // display(x,
@@ -429,9 +440,17 @@ void Text::move(float x, float y) {
 
 void Text::display() {
     window->use_context();
-    if (dirty) {
+    if (dirty_texture) {
         try {
             render();
+        }
+        catch (Text::RenderException e) {
+            LOG(WARNING) << e.what();
+            return;
+        }
+    }
+    if (dirty_vbo) {
+        try {
             generate_vbo();
         }
         catch (Text::RenderException e) {
@@ -439,6 +458,7 @@ void Text::display() {
             return;
         }
     }
+    
     if (shaders.count(window) == 0) {
         load_program(window);
     }
