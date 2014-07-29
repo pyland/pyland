@@ -1,7 +1,10 @@
+
 #include "character.hpp"
+#include "game_window.hpp"
 #include "gui/gui_manager.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
+#include "object.hpp"
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
 
@@ -12,7 +15,9 @@
 #include <memory>
 #include <vector>
 
+
 MapViewer::MapViewer(GameWindow* new_window, GUIManager* new_gui_manager) {
+
     if(new_window == nullptr) {
         LOG(ERROR) << "MapViewer::MapViewer: GameWindow should not be null";
     }
@@ -281,16 +286,16 @@ void MapViewer::refocus_map() {
     if(object) {
         map->set_display_x(centre_point_in_range(
             // half-tile offset to take centre of character
-            /*point*/  float(object->get_x_position()) + 0.5f,
-            /*length*/ float(map->get_width()),
-            /*bound*/  map->get_display_width()
+            /* point  */ float(object->get_x_position()) + 0.5f,
+            /* length */ float(map->get_width()),
+            /* bound  */ map->get_display_width()
         ));
 
         map->set_display_y(centre_point_in_range(
             // half-tile offset to take centre of character
-            /*point*/  float(object->get_y_position()) + 0.5f,
-            /*length*/ float(map->get_height()),
-            /*bound*/  map->get_display_height()
+            /* point  */ float(object->get_y_position()) + 0.5f,
+            /* length */ float(map->get_height()),
+            /* bound  */ map->get_display_height()
         ));
     } else {
         LOG(INFO) << "MapViewer::refocus_map: No objects have focus.";

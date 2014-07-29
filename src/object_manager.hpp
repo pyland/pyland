@@ -1,10 +1,11 @@
 #ifndef OBJECTMANAGER_H
 #define OBJECTMANAGER_H
 
-#include "object.hpp"
 #include <map>
 #include <memory>
 #include <mutex>
+
+class Object;
 
 ///
 /// This class holds the database of all the objects in the game. It

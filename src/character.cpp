@@ -1,4 +1,5 @@
 #include "character.hpp"
+#include "entitythread.hpp"
 #include "renderable_component.hpp"
 
 #include <new>

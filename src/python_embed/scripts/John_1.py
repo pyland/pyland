@@ -1,9 +1,4 @@
 """
-▞▀▖ ▜                ▗▌        ▞▀▖ ▌   ▞▀▖ ▞▀▖ ▞▀▖ ▜▘ ▛▀▘ ▜▘ ▛▀▘ ▛▀▖
-▌   ▐  ▝▀▖ ▞▀▘ ▞▀▘    ▌ ▐▌     ▌   ▌   ▙▄▌ ▚▄  ▚▄  ▐  ▙▄  ▐  ▙▄  ▌ ▌
-▌ ▖ ▐  ▞▀▌ ▝▀▖ ▝▀▖    ▌ ▗▖     ▌ ▖ ▌   ▌ ▌ ▖ ▌ ▖ ▌ ▐  ▌   ▐  ▌   ▌ ▌
-▝▀   ▘ ▝▀▘ ▀▀  ▀▀    ▝▀ ▝▘     ▝▀  ▀▀▘ ▘ ▘ ▝▀  ▝▀  ▀▘ ▘   ▀▘ ▀▀▘ ▀▀ 
-
 This is a program. You will be using these to do most of the game.
 
 The point of this game is to show you how powerful programming is in
@@ -28,7 +23,7 @@ Here are some quick tips:
 
 
 # Here's the interesting part:
-for _ in range(5000):
+for _ in range(10):
 	move(east)
 
 # This means:

@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "map.hpp"
 #include "renderable_component.hpp"
 #include "walkability.hpp"
 
@@ -17,6 +18,7 @@ class LockableEntityThread;
 ///
 class Object {
 
+private:  
     ///
     /// Boolean to indicate if the object has set itself to be renderable
     ///
@@ -25,12 +27,12 @@ class Object {
     ///
     /// The x position of the object
     ///
-    int x_position = 0;
+    double x_position = 0;
 
     ///
     /// The y position of the object
     ///
-    int y_position = 0;
+    double y_position = 0;
   
     ///
     /// The object's id
@@ -58,10 +60,24 @@ protected:
     ///
     RenderableComponent renderable_component;
 
+    ///
+    /// Tiles that the object is blocking, probably
+    /// by standing on.
+    ///
+    std::map<std::string, Map::Blocker> blocked_tiles;
+
+    ///
+    /// Utility function to make map replace less awful.
+    ///
+    void blocked_set(std::string key, Map::Blocker value);
 
 public:
     Object();
-    virtual ~Object();
+    virtual ~Object() = default;
+
+    // TODO: Comment
+    void set_state_on_moving_start(Vec2D target);
+    void set_state_on_moving_finish();
 
     ///
     /// DO NOT USE THIS! ONLY THE ENGINE SHOULD USE THIS FUNCTION 
@@ -86,24 +102,26 @@ public:
     /// @param x_pos the new x position in tiles
     ///
     void set_x_position(int x_pos);
+    void set_x_position(double x_pos);
 
     ///
     /// Get the object's x position in tiles
     /// @return the object's x position in tiles
     ///
-    int get_x_position() { return x_position; }
+    double get_x_position() { return x_position; }
 
     ///
     /// Set the object's y position in tiles
     /// @param y_pos
     ///
     void set_y_position(int y_pos);
+    void set_y_position(double y_pos);
 
     ///
     /// Get the object's y position in tiles
     /// @return the object's y position in tiles
     ///
-    int get_y_position() { return y_position; }
+    double get_y_position() { return y_position; }
 
 
     ///
@@ -154,6 +172,8 @@ public:
     void set_renderable(bool can_render) { renderable = can_render; }
 
     std::unique_ptr<LockableEntityThread> daemon;
+
+    bool moving = false;
 };
 
 #endif
