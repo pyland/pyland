@@ -236,37 +236,45 @@ int main(int argc, const char* argv[]) {
 
     void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
 
+    //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
+    Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont buttonfont(buttontype, 18);
+    Text stoptext(&window, buttonfont, true);
+    Text runtext(&window, buttonfont, true);
+    stoptext.set_text("Stop");
+    runtext.set_text("Run");
+    // referring to top left corner of text window
+    stoptext.move(105, 240 + 20);
+    runtext.move(5, 240 + 20);
+    stoptext.resize(window.get_size().first-20, 80 + 20);
+    runtext.resize(window.get_size().first-20, 80 + 20);
+
+
+    CallbackState callbackstate(interpreter, "John");
+
+
     
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
-    sprite_window->set_width_pixels(10);
-    sprite_window->set_height_pixels(500);
+    sprite_window->set_width_pixels(300);
+    sprite_window->set_height_pixels(300);
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
     run_button->set_text("Run");
-    run_button->set_on_click([] () { std::cout << "CLICKED run" << std::endl; });
-    run_button->set_width(1.0f);
+    run_button->set_on_click([&] () { LOG(ERROR) << "RUN"; callbackstate.restart(); });
+    run_button->set_width(0.2f);
     run_button->set_height(0.2f);
-    run_button->set_y_offset(0.0f);
+    run_button->set_y_offset(0.8f);
     run_button->set_x_offset(0.0f);
 
     std::shared_ptr<Button> stop_button = std::make_shared<Button>();
     stop_button->set_text("Stop");
-    stop_button->set_on_click([] () { std::cout << "CLICKED stop" << std::endl; });
-    stop_button->set_width(1.0f);
+    stop_button->set_on_click([&] () {LOG(ERROR) << "STOP";  callbackstate.stop(); });
+    stop_button->set_width(0.2f);
     stop_button->set_height(0.2f);
-    stop_button->set_y_offset(0.3f);
-    stop_button->set_x_offset(0.0f);
-
-    std::shared_ptr<Button> restart_button = std::make_shared<Button>();
-    restart_button->set_text("Restart");
-    restart_button->set_on_click([] () { std::cout << "CLICKED restart" << std::endl; });
-    restart_button->set_width(1.0f);
-    restart_button->set_height(0.2f);
-    restart_button->set_y_offset(0.7f);
-    restart_button->set_x_offset(0.0f);
+    stop_button->set_y_offset(0.8f);
+    stop_button->set_x_offset(0.3f);
  
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
-    sprite_window->add(restart_button);
     
     gui_manager.set_root(sprite_window);
     gui_manager.parse_components();
@@ -276,8 +284,6 @@ int main(int argc, const char* argv[]) {
     
 
     Engine::set_map_viewer(&map_viewer);
-
-    CallbackState callbackstate(interpreter, "John");
 
     InputManager* input_manager = window.get_input_manager();
 
@@ -362,6 +368,8 @@ int main(int argc, const char* argv[]) {
         em.process_events();
         map_viewer.render_map();
         mytext.display();
+        stoptext.display();
+        runtext.display();
         window.swap_buffers();
         GameWindow::update();
     }

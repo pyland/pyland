@@ -41,7 +41,6 @@ void GUIManager::update_components() {
 }
 
 void GUIManager::mouse_callback_function(MouseInputEvent event) {
-    std::cout << " CALLED" << std::endl;
 
     //Just get the end state for the moment
     /*

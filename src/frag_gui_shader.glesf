@@ -5,7 +5,7 @@ void main()
 {
   //TODO: Really hacky - just for the demo
   if(v_texCoord.r == 0.0)
-                  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                  gl_FragColor = vec4(0.6, 0.3, 0.0, 0.5);
   else 
        discard;
 //  vec4 colour =   texture2D(s_texture, v_texCoord);
