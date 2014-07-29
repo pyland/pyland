@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 
+#include "character.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
@@ -13,13 +14,14 @@
 #include "object_manager.hpp"
 #include "dispatcher.hpp"
 
-
+//TODO: THis needs to work with renderable objects 
 void Engine::move_object(int id, Vec2D move_by) {
-    std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
-    if (!object) { return; }
-    if (object->moving) { return; }
+    std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
 
-    Vec2D location = Vec2D(object->get_x_position(), object->get_y_position());
+    if (!character) { return; }
+    if (character->moving) { return; }
+
+    Vec2D location = Vec2D(character->get_x_position(), character->get_y_position());
     Vec2D target = location + move_by;
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y << ".\n"
@@ -28,7 +30,7 @@ void Engine::move_object(int id, Vec2D move_by) {
     // TODO: animate walking in-place
     if (!walkable(target)) { return; }
 
-    object->set_state_on_moving_start(target);
+    character->set_state_on_moving_start(target);
 
     // Step-off events
     EventManager::get_instance().add_event([location, id] () {
@@ -39,14 +41,14 @@ void Engine::move_object(int id, Vec2D move_by) {
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
         [location, target, id] (double completion) {
-            std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
-            if (!object) { return false; }
+            std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
+            if (!character) { return false; }
 
-            object->set_x_position(location.x * (1-completion) + target.x * completion);
-            object->set_y_position(location.y * (1-completion) + target.y * completion);
+            character->set_x_position(location.x * (1-completion) + target.x * completion);
+            character->set_y_position(location.y * (1-completion) + target.y * completion);
 
             if (completion == 1.0) {
-                object->set_state_on_moving_finish();
+                character->set_state_on_moving_finish();
 
                 // TODO: Make this only focus if the character
                 // is the main character.

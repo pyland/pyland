@@ -121,10 +121,11 @@ void ComponentGroup::add(std::shared_ptr<Component> component) {
 
     //We calculate the pixel display dimensions 
 
-    //calculate the width, based off of parent's widths
+    //calculate the pixel locations for this component, using the parent's dimensions
     component->set_width_pixels((int)((float)width_pixels*component->get_width()));
     component->set_height_pixels((int)((float)height_pixels*component->get_height()));
-}
+    component->set_x_offset_pixels((int)((float)width_pixels*component->get_x_offset()));
+    component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));                }
 
 void ComponentGroup::remove(int component_id) {
     components.erase(component_id);

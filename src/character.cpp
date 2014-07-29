@@ -1,5 +1,8 @@
 #include "character.hpp"
+
+#include "engine_api.hpp"
 #include "entitythread.hpp"
+#include "map_viewer.hpp"
 #include "renderable_component.hpp"
 
 #include <new>
@@ -35,6 +38,17 @@ Character::Character() {
     generate_tex_data();
     generate_vertex_data();
     load_textures();
+
+    // Starting positions should be integral
+    assert(trunc(x_position) == x_position);
+    assert(trunc(y_position) == y_position);
+
+    //Make a character blocked
+    blocked_set("stood on", Engine::get_map_viewer()->get_map()->block_tile(
+        Vec2D(int(x_position), int(y_position))
+    ));
+
+
     LOG(INFO) << "Character initialized";
 }
 
@@ -44,6 +58,29 @@ Character::~Character() {
     delete[] tex_buf;
 
     LOG(INFO) << "Character destructed";
+}
+
+
+void Character::blocked_set(std::string key, Map::Blocker value) {
+    blocked_tiles.erase(key);
+    blocked_tiles.insert(std::make_pair(key, value));
+}
+
+void Character::set_state_on_moving_start(Vec2D target) {
+    moving = true;
+
+    // Must erase before inserting, else nothing happens
+    blocked_set("walking on", Engine::get_map_viewer()->get_map()->block_tile(target));
+    blocked_set("walking off", blocked_tiles.at("stood on"));
+    blocked_tiles.erase("stood on");
+}
+
+void Character::set_state_on_moving_finish() {
+    moving = false;
+    
+    blocked_set("stood on", blocked_tiles.at("walking on"));
+    blocked_tiles.erase("walking on");
+    blocked_tiles.erase("walking off");
 }
 
 

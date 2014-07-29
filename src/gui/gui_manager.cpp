@@ -241,10 +241,10 @@ bool GUIManager::init_shaders() {
     Shader* shader = nullptr;
     try {
 #ifdef USE_GLES
-        shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
+        shader = new Shader("vert_shader.glesv", "frag_gui_shader.glesf");
 #endif
 #ifdef USE_GL
-        shader = new Shader("vert_shader.glv", "frag_shader.glf");
+        shader = new Shader("vert_shader.glv", "frag_gui_shader.glf");
 #endif
     }
     catch (std::exception e) {

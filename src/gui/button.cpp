@@ -15,7 +15,7 @@
 std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     delete []vertex_data;
     int num_floats = 18;
-    float scale = 32.0f;
+
     vertex_data = new GLfloat[sizeof(GLfloat)*num_floats];
     //Generate coordinates in our local object space
     //bottom left 
@@ -25,26 +25,26 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
 
     //top left
     vertex_data[3] = 0;
-    vertex_data[4] = (1) * scale;
+    vertex_data[4] = (GLfloat)height_pixels;
     vertex_data[5] = 0;
 
     //bottom right
-    vertex_data[6] = (1) * scale;
+    vertex_data[6] = (GLfloat)width_pixels;
     vertex_data[7] = 0;
     vertex_data[8] = 0;
 
     //top left
     vertex_data[9] = 0;
-    vertex_data[10] = 1 * scale;
+    vertex_data[10] = (GLfloat)height_pixels;
     vertex_data[11] = 0;
 
     //top right
-    vertex_data[12] = 1 * scale;
-    vertex_data[13] = 1 * scale;
+    vertex_data[12] = (GLfloat)width_pixels;
+    vertex_data[13] = (GLfloat)height_pixels;
     vertex_data[14] = 0;
 
     //bottom right
-    vertex_data[15] = 1 * scale;
+    vertex_data[15] = (GLfloat)width_pixels;
     vertex_data[16] = 0;
     vertex_data[17] = 0;
 

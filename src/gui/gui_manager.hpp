@@ -67,7 +67,7 @@ class GUIManager : public Object {
     bool init_shaders();
 public:
     GUIManager();
-    ~GUIManager();
+    virtual ~GUIManager();
 
     ///
     /// Callback function to handle mouse events

@@ -32,10 +32,30 @@ class Character : public Object {
     ///
     char* tex_buf = NULL;
 
+protected:
+
+    ///
+    /// Tiles that the object is blocking, probably
+    /// by standing on.
+    ///
+    std::map<std::string, Map::Blocker> blocked_tiles;
+
+
+    ///
+    /// Utility function to make map replace less awful.
+    ///
+    void blocked_set(std::string key, Map::Blocker value);
+
+
 public:
 
     Character();
     virtual ~Character();
+
+    // TODO: Comment
+    void set_state_on_moving_start(Vec2D target);
+    void set_state_on_moving_finish();
+
 
     ///
     /// Generate the texture coordinate data for the character
