@@ -6,9 +6,10 @@
 #define ENGINE_API_H
 
 #include <array>
-#include "api.hpp"
 #include <utility>
 #include <vector>
+
+#include "api.hpp"
 
 class MapViewer;
 
@@ -42,7 +43,7 @@ public:
     /// @param dx move in x by dx tiles
     /// @param dy move in x by dy tiles
     ///
-    static bool move_object(int id, Vec2D move_by);
+    static void move_object(int id, Vec2D move_by);
 
     ///
     /// Determine if a location can be walked on

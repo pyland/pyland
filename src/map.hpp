@@ -1,20 +1,12 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "character.hpp"
-#include "game_window.hpp"
-#include "layer.hpp"
-#include "map_object.hpp"
-#include "object.hpp"
-#include "renderable_component.hpp"
-#include "tileset.hpp"
-
-
 #include <array>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
+
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -24,21 +16,22 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
 #ifdef USE_GLES
-
 #include <GLES2/gl2.h>
-
 #endif
 
 #ifdef USE_GL
-
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
-
 #endif
 
 
+#include "dispatcher.hpp"
+#include "renderable_component.hpp"
+
+class Layer;
+class MapObject;
+class TileSet;
 
 class Map {
     ///

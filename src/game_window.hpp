@@ -31,8 +31,6 @@ extern "C" {
 
 class InputManager;
 
-
-
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
 ///

@@ -1,9 +1,3 @@
-#include "engine_api.hpp"
-#include "map_viewer.hpp"
-#include "object.hpp"
-#include "object_manager.hpp"
-#include "dispatcher.hpp"
-
 #include <cstdlib>
 #include <glog/logging.h>
 #include <memory>
@@ -11,40 +5,68 @@
 #include <vector>
 #include <iostream>
 
+#include "engine_api.hpp"
+#include "event_manager.hpp"
+#include "game_time.hpp"
+#include "map_viewer.hpp"
+#include "object.hpp"
+#include "object_manager.hpp"
+#include "dispatcher.hpp"
 
-bool Engine::move_object(int id, Vec2D move_by) {
 
+void Engine::move_object(int id, Vec2D move_by) {
     std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
+    if (!object) { return; }
+    if (object->moving) { return; }
 
-    if(object) {
+    Vec2D location = Vec2D(object->get_x_position(), object->get_y_position());
+    Vec2D target = location + move_by;
 
-        //Check if a move can be performed
-        Vec2D new_loco = Vec2D(object->get_x_position() + move_by.x, object->get_y_position() + move_by.y);
-        VLOG(2) << "Trying to walk to " << new_loco.x << " " << new_loco.y << ".\n"
-                << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(new_loco.x).at(new_loco.y);
-        if (!walkable(new_loco)) {
-            return false;
-        } else {
-            // trigger any waiting events on leaving 
-            Vec2D leave_tile = Vec2D(object->get_x_position(), object->get_y_position());
-            get_map_viewer()->get_map()->event_step_off.trigger(leave_tile, id);
+    VLOG(2) << "Trying to walk to " << target.x << " " << target.y << ".\n"
+            << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
 
-            //TODO, make this an event movement
-            object->set_x_position(object->get_x_position() + move_by.x);
-            object->set_y_position(object->get_y_position() + move_by.y);
+    // TODO: animate walking in-place
+    if (!walkable(target)) { return; }
 
-            //trigger any waiting events on arriving
-            Vec2D arrive_tile = Vec2D(object->get_x_position(), object->get_y_position());
-            get_map_viewer()->get_map()->event_step_on.trigger(arrive_tile, id);
+    object->set_state_on_moving_start(target);
 
-            //if there is a map viewer attached
-            if(Engine::map_viewer != nullptr) {
-                //animate the map if this is the object to focus ong
-                Engine::map_viewer->refocus_map();
+    // Step-off events
+    EventManager::get_instance().add_event([location, id] () {
+        get_map_viewer()->get_map()->event_step_off.trigger(location, id);
+    });
+
+    // Motion
+    EventManager::get_instance().add_timed_event(
+        GameTime::duration(0.08),
+        [move_by, target, id] (double completion) {
+            std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(id);
+            if (!object) { return false; }
+
+            // TODO: Animate
+
+            if (completion == 1.0) {
+                // TODO: Remove
+                object->set_x_position(object->get_x_position() + move_by.x);
+                object->set_y_position(object->get_y_position() + move_by.y);
+
+                object->set_state_on_moving_finish();
+
+                // TODO: Make this only focus if the character
+                // is the main character.
+                if (Engine::map_viewer) {
+                    Engine::map_viewer->refocus_map();
+                }
+
+                // Step-on events
+                EventManager::get_instance().add_event([target, id] () {
+                    get_map_viewer()->get_map()->event_step_on.trigger(target, id);
+                });
             }
+
+            // Run to completion
+            return true;
         }
-    }
-    return true;
+    );
 }
 
 MapViewer* Engine::map_viewer = nullptr;

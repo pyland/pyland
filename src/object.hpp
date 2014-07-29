@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "map.hpp"
 #include "renderable_component.hpp"
 #include "walkability.hpp"
 #include <memory>
@@ -15,7 +16,7 @@ class LockableEntityThread;
 ///
 ///
 class Object {
-  
+private:  
     ///
     /// The object's renderable component
     ///
@@ -56,10 +57,24 @@ class Object {
     ///
     Walkability walkability = Walkability::WALKABLE;
 
+    ///
+    /// Tiles that the object is blocking, probably
+    /// by standing on.
+    ///
+    std::map<std::string, Map::Blocker> blocked_tiles;
+
+    ///
+    /// Utility function to make map replace less awful.
+    ///
+    void blocked_set(std::string key, Map::Blocker value);
 
 public:
     Object();
-    virtual ~Object();
+    virtual ~Object() = default;
+
+    // TODO: Comment
+    void set_state_on_moving_start(Vec2D target);
+    void set_state_on_moving_finish();
 
     ///
     /// DO NOT USE THIS! ONLY THE ENGINE SHOULD USE THIS FUNCTION 
@@ -152,6 +167,8 @@ public:
     void set_renderable(bool can_render) { renderable = can_render; }
 
     std::unique_ptr<LockableEntityThread> daemon;
+
+    bool moving = false;
 };
 
 #endif
