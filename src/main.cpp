@@ -95,6 +95,9 @@ using namespace std;
 enum arrow_key {UP, DOWN, LEFT, RIGHT};
 
 #define GLOBAL_SCALE 1
+#define TEXT_BORDER_WIDTH 20
+#define TEXT_HEIGHT 80
+
 static volatile int shutdown;
 
 static std::mt19937 random_generator;
@@ -292,9 +295,18 @@ int main(int argc, const char* argv[]) {
     TextFont myfont(mytype, 18);
     Text mytext(&window, myfont, true);
     mytext.set_text("John");
-    mytext.move(100, 100);
-    mytext.resize(800, 80);
+    // referring to top left corner of text window
+    mytext.move(TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
+    mytext.resize(800, 100);
     Engine::set_dialogue_box(&mytext);
+
+    std::function<void(GameWindow*)> func = [&] (GameWindow* game_window) { 
+        LOG(INFO) << "text window resizing"; 
+        auto window_size = (*game_window).get_size();
+        mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
+    };
+
+    Lifeline text_lifeline = window.register_resize_handler(func);
 
     std::string editor;
 
