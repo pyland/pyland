@@ -93,10 +93,10 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 	@echo "${bold}[ Compiling gui object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
-		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
-		$(PYTHON_CPPFLAGS)    $(PYTHON_CXXFLAGS)    \
-		$(SDL_CPPFLAGS)  $(SDL_CXXFLAGS)  \
-		$(CPPFLAGS)      $(CXXFLAGS)
+		$(GLOG_CPPFLAGS)   $(GLOG_CXXFLAGS)   \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
+		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)    \
+		$(CPPFLAGS)        $(CXXFLAGS)
 
 
 
@@ -181,6 +181,7 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 	@-$(RM) \
 		$(BASE_OBJS)          \
 		$(CHALLENGE_OBJS)     \
+		$(GUI_OBJS)           \
 		$(INPUT_OBJS)         \
 		$(PYTHON_OBJS)        \
 		$(PYTHON_SHARED_OBJS)
