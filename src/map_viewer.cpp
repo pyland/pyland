@@ -143,7 +143,7 @@ void MapViewer::render_map() {
         }
     }
 
-    window->swap_buffers();
+    // window->swap_buffers();
 }
 
 /// 

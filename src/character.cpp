@@ -1,4 +1,5 @@
 #include "character.hpp"
+#include "image.hpp"
 #include "renderable_component.hpp"
 #include <glog/logging.h>
 #include <iostream>
@@ -19,8 +20,6 @@
 #endif
 
 #define TILESET_ELEMENT_SIZE 16
-#define IMAGE2_SIZE_WIDTH 192
-#define IMAGE2_SIZE_HEIGHT 128
 #define GLOBAL_SCALE 2
 #define IMAGE2_NUM_COMPONENTS 4
 
@@ -29,16 +28,16 @@
 
 Character::Character() {
     init_shaders();
+    load_textures();
     generate_tex_data();
     generate_vertex_data();
-    load_textures();
     LOG(INFO) << "Character initialized";
 }
 
 Character::~Character() {
     delete[] sprite_tex_data;
     delete[] sprite_data;
-    delete[] tex_buf;
+    delete texture_image;
 
     LOG(INFO) << "Character destructed";
 }
@@ -60,32 +59,32 @@ void Character::generate_tex_data() {
         return;
     }
 
-    GLfloat offset_x = GLfloat(TILESET_ELEMENT_SIZE) / IMAGE2_SIZE_WIDTH;
-    GLfloat offset_y = GLfloat(TILESET_ELEMENT_SIZE) / IMAGE2_SIZE_HEIGHT;
+    GLfloat offset_x = GLfloat(TILESET_ELEMENT_SIZE) / (GLfloat)texture_image->store_width;
+    GLfloat offset_y = GLfloat(TILESET_ELEMENT_SIZE) / (GLfloat)texture_image->store_height;
 
     //bottom left
     sprite_tex_data[0]  = offset_x * GLfloat(4.0);
-    sprite_tex_data[1]  = offset_y;
+    sprite_tex_data[1]  = offset_y * GLfloat(7.0);
 
     //top left
     sprite_tex_data[2]  = offset_x * GLfloat(4.0);
-    sprite_tex_data[3]  = 0.0f; 
+    sprite_tex_data[3]  = offset_y * GLfloat(8.0); 
 
     //bottom right
     sprite_tex_data[4]  = offset_x * GLfloat(5.0);
-    sprite_tex_data[5]  = offset_y;
+    sprite_tex_data[5]  = offset_y * GLfloat(7.0);
 
     //top left
     sprite_tex_data[6]  = offset_x * GLfloat(4.0);
-    sprite_tex_data[7]  = 0.0f;
+    sprite_tex_data[7]  = offset_y * GLfloat(8.0);
 
     //top right
     sprite_tex_data[8]  = offset_x * GLfloat(5.0);
-    sprite_tex_data[9]  = 0.0f;
+    sprite_tex_data[9]  = offset_y * GLfloat(8.0);
 
     //bottom right
     sprite_tex_data[10] = offset_x * GLfloat(5.0);
-    sprite_tex_data[11] = offset_y;
+    sprite_tex_data[11] = offset_y * GLfloat(7.0);
 
     render_component->set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
@@ -151,27 +150,12 @@ void Character::load_textures() {
     }
 
 
-    FILE *tex_file2 = nullptr;
-    size_t image_sz_2 = IMAGE2_SIZE_WIDTH*IMAGE2_SIZE_HEIGHT*IMAGE2_NUM_COMPONENTS;
+    texture_image = new Image("../resources/characters_1.png");
 
-    tex_buf = new char[image_sz_2];
-
-    tex_file2 = fopen("../resources/characters_1.raw", "rb");
-    if(tex_file2 == nullptr) {
-        LOG(ERROR) << "Character::load_textures: Couldn't load textures";
-    }
-
-    if (tex_file2 && tex_buf) {
-        size_t bytes_read = fread(tex_buf, 1, image_sz_2, tex_file2);
-        if (bytes_read != image_sz_2) {
-            throw new std::runtime_error("Problems with file; wrong number of bytes read.");
-        }
-        fclose(tex_file2);
-    }
     //Set the texture data in the rederable component
-    render_component->set_texture_data(tex_buf, static_cast<int>(image_sz_2), IMAGE2_SIZE_WIDTH, IMAGE2_SIZE_HEIGHT, false);
-
+    render_component->set_texture_image(texture_image);
 }
+
 bool Character::init_shaders() {
     Shader* shader = nullptr;
     try {

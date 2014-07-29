@@ -2,6 +2,7 @@
 #define CHARACTER_H
 
 #include "entitythread.hpp"
+#include "image.hpp"
 #include "object.hpp"
 
 #ifdef USE_GLES
@@ -22,7 +23,7 @@
 class Character : public Object {
     GLfloat* sprite_tex_data = NULL;
     GLfloat* sprite_data = NULL;
-    char* tex_buf = NULL;
+    Image* texture_image = NULL;
     int tileset = 0;
 public:
 

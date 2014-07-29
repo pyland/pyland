@@ -68,12 +68,13 @@ void MapLoader::load_layers() {
                 int tile_id = layer->GetTileId(x, y);
 
                 //Gets the tileset to use for this tile
-                const Tmx::Tileset* tileset = map.FindTileset(tile_id);
-                if(tileset == nullptr) {
+                int tileset_index = layer->GetTileTilesetIndex(x, y);
+                if(tileset_index == -1) {
                     //Add the default tile
                     layer_ptr->add_tile("", tile_id);
                     continue;
                 }
+                const Tmx::Tileset* tileset = map.GetTileset(tileset_index);
 
                 //Add the tile to the layer
                 layer_ptr->add_tile(tileset->GetName(), tile_id);                
