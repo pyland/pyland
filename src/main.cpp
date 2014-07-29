@@ -297,7 +297,8 @@ int main(int argc, const char* argv[]) {
     mytext.set_text("John");
     // referring to top left corner of text window
     mytext.move(TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
-    mytext.resize(800, 100);
+    auto window_size = window.get_size();
+    mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
     Engine::set_dialogue_box(&mytext);
 
     std::function<void(GameWindow*)> func = [&] (GameWindow* game_window) { 
