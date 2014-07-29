@@ -116,16 +116,14 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
                 // We are done.
                 return;
             }
-
             else {
-                // TODO: nicely handle error
-                PyErr_Print();
+                LOG(INFO) << "Python error in EntityThread, Python side.";
                 throw;
             }
         }
         waiting = true;
     }
-    
+
     LOG(INFO) << "run_entity: Finished";
 }
 

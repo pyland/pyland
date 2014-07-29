@@ -1,5 +1,6 @@
 import os
 import time
+import traceback
 
 def start(entity, RESTART, STOP, KILL, waiting):
 
@@ -14,8 +15,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             file_name = "python_embed/scripts/John_1.py"
             entity.print_debug ("reading from file :"+file_name)
-            with open(file_name) as file:
-                with open("python_embed/py_wrapper.py") as file_wrapper:
+            with open(file_name, encoding="utf-8") as file:
+                with open("python_embed/py_wrapper.py", encoding="utf-8") as file_wrapper:
                     text = file.read()
                     entity.print_debug(text)
                     function = file_wrapper.read() + text
@@ -28,7 +29,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
             print("RESTARTING")
             waiting = False
             continue
-        
+
         except STOP:
             print("STOPPING")
             waiting = True
@@ -37,6 +38,12 @@ def start(entity, RESTART, STOP, KILL, waiting):
         except KILL:
             print("DYING")
             raise
+
+        # For all other errors, print and stop
+        except:
+            waiting = True
+            print(2)
+            traceback.print_exc()
 
         else:
             break
