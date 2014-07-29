@@ -294,17 +294,15 @@ int main(int argc, const char* argv[]) {
     mytext.set_text("John");
     mytext.move(100, 100);
     mytext.resize(800, 80);
+    Engine::set_dialogue_box(&mytext);
 
     std::string editor;
 
     if (argc >= 2) {
-        editor = argv[1];
-    } else {
-        editor = "gedit";
+        Engine::set_editor(argv[1]);
     };
 
-
-    LongWalkChallenge long_walk_challenge(editor, &mytext);
+    LongWalkChallenge long_walk_challenge = LongWalkChallenge();
     callbackstate.spawn();
     long_walk_challenge.start();
 

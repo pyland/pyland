@@ -70,6 +70,8 @@ void Engine::move_object(int id, Vec2D move_by) {
 }
 
 MapViewer* Engine::map_viewer = nullptr;
+Text* Engine::dialogue_box = nullptr;
+
 
 bool Engine::walkable(Vec2D location) {
     int map_width = map_viewer->get_map()->get_width();
@@ -143,7 +145,7 @@ Vec2D Engine::find_object(int id) {
     throw std::runtime_error("Object is not in the map");
 }
 
-bool Engine::open_editor(std::string editor, std::string filename) {
+bool Engine::open_editor(std::string filename) {
     LOG(INFO) << "Opening editor";
     //TODO remove this function in the final version
     std::string bash_command = editor + std::string(" python_embed/scripts/") + filename;
@@ -152,7 +154,17 @@ bool Engine::open_editor(std::string editor, std::string filename) {
     return true;
 }
 
+
 std::vector<int> get_objects_at(Vec2D) {
     // TODO
     throw std::runtime_error("get_objects_at not implemented");
+}
+
+std::string Engine::editor = DEFAULT_PY_EDITOR;
+
+void Engine::print_dialogue(std::string name, std::string text) {
+    std::string text_to_display = name + " : " + text;
+    (*dialogue_box).set_text(text_to_display);
+    (*dialogue_box).display();
+    std::cout << name << "  says:\n" << text_to_display << std::endl;
 }
