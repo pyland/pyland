@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <functional>
 #include <glog/logging.h>
 #include <iostream>
@@ -90,36 +91,30 @@ void EventManager::add_event(std::function<void ()> func) {
     curr_frame_queue->push_back(func);
 }
 
+// Public
 void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (double)> func) {
-    GameTime::time_point start_time = time.time();
-
-    add_timed_event(duration, func, start_time);
+    add_timed_event(duration, func, time.time());
 }
+
+// Private
 void EventManager::add_timed_event(GameTime::duration duration,
                                    std::function<bool (double)> func,
                                    GameTime::time_point start_time) {
 
-    // Manages locking in an exception-safe manner
-    // Lock released when this lock_guard goes out of scope
     std::lock_guard<std::mutex> lock(queue_mutex);
 
-    // Convert a timed callback to a void lambda
-    // We do this by creating a void wrapper lambda and use
-    // variable capture to capture the data we need
+    // Convert a timed callback to a void lambda by creating a wrapper
+    // that keeps track of the completion and deals with re-registering.
     next_frame_queue->push_back([this, duration, func, start_time] () {
 
-        //Calculate the total time since the initial start time
-        GameTime::time_point curr_time = time.time();
-        auto curr_interval(curr_time - start_time);
-        
-        // Calculate how far to completion we are.
-        // curr_interval is in milliseconds so convert to seconds
-        double completion = curr_interval / duration;
+        auto completion = time.time() - start_time;
 
-        //If the result is true, put it on the next frame queue
-        bool result = func(completion);
-        if(result) {
+        // Don't allow finite polling speed to allow > 100% completion.
+        double fraction_complete = std::min(completion / duration, 1.0);
+
+        if (func(fraction_complete) && fraction_complete < 1.0) {
+            // Repeat if the callback wishes and the event isn't complete.
             add_timed_event(duration, func, start_time);
-        } //else, don't need to do anything
+        }
     });
 }

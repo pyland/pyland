@@ -1,10 +1,12 @@
-#include "object.hpp"
-#include "object_manager.hpp"
 #include <glog/logging.h>
 #include <iostream>
 #include <memory>
 #include <mutex>
 #include <thread>
+
+#include "object.hpp"
+#include "object_manager.hpp"
+
 
 ObjectManager& ObjectManager::get_instance() {
     //Lazy instantiation of the global instance
