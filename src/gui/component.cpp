@@ -16,7 +16,7 @@ Component::Component() : vertex_data(nullptr), texture_data(nullptr),
                          width_pixels(0),height_pixels(0),
                          x_offset(0.0f), y_offset(0.0f),
                          x_offset_pixels(0), y_offset_pixels(0),
-                         clickable(false)
+                         clickable(false), parent(nullptr)
 {
     id =  get_new_id();
 }
@@ -37,6 +37,13 @@ void Component::clear_on_click() {
     clickable = false;
 }
 
+void Component::set_width(float _width) {
+    width = _width;
+}
+
+void Component::set_height(float _height) {
+    height = _height;
+}
 
 const std::map<int, std::shared_ptr<Component>>& Component::get_components() {
     component_no_children_exception exception;

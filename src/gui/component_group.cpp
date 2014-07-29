@@ -60,8 +60,8 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
             float component_y_offset = component.second->get_y_offset();
 
 
-            pixel_offset_x =(int)((float)500 /*width_pixels */ * component_x_offset);
-            pixel_offset_y = (int)((float)200/*height_pixels */* component_y_offset);
+            pixel_offset_x =(int)((float)width_pixels * component_x_offset);
+            pixel_offset_y = (int)((float)height_pixels * component_y_offset);
 
             //Translation matrix
             glm::mat4 transform_matrix = glm::mat4(1.0);
@@ -117,11 +117,20 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
 }
 void ComponentGroup::add(std::shared_ptr<Component> component) {
     components[component->get_id()] = component;
-}
+    component->set_parent(this);
 
+    //We calculate the pixel display dimensions 
+
+    //calculate the width, based off of parent's widths
+    component->set_width_pixels((int)((float)width_pixels*component->get_width()));
+    component->set_height_pixels((int)((float)height_pixels*component->get_height()));
+}
 
 void ComponentGroup::remove(int component_id) {
     components.erase(component_id);
+    std::shared_ptr<Component> component = components[component->get_id()];
+    //no longer the parent
+    component->set_parent(nullptr);
 }
 
 std::shared_ptr<Component> ComponentGroup::get_component(int component_id) {

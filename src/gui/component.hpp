@@ -26,7 +26,16 @@
 ///
 class Component {
 protected:
+    ///
+    /// The parent of this component
+    ///
+    Component* parent;
+
+    ///
+    /// Mutex to lock on for getting new ids
+    ///
     std::mutex component_mutex;
+
     ///
     /// The Opengl vertex data for this component, transformed into world space
     ///
@@ -178,10 +187,23 @@ public:
     int get_id() { return id; }
 
     ///
+    /// Set this component's parent
+    /// @_parent the parent
+    ///
+    void set_parent(Component* _parent) { parent = _parent; }
+
+    ///
+    /// Get the parent of this component
+    /// @return the parent
+    /// TODO:make these weak ptrs
+    Component* get_parent() { return parent; }
+
+    ///
     /// Set the  width of the component relative to its parent
     /// @param _width the width
     ///
-    void set_width(float _width) { width = _width; }
+    void set_width(float _width);
+
     ///
     /// Get the width of the component relative to its parent
     /// @return the width
@@ -216,7 +238,7 @@ public:
     /// Set the  height of the component relative to its parent
     /// @param _height the height
     ///
-    void set_height(float _height) { height = _height; }
+    void set_height(float _height);
 
     ///
     /// Get the height of the component relative to its parent

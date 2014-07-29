@@ -235,6 +235,8 @@ int main(int argc, const char* argv[]) {
 
     
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
+    sprite_window->set_width_pixels(500);
+    sprite_window->set_height_pixels(300);
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
     run_button->set_text("Run");
     run_button->set_on_click([] () { std::cout << "CLICKED run" << std::endl; });
