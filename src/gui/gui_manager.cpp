@@ -1,9 +1,11 @@
+#include "component.hpp"
 #include "gui_manager.hpp"
 
 #include <new>
 #include <fstream>
 #include <glog/logging.h>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <string>
 #include <utility>
@@ -41,6 +43,81 @@ void GUIManager::update_components() {
 void GUIManager::mouse_callback_function(MouseInputEvent event) {
     std::cout << " CALLED" << std::endl;
 
+    //Just get the end state for the moment
+    /*
+      std::cout << "X " << event.to.x << " Y " << event.to.y << std::endl;
+      if(event.button & MouseState::Button::LEFT) {
+      std::cout << "LEFT" << std::endl;
+      }
+      if(event.button & MouseState::Button::RIGHT) {
+      std::cout << "RIGHT" << std::endl;
+      }
+      if(event.button & MouseState::Button::MIDDLE) {
+      std::cout << "MIDDLE" << std::endl;
+      }
+     
+    */
+    //Work out which component was clicked
+    int mouse_x = event.to.x;
+    int mouse_y = event.to.y;
+
+    int curr_x_offset = 0;
+    int curr_y_offset = 0;
+
+    //Traverse the component tree
+    recurse_components(root, mouse_x, mouse_y, curr_x_offset, curr_y_offset);
+}
+
+bool GUIManager::recurse_components(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset) {
+    try{
+        //Go through all the children of this component
+        for(auto component_pair : root->get_components()) {
+            std::shared_ptr<Component> component = component_pair.second;
+            
+            //Get the component dimensions
+            int component_width_pixels = component->get_width_pixels();
+            int component_x_offset_pixels = component->get_x_offset_pixels();
+            int component_y_offset_pixels = component->get_y_offset_pixels();
+            int component_height_pixels = component->get_height_pixels();
+
+            //The x and y offset of this component relative to the origin
+            int x_offset = curr_x_offset + component_x_offset_pixels;
+            int y_offset = curr_y_offset + component_y_offset_pixels;
+
+            //The offsets which account for the width and height of the component
+            int x_right_offset = x_offset + component_width_pixels;
+            int y_top_offset = y_offset + component_height_pixels;
+
+            //bounds test
+            //Check to see if the click is where this component sits
+            if(mouse_x >= x_offset && mouse_x <= x_right_offset && 
+               mouse_y >= y_offset && mouse_y <= y_top_offset) {
+                //Ok, so this component is in bounds - check if its is clickable or has children
+
+                if(component->is_clickable()) {
+                    //Call the click event handler
+                    component->call_on_click();
+                
+                    //The click has been handled
+                    return true;
+                }
+
+                //It's not clickable, traverse the children
+                if(recurse_components(component, mouse_x, mouse_y, x_offset, y_offset))  {
+                    //Click has been handled
+                    return true;
+                }
+                
+                //Click has not been handled
+                //Move onto next component in the tree (Next sibling).
+            }
+        }
+    }
+    catch(component_no_children_exception& e) {
+        //Catch the exception and return false
+        return false;
+    }
+    return false;
 }
 
 GUIManager::GUIManager() : gui_tex_data(nullptr), gui_data(nullptr), tex_buf(nullptr) {
@@ -182,9 +259,4 @@ bool GUIManager::init_shaders() {
     renderable_component.set_shader(shader);
 
     return true;
-
 }
-
-
-
-

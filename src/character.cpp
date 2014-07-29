@@ -1,5 +1,7 @@
 #include "character.hpp"
 #include "renderable_component.hpp"
+
+#include <new>
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
@@ -49,9 +51,12 @@ void Character::generate_tex_data() {
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
-    sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    if(sprite_tex_data == nullptr) {
-        LOG(ERROR) << "ERROR in Character::generate_tex_data, cannot allocate memory";
+    try {
+
+        sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
+    }
+    catch(std::bad_alloc& ba) {
+        LOG(ERROR) << "ERROR in Character::generate_tex_data(), cannot allocate memory";
         return;
     }
 
@@ -89,9 +94,12 @@ void Character::generate_vertex_data() {
     //holds the character vertex data
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
-    sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    if(sprite_data == nullptr) {
-        LOG(ERROR) << "Characater::generate_vertex_data: cannot allocate memory";
+    try {
+
+        sprite_data = new GLfloat[sizeof(GLfloat)*num_floats];
+    }
+    catch(std::bad_alloc& ba) {
+        LOG(ERROR) << "ERROR in Character::generate_vertex_data(), cannot allocate memory";
         return;
     }
 

@@ -2,7 +2,9 @@
 #define COMPONENT_H
 
 #include <cstddef>
+#include <exception>
 #include <functional>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <utility>
@@ -78,15 +80,29 @@ protected:
     int height_pixels;
 
     ///
-    /// The x offset of the component relative to the parent
+    /// The x offset of the component relative to the parent. This is the bottom left.
     ///
     float x_offset;
 
     ///
-    /// The y offset of the component relative to the parent
+    /// The y offset of the component relative to the parent. This is the bottom left.
     ///
     float y_offset;
 
+    ///
+    /// The x offset of the component in pixels, relative to the parent
+    ///
+    int x_offset_pixels;
+
+    ///
+    /// The y offset of the component in pixels, relative to the parent
+    ///
+    int y_offset_pixels;
+
+    ///
+    /// Indicates if the component is clickable
+    ///
+    bool clickable;
     ///
     /// The lambda function that is called when the button is clicked
     ///
@@ -115,16 +131,40 @@ public:
     virtual std::vector<std::pair<GLfloat*, int>> generate_texture_data() = 0;
 
     ///
+    /// Get the map listing all the components of the group.
+    /// This returns an empty map for Component.
+    /// @return a reference to a constant map object
+    /// 
+    virtual const std::map<int, std::shared_ptr<Component>>& get_components();
+
+
+    ///
     /// Set the on click lambda function for this button
     /// @param func the lambda function
     /// @return if the function registered correctly
     ///
-    bool set_on_click(std::function<void (void)> func);
-
+    void set_on_click(std::function<void (void)> func);
+    
+    ///
+    /// Call the component's on click function
+    ///
+    void call_on_click() { on_click_func(); }
+    
     ///
     /// Clear the handler - replaces with a void lambda that does nothing
     ///
     void clear_on_click();
+
+    ///
+    /// Sets if this component can be clicked
+    /// @param _clickable indicate if the component can be clicked
+    ///
+    void set_clickable(bool _clickable) { clickable = _clickable; }
+
+    ///
+    /// Determine if this component is clickable
+    ///
+    bool is_clickable() { return clickable; }
 
     ///
     /// Set the component's id
@@ -147,6 +187,30 @@ public:
     /// @return the width
     ///
     float get_width() { return width; }
+
+    ///
+    /// Set the width of the component in pixels
+    /// @param pixels the width of the component 
+    ///
+    void set_width_pixels(int pixels) { width_pixels = pixels; }
+
+    ///
+    /// Get the width of the component in pixels
+    /// @return the width in pixels
+    ///
+    int get_width_pixels() { return width_pixels; }
+
+    /// 
+    /// Set the height of the component in pixels
+    /// @pixels the height
+    ///
+    void set_height_pixels(int pixels) { height_pixels = pixels; }
+
+    ///
+    /// Get the height of the component in pixels
+    /// @param height_pixels the height of the component
+    ///
+    int get_height_pixels() { return height_pixels; }
 
     ///
     /// Set the  height of the component relative to its parent
@@ -180,11 +244,43 @@ public:
     float get_x_offset() { return x_offset; }
 
     ///
+    /// Set the x offset of the component in pixels, relative to its parent
+    /// @param pixels set the offset of this component in pixels
+    ///
+    void set_x_offset_pixels(int pixels) { x_offset_pixels = pixels; }
+
+    ///
+    /// Get the x offset of the component in pixels, relative to its parent
+    /// @param pixels the offset
+    ///
+    int get_x_offset_pixels() { return x_offset_pixels; }
+    
+    ///
+    /// Set the y offset of the component in pixels, relative to its parent
+    /// @param pixels set the offset of this component in pixels
+    ///
+    void set_y_offset_pixels(int pixels) { y_offset_pixels = pixels; }
+
+    ///
+    /// Get the y offset of the component in pixels, relative to its parent
+    /// @param pixels the offset
+    ///
+    int get_y_offset_pixels() { return y_offset_pixels; }
+    
+
+    ///
     /// Set the x offset of the component relative to its parent
     /// @param _x_offset the x offset of the component
     ///
     void set_x_offset(float _x_offset) { x_offset = _x_offset; }
 
 };
+
+class component_no_children_exception : public std::exception {
+    virtual const char* what() const throw() {
+        return "Component has no children";
+    }
+};
+
 
 #endif

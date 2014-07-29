@@ -86,6 +86,19 @@ public:
     void  parse_components();
 
     ///
+    /// Go through the tree and find a component to handle the click event.
+    /// The first component in bounds for the click and that has an on_click
+    /// function will be called and then the search terminated. This is a DFS.
+    /// @param root the component to search from
+    /// @param mouse_x the mouse x location
+    /// @param mouse_y the mouse y location
+    /// @param curr_x_offset the current x offset from the origin
+    /// @param curr_y_offset the current y offset from the origin
+    /// @return indicates if the click has been handled
+    ///
+    bool recurse_components(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset);
+
+    ///
     /// Set the root component of the component tree
     /// @param component the root
     ///

@@ -62,7 +62,7 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
 
             pixel_offset_x =(int)((float)500 /*width_pixels */ * component_x_offset);
             pixel_offset_y = (int)((float)200/*height_pixels */* component_y_offset);
-            std::cout << "PIXEL " << pixel_offset_x << "  " << pixel_offset_y << std::endl;
+
             //Translation matrix
             glm::mat4 transform_matrix = glm::mat4(1.0);
             glm::vec3 translate_vector = glm::vec3((float)pixel_offset_x, (float)pixel_offset_y, 0.0f);
