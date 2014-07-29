@@ -1,6 +1,11 @@
 #include "character.hpp"
 #include "image.hpp"
+#include "engine_api.hpp"
+#include "entitythread.hpp"
+#include "map_viewer.hpp"
 #include "renderable_component.hpp"
+
+#include <new>
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
@@ -31,6 +36,18 @@ Character::Character() {
     load_textures();
     generate_tex_data();
     generate_vertex_data();
+
+
+    // Starting positions should be integral
+    assert(trunc(x_position) == x_position);
+    assert(trunc(y_position) == y_position);
+
+    //Make a character blocked
+    blocked_set("stood on", Engine::get_map_viewer()->get_map()->block_tile(
+        Vec2D(int(x_position), int(y_position))
+    ));
+
+
     LOG(INFO) << "Character initialized";
 }
 
@@ -43,19 +60,40 @@ Character::~Character() {
 }
 
 
+void Character::blocked_set(std::string key, Map::Blocker value) {
+    blocked_tiles.erase(key);
+    blocked_tiles.insert(std::make_pair(key, value));
+}
+
+void Character::set_state_on_moving_start(Vec2D target) {
+    moving = true;
+
+    // Must erase before inserting, else nothing happens
+    blocked_set("walking on", Engine::get_map_viewer()->get_map()->block_tile(target));
+    blocked_set("walking off", blocked_tiles.at("stood on"));
+    blocked_tiles.erase("stood on");
+}
+
+void Character::set_state_on_moving_finish() {
+    moving = false;
+    
+    blocked_set("stood on", blocked_tiles.at("walking on"));
+    blocked_tiles.erase("walking on");
+    blocked_tiles.erase("walking off");
+}
+
+
 void Character::generate_tex_data() {
-    RenderableComponent* render_component = get_renderable_component();
-    if(render_component == nullptr) {
-        LOG(ERROR) << "ERROR in Character::generate_tex_data, render_component is nullptr";
-        return;
-    }
   
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
-    sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    if(sprite_tex_data == nullptr) {
-        LOG(ERROR) << "ERROR in Character::generate_tex_data, cannot allocate memory";
+    try {
+
+        sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
+    }
+    catch(std::bad_alloc& ba) {
+        LOG(ERROR) << "ERROR in Character::generate_tex_data(), cannot allocate memory";
         return;
     }
 
@@ -86,22 +124,19 @@ void Character::generate_tex_data() {
     sprite_tex_data[10] = offset_x * GLfloat(5.0);
     sprite_tex_data[11] = offset_y * GLfloat(7.0);
 
-    render_component->set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
+    renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
 
 void Character::generate_vertex_data() {
-    RenderableComponent* render_component = get_renderable_component();
-    if(render_component == nullptr) {
-        LOG(ERROR) << "Character::generate_vertex_data: render_component is nullptr";
-        return;
-    }
-
     //holds the character vertex data
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
-    sprite_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
-    if(sprite_data == nullptr) {
-        LOG(ERROR) << "Characater::generate_vertex_data: cannot allocate memory";
+    try {
+
+        sprite_data = new GLfloat[sizeof(GLfloat)*num_floats];
+    }
+    catch(std::bad_alloc& ba) {
+        LOG(ERROR) << "ERROR in Character::generate_vertex_data(), cannot allocate memory";
         return;
     }
 
@@ -137,23 +172,16 @@ void Character::generate_vertex_data() {
     sprite_data[16] = 0;
     sprite_data[17] = depth;
 
-    render_component->set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
-    render_component->set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
+    renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
+    renderable_component.set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
 }
 
 void Character::load_textures() {
 
-    RenderableComponent* render_component = get_renderable_component();
-    if(render_component == nullptr) {
-        LOG(ERROR) << "Character::generate_tex_data: render_component is nullptr";
-        return;
-    }
-
-
     texture_image = new Image("../resources/characters_1.png");
 
     //Set the texture data in the rederable component
-    render_component->set_texture_image(texture_image);
+    renderable_component.set_texture_image(texture_image);
 }
 
 bool Character::init_shaders() {
@@ -173,14 +201,8 @@ bool Character::init_shaders() {
         return false;
     }
 
-    RenderableComponent* render_component = get_renderable_component();
-    if(render_component == nullptr) {
-        LOG(ERROR) << "Character::init_shaders: render_component is nullptr";
-        delete shader;
-    }
-
     //Set the shader
-    render_component->set_shader(shader);
+    renderable_component.set_shader(shader);
 
     return true;
 
