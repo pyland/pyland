@@ -26,7 +26,7 @@ n
 */
 
 // A rotating cube rendered with OpenGL|ES. Three images used as textures on the cube faces.
-
+#include "Python.h"
 #include <boost/filesystem.hpp>
 #include <cassert>
 #include <cmath>

@@ -1,6 +1,6 @@
 #ifndef API_H
 #define API_H
-
+#include "Python.h"
 #include "python_embed_headers.hpp"
 
 #include <boost/python.hpp>

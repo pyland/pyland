@@ -1,3 +1,4 @@
+#include "Python.h"
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
 #include <boost/regex.hpp>

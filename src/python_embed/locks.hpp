@@ -1,6 +1,7 @@
 #ifndef LOCKS_H
 #define LOCKS_H
 
+#include "Python.h"
 #include "python_embed_headers.hpp"
 
 #include <boost/python.hpp>
