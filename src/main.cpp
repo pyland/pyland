@@ -270,13 +270,23 @@ int main(int argc, const char* argv[]) {
     stop_button->set_width(0.2f);
     stop_button->set_height(0.2f);
     stop_button->set_y_offset(0.8f);
-    stop_button->set_x_offset(0.3f);
+    stop_button->set_x_offset(0.8f);
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
 
     gui_manager.set_root(sprite_window);
     gui_manager.parse_components();
+
+    std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) { 
+        LOG(INFO) << "GUI resizing"; 
+        auto window_size = (*game_window).get_size();
+        sprite_window->set_width_pixels(window_size.first);
+        sprite_window->set_height_pixels(window_size.second);
+        gui_manager.parse_components();
+    };
+    Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
+
 
     MapViewer map_viewer(&window,&gui_manager);
     map_viewer.set_map(&map);
