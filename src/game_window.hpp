@@ -15,13 +15,13 @@
 #endif
 
 extern "C" {
+#include <SDL2/SDL.h>
+
 #ifdef USE_GLES
+#include <SDL2/SDL_syswm.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #endif
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
 }
 
 #include "callback.hpp"
@@ -125,6 +125,11 @@ private:
     /// Overscan compensation (top border pixels)
     ///
     static int overscan_top;
+    
+    ///
+    /// Stores X11 display and window information.
+    ///
+    SDL_SysWMinfo wm_info;
 #endif
 #ifdef USE_GL
     SDL_GLContext sdl_gl_context;
@@ -139,10 +144,6 @@ private:
     /// The currently focused window
     ///
     static GameWindow* focused_window;
-    ///
-    /// Stores X11 display and window information.
-    ///
-    SDL_SysWMinfo wm_info;
 
     ///
     /// Handle all the input separately to all the display setup.

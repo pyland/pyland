@@ -29,11 +29,16 @@ ifeq "$(PLATFORM)" "desktop"
 	GL_LDLIBS   = $(shell pkg-config gl --libs)
 
 	GRAPHICS_CPPFLAGS = $(GL_CPPFLAGS)
-	GRAPHICS_CXXFLAGS =
+	GRAPHICS_CXXFLAGS = $(GL_CXXFLAGS)
 	GRAPHICS_LDFLAGS  = $(GL_LDFLAGS)
 	GRAPHICS_LDLIBS   = $(GL_LDLIBS)
 	CPPFLAGS += -DUSE_GL
 else
+        X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
+        X11_CXXFLAGS =
+        X11_LDFLAGS  =
+        X11_LDLIBS   = $(shell pkg-config x11 --libs)
+
 	# From hello_triangle
 	GLES_CPPFLAGS = \
 		-I/opt/vc/include \
@@ -44,10 +49,10 @@ else
 	GLES_LDFLAGS  = -L/opt/vc/lib/
 	GLES_LDLIBS   = -lGLESv2 -lEGL -lbcm_host -lpthread
 
-	GRAPHICS_CPPFLAGS = $(GLES_CPPFLAGS)
-	GRAPHICS_CXXFLAGS =
-	GRAPHICS_LDFLAGS  = $(GLES_LDFLAGS)
-	GRAPHICS_LDLIBS   = $(GLES_LDLIBS)
+	GRAPHICS_CPPFLAGS = $(GLES_CPPFLAGS) $(X11_CPPFLAGS)
+	GRAPHICS_CXXFLAGS = $(GLES_CXXFLAGS) $(X11_CXXFLAGS)
+	GRAPHICS_LDFLAGS  = $(GLES_LDFLAGS)  $(X11_LDFLAGS)
+	GRAPHICS_LDLIBS   = $(GLES_LDLIBS)   $(X11_LDLIBS)
 	CPPFLAGS += -DUSE_GLES
 endif
 
@@ -79,13 +84,6 @@ TMXPARSER_CPPFLAGS = -I./tmx-parser/TmxParser
 TMXPARSER_CXXFLAGS =
 TMXPARSER_LDFLAGS  = -L./tmx-parser
 TMXPARSER_LDLIBS   = -ltmxparser
-
-
-
-X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
-X11_CXXFLAGS =
-X11_LDFLAGS  =
-X11_LDLIBS   = $(shell pkg-config x11 --libs)
 
 
 

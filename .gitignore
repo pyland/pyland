@@ -33,3 +33,4 @@ src/python_embed/python_embed_headers.hpp.gch
 src/python_embed/python_embed_headers.hpp.pch
 src/python_embed/python_embed_headers.hpp.unknown
 test/text/main
+*callgrind.out*
