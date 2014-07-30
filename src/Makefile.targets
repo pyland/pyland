@@ -93,9 +93,10 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 	@echo "${bold}[ Compiling gui object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
-		$(GLOG_CPPFLAGS)   $(GLOG_CXXFLAGS)   \
-		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
-		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)    \
+		$(GLOG_CPPFLAGS)   $(GLOG_CXXFLAGS)        \
+		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS) \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)      \
+		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)         \
 		$(CPPFLAGS)        $(CXXFLAGS)
 
 
@@ -113,9 +114,10 @@ $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | d
 	@echo "${bold}[ Compiling Python object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
-		$(GLOG_CPPFLAGS)                      \
-		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
-		$(PYTHON_INCLUDE_PCH)                 \
+		$(GLOG_CPPFLAGS)                           \
+		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS) \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)      \
+		$(PYTHON_INCLUDE_PCH)                      \
 		$(CXXFLAGS) $(CPPFLAGS)
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
@@ -124,7 +126,7 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies
 	@$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
-		$(CXXFLAGS) $(CPPFLAGS) \
+		$(CXXFLAGS) $(CPPFLAGS)             \
 		-MF dependencies/$*.sd
 
 
