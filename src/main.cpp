@@ -276,6 +276,12 @@ int main(int argc, const char* argv[]) {
     sprite_window->add(stop_button);
 
     gui_manager.set_root(sprite_window);
+
+    // quick fix so buttons in correct location in initial window before gui_resize_func callback
+    auto original_window_size = window.get_size();
+    sprite_window->set_width_pixels(original_window_size.first);
+    sprite_window->set_height_pixels(original_window_size.second);
+
     gui_manager.parse_components();
 
     std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) { 
