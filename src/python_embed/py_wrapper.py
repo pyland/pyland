@@ -16,11 +16,11 @@ def fun_wrapper (func, delay, args, kwargs):
 
 def move(*args, **kwargs):
     return fun_wrapper(entity.move, True, args, kwargs)
-    
+
 def monologue(*args, **kwargs):
     return fun_wrapper(entity.monologue, False, args, kwargs)
 
 def walkable(*args, **kwargs):
     return fun_wrapper(entity.walkable, False, args, kwargs)
 
-north, south, east, west = (0, 1), (0, -1), (1, 0), (-1, 0)    
+north, south, east, west = (0, 1), (0, -1), (1, 0), (-1, 0)
