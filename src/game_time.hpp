@@ -20,7 +20,7 @@ class GameTime {
 
         GameTime();
         GameTime(const GameTime &other);
-        
+
         Accessor<double> game_seconds_per_real_second;
         time_point time();
 

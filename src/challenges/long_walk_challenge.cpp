@@ -121,6 +121,11 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
         targets.at("treasure:path:long").front(),
         [&] (int) {
             // TODO: Fancy output
+            Engine::print_dialogue("Game",
+                "Nice, more treasure!\n"
+                "I doubt the next bit is going to be short enough to just walk...\n"
+                "You should try to program it.\n"
+            );
 
             wall_path_long_blockers.clear();
             return false;
@@ -166,6 +171,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
             [&] (int) {
                 Engine::print_dialogue("Game",
                     "You Win, Well Done !"
+                );
                     // "▄▄▄    ▄▄▄                              ▄▄      ▄▄  ▄▄▄▄▄▄   ▄▄▄   ▄▄     ▄▄\n" 
                     // " ██▄  ▄██                               ██      ██  ▀▀██▀▀   ███   ██     ██\n" 
                     // "  ██▄▄██    ▄████▄   ██    ██           ▀█▄ ██ ▄█▀    ██     ██▀█  ██     ██\n" 
@@ -173,7 +179,6 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                     // "    ██     ██    ██  ██    ██            ███▀▀███     ██     ██  █▄██     ▀▀\n" 
                     // "    ██     ▀██▄▄██▀  ██▄▄▄███            ███  ███   ▄▄██▄▄   ██   ███     ▄▄\n" 
                     // "    ▀▀       ▀▀▀▀     ▀▀▀▀ ▀▀            ▀▀▀  ▀▀▀   ▀▀▀▀▀▀   ▀▀   ▀▀▀     ▀▀\n" 
-                );
                 return true;
             }
 

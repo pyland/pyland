@@ -54,12 +54,6 @@ class EventManager {
     /// @param percentage the percentage of completion
     ///
 
-    ///
-    /// This deals with keeping track of the game's time,
-    /// and allowing the speed of time to be varied.
-    ///
-    GameTime time;
-
     void add_timed_event(GameTime::duration duration,
                          std::function<bool (double)> func,
                          GameTime::time_point start_time);
@@ -67,6 +61,12 @@ class EventManager {
     EventManager();
     ~EventManager();
 public:
+    ///
+    /// This deals with keeping track of the game's time,
+    /// and allowing the speed of time to be varied.
+    ///
+    GameTime time;
+
     ///
     /// Getter for the main global event manager.
     /// @return a reference to the global event manager
@@ -94,7 +94,7 @@ public:
     /// based on the duration, the current time and the time the event was added to the
     /// queue 
     void add_timed_event(GameTime::duration duration, std::function<bool (double)> func);
-    
+
     ///
     /// Processes all events in the current frame queue
     ///

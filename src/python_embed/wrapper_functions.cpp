@@ -9,12 +9,13 @@ namespace py = boost::python;
 
 BOOST_PYTHON_MODULE(wrapper_functions) {
     py::class_<Entity, boost::noncopyable>("Entity", py::no_init)
-        .def_readwrite("name",        &Entity::name)
-        .def_readwrite("id",        &Entity::id)
-        .def("move",        &Entity::move)
-        .def("walkable",    &Entity::walkable)
-        .def("monologue",   &Entity::monologue)
-        .def("print_debug", &Entity::py_print_debug);
+        .def_readwrite("name",   &Entity::name)
+        .def_readwrite("id",     &Entity::id)
+        .def("move",             &Entity::move)
+        .def("walkable",         &Entity::walkable)
+        .def("monologue",        &Entity::monologue)
+        .def("__set_game_speed", &Entity::__set_game_speed)
+        .def("print_debug",      &Entity::py_print_debug);
 
     py::class_<Vec2D>("Vec2D", py::init<int, int>())
         .def(py::self + py::other<Vec2D>())

@@ -69,17 +69,19 @@ void Character::set_state_on_moving_start(Vec2D target) {
     moving = true;
 
     // Must erase before inserting, else nothing happens
-    blocked_set("walking on", Engine::get_map_viewer()->get_map()->block_tile(target));
-    blocked_set("walking off", blocked_tiles.at("stood on"));
-    blocked_tiles.erase("stood on");
+    // TODO:
+        // blocked_set("walking on", Engine::get_map_viewer()->get_map()->block_tile(target));
+        // blocked_set("walking off", blocked_tiles.at("stood on"));
+        // blocked_tiles.erase("stood on");
 }
 
 void Character::set_state_on_moving_finish() {
     moving = false;
-    
-    blocked_set("stood on", blocked_tiles.at("walking on"));
-    blocked_tiles.erase("walking on");
-    blocked_tiles.erase("walking off");
+
+    // TODO:
+        // blocked_set("stood on", blocked_tiles.at("walking on"));
+        // blocked_tiles.erase("walking on");
+        // blocked_tiles.erase("walking off");
 }
 
 

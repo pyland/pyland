@@ -10,6 +10,7 @@
 
 #include "api.hpp"
 #include "engine_api.hpp"
+#include "event_manager.hpp"
 
 namespace py = boost::python;
 
@@ -71,4 +72,10 @@ void Entity::monologue() {
 
 void Entity::py_print_debug(std::string text) {
     LOG(INFO) << text;
+}
+
+void Entity::__set_game_speed(float game_seconds_per_real_second) {
+    EventManager::get_instance().add_event([game_seconds_per_real_second] () {
+        EventManager::get_instance().time.game_seconds_per_real_second = game_seconds_per_real_second;
+    });
 }

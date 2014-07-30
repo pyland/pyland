@@ -122,7 +122,7 @@ void create_character(Interpreter &interpreter) {
     LOG(INFO) << "Adding character";
     ObjectManager::get_instance().add_object(new_character);
     Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
-    
+
     Engine::get_map_viewer()->set_map_focus_object(new_character->get_id());
     LOG(INFO) << "Creating character wrapper";
     LOG(INFO) << "ID " << new_character->get_id();
@@ -253,7 +253,6 @@ int main(int argc, const char* argv[]) {
     CallbackState callbackstate(interpreter, "John");
 
 
-    
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
     sprite_window->set_width_pixels(300);
     sprite_window->set_height_pixels(300);
@@ -272,16 +271,16 @@ int main(int argc, const char* argv[]) {
     stop_button->set_height(0.2f);
     stop_button->set_y_offset(0.8f);
     stop_button->set_x_offset(0.3f);
- 
+
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
-    
+
     gui_manager.set_root(sprite_window);
     gui_manager.parse_components();
 
     MapViewer map_viewer(&window,&gui_manager);
     map_viewer.set_map(&map);
-    
+
 
     Engine::set_map_viewer(&map_viewer);
 
