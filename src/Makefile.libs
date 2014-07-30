@@ -59,10 +59,10 @@ endif
 
 
 # Filter to prevent warnings about -Wstrict-prototypes not being valid for C++
-PYTHON_CPPFLAGS = $(filter-out -Wstrict-prototypes,$(shell python${PYTHON_VERSION}-config --cflags))
+PYTHON_CPPFLAGS = $(shell ./python-config.py ${PYTHON_VERSION} --cflags)
 PYTHON_CXXFLAGS =
-PYTHON_LDFLAGS  = $(shell python${PYTHON_VERSION}-config --ldflags)
-PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
+PYTHON_LDFLAGS  = $(shell ./python-config.py ${PYTHON_VERSION} --ldflags)
+PYTHON_LDLIBS   = $(shell ./python-config.py ${PYTHON_VERSION} --libs)
 
 
 

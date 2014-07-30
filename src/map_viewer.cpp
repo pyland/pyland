@@ -1,3 +1,4 @@
+#include "python_embed_headers.hpp"
 
 #include "character.hpp"
 #include "game_window.hpp"

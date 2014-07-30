@@ -1,6 +1,8 @@
 #ifndef CHALLENGE_H
 #define CHALLENGE_H
 
+#include "python_embed_headers.hpp"
+
 #include <string>
 
 #include "typeface.hpp"

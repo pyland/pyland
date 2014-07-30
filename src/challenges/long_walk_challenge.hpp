@@ -1,6 +1,8 @@
 #ifndef LONG_WALK_CHALLENGE_H
 #define LONG_WALK_CHALLENGE_H
 
+#include "python_embed_headers.hpp"
+
 #include <string>
 #include <vector>
 

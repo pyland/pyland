@@ -1,3 +1,5 @@
+#include "python_embed_headers.hpp"
+
 #include "component.hpp"
 #include "gui_manager.hpp"
 #include "image.hpp"
