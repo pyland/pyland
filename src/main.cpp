@@ -25,8 +25,6 @@ n
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// A rotating cube rendered with OpenGL|ES. Three images used as textures on the cube faces.
-
 #include <boost/filesystem.hpp>
 #include <cassert>
 #include <cmath>
