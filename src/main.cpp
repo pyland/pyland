@@ -223,7 +223,7 @@ int main(int argc, const char* argv[]) {
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
-    int map_width = 16, map_height = 16;
+    int map_width = 32, map_height = 32;
     GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
     window.use_context();
 
