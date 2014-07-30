@@ -1,4 +1,5 @@
 NULL=
+SPACE= $(NULL) $(NULL)
 
 RM = rm -f
 RMDIR = rmdir
