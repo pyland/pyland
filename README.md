@@ -56,6 +56,7 @@ PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_pytho
 git clone https://github.com/heidi-ann/zygote
 brew install tinyxml sdl2_image sdl2  glog sdl2_ttf
 # install  XQuartz for x11
+brew install --with-c++11 --build-from-source boost
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
 
