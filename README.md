@@ -51,6 +51,12 @@ For compiling on desktop, use:
 PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
 
+#### Compiling on mac
+```bash
+git clone https://github.com/heidi-ann/zygote
+brew install tinyxml sdl2_image sdl2  glog sdl2_ttf
+# install  XQuartz for x11
+
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
 
 ##Usage

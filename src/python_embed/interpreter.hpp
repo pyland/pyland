@@ -1,7 +1,6 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
-#include "Python.h"
 #include "python_embed_headers.hpp"
 
 #include <atomic>

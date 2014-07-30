@@ -1,6 +1,7 @@
 #ifndef MAKE_UNIQUE_H
 #define MAKE_UNIQUE_H
 
+#include "python_embed_headers.hpp"
 // Forward port of C++14 make_shared
 
 #include <cstddef>

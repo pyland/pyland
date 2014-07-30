@@ -1,6 +1,8 @@
 #ifndef THREAD_KILLER_H
 #define THREAD_KILLER_H
 
+#include "python_embed_headers.hpp"
+
 #include <memory>
 #include <mutex>
 #include <vector>

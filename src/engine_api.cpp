@@ -1,3 +1,5 @@
+#include "python_embed_headers.hpp"
+
 #include <cstdlib>
 #include <glog/logging.h>
 #include <memory>

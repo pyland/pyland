@@ -5,6 +5,8 @@
 #ifndef ENGINE_API_H
 #define ENGINE_API_H
 
+#include "python_embed_headers.hpp"
+
 #include <array>
 #include <utility>
 #include <vector>

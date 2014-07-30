@@ -1,14 +1,16 @@
+#include "python_embed_headers.hpp"
+
+#include <fstream>
+#include <glog/logging.h>
+#include <iostream>
+#include <new>
+
 #include "character.hpp"
 #include "image.hpp"
 #include "engine_api.hpp"
 #include "entitythread.hpp"
 #include "map_viewer.hpp"
 #include "renderable_component.hpp"
-
-#include <new>
-#include <glog/logging.h>
-#include <iostream>
-#include <fstream>
 
 
 #ifdef USE_GLES

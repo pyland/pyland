@@ -1,4 +1,3 @@
-#include "Python.h"
 #include "python_embed_headers.hpp"
 
 #include <boost/python.hpp>
