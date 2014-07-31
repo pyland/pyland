@@ -28,11 +28,11 @@ InputManager::InputManager(GameWindow* window):
     pressed_keys(),
     typed_keys(),
     released_keys(),
-    
+
     mouse_start(0, 0, MouseState::ButtonMask::NONE),
     mouse_from(0, 0, MouseState::ButtonMask::NONE),
     mouse_to(0, 0, MouseState::ButtonMask::NONE),
-    
+
     key_events(),
     mouse_events(),
 
@@ -113,6 +113,8 @@ void InputManager::handle_event(SDL_Event* event) {
 void InputManager::run_callbacks() {
     while (!key_events.empty()) {
         KeyboardInputEvent& event = key_events.front();
+        VLOG(3) << event;
+
         keyboard_callbacks.broadcast(event);
         if (event.down) {
             if (event.changed) {
@@ -132,13 +134,16 @@ void InputManager::run_callbacks() {
         // Don't duplicate events
         if (pressed_keys.count(key) == 0 && typed_keys.count(key) == 0) {
             KeyboardInputEvent event(this, key, true, false, false);
+            VLOG(3) << event;
+
             keyboard_callbacks.broadcast(event);
             key_down_callbacks.broadcast(event);
         }
     }
-    
     while (!mouse_events.empty()) {
         MouseInputEvent& event = mouse_events.front();
+        VLOG(3) << event;
+
         mouse_callbacks.broadcast(event);
         mouse_events.pop();
     }

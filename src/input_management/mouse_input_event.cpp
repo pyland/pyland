@@ -18,3 +18,10 @@ MouseInputEvent::MouseInputEvent(InputManager* manager,
     was_down(button == 0 ? false : (((from.buttons >> (button - 1)) & 1) != 0)),
     down(button == 0 ? false : (((to.buttons >> (button - 1)) & 1) != 0)) {
 }
+
+std::ostream& operator<<(std::ostream& stream, const MouseInputEvent& event) {
+    return stream << "MouseInputEvent(start="     << event.start
+                                << ", from="      << event.from
+                                << ", to="        << event.to
+                                << ", button="    << event.button << ")";
+}

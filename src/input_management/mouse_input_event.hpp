@@ -1,13 +1,16 @@
 #ifndef MOUSE_INPUT_EVENT_H
 #define MOUSE_INPUT_EVENT_H
 
+#include <ostream>
+
 #include "input_event.hpp"
 #include "mouse_state.hpp"
 
 
-
 class MouseInputEvent : public InputEvent {
 public:
+    friend std::ostream& operator<<(std::ostream& os, const MouseInputEvent& event);
+
     ///
     /// The state just before a mouse button changed state.
     ///
