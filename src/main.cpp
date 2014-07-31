@@ -109,14 +109,13 @@ static std::mt19937 random_generator;
 void create_character(Interpreter &interpreter) {
     LOG(INFO) << "Creating character";
 
-    // Registering new character with game engine
-    shared_ptr<Character> new_character = make_shared<Character>();
-    new_character->set_name("John");
 
     int start_x = 4;
     int start_y = 15;
-    new_character->set_x_position(start_x);
-    new_character->set_y_position(start_y);
+
+    // Registering new character with game engine
+    shared_ptr<Character> new_character = make_shared<Character>(start_x, start_y);
+    new_character->set_name("John");
     LOG(INFO) << "Adding character";
     ObjectManager::get_instance().add_object(new_character);
     Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
@@ -303,6 +302,10 @@ int main(int argc, const char* argv[]) {
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(); }
+    ));
+    Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("N")},
+        [&] (KeyboardInputEvent) { callbackstate.spawn(); }
     ));
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("R")},
