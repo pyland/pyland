@@ -110,7 +110,7 @@ void RenderableComponent::bind_vbos() {
   
     //Bind the vertex data buffer
     glBindBuffer(GL_ARRAY_BUFFER, vbo_vertex_id);
-    glVertexAttribPointer(0 /*VERTEX_POS_INDX*/, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(0 /*VERTEX_POS_INDX*/, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(0 /* VERTEX_POS_INDX */);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_texture_id);

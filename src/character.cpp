@@ -123,7 +123,7 @@ void Character::generate_tex_data() {
 void Character::generate_vertex_data() {
     //holds the character vertex data
     //need 18 floats for each coordinate as these hold 3D coordinates
-    int num_floats = 18;
+    int num_floats = 12;
     GLfloat* sprite_data = nullptr;
     try {
 
@@ -135,36 +135,29 @@ void Character::generate_vertex_data() {
     }
 
     float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
-    float depth = 0.0f;
     //bottom left 
     sprite_data[0] = 0;
     sprite_data[1] = 0;
-    sprite_data[2] = depth;
 
     //top left
-    sprite_data[3] = 0;
-    sprite_data[4] = scale;
-    sprite_data[5] = depth;
+    sprite_data[2] = 0;
+    sprite_data[3] = scale;
 
     //bottom right
-    sprite_data[6] = scale;
-    sprite_data[7] = 0;
-    sprite_data[8] = depth;
+    sprite_data[4] = scale;
+    sprite_data[5] = 0;
 
     //top left
-    sprite_data[9] = 0;
-    sprite_data[10] = scale;
-    sprite_data[11] = depth;
+    sprite_data[6] = 0;
+    sprite_data[7] = scale;
 
     //top right
-    sprite_data[12] = scale;
-    sprite_data[13] = scale;
-    sprite_data[14] = depth;
+    sprite_data[8] = scale;
+    sprite_data[9] = scale;
 
     //bottom right
-    sprite_data[15] = scale;
-    sprite_data[16] = 0;
-    sprite_data[17] = depth;
+    sprite_data[10] = scale;
+    sprite_data[11] = 0;
 
     renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used

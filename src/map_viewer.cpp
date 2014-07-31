@@ -1,7 +1,9 @@
 
 #include "character.hpp"
+#include "engine_api.hpp"
 #include "game_window.hpp"
 #include "gui/gui_manager.hpp"
+#include "layer.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object.hpp"
@@ -57,58 +59,60 @@ void MapViewer::render_map() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    RenderableComponent* map_render_component = map->get_renderable_component();
-    if(map_render_component == nullptr) {
-        LOG(ERROR) << "MapViewer::render_map: RenderComponent should not be null ";
-        return;
-    }
-
-    Shader* map_shader = map_render_component->get_shader();
-    if(map_shader == nullptr) {
-        LOG(ERROR) << "MapViewer::render_map: Shader should not be null";
-        return;
-    }
 
     std::pair<int, int> size = window->get_size();
-    //TODO, set the map view correctly
-    glScissor(0, 0, size.first, size.second);
-    map->set_display_width(float(size.first) / 32.0f);
-    map->set_display_height(float(size.second) / 32.0f);
+    //Adjust the view to show only tiles the user can see
+    int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
+    int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
+    //We make use of intege truncation to get these to numbers in terms of tiles
+    int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
+    int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
+
+    //Set the viewable fragments and map display size
+    glScissor(0, 0,  display_width, display_height);
+    map->set_display_width(display_width);
+    map->set_display_height(display_height);
     glViewport(0, 0, size.first, size.second);
+
+    //TODO: Make this a callback
     refocus_map();
+
+    //Calculate the projection and modelview matrix for the map
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     glm::vec3 translate = glm::vec3(-map->get_display_x()*32.0f, -map->get_display_y()*32.0f, 0.0f);
     glm::mat4 translated = glm::translate(model, translate);
+
+    //Draw all the layers, from base to top to get the correct draw order
+    for(auto layer: map->get_layers()) {
+        RenderableComponent* layer_render_component = layer->get_renderable_component();
+        Shader* layer_shader = layer->get_renderable_component()->get_shader();
+
+
+        //Set the matrices
+        layer_render_component->set_projection_matrix(projection_matrix);
+        layer_render_component->set_modelview_matrix(translated);
+
+        layer_render_component->bind_shader();
   
 
+        //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
+        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(layer_render_component->get_projection_matrix()));
+        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(layer_render_component->get_modelview_matrix()));
 
-    map_render_component->set_projection_matrix(projection_matrix);
-    map_render_component->set_modelview_matrix(translated);
-
-    map_render_component->bind_shader();
-  
-
-    //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
-    glUniformMatrix4fv(glGetUniformLocation(map_shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(map_render_component->get_projection_matrix()));
-    glUniformMatrix4fv(glGetUniformLocation(map_shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(map_render_component->get_modelview_matrix()));
-
-    //Bind the vertex buffers and textures
-    map_render_component->bind_vbos();
-    map_render_component->bind_textures();
+        //Bind the vertex buffers and textures
+        layer_render_component->bind_vbos();
+        layer_render_component->bind_textures();
 
 
-    glDrawArrays(GL_TRIANGLES, 0, map_render_component->get_num_vertices_render());
+        glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
  
-    //Release the vertex buffers and textures
-    map_render_component->release_textures();
-    map_render_component->release_vbos();
+        //Release the vertex buffers and textures
+        layer_render_component->release_textures();
+        layer_render_component->release_vbos();
 
-    map_render_component->release_shader();
-
-
-
-
+        layer_render_component->release_shader();
+    }
 
     //Draw the characters
     const std::vector<int>& characters = map->get_characters();

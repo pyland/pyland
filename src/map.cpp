@@ -2,6 +2,7 @@
 #include <fstream>
 #include <glog/logging.h>
 #include <iostream>
+#include <memory>
 #include <string>
 
 //Include GLM
@@ -34,7 +35,6 @@
 #include "walkability.hpp"
 
 Map::Map(const std::string map_src):
-    renderable_component(),
     event_step_on(Vec2D(0, 0)),
     event_step_off(Vec2D(0, 0))
     {
@@ -72,8 +72,7 @@ Map::Map(const std::string map_src):
         init_shaders();
         init_textures();
         generate_tileset_coords(&texture_images[0]);
-        generate_map_texcoords();
-        generate_map_coords();
+        generate_data();
 
 }
 
@@ -172,6 +171,12 @@ void Map::generate_tileset_coords(Image* texture_image) {
         return;
     }
 
+    //Check tileset dimensions
+    if(texture_image->store_width == 0 || texture_image->store_height == 0) {
+        LOG(ERROR) << "Texture image has 0 in at least one dimension in Map::generate_tileset_coords";
+        return;
+    }
+
     //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
     //so we remap these 
     GLfloat tileset_inc_x = GLfloat(texture_image->width) / GLfloat(texture_image->store_width) / static_cast<GLfloat>(num_tiles_x);
@@ -179,9 +184,7 @@ void Map::generate_tileset_coords(Image* texture_image) {
     //We work from left to right, moving down the gl texture
     GLfloat tileset_offset_x = 0.0;
     GLfloat tileset_offset_y = GLfloat(num_tiles_y - 1) * tileset_inc_y;
-    //TODo: DIV ZEro HERRE 
 
-    //TODO: REMEMBER TILESET COORDINATES ARE INVERSE OF IMAGE FILE ONES
     //generate the coordinates for each tile
     for (int y = 0; y < num_tiles_y; y++) {
         for (int x = 0; x < num_tiles_x; x++) {
@@ -202,110 +205,153 @@ void Map::generate_tileset_coords(Image* texture_image) {
             tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y + tileset_inc_y;
  
             tileset_offset_x += tileset_inc_x;
-            //      for(int i =0 ; i < 8; i++)
-            //        cout << " " <<        tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+i];
-            //      cout << endl;
         }
         tileset_offset_x = 0.0;
         tileset_offset_y -= tileset_inc_y;
     }
 }
 
-/**
- * The function which generates the texture coordinates for the map
- * geometry, using the cached tile coordinates.
- */
-void Map::generate_map_texcoords() {
-    LOG(INFO) << "Generating map texture data";
-
-    //holds the map data
-    //need 12 float for the 2D texture coordinates
-    int num_floats = 12;
-    size_t data_size = sizeof(GLfloat) * map_height * map_width * num_floats * layers.size();
-    try {
-        map_tex_coords = new GLfloat[data_size];
-    }
-    catch(std::bad_alloc& ba) {
-        LOG(ERROR) << "Out of memory in Map::generate_map_texcoords";
-    }
+void Map::generate_data() {
+    LOG(INFO) << "Generating map data";
 
     //Get each layer of the map
     //Start at layer 0
-    int offset = 0;
-    int layer =0;
-    for(auto iter = layers.begin(); iter != layers.end(); ++iter) {
-        auto layer_data = (*iter)->get_layer_data();
+    for(auto layer_iter = layers.begin(); layer_iter != layers.end(); ++layer_iter) {
+        auto layer_data = (*layer_iter)->get_layer_data();
 
-        if ((*iter)->get_name() == "Collisions") {
+        //Don't generate data for the collisions layer
+        if ((*layer_iter)->get_name() == "Collisions") {
             continue;
         }
-        //Get all the tiles in the layer, moving from left to right and down 
+
+        //Work out if we need a dense or a sparse buffer
+        int total_tiles = 0;
+        int num_blank_tiles = 0;
         for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
-            std::string tileset_name = tile_data->first;
             int tile_id = tile_data->second;
-            if (tileset_name == "") {
-                tile_id = 119; //move to default blank tile
+            if(tile_id == 0) {
+                num_blank_tiles++;
             }
-
-            GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8];
-            //bottom left
-            map_tex_coords[offset+0] = tileset_ptr[0];
-            map_tex_coords[offset+1] = tileset_ptr[1];
-
-            //top left
-            map_tex_coords[offset+2] = tileset_ptr[2];
-            map_tex_coords[offset+3] = tileset_ptr[3];
-
-            //bottom right
-            map_tex_coords[offset+4] = tileset_ptr[4];
-            map_tex_coords[offset+5] = tileset_ptr[5];
-
-            //top left
-            map_tex_coords[offset+6] = tileset_ptr[2];
-            map_tex_coords[offset+7] = tileset_ptr[3];
-
-            //top right
-            map_tex_coords[offset+8] = tileset_ptr[6];
-            map_tex_coords[offset+9] = tileset_ptr[7];
-            
-            //bottom right
-            map_tex_coords[offset+10] = tileset_ptr[4];
-            map_tex_coords[offset+11] = tileset_ptr[5];
-            //layer*map_height*map_width*num_floats + x*map_height*num_floats + y*num_floats
-
-            offset += num_floats;
+            total_tiles++;
         }
-        //next layer
-        layer++;
+
+        //Spare packing by default
+        Layer::Packing layer_packing = Layer::Packing::SPARSE;
+
+        //If more than 50% of layer has tiles, make it dense
+        if(num_blank_tiles < total_tiles/2 ) {
+            layer_packing = Layer::Packing::DENSE;
+        }
+
+        //Create the buffer for the layer
+        int num_tiles = total_tiles - num_blank_tiles;
+        //The number of bytes needed - *6 for the GLTRIANGLES
+        int num_vertices = 6;
+        int num_dimensions = 2;
+        int tex_data_size = sizeof(GLfloat)*num_tiles*num_vertices*num_dimensions;
+        int vert_data_size = sizeof(GLfloat)*num_tiles*num_vertices*num_dimensions;
+        GLfloat* layer_tex_coords = nullptr;
+        GLfloat* layer_vert_coords = nullptr;
+
+        try {
+            layer_tex_coords = new GLfloat[tex_data_size];
+            layer_vert_coords = new GLfloat[vert_data_size];
+        }
+        catch(std::bad_alloc& ba) {
+            LOG(ERROR) << "Out of memory in Map::generate_data";
+            return;
+        }
+
+        //Build the layer data based on the 
+        if(layer_packing == Layer::Packing::DENSE) {
+            generate_dense_layer_tex_coords(layer_tex_coords, tex_data_size, num_tiles, *(layer_iter));
+            generate_dense_layer_vert_coords(layer_vert_coords, vert_data_size, num_tiles,*(layer_iter));
+        } 
+        else {
+            generate_sparse_layer_tex_coords(layer_tex_coords, tex_data_size, num_tiles, (*layer_iter));
+            generate_sparse_layer_vert_coords(layer_vert_coords, vert_data_size, num_tiles, (*layer_iter));
+        }
+
+        //Set this data in the renderable component for the layer
+        RenderableComponent* renderable_component = (*layer_iter)->get_renderable_component();
+        renderable_component->set_texture_coords_data(layer_tex_coords, tex_data_size, false);
+        renderable_component->set_vertex_data(layer_vert_coords, vert_data_size, false);
+        renderable_component->set_num_vertices_render(num_tiles*num_vertices*num_dimensions);
+
     }
-
-    //Set this data in the renderable component
-    renderable_component.set_texture_coords_data(map_tex_coords, data_size, false);
-
 }
 
-/*
- * The function which generates the map geometry so that it can be
- * rendered to the screen
- */
-void Map::generate_map_coords() {
+void Map::generate_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer, bool dense) {
+    auto layer_data = layer->get_layer_data();
+
+    //Get all the tiles in the layer, moving from left to right and down 
+    int offset = 0;
+    int num_floats = 12;
+    int num_blanks = 0;
+    int num_tiles_count = 0;
+    for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
+        std::string tileset_name = tile_data->first;
+        int tile_id = tile_data->second;
+        num_tiles_count++;
+
+        if(tile_id == 0) 
+            num_blanks++;
+
+        //IF WE ARE GENERATING A SPARSE LAYER
+        //Skip out blank tiles:
+        //This get's us our sparse data structure
+        if(dense == false && tile_id == 0)
+            continue;
+
+        //Get the texture coordinates for this tile
+        GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8]; //*8 as 8 coordinates per tile
+
+        //bottom left
+        data[offset+0] = tileset_ptr[0];
+        data[offset+1] = tileset_ptr[1];
+
+        //top left
+        data[offset+2] = tileset_ptr[2];
+        data[offset+3] = tileset_ptr[3];
+
+        //bottom right
+        data[offset+4] = tileset_ptr[4];
+        data[offset+5] = tileset_ptr[5];
+
+        //top left
+        data[offset+6] = tileset_ptr[2];
+        data[offset+7] = tileset_ptr[3];
+
+        //top right
+        data[offset+8] = tileset_ptr[6];
+        data[offset+9] = tileset_ptr[7];
+            
+        //bottom right
+        data[offset+10] = tileset_ptr[4];
+        data[offset+11] = tileset_ptr[5];
+
+        offset += num_floats;
+        /*      if(offset >= data_size) {
+            LOG(ERROR) << "Offset exceeded data size in Map::generate_layer_tex_coords";
+            return;
+            }*/
+    }
+}
+
+void Map::generate_sparse_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer) {
+    generate_layer_tex_coords(data, data_size, num_tiles, layer, false);
+}
+
+void Map::generate_dense_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer) {
+    generate_layer_tex_coords(data, data_size, num_tiles, layer, true);
+}
+
+void Map::generate_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer, bool dense) {
     LOG(INFO) << "Generating map coordinate data";
 
-    //holds the map data
-    //need 18 floats for each coordinate as these hold 3D coordinates
-    int num_floats = 18;
-    size_t data_size = sizeof(GLfloat) * map_height * map_width * num_floats * layers.size();
-    try {
-        map_data = new GLfloat[data_size]; 
-    }
-    catch(std::bad_alloc& ba) {
-        LOG(ERROR) << "Out of memory in Map::generate_map_coords";
-        return;
-    }
-
     float scale = (float)(Engine::get_tile_size() * Engine::get_global_scale());
-
-    //generate the map data
+    int num_floats = 12;
+    int offset = 0;
     ///
     /// Vertex winding order:
     /// 1, 3   4
@@ -316,90 +362,69 @@ void Map::generate_map_coords() {
     /// 0       2,5
     ///
 
-    //For all the layers
-    //Start at layer 0
-    int offset = 0;
-    float layer_offset = -1.0f;
-    float layer_inc = 1.0f / float(layers.size());
-    for (unsigned int layer = 0; layer < layers.size(); layer++) {
-        LOG(INFO) << "Map::generate_map_coords: Layer offset of " << layer_offset;
+    //The current tile's data
+    auto tile_data = layer->get_layer_data()->begin();
 
-        //Generate one layer's worth of data
-        for(int y = 0; y < map_height; y++) {
-            for(int x = 0; x < map_width; x++) {
-                // If it is a blank tile, draw it as a zero-area dot out of the way (hack).
-                // if (layers[layer]->get_tile(x, y) == 0) {
-                //     map_data[offset+0] =
-                //         map_data[offset+1] =
-                //         map_data[offset+3] =
-                //         map_data[offset+4] =
-                //         map_data[offset+6] =
-                //         map_data[offset+7] =
-                //         map_data[offset+9] =
-                //         map_data[offset+10] =
-                //         map_data[offset+12] =
-                //         map_data[offset+13] =
-                //         map_data[offset+15] =
-                //         map_data[offset+16] = scale * float(-1.0);
-                //     map_data[offset+2] =
-                //         map_data[offset+5] =
-                //         map_data[offset+8] =
-                //         map_data[offset+11] =
-                //         map_data[offset+14] =
-                //         map_data[offset+17] = layer_offset;
-                //     continue;
-                // }
-     
-                //generate one tile's worth of data
-
-                //bottom left
-                map_data[offset+ 0] = scale * float(x);
-                map_data[offset+ 1] = scale * float(y);
-                map_data[offset+ 2] = layer_offset;
-             
-                //top left
-                map_data[offset+ 3] = scale * float(x);
-                map_data[offset+ 4] = scale * float(y + 1);
-                map_data[offset+ 5] = layer_offset;
-
-                //bottom right
-                map_data[offset+ 6] = scale * float(x + 1);
-                map_data[offset+ 7] = scale * float(y);
-                map_data[offset+ 8] = layer_offset;
-            
-                //top left
-                map_data[offset+ 9]  = scale * float(x);
-                map_data[offset+10] = scale * float(y+1);
-                map_data[offset+11] = layer_offset;
-        
-                //top right
-                map_data[offset+12] = scale * float(x+1);
-                map_data[offset+13] = scale * float(y+1);
-                map_data[offset+14] = layer_offset;
-
-                //bottom right
-                map_data[offset+15] = scale * float(x+1);
-                map_data[offset+16] = scale * float(y);
-                map_data[offset+17] = layer_offset;
-
-                //layer*map_width*map_height*num_floats + x*map_height*num_floats + y*num_floats
-                offset += num_floats;
-
+    //Generate one layer's worth of data
+    for(int y = 0; y < map_height; y++) {
+        for(int x = 0; x < map_width; x++) {
+            //If we exhaust the layer's data
+            if(tile_data == layer->get_layer_data()->end()) {
+                LOG(ERROR) << "Layer had less data than map dimensions in Map::generate_layer_vert_coords";
+                return;
             }
-        }
-        layer_offset += layer_inc;
-    }
 
-    //Set this data in the renderable component
-    renderable_component.set_vertex_data(map_data, data_size, false);
-    renderable_component.set_num_vertices_render(GLsizei(layers.size() * 6 * map_width * map_height));
+            //IF GENERATING A SPARSE LAYER
+            //Skip empty tiles
+            int tile_id = tile_data->second;
+            if(dense == false && tile_id == 0) 
+                continue;
+
+            //bottom left
+            data[offset+ 0] = scale * float(x);
+            data[offset+ 1] = scale * float(y);
+             
+            //top left
+            data[offset+ 2] = scale * float(x);
+            data[offset+ 3] = scale * float(y + 1);
+
+            //bottom right
+            data[offset+ 4] = scale * float(x + 1);
+            data[offset+ 5] = scale * float(y);
+            
+            //top left
+            data[offset+ 6]  = scale * float(x);
+            data[offset+ 7] = scale * float(y+1);
+        
+            //top right
+            data[offset+ 8] = scale * float(x+1);
+            data[offset+ 9] = scale * float(y+1);
+
+            //bottom right
+            data[offset+10] = scale * float(x+1);
+            data[offset+11] = scale * float(y);
+
+            offset += num_floats;
+            ++tile_data;
+        }
+    }
+}
+
+void Map::generate_dense_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer) {
+    generate_layer_vert_coords(data, data_size, num_tiles, layer, true);
+}
+
+void Map::generate_sparse_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer) {
+    generate_layer_vert_coords(data, data_size, num_tiles, layer, false);
 }
 
 void Map::init_textures() {
     texture_images[0] = Image("../resources/basictiles_2.png");
 
     //Set the texture data in the rederable component
-    renderable_component.set_texture_image(&texture_images[0]);
+    for(auto layer: layers) {
+        layer->get_renderable_component()->set_texture_image(&texture_images[0]);
+    }
 }
 
 /**
@@ -421,8 +446,9 @@ bool Map::init_shaders() {
         LOG(ERROR) << "Failed to create the shader";
         return false;
     }
-    
-    renderable_component.set_shader(shader);
+    for(auto layer: layers) {
+        layer->get_renderable_component()->set_shader(shader);
+    }
 
     return true;
 

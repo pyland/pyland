@@ -54,6 +54,10 @@ private:
     ///
     Layer::Packing packing;
 
+    ///
+    /// The map of tile locations to tile offset
+    ///
+    std::map<int, int> location_texture_vbo_offset_map;
 public:
     ///
     /// Construct the new Layer
@@ -61,16 +65,32 @@ public:
     Layer(int _width_tiles, int _height_tiles, std::string _name);
 
     ///
-    /// Add a tile to the layer
+    /// Add a tile to the layer. This adds the tile to the end of the tile list.
+    /// Note: this does NOT add the tile to the geometry. It adds it to the list of tiles on this layer.
     /// 
     void add_tile(const std::string tileset, int tile_id);
-    
+
+    ///
+    /// Update a tile. Use THIS function to put a new tile on the layer or to update an  
+    /// existing tile on the layer.
+    /// @param x_pos the x position
+    /// @param y_pos the y position
+    /// @param tile_id the identifier of the tile
+    ///
+    void update_tile(int x_pos, int y_pos, int tile_id);
+
     ///
     /// Get the id of the tile at the specified location
     /// @param x_pos the layer x offset
     /// @param y_pos the layer y offset
     ///
     int get_tile(int x_pos, int y_pos);
+
+    ///
+    /// Get a tile's texture offset in the VBO
+    /// @return the texture offset in the VBo
+    ///
+    int get_tile_texture_vbo_offset();
 
     ///
     /// Gets the packing of the layer. This indicates how the data has been packed into

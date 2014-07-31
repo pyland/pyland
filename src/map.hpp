@@ -59,21 +59,6 @@ class Map {
     /// Cache of the tileset texture data for this Map
     ///
     GLfloat* tileset_tex_coords = nullptr;
-
-    /// 
-    /// Object instance to contain data needed to render the map
-    ///
-    RenderableComponent renderable_component;
-  
-    ///
-    /// The vertex data for the map
-    ///
-    GLfloat* map_vertex_data = nullptr;
-
-    /// 
-    /// The texture data for the map
-    ///
-    GLfloat* map_tex_data = nullptr;
   
     ///
     /// The texture data for the tileset. This is the cached entries
@@ -143,16 +128,79 @@ class Map {
     void generate_tileset_coords(Image* texture_image);
 
     ///
-    /// The function which generates the texture coordinates for the map
-    /// geometry, using the cached tile coordinates.
+    /// Generate the map's texture and vertex data
     ///
-    void generate_map_texcoords();
-  
-    ////
-    /// The function which generates the map geometry so that it can be
-    /// rendered to the screen
+    void generate_data();
+
     ///
-    void generate_map_coords();
+    /// Generates a layer's texture coordinates. Handles generating the
+    /// data if the layers are sparse or dense. A dense layer is one
+    /// with more tiles that are non-empty than empty ones.
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer, bool dense=true);
+
+    ///
+    /// Generates a layer's vertex coordinates. Handles generating the
+    /// data if the layers are sparse or dense. A dense layer is one
+    /// with more tiles that are non-empty than empty ones.
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer, bool dense=true);
+
+    ///
+    /// Calls genenerate_layer_vert_coords to generate a layer's vertex data
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_dense_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+
+    ///
+    /// Calls generate_layer_tex_coords
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_dense_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+
+    ///
+    /// Calls generate_layer_vert_coords
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_sparse_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+
+    ///
+    /// Calls generate_layer_tex_coords
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_sparse_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
 
     ///
     /// Initialises the textures
@@ -191,10 +239,6 @@ public:
     // Make this a copy
     ///
     const std::vector<int>& get_characters() { return characters; }
-    ///
-    /// Gets the RenderableComponent object instance associated with this Map
-    ///
-    RenderableComponent* get_renderable_component() { return &renderable_component; }
   
     ///
     /// Get the map width
@@ -270,6 +314,15 @@ public:
     };
 
     Blocker block_tile(Vec2D tile);
+
+
+    ///
+    /// Get the layers on this map
+    /// @return the layers
+    ///
+    std::vector<std::shared_ptr<Layer>> get_layers() { return layers; }
+
+
 };
 
 #endif
