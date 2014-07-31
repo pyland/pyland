@@ -91,30 +91,54 @@ void EventManager::add_event(std::function<void ()> func) {
     curr_frame_queue->push_back(func);
 }
 
-// Public
-void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (double)> func) {
-    add_timed_event(duration, func, time.time());
-}
-
-// Private
-void EventManager::add_timed_event(GameTime::duration duration,
-                                   std::function<bool (double)> func,
-                                   GameTime::time_point start_time) {
-
+void EventManager::add_event_next_frame(std::function<void ()> func) {
+    // Manages locking in an exception-safe manner
+    // Lock released when this lock_guard goes out of scope
     std::lock_guard<std::mutex> lock(queue_mutex);
 
-    // Convert a timed callback to a void lambda by creating a wrapper
-    // that keeps track of the completion and deals with re-registering.
-    next_frame_queue->push_back([this, duration, func, start_time] () {
+    //Add it to the queue
+    next_frame_queue->push_back(func);
+}
 
-        auto completion = time.time() - start_time;
+/// Magic.
+///
+/// Look it up if you want to change it.
+///
+/// Takes a function that takes a bound version of itself and returns the bound version of itself.
+std::function<void (void)> y_combinator(std::function<void (std::function<void (void)>)> self_recursive_function) {
+    auto this_call = std::bind(&y_combinator, self_recursive_function);
+    return std::bind(self_recursive_function, this_call);
+}
 
-        // Don't allow finite polling speed to allow > 100% completion.
-        double fraction_complete = std::min(completion / duration, 1.0);
+void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (double)> func) {
+    // This needs to be thread-safe, so wrap it in an event.
+    // Also, this holds the initialisation, so as to keep it static
+    // between all of the events.
+    //
+    // The use of a y-combinator and unholy magic keeps some things, like lifetimes,
+    // safe and prevents the need to have a lambda made every frame.
+    add_event([this, duration, func] () {
+        auto start_time = time.time();
 
-        if (func(fraction_complete) && fraction_complete < 1.0) {
-            // Repeat if the callback wishes and the event isn't complete.
-            add_timed_event(duration, func, start_time);
-        }
+        // Convert a timed callback to a void lambda by creating a wrapper
+        // that keeps track of the completion and deals with re-registering.
+        //
+        // This recurses onto its argument, which must be itself with the
+        // first element bound to itself.
+        auto callback = [this, duration, func, start_time] (std::function<void (void)> myself_but_bound) {
+            auto completion = time.time() - start_time;
+
+            // Don't allow finite polling speed to allow > 100% completion.
+            double fraction_complete = std::min(completion / duration, 1.0);
+
+            if (func(fraction_complete) && fraction_complete < 1.0) {
+                // Repeat if the callback wishes and the event isn't complete.
+                add_event_next_frame(myself_but_bound);
+            }
+        };
+
+        // Perform magic on the callback to bind it to a bound version of itself.
+        auto magically_recursive = y_combinator(callback);
+        add_event(magically_recursive);
     });
 }

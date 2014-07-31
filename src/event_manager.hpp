@@ -80,6 +80,7 @@ public:
     /// processed in the queue.
     ///
     void add_event(std::function<void ()>  func);
+    void add_event_next_frame(std::function<void ()>  func);
 
     ///
     /// Add an event with a time duration to run for. e.g. a timer
