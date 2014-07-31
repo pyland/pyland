@@ -24,13 +24,6 @@
 
 #endif
 
-#define TILESET_ELEMENT_SIZE 16
-#define GLOBAL_SCALE 2
-#define IMAGE2_NUM_COMPONENTS 4
-
-
-
-
 Character::Character() {
     init_shaders();
     load_textures();
@@ -52,10 +45,6 @@ Character::Character() {
 }
 
 Character::~Character() {
-    delete[] sprite_tex_data;
-    delete[] sprite_data;
-    delete texture_image;
-
     LOG(INFO) << "Character destructed";
 }
 
@@ -90,6 +79,8 @@ void Character::generate_tex_data() {
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
+
+    GLfloat* sprite_tex_data = nullptr;
     try {
 
         sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
@@ -99,8 +90,8 @@ void Character::generate_tex_data() {
         return;
     }
 
-    GLfloat offset_x = GLfloat(TILESET_ELEMENT_SIZE) / (GLfloat)texture_image->store_width;
-    GLfloat offset_y = GLfloat(TILESET_ELEMENT_SIZE) / (GLfloat)texture_image->store_height;
+    GLfloat offset_x = GLfloat(Engine::get_tile_size()) / (GLfloat)renderable_component.get_texture_image()->store_width;
+    GLfloat offset_y = GLfloat(Engine::get_tile_size()) / (GLfloat)renderable_component.get_texture_image()->store_height;
 
     //bottom left
     sprite_tex_data[0]  = offset_x * GLfloat(4.0);
@@ -133,6 +124,7 @@ void Character::generate_vertex_data() {
     //holds the character vertex data
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
+    GLfloat* sprite_data = nullptr;
     try {
 
         sprite_data = new GLfloat[sizeof(GLfloat)*num_floats];
@@ -142,7 +134,7 @@ void Character::generate_vertex_data() {
         return;
     }
 
-    float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
+    float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
     float depth = 0.0f;
     //bottom left 
     sprite_data[0] = 0;
@@ -179,8 +171,7 @@ void Character::generate_vertex_data() {
 }
 
 void Character::load_textures() {
-
-    texture_image = new Image("../resources/characters_1.png");
+    Image* texture_image = new Image("../resources/characters_1.png");
 
     //Set the texture data in the rederable component
     renderable_component.set_texture_image(texture_image);

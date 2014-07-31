@@ -1,3 +1,4 @@
+#include <exception>
 #include <fstream>
 #include <glog/logging.h>
 #include <iostream>
@@ -24,23 +25,13 @@
 
 
 #include "api.hpp"
+#include "engine_api.hpp"
 #include "layer.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
 #include "walkability.hpp"
-
-
-
-#define VERTEX_POS_INDX 0
-#define VERTEX_TEXCOORD0_INDX 1
-#define PATH "./"
-#define GLOBAL_SCALE 2
-
-#define IMAGE1_NUM_COMPONENTS 4
-
-#define TILESET_ELEMENT_SIZE 16
 
 Map::Map(const std::string map_src):
     renderable_component(),
@@ -163,21 +154,23 @@ void Map::remove_character(int character_id) {
 void Map::generate_tileset_coords(Image* texture_image) {
     LOG(INFO) << "Generating tileset texture coords";
 
-    //check the tilset image height and widths are multiples of the tiles
-    //  assert(image_height % TILESET_ELEMENT_SIZE != 0 || image_width % TILESET_ELEMENT_SIZE != 0);
+    if(Engine::get_tile_size() == 0) {
+        LOG(ERROR) << "Tile size is 0 in Map::generate_tileset_coords";
+        return;
+    }
 
-    assert(TILESET_ELEMENT_SIZE != 0);
-
-    int num_tiles_x = texture_image->width / TILESET_ELEMENT_SIZE;
-    int num_tiles_y = texture_image->height / TILESET_ELEMENT_SIZE;
+    int num_tiles_x = texture_image->width / Engine::get_tile_size();
+    int num_tiles_y = texture_image->height / Engine::get_tile_size();
     LOG(INFO) << "Tileset size: " << num_tiles_x << " " << num_tiles_y;
 
-    assert(num_tiles_x);
-    assert(num_tiles_y);
-
     //Each tile needs 8 floats to describe its position in the image
-    tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
-    assert(tileset_tex_coords);
+    try {
+        tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
+    } 
+    catch (std::bad_alloc& ba) {
+        LOG(ERROR) << "Out of Memory in Map::generate_tileset_coords";
+        return;
+    }
 
     //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
     //so we remap these 
@@ -229,8 +222,12 @@ void Map::generate_map_texcoords() {
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
     size_t data_size = sizeof(GLfloat) * map_height * map_width * num_floats * layers.size();
-    map_tex_coords = new GLfloat[data_size];
-    assert(map_tex_coords);
+    try {
+        map_tex_coords = new GLfloat[data_size];
+    }
+    catch(std::bad_alloc& ba) {
+        LOG(ERROR) << "Out of memory in Map::generate_map_texcoords";
+    }
 
     //Get each layer of the map
     //Start at layer 0
@@ -282,40 +279,6 @@ void Map::generate_map_texcoords() {
         layer++;
     }
 
-    /*
-    //generate the map data
-    // get the tile set coordinates for the particular tile
-    for(int x = 0; x < map_width; x++) {
-        for(int y = 0; y < map_height; y++) {
-            int curr_tile = world_data[x][y];
-
-            GLfloat *tileset_ptr = &tileset_tex_coords[curr_tile*8];
-            //bottom left
-            map_tex_coords[x*map_height*num_floats + y*num_floats+0] = tileset_ptr[0];
-            map_tex_coords[x*map_height*num_floats + y*num_floats+1] = tileset_ptr[1];
-
-            //top left
-            map_tex_coords[x*map_height*num_floats + y*num_floats+2] = tileset_ptr[2];
-            map_tex_coords[x*map_height*num_floats + y*num_floats+3] = tileset_ptr[3];
-
-            //bottom right
-            map_tex_coords[x*map_height*num_floats + y*num_floats+4] = tileset_ptr[4];
-            map_tex_coords[x*map_height*num_floats + y*num_floats+5] = tileset_ptr[5];
-
-            //top left
-            map_tex_coords[x*map_height*num_floats + y*num_floats+6] = tileset_ptr[2];
-            map_tex_coords[x*map_height*num_floats + y*num_floats+7] = tileset_ptr[3];
-
-            //top right
-            map_tex_coords[x*map_height*num_floats + y*num_floats+8] = tileset_ptr[6];
-            map_tex_coords[x*map_height*num_floats + y*num_floats+9] = tileset_ptr[7];
-            
-            //bottom right
-            map_tex_coords[x*map_height*num_floats + y*num_floats+10] = tileset_ptr[4];
-            map_tex_coords[x*map_height*num_floats + y*num_floats+11] = tileset_ptr[5];
-        }
-    }
-    */
     //Set this data in the renderable component
     renderable_component.set_texture_coords_data(map_tex_coords, data_size, false);
 
@@ -332,10 +295,15 @@ void Map::generate_map_coords() {
     //need 18 floats for each coordinate as these hold 3D coordinates
     int num_floats = 18;
     size_t data_size = sizeof(GLfloat) * map_height * map_width * num_floats * layers.size();
-    map_data = new GLfloat[data_size]; 
-    assert(map_data);
+    try {
+        map_data = new GLfloat[data_size]; 
+    }
+    catch(std::bad_alloc& ba) {
+        LOG(ERROR) << "Out of memory in Map::generate_map_coords";
+        return;
+    }
 
-    float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
+    float scale = (float)(Engine::get_tile_size() * Engine::get_global_scale());
 
     //generate the map data
     ///
@@ -421,42 +389,6 @@ void Map::generate_map_coords() {
         }
         layer_offset += layer_inc;
     }
-    /*
-    for(int x = 0; x < map_width; x++) {
-        for(int y = 0; y < map_height; y++) {
-            //generate one tile's worth of data
-
-            //bottom left
-            map_data[x*map_height*num_floats + y*num_floats+ 0] = scale * float(x);
-            map_data[x*map_height*num_floats + y*num_floats+ 1] = scale * float(y);
-            map_data[x*map_height*num_floats + y*num_floats+ 2] = 0;
-             
-            //top left
-            map_data[x*map_height*num_floats + y*num_floats+ 3] = scale * float(x);
-            map_data[x*map_height*num_floats + y*num_floats+ 4] = scale * float(y + 1);
-            map_data[x*map_height*num_floats + y*num_floats+ 5] = 0;
-
-            //bottom right
-            map_data[x*map_height*num_floats + y*num_floats+ 6] = scale * float(x + 1);
-            map_data[x*map_height*num_floats + y*num_floats+ 7] = scale * float(y);
-            map_data[x*map_height*num_floats + y*num_floats+ 8] = 0;
-            
-            //top left
-            map_data[x*map_height*num_floats + y*num_floats+ 9]  = scale * float(x);
-            map_data[x*map_height*num_floats + y*num_floats+10] = scale * float(y+1);
-            map_data[x*map_height*num_floats + y*num_floats+11] = 0;
-        
-            //top right
-            map_data[x*map_height*num_floats + y*num_floats+12] = scale * float(x+1);
-            map_data[x*map_height*num_floats + y*num_floats+13] = scale * float(y+1);
-            map_data[x*map_height*num_floats + y*num_floats+14] = 0;
-
-            //bottom right
-            map_data[x*map_height*num_floats + y*num_floats+15] = scale * float(x+1);
-            map_data[x*map_height*num_floats + y*num_floats+16] = scale * float(y);
-            map_data[x*map_height*num_floats + y*num_floats+17] = 0;
-        }
-    }*/
 
     //Set this data in the renderable component
     renderable_component.set_vertex_data(map_data, data_size, false);

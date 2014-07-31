@@ -18,9 +18,15 @@ RenderableComponent::~RenderableComponent() {
     //Delete the vertex buffers
     glDeleteBuffers(1, &vbo_vertex_id);
     glDeleteBuffers(1, &vbo_texture_id);
-}
+    
 
-void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_size, bool is_dynamic) { 
+    //TODO delete textures - need to see if texture manager does this
+    delete []vertex_data;
+    delete []texture_coords_data;
+    delete texture_image;
+}
+void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_size, bool is_dynamic) {
+    delete []vertex_data;
     vertex_data = new_vertex_data;
     vertex_data_size = data_size;
 
@@ -46,6 +52,8 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_
 }
 
 void RenderableComponent::set_texture_image(Image* image) { 
+
+    delete texture_image;
     texture_image = image;
 
     //Get current shader
@@ -74,6 +82,7 @@ void RenderableComponent::set_texture_image(Image* image) {
 }
 
 void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, size_t data_size, bool is_dynamic) { 
+    delete []texture_coords_data;
     texture_coords_data = new_texture_data;
     texture_coords_data_size = data_size;
     //Get current shader

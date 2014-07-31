@@ -22,12 +22,6 @@
 #include <GL/gl.h>
 #endif
 
-#define TILESET_ELEMENT_SIZE 16
-#define IMAGE2_SIZE_WIDTH 192
-#define IMAGE2_SIZE_HEIGHT 128
-#define GLOBAL_SCALE 2
-#define IMAGE2_NUM_COMPONENTS 4
-
 void GUIManager::parse_components() {
     //Now generate the needed rendering data
     generate_tex_data();
@@ -119,22 +113,16 @@ bool GUIManager::recurse_components(std::shared_ptr<Component> root, int mouse_x
     return false;
 }
 
-GUIManager::GUIManager() : gui_tex_data(nullptr), gui_data(nullptr){
+GUIManager::GUIManager() {
 
 }
 
 GUIManager::~GUIManager() {
-    delete []gui_tex_data;
-    delete []gui_data;
-
 }
 
 
 void GUIManager::generate_tex_data() {
     
-    //delete it if its already allocated
-    delete []gui_tex_data; 
-
     //generate the texture data data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
 
@@ -144,12 +132,13 @@ void GUIManager::generate_tex_data() {
         num_floats += component_texture_data.second;
     }
 
+    GLfloat* gui_tex_data = nullptr;
     //Create a buffer for the data
     try {
         gui_tex_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
     }
     catch(std::bad_alloc& ba) {
-        std::cerr << "ERROR: bad_alloc caught in GUIManager::generate_tex_data()" << ba.what() << std::endl;
+        LOG(ERROR) << "ERROR: bad_alloc caught in GUIManager::generate_tex_data()" << ba.what();
         return;
     }
 
@@ -172,10 +161,6 @@ void GUIManager::generate_tex_data() {
 } 
 
 void GUIManager::generate_vertex_data() {
-    
-    //Delete the data if its already allocated
-    delete []gui_data;
-
     //generate the vertex data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_vertex_data();
 
@@ -186,14 +171,14 @@ void GUIManager::generate_vertex_data() {
     }
 
     //Create a buffer for the data
+    GLfloat* gui_data = nullptr;
     try {
         gui_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
     }
     catch(std::bad_alloc& ba) {
-        std::cerr << "ERROR: bad_alloc caught in GUIManager::generate_vertex_data()" << ba.what() << std::endl;
+        LOG(ERROR) << "bad_alloc caught in GUIManager::generate_vertex_data()" << ba.what();
         return;
     }
-
 
     int gui_data_offset = 0;
     //Extract the data
@@ -212,8 +197,17 @@ void GUIManager::generate_vertex_data() {
 }
 
 void GUIManager::load_textures() {
+    Image* texture_image = nullptr;
 
-    texture_image = new Image("../resources/characters_1.png");
+    try {
+        texture_image = new Image("../resources/characters_1.png");
+    }
+    catch(std::exception e) {
+        delete texture_image;
+        texture_image = nullptr;
+        LOG(ERROR) << "Failed to create texture";
+        return;
+    }
 
     //Set the texture data in the rederable component
     renderable_component.set_texture_image(texture_image);

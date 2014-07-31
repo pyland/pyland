@@ -23,19 +23,6 @@
 /// to the required component e.g. mouse clicks.
 ///
 class GUIManager : public Object {
-    
-    Image* texture_image = nullptr;
-    ///
-    /// The vertex data for this component
-    ///
-    GLfloat* gui_data;
-
-    ///
-    /// The texture coordinates for this component
-    ///
-    GLfloat* gui_tex_data;
-
-
     ///
     /// The root component of the tree
     ///

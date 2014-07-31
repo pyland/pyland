@@ -1,6 +1,7 @@
 #ifndef LAYER_H
 #define LAYER_H
 
+#include "object.hpp"
 
 #include <utility>
 #include <memory>
@@ -8,18 +9,35 @@
 #include <vector>
 
 ///
-/// A layer on the map
+/// A layer on the map. These
 ///
-class Layer {
+class Layer : public Object {
+
+public:
     ///
-    /// The width of the layer
+    /// Enum class to indicate the packing of the layer data
     ///
-    int width;
+    enum class Packing {
+        ///
+        /// We have a dense layer 
+        ///
+        DENSE,
+        ///
+        /// We have a sparse layer
+        ///
+       SPARSE
+    };
+
+private:
+    ///
+    /// The width of the layer in tiles
+    ///
+    int width_tiles;
 
     ///
-    /// The height of the layer 
+    /// The height of the layer in tiles
     ///
-    int height;
+    int height_tiles;
 
     ///
     /// The name of the layer
@@ -31,12 +49,16 @@ class Layer {
     ///
     std::shared_ptr<std::vector<std::pair<std::string, int>>> layer;
 
+    ///
+    /// The packing of the layer
+    ///
+    Layer::Packing packing;
 
 public:
     ///
     /// Construct the new Layer
     ///
-    Layer(int _width, int _height, std::string _name) : width(_width), height(_height), name(_name), layer(std::make_shared<std::vector<std::pair<std::string, int>>>()) {}
+    Layer(int _width_tiles, int _height_tiles, std::string _name);
 
     ///
     /// Add a tile to the layer
@@ -51,19 +73,33 @@ public:
     int get_tile(int x_pos, int y_pos);
 
     ///
+    /// Gets the packing of the layer. This indicates how the data has been packed into
+    /// the VBOs
+    /// @return the packing
+    ///
+    Packing get_packing() { return packing; }
+
+    ///
+    /// Set the packing of the layer's data
+    /// @param _packing specify how the data has been packed into
+    /// the VBOs
+    ///
+    void set_packing(Packing _packing) { packing = _packing; }
+
+    ///
     /// Get the name of the layer
     ///
     std::string get_name() { return name; }
 
     ///
-    /// Get the width of the layer 
-    ///
-    int get_width() { return width; }
+    /// Get the width of the layer in tiles
+    /// 
+    int get_width_tiles() { return width_tiles; }
 
     ///
     /// Get the height of the layer
     ///
-    int get_height() { return height; }
+    int get_height_tiles() { return height_tiles; }
     
     ///
     /// Get the layer's data as a shared_ptr

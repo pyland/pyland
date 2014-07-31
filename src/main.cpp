@@ -98,7 +98,6 @@ using namespace std;
 
 enum arrow_key {UP, DOWN, LEFT, RIGHT};
 
-#define GLOBAL_SCALE 1
 #define TEXT_BORDER_WIDTH 20
 #define TEXT_HEIGHT 80
 
@@ -222,7 +221,7 @@ int main(int argc, const char* argv[]) {
     google::InstallFailureSignalHandler();
 
     int map_width = 32, map_height = 32;
-    GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
+    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
     window.use_context();
 
     Map map("../resources/map0.tmx");

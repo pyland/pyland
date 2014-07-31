@@ -41,6 +41,10 @@
 /// classes and the logic in these classes so that we reduce code
 /// bloat and needless copy-pasting.
 ///
+/// THIS CLASS DELETES THE MEMORY IT IS GIVEN WHEN IT IS DESTRUCTED
+///
+///
+///
 class RenderableComponent {
     ///
     /// The buffer holding the vertex data
@@ -71,7 +75,7 @@ class RenderableComponent {
     ///
     /// Image containing all texture image data and metadata.
     ///
-    Image* texture_image;
+    Image* texture_image = nullptr;
 
     ///
     /// The vertex buffer object identifier for the vertex buffer
@@ -205,6 +209,15 @@ public:
     /// @param image An Image containing the texture data and metadata.
     ///
     void set_texture_image(Image* image);        
+
+
+    ///
+    /// Get the texture image data and metadata of this component.
+    ///
+    /// @returnimage An Image containing the texture data and metadata.
+    ///
+    Image* get_texture_image() { return texture_image; }        
+
 
     ///
     /// Get the width of the component

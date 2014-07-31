@@ -14,6 +14,13 @@
 #include "object_manager.hpp"
 #include "dispatcher.hpp"
 
+///Static variables
+MapViewer* Engine::map_viewer = nullptr;
+Text* Engine::dialogue_box = nullptr;
+int Engine::tile_size= 16;
+int Engine::global_scale = 2;
+
+
 //TODO: THis needs to work with renderable objects 
 void Engine::move_object(int id, Vec2D move_by) {
     std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
@@ -68,10 +75,6 @@ void Engine::move_object(int id, Vec2D move_by) {
     );
 }
 
-MapViewer* Engine::map_viewer = nullptr;
-Text* Engine::dialogue_box = nullptr;
-
-
 bool Engine::walkable(Vec2D location) {
     int map_width = map_viewer->get_map()->get_width();
     int map_height = map_viewer->get_map()->get_height();
@@ -104,10 +107,6 @@ bool Engine::change_tile(int, Vec2D, int) {
 std::vector<int> Engine::get_tiles(Vec2D) {
     std::vector<int> tiles;
     return tiles;
-}
-
-int Engine::get_tile_size() {
-    throw std::runtime_error("get_tile_size not supported");
 }
 
 std::vector<int> Engine::get_objects(Vec2D) {
