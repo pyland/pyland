@@ -59,17 +59,3 @@ def start(entity, RESTART, STOP, KILL, waiting):
             entity.__set_game_speed(1);
 
             break
-
-# def run(entity):
-#     """Purely for testing"""
-
-#     print("Running with entity", entity)
-
-#     for _ in range(500):
-#         time.sleep(0.1)
-
-#         import random
-#         entity.move(random.randint(-1, 1), random.randint(-1, 1))
-#         print("Continuing with entity", entity)
-
-#     print("Finishing with entity", entity)
