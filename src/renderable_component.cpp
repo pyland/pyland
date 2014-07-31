@@ -52,8 +52,7 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_
 }
 
 void RenderableComponent::set_texture_image(Image* image) { 
-
-    delete texture_image;
+    //TODO: Get texture manager to prevent memory leak
     texture_image = image;
 
     //Get current shader
@@ -63,8 +62,6 @@ void RenderableComponent::set_texture_image(Image* image) {
     //Bind our shader
     bind_shader();
 
-
-
     glGenTextures(1, &texture_obj_id);
     glBindTexture(GL_TEXTURE_2D, texture_obj_id);
   
@@ -72,10 +69,6 @@ void RenderableComponent::set_texture_image(Image* image) {
                  GL_RGBA, GL_UNSIGNED_BYTE, (void*)texture_image->pixels);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
-    //  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
-    //	       GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
-    //  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
-    //  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
 
     //Restore shader
     glUseProgram(id);
@@ -91,7 +84,6 @@ void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, siz
 
     //Bind our shader
     bind_shader();
-
 
     //Set up buffer usage
     GLenum usage = GL_STATIC_DRAW;
@@ -116,17 +108,13 @@ void RenderableComponent::bind_vbos() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo_texture_id);
     glVertexAttribPointer(1 /* VERTEX_TEXCOORD0_INDX */, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray( 1 /*VERTEX_TEXCOORD0_INDX*/);
+    //    glBindAttribLocation(shader->get_program(), glGetAttribLocation(shader->get_program(), "a_position") /*VERTEX_POS_INDX*/, "a_position");
 
-    glBindAttribLocation(shader->get_program(), glGetAttribLocation(shader->get_program(), "a_position") /*VERTEX_POS_INDX*/, "a_position");
-
-    glBindAttribLocation(shader->get_program(), glGetAttribLocation(shader->get_program(), "a_texCoord")
-                         /*VERTEX_TEXCOORD0_INDX*/, "a_texCoord");
+    //    glBindAttribLocation(shader->get_program(), glGetAttribLocation(shader->get_program(), "a_texCoord")                         /*VERTEX_TEXCOORD0_INDX*/, "a_texCoord");
 
 
     //set sampler texture to unit 0
     glUniform1i(glGetUniformLocation(shader->get_program(), "s_texture"), 0);
-
-
 }
 void RenderableComponent::bind_textures() {
     glActiveTexture(GL_TEXTURE0);

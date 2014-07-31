@@ -165,6 +165,7 @@ void GUIManager::generate_vertex_data() {
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_vertex_data();
 
     //calculate data size
+    int num_dimensions = 2;
     long num_floats = 0;
     for(auto component_vertex_data : components_data) {
         num_floats += component_vertex_data.second;
@@ -193,7 +194,7 @@ void GUIManager::generate_vertex_data() {
     }
 
     renderable_component.set_vertex_data(gui_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(GLsizei(num_floats/3));//GL_TRIANGLES being used
+    renderable_component.set_num_vertices_render(GLsizei(num_floats/num_dimensions));//GL_TRIANGLES being used
 }
 
 void GUIManager::load_textures() {

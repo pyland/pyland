@@ -122,8 +122,8 @@ void Character::generate_tex_data() {
 
 void Character::generate_vertex_data() {
     //holds the character vertex data
-    //need 18 floats for each coordinate as these hold 3D coordinates
-    int num_floats = 12;
+    int num_dimensions = 2;
+    int num_floats = num_dimensions*6;//GLTRIANGLES
     GLfloat* sprite_data = nullptr;
     try {
 
@@ -135,6 +135,7 @@ void Character::generate_vertex_data() {
     }
 
     float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
+ 
     //bottom left 
     sprite_data[0] = 0;
     sprite_data[1] = 0;
@@ -159,12 +160,23 @@ void Character::generate_vertex_data() {
     sprite_data[10] = scale;
     sprite_data[11] = 0;
 
-    renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
-}
 
+    renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
+    renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
+}
+#include <iostream>
 void Character::load_textures() {
-    Image* texture_image = new Image("../resources/characters_1.png");
+    Image* texture_image = nullptr;
+
+    try {
+        texture_image = new Image("../resources/characters_1.png");
+    }
+    catch(std::exception e) {
+        delete texture_image;
+        texture_image = nullptr;
+        LOG(ERROR) << "Failed to create texture";
+        return;
+    }
 
     //Set the texture data in the rederable component
     renderable_component.set_texture_image(texture_image);

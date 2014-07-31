@@ -88,30 +88,31 @@ void MapViewer::render_map() {
         RenderableComponent* layer_render_component = layer->get_renderable_component();
         Shader* layer_shader = layer->get_renderable_component()->get_shader();
 
-
         //Set the matrices
         layer_render_component->set_projection_matrix(projection_matrix);
         layer_render_component->set_modelview_matrix(translated);
 
         layer_render_component->bind_shader();
-  
+
 
         //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
         glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(layer_render_component->get_projection_matrix()));
         glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(layer_render_component->get_modelview_matrix()));
 
-        //Bind the vertex buffers and textures
+
         layer_render_component->bind_vbos();
+
         layer_render_component->bind_textures();
 
 
-        glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
- 
-        //Release the vertex buffers and textures
+               glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
+
+        //Release the vertex buffers and texppptures
         layer_render_component->release_textures();
         layer_render_component->release_vbos();
 
         layer_render_component->release_shader();
+
     }
 
     //Draw the characters
@@ -120,7 +121,7 @@ void MapViewer::render_map() {
     for(auto it = characters.begin(); it != characters.end(); ++it) {
         if(*it != 0) {
             std::shared_ptr<Object> sprite = object_manager.get_object<Object>(*it);
-    
+
             RenderableComponent* character_render_component = sprite->get_renderable_component();
     
             //Move sprite to the required position
@@ -149,7 +150,7 @@ void MapViewer::render_map() {
 
             character_render_component->bind_vbos();
             character_render_component->bind_textures();
-            // LOG(INFO) << " X " << sprite->get_x_position()*32.0f << " Y " << sprite->get_y_position()*32.0f;
+
             glDrawArrays(GL_TRIANGLES, 0, character_render_component->get_num_vertices_render());
 
             character_render_component->release_textures();
@@ -163,8 +164,6 @@ void MapViewer::render_map() {
     
     //Move gui_manager to the required position
     glm::mat4 model2 = glm::mat4(1.0f);
-    //    glm::vec3 translate2 = glm::vec3(((float)gui_manager->get_x_position()-map->get_display_x())*32.0f, ((float)gui_manager->get_y_position()-map->get_display_y())*32.0f, 0.0f);
-    //    glm::mat4 translated2 = glm::translate(model2, translate2);
     gui_render_component->set_modelview_matrix(model2);
     gui_render_component->set_projection_matrix(projection_matrix);
 
@@ -183,7 +182,7 @@ void MapViewer::render_map() {
 
     gui_render_component->bind_vbos();
     gui_render_component->bind_textures();
-    //            std::cout << " X " << gui_manager->get_x_position()*32.0f << " Y " << gui_manager ->get_y_position()*32.0f<< std::endl;
+
     glDrawArrays(GL_TRIANGLES, 0, gui_render_component->get_num_vertices_render());
 
     gui_render_component->release_textures();

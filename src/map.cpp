@@ -271,13 +271,11 @@ void Map::generate_data() {
             generate_sparse_layer_tex_coords(layer_tex_coords, tex_data_size, num_tiles, (*layer_iter));
             generate_sparse_layer_vert_coords(layer_vert_coords, vert_data_size, num_tiles, (*layer_iter));
         }
-
         //Set this data in the renderable component for the layer
         RenderableComponent* renderable_component = (*layer_iter)->get_renderable_component();
         renderable_component->set_texture_coords_data(layer_tex_coords, tex_data_size, false);
         renderable_component->set_vertex_data(layer_vert_coords, vert_data_size, false);
-        renderable_component->set_num_vertices_render(num_tiles*num_vertices*num_dimensions);
-
+        renderable_component->set_num_vertices_render(num_tiles*num_vertices);
     }
 }
 
@@ -287,15 +285,9 @@ void Map::generate_layer_tex_coords(GLfloat* data, int data_size, int num_tiles,
     //Get all the tiles in the layer, moving from left to right and down 
     int offset = 0;
     int num_floats = 12;
-    int num_blanks = 0;
-    int num_tiles_count = 0;
     for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
         std::string tileset_name = tile_data->first;
         int tile_id = tile_data->second;
-        num_tiles_count++;
-
-        if(tile_id == 0) 
-            num_blanks++;
 
         //IF WE ARE GENERATING A SPARSE LAYER
         //Skip out blank tiles:
@@ -331,10 +323,6 @@ void Map::generate_layer_tex_coords(GLfloat* data, int data_size, int num_tiles,
         data[offset+11] = tileset_ptr[5];
 
         offset += num_floats;
-        /*      if(offset >= data_size) {
-            LOG(ERROR) << "Offset exceeded data size in Map::generate_layer_tex_coords";
-            return;
-            }*/
     }
 }
 
@@ -421,7 +409,7 @@ void Map::generate_sparse_layer_vert_coords(GLfloat* data, int data_size, int nu
 void Map::init_textures() {
     texture_images[0] = Image("../resources/basictiles_2.png");
 
-    //Set the texture data in the rederable component
+    //Set the texture data in the rederable component for each layer
     for(auto layer: layers) {
         layer->get_renderable_component()->set_texture_image(&texture_images[0]);
     }
@@ -446,6 +434,8 @@ bool Map::init_shaders() {
         LOG(ERROR) << "Failed to create the shader";
         return false;
     }
+
+    //Set the shader for each layer
     for(auto layer: layers) {
         layer->get_renderable_component()->set_shader(shader);
     }
