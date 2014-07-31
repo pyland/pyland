@@ -23,7 +23,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             entity.__set_game_speed(10000);
 
-            exec(function, dict(entity=entity, **globals()))
+            exec(function, dict(entity=entity, **globals()))     
+
 
         # TODO: These should be more thought-through.
 
@@ -53,7 +54,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             waiting = True
             print(2)
-            traceback.print_exc()
+            traceback_text = traceback.format_exc()
+            entity.print_dialogue(traceback_text)
 
         else:
             entity.__set_game_speed(1);

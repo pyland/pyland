@@ -67,13 +67,16 @@ bool Entity::walkable(int x, int y) {
 void Entity::monologue() {
     // TODO: Hook up to proper speaking.
     std::string text = "I am " + name + " and I am standing at " + (Engine::find_object(id)).to_string() + "!";
-    std::cout << text << std::endl;
     Engine::print_dialogue(name, text);
 }
 
 
 void Entity::py_print_debug(std::string text) {
     LOG(INFO) << text;
+}
+
+void Entity::py_print_dialogue(std::string text) {
+    Engine::print_dialogue(name, text);
 }
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
