@@ -8,19 +8,22 @@ def fun_wrapper (func, delay, args, kwargs):
         time.sleep(0.04)
     # TODO: extend this for type checking and providing documentation
     if len(args) == 0:
-        return func
+        return func ()
     elif len(args) == 1:
         return func (*args[0])
 
 # python API as exposed to the the user
 
 def move(*args, **kwargs):
+    entity.print_debug("script calling move")
     return fun_wrapper(entity.move, True, args, kwargs)
     
 def monologue(*args, **kwargs):
+    entity.print_debug("script calling monologue")
     return fun_wrapper(entity.monologue, False, args, kwargs)
 
 def walkable(*args, **kwargs):
+    entity.print_debug("script calling walkable")
     return fun_wrapper(entity.walkable, False, args, kwargs)
 
 north, south, east, west = (0, 1), (0, -1), (1, 0), (-1, 0)    
