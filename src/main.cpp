@@ -25,8 +25,6 @@ n
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// A rotating cube rendered with OpenGL|ES. Three images used as textures on the cube faces.
-
 #include <boost/filesystem.hpp>
 #include <cassert>
 #include <cmath>
@@ -223,7 +221,7 @@ int main(int argc, const char* argv[]) {
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
-    int map_width = 16, map_height = 16;
+    int map_width = 32, map_height = 32;
     GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
     window.use_context();
 
@@ -270,13 +268,29 @@ int main(int argc, const char* argv[]) {
     stop_button->set_width(0.2f);
     stop_button->set_height(0.2f);
     stop_button->set_y_offset(0.8f);
-    stop_button->set_x_offset(0.3f);
+    stop_button->set_x_offset(0.8f);
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
 
     gui_manager.set_root(sprite_window);
+
+    // quick fix so buttons in correct location in initial window before gui_resize_func callback
+    auto original_window_size = window.get_size();
+    sprite_window->set_width_pixels(original_window_size.first);
+    sprite_window->set_height_pixels(original_window_size.second);
+
     gui_manager.parse_components();
+
+    std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) { 
+        LOG(INFO) << "GUI resizing"; 
+        auto window_size = (*game_window).get_size();
+        sprite_window->set_width_pixels(window_size.first);
+        sprite_window->set_height_pixels(window_size.second);
+        gui_manager.parse_components();
+    };
+    Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
+
 
     MapViewer map_viewer(&window,&gui_manager);
     map_viewer.set_map(&map);

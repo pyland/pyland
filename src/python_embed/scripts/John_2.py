@@ -1,5 +1,5 @@
 import random
 
 while (True):
-	move(east)
+	move(west)
 

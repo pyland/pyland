@@ -28,7 +28,7 @@ public:
     /// @param _text the button text
     ///
     void set_text(std::string _text) { text = _text; }
-            
+
     ///
     ///o Get the button's text
     /// @return the text

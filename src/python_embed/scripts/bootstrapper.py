@@ -13,7 +13,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
             while waiting:
                 time.sleep(0.05)
 
-            file_name = "python_embed/scripts/John_1.py"
+            file_name = "python_embed/scripts/John_{}.py".format(entity.id)
             entity.print_debug ("reading from file :"+file_name)
             with open(file_name, encoding="utf-8") as file:
                 with open("python_embed/py_wrapper.py", encoding="utf-8") as file_wrapper:
@@ -23,7 +23,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             entity.__set_game_speed(10000);
 
-            exec(function, dict(entity=entity, **globals()))
+            exec(function, dict(entity=entity, **globals()))     
+
 
         # TODO: These should be more thought-through.
 
@@ -53,7 +54,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             waiting = True
             print(2)
-            traceback.print_exc()
+            traceback_text = traceback.format_exc()
+            entity.print_dialogue(traceback_text)
 
         else:
             entity.__set_game_speed(1);

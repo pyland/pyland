@@ -8,16 +8,15 @@
 #include "input_manager.hpp"
 
 extern "C" {
+#include <SDL2/SDL.h>
+
 #ifdef USE_GLES
+#include <SDL2/SDL_syswm.h>
 #include <bcm_host.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#endif
-    
 #include <X11/Xlib.h>
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
+#endif
 }
 
 #include "callback.hpp"
@@ -91,7 +90,9 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
         throw GameWindow::InitException("Failed to create SDL window");
     }
 
+#ifdef USE_GLES
     SDL_GetWindowWMInfo(window, &wm_info);
+#endif
 
 #ifdef USE_GLES
     dispmanDisplay = vc_dispmanx_display_open(0);
@@ -155,7 +156,9 @@ void GameWindow::init_sdl() {
         throw GameWindow::InitException("Failed to initialize SDL");
     }
 
+#ifdef USE_GLES
     SDL_VERSION(&wm_info.version);
+#endif
     
     LOG(INFO) << "SDL initialized.";
 }
@@ -245,6 +248,7 @@ void GameWindow::deinit_gl() {
 void GameWindow::init_surface() {
     int x, y, w, h;
 
+#ifdef USE_GLES
     // It turns out that SDL's window position information is not good
     // enough, as it reports for the window border, not the rendering
     // area. For the time being, we shall be using LibX11 to query the
@@ -260,9 +264,13 @@ void GameWindow::init_surface() {
                           &x,
                           &y,
                           &child);
+#endif
     // SDL_GetWindowPosition(window, &x, &y);
     SDL_GetWindowSize(window, &w, &h);
-    
+#ifdef USE_GL
+    // We don't care in desktop GL.
+    x = y = 0;
+#endif
     init_surface(x, y, w, h);
 }
 
@@ -416,7 +424,8 @@ void GameWindow::update() {
     // events, such as reinitializing surface, closing, callbacks.
     for (auto pair : windows) {
         GameWindow* window = pair.second;
-        
+
+#ifdef USE_GLES
         // Hacky fix: The events don't quite chronologically work, so
         // check the window position to start any needed surface update.
         int x, y;
@@ -433,6 +442,7 @@ void GameWindow::update() {
             LOG(INFO) << "Need surface reinit.";
             window->change_surface = InitAction::DO_INIT;
         }
+#endif
         
         switch (window->change_surface) {
         case InitAction::DO_INIT:
