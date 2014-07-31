@@ -166,6 +166,6 @@ std::string Engine::editor = DEFAULT_PY_EDITOR;
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
     (*dialogue_box).set_text(text_to_display);
-    (*dialogue_box).display();
-    std::cout << name << "  says:\n" << text_to_display << std::endl;
+    // (*dialogue_box).display();
+    std::cout << name << " says:\n" << text_to_display << std::endl;
 }
