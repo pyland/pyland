@@ -66,9 +66,9 @@ bool Entity::walkable(int x, int y) {
 
 void Entity::monologue() {
     // TODO: Hook up to proper speaking.
+    std::string monologue_text = "I am " + name + " and I am standing at " + (Engine::find_object(id)).to_string() + "!"; 
     std::cout << "I am " << name << " and I am standing at " << Engine::find_object(id) << "!" << std::endl;
-    print_to_screen("monologue");
-    std::cout << "monologue to screen requested" << std::endl;
+    print_to_screen(monologue_text);
 }
 
 
