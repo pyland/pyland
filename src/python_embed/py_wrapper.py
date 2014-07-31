@@ -8,7 +8,7 @@ def fun_wrapper (func, delay, args, kwargs):
         time.sleep(0.04)
     # TODO: extend this for type checking and providing documentation
     if len(args) == 0:
-        return func
+        return func ()
     elif len(args) == 1:
         return func (*args[0])
 
