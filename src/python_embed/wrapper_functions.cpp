@@ -16,6 +16,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("monologue",        &Entity::monologue)
         .def("__set_game_speed", &Entity::__set_game_speed)
         .def("print_debug",      &Entity::py_print_debug);
+        .def("print_to_screen",  &Entity::print_to_screen);
 
     py::class_<Vec2D>("Vec2D", py::init<int, int>())
         .def(py::self + py::other<Vec2D>())

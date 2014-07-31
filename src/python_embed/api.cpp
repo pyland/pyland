@@ -67,6 +67,8 @@ bool Entity::walkable(int x, int y) {
 void Entity::monologue() {
     // TODO: Hook up to proper speaking.
     std::cout << "I am " << name << " and I am standing at " << Engine::find_object(id) << "!" << std::endl;
+    print_to_screen("monologue");
+    std::cout << "monologue to screen requested" << std::endl;
 }
 
 
@@ -78,4 +80,9 @@ void Entity::__set_game_speed(float game_seconds_per_real_second) {
     EventManager::get_instance().add_event([game_seconds_per_real_second] () {
         EventManager::get_instance().time.game_seconds_per_real_second = game_seconds_per_real_second;
     });
+}
+
+void print_to_screen (std::string text) {
+    std::cout << "print_to_screen has been requested" << text << std::endl;
+    Engine::dialogue(name, text);
 }

@@ -13,6 +13,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
             while waiting:
                 time.sleep(0.05)
 
+            # TODO: remove this hack
             file_name = "python_embed/scripts/John_1.py"
             entity.print_debug ("reading from file :"+file_name)
             with open(file_name, encoding="utf-8") as file:
@@ -53,7 +54,9 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             waiting = True
             print(2)
-            traceback.print_exc()
+            traceback_text = traceback.print_exc()
+            print(traceback_text)
+            entity.print_to_screen(traceback_text)
 
         else:
             entity.__set_game_speed(1);
