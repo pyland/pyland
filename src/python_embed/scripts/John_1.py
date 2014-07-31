@@ -23,7 +23,8 @@ Here are some quick tips:
 
 
 # Here's the interesting part:
-for _ in range(10):
+for _ in range(10e):
+	monologue()
 	move(east)
 
 # This means:

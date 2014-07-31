@@ -82,7 +82,7 @@ void Entity::__set_game_speed(float game_seconds_per_real_second) {
     });
 }
 
-void print_to_screen (std::string text) {
+void Entity::print_to_screen (std::string text) {
     std::cout << "print_to_screen has been requested" << text << std::endl;
-    Engine::dialogue(name, text);
+    Engine::print_dialogue(name, text);
 }
