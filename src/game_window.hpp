@@ -28,8 +28,13 @@ extern "C" {
 #include "callback_registry.hpp"
 #include "lifeline.hpp"
 #include "lifeline_controller.hpp"
+#include "graphics_context.hpp"
+
+
 
 class InputManager;
+
+
 
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
@@ -134,6 +139,11 @@ private:
 #ifdef USE_GL
     SDL_GLContext sdl_gl_context;
 #endif
+
+    ///
+    /// Stores a wrapped up implementation specific GL context.
+    ///
+    GraphicsContext graphics_context;
 
     ///
     /// Mapping of SDL window IDs to GameWindows.
@@ -267,8 +277,14 @@ public:
     /// Switches the active opengl context to the one for this window.
     ///
     /// This should always be run before code using OpenGL calls runs.
+    /// Also implements GraphicsContext::use().
     ///
     void use_context();
+
+    ///
+    /// Returns a pointer to the GraphicsContext for the window.
+    ///
+    GraphicsContext* get_context();
 
     ///
     /// Swaps the opengl buffers for this window.

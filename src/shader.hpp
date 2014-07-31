@@ -1,23 +1,53 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <map>
+#include <memory>
 #include <stdexcept>
 
 #ifdef USE_GLES
-
 #include <GLES2/gl2.h>
-
 #endif
 
 #ifdef USE_GL
-
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
-
 #endif
+
 #include <string>
 
+
+
+class GraphicsContext;
+
+
+
 class Shader {
+private:
+    ///
+    /// Contains shaders asscociated with a common GL context.
+    ///
+    class ShaderCache {
+    private:
+        ///
+        /// Map from program paths to shaders.
+        ///
+        std::map<std::string, std::weak_ptr<Shader>> shaders;
+    public:
+        ShaderCache();
+        ~ShaderCache();
+        ///
+        /// Get a shader from a program path.
+        ///
+        /// If already loaded, retrieves a shader from the cache.
+        /// Otherwise, the shader is loaded.
+        ///
+        /// @param program_path Filename of a shader program description
+        ///        file.
+        /// @return A shared pointer to the relevant Shader.
+        ///
+        std::shared_ptr<Shader> get_shader(std::string program_name);
+    };
     ///
     /// Indicate if the shader loaded correctly
     ///
@@ -39,6 +69,11 @@ class Shader {
     GLuint vertex_shader = 0;
 
     ///
+    /// Map of graphics contexts to shader caches.
+    ///
+    std::map<GraphicsContext*, ShaderCache> shader_caches;
+
+    ///
     /// This function loads the shaders
     /// @param type The type of the shader: fragment or vertex
     /// @param src The source file for the shader's source
@@ -55,6 +90,20 @@ public:
         LoadException(const char  *message);
         LoadException(const std::string &message);
     };
+
+    ///
+    /// Get a commonly used Shader configuration. (STUB)
+    ///
+    /// This function is used to share shaders between separate
+    /// graphical components. On first run with given parameters it will
+    /// load the shader, on other calls it will retrieve it from a
+    /// cache.
+    ///
+    /// @param program_path Filename of a shader program description
+    ///        file.
+    /// @return A shared pointer to the relevant Shader.
+    ///
+    std::shared_ptr<Shader> get_shared_shader(const std::string program_path);
     
     /// 
     /// This function creates the Opengl program

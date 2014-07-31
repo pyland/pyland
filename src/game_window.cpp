@@ -23,6 +23,7 @@ extern "C" {
 #include "callback_registry.hpp"
 #include "lifeline.hpp"
 #include "lifeline_controller.hpp"
+#include "graphics_context.hpp"
 
 
 
@@ -55,14 +56,16 @@ GameWindow::InitException::InitException(const std::string &message): std::runti
 
 
 
-GameWindow::GameWindow(int width, int height, bool fullscreen) {
-    visible = false;
-    resizing = false;
-    window_x = 0;
-    window_y = 0;
-    window_width  = width;
-    window_height = height;
-    close_requested = false;
+GameWindow::GameWindow(int width, int height, bool fullscreen):
+    window_width(width),
+    window_height(height),
+    window_x(0),
+    window_y(0),
+    visible(false),
+    resizing(false),
+    close_requested(false),
+    graphics_context(this)
+{
     input_manager = new InputManager(this);
     
     if (windows.size() == 0) {
@@ -223,7 +226,7 @@ void GameWindow::init_gl() {
     }
 
     // Surface initialization is done here as it can be called multiple
-    // times after  main initialization.
+    // times after main initialization.
     init_surface();
 #endif
 #ifdef USE_GL
@@ -503,8 +506,11 @@ void GameWindow::use_context() {
 #ifdef USE_GL
     SDL_GL_MakeCurrent(window, sdl_gl_context);
 #endif
-    // In theory, not required:
-    // glViewport(0, 0, w, h);
+}
+
+
+GraphicsContext* GameWindow::get_context() {
+    return &graphics_context;
 }
 
 

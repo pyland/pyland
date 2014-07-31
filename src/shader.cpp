@@ -1,10 +1,13 @@
-#include "shader.hpp"
-
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
+#include <map>
+#include <memory>
 #include <stdexcept>
 #include <string>
+
+#include "shader.hpp"
+#include "graphics_context.hpp"
 
 
 
@@ -33,6 +36,16 @@ static char* load_file(std::string filename) {
     content[file_size] = '\0';
     
     return content;
+}
+
+
+
+Shader::ShaderCache::ShaderCache():
+    shaders() {
+}
+
+
+Shader::ShaderCache::~ShaderCache() {
 }
 
 
