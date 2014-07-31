@@ -1,10 +1,12 @@
 #ifndef MOUSE_STATE_H
 #define MOUSE_STATE_H
 
-
+#include <ostream>
 
 class MouseState {
 public:
+    friend std::ostream& operator<<(std::ostream& os, const MouseState& event);
+
     ///
     /// Pseudo-enumeration for the different button numbers.
     ///
