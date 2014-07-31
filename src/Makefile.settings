@@ -12,6 +12,7 @@ WARNINGS = \
 	-Wmissing-braces       \
 	-Wpointer-arith        \
 	-Wno-sign-conversion   \
+        -Wreorder              \
 	-pedantic              \
 	-isystem ./tmx-parser  \
 	-isystem ./tmx-parser/TmxParser

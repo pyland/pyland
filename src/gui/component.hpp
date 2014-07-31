@@ -1,6 +1,8 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+#include "gui_text.hpp"
+
 #include <cstddef>
 #include <exception>
 #include <functional>
@@ -135,10 +137,16 @@ public:
 
     ///
     /// Same as the vertex function but generates texture data
-    /// @param component the component to generate the data for 
     /// The pair holds the pointer and then the size of the data in bytes
     ///
     virtual std::vector<std::pair<GLfloat*, int>> generate_texture_data() = 0;
+
+    ///
+    /// Generates the font data for this component
+    /// 
+    /// 
+    //TODO: finish fonts
+    //    virtual std::vector<std::shared_ptr<GUIText>> generate_font_data() = 0;
 
     ///
     /// Get the map listing all the components of the group.

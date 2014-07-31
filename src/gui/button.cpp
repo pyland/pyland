@@ -1,4 +1,5 @@
 #include "button.hpp"
+#include "gui_text.hpp"
 
 #include <utility>
 #include <vector>
@@ -11,6 +12,10 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+std::vector<std::shared_ptr<GUIText>> generate_font_data() {
+    std::shared_ptr<GUIText> text = std::make_shared<GUIText>();
+}
 
 std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     delete []vertex_data;
@@ -53,7 +58,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     return vertices;
 
 }
-#include <iostream>
+
 std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
     delete []texture_data;
     int num_floats = 12;
@@ -89,4 +94,5 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
     texture_coords.push_back(std::make_pair(texture_data, num_floats));
     return texture_coords;
 }
+
 

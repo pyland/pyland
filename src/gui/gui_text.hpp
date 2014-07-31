@@ -85,7 +85,7 @@ public:
     /// Set the text's font
     /// @param _textfont the text's font
     ///
-    void set_text_font(std::shared_ptr<TextFont> _textfont) { textfont = _textfont; }
+    void set_text_font(std::shared_ptr<TextFont> _textfont) { font = _textfont; }
 
     ///
     /// Get the text 
@@ -98,7 +98,7 @@ public:
     /// @_text the new text
     ///
     void set_text(std::shared_ptr<Text> _text) { text = _text; }
-    
 };
 
 #endif
+  
