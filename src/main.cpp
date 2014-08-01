@@ -417,7 +417,7 @@ int main(int argc, const char* argv[]) {
         
     while (!window.check_close()) {
         em.process_events();
-        map_viewer.render_map();
+        map_viewer.render();
         mytext.display();
         stoptext.display();
         runtext.display();
