@@ -64,7 +64,7 @@ public:
     /// Load the textures that are being used by the character
     ///
     void load_textures();
- 
+
     ///
     /// Initialise the shaders that are being used by the character
     ///

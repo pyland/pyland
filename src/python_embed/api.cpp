@@ -39,7 +39,7 @@ bool Vec2D::operator==(Vec2D other) {
 void Vec2D::operator+=(Vec2D other) {
     x += other.x;
     y += other.y;
-}
+}   
 
 void Vec2D::operator-=(Vec2D other) {
     x -= other.x;
@@ -65,7 +65,10 @@ Entity::Entity(Vec2D start, std::string name, int id):
 
 bool Entity::move(int x, int y) {
     ++call_number;
-    Engine::move_object(id, Vec2D(x, y));
+    auto id = this->id;
+    EventManager::get_instance().add_event([id, x, y] () {
+        Engine::move_object(id, Vec2D(x, y));
+    });
 
     // TODO: Fix this!
     return true;
@@ -73,22 +76,38 @@ bool Entity::move(int x, int y) {
 
 bool Entity::walkable(int x, int y) {
     ++call_number;
-    return Engine::walkable(Engine::find_object(id) + Vec2D(x, y));
+    auto id = this->id;
+    EventManager::get_instance().add_event([id, x, y] () {
+        Engine::walkable(Engine::find_object(id) + Vec2D(x, y));
+    });
+
+    // TODO: Fix this!
+    throw std::runtime_error("walkable not implemented!");
 }
 
 void Entity::monologue() {
-    // TODO: Hook up to proper speaking.
-    std::string text = "I am " + name + " and I am standing at " + (Engine::find_object(id)).to_string() + "!";
-    Engine::print_dialogue(name, text);
+    auto id = this->id;
+    auto name = this->name;
+    EventManager::get_instance().add_event([id, name] () {
+        // TODO: Hook up to proper speaking.
+        std::string text = "I am " + name + " and I am standing at " + (Engine::find_object(id)).to_string() + "!";
+
+        Engine::print_dialogue(name, text);
+    });
 }
 
 
 void Entity::py_print_debug(std::string text) {
-    LOG(INFO) << text;
+    EventManager::get_instance().add_event([text] () {
+        LOG(INFO) << text;
+    });
 }
 
 void Entity::py_print_dialogue(std::string text) {
-    Engine::print_dialogue(name, text);
+    auto name = this->name;
+    EventManager::get_instance().add_event([name, text] () {
+        Engine::print_dialogue(name, text);
+    });
 }
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
