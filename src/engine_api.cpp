@@ -157,9 +157,24 @@ bool Engine::open_editor(std::string filename) {
 }
 
 
-std::vector<int> get_objects_at(Vec2D) {
-    // TODO
-    throw std::runtime_error("get_objects_at not implemented");
+std::vector<int> Engine::get_objects_at(Vec2D location) {
+    Map* map = map_viewer->get_map();
+    if (!map) {
+        throw std::runtime_error("Map not avalaible");
+    }
+
+    std::vector<int> results;
+    //Check the object is on the map
+
+    auto objects = map->get_characters();
+    for(int object_id : objects) {
+        //Object is on the map so now get its locationg
+        auto object = ObjectManager::get_instance().get_object<Object>(object_id);
+        if (Vec2D(object->get_x_position(), object->get_y_position()) == location) {
+            results.push_back(object_id);
+        }
+    }
+    return results;
 }
 
 std::string Engine::editor = DEFAULT_PY_EDITOR;

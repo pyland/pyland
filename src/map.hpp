@@ -271,7 +271,7 @@ public:
 
     Blocker block_tile(Vec2D tile);
 
-    Vec2D pixel_to_tile (Vec2D pixl_location);
+    Vec2D pixel_to_tile (Vec2D pixel_location);
 };
 
 #endif

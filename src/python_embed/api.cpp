@@ -24,6 +24,18 @@ Vec2D Vec2D::operator-(Vec2D other) {
     return Vec2D(x - other.x, y - other.y);
 }
 
+Vec2D Vec2D::operator/(Vec2D other) {
+    return Vec2D(x / other.x, y / other.y);
+}
+
+Vec2D Vec2D::operator*(Vec2D other) {
+    return Vec2D(x * other.x, y * other.y);
+}
+
+bool Vec2D::operator==(Vec2D other) {
+    return (x==other.x) && (y == other.y);
+}
+
 void Vec2D::operator+=(Vec2D other) {
     x += other.x;
     y += other.y;

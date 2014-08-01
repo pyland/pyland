@@ -44,6 +44,9 @@ class Vec2D {
         ///
         Vec2D operator+(Vec2D other);
         Vec2D operator-(Vec2D other);
+        Vec2D operator/(Vec2D other);
+        Vec2D operator*(Vec2D other);
+        bool operator==(Vec2D other);
 
         ///
         /// In-place addition of Vec2Ds
