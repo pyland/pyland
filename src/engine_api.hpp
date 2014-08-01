@@ -159,5 +159,8 @@ public:
     static void set_dialogue_box(Text* _dialogue_box) {dialogue_box = _dialogue_box; }
 
     static void print_dialogue(std::string name, std::string text);
+
+    static Vec2D pixel_to_tile (Vec2D pixel_location);
+    //static Vec2D tile_to_pixel (Vec2D tile_location);
 };
 #endif

@@ -57,7 +57,6 @@ protected:
 
 public:
     Object();
-    Object(int _x_position, int _y_position);
     //= default not supported in g++-4.8
     virtual ~Object();
 

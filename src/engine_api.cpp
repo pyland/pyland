@@ -14,6 +14,9 @@
 #include "object_manager.hpp"
 #include "dispatcher.hpp"
 
+
+#define TILESET_ELEMENT_SIZE 16
+
 //TODO: THis needs to work with renderable objects 
 void Engine::move_object(int id, Vec2D move_by) {
     std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
@@ -169,4 +172,8 @@ void Engine::print_dialogue(std::string name, std::string text) {
             std::cout << text_to_display << std::endl;
         }
     );
+}
+
+Vec2D Engine::pixel_to_tile (Vec2D pixel_location) {
+    return Vec2D(pixel_location.x / TILESET_ELEMENT_SIZE, pixel_location.y / TILESET_ELEMENT_SIZE );
 }

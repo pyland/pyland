@@ -350,6 +350,14 @@ int main(int argc, const char* argv[]) {
         );
     }
 
+    Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, 
+        [&] (MouseInputEvent event) {
+            LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
+            Vec2D tile_clicked = Engine::pixel_to_tile(Vec2D(event.to.x, event.to.y));
+            LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
+        }
+    ));
+
     EventManager &em = EventManager::get_instance();
 
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
