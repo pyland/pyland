@@ -160,7 +160,5 @@ public:
 
     static void print_dialogue(std::string name, std::string text);
 
-    static Vec2D pixel_to_tile (Vec2D pixel_location);
-    //static Vec2D tile_to_pixel (Vec2D tile_location);
 };
 #endif
