@@ -109,14 +109,13 @@ static std::mt19937 random_generator;
 void create_character(Interpreter &interpreter) {
     LOG(INFO) << "Creating character";
 
-    // Registering new character with game engine
-    shared_ptr<Character> new_character = make_shared<Character>();
-    new_character->set_name("John");
 
     int start_x = 4;
     int start_y = 15;
-    new_character->set_x_position(start_x);
-    new_character->set_y_position(start_y);
+
+    // Registering new character with game engine
+    shared_ptr<Character> new_character = make_shared<Character>(start_x, start_y);
+    new_character->set_name("John");
     LOG(INFO) << "Adding character";
     ObjectManager::get_instance().add_object(new_character);
     Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
@@ -304,6 +303,10 @@ int main(int argc, const char* argv[]) {
         {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(); }
     ));
+    Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("N")},
+        [&] (KeyboardInputEvent) { callbackstate.spawn(); }
+    ));
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("R")},
         [&] (KeyboardInputEvent) { callbackstate.restart(); }
@@ -346,6 +349,23 @@ int main(int argc, const char* argv[]) {
             ))
         );
     }
+
+    Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, 
+        [&] (MouseInputEvent event) {
+            LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
+            Vec2D tile_clicked = Engine::get_map_viewer()->get_map()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
+            LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
+            auto objects = Engine::get_objects_at(tile_clicked);
+            if (objects.size() == 1) {
+                callbackstate.register_number(objects[0]);
+            } else if (objects.size() == 0) {
+                LOG(INFO) << "Not objects to interact with";
+            } else {
+                LOG(WARNING) << "Not sure sprite object to switch to";
+                callbackstate.register_number(objects[0]);
+            }
+        }
+    ));
 
     EventManager &em = EventManager::get_instance();
 

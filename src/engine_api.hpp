@@ -159,5 +159,6 @@ public:
     static void set_dialogue_box(Text* _dialogue_box) {dialogue_box = _dialogue_box; }
 
     static void print_dialogue(std::string name, std::string text);
+
 };
 #endif
