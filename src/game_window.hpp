@@ -81,9 +81,14 @@ private:
     int window_y;
 
     ///
-    /// Keeps track of whether the surface is visible (i.e. exists)
+    /// Keeps track of whether a surface exists to render to.
     ///
     bool visible;
+
+    ///
+    /// Whether the EGL surface renders directly to the screen.
+    ///
+    bool foreground;
 
     ///
     /// If the window is being resized (true only during an update).
@@ -111,7 +116,10 @@ private:
     EGLSurface surface;
     EGLContext context;
 
-    EGLConfig config;
+    // The EGL config for direct to screen rendering.
+    EGLConfig window_config;
+    // The EGL config for rendering to a pixel buffer.
+    EGLConfig pbuffer_config;
     EGLint configCount;
 
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
