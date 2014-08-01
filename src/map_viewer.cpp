@@ -51,21 +51,30 @@ MapViewer::~MapViewer() {
 
 }
 
-void MapViewer::render_map() {
-    if(map == nullptr) {
+void MapViewer::render() {
+   if(map == nullptr) {
         LOG(ERROR) << "MapViewer::render_map: Map should not be null";
         return;
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
+    render_map();
+    render_objects();
+    render_gui();
+}
+
+void MapViewer::render_map() {
+    //Focus onto the player
+    refocus_map();
+
     //Calculate the projection and modelview matrix for the map
     std::pair<int, int> size = window->get_size();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     glm::vec3 translate = glm::vec3(-map->get_display_x()*32.0f, -map->get_display_y()*32.0f, 0.0f);
     glm::mat4 translated = glm::translate(model, translate);
-
+    
     //Draw all the layers, from base to top to get the correct draw order
     for(auto layer: map->get_layers()) {
         RenderableComponent* layer_render_component = layer->get_renderable_component();
@@ -87,8 +96,7 @@ void MapViewer::render_map() {
 
         layer_render_component->bind_textures();
 
-
-               glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
+        glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
 
         //Release the vertex buffers and texppptures
         layer_render_component->release_textures();
@@ -97,7 +105,12 @@ void MapViewer::render_map() {
         layer_render_component->release_shader();
 
     }
+}
 
+void MapViewer::render_objects() {
+    //Calculate the projection matrix
+    std::pair<int, int> size = window->get_size();
+    glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     //Draw the characters
     const std::vector<int>& characters = map->get_characters();
     ObjectManager& object_manager = ObjectManager::get_instance();
@@ -141,6 +154,12 @@ void MapViewer::render_map() {
             character_render_component->release_shader();
         }
     }
+}
+
+void MapViewer::render_gui() {
+    //Calculate the projection matrix
+    std::pair<int, int> size = window->get_size();
+    glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
 
     //TODO: Hacky method, clean it up
     RenderableComponent* gui_render_component = gui_manager->get_renderable_component();
