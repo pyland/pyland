@@ -528,9 +528,18 @@ Map::Blocker Map::block_tile(Vec2D tile) {
 
 Vec2D Map::pixel_to_tile(Vec2D pixel_location) {
     int scale = TILESET_ELEMENT_SIZE*GLOBAL_SCALE;
+    // convert pixel location to absolute instead of relative to current window
     Vec2D map_pixel = pixel_location + Vec2D(Map::get_display_x()*scale, Map::get_display_y()*scale);
+    // convert from pixel to map ints
     return Vec2D(map_pixel.x/scale, map_pixel.y/scale);
 }
 
+Vec2D Map::tile_to_pixel(Vec2D tile_location) {
+    int scale = TILESET_ELEMENT_SIZE*GLOBAL_SCALE;
+    std::cout << scale << std::endl;
+    Vec2D results = Vec2D(tile_location.x * scale, tile_location.y * scale);
+    results -= Vec2D(Map::get_display_x() * scale, Map::get_display_y() * scale);
+    return results;
+}
 
 
