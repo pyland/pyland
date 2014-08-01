@@ -160,7 +160,6 @@ void Character::generate_vertex_data() {
     sprite_data[10] = scale;
     sprite_data[11] = 0;
 
-
     renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }

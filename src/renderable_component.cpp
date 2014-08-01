@@ -30,7 +30,6 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_
     vertex_data = new_vertex_data;
     vertex_data_size = data_size;
 
-  
     //Get current shader
     GLint id;
     glGetIntegerv(GL_CURRENT_PROGRAM, &id);

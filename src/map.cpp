@@ -352,7 +352,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, int data_size, int num_tiles
 
     //The current tile's data
     auto tile_data = layer->get_layer_data()->begin();
-
+    std::cout << "LAYER " << std::endl;
     //Generate one layer's worth of data
     for(int y = 0; y < map_height; y++) {
         for(int x = 0; x < map_width; x++) {
@@ -365,13 +365,14 @@ void Map::generate_layer_vert_coords(GLfloat* data, int data_size, int num_tiles
             //IF GENERATING A SPARSE LAYER
             //Skip empty tiles
             int tile_id = tile_data->second;
-            if(dense == false && tile_id == 0) 
+            if(dense == false && tile_id == 0) {
+                ++tile_data;
                 continue;
-
+            }
             //bottom left
             data[offset+ 0] = scale * float(x);
             data[offset+ 1] = scale * float(y);
-             
+
             //top left
             data[offset+ 2] = scale * float(x);
             data[offset+ 3] = scale * float(y + 1);
