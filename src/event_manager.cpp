@@ -25,7 +25,7 @@ EventManager::~EventManager() {
 EventManager& EventManager::get_instance() {
     //:Lazy instantiation of the global instance
     static EventManager global_instance;
-    
+
     return global_instance;
 }
 
@@ -100,16 +100,6 @@ void EventManager::add_event_next_frame(std::function<void ()> func) {
     next_frame_queue->push_back(func);
 }
 
-/// Magic.
-///
-/// Look it up if you want to change it.
-///
-/// Takes a function that takes a bound version of itself and returns the bound version of itself.
-std::function<void (void)> y_combinator(std::function<void (std::function<void (void)>)> self_recursive_function) {
-    auto this_call = std::bind(&y_combinator, self_recursive_function);
-    return std::bind(self_recursive_function, this_call);
-}
-
 void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (double)> func) {
     // This needs to be thread-safe, so wrap it in an event.
     // Also, this holds the initialisation, so as to keep it static
@@ -122,10 +112,9 @@ void EventManager::add_timed_event(GameTime::duration duration, std::function<bo
 
         // Convert a timed callback to a void lambda by creating a wrapper
         // that keeps track of the completion and deals with re-registering.
-        //
-        // This recurses onto its argument, which must be itself with the
-        // first element bound to itself.
-        auto callback = [this, duration, func, start_time] (std::function<void (void)> myself_but_bound) {
+        static std::function<void (GameTime::duration,          std::function<bool (double)>,      GameTime::time_point)> callback =
+               [&]                (GameTime::duration duration, std::function<bool (double)> func, GameTime::time_point start_time) {
+
             auto completion = time.time() - start_time;
 
             // Don't allow finite polling speed to allow > 100% completion.
@@ -133,12 +122,10 @@ void EventManager::add_timed_event(GameTime::duration duration, std::function<bo
 
             if (func(fraction_complete) && fraction_complete < 1.0) {
                 // Repeat if the callback wishes and the event isn't complete.
-                add_event_next_frame(myself_but_bound);
+                add_event_next_frame(std::bind(callback, duration, func, start_time));
             }
         };
 
-        // Perform magic on the callback to bind it to a bound version of itself.
-        auto magically_recursive = y_combinator(callback);
-        add_event(magically_recursive);
+        add_event(std::bind(callback, duration, func, start_time));
     });
 }
