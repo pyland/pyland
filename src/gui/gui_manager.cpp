@@ -23,6 +23,9 @@
 #endif
 
 void GUIManager::parse_components() {
+    //Generate  the needed offsets
+    regenerate_offsets(root);
+
     //Now generate the needed rendering data
     generate_tex_data();
     generate_vertex_data();
@@ -30,6 +33,32 @@ void GUIManager::parse_components() {
     init_shaders();
 }
 
+void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
+    if(!parent) 
+        return;
+
+    try{
+        //Go through all the children of this component
+        for(auto component_pair : parent->get_components()) {
+            std::shared_ptr<Component> component = component_pair.second;
+            
+            //Recalculate the dimensions
+            int width_pixels = parent->get_width_pixels();
+            int height_pixels = parent->get_height_pixels();
+
+            //calculate the pixel locations for this component, using the parent's dimensions
+            component->set_width_pixels((int)((float)width_pixels*component->get_width()));
+            component->set_height_pixels((int)((float)height_pixels*component->get_height()));
+            component->set_x_offset_pixels((int)((float)width_pixels*component->get_x_offset()));
+            component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));              
+    
+            regenerate_offsets(component);
+        }
+    }
+    catch(component_no_children_exception& e) {
+        //DONE
+    }
+}
 void GUIManager::update_components() {
     
 }
@@ -58,10 +87,10 @@ void GUIManager::mouse_callback_function(MouseInputEvent event) {
     int curr_y_offset = 0;
 
     //Traverse the component tree
-    recurse_components(root, mouse_x, mouse_y, curr_x_offset, curr_y_offset);
+    handle_mouse_click(root, mouse_x, mouse_y, curr_x_offset, curr_y_offset);
 }
 
-bool GUIManager::recurse_components(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset) {
+bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset) {
     try{
         //Go through all the children of this component
         for(auto component_pair : root->get_components()) {
@@ -96,7 +125,7 @@ bool GUIManager::recurse_components(std::shared_ptr<Component> root, int mouse_x
                 }
 
                 //It's not clickable, traverse the children
-                if(recurse_components(component, mouse_x, mouse_y, x_offset, y_offset))  {
+                if(handle_mouse_click(component, mouse_x, mouse_y, x_offset, y_offset))  {
                     //Click has been handled
                     return true;
                 }

@@ -58,27 +58,9 @@ void MapViewer::render_map() {
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-    std::pair<int, int> size = window->get_size();
-    //Adjust the view to show only tiles the user can see
-    //    int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
-    //    int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
-    //We make use of intege truncation to get these to numbers in terms of tiles
-    //    int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
-    //    int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
-
-    //Set the viewable fragments and map display size
-
-    glScissor(0, 0,  size.first, size.second); //display_width, display_height);
-    map->set_display_width(size.first / 32.0f);//display_width);
-    map->set_display_height(size.second / 32.0f); //display_height);
-    glViewport(0, 0, size.first, size.second);
-
-    //TODO: Make this a callback
-    refocus_map();
-
+    
     //Calculate the projection and modelview matrix for the map
+    std::pair<int, int> size = window->get_size();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     glm::vec3 translate = glm::vec3(-map->get_display_x()*32.0f, -map->get_display_y()*32.0f, 0.0f);
