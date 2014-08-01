@@ -116,10 +116,7 @@ private:
     EGLSurface surface;
     EGLContext context;
 
-    // The EGL config for direct to screen rendering.
-    EGLConfig window_config;
-    // The EGL config for rendering to a pixel buffer.
-    EGLConfig pbuffer_config;
+    EGLConfig config;
     EGLint configCount;
 
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
@@ -277,6 +274,16 @@ public:
     /// This should always be run before code using OpenGL calls runs.
     ///
     void use_context();
+
+    ///
+    /// Debugging function for unsetting the current gl context.
+    ///
+    /// This is meant for debugging, and should not be called under
+    /// normal circumstances. This can be used to trip up code which
+    /// is making GL calls at inappropriate times, or forgetting to
+    /// set the current context.
+    ///
+    void disable_context();
 
     ///
     /// Swaps the opengl buffers for this window.

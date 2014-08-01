@@ -179,21 +179,12 @@ void GameWindow::init_gl() {
 #ifdef USE_GLES  
     EGLBoolean result;
   
-    static const EGLint window_attribute_list[] = {
-        EGL_RED_SIZE, 8,
-        EGL_GREEN_SIZE, 8,
-        EGL_BLUE_SIZE, 8,
-        EGL_ALPHA_SIZE, 8,
-        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-        EGL_NONE
-    };
-
-    static const EGLint pbuffer_attribute_list[] = {
+    static const EGLint attribute_list[] = {
         EGL_RED_SIZE, 8,
         EGL_GREEN_SIZE, 8,
         EGL_BLUE_SIZE, 8,
         EGL_ALPHA_SIZE, 0,
-        EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
+        EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
         EGL_NONE
     };
 
@@ -216,18 +207,11 @@ void GameWindow::init_gl() {
         throw GameWindow::InitException("Error initializing display connection");
     }
 
-    // Get frame buffer configuration for direct screen rendering.
-    result = eglChooseConfig(display, attribute_list, &window_config, 1, &configCount);
+    // Get frame buffer configuration.
+    result = eglChooseConfig(display, attribute_list, &config, 1, &configCount);
     if (result == EGL_FALSE) {
         eglTerminate(display);
         throw GameWindow::InitException("Error getting window frame buffer configuration");
-    }
-
-    // Get frame buffer configuration for pixel buffer rendering.
-    result = eglChooseConfig(display, attribute_list, &pbuffer_config, 1, &configCount);
-    if (result == EGL_FALSE) {
-        eglTerminate(display);
-        throw GameWindow::InitException("Error getting pbuffer frame buffer configuration");
     }
 
     //Should I use eglBindAPI? It is auomatically ES anyway.
@@ -294,7 +278,8 @@ void GameWindow::init_surface() {
 
 void GameWindow::init_surface(int x, int y, int w, int h) {
     deinit_surface();
-
+    // Because deinit clears this.
+    change_surface = InitAction::DO_INIT;
 #ifdef USE_GLES
     EGLSurface new_surface;
     
@@ -337,7 +322,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
         nativeWindow.height = h; // (???)
         vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
     
-        new_surface = eglCreateWindowSurface(display, window_config, &nativeWindow, nullptr);
+        new_surface = eglCreateWindowSurface(display, config, &nativeWindow, nullptr);
         if (new_surface == EGL_NO_SURFACE) {
             std::stringstream hex_error_code;
             hex_error_code << std::hex << eglGetError();
@@ -345,12 +330,15 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
             throw GameWindow::InitException("Error creating window surface: " + hex_error_code.str());
         }
     } else {
-        static EGLint attribute_list = {
+        EGLint attribute_list[] = {
             EGL_WIDTH, w,
             EGL_HEIGHT, h,
             EGL_NONE
         };
-        new_surface = eglCreatePbufferSurface(display, pbuffer_config, attribute_list);
+        
+        LOG(INFO) << "New surface: " << w << "x" << h << " (Pixel Buffer).";
+
+        new_surface = eglCreatePbufferSurface(display, config, attribute_list);
         if (new_surface == EGL_NO_SURFACE) {
             std::stringstream hex_error_code;
             hex_error_code << std::hex << eglGetError();
@@ -385,11 +373,13 @@ void GameWindow::deinit_surface() {
 #ifdef USE_GLES
     if (visible) {
         int result;
-        
-        DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
-        dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
-        vc_dispmanx_element_remove (dispmanUpdate, dispmanElement);
-        vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
+
+        if (foreground) {
+            DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
+            dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
+            vc_dispmanx_element_remove (dispmanUpdate, dispmanElement);
+            vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
+        }
         
         eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         result = eglDestroySurface(display, surface);
@@ -429,12 +419,21 @@ void GameWindow::update() {
                 window->request_close();
                 break;
             case SDL_WINDOWEVENT_RESIZED:
-                window->resizing = true;
-            case SDL_WINDOWEVENT_MOVED:
-            case SDL_WINDOWEVENT_RESTORED:
             case SDL_WINDOWEVENT_MAXIMIZED:
+            case SDL_WINDOWEVENT_RESTORED:
+                window->resizing = true;
+                LOG(INFO) << "Need surface reinit (resize)";
+                window->change_surface = InitAction::DO_INIT;
+                focused_window = window;
+                break;
+            case SDL_WINDOWEVENT_MOVED:
+                LOG(INFO) << "Need surface reinit (moved)";
+                window->change_surface = InitAction::DO_INIT;
+                focused_window = window;
+                break;
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
+                LOG(INFO) << "Need surface reinit (gained focus)";
                 window->foreground = true;
                 window->change_surface = InitAction::DO_INIT;
                 focused_window = window;
@@ -442,6 +441,7 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_FOCUS_LOST:
             case SDL_WINDOWEVENT_MINIMIZED:
             case SDL_WINDOWEVENT_HIDDEN:
+                LOG(INFO) << "Need surface reinit (lost focus)";
                 window->foreground = false;
                 // This used to deinit, but that is actually bad.
                 window->change_surface = InitAction::DO_INIT;
@@ -476,8 +476,26 @@ void GameWindow::update() {
                               &x,
                               &y,
                               &child);
-        if ((window->window_x != x || window->window_y != y) && window->visible && window->foreground) {
-            LOG(INFO) << "Need surface reinit.";
+        // Ensure that the window focus is correct. Once again, don't
+        // rely on SDL events.
+        // Currently, we test for window focus via input grab.
+        // if (window->change_surface == InitAction::DO_NOTHING) {
+        //     if (SDL_GetWindowFlags(window->window) & SDL_WINDOW_INPUT_FOCUS) {
+        //         if (window->foreground == false) {
+        //             LOG(INFO) << "Need surface reinit (gained focus).";
+        //             window->foreground = true;
+        //             window->change_surface = InitAction::DO_INIT;
+        //         }
+        //     } else {
+        //         if (window->foreground == true) {
+        //             LOG(INFO) << "Need surface reinit (lost focus).";
+        //             window->foreground = false;
+        //             window->change_surface = InitAction::DO_INIT;
+        //         }
+        //     }
+        // }
+        if ((window->window_x != x || window->window_y != y) && window->visible) {
+            LOG(INFO) << "Need surface reinit (moved).";
             window->change_surface = InitAction::DO_INIT;
         }
 #endif
@@ -546,9 +564,24 @@ void GameWindow::use_context() {
 }
 
 
+void GameWindow::disable_context() {
+#ifdef USE_GLES
+    if (visible) {
+        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    }
+#endif
+#ifdef USE_GL
+    SDL_GL_MakeCurrent(window, NULL);
+#endif
+}
+
+
 void GameWindow::swap_buffers() {
 #ifdef USE_GLES
-    eglSwapBuffers(display, surface);
+    if (foreground) {
+        // Only "direct"-to-screen rendering is double buffered.
+        eglSwapBuffers(display, surface);
+    }
 #endif
 #ifdef USE_GL
     SDL_GL_SwapWindow(window);
