@@ -271,7 +271,14 @@ public:
 
     Blocker block_tile(Vec2D tile);
 
+    ///
+    /// converts pixel location inside window to a map tile
+    ///
     Vec2D pixel_to_tile (Vec2D pixel_location);
+
+    ///
+    /// converts a tile in map to a pixel location in window of the bottem left corner of tile
+    Vec2D tile_to_pixel (Vec2D tile_location);
 };
 
 #endif
