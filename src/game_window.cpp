@@ -1,3 +1,11 @@
+// //////////////////////////////////////////////////////////////
+// //////////////////////// CURRENT BUGS ////////////////////////
+// //////////////////////////////////////////////////////////////
+//  First window focus events are lost:
+//      Temporary fix in constructor function.
+//      This is only a problem on GLES platforms.
+//
+
 // Behaviour modifiers (defines):
 //  STATIC_OVERSCAN:
 //      Set overscan compensation to the default Raspbian values.
@@ -7,6 +15,7 @@
 //      Never render directly to the screen - always use a PBuffer.
 //      This is primarily for debugging purposes. It will decrease
 //      performance signifficantly.
+//
 
 
 
@@ -109,6 +118,11 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
         throw GameWindow::InitException("Failed to create SDL window");
     }
 
+    // Temporary fix (which just seems to work) for a bug where focus
+    // events are not generated for the first time focus is changed.
+    // SEE ALSO BELOW IN THIS FUNCTION
+    SDL_HideWindow(window);
+    
 #ifdef USE_GLES
     SDL_GetWindowWMInfo(window, &wm_info);
 #endif
@@ -138,6 +152,11 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
         }
         throw e;
     }
+
+    // Temporary fix (which just seems to work) for a bug where focus
+    // events are not generated for the first time focus is changed.
+    // SEE ALSO ABOVE IN THIS FUNCTION.
+    SDL_ShowWindow(window);
 
     windows[SDL_GetWindowID(window)] = this;
 }
@@ -508,9 +527,6 @@ void GameWindow::update() {
                 if (focused_window == window) {
                     focused_window = nullptr;
                 }
-                break;
-            default:
-                LOG(WARNING) << "Unhandled WM event.";
                 break;
             }
             break;
