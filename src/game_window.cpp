@@ -1,3 +1,15 @@
+// Behaviour modifiers (defines):
+//  STATIC_OVERSCAN:
+//      Set overscan compensation to the default Raspbian values.
+//  OVERSCAN_LEFT, OVERSCAN_TOP:
+//      Hard code a fixed overscan (overridden by STATIC_OVERSCAN).
+//  GAME_WINDOW_DISABLE_DIRECT_RENDER:
+//      Never render directly to the screen - always use a PBuffer.
+//      This is primarily for debugging purposes. It will decrease
+//      performance signifficantly.
+
+
+
 #include <glog/logging.h>
 #include <iostream>
 #include <map>
@@ -15,6 +27,7 @@ extern "C" {
 #include <bcm_host.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <GLES2/gl2.h>
 #include <X11/Xlib.h>
 #endif
 }
@@ -57,7 +70,12 @@ GameWindow::InitException::InitException(const std::string &message): std::runti
 
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
+#ifdef GAME_WINDOW_DISABLE_DIRECT_RENDER
+    foreground = false;
+#else
     foreground = true;
+#endif
+    was_foreground = foreground;
     resizing = false;
     window_x = 0;
     window_y = 0;
@@ -101,7 +119,9 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
 
 #ifdef USE_GLES
     // Currently has no use with a desktop GL setup.
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    // renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    sdl_window_surface = SDL_GetWindowSurface(window);
+    background_surface = nullptr;
 #endif
     
     try {
@@ -110,7 +130,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
     catch (InitException e) {
 #ifdef USE_GLES
         vc_dispmanx_display_close(dispmanDisplay);
-        SDL_DestroyRenderer (renderer);
+        // SDL_DestroyRenderer (renderer);
 #endif
         SDL_DestroyWindow (window);
         if (windows.size() == 0) {
@@ -127,7 +147,7 @@ GameWindow::~GameWindow() {
 
 #ifdef USE_GLES
     vc_dispmanx_display_close(dispmanDisplay); // (???)
-    SDL_DestroyRenderer (renderer);
+    // SDL_DestroyRenderer (renderer);
 #endif
     // window_count--;
     windows.erase(SDL_GetWindowID(window));
@@ -345,6 +365,38 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
 
             throw GameWindow::InitException("Error creating pbuffer surface: " + hex_error_code.str());
         }
+
+        // We'll now want an image for aiding the display of our
+        // background window's content. This has a good chance of having
+        // an out-of-memory error.
+        // try {
+        //     // w by h image, non opengl as we don't want power of two.
+        //     background = Image(w, h, false);
+        // } catch (std::bad_alloc e) {
+        //     LOG(ERROR) << "Failed to create image for window background." << e.what();
+        //     background = Image();
+        // }
+
+        sdl_window_surface = SDL_GetWindowSurface(window);
+        
+        // Create an SDL surface for background blitting. RGBX
+        background_surface = SDL_CreateRGBSurface(0,
+                                                  sdl_window_surface->w,
+                                                  sdl_window_surface->h,
+                                                  32,
+#if SDL_BYTE_ORDER == SDL_BIG_ENDIAN
+                                                  0xff000000,
+                                                  0x00ff0000,
+                                                  0x0000ff00,
+                                                  0x00000000
+#else
+                                                  0x000000ff,
+                                                  0x0000ff00,
+                                                  0x00ff0000,
+                                                  0x00000000
+#endif
+                                                  );
+        SDL_SetSurfaceBlendMode(background_surface, SDL_BLENDMODE_NONE);
     }
     surface = new_surface;
 
@@ -355,10 +407,11 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     }
 
     // Clean up any garbage in the SDL window.
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
+    // SDL_RenderClear(renderer);
+    // SDL_RenderPresent(renderer);
 #endif
-    
+
+    was_foreground = foreground;
     visible = true;
     change_surface = InitAction::DO_NOTHING;
     // Only set these if the init was successful.
@@ -374,11 +427,16 @@ void GameWindow::deinit_surface() {
     if (visible) {
         int result;
 
-        if (foreground) {
+        if (was_foreground) {
             DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
             dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
             vc_dispmanx_element_remove (dispmanUpdate, dispmanElement);
             vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
+        } else {
+            if (background_surface != nullptr) {
+                SDL_FreeSurface(background_surface);
+                background_surface = nullptr;
+            }
         }
         
         eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -434,7 +492,9 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 LOG(INFO) << "Need surface reinit (gained focus)";
+#ifndef GAME_WINDOW_DISABLE_DIRECT_RENDER
                 window->foreground = true;
+#endif
                 window->change_surface = InitAction::DO_INIT;
                 focused_window = window;
                 break;
@@ -448,6 +508,9 @@ void GameWindow::update() {
                 if (focused_window == window) {
                     focused_window = nullptr;
                 }
+                break;
+            default:
+                LOG(WARNING) << "Unhandled WM event.";
                 break;
             }
             break;
@@ -578,9 +641,35 @@ void GameWindow::disable_context() {
 
 void GameWindow::swap_buffers() {
 #ifdef USE_GLES
-    if (foreground) {
-        // Only "direct"-to-screen rendering is double buffered.
-        eglSwapBuffers(display, surface);
+    if (visible) {
+        if (foreground) {
+            // Only "direct"-to-screen rendering is double buffered.
+            eglSwapBuffers(display, surface);
+        } else {
+            // Render the content of the pixel buffer to the SDL window.
+
+            // Copy the render into a compatible surface.
+            glReadPixels(0,
+                         0,
+                         background_surface->w,
+                         background_surface->h,
+                         GL_RGBA,
+                         GL_UNSIGNED_BYTE,
+                         background_surface->pixels);
+
+            // Copy (blit) the surface (whilst flipping) to the SDL window's surface.
+            SDL_Rect dst;
+            SDL_Rect src;
+            dst.x = src.x = 0;
+            dst.w = src.w = sdl_window_surface->w;
+            dst.h = src.h = 1;
+            for (int y = 0; y < background_surface->h; y++) {
+                src.y = sdl_window_surface->h - y - 1;
+                dst.y = y;
+                SDL_BlitSurface(background_surface, &src, sdl_window_surface, &dst);
+            }
+            SDL_UpdateWindowSurface(window);
+        }
     }
 #endif
 #ifdef USE_GL

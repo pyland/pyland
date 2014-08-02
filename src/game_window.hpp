@@ -55,12 +55,22 @@ private:
     SDL_Window* window;
     
     ///
+    /// The surface of the SDL window.
+    ///
+    SDL_Surface* sdl_window_surface;
+    
+    ///
+    /// Used for background GL rendering.
+    ///
+    SDL_Surface* background_surface;
+    
+    ///
     /// Stores the SDL renderer.
     ///
     /// The renderer can be used to draw things without the need to go
     /// through opengl textures and rendering (e.g. fonts).
     ///
-    SDL_Renderer* renderer;
+    // SDL_Renderer* renderer;
     
     ///
     /// SDL window and EGL surface width.
@@ -88,7 +98,18 @@ private:
     ///
     /// Whether the EGL surface renders directly to the screen.
     ///
+    /// This variable signifies intent. For a true representation of
+    /// current state, see was_foreground.
+    ///
     bool foreground;
+
+    ///
+    /// We need to keep a previous state for transitions during init and
+    /// deinit of surfaces.
+    ///
+    /// This is used primarily for ensuring resources are cleaned up.
+    ///
+    bool was_foreground;
 
     ///
     /// If the window is being resized (true only during an update).
@@ -163,7 +184,7 @@ private:
     /// Upon destruction, callback lifelines should be disabled.
     ///
     LifelineController callback_controller;
-    
+
     ///
     /// Initialize SDL.
     ///
@@ -287,6 +308,9 @@ public:
 
     ///
     /// Swaps the opengl buffers for this window.
+    ///
+    /// If using OpenGL ES, and the window is not in the foreground,
+    /// draw the content of the EGL PBuffer to the SDL window.
     ///
     void swap_buffers();
 
