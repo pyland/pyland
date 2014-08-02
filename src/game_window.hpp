@@ -186,7 +186,10 @@ private:
     LifelineController callback_controller;
 
     ///
-    /// Initialize SDL.
+    /// Initialize SDL, and some Raspberry Pi specific stuff.
+    ///
+    /// This initialises first-time SDL and graphics related stuff. It
+    /// calls bcm_host_init(), and also queries the overscan.
     ///
     void init_sdl();
     ///

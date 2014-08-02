@@ -8,9 +8,10 @@
 
 // Behaviour modifiers (defines):
 //  STATIC_OVERSCAN:
-//      Set overscan compensation to the default Raspbian values.
+//      Set overscan compensation by force, don't query it.
+//      Sets OVERSCAN_LEFT=24 and OVERSCAN_TOP=16 by default.
 //  OVERSCAN_LEFT, OVERSCAN_TOP:
-//      Hard code a fixed overscan (overridden by STATIC_OVERSCAN).
+//      Set default (or fixed) overscan.
 //  GAME_WINDOW_DISABLE_DIRECT_RENDER:
 //      Never render directly to the screen - always use a PBuffer.
 //      This is primarily for debugging purposes. It will decrease
@@ -49,19 +50,29 @@ extern "C" {
 
 
 #ifdef USE_GLES
+
 #ifdef STATIC_OVERSCAN
+
+#ifndef OVERSCAN_LEFT
 #define OVERSCAN_LEFT 24
+#endif
+#ifndef OVERSCAN_TOP
 #define OVERSCAN_TOP  16
+#endif
+
 #else
+
 #ifndef OVERSCAN_LEFT
 #define OVERSCAN_LEFT 0
 #endif
 #ifndef OVERSCAN_TOP
 #define OVERSCAN_TOP  0
 #endif
+
 #endif
 int GameWindow::overscan_left = OVERSCAN_LEFT;
 int GameWindow::overscan_top  = OVERSCAN_TOP;
+
 #endif
 
 
@@ -74,6 +85,55 @@ GameWindow* GameWindow::focused_window = nullptr;
 // NOTE: This will, and are required to, copy the message.
 GameWindow::InitException::InitException(const char *message): std::runtime_error(message) {}
 GameWindow::InitException::InitException(const std::string &message): std::runtime_error(message) {}
+
+
+
+#ifdef USE_GLES
+#include <stdio.h>
+///
+/// Queries the overscan values to compensate the window position.
+///
+/// Until a better API becomes available, query using vcgencmd.
+/// I don't think it's pretty, but it'll work on the Pi.
+///
+static void query_overscan(int* overscan_left, int* overscan_top) {
+    FILE* output;
+    int disable_overscan = 0;
+    *overscan_left = 0;
+    *overscan_top = 0;
+    // If overscan is disabled, set overscan to (0, 0).
+    output = popen("/opt/vc/bin/vcgencmd get_config disable_overscan", "r");
+    if (output == nullptr) {
+        // We couldn't get the information. Just accept it.
+        LOG(ERROR) << "Unable to query overscan using vcgencmd. Using defaults.";
+        return;
+    }
+    if (fscanf(output, "disable_overscan=%i", &disable_overscan) != 1) {
+        LOG(ERROR) << "Unable to query disable_overscan using vcgencmd. Using defaults";
+        return;
+    }
+    pclose(output);
+    if (disable_overscan == 1) {
+        *overscan_left = 0;
+        *overscan_top  = 0;
+        LOG(INFO) << "Overscan is disabled - compensation set to (0, 0).";
+    } else {
+        // Get left overscan.
+        output = popen("/opt/vc/bin/vcgencmd get_config overscan_left", "r");
+        if (fscanf(output, "overscan_left=%i", overscan_left) != 1) {
+            LOG(ERROR) << "Unable to query overscan_left using vcgencmd. Ignoring!";
+        }
+        pclose(output);
+        // Get top overscan.
+        output = popen("/opt/vc/bin/vcgencmd get_config overscan_top", "r");
+        if (fscanf(output, "overscan_top=%i", overscan_top) != 1) {
+            LOG(ERROR) << "Unable to query overscan_top using vcgencmd. Ignoring!";
+        }
+        pclose(output);
+        LOG(INFO) << "Overscan is enabled - compensation set to (" << overscan_left << ", " << overscan_top << ").";
+    }
+}
+#endif
 
 
 
@@ -187,6 +247,9 @@ void GameWindow::init_sdl() {
     
 #ifdef USE_GLES
     bcm_host_init();
+#ifndef STATIC_OVERSCAN
+    query_overscan(&GameWindow::overscan_left, &GameWindow::overscan_top);
+#endif
 #endif
     
     LOG(INFO) << "Initializing SDL...";
