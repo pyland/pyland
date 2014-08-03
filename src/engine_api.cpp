@@ -17,14 +17,15 @@
 
 #define TILE_SIZE 32
 
-//TODO: THis needs to work with renderable objects 
+//TODO: THis needs to work with renderable objects
 void Engine::move_object(int id, Vec2D move_by) {
     std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
 
     if (!character) { return; }
     if (character->moving) { return; }
 
-    Vec2D location = Vec2D(character->get_x_position(), character->get_y_position());
+    Vec2D location = Vec2D(int(character->get_x_position()),
+                           int(character->get_y_position()));
     Vec2D target = location + move_by;
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y << ".\n"
@@ -84,7 +85,7 @@ bool Engine::walkable(Vec2D location) {
         VLOG(2) << "Cannot move to requested tile due to map bounds";
         return false;
     }
-       
+
     //Check for collidable objects
     if(!Engine::map_viewer->get_map()->is_walkable(location.x, location.y)) {
         VLOG(2) << "Cannot move to requested tile due to collidable objects";
@@ -139,7 +140,8 @@ Vec2D Engine::find_object(int id) {
         if(object_id == id) {
             //Object is on the map so now get its locationg
             auto object = ObjectManager::get_instance().get_object<Object>(id);
-            return Vec2D(object->get_x_position(), object->get_y_position());
+            return Vec2D(int(object->get_x_position()),
+                         int(object->get_y_position()));
         }
     }
 
@@ -170,7 +172,10 @@ std::vector<int> Engine::get_objects_at(Vec2D location) {
     for(int object_id : objects) {
         //Object is on the map so now get its locationg
         auto object = ObjectManager::get_instance().get_object<Object>(object_id);
-        if (Vec2D(object->get_x_position(), object->get_y_position()) == location) {
+        Vec2D current_location(int(object->get_x_position()),
+                               int(object->get_y_position()));
+
+        if (current_location == location) {
             results.push_back(object_id);
         }
     }
@@ -182,7 +187,7 @@ std::string Engine::editor = DEFAULT_PY_EDITOR;
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
     EventManager::get_instance().add_event(
-        [dialogue_box, text_to_display] () {
+        [text_to_display] () {
             (*dialogue_box).set_text(text_to_display);
             std::cout << text_to_display << std::endl;
         }
