@@ -1,4 +1,4 @@
 import random
 
-for _ in range(100):
+for _ in range(20):
 	move(east)
