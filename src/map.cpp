@@ -515,7 +515,9 @@ Map::Blocker::Blocker(const Map::Blocker &other):
 }
 
 Map::Blocker::~Blocker() {
-    (*blocker)[tile.x][tile.y] = (*blocker)[tile.x][tile.y] - 1;
+    LOG(INFO) << "Unblocking tile at " << tile.x << ", " << tile.y << ".";
+
+    blocker->at(tile.x).at(tile.y) = blocker->at(tile.x).at(tile.y) - 1;
 
     LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
       << " decreased from " << (*blocker)[tile.x][tile.y] + 1
