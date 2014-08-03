@@ -22,6 +22,7 @@
 
 #include <glog/logging.h>
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <utility>
 
@@ -89,49 +90,125 @@ GameWindow::InitException::InitException(const std::string &message): std::runti
 
 
 #ifdef USE_GLES
-#include <stdio.h>
+#include <limits>
 ///
 /// Queries the overscan values to compensate the window position.
 ///
-/// Until a better API becomes available, query using vcgencmd.
-/// I don't think it's pretty, but it'll work on the Pi.
+/// For a VERY short time, this TRIED to use vcgencmd, but it turns out
+/// that is very good at ignoring disable_overscan.
+/// For now, we are forced to read the /boot/config.txt file.
 ///
 static void query_overscan(int* overscan_left, int* overscan_top) {
-    FILE* output;
-    int disable_overscan = 0;
-    *overscan_left = 0;
-    *overscan_top = 0;
-    // If overscan is disabled, set overscan to (0, 0).
-    output = popen("/opt/vc/bin/vcgencmd get_config disable_overscan", "r");
-    if (output == nullptr) {
-        // We couldn't get the information. Just accept it.
-        LOG(ERROR) << "Unable to query overscan using vcgencmd. Using defaults.";
+    // 256 should be more than enough.
+    // This is not a string because we want to find an = in it.
+    char line[256];
+    char* value;
+    std::ifstream input;
+    int disable = 0;
+    int left = *overscan_left;
+    int top  = *overscan_top;
+    
+    input.open("/boot/config.txt");
+    if (input.fail()) {
+        LOG(ERROR) << "Unable to query overscan using /boot/config.txt. Using defaults.";
         return;
     }
-    if (fscanf(output, "disable_overscan=%i", &disable_overscan) != 1) {
-        LOG(ERROR) << "Unable to query disable_overscan using vcgencmd. Using defaults";
-        return;
+
+    while (!input.eof()) {
+        switch (input.peek()) {
+        case '#':
+            // Ignore a comment.
+            input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            break;
+        case '\n':
+            // Skip character.
+            input.ignore();
+            break;
+        default:
+            input.getline(line, 255);
+            value = nullptr;
+            for (int i = 0; i < 255; i++) {
+                if (line[i] == '=') {
+                    line[i] = '\0';
+                    value = &line[i+1];
+                    break;
+                }
+            }
+            if (value == nullptr || value[0] == '\0') {
+                LOG(WARNING) << "/boot/config.txt parse error: line: " << line;
+            }
+            else {
+                try {
+                    std::string param_s(line);
+                    std::string value_s(value);
+                    if      (param_s == "disable_overscan") {
+                        disable = stoi(value_s);
+                    }
+                    else if (param_s == "overscan_left") {
+                        left = stoi(value_s);
+                    }
+                    else if (param_s == "overscan_top") {
+                        top = stoi(value_s);
+                    }                        
+                }
+                catch (std::exception) {
+                    LOG(WARNING) << "/boot/config.txt parse error: line: " << line;
+                }
+            }
+        }
     }
-    pclose(output);
-    if (disable_overscan == 1) {
+
+    input.close();
+
+    if (disable == 1) {
         *overscan_left = 0;
         *overscan_top  = 0;
         LOG(INFO) << "Overscan is disabled - compensation set to (0, 0).";
-    } else {
-        // Get left overscan.
-        output = popen("/opt/vc/bin/vcgencmd get_config overscan_left", "r");
-        if (fscanf(output, "overscan_left=%i", overscan_left) != 1) {
-            LOG(ERROR) << "Unable to query overscan_left using vcgencmd. Ignoring!";
-        }
-        pclose(output);
-        // Get top overscan.
-        output = popen("/opt/vc/bin/vcgencmd get_config overscan_top", "r");
-        if (fscanf(output, "overscan_top=%i", overscan_top) != 1) {
-            LOG(ERROR) << "Unable to query overscan_top using vcgencmd. Ignoring!";
-        }
-        pclose(output);
-        LOG(INFO) << "Overscan is enabled - compensation set to (" << overscan_left << ", " << overscan_top << ").";
     }
+    else {
+        *overscan_left = left;
+        *overscan_top  = top;
+        LOG(INFO) << "Overscan is enabled - compensation set to (" << *overscan_left << ", " << *overscan_top << ").";
+    }
+
+    // FILE* output;
+    // int disable_overscan = 0;
+    // *overscan_left = 0;
+    // *overscan_top = 0;
+    // // If overscan is disabled, set overscan to (0, 0).
+    // output = popen("/opt/vc/bin/vcgencmd get_config disable_overscan", "r");
+    // if (output == nullptr) {
+    //     // We couldn't get the information. Just accept it.
+    //     LOG(ERROR) << "Unable to query overscan using vcgencmd. Using defaults.";
+    //     return;
+    // }
+    // char tmp[256];
+    // fgets(tmp, 255, output);
+    // std::cout << tmp << std::endl;
+    // if (fscanf(output, "disable_overscan=%i\n", &disable_overscan) != 1) {
+    //     LOG(ERROR) << "Unable to query disable_overscan using vcgencmd. Using defaults";
+    //     return;
+    // }
+    // pclose(output);
+    // if (disable_overscan == 1) {
+    //     *overscan_left = 0;
+    //     *overscan_top  = 0;
+    //     LOG(INFO) << "Overscan is disabled - compensation set to (0, 0).";
+    // } else {
+    //     // Get left overscan.
+    //     output = popen("/opt/vc/bin/vcgencmd get_config overscan_left", "r");
+    //     if (fscanf(output, "overscan_left=%i\n", overscan_left) != 1) {
+    //         LOG(ERROR) << "Unable to query overscan_left using vcgencmd. Ignoring!";
+    //     }
+    //     pclose(output);
+    //     // Get top overscan.
+    //     output = popen("/opt/vc/bin/vcgencmd get_config overscan_top", "r");
+    //     if (fscanf(output, "overscan_top=%i\n", overscan_top) != 1) {
+    //         LOG(ERROR) << "Unable to query overscan_top using vcgencmd. Ignoring!";
+    //     }
+    //     pclose(output);
+    //     LOG(INFO) << "Overscan is enabled - compensation set to (" << overscan_left << ", " << overscan_top << ").";
+    // }
 }
 #endif
 
