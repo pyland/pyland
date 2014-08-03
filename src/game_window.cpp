@@ -170,45 +170,6 @@ static void query_overscan(int* overscan_left, int* overscan_top) {
         *overscan_top  = top;
         LOG(INFO) << "Overscan is enabled - compensation set to (" << *overscan_left << ", " << *overscan_top << ").";
     }
-
-    // FILE* output;
-    // int disable_overscan = 0;
-    // *overscan_left = 0;
-    // *overscan_top = 0;
-    // // If overscan is disabled, set overscan to (0, 0).
-    // output = popen("/opt/vc/bin/vcgencmd get_config disable_overscan", "r");
-    // if (output == nullptr) {
-    //     // We couldn't get the information. Just accept it.
-    //     LOG(ERROR) << "Unable to query overscan using vcgencmd. Using defaults.";
-    //     return;
-    // }
-    // char tmp[256];
-    // fgets(tmp, 255, output);
-    // std::cout << tmp << std::endl;
-    // if (fscanf(output, "disable_overscan=%i\n", &disable_overscan) != 1) {
-    //     LOG(ERROR) << "Unable to query disable_overscan using vcgencmd. Using defaults";
-    //     return;
-    // }
-    // pclose(output);
-    // if (disable_overscan == 1) {
-    //     *overscan_left = 0;
-    //     *overscan_top  = 0;
-    //     LOG(INFO) << "Overscan is disabled - compensation set to (0, 0).";
-    // } else {
-    //     // Get left overscan.
-    //     output = popen("/opt/vc/bin/vcgencmd get_config overscan_left", "r");
-    //     if (fscanf(output, "overscan_left=%i\n", overscan_left) != 1) {
-    //         LOG(ERROR) << "Unable to query overscan_left using vcgencmd. Ignoring!";
-    //     }
-    //     pclose(output);
-    //     // Get top overscan.
-    //     output = popen("/opt/vc/bin/vcgencmd get_config overscan_top", "r");
-    //     if (fscanf(output, "overscan_top=%i\n", overscan_top) != 1) {
-    //         LOG(ERROR) << "Unable to query overscan_top using vcgencmd. Ignoring!";
-    //     }
-    //     pclose(output);
-    //     LOG(INFO) << "Overscan is enabled - compensation set to (" << overscan_left << ", " << overscan_top << ").";
-    // }
 }
 #endif
 
@@ -281,7 +242,6 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
     catch (InitException e) {
 #ifdef USE_GLES
         vc_dispmanx_display_close(dispmanDisplay);
-        // SDL_DestroyRenderer (renderer);
 #endif
         SDL_DestroyWindow (window);
         if (windows.size() == 0) {
@@ -303,9 +263,7 @@ GameWindow::~GameWindow() {
 
 #ifdef USE_GLES
     vc_dispmanx_display_close(dispmanDisplay); // (???)
-    // SDL_DestroyRenderer (renderer);
 #endif
-    // window_count--;
     windows.erase(SDL_GetWindowID(window));
     
     SDL_DestroyWindow (window);
@@ -525,17 +483,6 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
             throw GameWindow::InitException("Error creating pbuffer surface: " + hex_error_code.str());
         }
 
-        // We'll now want an image for aiding the display of our
-        // background window's content. This has a good chance of having
-        // an out-of-memory error.
-        // try {
-        //     // w by h image, non opengl as we don't want power of two.
-        //     background = Image(w, h, false);
-        // } catch (std::bad_alloc e) {
-        //     LOG(ERROR) << "Failed to create image for window background." << e.what();
-        //     background = Image();
-        // }
-
         sdl_window_surface = SDL_GetWindowSurface(window);
         
         // Create an SDL surface for background blitting. RGBX
@@ -695,24 +642,6 @@ void GameWindow::update() {
                               &x,
                               &y,
                               &child);
-        // Ensure that the window focus is correct. Once again, don't
-        // rely on SDL events.
-        // Currently, we test for window focus via input grab.
-        // if (window->change_surface == InitAction::DO_NOTHING) {
-        //     if (SDL_GetWindowFlags(window->window) & SDL_WINDOW_INPUT_FOCUS) {
-        //         if (window->foreground == false) {
-        //             LOG(INFO) << "Need surface reinit (gained focus).";
-        //             window->foreground = true;
-        //             window->change_surface = InitAction::DO_INIT;
-        //         }
-        //     } else {
-        //         if (window->foreground == true) {
-        //             LOG(INFO) << "Need surface reinit (lost focus).";
-        //             window->foreground = false;
-        //             window->change_surface = InitAction::DO_INIT;
-        //         }
-        //     }
-        // }
         if ((window->window_x != x || window->window_y != y) && window->visible) {
             LOG(INFO) << "Need surface reinit (moved).";
             window->change_surface = InitAction::DO_INIT;
