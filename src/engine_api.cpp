@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <future>
 #include <glog/logging.h>
 #include <memory>
 #include <utility>
@@ -17,12 +18,22 @@
 
 #define TILE_SIZE 32
 
-//TODO: THis needs to work with renderable objects
 void Engine::move_object(int id, Vec2D move_by) {
+    // TODO: Make sure std::promise garbage collects correctly
+    Engine::move_object(id, move_by, std::make_shared<std::promise<bool>>());
+}
+
+//TODO: This needs to work with renderable objects
+void Engine::move_object(int id,
+                         Vec2D move_by,
+                         std::shared_ptr<std::promise<bool>> succeeded_promise_ptr) {
+
     std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
 
-    if (!character) { return; }
-    if (character->moving) { return; }
+    if (!character || character->moving) {
+        succeeded_promise_ptr->set_value(false);
+        return;
+    }
 
     Vec2D location = Vec2D(int(character->get_x_position()),
                            int(character->get_y_position()));
@@ -32,7 +43,10 @@ void Engine::move_object(int id, Vec2D move_by) {
             << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
 
     // TODO: animate walking in-place
-    if (!walkable(target)) { return; }
+    if (!walkable(target)) {
+        succeeded_promise_ptr->set_value(false);
+        return;
+    }
 
     character->set_state_on_moving_start(target);
 
@@ -44,9 +58,12 @@ void Engine::move_object(int id, Vec2D move_by) {
     // Motion
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
-        [location, target, id] (double completion) {
+        [succeeded_promise_ptr, location, target, id] (double completion) {
             std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
-            if (!character) { return false; }
+            if (!character) {
+                succeeded_promise_ptr->set_value(false);
+                return false;
+            }
 
             character->set_x_position(location.x * (1-completion) + target.x * completion);
             character->set_y_position(location.y * (1-completion) + target.y * completion);
@@ -64,6 +81,8 @@ void Engine::move_object(int id, Vec2D move_by) {
                 EventManager::get_instance().add_event([target, id] () {
                     get_map_viewer()->get_map()->event_step_on.trigger(target, id);
                 });
+
+                succeeded_promise_ptr->set_value(true);
             }
 
             // Run to completion
