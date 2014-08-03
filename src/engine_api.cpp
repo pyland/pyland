@@ -188,7 +188,7 @@ void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
     EventManager::get_instance().add_event(
         [text_to_display] () {
-            (*dialogue_box).set_text(text_to_display);
+            Engine::get_dialogue_box()->set_text(text_to_display);
             std::cout << text_to_display << std::endl;
         }
     );

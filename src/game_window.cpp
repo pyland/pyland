@@ -1,5 +1,28 @@
+// //////////////////////////////////////////////////////////////
+// //////////////////////// CURRENT BUGS ////////////////////////
+// //////////////////////////////////////////////////////////////
+//  First window focus events are lost:
+//      Temporary fix in constructor function.
+//      This is only a problem on GLES platforms.
+//
+
+// Behaviour modifiers (defines):
+//  STATIC_OVERSCAN:
+//      Set overscan compensation by force, don't query it.
+//      Sets OVERSCAN_LEFT=24 and OVERSCAN_TOP=16 by default.
+//  OVERSCAN_LEFT, OVERSCAN_TOP:
+//      Set default (or fixed) overscan.
+//  GAME_WINDOW_DISABLE_DIRECT_RENDER:
+//      Never render directly to the screen - always use a PBuffer.
+//      This is primarily for debugging purposes. It will decrease
+//      performance signifficantly.
+//
+
+
+
 #include <glog/logging.h>
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <utility>
 
@@ -15,6 +38,7 @@ extern "C" {
 #include <bcm_host.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <GLES2/gl2.h>
 #include <X11/Xlib.h>
 #endif
 }
@@ -27,19 +51,29 @@ extern "C" {
 
 
 #ifdef USE_GLES
+
 #ifdef STATIC_OVERSCAN
+
+#ifndef OVERSCAN_LEFT
 #define OVERSCAN_LEFT 24
+#endif
+#ifndef OVERSCAN_TOP
 #define OVERSCAN_TOP  16
+#endif
+
 #else
+
 #ifndef OVERSCAN_LEFT
 #define OVERSCAN_LEFT 0
 #endif
 #ifndef OVERSCAN_TOP
 #define OVERSCAN_TOP  0
 #endif
+
 #endif
 int GameWindow::overscan_left = OVERSCAN_LEFT;
 int GameWindow::overscan_top  = OVERSCAN_TOP;
+
 #endif
 
 
@@ -55,9 +89,100 @@ GameWindow::InitException::InitException(const std::string &message): std::runti
 
 
 
+#ifdef USE_GLES
+#include <limits>
+///
+/// Queries the overscan values to compensate the window position.
+///
+/// For a VERY short time, this TRIED to use vcgencmd, but it turns out
+/// that is very good at ignoring disable_overscan.
+/// For now, we are forced to read the /boot/config.txt file.
+///
+static void query_overscan(int* overscan_left, int* overscan_top) {
+    // 256 should be more than enough.
+    // This is not a string because we want to find an = in it.
+    char line[256];
+    char* value;
+    std::ifstream input;
+    int disable = 0;
+    int left = *overscan_left;
+    int top  = *overscan_top;
+    
+    input.open("/boot/config.txt");
+    if (input.fail()) {
+        LOG(ERROR) << "Unable to query overscan using /boot/config.txt. Using defaults.";
+        return;
+    }
+
+    while (!input.eof()) {
+        switch (input.peek()) {
+        case '#':
+            // Ignore a comment.
+            input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            break;
+        case '\n':
+            // Skip character.
+            input.ignore();
+            break;
+        default:
+            input.getline(line, 255);
+            value = nullptr;
+            for (int i = 0; i < 255; i++) {
+                if (line[i] == '=') {
+                    line[i] = '\0';
+                    value = &line[i+1];
+                    break;
+                }
+            }
+            if (value == nullptr || value[0] == '\0') {
+                LOG(WARNING) << "/boot/config.txt parse error: line: " << line;
+            }
+            else {
+                try {
+                    std::string param_s(line);
+                    std::string value_s(value);
+                    if      (param_s == "disable_overscan") {
+                        disable = stoi(value_s);
+                    }
+                    else if (param_s == "overscan_left") {
+                        left = stoi(value_s);
+                    }
+                    else if (param_s == "overscan_top") {
+                        top = stoi(value_s);
+                    }                        
+                }
+                catch (std::exception) {
+                    LOG(WARNING) << "/boot/config.txt parse error: line: " << line;
+                }
+            }
+        }
+    }
+
+    input.close();
+
+    if (disable == 1) {
+        *overscan_left = 0;
+        *overscan_top  = 0;
+        LOG(INFO) << "Overscan is disabled - compensation set to (0, 0).";
+    }
+    else {
+        *overscan_left = left;
+        *overscan_top  = top;
+        LOG(INFO) << "Overscan is enabled - compensation set to (" << *overscan_left << ", " << *overscan_top << ").";
+    }
+}
+#endif
+
+
+
 GameWindow::GameWindow(int width, int height, bool fullscreen) {
     visible = false;
+#ifdef GAME_WINDOW_DISABLE_DIRECT_RENDER
+    foreground = false;
+#else
     foreground = true;
+#endif
+    was_foreground = foreground;
     resizing = false;
     window_x = 0;
     window_y = 0;
@@ -91,6 +216,11 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
         throw GameWindow::InitException("Failed to create SDL window");
     }
 
+    // Temporary fix (which just seems to work) for a bug where focus
+    // events are not generated for the first time focus is changed.
+    // SEE ALSO BELOW IN THIS FUNCTION
+    SDL_HideWindow(window);
+    
 #ifdef USE_GLES
     SDL_GetWindowWMInfo(window, &wm_info);
 #endif
@@ -101,7 +231,9 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
 
 #ifdef USE_GLES
     // Currently has no use with a desktop GL setup.
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    // renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    sdl_window_surface = SDL_GetWindowSurface(window);
+    background_surface = nullptr;
 #endif
     
     try {
@@ -110,7 +242,6 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
     catch (InitException e) {
 #ifdef USE_GLES
         vc_dispmanx_display_close(dispmanDisplay);
-        SDL_DestroyRenderer (renderer);
 #endif
         SDL_DestroyWindow (window);
         if (windows.size() == 0) {
@@ -118,6 +249,11 @@ GameWindow::GameWindow(int width, int height, bool fullscreen) {
         }
         throw e;
     }
+
+    // Temporary fix (which just seems to work) for a bug where focus
+    // events are not generated for the first time focus is changed.
+    // SEE ALSO ABOVE IN THIS FUNCTION.
+    SDL_ShowWindow(window);
 
     windows[SDL_GetWindowID(window)] = this;
 }
@@ -127,9 +263,7 @@ GameWindow::~GameWindow() {
 
 #ifdef USE_GLES
     vc_dispmanx_display_close(dispmanDisplay); // (???)
-    SDL_DestroyRenderer (renderer);
 #endif
-    // window_count--;
     windows.erase(SDL_GetWindowID(window));
     
     SDL_DestroyWindow (window);
@@ -148,6 +282,9 @@ void GameWindow::init_sdl() {
     
 #ifdef USE_GLES
     bcm_host_init();
+#ifndef STATIC_OVERSCAN
+    query_overscan(&GameWindow::overscan_left, &GameWindow::overscan_top);
+#endif
 #endif
     
     LOG(INFO) << "Initializing SDL...";
@@ -179,21 +316,12 @@ void GameWindow::init_gl() {
 #ifdef USE_GLES  
     EGLBoolean result;
   
-    static const EGLint window_attribute_list[] = {
-        EGL_RED_SIZE, 8,
-        EGL_GREEN_SIZE, 8,
-        EGL_BLUE_SIZE, 8,
-        EGL_ALPHA_SIZE, 8,
-        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-        EGL_NONE
-    };
-
-    static const EGLint pbuffer_attribute_list[] = {
+    static const EGLint attribute_list[] = {
         EGL_RED_SIZE, 8,
         EGL_GREEN_SIZE, 8,
         EGL_BLUE_SIZE, 8,
         EGL_ALPHA_SIZE, 0,
-        EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
+        EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
         EGL_NONE
     };
 
@@ -216,18 +344,11 @@ void GameWindow::init_gl() {
         throw GameWindow::InitException("Error initializing display connection");
     }
 
-    // Get frame buffer configuration for direct screen rendering.
-    result = eglChooseConfig(display, attribute_list, &window_config, 1, &configCount);
+    // Get frame buffer configuration.
+    result = eglChooseConfig(display, attribute_list, &config, 1, &configCount);
     if (result == EGL_FALSE) {
         eglTerminate(display);
         throw GameWindow::InitException("Error getting window frame buffer configuration");
-    }
-
-    // Get frame buffer configuration for pixel buffer rendering.
-    result = eglChooseConfig(display, attribute_list, &pbuffer_config, 1, &configCount);
-    if (result == EGL_FALSE) {
-        eglTerminate(display);
-        throw GameWindow::InitException("Error getting pbuffer frame buffer configuration");
     }
 
     //Should I use eglBindAPI? It is auomatically ES anyway.
@@ -294,7 +415,8 @@ void GameWindow::init_surface() {
 
 void GameWindow::init_surface(int x, int y, int w, int h) {
     deinit_surface();
-
+    // Because deinit clears this.
+    change_surface = InitAction::DO_INIT;
 #ifdef USE_GLES
     EGLSurface new_surface;
     
@@ -337,7 +459,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
         nativeWindow.height = h; // (???)
         vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
     
-        new_surface = eglCreateWindowSurface(display, window_config, &nativeWindow, nullptr);
+        new_surface = eglCreateWindowSurface(display, config, &nativeWindow, nullptr);
         if (new_surface == EGL_NO_SURFACE) {
             std::stringstream hex_error_code;
             hex_error_code << std::hex << eglGetError();
@@ -345,18 +467,42 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
             throw GameWindow::InitException("Error creating window surface: " + hex_error_code.str());
         }
     } else {
-        static EGLint attribute_list = {
+        EGLint attribute_list[] = {
             EGL_WIDTH, w,
             EGL_HEIGHT, h,
             EGL_NONE
         };
-        new_surface = eglCreatePbufferSurface(display, pbuffer_config, attribute_list);
+        
+        LOG(INFO) << "New surface: " << w << "x" << h << " (Pixel Buffer).";
+
+        new_surface = eglCreatePbufferSurface(display, config, attribute_list);
         if (new_surface == EGL_NO_SURFACE) {
             std::stringstream hex_error_code;
             hex_error_code << std::hex << eglGetError();
 
             throw GameWindow::InitException("Error creating pbuffer surface: " + hex_error_code.str());
         }
+
+        sdl_window_surface = SDL_GetWindowSurface(window);
+        
+        // Create an SDL surface for background blitting. RGBX
+        background_surface = SDL_CreateRGBSurface(0,
+                                                  sdl_window_surface->w,
+                                                  sdl_window_surface->h,
+                                                  32,
+#if SDL_BYTE_ORDER == SDL_BIG_ENDIAN
+                                                  0xff000000,
+                                                  0x00ff0000,
+                                                  0x0000ff00,
+                                                  0x00000000
+#else
+                                                  0x000000ff,
+                                                  0x0000ff00,
+                                                  0x00ff0000,
+                                                  0x00000000
+#endif
+                                                  );
+        SDL_SetSurfaceBlendMode(background_surface, SDL_BLENDMODE_NONE);
     }
     surface = new_surface;
 
@@ -367,10 +513,11 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     }
 
     // Clean up any garbage in the SDL window.
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
+    // SDL_RenderClear(renderer);
+    // SDL_RenderPresent(renderer);
 #endif
-    
+
+    was_foreground = foreground;
     visible = true;
     change_surface = InitAction::DO_NOTHING;
     // Only set these if the init was successful.
@@ -385,11 +532,18 @@ void GameWindow::deinit_surface() {
 #ifdef USE_GLES
     if (visible) {
         int result;
-        
-        DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
-        dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
-        vc_dispmanx_element_remove (dispmanUpdate, dispmanElement);
-        vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
+
+        if (was_foreground) {
+            DISPMANX_UPDATE_HANDLE_T dispmanUpdate;
+            dispmanUpdate  = vc_dispmanx_update_start(0); // (???)
+            vc_dispmanx_element_remove (dispmanUpdate, dispmanElement);
+            vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
+        } else {
+            if (background_surface != nullptr) {
+                SDL_FreeSurface(background_surface);
+                background_surface = nullptr;
+            }
+        }
         
         eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         result = eglDestroySurface(display, surface);
@@ -429,19 +583,31 @@ void GameWindow::update() {
                 window->request_close();
                 break;
             case SDL_WINDOWEVENT_RESIZED:
-                window->resizing = true;
-            case SDL_WINDOWEVENT_MOVED:
-            case SDL_WINDOWEVENT_RESTORED:
             case SDL_WINDOWEVENT_MAXIMIZED:
+            case SDL_WINDOWEVENT_RESTORED:
+                window->resizing = true;
+                LOG(INFO) << "Need surface reinit (resize)";
+                window->change_surface = InitAction::DO_INIT;
+                focused_window = window;
+                break;
+            case SDL_WINDOWEVENT_MOVED:
+                LOG(INFO) << "Need surface reinit (moved)";
+                window->change_surface = InitAction::DO_INIT;
+                focused_window = window;
+                break;
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
+                LOG(INFO) << "Need surface reinit (gained focus)";
+#ifndef GAME_WINDOW_DISABLE_DIRECT_RENDER
                 window->foreground = true;
+#endif
                 window->change_surface = InitAction::DO_INIT;
                 focused_window = window;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
             case SDL_WINDOWEVENT_MINIMIZED:
             case SDL_WINDOWEVENT_HIDDEN:
+                LOG(INFO) << "Need surface reinit (lost focus)";
                 window->foreground = false;
                 // This used to deinit, but that is actually bad.
                 window->change_surface = InitAction::DO_INIT;
@@ -476,8 +642,8 @@ void GameWindow::update() {
                               &x,
                               &y,
                               &child);
-        if ((window->window_x != x || window->window_y != y) && window->visible && window->foreground) {
-            LOG(INFO) << "Need surface reinit.";
+        if ((window->window_x != x || window->window_y != y) && window->visible) {
+            LOG(INFO) << "Need surface reinit (moved).";
             window->change_surface = InitAction::DO_INIT;
         }
 #endif
@@ -546,9 +712,50 @@ void GameWindow::use_context() {
 }
 
 
+void GameWindow::disable_context() {
+#ifdef USE_GLES
+    if (visible) {
+        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    }
+#endif
+#ifdef USE_GL
+    SDL_GL_MakeCurrent(window, NULL);
+#endif
+}
+
+
 void GameWindow::swap_buffers() {
 #ifdef USE_GLES
-    eglSwapBuffers(display, surface);
+    if (visible) {
+        if (foreground) {
+            // Only "direct"-to-screen rendering is double buffered.
+            eglSwapBuffers(display, surface);
+        } else {
+            // Render the content of the pixel buffer to the SDL window.
+
+            // Copy the render into a compatible surface.
+            glReadPixels(0,
+                         0,
+                         background_surface->w,
+                         background_surface->h,
+                         GL_RGBA,
+                         GL_UNSIGNED_BYTE,
+                         background_surface->pixels);
+
+            // Copy (blit) the surface (whilst flipping) to the SDL window's surface.
+            SDL_Rect dst;
+            SDL_Rect src;
+            dst.x = src.x = 0;
+            dst.w = src.w = sdl_window_surface->w;
+            dst.h = src.h = 1;
+            for (int y = 0; y < background_surface->h; y++) {
+                src.y = sdl_window_surface->h - y - 1;
+                dst.y = y;
+                SDL_BlitSurface(background_surface, &src, sdl_window_surface, &dst);
+            }
+            SDL_UpdateWindowSurface(window);
+        }
+    }
 #endif
 #ifdef USE_GL
     SDL_GL_SwapWindow(window);
