@@ -172,16 +172,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
         map->event_step_on.register_callback(
             finish_location,
             [&] (int) {
-                Engine::print_dialogue("Game",
-                    "You Win, Well Done !"
-                );
-                    // "▄▄▄    ▄▄▄                              ▄▄      ▄▄  ▄▄▄▄▄▄   ▄▄▄   ▄▄     ▄▄\n" 
-                    // " ██▄  ▄██                               ██      ██  ▀▀██▀▀   ███   ██     ██\n" 
-                    // "  ██▄▄██    ▄████▄   ██    ██           ▀█▄ ██ ▄█▀    ██     ██▀█  ██     ██\n" 
-                    // "   ▀██▀    ██▀  ▀██  ██    ██            ██ ██ ██     ██     ██ ██ ██     ██\n" 
-                    // "    ██     ██    ██  ██    ██            ███▀▀███     ██     ██  █▄██     ▀▀\n" 
-                    // "    ██     ▀██▄▄██▀  ██▄▄▄███            ███  ███   ▄▄██▄▄   ██   ███     ▄▄\n" 
-                    // "    ▀▀       ▀▀▀▀     ▀▀▀▀ ▀▀            ▀▀▀  ▀▀▀   ▀▀▀▀▀▀   ▀▀   ▀▀▀     ▀▀\n" 
+                Engine::print_dialogue("Game", "You Win, Well Done !");
                 return true;
             }
 

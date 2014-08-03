@@ -169,7 +169,7 @@ public:
     Dispatcher<int> event_character_add;
     PositionDispatcher<int> event_step_on;
     PositionDispatcher<int> event_step_off;
-    std::vector <std::vector<int>> blocker;
+    std::vector<std::vector<int>> blocker;
 
     Map(const std::string map_src);
     ~Map();
