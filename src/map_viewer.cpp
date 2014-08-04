@@ -7,6 +7,7 @@
 #include "object.hpp"
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
+#include "engine_api.hpp"
 
 
 #include <algorithm>
@@ -296,6 +297,7 @@ void MapViewer::refocus_map() {
     } else {
         LOG(INFO) << "MapViewer::refocus_map: No objects have focus.";
     }
+    Engine::text_updater();
 }
 
 void MapViewer::set_map(Map* new_map) {

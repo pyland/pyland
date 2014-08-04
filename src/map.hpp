@@ -279,6 +279,7 @@ public:
     ///
     /// converts a tile in map to a pixel location in window of the bottem left corner of tile
     Vec2D tile_to_pixel (Vec2D tile_location);
+    Vec2D tile_to_pixel(std::pair<double,double> tile_location) ;
 };
 
 #endif

@@ -56,8 +56,8 @@ void Engine::move_object(int id,
     });
 
     // move text with charcters
-    Vec2D pixel_target = get_map_viewer()->get_map()->tile_to_pixel(target);
-    character->get_character_text()->move(pixel_target.x, pixel_target.y);
+    // Vec2D pixel_target = get_map_viewer()->get_map()->tile_to_pixel(target);
+    // character->get_character_text()->move(pixel_target.x, pixel_target.y);
 
     // Motion
     EventManager::get_instance().add_timed_event(
@@ -245,9 +245,14 @@ void Engine::text_updater() {
     for(int object_id : objects) {
         //Object is on the map so now get its locationg
         auto character = ObjectManager::get_instance().get_object<Character>(object_id);
-        auto object = ObjectManager::get_instance().get_object<Object>(object_id);
-        Vec2D tile = Vec2D(object->get_x_position(), object->get_y_position());
+
+        std::pair<double,double> tile(character->get_x_position(), character->get_y_position());
+
         Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(tile);
+
+        VLOG(2) << "sprite location" << character->get_x_position() << " " << character->get_y_position();
+        VLOG(2) << "Pixel position: " << pixel_position.to_string();
+
         character->get_character_text()->move(pixel_position.x, pixel_position.y);
     }
 

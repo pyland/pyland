@@ -541,15 +541,30 @@ Vec2D Map::pixel_to_tile(Vec2D pixel_location) {
 }
 
 Vec2D Map::tile_to_pixel(Vec2D tile_location) {
+    VLOG(2) << "incoming tiles" << tile_location.to_string();
     float scale(TILESET_ELEMENT_SIZE*GLOBAL_SCALE);
-    std::cout << scale << std::endl;
 
     Vec2D results(int(float(tile_location.x) * scale),
                   int(float(tile_location.y) * scale));
 
+    VLOG(2) << "incoming get_display" << Map::get_display_x() << " " << Map::get_display_y();
     results -= Vec2D(int(Map::get_display_x() * scale),
                      int(Map::get_display_y() * scale));
+    VLOG(2) << "outgoing pixel" << results.to_string();
     return results;
 }
+
+Vec2D Map::tile_to_pixel(std::pair<double,double> tile_location) {
+    VLOG(2) << "incoming tiles" << tile_location.first << " " << tile_location.second;
+    double scale(TILESET_ELEMENT_SIZE*GLOBAL_SCALE);
+
+    std::pair<double,double> results(tile_location.first * scale, tile_location.second * scale);
+
+    VLOG(2) << "incoming get_display" << Map::get_display_x() << " " << Map::get_display_y();
+    results.first = results.first - (Map::get_display_x() * scale) ;
+    results.second = results.second - (Map::get_display_y() * scale) ;
+    VLOG(2) << "outgoing pixel" << results.first << " " << results.second;
+    return Vec2D( (int)results.first, (int)results.second);
+}    
 
 
