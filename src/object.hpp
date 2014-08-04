@@ -28,11 +28,6 @@ private:
     /// The object's id
     ///
     int id = 0;
-  
-    ///
-    /// The name of the object
-    ///
-    std::string name = "";
 
     ///
     /// Walkable: determine if the object can be walked over
@@ -54,6 +49,11 @@ protected:
     /// The y position of the object
     ///
     double y_position = 0;
+
+    ///
+    /// The name of the object
+    ///
+    std::string name = "";
 
 public:
     Object();

@@ -114,8 +114,7 @@ void create_character(Interpreter &interpreter) {
     int start_y = 15;
 
     // Registering new character with game engine
-    shared_ptr<Character> new_character = make_shared<Character>(start_x, start_y);
-    new_character->set_name("John");
+    shared_ptr<Character> new_character = make_shared<Character>(start_x, start_y, "John");
     LOG(INFO) << "Adding character";
     ObjectManager::get_instance().add_object(new_character);
     Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
@@ -387,6 +386,13 @@ int main(int argc, const char* argv[]) {
 
     Lifeline text_lifeline = window.register_resize_handler(func);
 
+    std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) { 
+        LOG(INFO) << "text window resizing"; 
+        Engine::text_updater();
+    };
+
+    Lifeline text_lifeline_char = window.register_resize_handler(func_char);
+
     std::string editor;
 
     if (argc >= 2) {
@@ -408,6 +414,7 @@ int main(int argc, const char* argv[]) {
         em.process_events();
         map_viewer.render_map();
         mytext.display();
+        Engine::text_displayer();
         stoptext.display();
         runtext.display();
         cursor.display();

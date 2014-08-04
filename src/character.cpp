@@ -31,14 +31,26 @@
 
 
 
-Character::Character(int _x_position, int _y_position) {
+Character::Character(int _x_position, int _y_position, std::string _name) {
+    LOG(INFO) << "register new character called " << _name;
     x_position = _x_position;
     y_position = _y_position;
+    name = _name;
     init_shaders();
     load_textures();
     generate_tex_data();
     generate_vertex_data();
 
+    // setting up sprite text
+    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont myfont(mytype, 18);
+    Text* sprite_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    sprite_text->set_text(name);
+    Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
+    sprite_text->move(pixel_position.x ,pixel_position.y );
+    sprite_text->resize(100,100);
+    character_text = sprite_text;
+    LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // Starting positions should be integral
     assert(trunc(x_position) == x_position);
@@ -51,12 +63,14 @@ Character::Character(int _x_position, int _y_position) {
 
 
     LOG(INFO) << "Character initialized";
+
 }
 
 Character::~Character() {
     delete[] sprite_tex_data;
     delete[] sprite_data;
     delete texture_image;
+    delete character_text;
 
     LOG(INFO) << "Character destructed";
 }

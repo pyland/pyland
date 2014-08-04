@@ -3,6 +3,9 @@
 
 #include "image.hpp"
 #include "object.hpp"
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -30,6 +33,8 @@ class Character : public Object {
 
     Image* texture_image = nullptr;
 
+    Text* character_text = nullptr;
+
 protected:
 
     ///
@@ -42,7 +47,7 @@ protected:
 
 public:
 
-    Character(int _x_position, int _y_position);
+    Character(int _x_position, int _y_position, std::string _name);
     virtual ~Character();
 
     // TODO: Comment
@@ -69,6 +74,9 @@ public:
     /// Initialise the shaders that are being used by the character
     ///
     bool init_shaders();
+
+    Text* get_character_text() {return character_text; }
+    void set_character_text(Text* _character_text) {character_text = _character_text; }
 };
 
 #endif

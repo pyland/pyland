@@ -64,6 +64,8 @@ public:
     /// @return The map instance the viewer manages
     Map* get_map();
 
+    GameWindow* get_window() {return window; }
+
 
 };
 #endif

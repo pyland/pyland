@@ -161,5 +161,7 @@ public:
 
     static void print_dialogue(std::string name, std::string text);
 
+    static void text_displayer();
+    static void text_updater();
 };
 #endif

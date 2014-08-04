@@ -40,6 +40,10 @@ void Engine::move_object(int id, Vec2D move_by) {
         get_map_viewer()->get_map()->event_step_off.trigger(location, id);
     });
 
+    // move text with charcters
+    Vec2D pixel_target = get_map_viewer()->get_map()->tile_to_pixel(target);
+    character->get_character_text()->move(pixel_target.x, pixel_target.y);
+
     // Motion
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
@@ -187,5 +191,41 @@ void Engine::print_dialogue(std::string name, std::string text) {
             std::cout << text_to_display << std::endl;
         }
     );
+}
+
+void Engine::text_displayer() {
+
+    Map* map = map_viewer->get_map();
+    if (!map) {
+        throw std::runtime_error("Map not avalaible");
+    }
+
+    auto objects = map->get_characters();
+    for(int object_id : objects) {
+        //Object is on the map so now get its locationg
+        auto character = ObjectManager::get_instance().get_object<Character>(object_id);
+        if (character->get_character_text() != nullptr) {
+            character->get_character_text()->display();
+        }
+    }
+}
+
+void Engine::text_updater() {
+
+     Map* map = map_viewer->get_map();
+    if (!map) {
+        throw std::runtime_error("Map not avalaible");
+    }
+
+    auto objects = map->get_characters();
+    for(int object_id : objects) {
+        //Object is on the map so now get its locationg
+        auto character = ObjectManager::get_instance().get_object<Character>(object_id);
+        auto object = ObjectManager::get_instance().get_object<Object>(object_id);
+        Vec2D tile = Vec2D(object->get_x_position(), object->get_y_position());
+        Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(tile);
+        character->get_character_text()->move(pixel_position.x, pixel_position.y);
+    }
+
 }
 
