@@ -705,11 +705,15 @@ void GameWindow::use_context() {
 #ifdef USE_GLES
     if (visible) {
         eglMakeCurrent(display, surface, surface, context);
+    } else {
+        LOG(WARNING) << "Window surface is not visible. EGL context lost - OpenGL calls may fail!"
+        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     }
 #endif
 #ifdef USE_GL
     SDL_GL_MakeCurrent(window, sdl_gl_context);
 #endif
+    GraphicsContext::current = &graphics_context;
 }
 
 
@@ -720,13 +724,12 @@ GraphicsContext* GameWindow::get_context() {
 
 void GameWindow::disable_context() {
 #ifdef USE_GLES
-    if (visible) {
-        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-    }
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 #endif
 #ifdef USE_GL
     SDL_GL_MakeCurrent(window, NULL);
 #endif
+    GraphicsContext::current = nullptr;
 }
 
 

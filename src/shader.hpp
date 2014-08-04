@@ -46,8 +46,21 @@ private:
         ///        file.
         /// @return A shared pointer to the relevant Shader.
         ///
-        std::shared_ptr<Shader> get_shader(std::string program_name);
+        std::shared_ptr<Shader> get_shader(const std::string program_name);
+
+        ///
+        /// Removes a shader from the cache. Does not destroy it.
+        ///
+        void remove_shader(const std::string program_name);
     };
+
+    friend class ShaderCache;
+
+    ///
+    /// Program base name (if constructed with program name).
+    ///
+    std::string program_name;
+    
     ///
     /// Indicate if the shader loaded correctly
     ///
@@ -69,9 +82,14 @@ private:
     GLuint vertex_shader = 0;
 
     ///
+    /// The shader cache associated with the shader (if any)
+    ///
+    ShaderCache* cache;
+    
+    ///
     /// Map of graphics contexts to shader caches.
     ///
-    std::map<GraphicsContext*, ShaderCache> shader_caches;
+    static std::map<GraphicsContext*, ShaderCache> shader_caches;
 
     ///
     /// This function loads the shaders
@@ -92,24 +110,31 @@ public:
     };
 
     ///
-    /// Get a commonly used Shader configuration. (STUB)
+    /// Get a commonly used Shader configuration.
     ///
     /// This function is used to share shaders between separate
     /// graphical components. On first run with given parameters it will
     /// load the shader, on other calls it will retrieve it from a
-    /// cache.
+    /// cache. There is a separate cache for each GL context.
     ///
-    /// @param program_path Filename of a shader program description
-    ///        file.
+    /// @param program_name Base path of a shader program description
+    ///        file, or platform's shader files.
     /// @return A shared pointer to the relevant Shader.
     ///
-    std::shared_ptr<Shader> get_shared_shader(const std::string program_path);
+    std::shared_ptr<Shader> get_shared_shader(const std::string program_name);
     
+    /// 
+    /// This function creates the Opengl program from a program base
+    /// name.
+    /// @param program_name The base name/path of the shader files.
+    /// @return A shader ready to be used.
+    ///
+    Shader(const std::string program_name);
     /// 
     /// This function creates the Opengl program
     /// @param vs The source file for the vertex source
     /// @param fs The source file for the fragment source
-    /// @return The program id that Opengl is using for this shader program
+    /// @return A shader ready to be used.
     ///
     Shader(const std::string vs, const std::string fs);
     ~Shader();

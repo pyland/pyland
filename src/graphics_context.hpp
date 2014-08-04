@@ -27,12 +27,22 @@ class GameWindow;
 class GraphicsContext {
 private:
     friend class GameWindow;
+
+    ///
+    /// The currently active context.
+    ///
+    /// This is nullptr when no context is active.
+    ///
+    static GraphicsContext* current;
     
     ///
     /// The window with the one-to-one mapping with the GL context.
     ///
     GameWindow* window;
-    
+
+    ///
+    /// Meant only for creation in and for GameWindow.
+    ///
     GraphicsContext(GameWindow* window);
 public:
     ///
@@ -43,7 +53,16 @@ public:
     ///
     /// Start using this GL context.
     ///
+    /// Note that GameWindow will set the current active context.
+    ///
     void use();
+
+    ///
+    /// Get the current active context.
+    ///
+    /// @return The active context or nullptr when no context is active.
+    ///
+    static GraphicsContext* get_current();
 };
 
 

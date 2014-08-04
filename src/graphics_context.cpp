@@ -1,17 +1,9 @@
-extern "C" {
-#ifdef USE_GL
-#include <SDL2/SDL.h>
-#endif
-
-#ifdef USE_GLES
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#endif
-}
-
-
-
+#include "graphics_context.hpp"
 #include "game_window.hpp"
+
+
+
+GraphicsContext* GraphicsContext::current = nullptr;
 
 
 
@@ -26,5 +18,11 @@ bool GraphicsContext::operator==(GraphicsContext other) {
 
 
 void GraphicsContext::use() {
+    // window will set the current context.
     window->use_context();
+}
+
+
+GraphicsContext* GraphicsContext::get_current() {
+    return current;
 }
