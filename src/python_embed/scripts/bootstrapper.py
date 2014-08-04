@@ -1,8 +1,74 @@
 import os
 import time
+import threading
 import traceback
 
+def cast(cast_type, value):
+    """
+    A value → integer cast that is weaker than int(...) or float(...),
+    primarily by not casting strings.
+
+    Usage:
+        cast("int", 32.1)
+    """
+
+    try:
+        cast_method = getattr(value, "__{}__".format(cast_type))
+
+    except AttributeError:
+        raise TypeError("Value ({}) cannot be cast to {}".format(value, cast_type))
+
+    return cast_method()
+
+def create_execution_scope(entity):
+    # Create all of the functions whilst they are
+    # able to capture entity in their scope
+
+    north =  0, +1
+    south =  0, -1
+    east  = +1,  0
+    west  = -1,  0
+
+    def move(position):
+        entity.print_debug("Python: move({})".format(position))
+
+        x, y = position
+        x = cast("int", x)
+        y = cast("int", y)
+
+        entity.move(x, y)
+
+    def monologue(*args):
+        entity.print_debug("Python: monologue({})".format(args))
+        entity.monologue("\n".join(args))
+
+    def walkable(position):
+        entity.print_debug("Python: walkable({})".format(position))
+
+        x, y = position
+        x = cast("int", x)
+        y = cast("int", y)
+
+        return entity.walkable(x, y)
+
+
+    # Finally, export the desired behaviour
+    return {
+        "north": north,
+        "south": south,
+        "east":  east,
+        "west":  west,
+
+        "move": move,
+        "monologue": monologue,
+        "walkable": walkable
+    }
+
+
 def start(entity, RESTART, STOP, KILL, waiting):
+    """
+    Run the main bootstrapper loop! It's fun!
+    """
 
     entity.print_debug("Started bootstrapper")
     print("Started with entity", entity)
@@ -11,65 +77,49 @@ def start(entity, RESTART, STOP, KILL, waiting):
     while True:
         try:
             while waiting:
+                # Smallest reasonable wait while
+                # allowing fast interrupts.
+                #
+                # Could later be replaced with locking
+                # for proper interrupts.
                 time.sleep(0.05)
 
-            file_name = "python_embed/scripts/John_1.py"
-            entity.print_debug ("reading from file :"+file_name)
-            with open(file_name, encoding="utf-8") as file:
-                with open("python_embed/py_wrapper.py", encoding="utf-8") as file_wrapper:
-                    text = file.read()
-                    entity.print_debug(text)
-                    function = file_wrapper.read() + text
+            script_filename = "python_embed/scripts/John_{}.py".format(entity.id)
+            entity.print_debug("Reading from file: {}".format(script_filename))
 
-            entity.__set_game_speed(10000);
+            with open(script_filename, encoding="utf-8") as script_file:
+                script = script_file.read()
+                entity.print_debug(script)
 
-            exec(function, dict(entity=entity, **globals()))
+            execution_scope = create_execution_scope(entity)
 
-        # TODO: These should be more thought-through.
+            entity.__set_game_speed(100);
+            try:
+                exec(script, execution_scope)
+            finally:
+                entity.__set_game_speed(1);
 
         except RESTART:
-            entity.__set_game_speed(1);
+            entity.print_debug("RESTARTING")
 
-            print("RESTARTING")
             waiting = False
             continue
 
         except STOP:
-            entity.__set_game_speed(1);
+            entity.print_debug("STOPPING")
 
-            print("STOPPING")
             waiting = True
             continue
 
         except KILL:
-            entity.__set_game_speed(1);
+            entity.print_debug("DYING")
 
-            print("DYING")
             raise
 
-        # For all other errors, print and stop
+        # For all other errors, output and stop
         except:
-            entity.__set_game_speed(1);
-
             waiting = True
-            print(2)
-            traceback.print_exc()
+            entity.print_dialogue(traceback.format_exc());
 
         else:
-            entity.__set_game_speed(1);
-
             break
-
-# def run(entity):
-#     """Purely for testing"""
-
-#     print("Running with entity", entity)
-
-#     for _ in range(500):
-#         time.sleep(0.1)
-
-#         import random
-#         entity.move(random.randint(-1, 1), random.randint(-1, 1))
-#         print("Continuing with entity", entity)
-
-#     print("Finishing with entity", entity)

@@ -80,13 +80,14 @@ public:
     /// processed in the queue.
     ///
     void add_event(std::function<void ()>  func);
+    void add_event_next_frame(std::function<void ()>  func);
 
     ///
     /// Add an event with a time duration to run for. e.g. a timer
     /// This is wrapped in a normal event (like one passed to
     /// add_event) internally and internally managed.
     ///
-    /// @param duration The time duration to run the event for in seconds
+    /// @param duration The time duration to run the event for
     /// @param func a boolean return and double argument
     /// lambda. Return true to keep it in the queue and return false
     /// to remove it. The double is intended to be a percentage of

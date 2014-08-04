@@ -25,6 +25,11 @@ class GameTime {
         time_point time();
 
     private:
+        // This exists to unify the two constructors
+        GameTime(double game_seconds_per_real_second,
+                 duration passed_time,
+                 std::chrono::steady_clock::time_point time_at_last_tick);
+
         // Prevent mutation through assinment, which could allow time to go backwards,
         // but don't prevent copying elsewhere.
         GameTime &operator=(const GameTime &) = delete;

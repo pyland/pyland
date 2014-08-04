@@ -39,16 +39,10 @@ protected:
     std::map<std::string, Map::Blocker> blocked_tiles;
 
 
-    ///
-    /// Utility function to make map replace less awful.
-    ///
-    void blocked_set(std::string key, Map::Blocker value);
-
-
 
 public:
 
-    Character();
+    Character(int _x_position, int _y_position);
     virtual ~Character();
 
     // TODO: Comment
@@ -70,7 +64,7 @@ public:
     /// Load the textures that are being used by the character
     ///
     void load_textures();
- 
+
     ///
     /// Initialise the shaders that are being used by the character
     ///

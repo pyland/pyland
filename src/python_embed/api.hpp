@@ -44,6 +44,9 @@ class Vec2D {
         ///
         Vec2D operator+(Vec2D other);
         Vec2D operator-(Vec2D other);
+        Vec2D operator/(Vec2D other);
+        Vec2D operator*(Vec2D other);
+        bool operator==(Vec2D other);
 
         ///
         /// In-place addition of Vec2Ds
@@ -150,6 +153,7 @@ class Entity {
         void monologue(); 
 
         void py_print_debug(std::string text);
+        void py_print_dialogue(std::string text);
 
         void __set_game_speed(float game_seconds_per_real_second);
 };

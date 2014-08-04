@@ -31,7 +31,9 @@
 
 
 
-Character::Character() {
+Character::Character(int _x_position, int _y_position) {
+    x_position = _x_position;
+    y_position = _y_position;
     init_shaders();
     load_textures();
     generate_tex_data();
@@ -43,9 +45,9 @@ Character::Character() {
     assert(trunc(y_position) == y_position);
 
     //Make a character blocked
-    blocked_set("stood on", Engine::get_map_viewer()->get_map()->block_tile(
+    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
         Vec2D(int(x_position), int(y_position))
-    ));
+    )));
 
 
     LOG(INFO) << "Character initialized";
@@ -60,28 +62,16 @@ Character::~Character() {
 }
 
 
-void Character::blocked_set(std::string key, Map::Blocker value) {
-    blocked_tiles.erase(key);
-    blocked_tiles.insert(std::make_pair(key, value));
-}
-
 void Character::set_state_on_moving_start(Vec2D target) {
     moving = true;
-
-    // Must erase before inserting, else nothing happens
-    // TODO:
-        // blocked_set("walking on", Engine::get_map_viewer()->get_map()->block_tile(target));
-        // blocked_set("walking off", blocked_tiles.at("stood on"));
-        // blocked_tiles.erase("stood on");
+    blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
 }
 
 void Character::set_state_on_moving_finish() {
     moving = false;
-
-    // TODO:
-        // blocked_set("stood on", blocked_tiles.at("walking on"));
-        // blocked_tiles.erase("walking on");
-        // blocked_tiles.erase("walking off");
+    blocked_tiles.erase("stood on");
+    blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
+    blocked_tiles.erase("walking to");
 }
 
 

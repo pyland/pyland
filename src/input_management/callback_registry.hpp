@@ -17,6 +17,8 @@ private:
     std::set<Callback<Ret, Args...>> callbacks;
     
 public:
+    CallbackRegistry();
+    ~CallbackRegistry();
     ///
     /// Register a callback.
     ///

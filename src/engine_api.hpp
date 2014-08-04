@@ -6,8 +6,11 @@
 #define ENGINE_API_H
 
 #include <array>
+#include <future>
+#include <memory>
 #include <utility>
 #include <vector>
+
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
@@ -21,7 +24,7 @@ class MapViewer;
 ///
 #define TILESET_ELEMENT_SIZE 16
 
-/// 
+///
 /// default python editor, used as long as another isn't passed as command line arg
 #define DEFAULT_PY_EDITOR "gedit"
 
@@ -29,22 +32,22 @@ class MapViewer;
 class Engine {
 private:
 
-    /// 
+    ///
     /// name of editor used for python editing
     ///
     static std::string editor;
 
     static MapViewer* map_viewer;
 
-    /// 
-    /// pointer for text box 
+    ///
+    /// pointer for text box
     ///
     static Text* dialogue_box;
 
 public:
     ///
     /// Set the map viewer attached to the engine
-    /// @param _map_viewer the map viewer which is attached to the engine 
+    /// @param _map_viewer the map viewer which is attached to the engine
     ///
     static void set_map_viewer(MapViewer* _map_viewer) { map_viewer = _map_viewer; }
 
@@ -58,11 +61,12 @@ public:
     ///
     /// Move sprite onscreen
     ///
-    /// @param id ID of sprite to move 
+    /// @param id ID of sprite to move
     /// @param dx move in x by dx tiles
     /// @param dy move in x by dy tiles
     ///
     static void move_object(int id, Vec2D move_by);
+    static void move_object(int id, Vec2D move_by, std::shared_ptr<std::promise<bool>> succeeded_promise_ptr);
 
     ///
     /// Determine if a location can be walked on
@@ -116,7 +120,7 @@ public:
     /// @return a pair which is the (x, y) tuple of the object position
     ///
     static Vec2D find_object(int id);
-    
+
     ///
     /// Open a text editor for the user to edit a file
     /// @param filename name of file in scripts directory
@@ -146,7 +150,7 @@ public:
     ///
     /// Remove an object from the map at a givene location
     /// @param object_id the id of the object to add
-    /// @param x_pos the x position of the object 
+    /// @param x_pos the x position of the object
     /// @param y_pos the y position of the object
     ///
     static void remove_object(int object_id, Vec2D location);
@@ -157,7 +161,9 @@ public:
     static void set_editor(std::string _editor) {editor = _editor; }
 
     static void set_dialogue_box(Text* _dialogue_box) {dialogue_box = _dialogue_box; }
+    static Text* get_dialogue_box(){return dialogue_box; }
 
     static void print_dialogue(std::string name, std::string text);
+
 };
 #endif
