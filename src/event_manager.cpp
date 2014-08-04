@@ -52,18 +52,9 @@ void EventManager::process_events() {
             std::lock_guard<std::mutex> lock(queue_mutex);
 
             //If the queue is empty, exit this processing
-            //TODO, consider allowing only x number of events to be processed to stop infinite loops
             if(curr_frame_queue->empty()) {
-                //We swap the current_frame and the next_frame
-                //pointers so that the next_frame becomes the
-                //curr_frame.
-                //This is fine as we have the lock and only this event
-                //manager instance has the pointer so nobody can add
-                //items to the curr_frame queue whilst we do this
-                auto temp = curr_frame_queue;
-                curr_frame_queue = next_frame_queue;
-                next_frame_queue = temp;
-
+                //This is safe as we have the lock
+                std::swap(curr_frame_queue, next_frame_queue);
                 break;
             }
 
@@ -71,7 +62,7 @@ void EventManager::process_events() {
             //We've locked the queue so it will definitely have an item
             func = curr_frame_queue->front();
             curr_frame_queue->pop_front();
-        } // Lock released 
+        } // Lock released
 
         //Dispatch the callback
         if(func) {
