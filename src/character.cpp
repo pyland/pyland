@@ -79,7 +79,6 @@ Character::~Character() {
 void Character::set_state_on_moving_start(Vec2D target) {
     moving = true;
     blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
-
 }
 
 void Character::set_state_on_moving_finish() {

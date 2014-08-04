@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <future>
 #include <glog/logging.h>
 #include <memory>
 #include <utility>
@@ -17,21 +18,35 @@
 
 #define TILE_SIZE 32
 
-//TODO: THis needs to work with renderable objects 
 void Engine::move_object(int id, Vec2D move_by) {
+    // TODO: Make sure std::promise garbage collects correctly
+    Engine::move_object(id, move_by, std::make_shared<std::promise<bool>>());
+}
+
+//TODO: This needs to work with renderable objects
+void Engine::move_object(int id,
+                         Vec2D move_by,
+                         std::shared_ptr<std::promise<bool>> succeeded_promise_ptr) {
+
     std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
 
-    if (!character) { return; }
-    if (character->moving) { return; }
+    if (!character || character->moving) {
+        succeeded_promise_ptr->set_value(false);
+        return;
+    }
 
-    Vec2D location = Vec2D(character->get_x_position(), character->get_y_position());
+    Vec2D location = Vec2D(int(character->get_x_position()),
+                           int(character->get_y_position()));
     Vec2D target = location + move_by;
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y << ".\n"
             << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
 
     // TODO: animate walking in-place
-    if (!walkable(target)) { return; }
+    if (!walkable(target)) {
+        succeeded_promise_ptr->set_value(false);
+        return;
+    }
 
     character->set_state_on_moving_start(target);
 
@@ -47,9 +62,12 @@ void Engine::move_object(int id, Vec2D move_by) {
     // Motion
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
-        [location, target, id] (double completion) {
+        [succeeded_promise_ptr, location, target, id] (double completion) {
             std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
-            if (!character) { return false; }
+            if (!character) {
+                succeeded_promise_ptr->set_value(false);
+                return false;
+            }
 
             character->set_x_position(location.x * (1-completion) + target.x * completion);
             character->set_y_position(location.y * (1-completion) + target.y * completion);
@@ -67,6 +85,8 @@ void Engine::move_object(int id, Vec2D move_by) {
                 EventManager::get_instance().add_event([target, id] () {
                     get_map_viewer()->get_map()->event_step_on.trigger(target, id);
                 });
+
+                succeeded_promise_ptr->set_value(true);
             }
 
             // Run to completion
@@ -88,7 +108,7 @@ bool Engine::walkable(Vec2D location) {
         VLOG(2) << "Cannot move to requested tile due to map bounds";
         return false;
     }
-       
+
     //Check for collidable objects
     if(!Engine::map_viewer->get_map()->is_walkable(location.x, location.y)) {
         VLOG(2) << "Cannot move to requested tile due to collidable objects";
@@ -143,7 +163,8 @@ Vec2D Engine::find_object(int id) {
         if(object_id == id) {
             //Object is on the map so now get its locationg
             auto object = ObjectManager::get_instance().get_object<Object>(id);
-            return Vec2D(object->get_x_position(), object->get_y_position());
+            return Vec2D(int(object->get_x_position()),
+                         int(object->get_y_position()));
         }
     }
 
@@ -174,7 +195,10 @@ std::vector<int> Engine::get_objects_at(Vec2D location) {
     for(int object_id : objects) {
         //Object is on the map so now get its locationg
         auto object = ObjectManager::get_instance().get_object<Object>(object_id);
-        if (Vec2D(object->get_x_position(), object->get_y_position()) == location) {
+        Vec2D current_location(int(object->get_x_position()),
+                               int(object->get_y_position()));
+
+        if (current_location == location) {
             results.push_back(object_id);
         }
     }
@@ -187,7 +211,7 @@ void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
     EventManager::get_instance().add_event(
         [text_to_display] () {
-            (*(Engine::get_dialogue_box())).set_text(text_to_display);
+            Engine::get_dialogue_box()->set_text(text_to_display);
             std::cout << text_to_display << std::endl;
         }
     );

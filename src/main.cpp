@@ -106,7 +106,7 @@ static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
-void create_character(Interpreter &interpreter) {
+int create_character(Interpreter &interpreter) {
     LOG(INFO) << "Creating character";
 
 
@@ -132,6 +132,8 @@ void create_character(Interpreter &interpreter) {
     new_character->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
 
     LOG(INFO) << "Done!";
+
+    return new_character->get_id();
 }
 
 class CallbackState {
@@ -142,13 +144,19 @@ class CallbackState {
             name(name){
         }
 
-        void register_number(int id) {
-            LOG(INFO) << "changing focus to " << id;
-            Engine::get_map_viewer()->set_map_focus_object(id);
+        void register_number(int key) {
+            LOG(INFO) << "changing focus to " << key;
+
+            if (!(0 < key && size_t(key) < key_to_id.size())) {
+                LOG(INFO) << "changing focus aborted; no such id";
+                return;
+            }
+
+            Engine::get_map_viewer()->set_map_focus_object(key_to_id[key]);
         }
 
         void spawn() {
-            create_character(interpreter);
+            key_to_id.push_back(create_character(interpreter));
         }
 
         void restart() {
@@ -209,6 +217,7 @@ class CallbackState {
     private:
         Interpreter &interpreter;
         std::string name;
+        std::vector<int> key_to_id;
 };
 
 
