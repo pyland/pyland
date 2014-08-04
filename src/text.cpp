@@ -394,7 +394,7 @@ void Text::resize(int w, int h) {
     }
 }
 
-void Text::resize(float w, float h) {
+void Text::resize_ratio(float w, float h) {
     int iw, ih;
     std::pair<int,int> window_size = window->get_size();
     iw = (int)(w * (float)window_size.first);
@@ -421,7 +421,7 @@ void Text::move(int x, int y) {
     //         (float)(y + height) / (float)window_size.second);
 }
 
-void Text::move(float x, float y) {
+void Text::move_ratio(float x, float y) {
     int ix, iy;
     std::pair<int,int> window_size = window->get_size();
     ix = (int)(x * (float)window_size.first);
