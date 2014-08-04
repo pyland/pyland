@@ -56,7 +56,6 @@ class RenderableComponent {
     ///
     size_t vertex_data_size = 0;
 
-
     ///
     /// The number of vertices to render
     ///
@@ -183,6 +182,11 @@ public:
     GLfloat* get_vertex_data() { return vertex_data; }
 
     ///
+    /// Get the size of the vertex data
+    ///
+    size_t get_vertex_data_size() { return vertex_data_size; }
+
+    ///
     /// Set the vertex data to use for this component.
     /// @param new_vertex_data The new data to use for ther vertices of this object
     /// @param the size of the data in bytes
@@ -203,6 +207,10 @@ public:
     ///
     void set_texture_coords_data(GLfloat* new_texture_data, size_t data_size, bool is_dynamic);
 
+    ///
+    /// Get the texture coords data size
+    ///
+    size_t get_texture_coords_data_size() { return texture_coords_data_size; }
     ///
     /// Set the texture image data and metadata of this component.
     ///
@@ -250,6 +258,23 @@ public:
     /// Set the number of vertices we need to render
     ///
     void set_num_vertices_render(GLsizei num_vertices) { num_vertices_render = num_vertices; }
+
+    ///
+    /// Update the texture buffer
+    /// @param offset the byte offset into the buffer
+    /// @param size the size of the data to put into the buffer in bytes
+    /// @param data the data to put into the buffer
+    ///
+    void update_texture_buffer(int offset, size_t size, GLfloat* data);
+
+    ///
+    /// Update the vertex buffer
+    /// @param offset the byte offset into the buffer
+    /// @param size the size of the data to put into the buffer in bytes
+    /// @param data the data to put into the buffer
+    ///
+    void update_vertex_buffer(int offset, size_t size, GLfloat* data);
+
 };
 
 #endif

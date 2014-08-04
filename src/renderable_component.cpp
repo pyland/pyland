@@ -135,7 +135,6 @@ void RenderableComponent::release_vbos() {
 
 }
 
-
 void RenderableComponent::bind_shader() {
     if(shader == nullptr)
         return;
@@ -145,3 +144,38 @@ void RenderableComponent::bind_shader() {
 void RenderableComponent::release_shader() {
     glUseProgram(0);
 }
+
+void RenderableComponent::update_vertex_buffer(int offset, size_t size, GLfloat* data) {
+    //Get current shader
+    GLint id;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &id);
+
+    //Bind our shader
+    bind_shader();
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertex_id);
+
+    //Update the buffer
+    glBufferSubData(vbo_vertex_id, offset, size, data);
+
+    //Release shader
+    glUseProgram(id);
+}
+
+void RenderableComponent::update_texture_buffer(int offset, size_t size, GLfloat* data) {
+    //Get current shader
+    GLint id;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &id);
+
+    //Bind our shader
+    bind_shader();
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_texture_id);
+
+    //Update the buffer
+    glBufferSubData(vbo_texture_id, offset, size, data);
+
+    //Release shader
+    glUseProgram(id);
+}
+

@@ -51,6 +51,19 @@ class Map {
 
 
     ///
+    /// A vector of layers which maps the (x, y) position in the map
+    /// onto the offset in the buffer. The offsets are based off of
+    /// the number of vertices and the number of dimensions. It gives
+    /// the GLfloat offset.
+    ///.This allows us to update the buffers to change the map. 
+    /// First param: layer number, starts at 0
+    /// Second param: Map of (x, y) positions, flattened to a single
+    ///               number, this is x+ y*map_width, which maps these
+    ///               locations to their offset in the vertex and texture
+    ///
+    std::map<int, std::shared_ptr<std::map<int, int>>> layer_mappings;
+
+    ///
     /// The ids of the characters that are on this map
     ///
     std::vector<int> characters;
@@ -322,7 +335,26 @@ public:
     ///
     std::vector<std::shared_ptr<Layer>> get_layers() { return layers; }
 
+    ///
+    /// Update the tile at a given point in the map
+    /// @param x_pos the x position of the tile
+    /// @param y_pos the y position of the tile
+    /// @param tile_id the id of the tile
+    /// @param tileset_name the tileset name, default tileset used if
+    /// not specified
+    ///
+    void update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::string tileset_name="");
 
+    ///
+    /// Used when a tile needs to be added at a point. This function
+    /// will recalculate the layer mappings as needed to ensure future
+    /// updates update the correct buffer locations. Used for sparse maps.
+    /// @param x_pos
+    /// @param y_pos
+    /// @oaram tile_offset
+    /// @return the new offset
+    ///
+    int recalculate_layer_mappings(int x_pos, int y_pos, int tile_offset);
 };
 
 #endif
