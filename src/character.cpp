@@ -39,7 +39,7 @@ Character::Character(int _x_position, int _y_position, std::string _name) {
     TextFont myfont(mytype, 18);
     character_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
     character_text->set_text(name);
-    Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
+    Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(_x_position, _y_position));
     character_text->move(pixel_position.x ,pixel_position.y );
     character_text->resize(100,100);
     character_text->align_centre();

@@ -414,6 +414,7 @@ int main(int argc, const char* argv[]) {
     Lifeline text_lifeline = window.register_resize_handler(func);
 
     std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) { 
+        std::ignore = game_window;
         LOG(INFO) << "text window resizing"; 
         Engine::text_updater();
     };

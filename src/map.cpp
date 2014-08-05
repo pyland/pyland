@@ -736,7 +736,7 @@ Vec2D Map::pixel_to_tile(Vec2D pixel_location) {
 }
 
 Vec2D Map::tile_to_pixel(Vec2D tile_location) {
-    float scale(Engine::get_tile_size()*Engine::get_global_scale());
+    float scale(Engine::get_actual_tile_size());
 
     Vec2D results(int(float(tile_location.x) * scale),
                   int(float(tile_location.y) * scale));
@@ -747,7 +747,7 @@ Vec2D Map::tile_to_pixel(Vec2D tile_location) {
 }
 
 Vec2D Map::tile_to_pixel(std::pair<double,double> tile_location) {
-    double scale(Engine::get_tile_size()*Engine::get_global_scale());
+    double scale(Engine::get_actual_tile_size());
 
     std::pair<double,double> results(tile_location.first * scale, tile_location.second * scale);
     results.first = results.first - (Map::get_display_x() * scale) ;
