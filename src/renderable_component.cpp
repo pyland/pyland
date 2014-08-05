@@ -156,7 +156,7 @@ void RenderableComponent::update_vertex_buffer(int offset, size_t size, GLfloat*
     glBindBuffer(GL_ARRAY_BUFFER, vbo_vertex_id);
 
     //Update the buffer
-    glBufferSubData(vbo_vertex_id, offset, size, data);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 
     //Release shader
     glUseProgram(id);
@@ -173,8 +173,8 @@ void RenderableComponent::update_texture_buffer(int offset, size_t size, GLfloat
     glBindBuffer(GL_ARRAY_BUFFER, vbo_texture_id);
 
     //Update the buffer
-    glBufferSubData(vbo_texture_id, offset, size, data);
-
+    glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+    std::cout << " BUF " << vbo_texture_id << std::endl;
     //Release shader
     glUseProgram(id);
 }

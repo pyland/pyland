@@ -347,7 +347,9 @@ int main(int argc, const char* argv[]) {
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_HELD}), KEY({"Down","S"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
+        [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN);
+                                   Engine::get_map_viewer()->get_map()->update_tile(5, 15, 1, 11);
+        }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
