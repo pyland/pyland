@@ -1,5 +1,14 @@
 #include "layer.hpp"
+#include <exception>
 #include <iostream>
+
+Layer::Layer(int _width_tiles, int _height_tiles, std::string _name) : 
+    width_tiles(_width_tiles), height_tiles(_height_tiles),
+    name(_name), packing(Packing::DENSE),
+    layer(std::make_shared<std::vector<std::pair<std::string, int>>>()),
+    location_texture_vbo_offset_map() {
+
+}
 
 void Layer::add_tile(const std::string tileset, int tile_id) {
 
@@ -10,6 +19,16 @@ void Layer::add_tile(const std::string tileset, int tile_id) {
 
 int Layer::get_tile(int x_pos, int y_pos) {
     //Fetch the tile at the required position
-    int tile_id = (*layer).at(x_pos + (y_pos)*width).second;
+    int tile_id = (*layer).at(x_pos + (y_pos)*width_tiles).second;
     return tile_id;
+}
+
+void Layer::update_tile(int x_pos, int y_pos, int tile_id, std::string tileset) {
+    LayerInvalidException layer_invalid_exception;
+    if(x_pos < 0 || x_pos >= width_tiles || y_pos < 0 || y_pos >= height_tiles) 
+        throw layer_invalid_exception;
+    //Make the pair
+    
+    //Set the new tile
+    (*layer)[y_pos*width_tiles + x_pos] = std::make_pair(tileset, tile_id);;
 }

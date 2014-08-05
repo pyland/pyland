@@ -70,7 +70,7 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
 
             int size_data = component_data_pair.second;
             GLfloat* component_vertices = component_data_pair.first;
-            int num_dimensions = 3;
+            int num_dimensions = 2;
             //translate each vertex
             for(int i = 0; i < size_data; i+=num_dimensions) {
                 //Translate the vertex
@@ -81,7 +81,6 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
                 //Put the data back
                 component_vertices[i] = vertex.x;
                 component_vertices[i+1] = vertex.y;
-                component_vertices[i+2] = vertex.z;
             }
             
             //add to this group

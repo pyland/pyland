@@ -67,6 +67,7 @@ public:
     ///
     void set_id(int new_id);
 
+    ///TODO REMOVE THIS FROM HERE
     ///
     /// Get the object's walkability
     ///

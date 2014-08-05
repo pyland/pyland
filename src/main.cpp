@@ -71,7 +71,6 @@ using namespace std;
 
 enum arrow_key {UP, DOWN, LEFT, RIGHT};
 
-#define GLOBAL_SCALE 1
 #define TEXT_BORDER_WIDTH 20
 #define TEXT_HEIGHT 80
 
@@ -210,7 +209,7 @@ int main(int argc, const char* argv[]) {
     google::InstallFailureSignalHandler();
 
     int map_width = 32, map_height = 32;
-    GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
+    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
     window.use_context();
 
     Map map("../resources/map0.tmx");
@@ -280,11 +279,43 @@ int main(int argc, const char* argv[]) {
     Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
 
 
+
+
     MapViewer map_viewer(&window,&gui_manager);
     map_viewer.set_map(&map);
-
-
     Engine::set_map_viewer(&map_viewer);
+
+    //Setup the map resize callback
+    std::function<void(GameWindow*)> map_resize_func = [&] (GameWindow* game_window) { 
+        LOG(INFO) << "Map resizing"; 
+        std::pair<int, int> size = game_window->get_size();
+        //Adjust the view to show only tiles the user can see
+        int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
+        int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
+        //We make use of intege truncation to get these to numbers in terms of tiles
+        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
+        int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
+
+        //Set the viewable fragments
+        glScissor(0, 0, size.first, size.second);
+        glViewport(0, 0, size.first, size.second);
+
+        //do nothing if these are null
+        if(Engine::get_map_viewer() == nullptr || Engine::get_map_viewer()->get_map() == nullptr)
+            return;
+
+        //Set the display size
+        //Display one more tile so that we don't get an abrupt stop
+        Engine::get_map_viewer()->get_map()->set_display_width(num_tiles_x_display+1);
+        Engine::get_map_viewer()->get_map()->set_display_height(num_tiles_y_display+1);
+
+        //Readjust the map focus
+        Engine::get_map_viewer()->refocus_map();
+
+    };
+    Lifeline map_resize_lifeline = window.register_resize_handler(map_resize_func);
+
+
 
     InputManager* input_manager = window.get_input_manager();
 
@@ -402,7 +433,7 @@ int main(int argc, const char* argv[]) {
         
     while (!window.check_close()) {
         em.process_events();
-        map_viewer.render_map();
+        map_viewer.render();
         mytext.display();
         Engine::text_displayer();
         stoptext.display();

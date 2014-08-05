@@ -19,39 +19,33 @@ std::vector<std::shared_ptr<GUIText>> generate_font_data() {
 
 std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     delete []vertex_data;
-    int num_floats = 18;
+    int num_floats = 12;
 
     vertex_data = new GLfloat[sizeof(GLfloat)*num_floats];
     //Generate coordinates in our local object space
     //bottom left 
     vertex_data[0] = 0;
     vertex_data[1] = 0;
-    vertex_data[2] = 0;
 
     //top left
-    vertex_data[3] = 0;
-    vertex_data[4] = (GLfloat)height_pixels;
+    vertex_data[2] = 0;
+    vertex_data[3] = (GLfloat)height_pixels;
+
+    //bottom right
+    vertex_data[4] = (GLfloat)width_pixels;
     vertex_data[5] = 0;
 
-    //bottom right
-    vertex_data[6] = (GLfloat)width_pixels;
-    vertex_data[7] = 0;
-    vertex_data[8] = 0;
-
     //top left
-    vertex_data[9] = 0;
-    vertex_data[10] = (GLfloat)height_pixels;
-    vertex_data[11] = 0;
+    vertex_data[6] = 0;
+    vertex_data[7] = (GLfloat)height_pixels;
 
     //top right
-    vertex_data[12] = (GLfloat)width_pixels;
-    vertex_data[13] = (GLfloat)height_pixels;
-    vertex_data[14] = 0;
+    vertex_data[8] = (GLfloat)width_pixels;
+    vertex_data[9] = (GLfloat)height_pixels;
 
     //bottom right
-    vertex_data[15] = (GLfloat)width_pixels;
-    vertex_data[16] = 0;
-    vertex_data[17] = 0;
+    vertex_data[10] = (GLfloat)width_pixels;
+    vertex_data[11] = 0;
 
     std::vector<std::pair<GLfloat*, int>> vertices;
     vertices.push_back(std::make_pair(vertex_data, num_floats));

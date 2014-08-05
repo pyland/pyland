@@ -15,8 +15,14 @@
 #include "object_manager.hpp"
 #include "dispatcher.hpp"
 
+///Static variables
+MapViewer* Engine::map_viewer = nullptr;
+Text* Engine::dialogue_box = nullptr;
+int Engine::tile_size= 16;
+int Engine::global_scale = 2;
 
-#define TILE_SIZE 32
+
+//TODO: THis needs to work with renderable objects 
 
 void Engine::move_object(int id, Vec2D move_by) {
     // TODO: Make sure std::promise garbage collects correctly
@@ -95,10 +101,6 @@ void Engine::move_object(int id,
     );
 }
 
-MapViewer* Engine::map_viewer = nullptr;
-Text* Engine::dialogue_box = nullptr;
-
-
 bool Engine::walkable(Vec2D location) {
     int map_width = map_viewer->get_map()->get_width();
     int map_height = map_viewer->get_map()->get_height();
@@ -131,10 +133,6 @@ bool Engine::change_tile(int, Vec2D, int) {
 std::vector<int> Engine::get_tiles(Vec2D) {
     std::vector<int> tiles;
     return tiles;
-}
-
-int Engine::get_tile_size() {
-    throw std::runtime_error("get_tile_size not supported");
 }
 
 std::vector<int> Engine::get_objects(Vec2D) {
@@ -257,7 +255,7 @@ void Engine::text_updater() {
         VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
         character->get_character_text()->move(pixel_position.x, pixel_position.y);
-        character->get_status_text()->move(pixel_position.x, pixel_position.y + (1.5*TILE_SIZE));
+        character->get_status_text()->move(pixel_position.x, pixel_position.y + (1.5*Engine::get_tile_size()));
     }
 
 }

@@ -23,19 +23,6 @@
 /// to the required component e.g. mouse clicks.
 ///
 class GUIManager : public Object {
-    
-    Image* texture_image = nullptr;
-    ///
-    /// The vertex data for this component
-    ///
-    GLfloat* gui_data;
-
-    ///
-    /// The texture coordinates for this component
-    ///
-    GLfloat* gui_tex_data;
-
-
     ///
     /// The root component of the tree
     ///
@@ -61,6 +48,15 @@ class GUIManager : public Object {
     /// Initialise the shaders used by this component
     /// @return boolean indicating success or failure of the operation (true is success)
     bool init_shaders();
+
+    ///
+    /// Recalculate the offsets for components - used on a resize event
+    /// @param parent the parent of the current component - this recursively
+    /// walks the tree of components
+    ///
+    void regenerate_offsets(std::shared_ptr<Component> parent);
+
+
 public:
     GUIManager();
     virtual ~GUIManager();
@@ -92,7 +88,7 @@ public:
     /// @param curr_y_offset the current y offset from the origin
     /// @return indicates if the click has been handled
     ///
-    bool recurse_components(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset);
+    bool handle_mouse_click(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset);
 
     ///
     /// Set the root component of the component tree

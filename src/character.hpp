@@ -21,17 +21,6 @@
 /// Represents a character (sprite) in the engine
 ///
 class Character : public Object {
-    ///
-    /// The texture coordinate data for the character
-    ///
-    GLfloat* sprite_tex_data = nullptr;
-
-    ///
-    /// The vertex data for the character
-    ///
-    GLfloat* sprite_data = nullptr;
-
-    Image* texture_image = nullptr;
 
     Text* character_text = nullptr;
     Text* status_text = nullptr;
