@@ -507,9 +507,43 @@ Map::Blocker Map::block_tile(Vec2D tile) {
     return Blocker(tile, &blocker);
 }
 
-int Map::recalculate_layer_mappings(int x_pos, int y_pos, int tile_offset) {
-    //TODO implement
-    return 0; 
+void Map::recalculate_layer_mappings(int x_pos, int y_pos, int layer_num) {
+    //The index into the map
+    int index = y_pos*map_width + x_pos;
+    std::shared_ptr<std::map<int ,int>> layer = layer_mappings[layer_num];
+    int size = layer->size();
+    //The current tile offset
+    int tile_offset = (*layer)[index];
+    //The offsets are the buffer indices. Now, if the next element in
+    // the layer has the same offset, then this means that this sparse
+    // index has not been given a value so far. Thus, we need to put
+    // the data here and then increment all the offsets after the
+    // current offset. This gap of one indicates a used position.
+    //
+    // If this is not the case, then the offset is unique which means
+    // the tile has already been placed so just update it
+    //
+    if(index >= size || index < 0)
+        return;
+
+    //Handle last element
+    if(index + 1 == size) {
+        return;
+    }
+
+    //Do we need to increment mappings?
+    //Compare offsets
+    if((*layer)[index+ 1] == (*layer)[index]) {
+        //if the next element is the same, then we need to increment
+        //further offsets.
+
+        //Shift all of the offsets down as we're putting a tile into 
+        //this position
+        for(int i = index +1; i < size; i++)
+            (*layer)[i]++;
+
+    }
+    //ELSE. No, there is already a tile here
 }
 
 void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::string tileset_name) {
@@ -583,6 +617,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
 
     }
     else {
+        //TODO: create a small buffer to hold these updates rather than rebuilding the entire buffer
 
         //Generate the new tile's data
         GLfloat* vertex_data = nullptr;
@@ -626,11 +661,13 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
 
         //Fetch the offset from the data buffer
         tile_offset = (*layer_mappings[layer_num])[y_pos*map_width + x_pos];
-        tile_offset = 0;       
+
         //Recalculate the layer mappings
-        //TODO: create a small buffer to hold these updates rather than rebuilding the entire buffer
-        int offset = recalculate_layer_mappings(x_pos, y_pos, tile_offset);
-        offset = tile_offset*num_vertices*num_dimensions;
+        recalculate_layer_mappings(x_pos, y_pos, layer_num);
+        //The offset into the buffers
+        //The mappins have been updated by the previous function call
+        int offset = tile_offset*num_vertices*num_dimensions;
+
         //TODO: small buffer
         //Get the data 
         RenderableComponent* layer_renderable_component = layer->get_renderable_component();
@@ -674,6 +711,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
         layer_renderable_component->set_texture_coords_data(new_texture_data, new_texture_data_size, false);
     }
 }
+
 /*
 void Map::merge_layer_data() {
 

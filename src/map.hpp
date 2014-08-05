@@ -216,6 +216,16 @@ class Map {
     void generate_sparse_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
 
     ///
+    /// Used when a tile needs to be added at a point. This function
+    /// will recalculate the layer mappings as needed to ensure future
+    /// updates update the correct buffer locations. Used for sparse maps.
+    /// @param x_pos
+    /// @param y_pos
+    /// @param layer_num the layer
+    ///
+    void recalculate_layer_mappings(int x_pos, int y_pos, int layer_num);
+
+    ///
     /// Initialises the textures
     ///
     void init_textures();
@@ -344,17 +354,6 @@ public:
     /// not specified
     ///
     void update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::string tileset_name="");
-
-    ///
-    /// Used when a tile needs to be added at a point. This function
-    /// will recalculate the layer mappings as needed to ensure future
-    /// updates update the correct buffer locations. Used for sparse maps.
-    /// @param x_pos
-    /// @param y_pos
-    /// @oaram tile_offset
-    /// @return the new offset
-    ///
-    int recalculate_layer_mappings(int x_pos, int y_pos, int tile_offset);
 };
 
 #endif
