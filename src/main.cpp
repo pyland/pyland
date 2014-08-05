@@ -117,15 +117,23 @@ class CallbackState {
             name(name){
         }
 
-        void register_number(int key) {
+        void register_number_key(int key) {
             LOG(INFO) << "changing focus to " << key;
 
-            if (!(0 < key && size_t(key) < key_to_id.size())) {
+            if (!(0 <= key && size_t(key) < key_to_id.size())) {
                 LOG(INFO) << "changing focus aborted; no such id";
                 return;
             }
 
             Engine::get_map_viewer()->set_map_focus_object(key_to_id[key]);
+        }
+
+        void register_number_id(int id) {
+            LOG(INFO) << "changing focus to " << id;
+
+            //TODO: handle incorrect ID
+
+            Engine::get_map_viewer()->set_map_focus_object(id);
         }
 
         void spawn() {
@@ -326,7 +334,7 @@ int main(int argc, const char* argv[]) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
                 {KEY_PRESS, KEY(std::to_string(i))},
-                [&, i] (KeyboardInputEvent) { callbackstate.register_number(i); }
+                [&, i] (KeyboardInputEvent) { callbackstate.register_number_key(i); }
             ))
         );
     }
@@ -338,12 +346,12 @@ int main(int argc, const char* argv[]) {
             LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
             auto objects = Engine::get_objects_at(tile_clicked);
             if (objects.size() == 1) {
-                callbackstate.register_number(objects[0]);
+                callbackstate.register_number_id(objects[0]);
             } else if (objects.size() == 0) {
                 LOG(INFO) << "Not objects to interact with";
             } else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number(objects[0]);
+                callbackstate.register_number_id(objects[0]);
             }
         }
     ));
