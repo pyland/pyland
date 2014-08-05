@@ -1,3 +1,11 @@
+// Behaviour modifiers (defines):
+//  TEXT_SAFE_SURFACE
+//      Text can be rendered less directly by defining this.  This
+//      will copy the surface into another surface of an explicitly
+//      defined format - which is slow, but is safer use. In theory,
+//      disabling this also works perfectly though, giving a
+//      performance boost by directly reading off the text.
+
 #include <cstring>
 #include <cstdio>
 #include <iostream>
@@ -25,15 +33,6 @@ extern "C" {
 #include "text.hpp"
 #include "game_window.hpp"
 #include "callback.hpp"
-
-
-
-// NOTE:
-//   Text can be rendered less directly by defining
-//   TEXT_SAFE_SURFACE. This will copy the surface into another surface
-//   of an explicitly defined format - which is slow, but is safer
-//   use. In theory, disabling this also works perfectly though, giving
-//   a performance boost by directly reading off the text.
 
 
 
@@ -84,6 +83,7 @@ Text::Text(GameWindow* window, TextFont font, bool smooth):
     dirty_texture(true),
     dirty_vbo(true),
     text(""),
+    position_from_alignment(false),
     smooth(smooth),
     width(0),
     height(0),
@@ -247,8 +247,21 @@ void Text::render() {
         //   Well, it is a suggestion to the c++ compiler that smooth
         //   will not change throughout this function, so it can
         //   optimise the if containing _smooth out of the for loop
-        //   entirely, rather than checking it ever single iteration.
+        //   entirely, rather than checking it every single iteration.
         int _smooth = smooth;
+        int x_offset;
+        switch (alignment) {
+        default:
+        case Alignment::LEFT:
+            x_offset = 0;
+            break;
+        case Alignment::CENTRE:
+            x_offset = (image.width - rendered_line->w) / 2;
+            break;
+        case Alignment::RIGHT:
+            x_offset = image.width - rendered_line->w;
+            break;
+        }
         for (int y = 0; y < line_height; y++) {
             int yi = y + line_number * line_height;
             if (yi >= image.height) {
@@ -257,13 +270,13 @@ void Text::render() {
             }
             for (int x = 0; x < rendered_line->w; x++) {
 #ifdef TEXT_SAFE_SURFACE
-                image.flipped_pixels[yi][x].a = (((Uint32*)compatible->pixels)[(y*jump + x)]);
+                image.flipped_pixels[yi][x + x_offset].a = (((Uint32*)compatible->pixels)[(y*jump + x)]);
 #else
                 if (_smooth) {
-                    image.flipped_pixels[yi][x].a =(((Uint8*)rendered_line->pixels)[(y*jump + x)]);
+                    image.flipped_pixels[yi][x + x_offset].a =(((Uint8*)rendered_line->pixels)[(y*jump + x)]);
                 }
                 else {
-                    image.flipped_pixels[yi][x].a = (((Uint8*)rendered_line->pixels)[(y*jump + x)]) ? 255 : 0;
+                    image.flipped_pixels[yi][x + x_offset].a = (((Uint8*)rendered_line->pixels)[(y*jump + x)]) ? 255 : 0;
                 }
 #endif
             }
@@ -331,7 +344,25 @@ void Text::generate_vbo() {
         }
     }
 
-    std::pair<float, float> ratio_xy = window->get_ratio_from_pixels(std::pair<int,int>(x, y));
+    int x_final;
+    if (position_from_alignment) {
+        switch (alignment) {
+        default:
+        case Alignment::LEFT:
+            x_final = x;
+            break;
+        case Alignment::CENTRE:
+            x_final = x - (image.width / 2);
+            break;
+        case Alignment::RIGHT:
+            x_final = x - image.width;
+            break;
+        }
+    } else {
+        x_final = x;
+    }
+
+    std::pair<float, float> ratio_xy = window->get_ratio_from_pixels(std::pair<int,int>(x_final, y));
     std::pair<float, float> ratio_wh = window->get_ratio_from_pixels(std::pair<int,int>(width, height));
     // We are working with opengl coordinates where we strech from -1.0
     // to 1.0 across the window.
@@ -382,6 +413,36 @@ void Text::generate_vbo() {
 void Text::set_text(std::string text) {
     this->text = text;
     dirty_texture = true;
+}
+
+
+void Text::align_left() {
+    if (alignment != Alignment::LEFT) {
+        alignment = Alignment::LEFT;
+        dirty_texture = true;
+    }
+}
+
+void Text::align_centre() {
+    if (alignment != Alignment::CENTRE) {
+        alignment = Alignment::CENTRE;
+        dirty_texture = true;
+    }
+}
+
+void Text::align_right() {
+    if (alignment != Alignment::RIGHT) {
+        alignment = Alignment::RIGHT;
+        dirty_texture = true;
+    }
+}
+
+
+void Text::align_at_origin(bool aao) {
+    if (aao != position_from_alignment) {
+        position_from_alignment = aao;
+        dirty_vbo = true;
+    }
 }
 
 

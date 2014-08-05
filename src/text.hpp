@@ -32,18 +32,33 @@ class GameWindow;
 ///
 class Text {
 private:
+    enum class Alignment {
+        LEFT, CENTRE, RIGHT
+    };
     ///
     /// If true, the text needs to be re-rendered.
     ///
     bool dirty_texture;
     ///
-    /// If true, the text vbo needs to be re-configured.
+    /// If true, the text vbo needs to be re-generated.
     ///
     bool dirty_vbo;
     ///
     /// The text that need to be rendered.
     ///
     std::string text;
+    ///
+    /// Position text based on alignment.
+    ///
+    /// If true, rather than the position representing the top left of
+    /// the text area, it will represent the top left, centre, right
+    /// depending on the alignment.
+    ///
+    bool position_from_alignment;
+    ///
+    /// The justification
+    ///
+    Alignment alignment;
     ///
     /// If true, the text needs to be re-rendered.
     ///
@@ -59,7 +74,9 @@ private:
     ///
     /// Horizontal position of text.
     ///
-    /// Displacement of left edge of text from left edge of window.
+    /// Displacement of left edge of text from left edge of window,
+    /// unless position_from_alignment is set, in which case the text
+    /// origin can be the left, centre, or right top corner.
     ///
     int x;
     ///
@@ -131,6 +148,28 @@ public:
     /// Sets the text.
     ///
     void set_text(std::string text);
+
+    ///
+    /// Aligns the text to the left.
+    ///
+    void align_left();
+    ///
+    /// Centres text.
+    ///
+    void align_centre();
+    ///
+    /// Aligns the text to the right.
+    ///
+    void align_right();
+    ///
+    /// If true, the origin of the text will depend on alignment.
+    ///
+    /// When set to true:
+    /// if alignment is LEFT  , the origin is the top-left;
+    /// if alignment is CENTRE, the origin is the top-centre;
+    /// if alignment is RIGHT , the origin is the top-right;
+    ///
+    void align_at_origin(bool aao);
 
     ///
     /// Render the text to an image, and subsequently to an OpenGL
