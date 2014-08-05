@@ -134,7 +134,27 @@ void Text::render() {
         // Line indexing.
         for (int l = t; l < length; l++) {
             // Find word end.
-            for (w = l; w < length && (ctext[w] != ' ' && ctext[w] != '\n'); w++);
+            for (w = l; w < length && (ctext[w] != ' ' && ctext[w] != '\n'); w++) {
+                // As we are dealing with UTF-8, we must make sure to
+                // copy an entire character if it is more than one byte.
+                // The bit formats of UTF-8 characters are:
+                // 0xxxxxxx
+                // 110xxxxx 10xxxxxx
+                // 1110xxxx 10xxxxxx 10xxxxxx
+                // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+                // 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+                // 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+                //
+                // ... Well, actually it's not THAT simple, because
+                // there are these magical characters which modify other
+                // characters... But it's not worth the effort.
+                if (ctext[l] & 0x80) {
+                    // The number of bits in the first byte set to 1
+                    // before the first zero indicate the total number
+                    // of bytes to use for the UTF-8 character.
+                    for (int bits = ctext[w] << 1; w < length && (bits & 0x80); w++, bits <<= 1);
+                }
+            }
             // Copy word into line.
             for (; l < w; l++) {
                 line[l - t] = ctext[l];
