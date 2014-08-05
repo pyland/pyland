@@ -77,6 +77,7 @@ Character::~Character() {
     delete[] sprite_data;
     delete texture_image;
     delete character_text;
+    delete status_text;
 
     LOG(INFO) << "Character destructed";
 }
