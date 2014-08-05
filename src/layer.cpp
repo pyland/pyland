@@ -1,4 +1,5 @@
 #include "layer.hpp"
+#include <exception>
 #include <iostream>
 
 Layer::Layer(int _width_tiles, int _height_tiles, std::string _name) : 
@@ -22,6 +23,12 @@ int Layer::get_tile(int x_pos, int y_pos) {
     return tile_id;
 }
 
-int Layer::get_tile_texture_vbo_offset() {
-
+void Layer::update_tile(int x_pos, int y_pos, int tile_id, std::string tileset) {
+    LayerInvalidException layer_invalid_exception;
+    if(x_pos < 0 || x_pos >= width_tiles || y_pos < 0 || y_pos >= height_tiles) 
+        throw layer_invalid_exception;
+    //Make the pair
+    
+    //Set the new tile
+    (*layer)[y_pos*width_tiles + x_pos] = std::make_pair(tileset, tile_id);;
 }

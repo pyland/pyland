@@ -3,9 +3,10 @@
 
 #include "object.hpp"
 
-#include <utility>
+#include <exception>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 ///
@@ -76,8 +77,10 @@ public:
     /// @param x_pos the x position
     /// @param y_pos the y position
     /// @param tile_id the identifier of the tile
+    /// @param tileset the name of the tileset for this tile
+    /// Throws, LayerInvalidException if the x and y position is out of bounds
     ///
-    void update_tile(int x_pos, int y_pos, int tile_id);
+    void update_tile(int x_pos, int y_pos, int tile_id, std::string tileset);
 
     ///
     /// Get the id of the tile at the specified location
@@ -127,4 +130,14 @@ public:
     std::shared_ptr<std::vector<std::pair<std::string, int>>> get_layer_data() { return layer; }
 };
 
+///
+/// The exception class for layers
+///
+class LayerInvalidException : public std::exception {
+    virtual const char* what()  const throw() {
+        return "Invalid operation on Layer";
+    }
+};
 #endif
+
+

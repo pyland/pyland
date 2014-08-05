@@ -566,11 +566,14 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
     std::shared_ptr<Layer> layer = layers[layer_num];
     Layer::Packing packing = layer->get_packing();
 
+    //Add this tile to the layer data structure
+    layer->update_tile(x_pos, y_pos, tile_id, "");
+
     int tile_offset = 0;
-    std::cout << " LAYER "<< layer_num << std::endl;
+
     //Perform O(1) update. no need to do mapping changes
     if(packing == Layer::Packing::DENSE) {
-       std::cout << "DENSE" << std::endl;
+
         tile_offset = y_pos*map_width + x_pos;
 
         //Update the buffer
@@ -621,8 +624,6 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
         vertex_data[10] = scale * float(x_pos+1);
         vertex_data[11] = scale * float(y_pos);
 
-        std::cout << "NOT DENSE" << std::endl;
-        std::cout << "HERE "<< std::endl;
         //Fetch the offset from the data buffer
         tile_offset = (*layer_mappings[layer_num])[y_pos*map_width + x_pos];
         tile_offset = 0;       
@@ -654,8 +655,6 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
             new_vertex_data = nullptr;
             return;
         }
-        for(int i =0 ; i < 12 ; i++) 
-            std::cout << " DAT " << data[i] << std::endl;
 
         //Copy the first part of the original data
         int data_length = num_vertices*num_dimensions;
