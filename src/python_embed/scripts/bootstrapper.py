@@ -71,8 +71,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
     """
 
     entity.print_debug("Started bootstrapper")
-    print("Started with entity", entity)
-    print("whose name is", entity.name)
+    entity.print_debug("Started with entity {}".format(entity))
+    entity.print_debug("whose name is {}".format(entity.name))
 
     while True:
         try:

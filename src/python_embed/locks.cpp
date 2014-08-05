@@ -40,12 +40,24 @@ namespace lock {
         LOG(INFO) << " Thread GIL lock released";
     }
 
+    ThreadGILRelease::ThreadGILRelease() {
+        LOG(INFO) << " Releasing Thread GIL lock";
+        threadstate = PyEval_SaveThread();
+        LOG(INFO) << " Thread GIL lock Released";
+    }
+
+    ThreadGILRelease::~ThreadGILRelease() {
+        LOG(INFO) << " Reaquiring Thread GIL lock";
+        PyEval_RestoreThread(threadstate);
+        LOG(INFO) << " Thread GIL lock reaquired";
+    }
+
 
     ThreadState::ThreadState(InterpreterContext interpreter_context) {
         threadstate = PyThreadState_New(interpreter_context.get_interpreterstate());
     }
 
-    ThreadState::~ThreadState() {   
+    ThreadState::~ThreadState() {
         {
             LOG(INFO) << "ThreadState: Getting GIL and clearing ThreadState";
 

@@ -2,7 +2,7 @@
 
 extern "C" {
 #include <SDL.h>
-  
+
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
 #endif
@@ -18,7 +18,7 @@ extern "C" {
 
 int main(int argc, char** argv) {
     std::cerr << "Startup..." << std::endl;
-    
+
     try {
         GameWindow window = GameWindow(640, 400, false);
         InputManager* input_manager = window.get_input_manager();
@@ -50,6 +50,6 @@ int main(int argc, char** argv) {
     }
 
     std::cerr << "Terminate" << std::endl;
-    
+
     return 0;
 }

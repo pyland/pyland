@@ -500,7 +500,7 @@ Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
     tile(tile), blocker(blocker) {
         (*blocker)[tile.x][tile.y]++;
 
-        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+        VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
           << " increased from " << (*blocker)[tile.x][tile.y] - 1
           << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
@@ -509,17 +509,17 @@ Map::Blocker::Blocker(const Map::Blocker &other):
     tile(other.tile), blocker(other.blocker) {
         (*blocker)[tile.x][tile.y]++;
 
-        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+        VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
           << " increased from " << (*blocker)[tile.x][tile.y] - 1
           << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
 Map::Blocker::~Blocker() {
-    LOG(INFO) << "Unblocking tile at " << tile.x << ", " << tile.y << ".";
+    VLOG(2) << "Unblocking tile at " << tile.x << ", " << tile.y << ".";
 
     blocker->at(tile.x).at(tile.y) = blocker->at(tile.x).at(tile.y) - 1;
 
-    LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+    VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
       << " decreased from " << (*blocker)[tile.x][tile.y] + 1
       << " to " << (*blocker)[tile.x][tile.y] << ".";
 }

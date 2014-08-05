@@ -142,7 +142,7 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
     signal_to_exception({
         {
             EntityThread::Signal::RESTART,
-            make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_RESTART") 
+            make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_RESTART")
         }, {
             EntityThread::Signal::STOP,
             make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_STOP")
