@@ -19,6 +19,7 @@
 
 class MapViewer;
 
+enum Status {RUNNING, STOPPED, FAILED};
 
 ///
 /// default python editor, used as long as another isn't passed as command line arg
@@ -192,5 +193,6 @@ public:
 
     static void text_displayer();
     static void text_updater();
+    static void update_status(int id, std::string status);
 };
 #endif
