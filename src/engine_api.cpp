@@ -126,8 +126,9 @@ bool Engine::walkable(Vec2D location) {
     return true;
 }
 
-bool Engine::change_tile(int, Vec2D, int) {
-    return false;
+bool Engine::change_tile(Vec2D tile, int layer_num, int tile_id) {
+    map_viewer->get_map()->update_tile(tile.x, tile.y, layer_num, tile_id);
+    return true;
 }
 
 std::vector<int> Engine::get_tiles(Vec2D) {
