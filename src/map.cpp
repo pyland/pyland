@@ -541,16 +541,13 @@ Vec2D Map::pixel_to_tile(Vec2D pixel_location) {
 }
 
 Vec2D Map::tile_to_pixel(Vec2D tile_location) {
-    VLOG(2) << "incoming tiles" << tile_location.to_string();
     float scale(TILESET_ELEMENT_SIZE*GLOBAL_SCALE);
 
     Vec2D results(int(float(tile_location.x) * scale),
                   int(float(tile_location.y) * scale));
 
-    VLOG(2) << "incoming get_display" << Map::get_display_x() << " " << Map::get_display_y();
     results -= Vec2D(int(Map::get_display_x() * scale),
                      int(Map::get_display_y() * scale));
-    VLOG(2) << "outgoing pixel" << results.to_string();
     return results;
 }
 
