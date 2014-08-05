@@ -18,33 +18,28 @@ class LockableEntityThread;
 ///
 class Object {
 
-private:  
+private:
     ///
     /// Boolean to indicate if the object has set itself to be renderable
     ///
     bool renderable = true;
-  
+
     ///
     /// The object's id
     ///
     int id = 0;
-  
-    ///
-    /// The name of the object
-    ///
-    std::string name = "";
 
     ///
     /// Walkable: determine if the object can be walked over
     ///
     Walkability walkability = Walkability::WALKABLE;
 protected:
-  
+
     ///
     /// The object's renderable component
     ///
     RenderableComponent renderable_component;
-    
+
     ///
     /// The x position of the object
     ///
@@ -55,13 +50,18 @@ protected:
     ///
     double y_position = 0;
 
+    ///
+    /// The name of the object
+    ///
+    std::string name = "";
+
 public:
     Object();
     //= default not supported in g++-4.8
     virtual ~Object();
 
     ///
-    /// DO NOT USE THIS! ONLY THE ENGINE SHOULD USE THIS FUNCTION 
+    /// DO NOT USE THIS! ONLY THE ENGINE SHOULD USE THIS FUNCTION
     /// Set the id of the object
     /// @param new_id the object's id
     ///
@@ -122,7 +122,7 @@ public:
     /// Get the name of the object
     /// @return the name of the object
     std::string get_name() { return name; }
-  
+
     ///
     /// Get the renderable component
     /// @return the renderable component for this object

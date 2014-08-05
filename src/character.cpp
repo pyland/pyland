@@ -23,54 +23,64 @@
 #include <GL/gl.h>
 
 #endif
+Character::Character(int _x_position, int _y_position, std::string _name) {
+    LOG(INFO) << "register new character called " << _name;
+    x_position = _x_position;
+    y_position = _y_position;
+    name = _name;
 
-Character::Character() {
     init_shaders();
     load_textures();
     generate_tex_data();
     generate_vertex_data();
 
+    // setting up sprite text
+    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont myfont(mytype, 18);
+    character_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    character_text->set_text(name);
+    Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
+    character_text->move(pixel_position.x ,pixel_position.y );
+    character_text->resize(100,100);
+    LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
+
+    // setting up status text
+    status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    status_text->set_text("awaiting...");
+    Vec2D pixel_text = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
+    status_text->move(pixel_text.x ,pixel_text.y + 100);
+    status_text->resize(100,100);
 
     // Starting positions should be integral
     assert(trunc(x_position) == x_position);
     assert(trunc(y_position) == y_position);
 
     //Make a character blocked
-    blocked_set("stood on", Engine::get_map_viewer()->get_map()->block_tile(
+    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
         Vec2D(int(x_position), int(y_position))
-    ));
+    )));
 
 
     LOG(INFO) << "Character initialized";
+
 }
 
 Character::~Character() {
+
     LOG(INFO) << "Character destructed";
 }
 
 
-void Character::blocked_set(std::string key, Map::Blocker value) {
-    blocked_tiles.erase(key);
-    blocked_tiles.insert(std::make_pair(key, value));
-}
-
 void Character::set_state_on_moving_start(Vec2D target) {
     moving = true;
-
-    // Must erase before inserting, else nothing happens
-    // TODO:
-        // blocked_set("walking on", Engine::get_map_viewer()->get_map()->block_tile(target));
-        // blocked_set("walking off", blocked_tiles.at("stood on"));
-        // blocked_tiles.erase("stood on");
+    blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
 }
 
 void Character::set_state_on_moving_finish() {
     moving = false;
-
-    // TODO:
-        // blocked_set("stood on", blocked_tiles.at("walking on"));
-        // blocked_tiles.erase("walking on");
-        // blocked_tiles.erase("walking off");
+    blocked_tiles.erase("stood on");
+    blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
+    blocked_tiles.erase("walking to");
 }
 
 

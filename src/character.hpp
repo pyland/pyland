@@ -3,6 +3,9 @@
 
 #include "image.hpp"
 #include "object.hpp"
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -19,6 +22,9 @@
 ///
 class Character : public Object {
 
+    Text* character_text = nullptr;
+    Text* status_text = nullptr;
+
 protected:
 
     ///
@@ -28,16 +34,10 @@ protected:
     std::map<std::string, Map::Blocker> blocked_tiles;
 
 
-    ///
-    /// Utility function to make map replace less awful.
-    ///
-    void blocked_set(std::string key, Map::Blocker value);
-
-
 
 public:
 
-    Character();
+    Character(int _x_position, int _y_position, std::string _name);
     virtual ~Character();
 
     // TODO: Comment
@@ -59,11 +59,17 @@ public:
     /// Load the textures that are being used by the character
     ///
     void load_textures();
- 
+
     ///
     /// Initialise the shaders that are being used by the character
     ///
     bool init_shaders();
+
+    Text* get_character_text() {return character_text; }
+    void set_character_text(Text* _character_text) {character_text = _character_text; }
+    Text* get_status_text() {return status_text; }
+    void set_status_text(Text* _status_text) {status_text = _status_text; }
+
 };
 
 #endif

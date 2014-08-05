@@ -55,12 +55,22 @@ private:
     SDL_Window* window;
     
     ///
+    /// The surface of the SDL window.
+    ///
+    SDL_Surface* sdl_window_surface;
+    
+    ///
+    /// Used for background GL rendering.
+    ///
+    SDL_Surface* background_surface;
+    
+    ///
     /// Stores the SDL renderer.
     ///
     /// The renderer can be used to draw things without the need to go
     /// through opengl textures and rendering (e.g. fonts).
     ///
-    SDL_Renderer* renderer;
+    // SDL_Renderer* renderer;
     
     ///
     /// SDL window and EGL surface width.
@@ -81,9 +91,25 @@ private:
     int window_y;
 
     ///
-    /// Keeps track of whether the surface is visible (i.e. exists)
+    /// Keeps track of whether a surface exists to render to.
     ///
     bool visible;
+
+    ///
+    /// Whether the EGL surface renders directly to the screen.
+    ///
+    /// This variable signifies intent. For a true representation of
+    /// current state, see was_foreground.
+    ///
+    bool foreground;
+
+    ///
+    /// We need to keep a previous state for transitions during init and
+    /// deinit of surfaces.
+    ///
+    /// This is used primarily for ensuring resources are cleaned up.
+    ///
+    bool was_foreground;
 
     ///
     /// If the window is being resized (true only during an update).
@@ -158,9 +184,12 @@ private:
     /// Upon destruction, callback lifelines should be disabled.
     ///
     LifelineController callback_controller;
-    
+
     ///
-    /// Initialize SDL.
+    /// Initialize SDL, and some Raspberry Pi specific stuff.
+    ///
+    /// This initialises first-time SDL and graphics related stuff. It
+    /// calls bcm_host_init(), and also queries the overscan.
     ///
     void init_sdl();
     ///
@@ -271,7 +300,20 @@ public:
     void use_context();
 
     ///
+    /// Debugging function for unsetting the current gl context.
+    ///
+    /// This is meant for debugging, and should not be called under
+    /// normal circumstances. This can be used to trip up code which
+    /// is making GL calls at inappropriate times, or forgetting to
+    /// set the current context.
+    ///
+    void disable_context();
+
+    ///
     /// Swaps the opengl buffers for this window.
+    ///
+    /// If using OpenGL ES, and the window is not in the foreground,
+    /// draw the content of the EGL PBuffer to the SDL window.
     ///
     void swap_buffers();
 

@@ -1,5 +1,4 @@
 import random
 
-while (True):
+for _ in range(20):
 	move(east)
-

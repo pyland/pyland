@@ -43,11 +43,11 @@ class Map {
     /// Array of layers
     ///
     std::vector<std::shared_ptr<Layer>> layers;
-    
+
     ///
     /// Array of objects
     ///
-    std::vector<std::shared_ptr<MapObject>> objects;    
+    std::vector<std::shared_ptr<MapObject>> objects;
 
 
     ///
@@ -72,7 +72,7 @@ class Map {
     /// Cache of the tileset texture data for this Map
     ///
     GLfloat* tileset_tex_coords = nullptr;
-  
+
     ///
     /// The texture data for the tileset. This is the cached entries
     /// which allow generation of the map texture coordinates for a
@@ -82,7 +82,7 @@ class Map {
 
     ///
     /// This is the height of the map in tiles
-    /// 
+    ///
     int map_height = 16;
 
     ///
@@ -147,7 +147,7 @@ class Map {
 
     ///
     /// The function used to generate the cache of tile texture coordinates.
-    /// 
+    ///
     void generate_tileset_coords(Image* texture_image);
 
     ///
@@ -245,12 +245,12 @@ class Map {
     ///
     bool init_shaders();
 
-public: 
+public:
 
     Dispatcher<int> event_character_add;
     PositionDispatcher<int> event_step_on;
     PositionDispatcher<int> event_step_off;
-    std::vector <std::vector<int>> blocker;
+    std::vector<std::vector<int>> blocker;
 
     Map(const std::string map_src);
     ~Map();
@@ -268,11 +268,11 @@ public:
     void remove_character(int character_id);
 
     ///
-    /// Get the characters that are on this map 
+    /// Get the characters that are on this map
     // Make this a copy
     ///
     const std::vector<int>& get_characters() { return characters; }
-  
+
     ///
     /// Get the map width
     ///
@@ -280,7 +280,7 @@ public:
 
     ///
     /// Get the map height
-    /// 
+    ///
     int get_height() { return map_height; }
 
     ///
@@ -319,7 +319,7 @@ public:
     /// @param new_display_x the new display position
     ///
     void set_display_x(float new_display_x) { map_display_x = new_display_x; }
-    
+
     ///
     /// Get the map display bottom y position
     /// @return the map display bottom y  position
@@ -334,7 +334,7 @@ public:
 
     ///
     /// Is this location walkable
-    /// 
+    ///
     bool is_walkable(int x_pos, int y_pos);
 
     class Blocker {
@@ -372,6 +372,15 @@ public:
     ///
     int get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos);
 
+    ///
+    /// converts pixel location inside window to a map tile
+    ///
+    Vec2D pixel_to_tile (Vec2D pixel_location);
+
+    ///
+    /// converts a tile in map to a pixel location in window of the bottem left corner of tile
+    Vec2D tile_to_pixel (Vec2D tile_location);
+    Vec2D tile_to_pixel(std::pair<double,double> tile_location) ;
 };
 
 #endif

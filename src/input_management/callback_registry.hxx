@@ -7,6 +7,23 @@
 
 
 template <typename Ret, typename... Args>
+CallbackRegistry<Ret, Args...>::CallbackRegistry():
+    callbacks() {
+}
+
+
+template <typename Ret, typename... Args>
+CallbackRegistry<Ret, Args...>::~CallbackRegistry() {
+    // Save from the headache of iterator mutation.
+    std::set<Callback<Ret, Args...>> callbacks_safe = callbacks;
+    for (const Callback<Ret, Args...>& callback : callbacks_safe) {
+        callback.remove_registry(this);
+    }
+    callbacks.clear();
+}
+
+
+template <typename Ret, typename... Args>
 void CallbackRegistry<Ret, Args...>::register_callback(const Callback<Ret, Args...> callback) {
     callbacks.insert(callback);
     callback.add_registry(this);
@@ -37,7 +54,7 @@ void CallbackRegistry<Ret, Args...>::unregister_callback_no_notify(const Callbac
 
 template <typename Ret, typename... Args>
 void CallbackRegistry<Ret, Args...>::broadcast(Args... args) {
-    // Save from the head ache of iterator mutation.
+    // Save from the headache of iterator mutation.
     std::set<Callback<Ret, Args...>> callbacks_safe = callbacks;
     for (const Callback<Ret, Args...>& callback : callbacks_safe) {
         callback(args...);

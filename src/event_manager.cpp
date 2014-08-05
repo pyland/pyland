@@ -25,7 +25,7 @@ EventManager::~EventManager() {
 EventManager& EventManager::get_instance() {
     //:Lazy instantiation of the global instance
     static EventManager global_instance;
-    
+
     return global_instance;
 }
 
@@ -52,18 +52,9 @@ void EventManager::process_events() {
             std::lock_guard<std::mutex> lock(queue_mutex);
 
             //If the queue is empty, exit this processing
-            //TODO, consider allowing only x number of events to be processed to stop infinite loops
             if(curr_frame_queue->empty()) {
-                //We swap the current_frame and the next_frame
-                //pointers so that the next_frame becomes the
-                //curr_frame.
-                //This is fine as we have the lock and only this event
-                //manager instance has the pointer so nobody can add
-                //items to the curr_frame queue whilst we do this
-                auto temp = curr_frame_queue;
-                curr_frame_queue = next_frame_queue;
-                next_frame_queue = temp;
-
+                //This is safe as we have the lock
+                std::swap(curr_frame_queue, next_frame_queue);
                 break;
             }
 
@@ -71,7 +62,7 @@ void EventManager::process_events() {
             //We've locked the queue so it will definitely have an item
             func = curr_frame_queue->front();
             curr_frame_queue->pop_front();
-        } // Lock released 
+        } // Lock released
 
         //Dispatch the callback
         if(func) {
@@ -91,30 +82,41 @@ void EventManager::add_event(std::function<void ()> func) {
     curr_frame_queue->push_back(func);
 }
 
-// Public
-void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (double)> func) {
-    add_timed_event(duration, func, time.time());
-}
-
-// Private
-void EventManager::add_timed_event(GameTime::duration duration,
-                                   std::function<bool (double)> func,
-                                   GameTime::time_point start_time) {
-
+void EventManager::add_event_next_frame(std::function<void ()> func) {
+    // Manages locking in an exception-safe manner
+    // Lock released when this lock_guard goes out of scope
     std::lock_guard<std::mutex> lock(queue_mutex);
 
-    // Convert a timed callback to a void lambda by creating a wrapper
-    // that keeps track of the completion and deals with re-registering.
-    next_frame_queue->push_back([this, duration, func, start_time] () {
+    //Add it to the queue
+    next_frame_queue->push_back(func);
+}
 
-        auto completion = time.time() - start_time;
+void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (double)> func) {
+    // This needs to be thread-safe, so wrap it in an event.
+    // Also, this holds the initialisation, so as to keep it static
+    // between all of the events.
+    //
+    // The use of a y-combinator and unholy magic keeps some things, like lifetimes,
+    // safe and prevents the need to have a lambda made every frame.
+    add_event([this, duration, func] () {
+        auto start_time = time.time();
 
-        // Don't allow finite polling speed to allow > 100% completion.
-        double fraction_complete = std::min(completion / duration, 1.0);
+        // Convert a timed callback to a void lambda by creating a wrapper
+        // that keeps track of the completion and deals with re-registering.
+        static std::function<void (GameTime::duration,          std::function<bool (double)>,      GameTime::time_point)> callback =
+               [&]                (GameTime::duration duration, std::function<bool (double)> func, GameTime::time_point start_time) {
 
-        if (func(fraction_complete) && fraction_complete < 1.0) {
-            // Repeat if the callback wishes and the event isn't complete.
-            add_timed_event(duration, func, start_time);
-        }
+            auto completion = time.time() - start_time;
+
+            // Don't allow finite polling speed to allow > 100% completion.
+            double fraction_complete = std::min(completion / duration, 1.0);
+
+            if (func(fraction_complete) && fraction_complete < 1.0) {
+                // Repeat if the callback wishes and the event isn't complete.
+                add_event_next_frame(std::bind(callback, duration, func, start_time));
+            }
+        };
+
+        add_event(std::bind(callback, duration, func, start_time));
     });
 }

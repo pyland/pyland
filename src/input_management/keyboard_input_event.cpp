@@ -1,3 +1,4 @@
+#include <ostream>
 #include <SDL2/SDL.h>
 
 #include "input_manager.hpp"
@@ -12,4 +13,12 @@ KeyboardInputEvent::KeyboardInputEvent(InputManager* manager, int scan_code, boo
     down(down),
     changed(changed),
     typed(typed) {
+}
+
+std::ostream& operator<<(std::ostream& stream, const KeyboardInputEvent& event) {
+    return stream << "KeyboardInputEvent(scan_code=" << event.scan_code
+                                   << ", key_code="  << event.key_code
+                                   << ", down="      << event.down
+                                   << ", changed="   << event.changed
+                                   << ", typed="     << event.typed << ")";
 }

@@ -9,6 +9,7 @@
 #include "object.hpp"
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
+#include "engine_api.hpp"
 
 
 #include <algorithm>
@@ -27,7 +28,7 @@ MapViewer::MapViewer(GameWindow* new_window, GUIManager* new_gui_manager) {
 
     if(new_gui_manager == nullptr) {
         std::cerr << "INVALID PASSING NULL GUIManager" << std::endl;
-    }    
+    }
     gui_manager = new_gui_manager;
 
     // Set background color and clear buffers
@@ -87,7 +88,6 @@ void MapViewer::render_map() {
 
         layer_render_component->bind_shader();
 
-
         //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
         glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(layer_render_component->get_projection_matrix()));
         glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(layer_render_component->get_modelview_matrix()));
@@ -95,7 +95,7 @@ void MapViewer::render_map() {
 
         layer_render_component->bind_vbos();
 
-        layer_render_component->bind_textures();
+         layer_render_component->bind_textures();
 
         //Calculate the offsets for drawing
         //maps are built left to right, bottom to top
@@ -128,7 +128,7 @@ void MapViewer::render_objects() {
             std::shared_ptr<Object> sprite = object_manager.get_object<Object>(*it);
 
             RenderableComponent* character_render_component = sprite->get_renderable_component();
-    
+
             //Move sprite to the required position
             glm::mat4 model1 = glm::mat4(1.0f);
             glm::vec3 translate1 = glm::vec3(
@@ -172,7 +172,7 @@ void MapViewer::render_gui() {
 
     //TODO: Hacky method, clean it up
     RenderableComponent* gui_render_component = gui_manager->get_renderable_component();
-    
+
     //Move gui_manager to the required position
     glm::mat4 model2 = glm::mat4(1.0f);
     gui_render_component->set_modelview_matrix(model2);
@@ -202,78 +202,78 @@ void MapViewer::render_gui() {
 
 }
 
-/// 
+///
 /// Take a line of a given size (length) and a point offset on that line (point):
-/// 
+///
 /// ← length    →
 /// ├───────•───┤
 /// ← point →
-/// 
+///
 /// Also takes a display of a given size (bound):
-/// 
+///
 /// ← bound→
 /// ┼─────────────┼
-/// 
+///
 /// If bound == length:
-/// 
+///
 ///     It places the boxes over eachother:
-/// 
+///
 ///     ┼─────────────┼
 ///     ├─────────•───┤
 ///
 /// If length > bound:
-/// 
+///
 ///     It centres the box on the point:
-/// 
+///
 ///            ┼─────────────┼
 ///     ├─────────────•───┤
-/// 
+///
 ///     Then moves the box inside the bounds, if needed:
-/// 
+///
 ///         ┼─────────────┼
 ///     ├─────────────•───┤
-/// 
+///
 /// If bound > length:
-/// 
+///
 ///     It centres the line inside the box:
-/// 
+///
 ///     ┼─────────────┼
 ///           |•────────┤
-/// 
+///
 ///     It then moves the line inside the box, if needed:
-/// 
+///
 ///     ┼─────────────┼
 ///         |•────────┤
-/// 
+///
 /// Then it returns the distance from the start of length to the start of bound:
-/// 
+///
 ///     For example,
-/// 
+///
 ///         ────→
 ///             ┼─────────────┼
 ///         ├─────────────•───┤
-/// 
+///
 ///     which is positive, or
-/// 
+///
 ///         ←────
 ///         ┼─────────────┼
 ///             |•────────┤
-/// 
+///
 ///     which is negative.
-/// 
+///
 
 float centre_point_in_range(float point, float length, float bound) {
-    // First case is a subset of the other two
+    // First case is a union of the other two
     // and both cases have same first step.
     float bound_offset = point - bound / 2.0f;
 
     // Crop to valid range: bound inside length or length inside bound
     // Note order of min/max
-    if (length > bound) {
+    if (length >= bound) {
         // bound_offset positive by no more than | length - bound |
         bound_offset = std::min(std::max(bound_offset, 0.0f), length - bound);
     }
-    else if (bound > length) {
+    else if (bound >= length) {
         // bound_offset negative by no more than | length - bound |
         bound_offset = std::max(std::min(bound_offset, 0.0f), length - bound);
     }
@@ -289,7 +289,7 @@ void MapViewer::refocus_map() {
         LOG(INFO) << "MapViewer::refocus_map: No focus.";
         return;
     }
-        
+
     std::shared_ptr<Object> object = object_manager.get_object<Object>(map_focus_object);
 
     //If such an object exists, move the map to it
@@ -310,13 +310,14 @@ void MapViewer::refocus_map() {
     } else {
         LOG(INFO) << "MapViewer::refocus_map: No objects have focus.";
     }
+    Engine::text_updater();
 }
 
 void MapViewer::set_map(Map* new_map) {
     map = new_map;
 }
 
-void MapViewer::set_map_focus_object(int object_id) { 
+void MapViewer::set_map_focus_object(int object_id) {
     //Set the focus to the object if this is a valid object and it is on the map
     if(ObjectManager::is_valid_object_id(object_id)) {
         //        const std::vector<int>& characters = map->get_characters();

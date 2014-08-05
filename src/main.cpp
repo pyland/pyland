@@ -1,30 +1,3 @@
-/*
-    Copyright (c) 2012, Broadcom Europe Ltd
-    All rights reserved.
-
-    Redistribution and use in source and binary forms, with or without
-    omodification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-    * Neither the name of the copyright holder nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-n
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 #include <boost/filesystem.hpp>
 #include <cassert>
 #include <cmath>
@@ -105,17 +78,15 @@ static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
-void create_character(Interpreter &interpreter) {
+int create_character(Interpreter &interpreter) {
     LOG(INFO) << "Creating character";
 
-    // Registering new character with game engine
-    shared_ptr<Character> new_character = make_shared<Character>();
-    new_character->set_name("John");
 
     int start_x = 4;
     int start_y = 15;
-    new_character->set_x_position(start_x);
-    new_character->set_y_position(start_y);
+
+    // Registering new character with game engine
+    shared_ptr<Character> new_character = make_shared<Character>(start_x, start_y, "John");
     LOG(INFO) << "Adding character";
     ObjectManager::get_instance().add_object(new_character);
     Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
@@ -133,6 +104,8 @@ void create_character(Interpreter &interpreter) {
     new_character->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
 
     LOG(INFO) << "Done!";
+
+    return new_character->get_id();
 }
 
 class CallbackState {
@@ -143,13 +116,19 @@ class CallbackState {
             name(name){
         }
 
-        void register_number(int id) {
-            LOG(INFO) << "changing focus to " << id;
-            Engine::get_map_viewer()->set_map_focus_object(id);
+        void register_number(int key) {
+            LOG(INFO) << "changing focus to " << key;
+
+            if (!(0 < key && size_t(key) < key_to_id.size())) {
+                LOG(INFO) << "changing focus aborted; no such id";
+                return;
+            }
+
+            Engine::get_map_viewer()->set_map_focus_object(key_to_id[key]);
         }
 
         void spawn() {
-            create_character(interpreter);
+            key_to_id.push_back(create_character(interpreter));
         }
 
         void restart() {
@@ -210,6 +189,7 @@ class CallbackState {
     private:
         Interpreter &interpreter;
         std::string name;
+        std::vector<int> key_to_id;
 };
 
 
@@ -335,6 +315,10 @@ int main(int argc, const char* argv[]) {
         {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(); }
     ));
+    Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("N")},
+        [&] (KeyboardInputEvent) { callbackstate.spawn(); }
+    ));
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("R")},
         [&] (KeyboardInputEvent) { callbackstate.restart(); }
@@ -378,6 +362,23 @@ int main(int argc, const char* argv[]) {
         );
     }
 
+    Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, 
+        [&] (MouseInputEvent event) {
+            LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
+            Vec2D tile_clicked = Engine::get_map_viewer()->get_map()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
+            LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
+            auto objects = Engine::get_objects_at(tile_clicked);
+            if (objects.size() == 1) {
+                callbackstate.register_number(objects[0]);
+            } else if (objects.size() == 0) {
+                LOG(INFO) << "Not objects to interact with";
+            } else {
+                LOG(WARNING) << "Not sure sprite object to switch to";
+                callbackstate.register_number(objects[0]);
+            }
+        }
+    ));
+
     EventManager &em = EventManager::get_instance();
 
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
@@ -397,6 +398,13 @@ int main(int argc, const char* argv[]) {
     };
 
     Lifeline text_lifeline = window.register_resize_handler(func);
+
+    std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) { 
+        LOG(INFO) << "text window resizing"; 
+        Engine::text_updater();
+    };
+
+    Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
     std::string editor;
 
@@ -419,6 +427,7 @@ int main(int argc, const char* argv[]) {
         em.process_events();
         map_viewer.render();
         mytext.display();
+        Engine::text_displayer();
         stoptext.display();
         runtext.display();
         cursor.display();

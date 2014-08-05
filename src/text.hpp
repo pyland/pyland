@@ -145,7 +145,7 @@ public:
     ///
     /// Width and height are given in screen ratios.
     ///
-    void resize(float w, float h);
+    void resize_ratio(float w, float h);
     ///
     /// Move the text to at the given coordinates (pixels from
     /// bottom-left).
@@ -155,7 +155,7 @@ public:
     /// Move the text to at the given coordinates (screen ratio from
     /// bottom-left).
     ///
-    void move(float x, float y);
+    void move_ratio(float x, float y);
     ///
     /// Display the text.
     ///

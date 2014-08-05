@@ -4,23 +4,24 @@
 #include "game_time.hpp"
 
 GameTime::GameTime():
-    game_seconds_per_real_second(
-        1,
-        Accessor<double>::default_getter,
-        [this] (double value) { time(); return value; }
-    ),
-    passed_time(duration(0)),
-    time_at_last_tick(std::chrono::steady_clock::now())
+    GameTime(1.0, duration(0), std::chrono::steady_clock::now())
     {}
 
 GameTime::GameTime(const GameTime &other):
+    GameTime(other.game_seconds_per_real_second, other.passed_time, other.time_at_last_tick)
+    {}
+
+GameTime::GameTime(double game_seconds_per_real_second,
+                   duration passed_time,
+                   std::chrono::steady_clock::time_point time_at_last_tick):
+
     game_seconds_per_real_second(
-        other.game_seconds_per_real_second,
+        game_seconds_per_real_second,
         Accessor<double>::default_getter,
         [this] (double value) { time(); return value; }
     ),
-    passed_time(other.passed_time),
-    time_at_last_tick(other.time_at_last_tick)
+    passed_time(passed_time),
+    time_at_last_tick(time_at_last_tick)
     {}
 
 GameTime::time_point GameTime::time() {

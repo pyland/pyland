@@ -10,9 +10,6 @@
 #include <string>
 #include <utility>
 
-
-
-
 Object::Object() {
     // Get a new id for the object
     ObjectManager& object_manager = ObjectManager::get_instance();
