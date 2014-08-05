@@ -34,6 +34,7 @@ class Character : public Object {
     Image* texture_image = nullptr;
 
     Text* character_text = nullptr;
+    Text* status_text = nullptr;
 
 protected:
 
@@ -77,6 +78,9 @@ public:
 
     Text* get_character_text() {return character_text; }
     void set_character_text(Text* _character_text) {character_text = _character_text; }
+    Text* get_status_text() {return status_text; }
+    void set_status_text(Text* _status_text) {status_text = _status_text; }
+
 };
 
 #endif

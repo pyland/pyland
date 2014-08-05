@@ -231,6 +231,9 @@ void Engine::text_displayer() {
         if (character->get_character_text() != nullptr) {
             character->get_character_text()->display();
         }
+        if (character->get_status_text() != nullptr) {
+            character->get_status_text()->display();
+        }
     }
 }
 
@@ -254,6 +257,7 @@ void Engine::text_updater() {
         VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
         character->get_character_text()->move(pixel_position.x, pixel_position.y);
+        character->get_status_text()->move(pixel_position.x, pixel_position.y + (1.5*TILE_SIZE));
     }
 
 }
