@@ -254,8 +254,8 @@ void Engine::text_updater() {
         VLOG(2) << "sprite location" << character->get_x_position() << " " << character->get_y_position();
         VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
-        character->get_character_text()->move(pixel_position.x, pixel_position.y);
-        character->get_status_text()->move(pixel_position.x, pixel_position.y + (1.5*Engine::get_tile_size()));
+        character->get_character_text()->move(pixel_position.x + (0.5*Engine::get_actual_tile_size()), pixel_position.y);
+        character->get_status_text()->move(pixel_position.x + (0.5*Engine::get_actual_tile_size()), pixel_position.y + (1.5*Engine::get_actual_tile_size()));
     }
 
 }

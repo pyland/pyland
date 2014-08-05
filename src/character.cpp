@@ -42,14 +42,18 @@ Character::Character(int _x_position, int _y_position, std::string _name) {
     Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
     character_text->move(pixel_position.x ,pixel_position.y );
     character_text->resize(100,100);
+    character_text->align_centre();
+    character_text->align_at_origin(true);
     LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // setting up status text
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
     status_text->set_text("awaiting...");
     Vec2D pixel_text = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
-    status_text->move(pixel_text.x ,pixel_text.y + 100);
+    status_text->move(pixel_text.x ,pixel_text.y);
     status_text->resize(100,100);
+    status_text->align_centre();
+    status_text->align_at_origin(true);
 
     // Starting positions should be integral
     assert(trunc(x_position) == x_position);

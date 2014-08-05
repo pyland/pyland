@@ -211,7 +211,8 @@ int main(int argc, const char* argv[]) {
     google::InstallFailureSignalHandler();
 
     int map_width = 32, map_height = 32;
-    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
+    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), 
+        map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
     window.use_context();
 
     Map map("../resources/map0.tmx");
@@ -359,7 +360,10 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.monologue(); }
     ));
 
-    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {(gui_manager.*mouse_callback_function) (event);}));
+    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(
+        filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {
+            (gui_manager.*mouse_callback_function) (event);})
+    );
 
 
     std::vector<Lifeline> digit_callbacks;

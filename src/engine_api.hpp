@@ -74,6 +74,8 @@ public:
     /// @return the tile size
     ///
     static int get_tile_size() { return tile_size; }
+
+    static int get_actual_tile_size() {return tile_size * global_scale; }
     ///
     /// Set the map viewer attached to the engine
     /// @param _map_viewer the map viewer which is attached to the engine
