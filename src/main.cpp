@@ -135,8 +135,10 @@ class CallbackState {
             Engine::get_map_viewer()->set_map_focus_object(id);
         }
 
-        void spawn() {
-            key_to_id.push_back(create_character(interpreter));
+        int spawn() {
+            int id = create_character(interpreter);
+            key_to_id.push_back(id);
+            return id;
         }
 
         void restart() {
@@ -420,8 +422,12 @@ int main(int argc, const char* argv[]) {
         Engine::set_editor(argv[1]);
     };
 
+    int new_id = callbackstate.spawn();
+    std::string bash_command = 
+        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_") 
+        + std::to_string(new_id) + std::string(".py");
+    system(bash_command.c_str());
     LongWalkChallenge long_walk_challenge(input_manager);
-    callbackstate.spawn();
     long_walk_challenge.start();
 
     TextFont big_font(mytype, 50);
@@ -429,7 +435,11 @@ int main(int argc, const char* argv[]) {
     cursor.move(0, 0);
     cursor.resize(50, 50);
     cursor.set_text("<");
-    Lifeline cursor_lifeline = input_manager->register_mouse_handler(filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {cursor.move(event.to.x, event.to.y+25);}));
+    Lifeline cursor_lifeline = input_manager->register_mouse_handler(
+        filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
+            cursor.move(event.to.x, event.to.y+25);
+        })
+        );
         
     while (!window.check_close()) {
         em.process_events();
