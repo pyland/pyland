@@ -219,20 +219,17 @@ void GUIManager::load_textures() {
     renderable_component.set_texture_image(texture_image);
 }
 bool GUIManager::init_shaders() {
-
-    Shader* shader = nullptr;
+    std::shared_ptr<Shader> shader;
     try {
-#ifdef USE_GLES
-        shader = new Shader("vert_shader.glesv", "frag_gui_shader.glesf");
-#endif
-#ifdef USE_GL
-        shader = new Shader("vert_shader.glv", "frag_gui_shader.glf");
-#endif
+// #ifdef USE_GLES
+//         shader = new Shader("vert_shader.glesv", "frag_gui_shader.glesf");
+// #endif
+// #ifdef USE_GL
+//         shader = new Shader("vert_shader.glv", "frag_gui_shader.glf");
+// #endif
+        shader = Shader::get_shared_shader("gui_shader");
     }
     catch (std::exception e) {
-
-        delete shader;
-        shader = nullptr;
         LOG(ERROR) << "Failed to create the shader";
         return false;
     }

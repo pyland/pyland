@@ -63,7 +63,7 @@ void MapViewer::render_map() {
         return;
     }
 
-    Shader* map_shader = map_render_component->get_shader();
+    Shader* map_shader = map_render_component->get_shader().get();
     if(map_shader == nullptr) {
         LOG(ERROR) << "MapViewer::render_map: Shader should not be null";
         return;
@@ -132,7 +132,7 @@ void MapViewer::render_map() {
 
             character_render_component->bind_shader();
 
-            Shader* shader = character_render_component->get_shader();
+            Shader* shader = character_render_component->get_shader().get();
             if(shader == nullptr) {
                 LOG(ERROR) << "MapViewer::render_map: Shader (character_render_component->get_shader()) should not be null";
                 return;
@@ -166,7 +166,7 @@ void MapViewer::render_map() {
 
     gui_render_component->bind_shader();
 
-    Shader* gui_shader = gui_render_component->get_shader();
+    Shader* gui_shader = gui_render_component->get_shader().get();
     if(gui_shader == nullptr) {
         std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
         return;

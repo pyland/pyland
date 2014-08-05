@@ -121,7 +121,7 @@ public:
     ///        file, or platform's shader files.
     /// @return A shared pointer to the relevant Shader.
     ///
-    std::shared_ptr<Shader> get_shared_shader(const std::string program_name);
+    static std::shared_ptr<Shader> get_shared_shader(const std::string program_name);
     
     /// 
     /// This function creates the Opengl program from a program base

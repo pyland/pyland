@@ -3,6 +3,8 @@
 // //////////////////////////////////////////////////////////////
 //  Shader caches are not cleaned up when a graphics context ends.
 //      Not really a problem unless using multiple contexts.
+//  Shader caches are created twice and destroyed once due to copying
+//      when inserting into the map (pair?).
 
 #include <glog/logging.h>
 #include <iostream>
@@ -57,8 +59,7 @@ static char* load_file(std::string filename) {
 
 
 
-Shader::ShaderCache::ShaderCache():
-    shaders() {
+Shader::ShaderCache::ShaderCache() {
     LOG(INFO) << "Created shader cache " << this;
 }
 
