@@ -72,7 +72,7 @@ public:
     void add_tile(const std::string tileset, int tile_id);
 
     ///
-    /// Update a tile. Use THIS function to put a new tile on the layer or to update an  
+    /// Update a tile. This  function is used to put a new tile on the layer or to update an  
     /// existing tile on the layer.
     /// @param x_pos the x position
     /// @param y_pos the y position

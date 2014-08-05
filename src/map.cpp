@@ -220,9 +220,16 @@ void Map::generate_data() {
     for(auto layer_iter = layers.begin(); layer_iter != layers.end(); ++layer_iter) {
         auto layer_data = (*layer_iter)->get_layer_data();
 
+
+        //Build the mapping from (x, y) to offsets in the vertex and texture buffers
+        std::shared_ptr<std::map<int, int>> buffer_map = std::make_shared<std::map<int, int>>();        
+        layer_mappings[layer_num] = buffer_map;
+
+
         //Don't generate data for the collisions layer
         //TODO: handle this not being in layer_mappings
         if ((*layer_iter)->get_name() == "Collisions") {
+            layer_num++;
             continue;
         }
 
@@ -251,10 +258,8 @@ void Map::generate_data() {
         //Create the buffer for the layer
         int num_tiles = total_tiles - num_blank_tiles;
         //The number of bytes needed - *6 for the GLTRIANGLES
-        int num_vertices = 6;
-        int num_dimensions = 2;
-        int tex_data_size = sizeof(GLfloat)*num_tiles*num_vertices*num_dimensions;
-        int vert_data_size = sizeof(GLfloat)*num_tiles*num_vertices*num_dimensions;
+        int tex_data_size = sizeof(GLfloat)*num_tiles*num_tile_vertices*num_tile_dimensions;
+        int vert_data_size = sizeof(GLfloat)*num_tiles*num_tile_vertices*num_tile_dimensions;
         GLfloat* layer_tex_coords = nullptr;
         GLfloat* layer_vert_coords = nullptr;
 
@@ -280,11 +285,7 @@ void Map::generate_data() {
         RenderableComponent* renderable_component = (*layer_iter)->get_renderable_component();
         renderable_component->set_texture_coords_data(layer_tex_coords, tex_data_size, false);
         renderable_component->set_vertex_data(layer_vert_coords, vert_data_size, false);
-        renderable_component->set_num_vertices_render(num_tiles*num_vertices);
-
-        //Build the mapping from (x, y) to offsets in the vertex and texture buffers
-        std::shared_ptr<std::map<int, int>> buffer_map = std::make_shared<std::map<int, int>>();        
-        layer_mappings[layer_num] = buffer_map;
+        renderable_component->set_num_vertices_render(num_tiles*num_tile_vertices);
 
         //Generate the mappings
         int x = 0;
@@ -300,7 +301,7 @@ void Map::generate_data() {
             //If we're not looking at a blank tile
             if(tile_id != 0) {
                 //Calculate the new offset
-                idx += num_dimensions*num_vertices;
+                idx += num_tile_dimensions*num_tile_vertices;
             }
             //ELSE: Offset unchanged
         }
@@ -549,10 +550,8 @@ void Map::recalculate_layer_mappings(int x_pos, int y_pos, int layer_num) {
 void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::string tileset_name) {
     //BUILD THE DATA
     //Data for the update
-    int num_dimensions = 2;
-    int num_vertices = 6;
     GLfloat* data = nullptr;
-    size_t data_size = (size_t)(sizeof(GLfloat)*num_dimensions*num_vertices);
+    size_t data_size = (size_t)(sizeof(GLfloat)*num_tile_dimensions*num_tile_vertices);
 
     //Get a buffer for the data
     try {
@@ -613,7 +612,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
         //Update the buffer
         //Just update that tile directly
         RenderableComponent* layer_renderable_component = layer->get_renderable_component();
-        layer_renderable_component->update_texture_buffer(tile_offset*num_vertices*num_dimensions*sizeof(GLfloat), data_size, data);
+        layer_renderable_component->update_texture_buffer(tile_offset*num_tile_vertices*num_tile_dimensions*sizeof(GLfloat), data_size, data);
 
     }
     else {
@@ -666,7 +665,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
         recalculate_layer_mappings(x_pos, y_pos, layer_num);
         //The offset into the buffers
         //The mappins have been updated by the previous function call
-        int offset = tile_offset*num_vertices*num_dimensions;
+        int offset = tile_offset*num_tile_vertices*num_tile_dimensions;
 
         //TODO: small buffer
         //Get the data 
@@ -694,7 +693,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
         }
 
         //Copy the first part of the original data
-        int data_length = num_vertices*num_dimensions;
+        int data_length = num_tile_vertices*num_tile_dimensions;
         std::copy(layer_vertex_data, &layer_vertex_data[offset], new_vertex_data);
         std::copy(layer_texture_data, &layer_texture_data[offset], new_texture_data);
         
@@ -711,7 +710,14 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::str
         layer_renderable_component->set_texture_coords_data(new_texture_data, new_texture_data_size, false);
     }
 }
+int Map::get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos) {
+     //Fetch the offset from the data buffer
+     int tile_offset = (*layer_mappings[layer_num])[y_pos*map_width + x_pos];
 
+     //The VBO offset is the tile offset times the dimenions and number of vertices
+     return tile_offset*num_tile_vertices*num_tile_dimensions;
+
+}
 /*
 void Map::merge_layer_data() {
 

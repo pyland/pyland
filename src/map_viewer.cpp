@@ -76,6 +76,7 @@ void MapViewer::render_map() {
     glm::mat4 translated = glm::translate(model, translate);
     
     //Draw all the layers, from base to top to get the correct draw order
+    int layer_num = 0;
     for(auto layer: map->get_layers()) {
         RenderableComponent* layer_render_component = layer->get_renderable_component();
         Shader* layer_shader = layer->get_renderable_component()->get_shader();
@@ -96,14 +97,22 @@ void MapViewer::render_map() {
 
         layer_render_component->bind_textures();
 
-        glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
+        //Calculate the offsets for drawing
+        //maps are built left to right, bottom to top
+        //        int offset = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x(), 0);
 
+        //        int length = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x()+map->get_display_width() -1, 0);
+        //        glDrawArrays(GL_TRIANGLES, offset, (length -offset) / 2); // no of vetices, divide by 2 dimenions
+        glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
+        //        std::cout <<" OOF " << offset << " " << length << std::endl;
         //Release the vertex buffers and texppptures
         layer_render_component->release_textures();
         layer_render_component->release_vbos();
 
         layer_render_component->release_shader();
 
+        //next layer
+        layer_num ++;
     }
 }
 
