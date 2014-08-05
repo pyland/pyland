@@ -136,6 +136,16 @@ class Map {
     GLfloat* map_tex_coords = nullptr;
 
     ///
+    /// The number of dimensions in the vertex and texture buffers for a tile: (x, y) here
+    ///
+    int num_tile_dimensions = 2;
+
+    ///
+    /// The number of vertices for a tile
+    ///
+    int num_tile_vertices = 6;
+
+    ///
     /// The function used to generate the cache of tile texture coordinates.
     /// 
     void generate_tileset_coords(Image* texture_image);
@@ -354,6 +364,14 @@ public:
     /// not specified
     ///
     void update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::string tileset_name="");
+
+
+    ///
+    /// Get a tile's texture offset in the VBO
+    /// @return the texture offset in the VBo
+    ///
+    int get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos);
+
 };
 
 #endif
