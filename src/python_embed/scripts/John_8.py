@@ -23,7 +23,7 @@ Here are some quick tips:
 
 
 # Here's the interesting part:
-for _ in range(1500):
+for _ in range(10):
 	move(east)
 
 # This means:

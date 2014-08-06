@@ -116,7 +116,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                     wall_path_medium_blockers.clear();
 
                         for (auto wall_location : targets.at("wall:path:medium")) {
-                            Engine::change_tile(wall_location, 5, 120);
+                            Engine::change_tile(wall_location, 5, 118);
                         }
                 }
             ));

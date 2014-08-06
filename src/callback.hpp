@@ -22,12 +22,12 @@ private:
     ///
     /// UIDs are assigned through the use of abundant integers.
     ///
-    static Uint64 uid_count;
+    static uint64_t uid_count;
     
     ///
     /// UID of the callback
     ///
-    Uint64 uid;
+    uint64_t uid;
 protected:
     friend class CallbackRegistry<Ret, Args...>;
     

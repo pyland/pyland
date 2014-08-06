@@ -705,8 +705,9 @@ void GameWindow::use_context() {
 #ifdef USE_GLES
     if (visible) {
         eglMakeCurrent(display, surface, surface, context);
-    } else {
-        LOG(WARNING) << "Window surface is not visible. EGL context lost - OpenGL calls may fail!"
+    }
+    else {
+        LOG(WARNING) << "Window surface is not visible. EGL context lost - OpenGL calls may fail!";
         eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     }
 #endif

@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "gil_safe_future.hpp"
+#include "notification.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
@@ -21,6 +22,7 @@
 class MapViewer;
 
 enum Status {RUNNING, STOPPED, FAILED};
+enum Direction {Next, Previous};
 
 ///
 /// default python editor, used as long as another isn't passed as command line arg
@@ -41,6 +43,11 @@ private:
     /// pointer for text box
     ///
     static Text* dialogue_box;
+
+    ///
+    /// cache for hold past notification
+    ///
+    static Notification notifcation_stack; 
     
     ///
     /// The size of a tile
@@ -206,9 +213,11 @@ public:
     static Text* get_dialogue_box(){return dialogue_box; }
 
     static void print_dialogue(std::string name, std::string text);
+    static void move_notification(Direction direction);
 
     static void text_displayer();
     static void text_updater();
     static void update_status(int id, std::string status);
+
 };
 #endif
