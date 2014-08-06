@@ -2,15 +2,16 @@
 #include <map>
 
 template <typename... Arguments>
-typename Dispatcher<Arguments...>::CallbackID
-
-Dispatcher<Arguments...>::register_callback(std::function<bool (Arguments...)> callback) {
+typename Dispatcher<Arguments...>::CallbackID Dispatcher<Arguments...>::register_callback(
+    std::function<bool (Arguments...)> callback
+) {
     functions[++maxid] = callback;
     return maxid;
 }
 
 template <typename... Arguments>
 bool Dispatcher<Arguments...>::unregister(Dispatcher<Arguments...>::CallbackID callback) {
+    // erase by value returns number erased, which then gets coerced to a bool
     return functions.erase(callback);
 }
 
@@ -19,6 +20,7 @@ void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
     // Do increments inline
     for (auto it = functions.cbegin(); it != functions.cend(); ) {
         if (!(*it)(arguments...)) {
+            // erase by iterator returns the next valid iterator
             it = functions.erase(it);
         }
         else {
