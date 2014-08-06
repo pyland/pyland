@@ -116,10 +116,10 @@ class CallbackState {
             name(name){
         }
 
-        void register_number(int key) {
+        void register_number_key(int key) {
             LOG(INFO) << "changing focus to " << key;
 
-            if (!(0 < key && size_t(key) < key_to_id.size())) {
+            if (!(0 <= key && size_t(key) < key_to_id.size())) {
                 LOG(INFO) << "changing focus aborted; no such id";
                 return;
             }
@@ -127,8 +127,18 @@ class CallbackState {
             Engine::get_map_viewer()->set_map_focus_object(key_to_id[key]);
         }
 
-        void spawn() {
-            key_to_id.push_back(create_sprite(interpreter));
+        void register_number_id(int id) {
+            LOG(INFO) << "changing focus to " << id;
+
+            //TODO: handle incorrect ID
+
+            Engine::get_map_viewer()->set_map_focus_object(id);
+        }
+
+        int spawn() {
+            int id = create_character(interpreter);
+            key_to_id.push_back(id);
+            return id;
         }
 
         void restart() {
@@ -201,7 +211,8 @@ int main(int argc, const char* argv[]) {
     google::InstallFailureSignalHandler();
 
     int map_width = 32, map_height = 32;
-    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
+    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), 
+        map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
     window.use_context();
 
     Map map("../resources/map0.tmx");
@@ -349,7 +360,10 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.monologue(); }
     ));
 
-    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {(gui_manager.*mouse_callback_function) (event);}));
+    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(
+        filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {
+            (gui_manager.*mouse_callback_function) (event);})
+    );
 
 
     std::vector<Lifeline> digit_callbacks;
@@ -357,7 +371,7 @@ int main(int argc, const char* argv[]) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
                 {KEY_PRESS, KEY(std::to_string(i))},
-                [&, i] (KeyboardInputEvent) { callbackstate.register_number(i); }
+                [&, i] (KeyboardInputEvent) { callbackstate.register_number_key(i); }
             ))
         );
     }
@@ -369,12 +383,12 @@ int main(int argc, const char* argv[]) {
             LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
             auto objects = Engine::get_objects_at(tile_clicked);
             if (objects.size() == 1) {
-                callbackstate.register_number(objects[0]);
+                callbackstate.register_number_id(objects[0]);
             } else if (objects.size() == 0) {
                 LOG(INFO) << "Not objects to interact with";
             } else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number(objects[0]);
+                callbackstate.register_number_id(objects[0]);
             }
         }
     ));
@@ -400,6 +414,7 @@ int main(int argc, const char* argv[]) {
     Lifeline text_lifeline = window.register_resize_handler(func);
 
     std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) { 
+        std::ignore = game_window;
         LOG(INFO) << "text window resizing"; 
         Engine::text_updater();
     };
@@ -412,8 +427,12 @@ int main(int argc, const char* argv[]) {
         Engine::set_editor(argv[1]);
     };
 
+    int new_id = callbackstate.spawn();
+    std::string bash_command = 
+        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_") 
+        + std::to_string(new_id) + std::string(".py");
+    system(bash_command.c_str());
     LongWalkChallenge long_walk_challenge(input_manager);
-    callbackstate.spawn();
     long_walk_challenge.start();
 
     TextFont big_font(mytype, 50);
@@ -421,7 +440,11 @@ int main(int argc, const char* argv[]) {
     cursor.move(0, 0);
     cursor.resize(50, 50);
     cursor.set_text("<");
-    Lifeline cursor_lifeline = input_manager->register_mouse_handler(filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {cursor.move(event.to.x, event.to.y+25);}));
+    Lifeline cursor_lifeline = input_manager->register_mouse_handler(
+        filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
+            cursor.move(event.to.x, event.to.y+25);
+        })
+        );
         
     while (!window.check_close()) {
         em.process_events();

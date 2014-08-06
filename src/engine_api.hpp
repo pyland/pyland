@@ -19,6 +19,7 @@
 
 class MapViewer;
 
+enum Status {RUNNING, STOPPED, FAILED};
 
 ///
 /// default python editor, used as long as another isn't passed as command line arg
@@ -74,6 +75,8 @@ public:
     /// @return the tile size
     ///
     static int get_tile_size() { return tile_size; }
+
+    static int get_actual_tile_size() {return tile_size * global_scale; }
     ///
     /// Set the map viewer attached to the engine
     /// @param _map_viewer the map viewer which is attached to the engine
@@ -113,7 +116,7 @@ public:
     /// @param layer the layer of the tile to change
     /// @return indicates if the operation completed successfully
     ///
-    static bool change_tile(int new_id, Vec2D location, int layer);
+    static bool change_tile(Vec2D tile, int layer_num, int tile_id);
 
     ///
     /// Gets the ids of the tiles at this location. Layer 0 is the first
@@ -205,5 +208,6 @@ public:
 
     static void text_displayer();
     static void text_updater();
+    static void update_status(int id, std::string status);
 };
 #endif

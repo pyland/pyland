@@ -10,11 +10,16 @@ Uint64 Callback<Ret, Args...>::uid_count = 0;
 
 
 template <typename Ret, typename... Args>
-Callback<Ret, Args...>::Callback(std::function<Ret(Args...)> func):
+Callback<Ret, Args...>::Callback(const std::function<Ret(Args...)>& func):
     func(func),
     registries(std::make_shared<std::set<CallbackRegistry<Ret, Args...>*>>()) {
         uid = uid_count;
         uid_count++;
+}
+    
+template <typename Ret, typename... Args>
+Callback<Ret, Args...>::Callback(const Ret (&func)(Args...)):
+    Callback(std::function<Ret(Args...)>(func)) {
 }
     
 template <typename Ret, typename... Args>

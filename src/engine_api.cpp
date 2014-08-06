@@ -126,8 +126,9 @@ bool Engine::walkable(Vec2D location) {
     return true;
 }
 
-bool Engine::change_tile(int, Vec2D, int) {
-    return false;
+bool Engine::change_tile(Vec2D tile, int layer_num, int tile_id) {
+    map_viewer->get_map()->update_tile(tile.x, tile.y, layer_num, tile_id);
+    return true;
 }
 
 std::vector<int> Engine::get_tiles(Vec2D) {
@@ -292,9 +293,20 @@ void Engine::text_updater() {
         VLOG(2) << "sprite location" << sprite->get_x_position() << " " << sprite->get_y_position();
         VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
-        sprite->get_object_text()->move(pixel_position.x, pixel_position.y);
-        sprite->get_status_text()->move(pixel_position.x, pixel_position.y + (1.5*Engine::get_tile_size()));
+        sprite->get_object_text()->move(
+            pixel_position.x + (int)(0.5*Engine::get_actual_tile_size()), 
+            pixel_position.y
+        );
+        sprite->get_status_text()->move(
+            pixel_position.x + (int)(0.5*Engine::get_actual_tile_size()), 
+            pixel_position.y + (int)(1.5*Engine::get_actual_tile_size())
+        );
     }
 
+}
+
+void Engine::update_status(int id, std::string status) {
+    auto character = ObjectManager::get_instance().get_object<Character>(id);
+    character->get_status_text()->set_text(status);
 }
 

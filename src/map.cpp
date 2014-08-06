@@ -479,18 +479,17 @@ void Map::init_textures() {
  * This function initialises the shader, creating and loading them.
  */
 bool Map::init_shaders() {
-    Shader* shader = nullptr;
+    std::shared_ptr<Shader> shader;
     try {
-#ifdef USE_GLES
-        shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
-#endif
-#ifdef USE_GL
-        shader = new Shader("vert_shader.glv", "frag_shader.glf");
-#endif
+// #ifdef USE_GLES
+//         shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
+// #endif
+// #ifdef USE_GL
+//         shader = new Shader("vert_shader.glv", "frag_shader.glf");
+// #endif
+        shader = Shader::get_shared_shader("tile_shader");
     }
     catch (std::exception e) {
-        delete shader;
-        shader = nullptr;
         LOG(ERROR) << "Failed to create the shader";
         return false;
     }
@@ -746,9 +745,3 @@ int Map::get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos) {
      return tile_offset*num_tile_vertices*num_tile_dimensions;
 }
 
-/*
-void Map::merge_layer_data() {
-
-
-}
-*/

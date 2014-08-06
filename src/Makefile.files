@@ -9,6 +9,7 @@ BASE_OBJS = \
 	engine_api.o     \
 	event_manager.o  \
 	game_window.o    \
+	graphics_context.o \
 	image.o          \
 	layer.o          \
 	lifeline.o       \

@@ -60,6 +60,7 @@ else
 	bold   = $(shell tput bold)
 	normal = $(shell tput sgr0)
 	red    = $(shell tput setaf 1)
+	green  = $(shell tput setaf 2)
 endif
 
 COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr "$(GCC_MAJOR)" \>= 4 \& "$(GCC_MINOR)" \>= 9)

@@ -42,14 +42,20 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
     Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
     object_text->move(pixel_position.x ,pixel_position.y );
     object_text->resize(100,100);
+    object_text->align_centre();
+    object_text->align_at_origin(true);
+
     LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // setting up status text
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    status_text->set_text("awaiting...");
+
+    status_text->set_text("");
     Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    status_text->move(pixel_text.x ,pixel_text.y + 100);
+    status_text->move(pixel_text.x ,pixel_text.y);
     status_text->resize(100,100);
+    status_text->align_centre();
+    status_text->align_at_origin(true);
 
     // Starting positions should be integral
     assert(trunc(x_position) == x_position);
@@ -190,17 +196,17 @@ void Sprite::load_textures() {
 }
 
 bool Sprite::init_shaders() {
-    Shader* shader = nullptr;
+    std::shared_ptr<Shader> shader;
     try {
-#ifdef USE_GLES
-        shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
-#endif
-#ifdef USE_GL
-        shader = new Shader("vert_shader.glv", "frag_shader.glf");
-#endif
+// #ifdef USE_GLES
+//         shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
+// #endif
+// #ifdef USE_GL
+//         shader = new Shader("vert_shader.glv", "frag_shader.glf");
+// #endif
+        shader = Shader::get_shared_shader("tile_shader");
     }
     catch (std::exception e) {
-        shader = nullptr;
         LOG(ERROR) << "Failed to create the shader";
         return false;
     }
