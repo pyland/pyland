@@ -32,6 +32,7 @@
 #include "map_loader.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
+#include "sprite.hpp"
 #include "walkability.hpp"
 
 Map::Map(const std::string map_src):
@@ -60,8 +61,13 @@ Map::Map(const std::string map_src):
 
         layers = map_loader.get_layers();
         tilesets = map_loader.get_tilesets();
-        objects  = map_loader.get_objects();
-
+        //Get map objects
+        for(auto map_object : map_loader.get_objects()) {
+            //Add the object to the object manager and the map
+            int object_id = map_object->get_id();
+            ObjectManager::get_instance().add_object(map_object);
+            map_object_ids.push_back(object_id);
+        }
         //Get the tilesets
         //TODO: We'll only support one tileset at the moment
         //Get an object list
@@ -79,10 +85,8 @@ Map::Map(const std::string map_src):
 Map::~Map() {
     // texture_images stored within struct, implicit destruction.
     // release buffers
-    delete[] map_data;
-    delete[] map_tex_coords;
     delete[] tileset_tex_coords;
-
+    delete[] tileset_tex_data;
     LOG(INFO) << "Map destructed";
 }
 
@@ -90,13 +94,32 @@ bool Map::is_walkable(int x_pos, int y_pos) {
     //Default is walkable
     bool walkable = true;
     //return true;
-    //Iterate through all objects
-    for(auto character : characters) {
+    //Iterate through all sprites
+    for(auto sprite : sprite_ids) {
         //If its an invalid object
-        if (character == 0)
+        if (sprite == 0)
             continue;
 
-        std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(character);
+        std::shared_ptr<Sprite> object = ObjectManager::get_instance().get_object<Sprite>(sprite);
+
+        //If we cannot walk on this object
+        if(object) {
+            if(object->get_walkability() == Walkability::BLOCKED) {
+                walkable = false;
+
+                //We can stop checking further objects and tiles
+                return walkable;
+            }
+        }
+    }
+
+    //Iterate through all map objects
+    for(auto map_object : map_object_ids) {
+        //If its an invalid object
+        if (map_object == 0)
+            continue;
+
+        std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(map_object);
 
         //If we cannot walk on this object
         if(object) {
@@ -127,19 +150,19 @@ bool Map::is_walkable(int x_pos, int y_pos) {
     return walkable;
 }
 
-void Map::add_character(int character_id) {
-    if(ObjectManager::is_valid_object_id(character_id))
-        characters.push_back(character_id);
+void Map::add_sprite(int sprite_id) {
+    if(ObjectManager::is_valid_object_id(sprite_id))
+        sprite_ids.push_back(sprite_id);
 }
 
-void Map::remove_character(int character_id) {
-    if(ObjectManager::is_valid_object_id(character_id)){
-        for(auto it = characters.begin(); it != characters.end(); ++it) {
+void Map::remove_sprite(int sprite_id) {
+    if(ObjectManager::is_valid_object_id(sprite_id)){
+        for(auto it = sprite_ids.begin(); it != sprite_ids.end(); ++it) {
             //If a valid object
             if(*it != 0) {
-                //remove it if its the character
-                if(*it == character_id) {
-                    characters.erase(it);
+                //remove it if its the sprite
+                if(*it == sprite_id) {
+                    sprite_ids.erase(it);
                     return;
                 }
             }
@@ -252,7 +275,6 @@ void Map::generate_data() {
         //If more than 50% of layer has tiles, make it dense
         if(num_blank_tiles < total_tiles/2 ) {
             layer_packing = Layer::Packing::DENSE;
-            std::cout <<" DENSE "<< layer_num << std::endl;
         }
 
         (*layer_iter)->set_packing(layer_packing);
@@ -388,7 +410,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, int data_size, int num_tiles
 
     //The current tile's data
     auto tile_data = layer->get_layer_data()->begin();
-    std::cout << "LAYER " << std::endl;
+
     //Generate one layer's worth of data
     for(int y = 0; y < map_height; y++) {
         for(int x = 0; x < map_width; x++) {
@@ -722,42 +744,3 @@ int Map::get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos) {
      return tile_offset*num_tile_vertices*num_tile_dimensions;
 }
 
-Vec2D Map::pixel_to_tile(Vec2D pixel_location) {
-    float scale(Engine::get_tile_size()*Engine::get_global_scale());
-    // convert pixel location to absolute instead of relative to current window
-
-    Vec2D map_pixel(pixel_location + Vec2D(int(Map::get_display_x() * scale),
-                                           int(Map::get_display_y() * scale)));
-
-    // convert from pixel to map ints
-    return Vec2D(int(float(map_pixel.x) / scale),
-                 int(float(map_pixel.y) / scale));
-}
-
-Vec2D Map::tile_to_pixel(Vec2D tile_location) {
-    float scale(Engine::get_actual_tile_size());
-
-    Vec2D results(int(float(tile_location.x) * scale),
-                  int(float(tile_location.y) * scale));
-
-    results -= Vec2D(int(Map::get_display_x() * scale),
-                     int(Map::get_display_y() * scale));
-    return results;
-}
-
-Vec2D Map::tile_to_pixel(std::pair<double,double> tile_location) {
-    double scale(Engine::get_actual_tile_size());
-
-    std::pair<double,double> results(tile_location.first * scale, tile_location.second * scale);
-    results.first = results.first - (Map::get_display_x() * scale) ;
-    results.second = results.second - (Map::get_display_y() * scale) ;
-    return Vec2D( (int)results.first, (int)results.second);
-}    
-
-
-/*
-void Map::merge_layer_data() {
-
-
-}
-*/

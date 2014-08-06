@@ -245,12 +245,6 @@ void GUIManager::load_textures() {
 bool GUIManager::init_shaders() {
     std::shared_ptr<Shader> shader;
     try {
-// #ifdef USE_GLES
-//         shader = new Shader("vert_shader.glesv", "frag_gui_shader.glesf");
-// #endif
-// #ifdef USE_GL
-//         shader = new Shader("vert_shader.glv", "frag_gui_shader.glf");
-// #endif
         shader = Shader::get_shared_shader("gui_shader");
     }
     catch (std::exception e) {

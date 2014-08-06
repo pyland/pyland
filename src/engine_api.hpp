@@ -104,8 +104,8 @@ public:
     /// @param dx move in x by dx tiles
     /// @param dy move in x by dy tiles
     ///
-    static void move_object(int id, Vec2D move_by);
-    static void move_object(int id, Vec2D move_by, std::shared_ptr<std::promise<bool>> succeeded_promise_ptr);
+    static void move_sprite(int id, Vec2D move_by);
+    static void move_sprite(int id, Vec2D move_by, std::shared_ptr<std::promise<bool>> succeeded_promise_ptr);
 
     ///
     /// Determine if a location can be walked on
@@ -146,6 +146,14 @@ public:
     static std::vector<int> get_objects(Vec2D location);
 
     ///
+    /// Get the sprites at the given map position if any, empty if no objects
+    /// @param x the x position on the map
+    /// @param y the y position on the map
+    /// @return a vector of all the objects at that position on the map
+    ///
+    static std::vector<int> get_sprites(Vec2D location);
+
+    ///
     /// Load the map specified by the ap id
     /// @param map_id the id of the map to load
     /// @return indicate if the map was successfully loaded
@@ -153,7 +161,7 @@ public:
     static bool load_map(int map_id);
 
     ///
-    /// Get the locationof tte object in the map, throws exception if
+    /// Get the location of the map object or sprite in the map, throws exception if
     /// there is the object is not on the map
     /// @id the id of the object
     /// @return a pair which is the (x, y) tuple of the object position
@@ -168,9 +176,16 @@ public:
 
     ///
     /// Get a list of objects at this point
-    ///
+    /// @return a vector of object ids
     ///
     static std::vector<int> get_objects_at(Vec2D location);
+
+    ///
+    /// Get a list of sprites at this point
+    /// @return a vector of object ids
+    ///
+    static std::vector<int> get_sprites_at(Vec2D location);
+
 
     ///
     /// Add an object to the map at the given location

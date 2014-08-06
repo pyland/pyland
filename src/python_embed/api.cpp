@@ -75,7 +75,7 @@ bool Entity::move(int x, int y) {
 
     auto id = this->id;
     EventManager::get_instance().add_event([walk_succeeded_promise_ptr, id, x, y] () {
-        Engine::move_object(id, Vec2D(x, y), walk_succeeded_promise_ptr);
+        Engine::move_sprite(id, Vec2D(x, y), walk_succeeded_promise_ptr);
     });
 
     LOG(INFO) << "Getting future";

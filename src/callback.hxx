@@ -5,7 +5,7 @@
 
 
 template <typename Ret, typename... Args>
-Uint64 Callback<Ret, Args...>::uid_count = 0;
+uint64_t Callback<Ret, Args...>::uid_count = 0;
 
 
 

@@ -29,6 +29,7 @@
 #include "dispatcher.hpp"
 #include "renderable_component.hpp"
 
+class Sprite;
 class Layer;
 class MapObject;
 class TileSet;
@@ -45,12 +46,6 @@ class Map {
     std::vector<std::shared_ptr<Layer>> layers;
 
     ///
-    /// Array of objects
-    ///
-    std::vector<std::shared_ptr<MapObject>> objects;
-
-
-    ///
     /// A vector of layers which maps the (x, y) position in the map
     /// onto the offset in the buffer. The offsets are based off of
     /// the number of vertices and the number of dimensions. It gives
@@ -64,9 +59,14 @@ class Map {
     std::map<int, std::shared_ptr<std::map<int, int>>> layer_mappings;
 
     ///
-    /// The ids of the characters that are on this map
+    /// The ids of the map objects that are on this map
     ///
-    std::vector<int> characters;
+    std::vector<int> map_object_ids;
+
+    ///
+    /// The ids of the sprites that are on this map
+    ///
+    std::vector<int> sprite_ids;
 
     ///
     /// Cache of the tileset texture data for this Map
@@ -90,50 +90,11 @@ class Map {
     ///
     int map_width = 16;
 
-    ///
-    /// The speed at which we scroll the map.
-    ///
-    float map_scroll_speed = 32.0f;
-
-    ///
-    /// The far left  x position where we display the map
-    ///
-    float map_display_x = 0.0f;
-
-    ///
-    /// The lower y position we are currently displaying the map at.
-    ///
-    float map_display_y = 0.0f;
-
-    ///
-    /// The width of the map to be displayed on screen.
-    ///
-    float map_display_width = 30;
-
-    ///
-    /// The height of the map to be displayed on screen
-    ///
-    float map_display_height = 30;
 
     ///
     /// The texture buffer pointers
     ///
     Image texture_images[1];
-
-    ///
-    /// The tileset texture coordinates
-    ///
-    GLfloat* tileset_text_coords = nullptr;
-
-    ///
-    /// Pointer to the map vertex data
-    ///
-    GLfloat* map_data = nullptr;
-
-    ///
-    /// Pointer tno the map texture coordinate data
-    ///
-    GLfloat* map_tex_coords = nullptr;
 
     ///
     /// The number of dimensions in the vertex and texture buffers for a tile: (x, y) here
@@ -247,7 +208,7 @@ class Map {
 
 public:
 
-    Dispatcher<int> event_character_add;
+    Dispatcher<int> event_sprite_add;
     PositionDispatcher<int> event_step_on;
     PositionDispatcher<int> event_step_off;
     std::vector<std::vector<int>> blocker;
@@ -256,22 +217,30 @@ public:
     ~Map();
 
     ///
-    /// Add a character to the map
-    /// @param character_id the id of the character
+    /// Add a sprite to the map
+    /// @param sprite_id the id of the sprite
     ///
-    void add_character(int character_id);
+    void add_sprite(int sprite_id);
 
     ///
-    /// Remove a character from the map
-    /// @param character_id the id of the character
+    /// Remove a sprite from the map
+    /// @param sprite_id the id of the sprite
     ///
-    void remove_character(int character_id);
+    void remove_sprite(int sprite_id);
 
     ///
-    /// Get the characters that are on this map
-    // Make this a copy
+    /// Get the sprites that are on this map
+    /// @return a vector of sprite ids
+    /// - we don't want class users to add sprites to the map 
+    /// using this vector
     ///
-    const std::vector<int>& get_characters() { return characters; }
+    const std::vector<int>& get_sprites() { return sprite_ids; }
+
+    ///
+    /// Get the map objects that are on this map
+    /// @return a vector of map object ids
+    ///
+    const std::vector<int>& get_map_objects() { return map_object_ids; }
 
     ///
     /// Get the map width
@@ -284,59 +253,14 @@ public:
     int get_height() { return map_height; }
 
     ///
-    /// Get the display width of the map
-    /// @return get the display width of the map
-    ///
-    float get_display_width() { return map_display_width; }
-
-    ///
-    /// Set the display width of the map
-    /// @param display_width the new display width of the map
-    ///
-    void set_display_width(float display_width) { map_display_width = display_width; }
-
-    ///
-    /// Get the display height of the map
-    /// @return get the display height of the map
-    ///
-    float get_display_height() { return map_display_height; }
-
-    ///
-    /// Set the display height of the map
-    /// @param display_width the new display height of the map
-    ///
-    void set_display_height(float display_height) { map_display_height = display_height; }
-
-
-    ///
-    /// Get the map display lower left x position
-    /// @return the map display far left x position
-    ///
-    float get_display_x() { return map_display_x; }
-
-    ///
-    /// Set the x display position of the map
-    /// @param new_display_x the new display position
-    ///
-    void set_display_x(float new_display_x) { map_display_x = new_display_x; }
-
-    ///
-    /// Get the map display bottom y position
-    /// @return the map display bottom y  position
-    ///
-    float get_display_y() { return map_display_y; }
-
-    ///
-    /// Set the y display position of the map
-    /// @param new_display_y the new display position
-    ///
-    void set_display_y(float new_display_y) { map_display_y = new_display_y; }
-
-    ///
     /// Is this location walkable
     ///
     bool is_walkable(int x_pos, int y_pos);
 
+    ///
+    /// TODO: Heidi: Document this class
+    /// Collision detection for generated elements
+    ///
     class Blocker {
         public:
             Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker);
@@ -347,7 +271,6 @@ public:
     };
 
     Blocker block_tile(Vec2D tile);
-
 
     ///
     /// Get the layers on this map
@@ -372,15 +295,6 @@ public:
     ///
     int get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos);
 
-    ///
-    /// converts pixel location inside window to a map tile
-    ///
-    Vec2D pixel_to_tile (Vec2D pixel_location);
-
-    ///
-    /// converts a tile in map to a pixel location in window of the bottem left corner of tile
-    Vec2D tile_to_pixel (Vec2D tile_location);
-    Vec2D tile_to_pixel(std::pair<double,double> tile_location) ;
 };
 
 #endif

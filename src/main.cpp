@@ -26,7 +26,6 @@
 
 #include "api.hpp"
 #include "button.hpp"
-#include "character.hpp"
 #include "component.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
@@ -44,6 +43,7 @@
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
+#include "sprite.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
@@ -78,34 +78,34 @@ static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
-int create_character(Interpreter &interpreter) {
-    LOG(INFO) << "Creating character";
+int create_sprite(Interpreter &interpreter) {
+    LOG(INFO) << "Creating sprite";
 
 
     int start_x = 4;
     int start_y = 15;
 
-    // Registering new character with game engine
-    shared_ptr<Character> new_character = make_shared<Character>(start_x, start_y, "John");
-    LOG(INFO) << "Adding character";
-    ObjectManager::get_instance().add_object(new_character);
-    Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
+    // Registering new sprite with game engine
+    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start_x, start_y, "John");
+    LOG(INFO) << "Adding sprite";
+    ObjectManager::get_instance().add_object(new_sprite);
+    Engine::get_map_viewer()->get_map()->add_sprite(new_sprite->get_id());
 
-    Engine::get_map_viewer()->set_map_focus_object(new_character->get_id());
-    LOG(INFO) << "Creating character wrapper";
-    LOG(INFO) << "ID " << new_character->get_id();
+    Engine::get_map_viewer()->set_map_focus_object(new_sprite->get_id());
+    LOG(INFO) << "Creating sprite wrapper";
+    LOG(INFO) << "ID " << new_sprite->get_id();
 
-    // Register user controled character
+    // Register user controled sprite
     // Yes, this is a memory leak. Deal with it.
-    Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_character->get_name(), new_character->get_id());
+    Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_sprite->get_name(), new_sprite->get_id());
 
-    LOG(INFO) << "Registering character";
+    LOG(INFO) << "Registering sprite";
 
-    new_character->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
+    new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
 
     LOG(INFO) << "Done!";
 
-    return new_character->get_id();
+    return new_sprite->get_id();
 }
 
 class CallbackState {
@@ -136,7 +136,7 @@ class CallbackState {
         }
 
         int spawn() {
-            int id = create_character(interpreter);
+            int id = create_sprite(interpreter);
             key_to_id.push_back(id);
             return id;
         }
@@ -175,16 +175,16 @@ class CallbackState {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             switch (direction) {
                 case (UP):
-                    Engine::move_object(id,Vec2D(0,1));
+                    Engine::move_sprite(id,Vec2D(0,1));
                     break;
                 case (DOWN):
-                    Engine::move_object(id,Vec2D(0,-1));
+                    Engine::move_sprite(id,Vec2D(0,-1));
                     break;
                 case (RIGHT):
-                    Engine::move_object(id,Vec2D(-1,0));
+                    Engine::move_sprite(id,Vec2D(-1,0));
                     break;
                 case (LEFT):
-                    Engine::move_object(id,Vec2D(1,0));
+                    Engine::move_sprite(id,Vec2D(1,0));
                     break;
             }
 
@@ -339,8 +339,8 @@ int main(int argc, const char* argv[]) {
         int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
         int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
         //We make use of intege truncation to get these to numbers in terms of tiles
-        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
-        int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
+        //        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
+        //    int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
 
         //Set the viewable fragments
         glScissor(0, 0, size.first, size.second);
@@ -352,8 +352,8 @@ int main(int argc, const char* argv[]) {
 
         //Set the display size
         //Display one more tile so that we don't get an abrupt stop
-        Engine::get_map_viewer()->get_map()->set_display_width(num_tiles_x_display+1);
-        Engine::get_map_viewer()->get_map()->set_display_height(num_tiles_y_display+1);
+        Engine::get_map_viewer()->set_display_width(num_tiles_x_display+1);
+        Engine::get_map_viewer()->set_display_height(num_tiles_y_display+1);
 
         //Readjust the map focus
         Engine::get_map_viewer()->refocus_map();
@@ -422,7 +422,7 @@ int main(int argc, const char* argv[]) {
     Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, 
         [&] (MouseInputEvent event) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
-            Vec2D tile_clicked = Engine::get_map_viewer()->get_map()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
+            Vec2D tile_clicked = Engine::get_map_viewer()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
             LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
             auto objects = Engine::get_objects_at(tile_clicked);
             if (objects.size() == 1) {

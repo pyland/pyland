@@ -4,7 +4,6 @@
 
 template <typename R>
 std::shared_ptr<R> ObjectManager::get_object(int object_id) {
-
     if(!is_valid_object_id(object_id)) {
         LOG(ERROR) << "ObjectManager::get_object: Object id is invalid; id: " << object_id;
         return nullptr;
