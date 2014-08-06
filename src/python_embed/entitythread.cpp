@@ -122,8 +122,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
                 return;
             }
             else {
-                LOG(INFO) << "Python error in EntityThread, Python side.";
-                throw;
+                LOG(WARNING) << "Python error in EntityThread, Python side.";
             }
         }
         waiting = true;
@@ -217,8 +216,9 @@ void EntityThread::clean() {
 }
 
 void EntityThread::finish() {
-    // TODO: implement clean destruction of EntityThreads
-    throw std::runtime_error("EntityThread::finish not implemented");
+    // TODO: implement nagging
+    halt_soft(Signal::KILL);
+    thread->join();
 }
 
 EntityThread::~EntityThread() {
