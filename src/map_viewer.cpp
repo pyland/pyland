@@ -80,7 +80,7 @@ void MapViewer::render_map() {
     int layer_num = 0;
     for(auto layer: map->get_layers()) {
         RenderableComponent* layer_render_component = layer->get_renderable_component();
-        Shader* layer_shader = layer->get_renderable_component()->get_shader().get();
+        Shader* layer_shader = layer_render_component->get_shader().get();
 
         //Set the matrices
         layer_render_component->set_projection_matrix(projection_matrix);
@@ -94,8 +94,8 @@ void MapViewer::render_map() {
 
 
         layer_render_component->bind_vbos();
-
-         layer_render_component->bind_textures();
+        
+        layer_render_component->bind_textures();
 
         //Calculate the offsets for drawing
         //maps are built left to right, bottom to top
@@ -103,7 +103,7 @@ void MapViewer::render_map() {
 
          //      int length = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x()+map->get_display_width() -1, 0);
          //    glDrawArrays(GL_TRIANGLES, offset, (length -offset) / 2); // no of vetices, divide by 2 dimenions
-                 glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
+        glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
         //        std::cout <<" OOF " << offset << " " << length << std::endl;
         //Release the vertex buffers and texppptures
         layer_render_component->release_textures();
@@ -143,7 +143,8 @@ void MapViewer::render_sprites() {
 
             sprite_render_component->bind_shader();
 
-            Shader* shader = character_render_component->get_shader().get();
+            Shader* shader = sprite_render_component->get_shader().get();
+
             if(shader == nullptr) {
                 LOG(ERROR) << "MapViewer::render_map: Shader (sprite_render_component->get_shader()) should not be null";
                 return;
@@ -192,7 +193,7 @@ void MapViewer::render_objects() {
 
             object_render_component->bind_shader();
 
-            Shader* shader = object_render_component->get_shader();
+            Shader* shader = object_render_component->get_shader().get();
             if(shader == nullptr) {
                 LOG(ERROR) << "MapViewer::render_map: Shader (object_render_component->get_shader()) should not be null";
                 return;

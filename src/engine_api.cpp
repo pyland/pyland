@@ -306,7 +306,7 @@ void Engine::text_updater() {
 }
 
 void Engine::update_status(int id, std::string status) {
-    auto character = ObjectManager::get_instance().get_object<Character>(id);
-    character->get_status_text()->set_text(status);
+    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+    sprite->get_status_text()->set_text(status);
 }
 

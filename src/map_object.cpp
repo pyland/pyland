@@ -198,26 +198,16 @@ void MapObject::load_textures() {
 }
 
 bool MapObject::init_shaders() {
-    Shader* shader = nullptr;
+    std::shared_ptr<Shader> shader;
     try {
-#ifdef USE_GLES
-        shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
-#endif
-#ifdef USE_GL
-        shader = new Shader("vert_shader.glv", "frag_shader.glf");
-#endif
+        shader = Shader::get_shared_shader("tile_shader");
     }
     catch (std::exception e) {
-        delete shader;
-        shader = nullptr;
         LOG(ERROR) << "Failed to create the shader";
         return false;
     }
 
     //Set the shader
     renderable_component.set_shader(shader);
-
-    return true;
-
 }
 

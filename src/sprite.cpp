@@ -198,12 +198,6 @@ void Sprite::load_textures() {
 bool Sprite::init_shaders() {
     std::shared_ptr<Shader> shader;
     try {
-// #ifdef USE_GLES
-//         shader = new Shader("vert_shader.glesv", "frag_shader.glesf");
-// #endif
-// #ifdef USE_GL
-//         shader = new Shader("vert_shader.glv", "frag_shader.glf");
-// #endif
         shader = Shader::get_shared_shader("tile_shader");
     }
     catch (std::exception e) {

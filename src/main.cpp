@@ -136,7 +136,7 @@ class CallbackState {
         }
 
         int spawn() {
-            int id = create_character(interpreter);
+            int id = create_sprite(interpreter);
             key_to_id.push_back(id);
             return id;
         }
