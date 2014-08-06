@@ -209,9 +209,6 @@ void Map::generate_tileset_coords(Image* texture_image) {
             tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y + tileset_inc_y;
 
             tileset_offset_x += tileset_inc_x;
-            //      for(int i =0 ; i < 8; i++)
-            //        cout << " " <<        tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+i];
-            //      cout << endl;
         }
         tileset_offset_x = 0.0;
         tileset_offset_y -= tileset_inc_y;
@@ -542,7 +539,6 @@ Vec2D Map::pixel_to_tile(Vec2D pixel_location) {
 
 Vec2D Map::tile_to_pixel(Vec2D tile_location) {
     float scale(TILESET_ELEMENT_SIZE*GLOBAL_SCALE);
-    std::cout << scale << std::endl;
 
     Vec2D results(int(float(tile_location.x) * scale),
                   int(float(tile_location.y) * scale));
