@@ -179,7 +179,6 @@ void MapViewer::render_map() {
 
     gui_render_component->bind_vbos();
     gui_render_component->bind_textures();
-    //            std::cout << " X " << gui_manager->get_x_position()*32.0f << " Y " << gui_manager ->get_y_position()*32.0f<< std::endl;
     glDrawArrays(GL_TRIANGLES, 0, gui_render_component->get_num_vertices_render());
 
     gui_render_component->release_textures();
