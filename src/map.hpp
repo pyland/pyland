@@ -29,6 +29,7 @@
 #include "dispatcher.hpp"
 #include "renderable_component.hpp"
 
+class Sprite;
 class Layer;
 class MapObject;
 class TileSet;
@@ -45,12 +46,6 @@ class Map {
     std::vector<std::shared_ptr<Layer>> layers;
 
     ///
-    /// Array of objects
-    ///
-    std::vector<std::shared_ptr<MapObject>> objects;
-
-
-    ///
     /// A vector of layers which maps the (x, y) position in the map
     /// onto the offset in the buffer. The offsets are based off of
     /// the number of vertices and the number of dimensions. It gives
@@ -64,9 +59,14 @@ class Map {
     std::map<int, std::shared_ptr<std::map<int, int>>> layer_mappings;
 
     ///
-    /// The ids of the characters that are on this map
+    /// The ids of the map objects that are on this map
     ///
-    std::vector<int> characters;
+    std::vector<int> map_object_ids;
+
+    ///
+    /// The ids of the sprites that are on this map
+    ///
+    std::vector<int> sprite_ids;
 
     ///
     /// Cache of the tileset texture data for this Map
@@ -247,7 +247,7 @@ class Map {
 
 public:
 
-    Dispatcher<int> event_character_add;
+    Dispatcher<int> event_sprite_add;
     PositionDispatcher<int> event_step_on;
     PositionDispatcher<int> event_step_off;
     std::vector<std::vector<int>> blocker;
@@ -256,22 +256,30 @@ public:
     ~Map();
 
     ///
-    /// Add a character to the map
-    /// @param character_id the id of the character
+    /// Add a sprite to the map
+    /// @param sprite_id the id of the sprite
     ///
-    void add_character(int character_id);
+    void add_sprite(int sprite_id);
 
     ///
-    /// Remove a character from the map
-    /// @param character_id the id of the character
+    /// Remove a sprite from the map
+    /// @param sprite_id the id of the sprite
     ///
-    void remove_character(int character_id);
+    void remove_sprite(int sprite_id);
 
     ///
-    /// Get the characters that are on this map
-    // Make this a copy
+    /// Get the sprites that are on this map
+    /// @return a vector of sprite ids
+    /// - we don't want class users to add sprites to the map 
+    /// using this vector
     ///
-    const std::vector<int>& get_characters() { return characters; }
+    const std::vector<int>& get_sprites() { return sprite_ids; }
+
+    ///
+    /// Get the map objects that are on this map
+    /// @return a vector of map object ids
+    ///
+    const std::vector<int>& get_map_objects() { return map_object_ids; }
 
     ///
     /// Get the map width

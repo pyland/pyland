@@ -6,7 +6,6 @@ EXECUTABLE = main.bin
 #
 
 BASE_OBJS = \
-	character.o      \
 	engine_api.o     \
 	event_manager.o  \
 	game_window.o    \
@@ -23,6 +22,7 @@ BASE_OBJS = \
 	object_manager.o \
 	renderable_component.o \
 	shader.o         \
+        sprite.o         \
 	text.o           \
 	text_font.o      \
 	tileset.o        \

@@ -1,8 +1,8 @@
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef SPRITE_H
+#define SPRITE_H
 
 #include "image.hpp"
-#include "object.hpp"
+#include "map_object.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
@@ -18,11 +18,11 @@
 
 
 ///
-/// Represents a character (sprite) in the engine
+/// Represents a sprite in the engine
 ///
-class Character : public Object {
+class Sprite : public MapObject {
 
-    Text* character_text = nullptr;
+    Text* sprite_text = nullptr;
     Text* status_text = nullptr;
 
 protected:
@@ -37,8 +37,8 @@ protected:
 
 public:
 
-    Character(int _x_position, int _y_position, std::string _name);
-    virtual ~Character();
+    Sprite(int _x_position, int _y_position, std::string _name);
+    virtual ~Sprite();
 
     // TODO: Comment
     void set_state_on_moving_start(Vec2D target);
@@ -46,27 +46,27 @@ public:
 
 
     ///
-    /// Generate the texture coordinate data for the character
+    /// Generate the texture coordinate data for the sprite
     ///
     void generate_tex_data();
 
     ///
-    /// Generate the vertex data for the character
+    /// Generate the vertex data for the sprite
     ///
     void generate_vertex_data();
 
     ///
-    /// Load the textures that are being used by the character
+    /// Load the textures that are being used by the sprite
     ///
     void load_textures();
 
     ///
-    /// Initialise the shaders that are being used by the character
+    /// Initialise the shaders that are being used by the sprite
     ///
     bool init_shaders();
 
-    Text* get_character_text() {return character_text; }
-    void set_character_text(Text* _character_text) {character_text = _character_text; }
+    Text* get_sprite_text() {return sprite_text; }
+    void set_sprite_text(Text* _sprite_text) {sprite_text = _sprite_text; }
     Text* get_status_text() {return status_text; }
     void set_status_text(Text* _status_text) {status_text = _status_text; }
 

@@ -6,7 +6,6 @@
 #include <vector>
 #include <iostream>
 
-#include "character.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
@@ -14,6 +13,7 @@
 #include "object.hpp"
 #include "object_manager.hpp"
 #include "dispatcher.hpp"
+#include "sprite.hpp"
 
 ///Static variables
 MapViewer* Engine::map_viewer = nullptr;
@@ -24,25 +24,25 @@ int Engine::global_scale = 2;
 
 //TODO: THis needs to work with renderable objects 
 
-void Engine::move_object(int id, Vec2D move_by) {
+void Engine::move_sprite(int id, Vec2D move_by) {
     // TODO: Make sure std::promise garbage collects correctly
-    Engine::move_object(id, move_by, std::make_shared<std::promise<bool>>());
+    Engine::move_sprite(id, move_by, std::make_shared<std::promise<bool>>());
 }
 
 //TODO: This needs to work with renderable objects
-void Engine::move_object(int id,
+void Engine::move_sprite(int id,
                          Vec2D move_by,
                          std::shared_ptr<std::promise<bool>> succeeded_promise_ptr) {
 
-    std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
+    std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
 
-    if (!character || character->moving) {
+    if (!sprite || sprite->is_moving()) {
         succeeded_promise_ptr->set_value(false);
         return;
     }
 
-    Vec2D location = Vec2D(int(character->get_x_position()),
-                           int(character->get_y_position()));
+    Vec2D location = Vec2D(int(sprite->get_x_position()),
+                           int(sprite->get_y_position()));
     Vec2D target = location + move_by;
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y << ".\n"
@@ -54,7 +54,7 @@ void Engine::move_object(int id,
         return;
     }
 
-    character->set_state_on_moving_start(target);
+    sprite->set_state_on_moving_start(target);
 
     // Step-off events
     EventManager::get_instance().add_event([location, id] () {
@@ -63,26 +63,26 @@ void Engine::move_object(int id,
 
     // move text with charcters
     // Vec2D pixel_target = get_map_viewer()->get_map()->tile_to_pixel(target);
-    // character->get_character_text()->move(pixel_target.x, pixel_target.y);
+    // sprite->get_sprite_text()->move(pixel_target.x, pixel_target.y);
 
     // Motion
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
         [succeeded_promise_ptr, location, target, id] (double completion) {
-            std::shared_ptr<Character> character = ObjectManager::get_instance().get_object<Character>(id);
-            if (!character) {
+            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+            if (!sprite) {
                 succeeded_promise_ptr->set_value(false);
                 return false;
             }
 
-            character->set_x_position(location.x * (1-completion) + target.x * completion);
-            character->set_y_position(location.y * (1-completion) + target.y * completion);
+            sprite->set_x_position(location.x * (1-completion) + target.x * completion);
+            sprite->set_y_position(location.y * (1-completion) + target.y * completion);
 
             if (completion == 1.0) {
-                character->set_state_on_moving_finish();
+                sprite->set_state_on_moving_finish();
 
-                // TODO: Make this only focus if the character
-                // is the main character.
+                // TODO: Make this only focus if the sprite
+                // is the main sprite.
                 if (Engine::map_viewer) {
                     Engine::map_viewer->refocus_map();
                 }
@@ -139,6 +139,10 @@ std::vector<int> Engine::get_objects(Vec2D) {
     std::vector<int> objects;
     return objects;
 }
+std::vector<int> Engine::get_sprites(Vec2D) {
+    std::vector<int> objects;
+    return objects;
+}
 
 bool Engine::load_map(int) {
     return false;
@@ -156,16 +160,25 @@ Vec2D Engine::find_object(int id) {
     }
 
     //Check the object is on the map
-    auto objects = map->get_characters();
-    for(auto object_id : objects) {
+    auto map_objects = map->get_map_objects();
+    auto sprites = map->get_sprites();
+    for(auto object_id : map_objects) {
         if(object_id == id) {
-            //Object is on the map so now get its locationg
-            auto object = ObjectManager::get_instance().get_object<Object>(id);
+            //Object is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             return Vec2D(int(object->get_x_position()),
                          int(object->get_y_position()));
         }
     }
 
+    for(auto object_id : sprites) {
+        if(object_id == id) {
+            //Object is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<Sprite>(id);
+            return Vec2D(int(object->get_x_position()),
+                         int(object->get_y_position()));
+        }
+    }
     //Not on the map
     throw std::runtime_error("Object is not in the map");
 }
@@ -189,10 +202,10 @@ std::vector<int> Engine::get_objects_at(Vec2D location) {
     std::vector<int> results;
     //Check the object is on the map
 
-    auto objects = map->get_characters();
-    for(int object_id : objects) {
+    auto map_objects = map->get_map_objects();
+    for(int object_id : map_objects) {
         //Object is on the map so now get its locationg
-        auto object = ObjectManager::get_instance().get_object<Object>(object_id);
+        auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
         Vec2D current_location(int(object->get_x_position()),
                                int(object->get_y_position()));
 
@@ -200,6 +213,31 @@ std::vector<int> Engine::get_objects_at(Vec2D location) {
             results.push_back(object_id);
         }
     }
+
+    return results;
+}
+
+std::vector<int> Engine::get_sprites_at(Vec2D location) {
+    Map* map = map_viewer->get_map();
+    if (!map) {
+        throw std::runtime_error("Map not avalaible");
+    }
+
+    std::vector<int> results;
+    //Check the object is on the map
+
+    auto sprites = map->get_sprites();
+    for(int object_id : sprites) {
+        //Object is on the map so now get its locationg
+        auto object = ObjectManager::get_instance().get_object<Sprite>(object_id);
+        Vec2D current_location(int(object->get_x_position()),
+                               int(object->get_y_position()));
+
+        if (current_location == location) {
+            results.push_back(object_id);
+        }
+    }
+
     return results;
 }
 
@@ -222,15 +260,15 @@ void Engine::text_displayer() {
         throw std::runtime_error("Map not avalaible");
     }
 
-    auto objects = map->get_characters();
+    auto objects = map->get_sprites();
     for(int object_id : objects) {
         //Object is on the map so now get its locationg
-        auto character = ObjectManager::get_instance().get_object<Character>(object_id);
-        if (character->get_character_text() != nullptr) {
-            character->get_character_text()->display();
+        auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
+        if (sprite->get_sprite_text() != nullptr) {
+            sprite->get_sprite_text()->display();
         }
-        if (character->get_status_text() != nullptr) {
-            character->get_status_text()->display();
+        if (sprite->get_status_text() != nullptr) {
+            sprite->get_status_text()->display();
         }
     }
 }
@@ -242,20 +280,20 @@ void Engine::text_updater() {
         throw std::runtime_error("Map not avalaible");
     }
 
-    auto objects = map->get_characters();
+    auto objects = map->get_sprites();
     for(int object_id : objects) {
         //Object is on the map so now get its locationg
-        auto character = ObjectManager::get_instance().get_object<Character>(object_id);
+        auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
 
-        std::pair<double,double> tile(character->get_x_position(), character->get_y_position());
+        std::pair<double,double> tile(sprite->get_x_position(), sprite->get_y_position());
 
         Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(tile);
 
-        VLOG(2) << "sprite location" << character->get_x_position() << " " << character->get_y_position();
+        VLOG(2) << "sprite location" << sprite->get_x_position() << " " << sprite->get_y_position();
         VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
-        character->get_character_text()->move(pixel_position.x, pixel_position.y);
-        character->get_status_text()->move(pixel_position.x, pixel_position.y + (1.5*Engine::get_tile_size()));
+        sprite->get_sprite_text()->move(pixel_position.x, pixel_position.y);
+        sprite->get_status_text()->move(pixel_position.x, pixel_position.y + (1.5*Engine::get_tile_size()));
     }
 
 }

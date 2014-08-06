@@ -32,6 +32,7 @@
 #include "map_loader.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
+#include "sprite.hpp"
 #include "walkability.hpp"
 
 Map::Map(const std::string map_src):
@@ -60,8 +61,13 @@ Map::Map(const std::string map_src):
 
         layers = map_loader.get_layers();
         tilesets = map_loader.get_tilesets();
-        objects  = map_loader.get_objects();
-
+        //Get map objects
+        for(auto map_object : map_loader.get_objects()) {
+            //Add the object to the object manager and the map
+            int object_id = map_object->get_id();
+            ObjectManager::get_instance().add_object(map_object);
+            map_object_ids.push_back(object_id);
+        }
         //Get the tilesets
         //TODO: We'll only support one tileset at the moment
         //Get an object list
@@ -90,13 +96,32 @@ bool Map::is_walkable(int x_pos, int y_pos) {
     //Default is walkable
     bool walkable = true;
     //return true;
-    //Iterate through all objects
-    for(auto character : characters) {
+    //Iterate through all sprites
+    for(auto sprite : sprite_ids) {
         //If its an invalid object
-        if (character == 0)
+        if (sprite == 0)
             continue;
 
-        std::shared_ptr<Object> object = ObjectManager::get_instance().get_object<Object>(character);
+        std::shared_ptr<Sprite> object = ObjectManager::get_instance().get_object<Sprite>(sprite);
+
+        //If we cannot walk on this object
+        if(object) {
+            if(object->get_walkability() == Walkability::BLOCKED) {
+                walkable = false;
+
+                //We can stop checking further objects and tiles
+                return walkable;
+            }
+        }
+    }
+
+    //Iterate through all map objects
+    for(auto map_object : map_object_ids) {
+        //If its an invalid object
+        if (map_object == 0)
+            continue;
+
+        std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(map_object);
 
         //If we cannot walk on this object
         if(object) {
@@ -127,19 +152,19 @@ bool Map::is_walkable(int x_pos, int y_pos) {
     return walkable;
 }
 
-void Map::add_character(int character_id) {
-    if(ObjectManager::is_valid_object_id(character_id))
-        characters.push_back(character_id);
+void Map::add_sprite(int sprite_id) {
+    if(ObjectManager::is_valid_object_id(sprite_id))
+        sprite_ids.push_back(sprite_id);
 }
 
-void Map::remove_character(int character_id) {
-    if(ObjectManager::is_valid_object_id(character_id)){
-        for(auto it = characters.begin(); it != characters.end(); ++it) {
+void Map::remove_sprite(int sprite_id) {
+    if(ObjectManager::is_valid_object_id(sprite_id)){
+        for(auto it = sprite_ids.begin(); it != sprite_ids.end(); ++it) {
             //If a valid object
             if(*it != 0) {
-                //remove it if its the character
-                if(*it == character_id) {
-                    characters.erase(it);
+                //remove it if its the sprite
+                if(*it == sprite_id) {
+                    sprite_ids.erase(it);
                     return;
                 }
             }

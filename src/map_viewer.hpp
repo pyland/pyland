@@ -42,6 +42,11 @@ class MapViewer {
     ///
     void render_objects();
 
+    ///
+    /// Render sprites on the map
+    ///
+    void render_sprites();
+
 public:
     MapViewer(GameWindow* window, GUIManager* manager);
     ~MapViewer();

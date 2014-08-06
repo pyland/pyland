@@ -1,9 +1,9 @@
-#include "character.hpp"
 #include "image.hpp"
 #include "engine_api.hpp"
 #include "entitythread.hpp"
 #include "map_viewer.hpp"
 #include "renderable_component.hpp"
+#include "sprite.hpp"
 
 #include <new>
 #include <glog/logging.h>
@@ -23,8 +23,8 @@
 #include <GL/gl.h>
 
 #endif
-Character::Character(int _x_position, int _y_position, std::string _name) {
-    LOG(INFO) << "register new character called " << _name;
+Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
+    LOG(INFO) << "register new sprite called " << _name;
     x_position = _x_position;
     y_position = _y_position;
     name = _name;
@@ -37,11 +37,11 @@ Character::Character(int _x_position, int _y_position, std::string _name) {
     // setting up sprite text
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
     TextFont myfont(mytype, 18);
-    character_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    character_text->set_text(name);
+    sprite_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    sprite_text->set_text(name);
     Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
-    character_text->move(pixel_position.x ,pixel_position.y );
-    character_text->resize(100,100);
+    sprite_text->move(pixel_position.x ,pixel_position.y );
+    sprite_text->resize(100,100);
     LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // setting up status text
@@ -55,28 +55,28 @@ Character::Character(int _x_position, int _y_position, std::string _name) {
     assert(trunc(x_position) == x_position);
     assert(trunc(y_position) == y_position);
 
-    //Make a character blocked
+    //Make a sprite blocked
     blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
         Vec2D(int(x_position), int(y_position))
     )));
 
 
-    LOG(INFO) << "Character initialized";
+    LOG(INFO) << "Sprite initialized";
 
 }
 
-Character::~Character() {
+Sprite::~Sprite() {
 
-    LOG(INFO) << "Character destructed";
+    LOG(INFO) << "Sprite destructed";
 }
 
 
-void Character::set_state_on_moving_start(Vec2D target) {
+void Sprite::set_state_on_moving_start(Vec2D target) {
     moving = true;
     blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
 }
 
-void Character::set_state_on_moving_finish() {
+void Sprite::set_state_on_moving_finish() {
     moving = false;
     blocked_tiles.erase("stood on");
     blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
@@ -84,7 +84,7 @@ void Character::set_state_on_moving_finish() {
 }
 
 
-void Character::generate_tex_data() {
+void Sprite::generate_tex_data() {
   
     //holds the texture data
     //need 12 float for the 2D texture coordinates
@@ -96,7 +96,7 @@ void Character::generate_tex_data() {
         sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
     }
     catch(std::bad_alloc& ba) {
-        LOG(ERROR) << "ERROR in Character::generate_tex_data(), cannot allocate memory";
+        LOG(ERROR) << "ERROR in Sprite::generate_tex_data(), cannot allocate memory";
         return;
     }
 
@@ -130,8 +130,8 @@ void Character::generate_tex_data() {
     renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
 
-void Character::generate_vertex_data() {
-    //holds the character vertex data
+void Sprite::generate_vertex_data() {
+    //holds the sprite vertex data
     int num_dimensions = 2;
     int num_floats = num_dimensions*6;//GLTRIANGLES
     GLfloat* sprite_data = nullptr;
@@ -140,7 +140,7 @@ void Character::generate_vertex_data() {
         sprite_data = new GLfloat[sizeof(GLfloat)*num_floats];
     }
     catch(std::bad_alloc& ba) {
-        LOG(ERROR) << "ERROR in Character::generate_vertex_data(), cannot allocate memory";
+        LOG(ERROR) << "ERROR in Sprite::generate_vertex_data(), cannot allocate memory";
         return;
     }
 
@@ -173,15 +173,14 @@ void Character::generate_vertex_data() {
     renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }
-#include <iostream>
-void Character::load_textures() {
+
+void Sprite::load_textures() {
     Image* texture_image = nullptr;
 
     try {
         texture_image = new Image("../resources/characters_1.png");
     }
     catch(std::exception e) {
-        delete texture_image;
         texture_image = nullptr;
         LOG(ERROR) << "Failed to create texture";
         return;
@@ -191,7 +190,7 @@ void Character::load_textures() {
     renderable_component.set_texture_image(texture_image);
 }
 
-bool Character::init_shaders() {
+bool Sprite::init_shaders() {
     Shader* shader = nullptr;
     try {
 #ifdef USE_GLES
@@ -202,7 +201,6 @@ bool Character::init_shaders() {
 #endif
     }
     catch (std::exception e) {
-        delete shader;
         shader = nullptr;
         LOG(ERROR) << "Failed to create the shader";
         return false;
