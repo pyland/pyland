@@ -23,7 +23,6 @@ GraphicsContext::~GraphicsContext() {
     resource_releasers.broadcast();
 }
 
-
 bool GraphicsContext::operator==(GraphicsContext other) {
     return window == other.window;
 }

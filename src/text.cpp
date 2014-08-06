@@ -113,9 +113,9 @@ void Text::render() {
     int length = (int)text.length();
     // Entire text.
     const char* ctext = text.c_str();
-    
+
     image = Image(width, height, true);
-    
+
     // Line of text.
     char* line = new char[length+1];
 
@@ -219,7 +219,7 @@ void Text::render() {
             // Check that we aren't going to chase our tailes trying to fit an unfittable character.
             if (ctext[w] != '\n') {
                 LOG(WARNING) << "Cannot render text: character too large.";
-                delete line;
+                delete[] line;
                 throw Text::RenderException("A word is too long");
             }
             else {
@@ -234,7 +234,7 @@ void Text::render() {
         SDL_Color white;
         white.r = white.g = white.b = white.a = 255;
         LOG(INFO) << "Rendering line of text: \"" << line << "\".";
-        
+
         SDL_Surface* rendered_line;
         if (smooth) {
             rendered_line = TTF_RenderUTF8_Shaded(font.font, line, white, black);
@@ -314,7 +314,7 @@ void Text::render() {
             break;
         }
     }
-    
+
     delete[] line;
     generate_texture();
     dirty_texture = false;
@@ -392,14 +392,14 @@ void Text::generate_vbo() {
     float rh = ratio_wh.second * 2.0f;
     float tw = (float)image.width  / (float)image.store_width;
     float th = 1.0f - ((float)image.height / (float)image.store_height);
-    
+
     // float rx = -1.0f;
     // float ry = -1.0f;
     // float rw = 2.0f;
     // float rh = 2.0f;
     // float tw = 1.0f;
     // float th = 1.0f;
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     // There are 4 vertices in a rectangle, but we use 6 vertices in 2
     // triangles to make the rectangle.
@@ -422,7 +422,7 @@ void Text::generate_vbo() {
         //     Bottom-right (1, 0)
         rx + rw, ry - rh, tw  , th  ,
     };
-    
+
     glBufferData(GL_ARRAY_BUFFER, sizeof(vbo_data), vbo_data, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -539,7 +539,7 @@ void Text::display() {
             return;
         }
     }
-    
+
     if (shaders.count(window) == 0) {
         load_program(window);
     }
@@ -569,9 +569,9 @@ void Text::display() {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);

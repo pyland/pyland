@@ -283,7 +283,7 @@ void Engine::text_updater() {
     }
 
     auto objects = map->get_sprites();
-    for(int object_id : objects) {
+    for (int object_id : objects) {
         //Object is on the map so now get its locationg
         auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
 
@@ -295,12 +295,12 @@ void Engine::text_updater() {
         VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
         sprite->get_object_text()->move(
-            pixel_position.x + (int)(0.5*Engine::get_actual_tile_size()), 
+            pixel_position.x + int(0.5 * Engine::get_actual_tile_size()),
             pixel_position.y
         );
         sprite->get_status_text()->move(
-            pixel_position.x + (int)(0.5*Engine::get_actual_tile_size()), 
-            pixel_position.y + (int)(1.5*Engine::get_actual_tile_size())
+            pixel_position.x + int(0.5 * Engine::get_actual_tile_size()),
+            pixel_position.y + int(1.5 * Engine::get_actual_tile_size())
         );
     }
 

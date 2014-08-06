@@ -37,7 +37,7 @@ PositionDispatcher<Arguments...>::PositionDispatcher (Vec2D location):
         )
     )
 {}
- 
+
 template <typename... Arguments>
 typename PositionDispatcher<Arguments...>::CallbackID PositionDispatcher<Arguments...>::register_callback(
         Vec2D tile, std::function<bool (Arguments...)> callback) {
