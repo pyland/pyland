@@ -275,7 +275,6 @@ void Map::generate_data() {
         //If more than 50% of layer has tiles, make it dense
         if(num_blank_tiles < total_tiles/2 ) {
             layer_packing = Layer::Packing::DENSE;
-            std::cout <<" DENSE "<< layer_num << std::endl;
         }
 
         (*layer_iter)->set_packing(layer_packing);
@@ -411,7 +410,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, int data_size, int num_tiles
 
     //The current tile's data
     auto tile_data = layer->get_layer_data()->begin();
-    std::cout << "LAYER " << std::endl;
+
     //Generate one layer's worth of data
     for(int y = 0; y < map_height; y++) {
         for(int x = 0; x < map_width; x++) {
