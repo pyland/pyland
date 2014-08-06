@@ -112,7 +112,6 @@ public:
     ///
     bool init_shaders();
 
-    ///
     /// Set the object's moving status
     /// @param _moving if the object is moving
     ///

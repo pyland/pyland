@@ -9,6 +9,7 @@
 #include "engine_api.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
+#include "gil_safe_future.hpp"
 #include "map_viewer.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
@@ -23,37 +24,28 @@ int Engine::global_scale = 2;
 Notification Engine::notifcation_stack = Notification();
 
 
-//TODO: THis needs to work with renderable objects 
+//TODO: THis needs to work with renderable objects
 
 void Engine::move_sprite(int id, Vec2D move_by) {
     // TODO: Make sure std::promise garbage collects correctly
-    Engine::move_sprite(id, move_by, std::make_shared<std::promise<bool>>());
+    Engine::move_sprite(id, move_by, GilSafeFuture<bool>());
 }
 
 //TODO: This needs to work with renderable objects
-void Engine::move_sprite(int id,
-                         Vec2D move_by,
-                         std::shared_ptr<std::promise<bool>> succeeded_promise_ptr) {
+void Engine::move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeeded_return) {
 
-    std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
 
-    if (!sprite || sprite->is_moving()) {
-        succeeded_promise_ptr->set_value(false);
-        return;
-    }
+    if (!sprite || sprite->is_moving()) { return; }
 
-    Vec2D location = Vec2D(int(sprite->get_x_position()),
-                           int(sprite->get_y_position()));
+    Vec2D location(int(sprite->get_x_position()), int(sprite->get_y_position()));
     Vec2D target = location + move_by;
 
-    VLOG(2) << "Trying to walk to " << target.x << " " << target.y << ".\n"
-            << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
+    VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
+    VLOG(2) << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
 
     // TODO: animate walking in-place
-    if (!walkable(target)) {
-        succeeded_promise_ptr->set_value(false);
-        return;
-    }
+    if (!walkable(target)) { return; }
 
     sprite->set_state_on_moving_start(target);
 
@@ -69,12 +61,9 @@ void Engine::move_sprite(int id,
     // Motion
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
-        [succeeded_promise_ptr, location, target, id] (double completion) {
-            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-            if (!sprite) {
-                succeeded_promise_ptr->set_value(false);
-                return false;
-            }
+        [walk_succeeded_return, location, target, id] (double completion) mutable {
+            auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+            if (!sprite) { return false; }
 
             sprite->set_x_position(location.x * (1-completion) + target.x * completion);
             sprite->set_y_position(location.y * (1-completion) + target.y * completion);
@@ -93,7 +82,7 @@ void Engine::move_sprite(int id,
                     get_map_viewer()->get_map()->event_step_on.trigger(target, id);
                 });
 
-                succeeded_promise_ptr->set_value(true);
+                walk_succeeded_return.set(true);
             }
 
             // Run to completion
@@ -288,8 +277,7 @@ void Engine::text_displayer() {
 }
 
 void Engine::text_updater() {
-
-     Map* map = map_viewer->get_map();
+    Map* map = map_viewer->get_map();
     if (!map) {
         throw std::runtime_error("Map not avalaible");
     }

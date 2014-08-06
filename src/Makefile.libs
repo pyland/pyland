@@ -9,12 +9,6 @@ BOOST_LDLIBS   = \
 
 
 
-GCC_VERSION = $(shell expr `$(COMPILER) -dumpversion`)
-GCC_MAJOR = $(shell expr `echo $(GCC_VERSION)` | cut -f1 -d.)
-GCC_MINOR = $(shell expr `echo $(GCC_VERSION)` | cut -f2 -d.)
-
-
-
 GLOG_CPPFLAGS = $(shell pkg-config libglog --cflags)
 GLOG_CXXFLAGS =
 GLOG_LDFLAGS  = 

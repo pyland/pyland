@@ -12,6 +12,7 @@
 #include "api.hpp"
 #include "engine_api.hpp"
 #include "event_manager.hpp"
+#include "gil_safe_future.hpp"
 
 namespace py = boost::python;
 
@@ -67,57 +68,33 @@ Entity::Entity(Vec2D start, std::string name, int id):
 bool Entity::move(int x, int y) {
     ++call_number;
 
-    // Must be moved; cannot be copied.
-    // Lambdas don't support move-capture, so
-    // have to bind to the lambda.
-    auto walk_succeeded_promise_ptr = std::make_shared<std::promise<bool>>();
-    auto walk_succeeded_future = walk_succeeded_promise_ptr->get_future();
-
     auto id = this->id;
-    EventManager::get_instance().add_event([walk_succeeded_promise_ptr, id, x, y] () {
-        Engine::move_sprite(id, Vec2D(x, y), walk_succeeded_promise_ptr);
-    });
-
-    LOG(INFO) << "Getting future";
-
-    auto m_thread_state = PyEval_SaveThread();
-    auto ret = walk_succeeded_future.get();
-    PyEval_RestoreThread(m_thread_state);
-
-    LOG(INFO) << "Got future";
-    return ret;
+    return GilSafeFuture<bool>::execute(
+        [id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
+            Engine::move_sprite(id, Vec2D(x, y), walk_succeeded_return);
+        },
+        false
+    );
 }
 
 bool Entity::walkable(int x, int y) {
     ++call_number;
 
-    // Must be moved; cannot be copied.
-    // Lambdas don't support move-capture, so
-    // have to bind to the lambda.
-    auto walkable_promise_ptr = std::make_shared<std::promise<bool>>();
-    auto walkable_future = walkable_promise_ptr->get_future();
-
     auto id = this->id;
-    EventManager::get_instance().add_event([walkable_promise_ptr, id, x, y] () {
-        walkable_promise_ptr->set_value(
-            Engine::walkable(Engine::find_object(id) + Vec2D(x, y))
-        );
-    });
-
-    LOG(INFO) << "Getting future";
-
-    auto m_thread_state = PyEval_SaveThread();
-    auto ret = walkable_future.get();
-    PyEval_RestoreThread(m_thread_state);
-
-    LOG(INFO) << "Got future";
-    return ret;
+    return GilSafeFuture<bool>::execute(
+        [id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
+            walk_succeeded_return.set(
+                Engine::walkable(Engine::find_object(id) + Vec2D(x, y))
+            );
+        },
+        false
+    );
 }
 
 void Entity::monologue() {
     auto id = this->id;
     auto name = this->name;
-    EventManager::get_instance().add_event([id, name] () {
+    return GilSafeFuture<void>::execute([id, name] (GilSafeFuture<void>) {
         std::string text = (
             "I am " + name + " and "
             "I am standing at " + Engine::find_object(id).to_string() + "!"
@@ -128,21 +105,20 @@ void Entity::monologue() {
 }
 
 
+// Not thread safe for efficiency reasons...
 void Entity::py_print_debug(std::string text) {
-    EventManager::get_instance().add_event([text] () {
-        LOG(INFO) << text;
-    });
+    LOG(INFO) << text;
 }
 
 void Entity::py_print_dialogue(std::string text) {
     auto name = this->name;
-    EventManager::get_instance().add_event([name, text] () {
+    return GilSafeFuture<void>::execute([name, text] (GilSafeFuture<void>) {
         Engine::print_dialogue(name, text);
     });
 }
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
-    EventManager::get_instance().add_event([game_seconds_per_real_second] () {
+    return GilSafeFuture<void>::execute([game_seconds_per_real_second] (GilSafeFuture<void>) {
         EventManager::get_instance().time.game_seconds_per_real_second = game_seconds_per_real_second;
     });
 }

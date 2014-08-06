@@ -1,6 +1,7 @@
 #include <boost/filesystem.hpp>
 #include <cassert>
 #include <cmath>
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
@@ -67,7 +68,7 @@
 
 
 
-using namespace std;    
+using namespace std;
 
 enum arrow_key {UP, DOWN, LEFT, RIGHT};
 
@@ -205,7 +206,7 @@ class CallbackState {
 
 int main(int argc, const char* argv[]) {
     // TODO: Support no window
-    // Can't do this cleanly at the moment as the MapViewer needs the window instance.... 
+    // Can't do this cleanly at the moment as the MapViewer needs the window instance....
 
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
@@ -315,8 +316,8 @@ int main(int argc, const char* argv[]) {
 
     gui_manager.parse_components();
 
-    std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) { 
-        LOG(INFO) << "GUI resizing"; 
+    std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) {
+        LOG(INFO) << "GUI resizing";
         auto window_size = (*game_window).get_size();
         sprite_window->set_width_pixels(window_size.first);
         sprite_window->set_height_pixels(window_size.second);
@@ -419,7 +420,7 @@ int main(int argc, const char* argv[]) {
         );
     }
 
-    Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, 
+    Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})},
         [&] (MouseInputEvent event) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
             Vec2D tile_clicked = Engine::get_map_viewer()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
@@ -448,8 +449,8 @@ int main(int argc, const char* argv[]) {
     mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
     Engine::set_dialogue_box(&mytext);
 
-    std::function<void(GameWindow*)> func = [&] (GameWindow* game_window) { 
-        LOG(INFO) << "text window resizing"; 
+    std::function<void(GameWindow*)> func = [&] (GameWindow* game_window) {
+        LOG(INFO) << "text window resizing";
         auto window_size = (*game_window).get_size();
         mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
     };
@@ -483,15 +484,37 @@ int main(int argc, const char* argv[]) {
     cursor.move(0, 0);
     cursor.resize(50, 50);
     cursor.set_text("<");
+
     Lifeline cursor_lifeline = input_manager->register_mouse_handler(
         filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
             cursor.move(event.to.x, event.to.y+25);
         })
-        );
-        
+    );
+
+    auto last_clock = std::chrono::steady_clock::now();
+    auto average_time = std::chrono::steady_clock::duration(0);
+
+    VLOG(3) << "{";
     while (!window.check_close()) {
+        auto new_clock = std::chrono::steady_clock::now();
+        auto new_time = new_clock - last_clock;
+        last_clock = new_clock;
+        average_time = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+            average_time * 0.99 + new_time * 0.01
+        );
+
+        VLOG_EVERY_N(1, 10) << std::chrono::seconds(1) / average_time;
+
+        VLOG(3) << "} SB | IM {";
+        GameWindow::update();
+
+        VLOG(3) << "} IM | EM {";
         em.process_events();
+
+        VLOG(3) << "} EM | RM {";
         map_viewer.render();
+
+        VLOG(3) << "} RM | TD {";
         mytext.display();
         Engine::text_displayer();
         stoptext.display();
@@ -499,10 +522,12 @@ int main(int argc, const char* argv[]) {
         forward_text.display();
         backward_text.display();
         cursor.display();
+
+        VLOG(3) << "} TD | SB {";
         window.swap_buffers();
-        GameWindow::update();
     }
+    VLOG(3) << "}";
 
     return 0;
 }
-// 
+//

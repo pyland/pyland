@@ -11,6 +11,7 @@
 #include <utility>
 #include <vector>
 
+#include "gil_safe_future.hpp"
 #include "notification.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
@@ -105,7 +106,7 @@ public:
     /// @param dy move in x by dy tiles
     ///
     static void move_sprite(int id, Vec2D move_by);
-    static void move_sprite(int id, Vec2D move_by, std::shared_ptr<std::promise<bool>> succeeded_promise_ptr);
+    static void move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeeded_return);
 
     ///
     /// Determine if a location can be walked on
