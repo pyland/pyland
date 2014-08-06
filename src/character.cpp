@@ -48,7 +48,7 @@ Character::Character(int _x_position, int _y_position, std::string _name) {
 
     // setting up status text
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    status_text->set_text("awaiting...");
+    status_text->set_text("");
     Vec2D pixel_text = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
     status_text->move(pixel_text.x ,pixel_text.y);
     status_text->resize(100,100);
