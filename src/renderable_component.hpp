@@ -105,7 +105,7 @@ class RenderableComponent {
     /// The shader used to render this component. This is a pointer because more than
     /// one RenderableComponent can have the same shader
     ///
-    Shader* shader = nullptr;
+    std::shared_ptr<Shader> shader;
 
     ///
     /// The current projection matrix
@@ -159,12 +159,12 @@ public:
     ///
     /// Sets the shader to use for this component
     ///
-    void set_shader(Shader* new_shader) {shader = new_shader; }
+    void set_shader(std::shared_ptr<Shader> new_shader) {shader = new_shader; }
 
     ///
     /// Gets the shader used by this component
     ///
-    Shader* get_shader() { return shader; }
+    std::shared_ptr<Shader> get_shader() { return shader; }
 
     ///
     /// Bind the vertex buffers 

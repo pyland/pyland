@@ -80,7 +80,7 @@ void MapViewer::render_map() {
     int layer_num = 0;
     for(auto layer: map->get_layers()) {
         RenderableComponent* layer_render_component = layer->get_renderable_component();
-        Shader* layer_shader = layer->get_renderable_component()->get_shader();
+        Shader* layer_shader = layer->get_renderable_component()->get_shader().get();
 
         //Set the matrices
         layer_render_component->set_projection_matrix(projection_matrix);
@@ -142,7 +142,7 @@ void MapViewer::render_objects() {
 
             character_render_component->bind_shader();
 
-            Shader* shader = character_render_component->get_shader();
+            Shader* shader = character_render_component->get_shader().get();
             if(shader == nullptr) {
                 LOG(ERROR) << "MapViewer::render_map: Shader (character_render_component->get_shader()) should not be null";
                 return;
@@ -180,7 +180,7 @@ void MapViewer::render_gui() {
 
     gui_render_component->bind_shader();
 
-    Shader* gui_shader = gui_render_component->get_shader();
+    Shader* gui_shader = gui_render_component->get_shader().get();
     if(gui_shader == nullptr) {
         std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
         return;

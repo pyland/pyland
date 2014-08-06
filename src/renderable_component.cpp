@@ -136,7 +136,7 @@ void RenderableComponent::release_vbos() {
 }
 
 void RenderableComponent::bind_shader() {
-    if(shader == nullptr)
+    if(!shader)
         return;
     glUseProgram(shader->get_program());
 }

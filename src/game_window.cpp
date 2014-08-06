@@ -47,6 +47,7 @@ extern "C" {
 #include "callback_registry.hpp"
 #include "lifeline.hpp"
 #include "lifeline_controller.hpp"
+#include "graphics_context.hpp"
 
 
 
@@ -175,20 +176,22 @@ static void query_overscan(int* overscan_left, int* overscan_top) {
 
 
 
-GameWindow::GameWindow(int width, int height, bool fullscreen) {
-    visible = false;
+GameWindow::GameWindow(int width, int height, bool fullscreen):
+    window_width(width),
+    window_height(height),
+    window_x(0),
+    window_y(0),
+    visible(false),
 #ifdef GAME_WINDOW_DISABLE_DIRECT_RENDER
-    foreground = false;
+    foreground(false),
 #else
-    foreground = true;
+    foreground(true),
+    was_foreground(foreground),
 #endif
-    was_foreground = foreground;
-    resizing = false;
-    window_x = 0;
-    window_y = 0;
-    window_width  = width;
-    window_height = height;
-    close_requested = false;
+    resizing(false),
+    close_requested(false),
+    graphics_context(this)
+{
     input_manager = new InputManager(this);
     
     if (windows.size() == 0) {
@@ -702,25 +705,31 @@ void GameWindow::use_context() {
 #ifdef USE_GLES
     if (visible) {
         eglMakeCurrent(display, surface, surface, context);
+    } else {
+        LOG(WARNING) << "Window surface is not visible. EGL context lost - OpenGL calls may fail!"
+        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     }
 #endif
 #ifdef USE_GL
     SDL_GL_MakeCurrent(window, sdl_gl_context);
 #endif
-    // In theory, not required:
-    // glViewport(0, 0, w, h);
+    GraphicsContext::current = &graphics_context;
+}
+
+
+GraphicsContext* GameWindow::get_context() {
+    return &graphics_context;
 }
 
 
 void GameWindow::disable_context() {
 #ifdef USE_GLES
-    if (visible) {
-        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-    }
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 #endif
 #ifdef USE_GL
     SDL_GL_MakeCurrent(window, NULL);
 #endif
+    GraphicsContext::current = nullptr;
 }
 
 
