@@ -89,7 +89,7 @@ private:
     ///
     /// Map of graphics contexts to shader caches.
     ///
-    static std::map<GraphicsContext*, ShaderCache> shader_caches;
+    static std::map<GraphicsContext*, std::shared_ptr<ShaderCache>> shader_caches;
 
     ///
     /// This function loads the shaders

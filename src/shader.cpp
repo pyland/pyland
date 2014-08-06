@@ -4,11 +4,13 @@
 //  Shader caches are not cleaned up when a graphics context ends.
 //      Not really a problem unless using multiple contexts.
 //  Shader caches are created twice and destroyed once due to copying
-//      when inserting into the map (pair?).
+//      when inserting into the map (pair?). This doesn't do any harm,
+//      it's just weird.
 
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
+#include <functional>
 #include <map>
 #include <memory>
 #include <stdexcept>
@@ -19,7 +21,7 @@
 
 
 
-std::map<GraphicsContext*, Shader::ShaderCache> Shader::shader_caches;
+std::map<GraphicsContext*, std::shared_ptr<Shader::ShaderCache>> Shader::shader_caches;
 
 
 
@@ -109,10 +111,12 @@ std::shared_ptr<Shader> Shader::get_shared_shader(const std::string program_name
     
     if (shader_caches.count(context) == 0) {
         // Create a new ShaderCache as this is the first of its context.
-        shader_caches.insert(std::make_pair(context, ShaderCache()));
+        std::shared_ptr<ShaderCache> shader_cache = std::make_shared<ShaderCache>();
+        shader_caches.insert(std::make_pair(context, shader_cache));
+        context->register_resource_releaser(std::function<void()>([context] () {Shader::shader_caches.erase(context);}));
     }
 
-    return shader_caches.find(context)->second.get_shader(program_name);
+    return shader_caches.find(context)->second->get_shader(program_name);
 }
 
 

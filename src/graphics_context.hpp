@@ -14,15 +14,21 @@ extern "C" {
 
 
 
+#include "callback.hpp"
+#include "callback_registry.hpp"
+
+
+
 class GameWindow;
 
 
 
 ///
-/// Used to unambiguously distinguish between GL contexts.
+/// Used to unambiguously distinguish between and manage GL contexts.
 ///
 /// The implementation is simply a wrapper around GameWindow which hides
-/// the user from the internals of graphics management.
+/// the user from the internals of graphics management, whilst also
+/// providing a system for resource clean up.
 ///
 class GraphicsContext {
 private:
@@ -44,9 +50,22 @@ private:
     /// Meant only for creation in and for GameWindow.
     ///
     GraphicsContext(GameWindow* window);
+
+    ///
+    /// Will release resources which were registered to this context.
+    ///
+    ~GraphicsContext();
+
+    ///
+    /// Callback functions for cleaning up resources when the context
+    /// is destroyed.
+    ///
+    CallbackRegistry<void> resource_releasers;
 public:
     ///
     /// Return true if the contexts use the same GL context.
+    ///
+    /// Never used.
     ///
     bool operator==(GraphicsContext other);
 
@@ -56,6 +75,12 @@ public:
     /// Note that GameWindow will set the current active context.
     ///
     void use();
+
+    ///
+    /// Register a resource releaser, which will run when the context
+    /// is destroyed.
+    ///
+    void register_resource_releaser(Callback<void> callback);
 
     ///
     /// Get the current active context.
