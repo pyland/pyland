@@ -34,9 +34,8 @@ void Engine::move_object(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeed
     Vec2D location(int(character->get_x_position()), int(character->get_y_position()));
     Vec2D target = location + move_by;
 
-    VLOG(2) << "Trying to walk to " << target.x << " " << target.y << ".\n"
-            << "Tile blocker count is "
-            << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
+    VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
+    VLOG(2) << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
 
     // TODO: animate walking in-place
     if (!walkable(target)) { return; }
