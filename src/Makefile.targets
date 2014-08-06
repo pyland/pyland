@@ -44,7 +44,7 @@ dependencies/input_management: | dependencies
 # DO NOT RE-ORDER - tmx parser must come before tinyxml in ldlibs
 
 $(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
-	@echo "${bold}${red}[ Compiling $(EXECUTABLE) ]${normal}"
+	@echo "${bold}${green}[ Compiling $(EXECUTABLE) ]${normal}"
 
 	@$(COMPILER) -o $@ \
 		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
@@ -64,7 +64,7 @@ $(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON
 #
 
 $(BASE_OBJS): %.o : %.cpp | dependencies
-	@echo "${bold}[ Compiling base object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling base object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
 	@# This should not cause a large slowdown unless actually included in many files.
@@ -79,7 +79,7 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(CPPFLAGS)           $(CXXFLAGS)
 
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
-	@echo "${bold}[ Compiling input object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling input object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
@@ -88,7 +88,7 @@ $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 
 
 $(GUI_OBJS): %.o : %.cpp | dependencies/gui
-	@echo "${bold}[ Compiling gui object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling gui object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS)   $(GLOG_CXXFLAGS)        \
@@ -100,7 +100,7 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 
 
 $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
-	@echo "${bold}[ Compiling challenge object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling challenge object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
@@ -109,7 +109,7 @@ $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
 		$(CPPFLAGS)          $(CXXFLAGS)
 
 $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/python_embed
-	@echo "${bold}[ Compiling Python object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling Python object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS)                           \
@@ -119,7 +119,7 @@ $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | d
 		$(CXXFLAGS) $(CPPFLAGS)
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
-	@echo "${bold}[ Compiling Python shared object file ${red}$*.so${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling Python shared object file ${green}$*.so${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
@@ -133,11 +133,11 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies
 #
 
 $(PYTHON_HEADER).unknown:
-	@echo "${bold}[ $(COMPILER): ${RED}Don't know how to precompiling Python header; ignoring.${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): ${GREEN}Don't know how to precompiling Python header; ignoring.${normal}${bold} ]${normal}"
 	@touch $(PYTHON_HEADER).unknown
 
 $(PYTHON_HEADER).gch: $(PYTHON_HEADER)
-	@echo "${bold}[ $(COMPILER): Precompiling Python header ${red}$<.gch${normal}${bold} from ${red}$<${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): Precompiling Python header ${green}$<.gch${normal}${bold} from ${green}$<${normal}${bold} ]${normal}"
 
 	@$(COMPILER) $< -o $<.gch \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
@@ -146,7 +146,7 @@ $(PYTHON_HEADER).gch: $(PYTHON_HEADER)
 # This largely assumes the setup is constant for clang.
 # clang with precompiled headers may work, but is not guaranteed.
 $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
-	@echo "${bold}[ $(COMPILER): Precompiling Python header ${red}$<.pch${normal}${bold} from ${red}$<${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): Precompiling Python header ${green}$<.pch${normal}${bold} from ${green}$<${normal}${bold} ]${normal}"
 
 	@# Apologies for the mess, but I can't think of a better way.
 	@$(COMPILER) -x c++-header $< -o $<.pch \
@@ -167,7 +167,7 @@ $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
 #
 
 debug:
-	@echo "${bold}${red}Complied in debug${normal}"
+	@echo "${bold}${green}Complied in debug${normal}"
 
 
 #
@@ -194,12 +194,12 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 		dependencies/python_embed     \
 		dependencies
 
-	@echo "${bold}${red}Made clean${normal}"
+	@echo "${bold}${green}Made clean${normal}"
 
 veryclean: clean
 	@-$(RM) $(PYTHON_HEADER).gch $(PYTHON_HEADER).pch
 	@-$(MAKE) -C tmx-parser -f Makefile.linux clean
-	@echo "${bold}${red}Made very clean${normal}"
+	@echo "${bold}${green}Made very clean${normal}"
 
 -include ${HEADER_DEPENDS}
 
