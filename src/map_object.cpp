@@ -42,17 +42,17 @@ MapObject::MapObject(int _x_position, int _y_position, std::string _name) {
     // setting up sprite text
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
     TextFont myfont(mytype, 18);
-    map_object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    map_object_text->set_text(name);
-    Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
-    map_object_text->move(pixel_position.x ,pixel_position.y );
-    map_object_text->resize(100,100);
+    object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    object_text->set_text(name);
+    Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
+    object_text->move(pixel_position.x ,pixel_position.y );
+    object_text->resize(100,100);
     LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // setting up status text
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
     status_text->set_text("awaiting...");
-    Vec2D pixel_text = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
+    Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
     status_text->move(pixel_text.x ,pixel_text.y + 100);
     status_text->resize(100,100);
 
@@ -71,7 +71,8 @@ MapObject::MapObject(int _x_position, int _y_position, std::string _name) {
 }
 
 MapObject::~MapObject() {
-
+    delete object_text;
+    delete status_text;
     LOG(INFO) << "MapObject destructed";
 }
 

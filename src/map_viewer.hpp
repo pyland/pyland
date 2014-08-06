@@ -8,6 +8,7 @@ class GameWindow;
 class Map;
 
 class MapViewer {
+
     ///
     /// The Map we are currently rendering
     ///
@@ -26,6 +27,31 @@ class MapViewer {
     /// The reference to the window object in which we render the map.
     ///
     GameWindow *window = nullptr;
+
+    ///
+    /// The speed at which we scroll the map.
+    ///
+    float map_scroll_speed = 32.0f;
+
+    ///
+    /// The far left  x position where we display the map
+    ///
+    float map_display_x = 0.0f;
+
+    ///
+    /// The lower y position we are currently displaying the map at.
+    ///
+    float map_display_y = 0.0f;
+
+    ///
+    /// The width of the map to be displayed on screen.
+    ///
+    float map_display_width = 30;
+
+    ///
+    /// The height of the map to be displayed on screen
+    ///
+    float map_display_height = 30;
 
     ///
     /// Render the GUI 
@@ -83,9 +109,71 @@ public:
     /// Return the map instance the viewer is managing
     /// @return The map instance the viewer manages
     Map* get_map();
+    
+    ///
+    /// Get the game window associated with this map viewer
+    /// @return the game window used to view the map
+    ///
+    GameWindow* get_window() { return window; }
 
-    GameWindow* get_window() {return window; }
+    ///
+    /// Get the display width of the map
+    /// @return get the display width of the map
+    ///
+    float get_display_width() { return map_display_width; }
 
+    ///
+    /// Set the display width of the map
+    /// @param display_width the new display width of the map
+    ///
+    void set_display_width(float display_width) { map_display_width = display_width; }
+
+    ///
+    /// Get the display height of the map
+    /// @return get the display height of the map
+    ///
+    float get_display_height() { return map_display_height; }
+
+    ///
+    /// Set the display height of the map
+    /// @param display_width the new display height of the map
+    ///
+    void set_display_height(float display_height) { map_display_height = display_height; }
+
+
+    ///
+    /// Get the map display lower left x position
+    /// @return the map display far left x position
+    ///
+    float get_display_x() { return map_display_x; }
+
+    ///
+    /// Set the x display position of the map
+    /// @param new_display_x the new display position
+    ///
+    void set_display_x(float new_display_x) { map_display_x = new_display_x; }
+
+    ///
+    /// Get the map display bottom y position
+    /// @return the map display bottom y  position
+    ///
+    float get_display_y() { return map_display_y; }
+
+    ///
+    /// Set the y display position of the map
+    /// @param new_display_y the new display position
+    ///
+    void set_display_y(float new_display_y) { map_display_y = new_display_y; }
+
+    ///
+    /// converts pixel location inside window to a map tile
+    ///
+    Vec2D pixel_to_tile (Vec2D pixel_location);
+
+    ///
+    /// converts a tile in map to a pixel location in window of the bottem left corner of tile
+    Vec2D tile_to_pixel (Vec2D tile_location);
+    Vec2D tile_to_pixel(std::pair<double,double> tile_location) ;
 
 };
 #endif

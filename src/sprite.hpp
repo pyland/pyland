@@ -22,9 +22,6 @@
 ///
 class Sprite : public MapObject {
 
-    Text* sprite_text = nullptr;
-    Text* status_text = nullptr;
-
 protected:
 
     ///
@@ -64,12 +61,6 @@ public:
     /// Initialise the shaders that are being used by the sprite
     ///
     bool init_shaders();
-
-    Text* get_sprite_text() {return sprite_text; }
-    void set_sprite_text(Text* _sprite_text) {sprite_text = _sprite_text; }
-    Text* get_status_text() {return status_text; }
-    void set_status_text(Text* _status_text) {status_text = _status_text; }
-
 };
 
 #endif

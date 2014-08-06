@@ -264,8 +264,8 @@ void Engine::text_displayer() {
     for(int object_id : objects) {
         //Object is on the map so now get its locationg
         auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
-        if (sprite->get_sprite_text() != nullptr) {
-            sprite->get_sprite_text()->display();
+        if (sprite->get_object_text() != nullptr) {
+            sprite->get_object_text()->display();
         }
         if (sprite->get_status_text() != nullptr) {
             sprite->get_status_text()->display();
@@ -287,12 +287,12 @@ void Engine::text_updater() {
 
         std::pair<double,double> tile(sprite->get_x_position(), sprite->get_y_position());
 
-        Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(tile);
+        Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(tile);
 
         VLOG(2) << "sprite location" << sprite->get_x_position() << " " << sprite->get_y_position();
         VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
-        sprite->get_sprite_text()->move(pixel_position.x, pixel_position.y);
+        sprite->get_object_text()->move(pixel_position.x, pixel_position.y);
         sprite->get_status_text()->move(pixel_position.x, pixel_position.y + (1.5*Engine::get_tile_size()));
     }
 

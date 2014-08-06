@@ -12,10 +12,12 @@
 /// Represents an object which can be rendered on the map
 ///
 class MapObject : public Object{
+
+protected:
     ///
     /// The text to display above the object
     ///
-    Text* map_object_text = nullptr;
+    Text* object_text = nullptr;
 
     ///
     /// The status text for the object
@@ -27,7 +29,7 @@ class MapObject : public Object{
     ///
     Walkability walkability = Walkability::WALKABLE;
 
-protected:
+
     ///
     /// The x position of the object
     ///
@@ -123,13 +125,13 @@ public:
     /// Get the object's text to display
     /// @return the object's text
     ///
-    Text* get_object_text() {return map_object_text; }
+    Text* get_object_text() {return object_text; }
 
     ///
     /// Set the object's text to be displayed 
     /// @param _object_text the object's text
     ///
-    void set_object_text(Text* _object_text) {map_object_text = _object_text; }
+    void set_object_text(Text* _object_text) {object_text = _object_text; }
 
     ///
     /// Get the object's status text

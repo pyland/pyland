@@ -90,50 +90,11 @@ class Map {
     ///
     int map_width = 16;
 
-    ///
-    /// The speed at which we scroll the map.
-    ///
-    float map_scroll_speed = 32.0f;
-
-    ///
-    /// The far left  x position where we display the map
-    ///
-    float map_display_x = 0.0f;
-
-    ///
-    /// The lower y position we are currently displaying the map at.
-    ///
-    float map_display_y = 0.0f;
-
-    ///
-    /// The width of the map to be displayed on screen.
-    ///
-    float map_display_width = 30;
-
-    ///
-    /// The height of the map to be displayed on screen
-    ///
-    float map_display_height = 30;
 
     ///
     /// The texture buffer pointers
     ///
     Image texture_images[1];
-
-    ///
-    /// The tileset texture coordinates
-    ///
-    GLfloat* tileset_text_coords = nullptr;
-
-    ///
-    /// Pointer to the map vertex data
-    ///
-    GLfloat* map_data = nullptr;
-
-    ///
-    /// Pointer tno the map texture coordinate data
-    ///
-    GLfloat* map_tex_coords = nullptr;
 
     ///
     /// The number of dimensions in the vertex and texture buffers for a tile: (x, y) here
@@ -292,59 +253,14 @@ public:
     int get_height() { return map_height; }
 
     ///
-    /// Get the display width of the map
-    /// @return get the display width of the map
-    ///
-    float get_display_width() { return map_display_width; }
-
-    ///
-    /// Set the display width of the map
-    /// @param display_width the new display width of the map
-    ///
-    void set_display_width(float display_width) { map_display_width = display_width; }
-
-    ///
-    /// Get the display height of the map
-    /// @return get the display height of the map
-    ///
-    float get_display_height() { return map_display_height; }
-
-    ///
-    /// Set the display height of the map
-    /// @param display_width the new display height of the map
-    ///
-    void set_display_height(float display_height) { map_display_height = display_height; }
-
-
-    ///
-    /// Get the map display lower left x position
-    /// @return the map display far left x position
-    ///
-    float get_display_x() { return map_display_x; }
-
-    ///
-    /// Set the x display position of the map
-    /// @param new_display_x the new display position
-    ///
-    void set_display_x(float new_display_x) { map_display_x = new_display_x; }
-
-    ///
-    /// Get the map display bottom y position
-    /// @return the map display bottom y  position
-    ///
-    float get_display_y() { return map_display_y; }
-
-    ///
-    /// Set the y display position of the map
-    /// @param new_display_y the new display position
-    ///
-    void set_display_y(float new_display_y) { map_display_y = new_display_y; }
-
-    ///
     /// Is this location walkable
     ///
     bool is_walkable(int x_pos, int y_pos);
 
+    ///
+    /// TODO: Heidi: Document this class
+    /// Collision detection for generated elements
+    ///
     class Blocker {
         public:
             Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker);
@@ -355,7 +271,6 @@ public:
     };
 
     Blocker block_tile(Vec2D tile);
-
 
     ///
     /// Get the layers on this map
@@ -380,15 +295,6 @@ public:
     ///
     int get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos);
 
-    ///
-    /// converts pixel location inside window to a map tile
-    ///
-    Vec2D pixel_to_tile (Vec2D pixel_location);
-
-    ///
-    /// converts a tile in map to a pixel location in window of the bottem left corner of tile
-    Vec2D tile_to_pixel (Vec2D tile_location);
-    Vec2D tile_to_pixel(std::pair<double,double> tile_location) ;
 };
 
 #endif

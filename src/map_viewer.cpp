@@ -73,7 +73,7 @@ void MapViewer::render_map() {
     std::pair<int, int> size = window->get_size();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 translate = glm::vec3(-map->get_display_x()*32.0f, -map->get_display_y()*32.0f, 0.0f);
+    glm::vec3 translate = glm::vec3(-get_display_x()*32.0f, -get_display_y()*32.0f, 0.0f);
     glm::mat4 translated = glm::translate(model, translate);
     
     //Draw all the layers, from base to top to get the correct draw order
@@ -133,8 +133,8 @@ void MapViewer::render_sprites() {
             glm::mat4 model1 = glm::mat4(1.0f);
             glm::vec3 translate1 = glm::vec3(
 
-                (float(sprite->get_x_position()) - map->get_display_x()) * 32.0f,
-                (float(sprite->get_y_position()) - map->get_display_y()) * 32.0f,
+                (float(sprite->get_x_position()) - get_display_x()) * 32.0f,
+                (float(sprite->get_y_position()) - get_display_y()) * 32.0f,
                 0.0f
             );
             glm::mat4 translated1 = glm::translate(model1, translate1);
@@ -182,8 +182,8 @@ void MapViewer::render_objects() {
             glm::mat4 model1 = glm::mat4(1.0f);
             glm::vec3 translate1 = glm::vec3(
 
-                (float(object->get_x_position()) - map->get_display_x()) * 32.0f,
-                (float(object->get_y_position()) - map->get_display_y()) * 32.0f,
+                (float(object->get_x_position()) - get_display_x()) * 32.0f,
+                (float(object->get_y_position()) - get_display_y()) * 32.0f,
                 0.0f
             );
             glm::mat4 translated1 = glm::translate(model1, translate1);
@@ -343,18 +343,18 @@ void MapViewer::refocus_map() {
 
     //If such an sprite exists, move the map to it
     if(sprite) {
-        map->set_display_x(centre_point_in_range(
+        set_display_x(centre_point_in_range(
             // half-tile offset to take centre of sprite
             /* point  */ float(sprite->get_x_position()) + 0.5f,
             /* length */ float(map->get_width()),
-            /* bound  */ map->get_display_width()
+            /* bound  */ get_display_width()
         ));
 
-        map->set_display_y(centre_point_in_range(
+        set_display_y(centre_point_in_range(
             // half-tile offset to take centre of sprite
             /* point  */ float(sprite->get_y_position()) + 0.5f,
             /* length */ float(map->get_height()),
-            /* bound  */ map->get_display_height()
+            /* bound  */ get_display_height()
         ));
     } else {
         LOG(INFO) << "MapViewer::refocus_map: No sprites have focus.";
@@ -389,3 +389,38 @@ void MapViewer::set_map_focus_object(int object_id) {
 Map* MapViewer::get_map() {
     return map;
 }
+
+
+
+Vec2D MapViewer::pixel_to_tile(Vec2D pixel_location) {
+    float scale(Engine::get_tile_size()*Engine::get_global_scale());
+    // convert pixel location to absolute instead of relative to current window
+
+    Vec2D map_pixel(pixel_location + Vec2D(int(get_display_x() * scale),
+                                           int(get_display_y() * scale)));
+
+    // convert from pixel to map ints
+    return Vec2D(int(float(map_pixel.x) / scale),
+                 int(float(map_pixel.y) / scale));
+}
+
+Vec2D MapViewer::tile_to_pixel(Vec2D tile_location) {
+    float scale(Engine::get_tile_size()*Engine::get_global_scale());
+
+    Vec2D results(int(float(tile_location.x) * scale),
+                  int(float(tile_location.y) * scale));
+
+    results -= Vec2D(int(get_display_x() * scale),
+                     int(get_display_y() * scale));
+    return results;
+}
+
+Vec2D MapViewer::tile_to_pixel(std::pair<double,double> tile_location) {
+    double scale(Engine::get_tile_size()*Engine::get_global_scale());
+
+    std::pair<double,double> results(tile_location.first * scale, tile_location.second * scale);
+    results.first = results.first - (get_display_x() * scale) ;
+    results.second = results.second - (get_display_y() * scale) ;
+    return Vec2D( (int)results.first, (int)results.second);
+}    
+

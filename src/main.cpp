@@ -285,8 +285,8 @@ int main(int argc, const char* argv[]) {
         int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
         int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
         //We make use of intege truncation to get these to numbers in terms of tiles
-        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
-        int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
+        //        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
+        //    int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
 
         //Set the viewable fragments
         glScissor(0, 0, size.first, size.second);
@@ -298,8 +298,8 @@ int main(int argc, const char* argv[]) {
 
         //Set the display size
         //Display one more tile so that we don't get an abrupt stop
-        Engine::get_map_viewer()->get_map()->set_display_width(num_tiles_x_display+1);
-        Engine::get_map_viewer()->get_map()->set_display_height(num_tiles_y_display+1);
+        Engine::get_map_viewer()->set_display_width(num_tiles_x_display+1);
+        Engine::get_map_viewer()->set_display_height(num_tiles_y_display+1);
 
         //Readjust the map focus
         Engine::get_map_viewer()->refocus_map();
@@ -365,7 +365,7 @@ int main(int argc, const char* argv[]) {
     Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, 
         [&] (MouseInputEvent event) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
-            Vec2D tile_clicked = Engine::get_map_viewer()->get_map()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
+            Vec2D tile_clicked = Engine::get_map_viewer()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
             LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
             auto objects = Engine::get_objects_at(tile_clicked);
             if (objects.size() == 1) {

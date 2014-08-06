@@ -23,7 +23,9 @@ RenderableComponent::~RenderableComponent() {
     //TODO delete textures - need to see if texture manager does this
     delete []vertex_data;
     delete []texture_coords_data;
-    delete texture_image;
+
+    //TODO: Texture manager will do this
+    //    delete texture_image;
 }
 void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_size, bool is_dynamic) {
     delete []vertex_data;

@@ -85,10 +85,8 @@ Map::Map(const std::string map_src):
 Map::~Map() {
     // texture_images stored within struct, implicit destruction.
     // release buffers
-    delete[] map_data;
-    delete[] map_tex_coords;
     delete[] tileset_tex_coords;
-
+    delete[] tileset_tex_data;
     LOG(INFO) << "Map destructed";
 }
 
@@ -747,39 +745,6 @@ int Map::get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos) {
      //The VBO offset is the tile offset times the dimenions and number of vertices
      return tile_offset*num_tile_vertices*num_tile_dimensions;
 }
-
-Vec2D Map::pixel_to_tile(Vec2D pixel_location) {
-    float scale(Engine::get_tile_size()*Engine::get_global_scale());
-    // convert pixel location to absolute instead of relative to current window
-
-    Vec2D map_pixel(pixel_location + Vec2D(int(Map::get_display_x() * scale),
-                                           int(Map::get_display_y() * scale)));
-
-    // convert from pixel to map ints
-    return Vec2D(int(float(map_pixel.x) / scale),
-                 int(float(map_pixel.y) / scale));
-}
-
-Vec2D Map::tile_to_pixel(Vec2D tile_location) {
-    float scale(Engine::get_tile_size()*Engine::get_global_scale());
-
-    Vec2D results(int(float(tile_location.x) * scale),
-                  int(float(tile_location.y) * scale));
-
-    results -= Vec2D(int(Map::get_display_x() * scale),
-                     int(Map::get_display_y() * scale));
-    return results;
-}
-
-Vec2D Map::tile_to_pixel(std::pair<double,double> tile_location) {
-    double scale(Engine::get_tile_size()*Engine::get_global_scale());
-
-    std::pair<double,double> results(tile_location.first * scale, tile_location.second * scale);
-    results.first = results.first - (Map::get_display_x() * scale) ;
-    results.second = results.second - (Map::get_display_y() * scale) ;
-    return Vec2D( (int)results.first, (int)results.second);
-}    
-
 
 /*
 void Map::merge_layer_data() {
