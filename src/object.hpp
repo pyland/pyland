@@ -30,11 +30,6 @@ private:
     int id = 0;
 
     ///
-    /// The name of the object
-    ///
-    std::string name = "";
-
-    ///
     /// Walkable: determine if the object can be walked over
     ///
     Walkability walkability = Walkability::WALKABLE;
@@ -55,6 +50,11 @@ protected:
     ///
     double y_position = 0;
 
+    ///
+    /// The name of the object
+    ///
+    std::string name = "";
+
 public:
     Object();
     //= default not supported in g++-4.8
@@ -67,6 +67,7 @@ public:
     ///
     void set_id(int new_id);
 
+    ///TODO REMOVE THIS FROM HERE
     ///
     /// Get the object's walkability
     ///

@@ -51,6 +51,19 @@ class Map {
 
 
     ///
+    /// A vector of layers which maps the (x, y) position in the map
+    /// onto the offset in the buffer. The offsets are based off of
+    /// the number of vertices and the number of dimensions. It gives
+    /// the GLfloat offset.
+    ///.This allows us to update the buffers to change the map. 
+    /// First param: layer number, starts at 0
+    /// Second param: Map of (x, y) positions, flattened to a single
+    ///               number, this is x+ y*map_width, which maps these
+    ///               locations to their offset in the vertex and texture
+    ///
+    std::map<int, std::shared_ptr<std::map<int, int>>> layer_mappings;
+
+    ///
     /// The ids of the characters that are on this map
     ///
     std::vector<int> characters;
@@ -59,21 +72,6 @@ class Map {
     /// Cache of the tileset texture data for this Map
     ///
     GLfloat* tileset_tex_coords = nullptr;
-
-    ///
-    /// Object instance to contain data needed to render the map
-    ///
-    RenderableComponent renderable_component;
-
-    ///
-    /// The vertex data for the map
-    ///
-    GLfloat* map_vertex_data = nullptr;
-
-    ///
-    /// The texture data for the map
-    ///
-    GLfloat* map_tex_data = nullptr;
 
     ///
     /// The texture data for the tileset. This is the cached entries
@@ -138,21 +136,104 @@ class Map {
     GLfloat* map_tex_coords = nullptr;
 
     ///
+    /// The number of dimensions in the vertex and texture buffers for a tile: (x, y) here
+    ///
+    int num_tile_dimensions = 2;
+
+    ///
+    /// The number of vertices for a tile
+    ///
+    int num_tile_vertices = 6;
+
+    ///
     /// The function used to generate the cache of tile texture coordinates.
     ///
     void generate_tileset_coords(Image* texture_image);
 
     ///
-    /// The function which generates the texture coordinates for the map
-    /// geometry, using the cached tile coordinates.
+    /// Generate the map's texture and vertex data
     ///
-    void generate_map_texcoords();
+    void generate_data();
 
-    ////
-    /// The function which generates the map geometry so that it can be
-    /// rendered to the screen
     ///
-    void generate_map_coords();
+    /// Generates a layer's texture coordinates. Handles generating the
+    /// data if the layers are sparse or dense. A dense layer is one
+    /// with more tiles that are non-empty than empty ones.
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer, bool dense=true);
+
+    ///
+    /// Generates a layer's vertex coordinates. Handles generating the
+    /// data if the layers are sparse or dense. A dense layer is one
+    /// with more tiles that are non-empty than empty ones.
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer, bool dense=true);
+
+    ///
+    /// Calls genenerate_layer_vert_coords to generate a layer's vertex data
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_dense_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+
+    ///
+    /// Calls generate_layer_tex_coords
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_dense_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+
+    ///
+    /// Calls generate_layer_vert_coords
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_sparse_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+
+    ///
+    /// Calls generate_layer_tex_coords
+    ///
+    /// @data the array to put the data
+    /// @data_size the size of he array in bytes
+    /// @num_tiles the number of tiles to generate data for
+    /// @layer the layer to generate the texture coordinates for
+    /// @dense if the layer is dense or sparse 
+    ///
+    void generate_sparse_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+
+    ///
+    /// Used when a tile needs to be added at a point. This function
+    /// will recalculate the layer mappings as needed to ensure future
+    /// updates update the correct buffer locations. Used for sparse maps.
+    /// @param x_pos
+    /// @param y_pos
+    /// @param layer_num the layer
+    ///
+    void recalculate_layer_mappings(int x_pos, int y_pos, int layer_num);
 
     ///
     /// Initialises the textures
@@ -191,10 +272,6 @@ public:
     // Make this a copy
     ///
     const std::vector<int>& get_characters() { return characters; }
-    ///
-    /// Gets the RenderableComponent object instance associated with this Map
-    ///
-    RenderableComponent* get_renderable_component() { return &renderable_component; }
 
     ///
     /// Get the map width
@@ -271,6 +348,30 @@ public:
 
     Blocker block_tile(Vec2D tile);
 
+
+    ///
+    /// Get the layers on this map
+    /// @return the layers
+    ///
+    std::vector<std::shared_ptr<Layer>> get_layers() { return layers; }
+
+    ///
+    /// Update the tile at a given point in the map
+    /// @param x_pos the x position of the tile
+    /// @param y_pos the y position of the tile
+    /// @param tile_id the id of the tile
+    /// @param tileset_name the tileset name, default tileset used if
+    /// not specified
+    ///
+    void update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::string tileset_name="");
+
+
+    ///
+    /// Get a tile's texture offset in the VBO
+    /// @return the texture offset in the VBo
+    ///
+    int get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos);
+
     ///
     /// converts pixel location inside window to a map tile
     ///
@@ -279,6 +380,7 @@ public:
     ///
     /// converts a tile in map to a pixel location in window of the bottem left corner of tile
     Vec2D tile_to_pixel (Vec2D tile_location);
+    Vec2D tile_to_pixel(std::pair<double,double> tile_location) ;
 };
 
 #endif

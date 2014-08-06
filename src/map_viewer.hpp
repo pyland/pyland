@@ -27,6 +27,21 @@ class MapViewer {
     ///
     GameWindow *window = nullptr;
 
+    ///
+    /// Render the GUI 
+    ///
+    void render_gui();
+    
+    ///
+    /// Render the map
+    ///
+    void render_map();
+
+    ///
+    /// Render objects on the map
+    ///
+    void render_objects();
+
 public:
     MapViewer(GameWindow* window, GUIManager* manager);
     ~MapViewer();
@@ -49,9 +64,9 @@ public:
     int get_map_focus_object() { return map_focus_object; }
 
     ///
-    /// Render the currently bound map
+    /// Render the currently bound map, objects and GUI
     ///
-    void render_map();
+    void render();
 
     ///
     /// Set the map that the viewer is managing
@@ -63,6 +78,8 @@ public:
     /// Return the map instance the viewer is managing
     /// @return The map instance the viewer manages
     Map* get_map();
+
+    GameWindow* get_window() {return window; }
 
 
 };

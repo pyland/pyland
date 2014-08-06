@@ -23,22 +23,37 @@
 #include <GL/gl.h>
 
 #endif
-
-#define TILESET_ELEMENT_SIZE 16
-#define GLOBAL_SCALE 2
-#define IMAGE2_NUM_COMPONENTS 4
-
-
-
-
-Character::Character(int _x_position, int _y_position) {
+Character::Character(int _x_position, int _y_position, std::string _name) {
+    LOG(INFO) << "register new character called " << _name;
     x_position = _x_position;
     y_position = _y_position;
+    name = _name;
+
     init_shaders();
     load_textures();
     generate_tex_data();
     generate_vertex_data();
 
+    // setting up sprite text
+    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont myfont(mytype, 18);
+    character_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    character_text->set_text(name);
+    Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(_x_position, _y_position));
+    character_text->move(pixel_position.x ,pixel_position.y );
+    character_text->resize(100,100);
+    character_text->align_centre();
+    character_text->align_at_origin(true);
+    LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
+
+    // setting up status text
+    status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    status_text->set_text("");
+    Vec2D pixel_text = Engine::get_map_viewer()->get_map()->tile_to_pixel(Vec2D(x_position, y_position));
+    status_text->move(pixel_text.x ,pixel_text.y);
+    status_text->resize(100,100);
+    status_text->align_centre();
+    status_text->align_at_origin(true);
 
     // Starting positions should be integral
     assert(trunc(x_position) == x_position);
@@ -51,12 +66,10 @@ Character::Character(int _x_position, int _y_position) {
 
 
     LOG(INFO) << "Character initialized";
+
 }
 
 Character::~Character() {
-    delete[] sprite_tex_data;
-    delete[] sprite_data;
-    delete texture_image;
 
     LOG(INFO) << "Character destructed";
 }
@@ -80,6 +93,8 @@ void Character::generate_tex_data() {
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
+
+    GLfloat* sprite_tex_data = nullptr;
     try {
 
         sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
@@ -89,8 +104,8 @@ void Character::generate_tex_data() {
         return;
     }
 
-    GLfloat offset_x = GLfloat(TILESET_ELEMENT_SIZE) / (GLfloat)texture_image->store_width;
-    GLfloat offset_y = GLfloat(TILESET_ELEMENT_SIZE) / (GLfloat)texture_image->store_height;
+    GLfloat offset_x = GLfloat(Engine::get_tile_size()) / (GLfloat)renderable_component.get_texture_image()->store_width;
+    GLfloat offset_y = GLfloat(Engine::get_tile_size()) / (GLfloat)renderable_component.get_texture_image()->store_height;
 
     //bottom left
     sprite_tex_data[0]  = offset_x * GLfloat(4.0);
@@ -121,8 +136,9 @@ void Character::generate_tex_data() {
 
 void Character::generate_vertex_data() {
     //holds the character vertex data
-    //need 18 floats for each coordinate as these hold 3D coordinates
-    int num_floats = 18;
+    int num_dimensions = 2;
+    int num_floats = num_dimensions*6;//GLTRIANGLES
+    GLfloat* sprite_data = nullptr;
     try {
 
         sprite_data = new GLfloat[sizeof(GLfloat)*num_floats];
@@ -132,45 +148,48 @@ void Character::generate_vertex_data() {
         return;
     }
 
-    float scale = TILESET_ELEMENT_SIZE * GLOBAL_SCALE;
-    float depth = 0.0f;
+    float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
+ 
     //bottom left 
     sprite_data[0] = 0;
     sprite_data[1] = 0;
-    sprite_data[2] = depth;
 
     //top left
-    sprite_data[3] = 0;
-    sprite_data[4] = scale;
-    sprite_data[5] = depth;
+    sprite_data[2] = 0;
+    sprite_data[3] = scale;
 
     //bottom right
-    sprite_data[6] = scale;
-    sprite_data[7] = 0;
-    sprite_data[8] = depth;
+    sprite_data[4] = scale;
+    sprite_data[5] = 0;
 
     //top left
-    sprite_data[9] = 0;
-    sprite_data[10] = scale;
-    sprite_data[11] = depth;
+    sprite_data[6] = 0;
+    sprite_data[7] = scale;
 
     //top right
-    sprite_data[12] = scale;
-    sprite_data[13] = scale;
-    sprite_data[14] = depth;
+    sprite_data[8] = scale;
+    sprite_data[9] = scale;
 
     //bottom right
-    sprite_data[15] = scale;
-    sprite_data[16] = 0;
-    sprite_data[17] = depth;
+    sprite_data[10] = scale;
+    sprite_data[11] = 0;
 
     renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(num_floats/3);//GL_TRIANGLES being used
+    renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }
-
+#include <iostream>
 void Character::load_textures() {
+    Image* texture_image = nullptr;
 
-    texture_image = new Image("../resources/characters_1.png");
+    try {
+        texture_image = new Image("../resources/characters_1.png");
+    }
+    catch(std::exception e) {
+        delete texture_image;
+        texture_image = nullptr;
+        LOG(ERROR) << "Failed to create texture";
+        return;
+    }
 
     //Set the texture data in the rederable component
     renderable_component.set_texture_image(texture_image);

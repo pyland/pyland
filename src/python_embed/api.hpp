@@ -156,6 +156,8 @@ class Entity {
         void py_print_dialogue(std::string text);
 
         void __set_game_speed(float game_seconds_per_real_second);
+
+        void py_update_status(std::string status);
 };
 
 

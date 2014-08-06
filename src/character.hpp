@@ -3,6 +3,9 @@
 
 #include "image.hpp"
 #include "object.hpp"
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -18,17 +21,9 @@
 /// Represents a character (sprite) in the engine
 ///
 class Character : public Object {
-    ///
-    /// The texture coordinate data for the character
-    ///
-    GLfloat* sprite_tex_data = nullptr;
 
-    ///
-    /// The vertex data for the character
-    ///
-    GLfloat* sprite_data = nullptr;
-
-    Image* texture_image = nullptr;
+    Text* character_text = nullptr;
+    Text* status_text = nullptr;
 
 protected:
 
@@ -42,7 +37,7 @@ protected:
 
 public:
 
-    Character(int _x_position, int _y_position);
+    Character(int _x_position, int _y_position, std::string _name);
     virtual ~Character();
 
     // TODO: Comment
@@ -69,6 +64,12 @@ public:
     /// Initialise the shaders that are being used by the character
     ///
     bool init_shaders();
+
+    Text* get_character_text() {return character_text; }
+    void set_character_text(Text* _character_text) {character_text = _character_text; }
+    Text* get_status_text() {return status_text; }
+    void set_status_text(Text* _status_text) {status_text = _status_text; }
+
 };
 
 #endif

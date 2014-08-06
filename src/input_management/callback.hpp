@@ -52,7 +52,7 @@ protected:
 public:
     ///
     /// Construct a callback using the specified function.
-    Callback(std::function<Ret(Args...)> func);
+    Callback(const std::function<Ret(Args...)>& func);
     ~Callback();
 
     ///

@@ -10,14 +10,6 @@
 #include <memory>
 #include <string>
 #include <Tmx.h>
-    
-#define IMAGE1_SIZE_WIDTH 128
-#define IMAGE1_NUM_COMPONENTS 4
-#define IMAGE1_SIZE_HEIGHT 240
-
-
-#define TILESET_ELEMENT_SIZE 16
-
 
 ///
 /// See: https://github.com/bjorn/tiled/wiki/TMX-Map-Format

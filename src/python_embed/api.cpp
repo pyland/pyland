@@ -146,3 +146,7 @@ void Entity::__set_game_speed(float game_seconds_per_real_second) {
         EventManager::get_instance().time.game_seconds_per_real_second = game_seconds_per_real_second;
     });
 }
+
+void Entity::py_update_status(std::string status){
+    Engine::update_status(id,status);
+}

@@ -19,10 +19,7 @@
 
 class MapViewer;
 
-///
-/// size of each tile in pixels
-///
-#define TILESET_ELEMENT_SIZE 16
+enum Status {RUNNING, STOPPED, FAILED};
 
 ///
 /// default python editor, used as long as another isn't passed as command line arg
@@ -43,8 +40,43 @@ private:
     /// pointer for text box
     ///
     static Text* dialogue_box;
+    
+    ///
+    /// The size of a tile
+    ///
+    static int tile_size;
 
+    ///
+    /// The global tile and object scaling factor, how much to multiply widths and heights
+    /// by
+    ///
+    static int global_scale;
 public:
+    ///
+    /// Get the global scale 
+    /// @return the global scale
+    ///
+    static int get_global_scale() { return global_scale; }
+    
+    ///
+    /// Set the global scaling factor
+    /// @param _global_scale the scaling factor
+    ///
+    static void set_global_scale(int _global_scale) { global_scale = _global_scale; }
+
+    ///
+    /// Set the tile size to be used by the engine
+    /// @param _tile_size the tile size
+    ///
+    static void set_tile_size(int _tile_size) { tile_size = _tile_size; }
+
+    ///
+    /// Get the tile size used by the engine  in pixels - we only support square ones
+    /// @return the tile size
+    ///
+    static int get_tile_size() { return tile_size; }
+
+    static int get_actual_tile_size() {return tile_size * global_scale; }
     ///
     /// Set the map viewer attached to the engine
     /// @param _map_viewer the map viewer which is attached to the engine
@@ -84,7 +116,7 @@ public:
     /// @param layer the layer of the tile to change
     /// @return indicates if the operation completed successfully
     ///
-    static bool change_tile(int new_id, Vec2D location, int layer);
+    static bool change_tile(Vec2D tile, int layer_num, int tile_id);
 
     ///
     /// Gets the ids of the tiles at this location. Layer 0 is the first
@@ -128,12 +160,6 @@ public:
     static bool open_editor(std::string filename);
 
     ///
-    /// Get the size of a tile in the current map
-    /// @return the size of the tile in pixels - we only support square ones
-    ///
-    static int get_tile_size();
-
-    ///
     /// Get a list of objects at this point
     ///
     ///
@@ -165,5 +191,8 @@ public:
 
     static void print_dialogue(std::string name, std::string text);
 
+    static void text_displayer();
+    static void text_updater();
+    static void update_status(int id, std::string status);
 };
 #endif

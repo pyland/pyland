@@ -15,8 +15,14 @@
 #include "object_manager.hpp"
 #include "dispatcher.hpp"
 
+///Static variables
+MapViewer* Engine::map_viewer = nullptr;
+Text* Engine::dialogue_box = nullptr;
+int Engine::tile_size= 16;
+int Engine::global_scale = 2;
 
-#define TILE_SIZE 32
+
+//TODO: THis needs to work with renderable objects 
 
 void Engine::move_object(int id, Vec2D move_by) {
     // TODO: Make sure std::promise garbage collects correctly
@@ -55,6 +61,10 @@ void Engine::move_object(int id,
         get_map_viewer()->get_map()->event_step_off.trigger(location, id);
     });
 
+    // move text with charcters
+    // Vec2D pixel_target = get_map_viewer()->get_map()->tile_to_pixel(target);
+    // character->get_character_text()->move(pixel_target.x, pixel_target.y);
+
     // Motion
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
@@ -91,10 +101,6 @@ void Engine::move_object(int id,
     );
 }
 
-MapViewer* Engine::map_viewer = nullptr;
-Text* Engine::dialogue_box = nullptr;
-
-
 bool Engine::walkable(Vec2D location) {
     int map_width = map_viewer->get_map()->get_width();
     int map_height = map_viewer->get_map()->get_height();
@@ -120,17 +126,14 @@ bool Engine::walkable(Vec2D location) {
     return true;
 }
 
-bool Engine::change_tile(int, Vec2D, int) {
-    return false;
+bool Engine::change_tile(Vec2D tile, int layer_num, int tile_id) {
+    map_viewer->get_map()->update_tile(tile.x, tile.y, layer_num, tile_id);
+    return true;
 }
 
 std::vector<int> Engine::get_tiles(Vec2D) {
     std::vector<int> tiles;
     return tiles;
-}
-
-int Engine::get_tile_size() {
-    throw std::runtime_error("get_tile_size not supported");
 }
 
 std::vector<int> Engine::get_objects(Vec2D) {
@@ -211,5 +214,61 @@ void Engine::print_dialogue(std::string name, std::string text) {
             std::cout << text_to_display << std::endl;
         }
     );
+}
+
+void Engine::text_displayer() {
+
+    Map* map = map_viewer->get_map();
+    if (!map) {
+        throw std::runtime_error("Map not avalaible");
+    }
+
+    auto objects = map->get_characters();
+    for(int object_id : objects) {
+        //Object is on the map so now get its locationg
+        auto character = ObjectManager::get_instance().get_object<Character>(object_id);
+        if (character->get_character_text() != nullptr) {
+            character->get_character_text()->display();
+        }
+        if (character->get_status_text() != nullptr) {
+            character->get_status_text()->display();
+        }
+    }
+}
+
+void Engine::text_updater() {
+
+     Map* map = map_viewer->get_map();
+    if (!map) {
+        throw std::runtime_error("Map not avalaible");
+    }
+
+    auto objects = map->get_characters();
+    for(int object_id : objects) {
+        //Object is on the map so now get its locationg
+        auto character = ObjectManager::get_instance().get_object<Character>(object_id);
+
+        std::pair<double,double> tile(character->get_x_position(), character->get_y_position());
+
+        Vec2D pixel_position = Engine::get_map_viewer()->get_map()->tile_to_pixel(tile);
+
+        VLOG(2) << "sprite location" << character->get_x_position() << " " << character->get_y_position();
+        VLOG(2) << "Pixel position: " << pixel_position.to_string();
+
+        character->get_character_text()->move(
+            pixel_position.x + (int)(0.5*Engine::get_actual_tile_size()), 
+            pixel_position.y
+        );
+        character->get_status_text()->move(
+            pixel_position.x + (int)(0.5*Engine::get_actual_tile_size()), 
+            pixel_position.y + (int)(1.5*Engine::get_actual_tile_size())
+        );
+    }
+
+}
+
+void Engine::update_status(int id, std::string status) {
+    auto character = ObjectManager::get_instance().get_object<Character>(id);
+    character->get_status_text()->set_text(status);
 }
 

@@ -1,30 +1,3 @@
-/*
-    Copyright (c) 2012, Broadcom Europe Ltd
-    All rights reserved.
-
-    Redistribution and use in source and binary forms, with or without
-    omodification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-    * Neither the name of the copyright holder nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-n
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 #include <boost/filesystem.hpp>
 #include <cassert>
 #include <cmath>
@@ -98,7 +71,6 @@ using namespace std;
 
 enum arrow_key {UP, DOWN, LEFT, RIGHT};
 
-#define GLOBAL_SCALE 1
 #define TEXT_BORDER_WIDTH 20
 #define TEXT_HEIGHT 80
 
@@ -114,8 +86,7 @@ int create_character(Interpreter &interpreter) {
     int start_y = 15;
 
     // Registering new character with game engine
-    shared_ptr<Character> new_character = make_shared<Character>(start_x, start_y);
-    new_character->set_name("John");
+    shared_ptr<Character> new_character = make_shared<Character>(start_x, start_y, "John");
     LOG(INFO) << "Adding character";
     ObjectManager::get_instance().add_object(new_character);
     Engine::get_map_viewer()->get_map()->add_character(new_character->get_id());
@@ -145,10 +116,10 @@ class CallbackState {
             name(name){
         }
 
-        void register_number(int key) {
+        void register_number_key(int key) {
             LOG(INFO) << "changing focus to " << key;
 
-            if (!(0 < key && size_t(key) < key_to_id.size())) {
+            if (!(0 <= key && size_t(key) < key_to_id.size())) {
                 LOG(INFO) << "changing focus aborted; no such id";
                 return;
             }
@@ -156,8 +127,18 @@ class CallbackState {
             Engine::get_map_viewer()->set_map_focus_object(key_to_id[key]);
         }
 
-        void spawn() {
-            key_to_id.push_back(create_character(interpreter));
+        void register_number_id(int id) {
+            LOG(INFO) << "changing focus to " << id;
+
+            //TODO: handle incorrect ID
+
+            Engine::get_map_viewer()->set_map_focus_object(id);
+        }
+
+        int spawn() {
+            int id = create_character(interpreter);
+            key_to_id.push_back(id);
+            return id;
         }
 
         void restart() {
@@ -230,7 +211,8 @@ int main(int argc, const char* argv[]) {
     google::InstallFailureSignalHandler();
 
     int map_width = 32, map_height = 32;
-    GameWindow window(map_width*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, map_height*TILESET_ELEMENT_SIZE*GLOBAL_SCALE, false);
+    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), 
+        map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
     window.use_context();
 
     Map map("../resources/map0.tmx");
@@ -300,11 +282,43 @@ int main(int argc, const char* argv[]) {
     Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
 
 
+
+
     MapViewer map_viewer(&window,&gui_manager);
     map_viewer.set_map(&map);
-
-
     Engine::set_map_viewer(&map_viewer);
+
+    //Setup the map resize callback
+    std::function<void(GameWindow*)> map_resize_func = [&] (GameWindow* game_window) { 
+        LOG(INFO) << "Map resizing"; 
+        std::pair<int, int> size = game_window->get_size();
+        //Adjust the view to show only tiles the user can see
+        int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
+        int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
+        //We make use of intege truncation to get these to numbers in terms of tiles
+        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
+        int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
+
+        //Set the viewable fragments
+        glScissor(0, 0, size.first, size.second);
+        glViewport(0, 0, size.first, size.second);
+
+        //do nothing if these are null
+        if(Engine::get_map_viewer() == nullptr || Engine::get_map_viewer()->get_map() == nullptr)
+            return;
+
+        //Set the display size
+        //Display one more tile so that we don't get an abrupt stop
+        Engine::get_map_viewer()->get_map()->set_display_width(num_tiles_x_display+1);
+        Engine::get_map_viewer()->get_map()->set_display_height(num_tiles_y_display+1);
+
+        //Readjust the map focus
+        Engine::get_map_viewer()->refocus_map();
+
+    };
+    Lifeline map_resize_lifeline = window.register_resize_handler(map_resize_func);
+
+
 
     InputManager* input_manager = window.get_input_manager();
 
@@ -346,7 +360,10 @@ int main(int argc, const char* argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.monologue(); }
     ));
 
-    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {(gui_manager.*mouse_callback_function) (event);}));
+    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(
+        filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {
+            (gui_manager.*mouse_callback_function) (event);})
+    );
 
 
     std::vector<Lifeline> digit_callbacks;
@@ -354,7 +371,7 @@ int main(int argc, const char* argv[]) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
                 {KEY_PRESS, KEY(std::to_string(i))},
-                [&, i] (KeyboardInputEvent) { callbackstate.register_number(i); }
+                [&, i] (KeyboardInputEvent) { callbackstate.register_number_key(i); }
             ))
         );
     }
@@ -366,12 +383,12 @@ int main(int argc, const char* argv[]) {
             LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
             auto objects = Engine::get_objects_at(tile_clicked);
             if (objects.size() == 1) {
-                callbackstate.register_number(objects[0]);
+                callbackstate.register_number_id(objects[0]);
             } else if (objects.size() == 0) {
                 LOG(INFO) << "Not objects to interact with";
             } else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number(objects[0]);
+                callbackstate.register_number_id(objects[0]);
             }
         }
     ));
@@ -396,14 +413,26 @@ int main(int argc, const char* argv[]) {
 
     Lifeline text_lifeline = window.register_resize_handler(func);
 
+    std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) { 
+        std::ignore = game_window;
+        LOG(INFO) << "text window resizing"; 
+        Engine::text_updater();
+    };
+
+    Lifeline text_lifeline_char = window.register_resize_handler(func_char);
+
     std::string editor;
 
     if (argc >= 2) {
         Engine::set_editor(argv[1]);
     };
 
+    int new_id = callbackstate.spawn();
+    std::string bash_command = 
+        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_") 
+        + std::to_string(new_id) + std::string(".py");
+    system(bash_command.c_str());
     LongWalkChallenge long_walk_challenge(input_manager);
-    callbackstate.spawn();
     long_walk_challenge.start();
 
     TextFont big_font(mytype, 50);
@@ -411,12 +440,17 @@ int main(int argc, const char* argv[]) {
     cursor.move(0, 0);
     cursor.resize(50, 50);
     cursor.set_text("<");
-    Lifeline cursor_lifeline = input_manager->register_mouse_handler(filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {cursor.move(event.to.x, event.to.y+25);}));
+    Lifeline cursor_lifeline = input_manager->register_mouse_handler(
+        filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
+            cursor.move(event.to.x, event.to.y+25);
+        })
+        );
         
     while (!window.check_close()) {
         em.process_events();
-        map_viewer.render_map();
+        map_viewer.render();
         mytext.display();
+        Engine::text_displayer();
         stoptext.display();
         runtext.display();
         cursor.display();
