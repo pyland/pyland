@@ -60,11 +60,18 @@ else
 	bold   = $(shell tput bold)
 	normal = $(shell tput sgr0)
 	red    = $(shell tput setaf 1)
+	green  = $(shell tput setaf 2)
 endif
+
+
+
+GCC_VERSION = $(shell $(COMPILER) -dumpversion)
+GCC_MAJOR   = $(shell echo $(GCC_VERSION) | cut -f1 -d.)
+GCC_MINOR   = $(shell echo $(GCC_VERSION) | cut -f2 -d.)
 
 COMPILER_SUPPORTS_DIAGNOSTICS_COLOR = $(shell expr "$(GCC_MAJOR)" \>= 4 \& "$(GCC_MINOR)" \>= 9)
 ifeq "$(COMPILER_SUPPORTS_DIAGNOSTICS_COLOR)" "1"
-    CXXFLAGS += -fdiagnostics-color=auto
+	CXXFLAGS += -fdiagnostics-color
 endif
 
 

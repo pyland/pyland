@@ -52,6 +52,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
     // Set up blocking walls
     for (auto wall_location : targets.at("wall:path:medium")) {
         wall_path_medium_blockers.push_back(map->block_tile(wall_location));
+        Engine::change_tile(wall_location, 5, 3);
     }
 
     for (auto wall_location : targets.at("wall:path:long")) {
@@ -113,6 +114,10 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                     std::string filename = "John_" + id + ".py";
                     Engine::open_editor(filename);
                     wall_path_medium_blockers.clear();
+
+                        for (auto wall_location : targets.at("wall:path:medium")) {
+                            Engine::change_tile(wall_location, 5, 120);
+                        }
                 }
             ));
 

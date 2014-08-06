@@ -71,7 +71,7 @@ bool Entity::move(int x, int y) {
     auto id = this->id;
     return GilSafeFuture<bool>::execute(
         [id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
-            Engine::move_object(id, Vec2D(x, y), walk_succeeded_return);
+            Engine::move_sprite(id, Vec2D(x, y), walk_succeeded_return);
         },
         false
     );
@@ -105,10 +105,9 @@ void Entity::monologue() {
 }
 
 
+// Not thread safe for efficiency reasons...
 void Entity::py_print_debug(std::string text) {
-    return GilSafeFuture<void>::execute([text] (GilSafeFuture<void>) {
-        LOG(INFO) << text;
-    });
+    LOG(INFO) << text;
 }
 
 void Entity::py_print_dialogue(std::string text) {
@@ -122,4 +121,8 @@ void Entity::__set_game_speed(float game_seconds_per_real_second) {
     return GilSafeFuture<void>::execute([game_seconds_per_real_second] (GilSafeFuture<void>) {
         EventManager::get_instance().time.game_seconds_per_real_second = game_seconds_per_real_second;
     });
+}
+
+void Entity::py_update_status(std::string status){
+    Engine::update_status(id,status);
 }

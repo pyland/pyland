@@ -15,28 +15,14 @@ Object::Object() {
     ObjectManager& object_manager = ObjectManager::get_instance();
     object_manager.get_next_id(this);
 
+    //TODO: Maybe add the object to the object manager here
+
     // Starting positions should be integral
     assert(trunc(x_position) == x_position);
     assert(trunc(y_position) == y_position);
 }
 Object::~Object() {
 
-}
-
-void Object::set_x_position(int x_pos) {
-    x_position = double(x_pos);
-}
-
-void Object::set_x_position(double x_pos) {
-    x_position = x_pos;
-}
-
-void Object::set_y_position(int y_pos) {
-    y_position = double(y_pos);
-}
-
-void Object::set_y_position(double y_pos) {
-    y_position = y_pos;
 }
 
 void Object::set_id(int new_id) {

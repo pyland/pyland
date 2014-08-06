@@ -1,5 +1,7 @@
 #include <exception>
 #include <iostream>
+#include <fstream>
+#include <string>
 
 extern "C" {
 #include <SDL.h>
@@ -26,6 +28,35 @@ extern "C" {
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
+
+
+
+std::string load_file(std::string filename) {
+    char* content;
+    std::ifstream file;
+    
+    file.open(filename);
+    
+    // If you even need [more than] 2GiB, you are doing something
+    // seriously wrong.
+    file.seekg(0, std::ios_base::end);
+    int file_size = (int)file.tellg();
+    file.seekg(0, std::ios_base::beg);
+    
+    content = new char[file_size+1];
+    file.read(content, file_size);
+    if (file.gcount() != file_size) {
+        LOG(ERROR) << "Unable to load shader file \"" << filename << "\".";
+        return "FAILED TO LOAD FILE";
+    }
+    
+    file.close();
+
+    // Add null terminator.
+    content[file_size] = '\0';
+    
+    return std::string(content);
+}
 
 
 
@@ -83,16 +114,17 @@ int main(int argc, char** argv) {
         input_manager->register_key_type_handler(type_callback);
         input_manager->register_key_press_handler(press_callback);
 
-        Typeface typeface("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
-        TextFont font(typeface, 16);
+        Typeface typeface("font.ttf");
+        TextFont font(typeface, 12);
         Text text(&window, font, true);
-        text.move(100, 400);
-        text.set_text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nThis_line_is_supposedly_very_long_and_should_not_render_properly! A B C");
+        text.move(100, 1000);
+        // text.set_text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nThis_line_is_supposedly_very_long_and_should_not_render_properly! A B C");
+        text.set_text(load_file("UTF-8-test.txt"));
         // for (int i = 0; i < 1000; i++) {
         //     text.resize(500, 400 + (i % 2));
         //     text.display();
         // }
-        text.resize(532, 400);
+        text.resize(800, 1000);
         text.display();
         
         TextFont big_font(typeface, 50);

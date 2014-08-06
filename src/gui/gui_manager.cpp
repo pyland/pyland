@@ -22,13 +22,10 @@
 #include <GL/gl.h>
 #endif
 
-#define TILESET_ELEMENT_SIZE 16
-#define IMAGE2_SIZE_WIDTH 192
-#define IMAGE2_SIZE_HEIGHT 128
-#define GLOBAL_SCALE 2
-#define IMAGE2_NUM_COMPONENTS 4
-
 void GUIManager::parse_components() {
+    //Generate  the needed offsets
+    regenerate_offsets(root);
+
     //Now generate the needed rendering data
     generate_tex_data();
     generate_vertex_data();
@@ -36,6 +33,32 @@ void GUIManager::parse_components() {
     init_shaders();
 }
 
+void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
+    if(!parent) 
+        return;
+
+    try{
+        //Go through all the children of this component
+        for(auto component_pair : parent->get_components()) {
+            std::shared_ptr<Component> component = component_pair.second;
+            
+            //Recalculate the dimensions
+            int width_pixels = parent->get_width_pixels();
+            int height_pixels = parent->get_height_pixels();
+
+            //calculate the pixel locations for this component, using the parent's dimensions
+            component->set_width_pixels((int)((float)width_pixels*component->get_width()));
+            component->set_height_pixels((int)((float)height_pixels*component->get_height()));
+            component->set_x_offset_pixels((int)((float)width_pixels*component->get_x_offset()));
+            component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));              
+    
+            regenerate_offsets(component);
+        }
+    }
+    catch(component_no_children_exception& e) {
+        //DONE
+    }
+}
 void GUIManager::update_components() {
     
 }
@@ -51,10 +74,10 @@ void GUIManager::mouse_callback_function(MouseInputEvent event) {
     int curr_y_offset = 0;
 
     //Traverse the component tree
-    recurse_components(root, mouse_x, mouse_y, curr_x_offset, curr_y_offset);
+    handle_mouse_click(root, mouse_x, mouse_y, curr_x_offset, curr_y_offset);
 }
 
-bool GUIManager::recurse_components(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset) {
+bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset) {
     try{
         //Go through all the children of this component
         for(auto component_pair : root->get_components()) {
@@ -89,7 +112,7 @@ bool GUIManager::recurse_components(std::shared_ptr<Component> root, int mouse_x
                 }
 
                 //It's not clickable, traverse the children
-                if(recurse_components(component, mouse_x, mouse_y, x_offset, y_offset))  {
+                if(handle_mouse_click(component, mouse_x, mouse_y, x_offset, y_offset))  {
                     //Click has been handled
                     return true;
                 }
@@ -106,22 +129,16 @@ bool GUIManager::recurse_components(std::shared_ptr<Component> root, int mouse_x
     return false;
 }
 
-GUIManager::GUIManager() : gui_tex_data(nullptr), gui_data(nullptr){
+GUIManager::GUIManager() {
 
 }
 
 GUIManager::~GUIManager() {
-    delete []gui_tex_data;
-    delete []gui_data;
-
 }
 
 
 void GUIManager::generate_tex_data() {
     
-    //delete it if its already allocated
-    delete []gui_tex_data; 
-
     //generate the texture data data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
 
@@ -131,12 +148,13 @@ void GUIManager::generate_tex_data() {
         num_floats += component_texture_data.second;
     }
 
+    GLfloat* gui_tex_data = nullptr;
     //Create a buffer for the data
     try {
         gui_tex_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
     }
     catch(std::bad_alloc& ba) {
-        std::cerr << "ERROR: bad_alloc caught in GUIManager::generate_tex_data()" << ba.what() << std::endl;
+        LOG(ERROR) << "ERROR: bad_alloc caught in GUIManager::generate_tex_data()" << ba.what();
         return;
     }
 
@@ -159,28 +177,25 @@ void GUIManager::generate_tex_data() {
 } 
 
 void GUIManager::generate_vertex_data() {
-    
-    //Delete the data if its already allocated
-    delete []gui_data;
-
     //generate the vertex data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_vertex_data();
 
     //calculate data size
+    int num_dimensions = 2;
     long num_floats = 0;
     for(auto component_vertex_data : components_data) {
         num_floats += component_vertex_data.second;
     }
 
     //Create a buffer for the data
+    GLfloat* gui_data = nullptr;
     try {
         gui_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
     }
     catch(std::bad_alloc& ba) {
-        std::cerr << "ERROR: bad_alloc caught in GUIManager::generate_vertex_data()" << ba.what() << std::endl;
+        LOG(ERROR) << "bad_alloc caught in GUIManager::generate_vertex_data()" << ba.what();
         return;
     }
-
 
     int gui_data_offset = 0;
     //Extract the data
@@ -195,31 +210,31 @@ void GUIManager::generate_vertex_data() {
     }
 
     renderable_component.set_vertex_data(gui_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(GLsizei(num_floats/3));//GL_TRIANGLES being used
+    renderable_component.set_num_vertices_render(GLsizei(num_floats/num_dimensions));//GL_TRIANGLES being used
 }
 
 void GUIManager::load_textures() {
+    Image* texture_image = nullptr;
 
-    texture_image = new Image("../resources/characters_1.png");
+    try {
+        texture_image = new Image("../resources/characters_1.png");
+    }
+    catch(std::exception e) {
+        delete texture_image;
+        texture_image = nullptr;
+        LOG(ERROR) << "Failed to create texture";
+        return;
+    }
 
     //Set the texture data in the rederable component
     renderable_component.set_texture_image(texture_image);
 }
 bool GUIManager::init_shaders() {
-
-    Shader* shader = nullptr;
+    std::shared_ptr<Shader> shader;
     try {
-#ifdef USE_GLES
-        shader = new Shader("vert_shader.glesv", "frag_gui_shader.glesf");
-#endif
-#ifdef USE_GL
-        shader = new Shader("vert_shader.glv", "frag_gui_shader.glf");
-#endif
+        shader = Shader::get_shared_shader("gui_shader");
     }
     catch (std::exception e) {
-
-        delete shader;
-        shader = nullptr;
         LOG(ERROR) << "Failed to create the shader";
         return false;
     }
