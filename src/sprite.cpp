@@ -25,6 +25,8 @@
 #endif
 Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
     LOG(INFO) << "register new sprite called " << _name;
+
+    // set name & positon 
     x_position = _x_position;
     y_position = _y_position;
     name = _name;
@@ -34,7 +36,7 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
     generate_tex_data();
     generate_vertex_data();
 
-    // setting up sprite text
+    // setting up sprite name text
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
     TextFont myfont(mytype, 18);
     object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
@@ -49,7 +51,6 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
 
     // setting up status text
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-
     status_text->set_text("");
     Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
     status_text->move(pixel_text.x ,pixel_text.y);
@@ -61,7 +62,7 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
     assert(trunc(x_position) == x_position);
     assert(trunc(y_position) == y_position);
 
-    //Make a sprite blocked
+    // Make a sprite blocked
     blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
         Vec2D(int(x_position), int(y_position))
     )));
@@ -72,17 +73,21 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
 }
 
 Sprite::~Sprite() {
+    delete object_text;
+    delete status_text;
     LOG(INFO) << "Sprite destructed";
 }
 
 
 void Sprite::set_state_on_moving_start(Vec2D target) {
     moving = true;
+    // adding blocker to new tile
     blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
 }
 
 void Sprite::set_state_on_moving_finish() {
     moving = false;
+    // removing old blocker and changing key for new one
     blocked_tiles.erase("stood on");
     blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
     blocked_tiles.erase("walking to");

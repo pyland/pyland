@@ -14,15 +14,6 @@
 class MapObject : public Object{
 
 protected:
-    ///
-    /// The text to display above the object
-    ///
-    Text* object_text = nullptr;
-
-    ///
-    /// The status text for the object
-    ///
-    Text* status_text = nullptr;
 
     ///
     /// Walkable: determine if the object can be walked over
@@ -120,30 +111,6 @@ public:
     /// Initialise the shaders that are being used by the object
     ///
     bool init_shaders();
-
-    ///
-    /// Get the object's text to display
-    /// @return the object's text
-    ///
-    Text* get_object_text() {return object_text; }
-
-    ///
-    /// Set the object's text to be displayed 
-    /// @param _object_text the object's text
-    ///
-    void set_object_text(Text* _object_text) {object_text = _object_text; }
-
-    ///
-    /// Get the object's status text
-    /// @return the object's status text
-    ///
-    Text* get_status_text() {return status_text; }
-    
-    ///
-    /// Set the object's status text
-    /// @param _status_text the object's status text
-    ///
-    void set_status_text(Text* _status_text) {status_text = _status_text; }
 
     ///
     /// Set the object's moving status
