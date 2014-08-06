@@ -18,6 +18,11 @@ Callback<Ret, Args...>::Callback(const std::function<Ret(Args...)>& func):
 }
     
 template <typename Ret, typename... Args>
+Callback<Ret, Args...>::Callback(const Ret (&func)(Args...)):
+    Callback(std::function<Ret(Args...)>(func)) {
+}
+    
+template <typename Ret, typename... Args>
 Callback<Ret, Args...>::~Callback() {
     // Deleting registry entries is not our job! It is handled by
     // shared_ptr.
