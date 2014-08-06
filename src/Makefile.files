@@ -15,6 +15,7 @@ BASE_OBJS = \
 	layer.o          \
 	lifeline.o       \
 	lifeline_controller.o \
+	notification.o   \
 	main.o           \
 	map.o            \
 	map_loader.o     \

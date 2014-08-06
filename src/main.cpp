@@ -260,8 +260,51 @@ int main(int argc, const char* argv[]) {
     stop_button->set_y_offset(0.8f);
     stop_button->set_x_offset(0.8f);
 
+    // TODO: move notification button to be better home
+
+    Typeface notification_buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont notification_buttonfont(buttontype, 30); 
+
+    float button_size = 0.05f;
+    std::pair<float,float> backward_loco(0.85f,0.05f);
+    std::pair<float,float> forward_loco(0.95f,0.05f);
+
+    std::shared_ptr<Button> backward_button = std::make_shared<Button>();
+    backward_button->set_text("backward");
+    backward_button->set_on_click([&] () {
+        LOG(INFO) << "backward button pressed";  
+        Engine::move_notification(Previous); 
+    });
+    backward_button->set_width(button_size);
+    backward_button->set_height(button_size);
+    backward_button->set_y_offset(backward_loco.second);
+    backward_button->set_x_offset(backward_loco.first);    
+    Text backward_text(&window, notification_buttonfont, true);
+    backward_text.set_text("<-");
+    backward_text.move_ratio(backward_loco.first, backward_loco.second);  
+    backward_text.resize_ratio(button_size,button_size);
+
+
+    std::shared_ptr<Button> forward_button = std::make_shared<Button>();
+    forward_button->set_text("forward");
+    forward_button->set_on_click([&] () {
+        LOG(INFO) << "forward button pressed"; 
+        Engine::move_notification(Next); 
+    });
+    forward_button->set_width(button_size);
+    forward_button->set_height(button_size);
+    forward_button->set_y_offset(forward_loco.second);
+    forward_button->set_x_offset(forward_loco.first);  
+    Text forward_text(&window, notification_buttonfont, true);
+    forward_text.set_text("->");
+    forward_text.move_ratio(forward_loco.first,forward_loco.second);
+    forward_text.resize_ratio(button_size,button_size);
+
+
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
+    sprite_window->add(backward_button);
+    sprite_window->add(forward_button);
 
     gui_manager.set_root(sprite_window);
 
@@ -453,6 +496,8 @@ int main(int argc, const char* argv[]) {
         Engine::text_displayer();
         stoptext.display();
         runtext.display();
+        forward_text.display();
+        backward_text.display();
         cursor.display();
         window.swap_buffers();
         GameWindow::update();

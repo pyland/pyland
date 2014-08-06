@@ -20,6 +20,7 @@ MapViewer* Engine::map_viewer = nullptr;
 Text* Engine::dialogue_box = nullptr;
 int Engine::tile_size= 16;
 int Engine::global_scale = 2;
+Notification Engine::notifcation_stack = Notification();
 
 
 //TODO: THis needs to work with renderable objects 
@@ -208,12 +209,24 @@ std::string Engine::editor = DEFAULT_PY_EDITOR;
 
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
+    notifcation_stack.add_new(text_to_display);
     EventManager::get_instance().add_event(
         [text_to_display] () {
             Engine::get_dialogue_box()->set_text(text_to_display);
             std::cout << text_to_display << std::endl;
         }
     );
+}
+
+void Engine::move_notification(Direction direction) {
+    switch (direction) {
+        case (Next):
+            Engine::get_dialogue_box()->set_text(notifcation_stack.forward());
+            break;
+        case (Previous):
+            Engine::get_dialogue_box()->set_text(notifcation_stack.backward());
+            break;
+    }
 }
 
 void Engine::text_displayer() {
