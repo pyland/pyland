@@ -13,6 +13,17 @@
 #include <GL/gl.h>
 #endif
 
+Button::Button() {
+
+}
+
+Button::Button(std::string _text, std::function<void (void)> on_click, 
+               float _width, float _height, float _x_offset, float _y_offset) :
+    Component(_text, on_click, _width, _height, _x_offset, _y_offset) {
+
+
+}
+
 std::vector<std::shared_ptr<GUIText>> generate_font_data() {
     std::shared_ptr<GUIText> text = std::make_shared<GUIText>();
 }

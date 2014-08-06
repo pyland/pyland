@@ -28,6 +28,10 @@ class GUIManager : public Object {
     ///
     std::shared_ptr<Component> root;
 
+    ///
+    /// The text objects for all the component
+    ///
+    std::vector<std::shared_ptr<GUIText>> components_text;
 
     ///
     /// Generate the texture data for this component and its sub components
@@ -102,7 +106,10 @@ public:
     ///
     std::shared_ptr<Component> get_root() { return root; }
 
-
+    ///
+    /// Render the text
+    ///
+    void render_text();
 };
 
 #endif

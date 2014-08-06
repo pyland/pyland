@@ -3,6 +3,7 @@
 
 #include "component.hpp"
 
+#include <functional>
 #include <memory>
 #include <string>
 #include <utility>
@@ -22,7 +23,8 @@
 class Button : public Component {
     std::string text;
 public:
-    
+    Button();
+    Button(std::string _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
     ///
     /// Set the text for the button
     /// @param _text the button text

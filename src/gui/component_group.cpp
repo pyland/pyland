@@ -114,6 +114,43 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
 
     return group_data;
 }
+
+std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
+    std::vector<std::shared_ptr<GUIText>> group_data;
+    
+   //Call the implementation of this class  to generate it's data
+   generate_this_text_data();
+
+    //Add this components data
+   group_data.push_back(std::make_shared(component_text));
+
+   //Go through all the components in this group
+    for(auto component_pair : components) {
+        std::vector<std::shared_ptr<GUIText>> component_data = component_pair.second->generate_text_data();
+        
+        //get all the text data in the component - deals with ComponentGroup children
+        for(auto text_data : component_data) {
+            //comvert this into this component's local spacd
+
+            //Calcuate how far to translate this component
+            int pixel_offset_x = 0; 
+            float component_x_offset = text_data->get_transformed_x_offset();
+            int pixel_offset_y = 0 ;
+            float component_y_offset = text_data->get_transformed_y_offset();
+
+            pixel_offset_x =(int)((float)width_pixels * component_x_offset);
+            pixel_offset_y = (int)((float)height_pixels * component_y_offset);
+
+            //Translate it
+            text_data->set_transformed_x_offset(component_x_offset + pixel_offset_x);
+            text_data->set_transformed_y_offset(component_y_offset + pixel_offset_y);
+
+            //add to this group
+            group_data.push_back(component_data_pair);
+    }
+    return group_data;
+}
+
 void ComponentGroup::add(std::shared_ptr<Component> component) {
     components[component->get_id()] = component;
     component->set_parent(this);

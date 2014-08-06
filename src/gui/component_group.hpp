@@ -68,7 +68,6 @@ public:
     /// to generate the vertex data for this actual component. We need to also
     /// enumerate all the components in this group and so this behaviour is common to
     /// all subclasses.
-    /// @param component the component to generate the data for 
     /// The pair holds the pointer and then the size of the data in bytes
     ///
     virtual std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data() = 0;
@@ -76,9 +75,15 @@ public:
     ///
     /// This function is called by generate texture data (See Call Super on wikipedia)
     /// to generate the texture data for this actual component
-    /// @param component the component to generate the data for 
     /// The pair holds the pointer and then the size of the data in bytes
     ///
     virtual std::vector<std::pair<GLfloat*, int>> generate_this_texture_data() = 0;
+
+    ///
+    /// This function is called by generate text data (See Call Super on wikipedia)
+    /// to generate the text data for this actual component
+    ///
+    virtual std::vector<std::pair<GLfloat*, int>> generate_this_texture_data() = 0;
+
 };
 #endif

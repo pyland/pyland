@@ -49,19 +49,14 @@ protected:
     int size_vertex_data;
 
     ///
-    /// The size of the texture data in bytes
-    ///
-    int size_texture_data;
-
-    ///
     /// The Opengl texture data for this component
     ///
     GLfloat* texture_data;
 
     ///
-    /// A pointer to the parent
+    /// The size of the texture data in bytes
     ///
-    //    std::weak_pr<Component> parent;
+    int size_texture_data;
 
     ///
     /// The GUID of the component
@@ -126,7 +121,10 @@ protected:
 
 public:
     Component();
-    ~Component();
+    Component(std::function<void (void)> on_click, float _width, float _height, float _xo_offset, float _y_offset);
+ 
+    ~Component(); 
+   
     ///
     /// Generates the vertex data for this particular component. This
     /// data is in the local 'object' space and will need to be
@@ -142,11 +140,10 @@ public:
     virtual std::vector<std::pair<GLfloat*, int>> generate_texture_data() = 0;
 
     ///
-    /// Generates the font data for this component
+    /// Generates the text data for this component
     /// 
     /// 
-    //TODO: finish fonts
-    //    virtual std::vector<std::shared_ptr<GUIText>> generate_font_data() = 0;
+    virtual std::vector<std::shared_ptr<GUIText>> generate_text_data();
 
     ///
     /// Get the map listing all the components of the group.

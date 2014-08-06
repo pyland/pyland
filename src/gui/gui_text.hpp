@@ -1,6 +1,7 @@
 #ifndef GUI_TEXT_H
 #define GUI_TEXT_H
 
+#include "component.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
@@ -10,18 +11,16 @@
 ///
 /// Structure to hold the GUI text data that the GUI manager needs to render a component's text
 ///
-class GUIText {
+class GUIText : public Component {
     ///
-    /// The x position of the font in pixels. Initially in object space
-    /// but is transformed into global space through the transforms
+    /// The transformed x pixel offset in to global space
     ///
-    int x_pos;
+    int transformed_x_pixel_offset;
 
     ///
-    /// The y position of the font in pixels. Initially in object space
-    /// but is transformed into global space through the transforms
+    /// The transformed y pixels offset in to global space
     ///
-    int y_pos;
+    int transformed_y_pixel_offset;
 
     ///
     /// The typeface to use for the font
@@ -39,29 +38,20 @@ class GUIText {
     std::shared_ptr<Text> text;
 
 public:
-    ///
-    /// Set the x position of the text
-    /// @param x the xposition
-    ///
-    void set_x_pos(int x) { x_pos = x; }
+    GUIText();
+    ~GUIText();
 
     ///
-    /// Get the x position of the text
-    /// @return the x position
-    ///
-    int get_x_pos() { return x_pos; }
-
-    ///
-    /// Set the y position of the text
-    /// @param y the xposition
-    ///
-    void set_y_pos(int y) { y_pos = y; }
-
-    ///
-    /// Get the y position of the text
+    /// Get the transformed x pixel  position of the text
     /// @return the y position
     ///
-    int get_y_pos() { return y_pos; }
+    int get_transformed_x_offset() { return transformed_x_pixel_offset; }
+
+    ///
+    /// Get the transformed pixel y position of the text
+    /// @return the y position
+    ///
+    int get_transformed_y_offset() { return transformed_y_pixel_offset; }
     
     ///
     /// Get the typeface for the text
@@ -98,6 +88,16 @@ public:
     /// @_text the new text
     ///
     void set_text(std::shared_ptr<Text> _text) { text = _text; }
+
+    ///
+    /// Display the text at the pixel x and y positions
+    ///
+    void display();
+
+    //Overloads from Component
+    std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
+    std::vector<std::pair<GLfloat*, int>> generate_texture_data();
+    std::vector<std::shared_ptr<GUIText>> generate_text_data();
 };
 
 #endif

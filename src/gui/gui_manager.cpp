@@ -64,22 +64,7 @@ void GUIManager::update_components() {
 }
 
 void GUIManager::mouse_callback_function(MouseInputEvent event) {
-
-    //Just get the end state for the moment
-    /*
-      std::cout << "X " << event.to.x << " Y " << event.to.y << std::endl;
-      if(event.button & MouseState::Button::LEFT) {
-      std::cout << "LEFT" << std::endl;
-      }
-      if(event.button & MouseState::Button::RIGHT) {
-      std::cout << "RIGHT" << std::endl;
-      }
-      if(event.button & MouseState::Button::MIDDLE) {
-      std::cout << "MIDDLE" << std::endl;
-      }
-     
-    */
-    //Work out which component was clicked
+    //Get the data
     int mouse_x = event.to.x;
     int mouse_y = event.to.y;
 
@@ -147,6 +132,7 @@ GUIManager::GUIManager() {
 }
 
 GUIManager::~GUIManager() {
+
 }
 
 
@@ -226,6 +212,16 @@ void GUIManager::generate_vertex_data() {
     renderable_component.set_num_vertices_render(GLsizei(num_floats/num_dimensions));//GL_TRIANGLES being used
 }
 
+void GUIManager::generate_text_data() {
+    components_text = root->generate_text_data();
+}
+
+void GUIManager::render_texts() {
+    for(auto text_data : components_text) {
+        text_data->display();
+    }
+}
+
 void GUIManager::load_textures() {
     Image* texture_image = nullptr;
 
@@ -242,6 +238,7 @@ void GUIManager::load_textures() {
     //Set the texture data in the rederable component
     renderable_component.set_texture_image(texture_image);
 }
+
 bool GUIManager::init_shaders() {
     std::shared_ptr<Shader> shader;
     try {
