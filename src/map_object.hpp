@@ -20,6 +20,15 @@ protected:
     ///
     Walkability walkability = Walkability::WALKABLE;
 
+    ///
+    /// The name of the tilesheet to use for the map object
+    ///
+    std::string tile_sheet;
+
+    ///
+    /// The id of the tile in the sheet
+    ///
+    int tile_sheet_id;
 
     ///
     /// The x position of the object
@@ -45,8 +54,32 @@ protected:
 
 public:
     MapObject();
-    MapObject(int _x_position, int _y_position, std::string _name);
+    MapObject(int _x_position, int _y_position, std::string _name, int _tile_sheet_id, std::string _tile_sheet="../resources/basictiles_2.png");
     virtual ~MapObject();
+
+    ///
+    /// Set the tile sheet to use for this character
+    /// @param _tile_sheet the tile sheet
+    ///
+    void set_tile_sheet(std::string _tile_sheet);
+
+    ///
+    /// Get the tile sheet
+    /// @return the tile sheet
+    ///
+    std::string get_tile_sheet() { return tile_sheet; }
+
+    ///
+    /// Set the id of the tile in the tile sheet
+    /// @param _tile_sheet_id the id of the tile in the tile sheet
+    ///
+    void set_tile_sheet_id(int _tile_sheet_id);
+
+    ///
+    /// Get the id of the tile in the tile sheet
+    /// @return the tile sheet id
+    ///
+    int get_tile_sheet_id() { return tile_sheet_id; }
 
     ///
     /// Set the object's x position in tiles

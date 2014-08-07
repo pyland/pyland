@@ -23,6 +23,17 @@
 class Sprite : public MapObject {
 
 protected:
+
+    ///
+    /// The name of the spritesheet to use for the map object
+    ///
+    std::string sprite_sheet;
+
+    ///
+    /// The id of the sprite in the sheet
+    ///
+    int sprite_sheet_id;
+
     ///
     /// The text to display above the object
     ///
@@ -43,9 +54,33 @@ protected:
 
 
 public:
-
-    Sprite(int _x_position, int _y_position, std::string _name);
+    Sprite();
+    Sprite(int _x_position, int _y_position, std::string _name, int _sprite_sheet_id, std::string _sprite_sheet="../resources/characters_1.png");
     virtual ~Sprite();
+
+    ///
+    /// Set the sprite sheet to use for this character
+    /// @param _sprite_sheet the sprite sheet
+    ///
+    void set_sprite_sheet(std::string _sprite_sheet);
+
+    ///
+    /// Get the sprite sheet
+    /// @return the sprite sheet
+    ///
+    std::string get_sprite_sheet() { return sprite_sheet; }
+
+    ///
+    /// Set the id of the sprite in the sprite sheet
+    /// @param _sprite_sheet_id the id of the sprite in the sprite sheet
+    ///
+    void set_sprite_sheet_id(int _sprite_sheet_id);
+
+    ///
+    /// Get the id of the sprite in the sprite sheet
+    /// @return the sprite sheet id
+    ///
+    int get_sprite_sheet_id() { return sprite_sheet_id; }
 
     ///
     /// manage collisions for spirtes as they move

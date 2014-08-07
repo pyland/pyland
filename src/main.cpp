@@ -85,9 +85,9 @@ int create_sprite(Interpreter &interpreter) {
 
     int start_x = 4;
     int start_y = 15;
-
+    
     // Registering new sprite with game engine
-    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start_x, start_y, "John");
+    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start_x, start_y, "John", 4);
     LOG(INFO) << "Adding sprite";
     ObjectManager::get_instance().add_object(new_sprite);
     Engine::get_map_viewer()->get_map()->add_sprite(new_sprite->get_id());
