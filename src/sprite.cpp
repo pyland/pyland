@@ -291,6 +291,7 @@ bool Sprite::init_shaders() {
 }
 
 void Sprite::add_to_inventory(std::shared_ptr<MapObject> new_object) {
+    LOG(INFO) << "adding item to sprites inventory";
     new_object->set_x_position(x_position);
     new_object->set_y_position(y_position);
     inventory.push_back(new_object);
@@ -324,4 +325,13 @@ void Sprite::set_x_position(double x_pos) {
     //     item->set_y_position(y_position);
     // }
     x_position = x_pos; 
+}
+
+void Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
+    // there must be a better way to do this
+    auto it = std::find(std::begin(inventory), std::end(inventory), old_object);
+    if (it != std::end(inventory)) {
+        inventory.erase(it);
+        LOG(INFO) << "removing item to sprites inventory";
+    }
 }

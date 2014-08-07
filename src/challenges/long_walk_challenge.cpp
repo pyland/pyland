@@ -68,7 +68,15 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                 int id = Engine::get_sprites_at(Vec2D(10,14)).front();
                 ObjectManager::get_instance().get_object<Sprite>(id)->add_to_inventory(test_chest);
                 return false;
-                });
+    });
+
+    map->event_step_on.register_callback(
+            Vec2D(15, 14),
+            [test_chest] (int) {
+                int id = Engine::get_sprites_at(Vec2D(15,14)).front();
+                ObjectManager::get_instance().get_object<Sprite>(id)->remove_from_inventory(test_chest);
+                return true;
+    ./std::map<key, value> map;});
 
 
     // Set up blocking walls
