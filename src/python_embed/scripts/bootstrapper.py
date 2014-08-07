@@ -71,8 +71,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
     """
 
     entity.print_debug("Started bootstrapper")
-    print("Started with entity", entity)
-    print("whose name is", entity.name)
+    entity.print_debug("Started with entity {}".format(entity))
+    entity.print_debug("whose name is {}".format(entity.name))
 
     while True:
         try:
@@ -93,7 +93,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             execution_scope = create_execution_scope(entity)
 
-            entity.__set_game_speed(100);
+            entity.__set_game_speed(1000000000000);
             try:
                 entity.update_status("running")
                 exec(script, execution_scope)
@@ -115,7 +115,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
         except KILL:
             entity.print_debug("DYING")
-            entity.update_status("stopped")
+            entity.update_status("dead")
             raise
 
         # For all other errors, output and stop

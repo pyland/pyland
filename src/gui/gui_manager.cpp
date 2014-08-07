@@ -67,6 +67,7 @@ void GUIManager::update_components() {
 }
 
 void GUIManager::mouse_callback_function(MouseInputEvent event) {
+
     //Get the data
     int mouse_x = event.to.x;
     int mouse_y = event.to.y;

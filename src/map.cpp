@@ -93,44 +93,6 @@ Map::~Map() {
 bool Map::is_walkable(int x_pos, int y_pos) {
     //Default is walkable
     bool walkable = true;
-    //return true;
-    //Iterate through all sprites
-    for(auto sprite : sprite_ids) {
-        //If its an invalid object
-        if (sprite == 0)
-            continue;
-
-        std::shared_ptr<Sprite> object = ObjectManager::get_instance().get_object<Sprite>(sprite);
-
-        //If we cannot walk on this object
-        if(object) {
-            if(object->get_walkability() == Walkability::BLOCKED) {
-                walkable = false;
-
-                //We can stop checking further objects and tiles
-                return walkable;
-            }
-        }
-    }
-
-    //Iterate through all map objects
-    for(auto map_object : map_object_ids) {
-        //If its an invalid object
-        if (map_object == 0)
-            continue;
-
-        std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(map_object);
-
-        //If we cannot walk on this object
-        if(object) {
-            if(object->get_walkability() == Walkability::BLOCKED) {
-                walkable = false;
-
-                //We can stop checking further objects and tiles
-                return walkable;
-            }
-        }
-    }
 
     //Iterate through all tiles
     for(auto layer : layers ) {
@@ -148,6 +110,27 @@ bool Map::is_walkable(int x_pos, int y_pos) {
     }
 
     return walkable;
+}
+
+
+void Map::add_map_object(int map_object_id) {
+    if(ObjectManager::is_valid_object_id(map_object_id))
+        map_object_ids.push_back(map_object_id);
+}
+
+void Map::remove_map_object(int map_object_id) {
+    if(ObjectManager::is_valid_object_id(map_object_id)){
+        for(auto it = map_object_ids.begin(); it != map_object_ids.end(); ++it) {
+            //If a valid object
+            if(*it != 0) {
+                //remove it if its the map_object
+                if(*it == map_object_id) {
+                    map_object_ids.erase(it);
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void Map::add_sprite(int sprite_id) {
@@ -505,7 +488,7 @@ Map::Blocker::Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker):
     tile(tile), blocker(blocker) {
         (*blocker)[tile.x][tile.y]++;
 
-        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+        VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
           << " increased from " << (*blocker)[tile.x][tile.y] - 1
           << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
@@ -514,17 +497,17 @@ Map::Blocker::Blocker(const Map::Blocker &other):
     tile(other.tile), blocker(other.blocker) {
         (*blocker)[tile.x][tile.y]++;
 
-        LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+        VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
           << " increased from " << (*blocker)[tile.x][tile.y] - 1
           << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
 Map::Blocker::~Blocker() {
-    LOG(INFO) << "Unblocking tile at " << tile.x << ", " << tile.y << ".";
+    VLOG(2) << "Unblocking tile at " << tile.x << ", " << tile.y << ".";
 
     blocker->at(tile.x).at(tile.y) = blocker->at(tile.x).at(tile.y) - 1;
 
-    LOG(INFO) << "Block level at tile " << tile.x << " " <<tile.y
+    VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
       << " decreased from " << (*blocker)[tile.x][tile.y] + 1
       << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
@@ -563,7 +546,7 @@ void Map::recalculate_layer_mappings(int x_pos, int y_pos, int layer_num) {
         //if the next element is the same, then we need to increment
         //further offsets.
 
-        //Shift all of the offsets down as we're putting a tile into 
+        //Shift all of the offsets down as we're putting a tile into
         //this position
         for(int i = index +1; i < size; i++)
             (*layer)[i]++;

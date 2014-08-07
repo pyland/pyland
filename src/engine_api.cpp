@@ -9,6 +9,7 @@
 #include "engine_api.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
+#include "gil_safe_future.hpp"
 #include "map_viewer.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
@@ -20,39 +21,31 @@ MapViewer* Engine::map_viewer = nullptr;
 Text* Engine::dialogue_box = nullptr;
 int Engine::tile_size= 16;
 int Engine::global_scale = 2;
+Notification Engine::notifcation_stack = Notification();
 
 
-//TODO: THis needs to work with renderable objects 
+//TODO: THis needs to work with renderable objects
 
 void Engine::move_sprite(int id, Vec2D move_by) {
     // TODO: Make sure std::promise garbage collects correctly
-    Engine::move_sprite(id, move_by, std::make_shared<std::promise<bool>>());
+    Engine::move_sprite(id, move_by, GilSafeFuture<bool>());
 }
 
 //TODO: This needs to work with renderable objects
-void Engine::move_sprite(int id,
-                         Vec2D move_by,
-                         std::shared_ptr<std::promise<bool>> succeeded_promise_ptr) {
+void Engine::move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeeded_return) {
 
-    std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
 
-    if (!sprite || sprite->is_moving()) {
-        succeeded_promise_ptr->set_value(false);
-        return;
-    }
+    if (!sprite || sprite->is_moving()) { return; }
 
-    Vec2D location = Vec2D(int(sprite->get_x_position()),
-                           int(sprite->get_y_position()));
+    Vec2D location(int(sprite->get_x_position()), int(sprite->get_y_position()));
     Vec2D target = location + move_by;
 
-    VLOG(2) << "Trying to walk to " << target.x << " " << target.y << ".\n"
-            << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
+    VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
+    VLOG(2) << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
 
     // TODO: animate walking in-place
-    if (!walkable(target)) {
-        succeeded_promise_ptr->set_value(false);
-        return;
-    }
+    if (!walkable(target)) { return; }
 
     sprite->set_state_on_moving_start(target);
 
@@ -68,12 +61,9 @@ void Engine::move_sprite(int id,
     // Motion
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
-        [succeeded_promise_ptr, location, target, id] (double completion) {
-            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-            if (!sprite) {
-                succeeded_promise_ptr->set_value(false);
-                return false;
-            }
+        [walk_succeeded_return, location, target, id] (double completion) mutable {
+            auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+            if (!sprite) { return false; }
 
             sprite->set_x_position(location.x * (1-completion) + target.x * completion);
             sprite->set_y_position(location.y * (1-completion) + target.y * completion);
@@ -92,7 +82,7 @@ void Engine::move_sprite(int id,
                     get_map_viewer()->get_map()->event_step_on.trigger(target, id);
                 });
 
-                succeeded_promise_ptr->set_value(true);
+                walk_succeeded_return.set(true);
             }
 
             // Run to completion
@@ -246,12 +236,24 @@ std::string Engine::editor = DEFAULT_PY_EDITOR;
 
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
+    notifcation_stack.add_new(text_to_display);
     EventManager::get_instance().add_event(
         [text_to_display] () {
             Engine::get_dialogue_box()->set_text(text_to_display);
             std::cout << text_to_display << std::endl;
         }
     );
+}
+
+void Engine::move_notification(Direction direction) {
+    switch (direction) {
+        case (Next):
+            Engine::get_dialogue_box()->set_text(notifcation_stack.forward());
+            break;
+        case (Previous):
+            Engine::get_dialogue_box()->set_text(notifcation_stack.backward());
+            break;
+    }
 }
 
 void Engine::text_displayer() {
@@ -275,8 +277,7 @@ void Engine::text_displayer() {
 }
 
 void Engine::text_updater() {
-
-     Map* map = map_viewer->get_map();
+    Map* map = map_viewer->get_map();
     if (!map) {
         throw std::runtime_error("Map not avalaible");
     }
@@ -290,8 +291,8 @@ void Engine::text_updater() {
 
         Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(tile);
 
-        VLOG(2) << "sprite location" << sprite->get_x_position() << " " << sprite->get_y_position();
-        VLOG(2) << "Pixel position: " << pixel_position.to_string();
+        //VLOG(2) << "sprite location" << sprite->get_x_position() << " " << sprite->get_y_position();
+        //VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
         sprite->get_object_text()->move(
             pixel_position.x + (int)(0.5*Engine::get_actual_tile_size()), 

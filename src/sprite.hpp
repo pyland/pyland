@@ -25,6 +25,27 @@ class Sprite : public MapObject {
 protected:
 
     ///
+    /// The name of the spritesheet to use for the map object
+    ///
+    std::string sprite_sheet;
+
+    ///
+    /// The id of the sprite in the sheet
+    ///
+    int sprite_sheet_id;
+
+    ///
+    /// The text to display above the object
+    ///
+    Text* object_text = nullptr;
+
+    ///
+    /// The status text for the object
+    ///
+    Text* status_text = nullptr;
+
+
+    ///
     /// Tiles that the object is blocking, probably
     /// by standing on.
     ///
@@ -33,12 +54,44 @@ protected:
 
 
 public:
-
-    Sprite(int _x_position, int _y_position, std::string _name);
+    Sprite();
+    Sprite(int _x_position, int _y_position, std::string _name, int _sprite_sheet_id, std::string _sprite_sheet="../resources/characters_1.png");
     virtual ~Sprite();
 
-    // TODO: Comment
+    ///
+    /// Set the sprite sheet to use for this character
+    /// @param _sprite_sheet the sprite sheet
+    ///
+    void set_sprite_sheet(std::string _sprite_sheet);
+
+    ///
+    /// Get the sprite sheet
+    /// @return the sprite sheet
+    ///
+    std::string get_sprite_sheet() { return sprite_sheet; }
+
+    ///
+    /// Set the id of the sprite in the sprite sheet
+    /// @param _sprite_sheet_id the id of the sprite in the sprite sheet
+    ///
+    void set_sprite_sheet_id(int _sprite_sheet_id);
+
+    ///
+    /// Get the id of the sprite in the sprite sheet
+    /// @return the sprite sheet id
+    ///
+    int get_sprite_sheet_id() { return sprite_sheet_id; }
+
+    ///
+    /// manage collisions for spirtes as they move
+    /// @param target
+    ///     tile the sprite it moving to
+    ///
     void set_state_on_moving_start(Vec2D target);
+
+    ///
+    /// manage collisions for sprites as they move
+    ///
     void set_state_on_moving_finish();
 
 
@@ -61,6 +114,30 @@ public:
     /// Initialise the shaders that are being used by the sprite
     ///
     bool init_shaders();
+
+    ///
+    /// Get the object's text to display
+    /// @return the object's text
+    ///
+    Text* get_object_text() {return object_text; }
+
+    ///
+    /// Set the object's text to be displayed 
+    /// @param _object_text the object's text
+    ///
+    void set_object_text(Text* _object_text) {object_text = _object_text; }
+
+    ///
+    /// Get the object's status text
+    /// @return the object's status text
+    ///
+    Text* get_status_text() {return status_text; }
+    
+    ///
+    /// Set the object's status text
+    /// @param _status_text the object's status text
+    ///
+    void set_status_text(Text* _status_text) {status_text = _status_text; }
 };
 
 #endif

@@ -14,6 +14,7 @@ BASE_OBJS = \
 	layer.o          \
 	lifeline.o       \
 	lifeline_controller.o \
+	notification.o   \
 	main.o           \
 	map.o            \
 	map_loader.o     \
@@ -63,15 +64,16 @@ GUI_OBJS = \
         gui/gui_text.o               \
         gui/gui_text_data.o          \
 	gui/gui_window.o             \
-	gui/gui_manager.o            
+	gui/gui_manager.o
 
 
 PYTHON_OBJS = \
-	python_embed/api.o           \
-	python_embed/interpreter.o   \
+	python_embed/api.o             \
+	python_embed/gil_safe_future.o \
+	python_embed/interpreter.o     \
 	python_embed/interpreter_context.o \
-	python_embed/locks.o         \
-	python_embed/entitythread.o  \
+	python_embed/locks.o           \
+	python_embed/entitythread.o    \
 	python_embed/thread_killer.o
 
 
@@ -81,6 +83,6 @@ PYTHON_HEADER = python_embed/python_embed_headers.hpp
 
 PYTHON_SHARED_OBJS = \
 	python_embed/wrapper_functions.so
-	
+
 PYTHON_SHARED_OBJS_DEPENDS = \
-	python_embed/api.o	
+	python_embed/api.o

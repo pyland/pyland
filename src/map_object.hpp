@@ -14,21 +14,21 @@
 class MapObject : public Object{
 
 protected:
-    ///
-    /// The text to display above the object
-    ///
-    Text* object_text = nullptr;
-
-    ///
-    /// The status text for the object
-    ///
-    Text* status_text = nullptr;
 
     ///
     /// Walkable: determine if the object can be walked over
     ///
     Walkability walkability = Walkability::WALKABLE;
 
+    ///
+    /// The name of the tilesheet to use for the map object
+    ///
+    std::string tile_sheet;
+
+    ///
+    /// The id of the tile in the sheet
+    ///
+    int tile_sheet_id;
 
     ///
     /// The x position of the object
@@ -54,8 +54,32 @@ protected:
 
 public:
     MapObject();
-    MapObject(int _x_position, int _y_position, std::string _name);
+    MapObject(int _x_position, int _y_position, std::string _name, int _tile_sheet_id, std::string _tile_sheet="../resources/basictiles_2.png");
     virtual ~MapObject();
+
+    ///
+    /// Set the tile sheet to use for this character
+    /// @param _tile_sheet the tile sheet
+    ///
+    void set_tile_sheet(std::string _tile_sheet);
+
+    ///
+    /// Get the tile sheet
+    /// @return the tile sheet
+    ///
+    std::string get_tile_sheet() { return tile_sheet; }
+
+    ///
+    /// Set the id of the tile in the tile sheet
+    /// @param _tile_sheet_id the id of the tile in the tile sheet
+    ///
+    void set_tile_sheet_id(int _tile_sheet_id);
+
+    ///
+    /// Get the id of the tile in the tile sheet
+    /// @return the tile sheet id
+    ///
+    int get_tile_sheet_id() { return tile_sheet_id; }
 
     ///
     /// Set the object's x position in tiles
@@ -95,7 +119,7 @@ public:
     /// Set the object's walkability
     /// @param _walkability the walkability of the object
     ///
-    void set_walkability(Walkability _walkability) { walkability = _walkability; }
+    void set_walkability(Walkability _walkability);
 
     // TODO Joshua: Comment
     void set_state_on_moving_start(Vec2D target);
@@ -121,31 +145,6 @@ public:
     ///
     bool init_shaders();
 
-    ///
-    /// Get the object's text to display
-    /// @return the object's text
-    ///
-    Text* get_object_text() {return object_text; }
-
-    ///
-    /// Set the object's text to be displayed 
-    /// @param _object_text the object's text
-    ///
-    void set_object_text(Text* _object_text) {object_text = _object_text; }
-
-    ///
-    /// Get the object's status text
-    /// @return the object's status text
-    ///
-    Text* get_status_text() {return status_text; }
-    
-    ///
-    /// Set the object's status text
-    /// @param _status_text the object's status text
-    ///
-    void set_status_text(Text* _status_text) {status_text = _status_text; }
-
-    ///
     /// Set the object's moving status
     /// @param _moving if the object is moving
     ///
