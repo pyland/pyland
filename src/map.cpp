@@ -150,6 +150,27 @@ bool Map::is_walkable(int x_pos, int y_pos) {
     return walkable;
 }
 
+
+void Map::add_map_object(int map_object_id) {
+    if(ObjectManager::is_valid_object_id(map_object_id))
+        map_object_ids.push_back(map_object_id);
+}
+
+void Map::remove_map_object(int map_object_id) {
+    if(ObjectManager::is_valid_object_id(map_object_id)){
+        for(auto it = map_object_ids.begin(); it != map_object_ids.end(); ++it) {
+            //If a valid object
+            if(*it != 0) {
+                //remove it if its the map_object
+                if(*it == map_object_id) {
+                    map_object_ids.erase(it);
+                    return;
+                }
+            }
+        }
+    }
+}
+
 void Map::add_sprite(int sprite_id) {
     if(ObjectManager::is_valid_object_id(sprite_id))
         sprite_ids.push_back(sprite_id);

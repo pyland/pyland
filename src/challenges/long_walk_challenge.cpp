@@ -58,6 +58,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
     ObjectManager::get_instance().add_object(test_chest);
     auto chest_id = test_chest->get_id();
     LOG(INFO) << "created test_chest with id: " << chest_id;
+    map->add_map_object(chest_id);
     test_chest->set_walkability(Walkability::BLOCKED);
 
     // Set up blocking walls

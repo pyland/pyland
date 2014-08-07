@@ -229,6 +229,19 @@ public:
     void remove_sprite(int sprite_id);
 
     ///
+    /// Add a map object to the map
+    /// @param map_object_id the id of the map object
+    ///
+    void add_map_object(int map_object_id);
+
+    ///
+    /// Remove a map object from the map
+    /// @param map_object_id the id of the map object
+    ///
+    void remove_map_object(int map_object_id);
+
+
+    ///
     /// Get the sprites that are on this map
     /// @return a vector of sprite ids
     /// - we don't want class users to add sprites to the map 
