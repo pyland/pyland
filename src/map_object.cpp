@@ -108,7 +108,7 @@ void MapObject::generate_tex_data() {
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
-
+    std::cout << " CALLEDD " << std::endl;
     GLfloat* map_object_tex_data = nullptr;
     try {
 
@@ -118,7 +118,6 @@ void MapObject::generate_tex_data() {
         LOG(ERROR) << "ERROR in MapObject::generate_tex_data(), cannot allocate memory";
         return;
     }
-
 
     int image_width = renderable_component.get_texture_image()->store_width;
     int image_height = renderable_component.get_texture_image()->store_height;
@@ -135,8 +134,11 @@ void MapObject::generate_tex_data() {
     }
 
     //Tile ids are from top left but opengl texture coordinates are bottom left so adjust as needed
-    GLfloat offset_x = (GLfloat)(tile_sheet_id % (int)(image_width/inc_x))*inc_x;
-    GLfloat offset_y = (1.0f - inc_y) -  (GLfloat)(tile_sheet_id / (int)(image_width/inc_x))*inc_y;
+    GLfloat offset_x = (GLfloat)(tile_sheet_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
+    GLfloat offset_y = (1.0f - inc_y) -  (GLfloat)(tile_sheet_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
+
+    std::cout << " ID " << tile_sheet_id << " WIDTH " << image_width << " INC " << inc_x << std::endl;    
+    std::cout <<" SETTING" << (int)(image_width/inc_x) << std::endl;
 
     //bottom left
     map_object_tex_data[0]  = offset_x;
@@ -218,7 +220,7 @@ void MapObject::generate_vertex_data() {
     renderable_component.set_vertex_data(map_object_vert_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }
-#include <iostream>
+
 void MapObject::load_textures() {
     Image* texture_image = nullptr;
 

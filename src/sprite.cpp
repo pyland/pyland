@@ -175,8 +175,8 @@ void Sprite::generate_tex_data() {
     }
 
     //Tile ids are from top left but opengl texture coordinates are bottom left so adjust as needed
-    GLfloat offset_x = (GLfloat)(sprite_sheet_id % (int)(image_width/inc_x))*inc_x;
-    GLfloat offset_y = (1.0f - inc_y)-  (GLfloat)(sprite_sheet_id / (int)(image_width/inc_x))*inc_y;
+    GLfloat offset_x = (GLfloat)(sprite_sheet_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
+    GLfloat offset_y = (1.0f - inc_y)-  (GLfloat)(sprite_sheet_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
 
     //bottom left
     sprite_tex_data[0]  = offset_x;
