@@ -1,5 +1,6 @@
 #include "component.hpp"
 #include "gui_manager.hpp"
+#include "gui_text.hpp"
 #include "image.hpp"
 #include <new>
 #include <fstream>
@@ -27,8 +28,9 @@ void GUIManager::parse_components() {
     regenerate_offsets(root);
 
     //Now generate the needed rendering data
-    generate_tex_data();
+    generate_texture_data();
     generate_vertex_data();
+    generate_text_data();
     load_textures();
     init_shaders();
 }
@@ -136,7 +138,7 @@ GUIManager::~GUIManager() {
 }
 
 
-void GUIManager::generate_tex_data() {
+void GUIManager::generate_texture_data() {
     
     //generate the texture data data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
@@ -216,7 +218,7 @@ void GUIManager::generate_text_data() {
     components_text = root->generate_text_data();
 }
 
-void GUIManager::render_texts() {
+void GUIManager::render_text() {
     for(auto text_data : components_text) {
         text_data->display();
     }

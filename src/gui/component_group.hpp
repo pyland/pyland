@@ -58,10 +58,14 @@ public:
 
     ///
     /// Same as the vertex function but generates texture data
-    /// @param component the component to generate the data for 
     /// The pair holds the pointer and then the size of the data in bytes
     ///
     std::vector<std::pair<GLfloat*, int>> generate_texture_data();
+
+    ///
+    /// Gets a vector of all the GUIText elements for this component
+    ///
+    std::vector<std::shared_ptr<GUIText>> generate_text_data();
 
     ///
     /// This function is called by generate vertex data (See Call Super on wikipedia)
@@ -83,7 +87,7 @@ public:
     /// This function is called by generate text data (See Call Super on wikipedia)
     /// to generate the text data for this actual component
     ///
-    virtual std::vector<std::pair<GLfloat*, int>> generate_this_texture_data() = 0;
+    virtual std::vector<std::shared_ptr<GUIText>> generate_this_text_data() = 0;
 
 };
 #endif

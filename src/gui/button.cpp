@@ -19,8 +19,9 @@ Button::Button() {
 
 Button::Button(std::string _text, std::function<void (void)> on_click, 
                float _width, float _height, float _x_offset, float _y_offset) :
-    Component(_text, on_click, _width, _height, _x_offset, _y_offset) {
+    Component(on_click, _width, _height, _x_offset, _y_offset) {
 
+    text = _text;
 
 }
 
@@ -101,3 +102,9 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
 }
 
 
+std::vector<std::shared_ptr<GUIText>> Button::generate_text_data() {
+    std::vector<std::shared_ptr<GUIText>> text_data;
+
+    return text_data;
+
+}

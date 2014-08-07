@@ -25,22 +25,16 @@ class Button : public Component {
 public:
     Button();
     Button(std::string _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
-    ///
-    /// Set the text for the button
-    /// @param _text the button text
-    ///
-    void set_text(std::string _text) { text = _text; }
 
-    ///
-    ///o Get the button's text
-    /// @return the text
-    ///
     std::string get_text() { return text; }
+
+    void set_text(std::string _text) { text = _text; }
 
     std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
 
     std::vector<std::pair<GLfloat*, int>> generate_texture_data();
 
+    std::vector<std::shared_ptr<GUIText>> generate_text_data();
 };
 
 #endif

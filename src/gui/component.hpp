@@ -1,8 +1,8 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include "gui_text.hpp"
 
+class GUIText;
 #include <cstddef>
 #include <exception>
 #include <functional>
@@ -143,7 +143,7 @@ public:
     /// Generates the text data for this component
     /// 
     /// 
-    virtual std::vector<std::shared_ptr<GUIText>> generate_text_data();
+    virtual std::vector<std::shared_ptr<GUIText>> generate_text_data() = 0;
 
     ///
     /// Get the map listing all the components of the group.
@@ -309,6 +309,5 @@ class component_no_children_exception : public std::exception {
         return "Component has no children";
     }
 };
-
 
 #endif

@@ -3,6 +3,7 @@
 
 
 #include "component.hpp"
+#include "gui_text.hpp"
 #include "input_manager.hpp"
 #include "callback.hpp"
 #include "lifeline.hpp"
@@ -36,12 +37,17 @@ class GUIManager : public Object {
     ///
     /// Generate the texture data for this component and its sub components
     ///
-    void generate_tex_data();
+    void generate_texture_data();
 
     ///
     /// Generate the vertex data for this component and its sub components
     ///
     void generate_vertex_data();
+
+    ///
+    /// Generate the text data for this component and its sub componets
+    ///
+    void generate_text_data();
 
     ///
     /// Load the texture for this component

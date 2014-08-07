@@ -43,7 +43,7 @@ public:
 
     ///
     /// Get the transformed x pixel  position of the text
-    /// @return the y position
+    /// @return the x position
     ///
     int get_transformed_x_offset() { return transformed_x_pixel_offset; }
 
@@ -52,6 +52,18 @@ public:
     /// @return the y position
     ///
     int get_transformed_y_offset() { return transformed_y_pixel_offset; }
+
+    ///
+    /// Set the transformed x pixel  position of the text
+    /// @param the x position
+    ///
+    void set_transformed_x_offset(int pixels) { transformed_x_pixel_offset = pixels; }
+
+    ///
+    /// Set the transformed pixel y position of the text
+    /// @param the y position
+    ///
+    void set_transformed_y_offset(int pixels) { transformed_y_pixel_offset = pixels; }
     
     ///
     /// Get the typeface for the text

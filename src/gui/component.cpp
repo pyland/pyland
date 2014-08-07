@@ -66,10 +66,3 @@ const std::map<int, std::shared_ptr<Component>>& Component::get_components() {
     throw exception;
 }
 
-void Component::set_text(std::string _text) {
-    component_text.set_text(_text);
-}
-
-std::string Component::get_text() {
-    return component_text.get_text();
-}

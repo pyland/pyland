@@ -1,5 +1,6 @@
 #include "component.hpp"
 #include "component_group.hpp"
+#include "gui_text.hpp"
 
 #include <iostream>
 #include <map>
@@ -116,13 +117,9 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
 }
 
 std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
-    std::vector<std::shared_ptr<GUIText>> group_data;
-    
-   //Call the implementation of this class  to generate it's data
-   generate_this_text_data();
 
-    //Add this components data
-   group_data.push_back(std::make_shared(component_text));
+   //Call the implementation of this class  to generate it's data
+    std::vector<std::shared_ptr<GUIText>> group_data = generate_this_text_data();;
 
    //Go through all the components in this group
     for(auto component_pair : components) {
@@ -146,7 +143,8 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
             text_data->set_transformed_y_offset(component_y_offset + pixel_offset_y);
 
             //add to this group
-            group_data.push_back(component_data_pair);
+            group_data.push_back(text_data);
+        }
     }
     return group_data;
 }
