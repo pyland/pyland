@@ -86,7 +86,7 @@ public:
     /// Set the object's walkability
     /// @param _walkability the walkability of the object
     ///
-    void set_walkability(Walkability _walkability) { walkability = _walkability; }
+    void set_walkability(Walkability _walkability);
 
     // TODO Joshua: Comment
     void set_state_on_moving_start(Vec2D target);

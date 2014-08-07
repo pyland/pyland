@@ -62,7 +62,8 @@ MapObject::~MapObject() {
 
 void MapObject::set_state_on_moving_start(Vec2D target) {
     moving = true;
-    //TODO: fix walkability if this changes 
+    // TODO: fix walkability if this changes, currently we assume set_walkability 
+    // it not used during movement
     if ( get_walkability() == Walkability::BLOCKED) {
         blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
     }
@@ -197,5 +198,17 @@ bool MapObject::init_shaders() {
 
     //Set the shader
     renderable_component.set_shader(shader);
+}
+
+ void MapObject::set_walkability(Walkability _walkability) { 
+    walkability = _walkability;
+    if ( walkability == Walkability::BLOCKED) {
+        // don't need to check if was previously blocked or not
+        blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
+            Vec2D(int(x_position), int(y_position))
+        )));
+    } else {
+        blocked_tiles.erase("stood on");
+    }
 }
 
