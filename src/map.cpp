@@ -93,44 +93,6 @@ Map::~Map() {
 bool Map::is_walkable(int x_pos, int y_pos) {
     //Default is walkable
     bool walkable = true;
-    //return true;
-    //Iterate through all sprites
-    for(auto sprite : sprite_ids) {
-        //If its an invalid object
-        if (sprite == 0)
-            continue;
-
-        std::shared_ptr<Sprite> object = ObjectManager::get_instance().get_object<Sprite>(sprite);
-
-        //If we cannot walk on this object
-        if(object) {
-            if(object->get_walkability() == Walkability::BLOCKED) {
-                walkable = false;
-
-                //We can stop checking further objects and tiles
-                return walkable;
-            }
-        }
-    }
-
-    //Iterate through all map objects
-    for(auto map_object : map_object_ids) {
-        //If its an invalid object
-        if (map_object == 0)
-            continue;
-
-        std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(map_object);
-
-        //If we cannot walk on this object
-        if(object) {
-            if(object->get_walkability() == Walkability::BLOCKED) {
-                walkable = false;
-
-                //We can stop checking further objects and tiles
-                return walkable;
-            }
-        }
-    }
 
     //Iterate through all tiles
     for(auto layer : layers ) {
