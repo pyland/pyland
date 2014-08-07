@@ -479,6 +479,15 @@ int main(int argc, const char* argv[]) {
     LongWalkChallenge long_walk_challenge(input_manager);
     long_walk_challenge.start();
 
+    // adding test item to inventory
+    std::shared_ptr<MapObject> test_chest = std::make_shared<MapObject>(10, 15, "test chest",5);
+    ObjectManager::get_instance().add_object(test_chest);
+    auto chest_id = test_chest->get_id();
+    LOG(INFO) << "created test_chest with id: " << chest_id;
+    map.add_map_object(chest_id);
+    test_chest->set_walkability(Walkability::WALKABLE);
+    ObjectManager::get_instance().get_object<Sprite>(new_id)->add_to_inventory(test_chest);
+
     TextFont big_font(mytype, 50);
     Text cursor(&window, big_font, true);
     cursor.move(0, 0);

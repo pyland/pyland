@@ -53,15 +53,6 @@ std::map<std::string, std::vector<Vec2D>> targets = {
 LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(input_manager) {
     auto *map = Engine::get_map_viewer()->get_map();
 
-    //set up a test of map_object
-    // std::shared_ptr<MapObject> test_chest = std::make_shared<MapObject>(10, 15, "test chest",5);
-    // ObjectManager::get_instance().add_object(test_chest);
-    // auto chest_id = test_chest->get_id();
-    // LOG(INFO) << "created test_chest with id: " << chest_id;
-    // map->add_map_object(chest_id);
-    // test_chest->set_walkability(Walkability::WALKABLE);
-    // test_chest->set_renderable(false);
-
     // Set up blocking walls
     for (auto wall_location : targets.at("wall:path:medium")) {
         std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location.x, wall_location.y, "medium wall",5);
