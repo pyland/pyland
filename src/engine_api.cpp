@@ -291,8 +291,8 @@ void Engine::text_updater() {
 
         Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(tile);
 
-        VLOG(2) << "sprite location" << sprite->get_x_position() << " " << sprite->get_y_position();
-        VLOG(2) << "Pixel position: " << pixel_position.to_string();
+        //VLOG(2) << "sprite location" << sprite->get_x_position() << " " << sprite->get_y_position();
+        //VLOG(2) << "Pixel position: " << pixel_position.to_string();
 
         sprite->get_object_text()->move(
             pixel_position.x + (int)(0.5*Engine::get_actual_tile_size()), 

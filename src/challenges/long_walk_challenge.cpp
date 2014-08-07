@@ -53,22 +53,30 @@ std::map<std::string, std::vector<Vec2D>> targets = {
 LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(input_manager) {
     auto *map = Engine::get_map_viewer()->get_map();
 
-    // set up a test of map_object
+    //set up a test of map_object
     std::shared_ptr<MapObject> test_chest = std::make_shared<MapObject>(10, 15, "test chest",5);
     ObjectManager::get_instance().add_object(test_chest);
     auto chest_id = test_chest->get_id();
     LOG(INFO) << "created test_chest with id: " << chest_id;
     map->add_map_object(chest_id);
-    test_chest->set_walkability(Walkability::BLOCKED);
+    test_chest->set_walkability(Walkability::WALKABLE);
     test_chest->set_tile_sheet_id(119);
+
     // Set up blocking walls
     for (auto wall_location : targets.at("wall:path:medium")) {
-        wall_path_medium_blockers.push_back(map->block_tile(wall_location));
-        Engine::change_tile(wall_location, 5, 3);
+        std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location.x, wall_location.y, "medium wall",5);
+        ObjectManager::get_instance().add_object(wall);
+        wall->set_walkability(Walkability::BLOCKED);
+        wall_path_medium_objects.push_back(wall);
+        map->add_map_object(wall->get_id());
     }
 
     for (auto wall_location : targets.at("wall:path:long")) {
-        wall_path_long_blockers.push_back(map->block_tile(wall_location));
+        std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location.x, wall_location.y, "medium wall",5);
+        ObjectManager::get_instance().add_object(wall);
+        wall->set_walkability(Walkability::BLOCKED);
+        wall_path_long_objects.push_back(wall);
+        map->add_map_object(wall->get_id());
     }
 
     // Set up notifications about walls
@@ -125,12 +133,10 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                     std::string id = std::to_string(Engine::get_map_viewer()->get_map_focus_object());
                     std::string filename = "John_" + id + ".py";
                     Engine::open_editor(filename);
-                    wall_path_medium_blockers.clear();
-
-                        for (auto wall_location : targets.at("wall:path:medium")) {
-                            Engine::change_tile(wall_location, 5, 118);
-                        }
-                }
+                    for (auto wall_object : wall_path_medium_objects) {
+                        wall_object->set_walkability(Walkability::WALKABLE);
+                        wall_object->set_tile_sheet_id(119);
+                    }}
             ));
 
             return false;
@@ -147,7 +153,10 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                 "You should try to program it.\n"
             );
 
-            wall_path_long_blockers.clear();
+            for (auto wall_object : wall_path_long_objects) {
+                wall_object->set_walkability(Walkability::WALKABLE);
+                wall_object->set_tile_sheet_id(119);
+            }
             return false;
         }
     );
