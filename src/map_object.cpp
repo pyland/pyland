@@ -108,7 +108,6 @@ void MapObject::generate_tex_data() {
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
-    std::cout << " CALLEDD " << std::endl;
     GLfloat* map_object_tex_data = nullptr;
     try {
 
@@ -136,9 +135,6 @@ void MapObject::generate_tex_data() {
     //Tile ids are from top left but opengl texture coordinates are bottom left so adjust as needed
     GLfloat offset_x = (GLfloat)(tile_sheet_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
     GLfloat offset_y = (1.0f - inc_y) -  (GLfloat)(tile_sheet_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
-
-    std::cout << " ID " << tile_sheet_id << " WIDTH " << image_width << " INC " << inc_x << std::endl;    
-    std::cout <<" SETTING" << (int)(image_width/inc_x) << std::endl;
 
     //bottom left
     map_object_tex_data[0]  = offset_x;

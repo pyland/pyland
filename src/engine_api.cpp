@@ -65,8 +65,15 @@ void Engine::move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeed
             auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             if (!sprite) { return false; }
 
-            sprite->set_x_position(location.x * (1-completion) + target.x * completion);
-            sprite->set_y_position(location.y * (1-completion) + target.y * completion);
+            double x_position = location.x * (1-completion) + target.x * completion;
+            double y_position = location.y * (1-completion) + target.y * completion;
+            sprite->set_x_position(x_position);
+            sprite->set_y_position(y_position);
+
+            for (auto item: sprite->get_inventory()) {
+                item->set_x_position(x_position);
+                item->set_y_position(y_position);
+            }
 
             if (completion == 1.0) {
                 sprite->set_state_on_moving_finish();
