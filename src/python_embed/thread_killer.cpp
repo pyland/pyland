@@ -76,7 +76,6 @@ void thread_killer(std::timed_mutex &finish_signal,
         }
 
         LOG(INFO) << "Kill thread woke up";
-        LOG(INFO) << "111" << entitythreads.value.size();
 
         std::lock_guard<std::mutex> lock(*entitythreads.lock);
 
