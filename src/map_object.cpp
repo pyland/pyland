@@ -44,9 +44,11 @@ MapObject::MapObject(int _x_position, int _y_position, std::string _name) {
     assert(trunc(y_position) == y_position);
 
     //Make a map object blocked
-    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
-        Vec2D(int(x_position), int(y_position))
-    )));
+    if ( get_walkability() == Walkability::BLOCKED) {
+        blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
+            Vec2D(int(x_position), int(y_position))
+        )));
+    }
 
 
     LOG(INFO) << "MapObject initialized";
@@ -60,14 +62,19 @@ MapObject::~MapObject() {
 
 void MapObject::set_state_on_moving_start(Vec2D target) {
     moving = true;
-    blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
+    //TODO: fix walkability if this changes 
+    if ( get_walkability() == Walkability::BLOCKED) {
+        blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
+    }
 }
 
 void MapObject::set_state_on_moving_finish() {
     moving = false;
-    blocked_tiles.erase("stood on");
-    blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
-    blocked_tiles.erase("walking to");
+    if ( get_walkability() == Walkability::BLOCKED) {
+        blocked_tiles.erase("stood on");
+        blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
+        blocked_tiles.erase("walking to");
+    }
 }
 
 
