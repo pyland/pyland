@@ -13,7 +13,7 @@
 /// groups, allowing us to build up a component tree of components to render.
 ///
 class ComponentGroup : public Component {
-
+protected:
     ///
     /// The number of components in the group
     ///
@@ -87,7 +87,7 @@ public:
     /// This function is called by generate text data (See Call Super on wikipedia)
     /// to generate the text data for this actual component
     ///
-    virtual std::vector<std::shared_ptr<GUIText>> generate_this_text_data() = 0;
+    virtual std::vector<std::shared_ptr<GUITextData>> generate_this_text_data() = 0;
 
 };
 #endif

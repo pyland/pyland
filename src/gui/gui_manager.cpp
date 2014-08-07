@@ -1,3 +1,4 @@
+
 #include "component.hpp"
 #include "gui_manager.hpp"
 #include "gui_text.hpp"
@@ -220,7 +221,12 @@ void GUIManager::generate_text_data() {
 
 void GUIManager::render_text() {
     for(auto text_data : components_text) {
-        text_data->display();
+
+        int x_pos = text_data->get_transformed_x_offset();
+        int y_pos = text_data->get_transformed_y_offset();
+
+        text_data->get_text()->move(x_pos, y_pos);
+        text_data->get_text()->display();
     }
 }
 

@@ -1,6 +1,6 @@
 #include "button.hpp"
 #include "gui_text.hpp"
-
+#include "text.hpp"
 #include <utility>
 #include <vector>
 
@@ -17,17 +17,14 @@ Button::Button() {
 
 }
 
-Button::Button(std::string _text, std::function<void (void)> on_click, 
+Button::Button(std::shared_ptr<Text>  _text, std::function<void (void)> on_click, 
                float _width, float _height, float _x_offset, float _y_offset) :
     Component(on_click, _width, _height, _x_offset, _y_offset) {
 
-    text = _text;
+    button_text.set_text(_text);
 
 }
 
-std::vector<std::shared_ptr<GUIText>> generate_font_data() {
-    std::shared_ptr<GUIText> text = std::make_shared<GUIText>();
-}
 
 std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     delete []vertex_data;
@@ -102,9 +99,19 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
 }
 
 
-std::vector<std::shared_ptr<GUIText>> Button::generate_text_data() {
-    std::vector<std::shared_ptr<GUIText>> text_data;
+std::vector<std::shared_ptr<GUITextData>> Button::generate_text_data() {
+    std::vector<std::shared_ptr<GUITextData>> text_data;
 
+    text_data.push_back(button_text.get_gui_text());
     return text_data;
 
+}
+
+
+std::shared_ptr<Text> Button::get_text() {
+    return button_text.get_text();
+}
+
+void Button::set_text(std::shared_ptr<Text> _text) {
+    button_text.set_text(_text);
 }

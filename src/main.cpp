@@ -226,26 +226,34 @@ int main(int argc, const char* argv[]) {
 
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
     Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont buttonfont(buttontype, 18);
-    Text stoptext(&window, buttonfont, true);
-    Text runtext(&window, buttonfont, true);
-    stoptext.set_text("Stop");
-    runtext.set_text("Run");
-    // referring to top left corner of text window
-    stoptext.move(105, 240 + 20);
-    runtext.move(5, 240 + 20);
-    stoptext.resize(window.get_size().first-20, 80 + 20);
-    runtext.resize(window.get_size().first-20, 80 + 20);
+    TextFont buttonfont(buttontype, 10);
 
+    std::shared_ptr<Text> test = std::make_shared<Text>(&window, buttonfont, true);
+    test->move(30, 30);
+    test->resize(300,300);
+    test->set_text("Stop");
+    
+    std::shared_ptr<Text> stoptext = std::make_shared<Text>(&window, buttonfont, true);
+    std::shared_ptr<Text> runtext = std::make_shared<Text>(&window, buttonfont, true);
+    // referring to top left corner of text window
+    //    stoptext.move(105, 240 + 20);
+    //    runtext.move(5, 240 + 20);
+    runtext->move(0,30);
+    stoptext->move(0,30);
+
+
+    stoptext->resize(300, 300);
+    runtext->resize(300, 300);
+    stoptext->set_text("Stop");
+    runtext->set_text("Run");
 
     CallbackState callbackstate(interpreter, "John");
-
 
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
     sprite_window->set_width_pixels(300);
     sprite_window->set_height_pixels(300);
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
-    run_button->set_text("Run");
+    run_button->set_text(runtext);
     run_button->set_on_click([&] () { LOG(ERROR) << "RUN"; callbackstate.restart(); });
     run_button->set_width(0.2f);
     run_button->set_height(0.2f);
@@ -253,7 +261,7 @@ int main(int argc, const char* argv[]) {
     run_button->set_x_offset(0.0f);
 
     std::shared_ptr<Button> stop_button = std::make_shared<Button>();
-    stop_button->set_text("Stop");
+    stop_button->set_text(stoptext);
     stop_button->set_on_click([&] () {LOG(ERROR) << "STOP";  callbackstate.stop(); });
     stop_button->set_width(0.2f);
     stop_button->set_height(0.2f);
@@ -451,9 +459,9 @@ int main(int argc, const char* argv[]) {
         map_viewer.render();
         mytext.display();
         Engine::text_displayer();
-        stoptext.display();
-        runtext.display();
         cursor.display();
+        runtext->display();
+        test->display();
         window.swap_buffers();
         GameWindow::update();
     }

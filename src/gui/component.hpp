@@ -2,7 +2,7 @@
 #define COMPONENT_H
 
 
-class GUIText;
+#include "gui_text_data.hpp"
 #include <cstddef>
 #include <exception>
 #include <functional>

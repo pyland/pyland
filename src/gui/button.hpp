@@ -2,6 +2,11 @@
 #define BUTTON_H
 
 #include "component.hpp"
+#include "gui_text.hpp"
+#include "gui_text_data.hpp"
+#include "text.hpp"
+
+
 
 #include <functional>
 #include <memory>
@@ -21,20 +26,20 @@
 
 
 class Button : public Component {
-    std::string text;
+    GUIText button_text;
 public:
     Button();
-    Button(std::string _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
+    Button(std::shared_ptr<Text> _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
 
-    std::string get_text() { return text; }
+    std::shared_ptr<Text> get_text();
 
-    void set_text(std::string _text) { text = _text; }
+    void set_text(std::shared_ptr<Text>  _text);
 
     std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
 
     std::vector<std::pair<GLfloat*, int>> generate_texture_data();
 
-    std::vector<std::shared_ptr<GUIText>> generate_text_data();
+    std::vector<std::shared_ptr<GUITextData>> generate_text_data();
 };
 
 #endif

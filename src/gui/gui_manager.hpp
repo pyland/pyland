@@ -32,7 +32,7 @@ class GUIManager : public Object {
     ///
     /// The text objects for all the component
     ///
-    std::vector<std::shared_ptr<GUIText>> components_text;
+    std::vector<std::shared_ptr<GUITextData>> components_text;
 
     ///
     /// Generate the texture data for this component and its sub components

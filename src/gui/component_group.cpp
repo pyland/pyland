@@ -116,19 +116,19 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
     return group_data;
 }
 
-std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
+std::vector<std::shared_ptr<GUITextData>> ComponentGroup::generate_text_data() {
 
    //Call the implementation of this class  to generate it's data
-    std::vector<std::shared_ptr<GUIText>> group_data = generate_this_text_data();;
+    std::vector<std::shared_ptr<GUITextData>> group_data = generate_this_text_data();;
 
    //Go through all the components in this group
     for(auto component_pair : components) {
-        std::vector<std::shared_ptr<GUIText>> component_data = component_pair.second->generate_text_data();
+        std::vector<std::shared_ptr<GUITextData>> component_data = component_pair.second->generate_text_data();
         
         //get all the text data in the component - deals with ComponentGroup children
         for(auto text_data : component_data) {
             //comvert this into this component's local spacd
-
+            std::cout << " MOVING" << std::endl;
             //Calcuate how far to translate this component
             int pixel_offset_x = 0; 
             float component_x_offset = text_data->get_transformed_x_offset();
@@ -141,7 +141,7 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
             //Translate it
             text_data->set_transformed_x_offset(component_x_offset + pixel_offset_x);
             text_data->set_transformed_y_offset(component_y_offset + pixel_offset_y);
-
+            std::cout << "OOFSET " << pixel_offset_x << std::endl;
             //add to this group
             group_data.push_back(text_data);
         }
