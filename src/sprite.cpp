@@ -23,13 +23,63 @@
 #include <GL/gl.h>
 
 #endif
-Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
+
+Sprite::Sprite() {
+    sprite_sheet = "../resources/characters_1.png";
+    sprite_sheet_id = 0;
+    x_position = 0;
+    y_position = 0;
+    name = "";
+
+    init_shaders();
+    load_textures();
+    generate_tex_data();
+    generate_vertex_data();
+
+    // setting up sprite name text
+    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    TextFont myfont(mytype, 18);
+    object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    object_text->set_text(name);
+    Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
+    object_text->move(pixel_position.x ,pixel_position.y );
+    object_text->resize(100,100);
+    object_text->align_centre();
+    object_text->align_at_origin(true);
+
+    LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
+
+    // setting up status text
+    status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    status_text->set_text("");
+    Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
+    status_text->move(pixel_text.x ,pixel_text.y);
+    status_text->resize(100,100);
+    status_text->align_centre();
+    status_text->align_at_origin(true);
+
+    // Starting positions should be integral
+    assert(trunc(x_position) == x_position);
+    assert(trunc(y_position) == y_position);
+
+    // Make a sprite blocked
+    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
+        Vec2D(int(x_position), int(y_position))
+    )));
+
+
+    LOG(INFO) << "Sprite initialized";
+
+}
+Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_sheet_id, std::string _sprite_sheet) {
     LOG(INFO) << "register new sprite called " << _name;
 
     // set name & positon 
     x_position = _x_position;
     y_position = _y_position;
     name = _name;
+    sprite_sheet_id = _sprite_sheet_id;
+    sprite_sheet = _sprite_sheet;
 
     init_shaders();
     load_textures();
@@ -110,36 +160,59 @@ void Sprite::generate_tex_data() {
         return;
     }
 
-    GLfloat offset_x = GLfloat(Engine::get_tile_size()) / (GLfloat)renderable_component.get_texture_image()->store_width;
-    GLfloat offset_y = GLfloat(Engine::get_tile_size()) / (GLfloat)renderable_component.get_texture_image()->store_height;
+    int image_width = renderable_component.get_texture_image()->store_width;
+    int image_height = renderable_component.get_texture_image()->store_height;
+    if(image_width == 0 || image_height == 0 ) {
+        LOG(ERROR) << "At least one image dimension is 0";
+        return;
+    }
+
+    GLfloat inc_x = GLfloat(Engine::get_tile_size()) / (GLfloat)image_width;
+    GLfloat inc_y = GLfloat(Engine::get_tile_size()) / (GLfloat)image_height;
+    if(inc_x == 0.0f  ||inc_y == 0.0f) {
+        LOG(ERROR) << "Increments are 0";
+        return;
+    }
+
+    //Tile ids are from top left but opengl texture coordinates are bottom left so adjust as needed
+    GLfloat offset_x = (GLfloat)(sprite_sheet_id % (int)(image_width/inc_x))*inc_x;
+    GLfloat offset_y = (1.0f - inc_y)-  (GLfloat)(sprite_sheet_id / (int)(image_width/inc_x))*inc_y;
 
     //bottom left
-    sprite_tex_data[0]  = offset_x * GLfloat(4.0);
-    sprite_tex_data[1]  = offset_y * GLfloat(7.0);
+    sprite_tex_data[0]  = offset_x;
+    sprite_tex_data[1]  = offset_y;
 
     //top left
-    sprite_tex_data[2]  = offset_x * GLfloat(4.0);
-    sprite_tex_data[3]  = offset_y * GLfloat(8.0); 
+    sprite_tex_data[2]  = offset_x;
+    sprite_tex_data[3]  = offset_y + inc_y;
 
     //bottom right
-    sprite_tex_data[4]  = offset_x * GLfloat(5.0);
-    sprite_tex_data[5]  = offset_y * GLfloat(7.0);
+    sprite_tex_data[4]  = offset_x + inc_x;
+    sprite_tex_data[5]  = offset_y;
 
     //top left
-    sprite_tex_data[6]  = offset_x * GLfloat(4.0);
-    sprite_tex_data[7]  = offset_y * GLfloat(8.0);
+    sprite_tex_data[6]  = offset_x;
+    sprite_tex_data[7]  = offset_y + inc_y;
 
     //top right
-    sprite_tex_data[8]  = offset_x * GLfloat(5.0);
-    sprite_tex_data[9]  = offset_y * GLfloat(8.0);
+    sprite_tex_data[8]  = offset_x + inc_x;
+    sprite_tex_data[9]  = offset_y + inc_y;
 
     //bottom right
-    sprite_tex_data[10] = offset_x * GLfloat(5.0);
-    sprite_tex_data[11] = offset_y * GLfloat(7.0);
+    sprite_tex_data[10] = offset_x + inc_x;
+    sprite_tex_data[11] = offset_y; 
 
     renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
-
+void Sprite::set_sprite_sheet_id(int _sprite_sheet_id) {
+    sprite_sheet_id  = _sprite_sheet_id; 
+    
+    generate_tex_data();
+}
+void Sprite::set_sprite_sheet(std::string _sprite_sheet) {
+    sprite_sheet = _sprite_sheet; 
+    generate_tex_data();
+}
 void Sprite::generate_vertex_data() {
     //holds the sprite vertex data
     int num_dimensions = 2;
@@ -188,7 +261,7 @@ void Sprite::load_textures() {
     Image* texture_image = nullptr;
 
     try {
-        texture_image = new Image("../resources/characters_1.png");
+        texture_image = new Image(sprite_sheet.c_str());
     }
     catch(std::exception e) {
         texture_image = nullptr;
