@@ -5,62 +5,19 @@
 #include <fstream>
 #include <future>
 #include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <iostream>
 #include <sstream>
 #include <string>
 
 #include "api.hpp"
-#include "engine_api.hpp"
+#include "engine.hpp"
 #include "event_manager.hpp"
 #include "gil_safe_future.hpp"
 
 namespace py = boost::python;
 
-Vec2D::Vec2D(int x, int y): x(x), y(y) {}
-
-Vec2D Vec2D::operator+(Vec2D other) {
-    return Vec2D(x + other.x, y + other.y);
-}
-
-Vec2D Vec2D::operator-(Vec2D other) {
-    return Vec2D(x - other.x, y - other.y);
-}
-
-Vec2D Vec2D::operator/(Vec2D other) {
-    return Vec2D(x / other.x, y / other.y);
-}
-
-Vec2D Vec2D::operator*(Vec2D other) {
-    return Vec2D(x * other.x, y * other.y);
-}
-
-bool Vec2D::operator==(Vec2D other) {
-    return (x==other.x) && (y == other.y);
-}
-
-void Vec2D::operator+=(Vec2D other) {
-    x += other.x;
-    y += other.y;
-}
-
-void Vec2D::operator-=(Vec2D other) {
-    x -= other.x;
-    y -= other.y;
-}
-
-std::ostream& operator<<(std::ostream& out, Vec2D in) {
-    return out << in.to_string();
-}
-
-std::string Vec2D::to_string() {
-    std::ostringstream stringStream;
-    stringStream << "(" << x << " " << y << ")";
-    return stringStream.str();
-}
-
-
-
-Entity::Entity(Vec2D start, std::string name, int id):
+Entity::Entity(glm::vec2 start, std::string name, int id):
     start(start), script(""), id(id), call_number(0) {
         this->name = std::string(name);
 }
@@ -71,7 +28,7 @@ bool Entity::move(int x, int y) {
     auto id = this->id;
     return GilSafeFuture<bool>::execute(
         [id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
-            Engine::move_sprite(id, Vec2D(x, y), walk_succeeded_return);
+            Engine::move_sprite(id, glm::ivec2(x, y), walk_succeeded_return);
         },
         false
     );
@@ -84,7 +41,8 @@ bool Entity::walkable(int x, int y) {
     return GilSafeFuture<bool>::execute(
         [id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
             walk_succeeded_return.set(
-                Engine::walkable(Engine::find_object(id) + Vec2D(x, y))
+                // TODO: assert integral
+                Engine::walkable(glm::ivec2(Engine::find_object(id)) + glm::ivec2(x, y))
             );
         },
         false
@@ -95,12 +53,13 @@ void Entity::monologue() {
     auto id = this->id;
     auto name = this->name;
     return GilSafeFuture<void>::execute([id, name] (GilSafeFuture<void>) {
-        std::string text = (
-            "I am " + name + " and "
-            "I am standing at " + Engine::find_object(id).to_string() + "!"
-        );
+        std::ostringstream stream;
 
-        Engine::print_dialogue(name, text);
+        auto where(Engine::find_object(id));
+        stream << "I am " << name << " and "
+               << "I am standing at " << where.x << ", " << where.y << "!";
+
+        Engine::print_dialogue(name, stream.str());
     });
 }
 

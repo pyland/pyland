@@ -1,5 +1,5 @@
 #include "image.hpp"
-#include "engine_api.hpp"
+#include "engine.hpp"
 #include "entitythread.hpp"
 #include "map_viewer.hpp"
 #include "renderable_component.hpp"
@@ -23,52 +23,10 @@
 #include <GL/gl.h>
 
 #endif
-Sprite::Sprite(int _x_position, int _y_position, std::string _name) {
-    LOG(INFO) << "register new sprite called " << _name;
-    x_position = _x_position;
-    y_position = _y_position;
-    name = _name;
-
-    init_shaders();
-    load_textures();
-    generate_tex_data();
-    generate_vertex_data();
-
-    // setting up sprite text
-    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 18);
-    object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    object_text->set_text(name);
-    Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    object_text->move(pixel_position.x ,pixel_position.y );
-    object_text->resize(100,100);
-    object_text->align_centre();
-    object_text->align_at_origin(true);
-
-    LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
-
-    // setting up status text
-    status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-
+Sprite::Sprite(glm::ivec2 position, std::string name): MapObject(position, name) {
+    // TODO: do this properly
     status_text->set_text("");
-    Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    status_text->move(pixel_text.x ,pixel_text.y);
-    status_text->resize(100,100);
-    status_text->align_centre();
-    status_text->align_at_origin(true);
-
-    // Starting positions should be integral
-    assert(trunc(x_position) == x_position);
-    assert(trunc(y_position) == y_position);
-
-    //Make a sprite blocked
-    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
-        Vec2D(int(x_position), int(y_position))
-    )));
-
-
     LOG(INFO) << "Sprite initialized";
-
 }
 
 Sprite::~Sprite() {
@@ -76,7 +34,7 @@ Sprite::~Sprite() {
 }
 
 
-void Sprite::set_state_on_moving_start(Vec2D target) {
+void Sprite::set_state_on_moving_start(glm::ivec2 target) {
     moving = true;
     blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
 }
@@ -90,7 +48,6 @@ void Sprite::set_state_on_moving_finish() {
 
 
 void Sprite::generate_tex_data() {
-  
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
@@ -114,7 +71,7 @@ void Sprite::generate_tex_data() {
 
     //top left
     sprite_tex_data[2]  = offset_x * GLfloat(4.0);
-    sprite_tex_data[3]  = offset_y * GLfloat(8.0); 
+    sprite_tex_data[3]  = offset_y * GLfloat(8.0);
 
     //bottom right
     sprite_tex_data[4]  = offset_x * GLfloat(5.0);
@@ -133,7 +90,7 @@ void Sprite::generate_tex_data() {
     sprite_tex_data[11] = offset_y * GLfloat(7.0);
 
     renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
-} 
+}
 
 void Sprite::generate_vertex_data() {
     //holds the sprite vertex data
@@ -150,8 +107,8 @@ void Sprite::generate_vertex_data() {
     }
 
     float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
- 
-    //bottom left 
+
+    //bottom left
     sprite_data[0] = 0;
     sprite_data[1] = 0;
 
@@ -179,6 +136,7 @@ void Sprite::generate_vertex_data() {
     renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }
 
+// TODO: Fix...
 void Sprite::load_textures() {
     Image* texture_image = nullptr;
 

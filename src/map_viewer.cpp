@@ -1,4 +1,11 @@
-#include "engine_api.hpp"
+#include <algorithm>
+#include <glm/vec2.hpp>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <vector>
+
+#include "engine.hpp"
 #include "game_window.hpp"
 #include "gui/gui_manager.hpp"
 #include "layer.hpp"
@@ -8,14 +15,6 @@
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
 #include "sprite.hpp"
-#include "engine_api.hpp"
-
-
-#include <algorithm>
-#include <iostream>
-#include <map>
-#include <memory>
-#include <vector>
 
 
 MapViewer::MapViewer(GameWindow* new_window, GUIManager* new_gui_manager) {
@@ -75,7 +74,7 @@ void MapViewer::render_map() {
     glm::mat4 model = glm::mat4(1.0f);
     glm::vec3 translate = glm::vec3(-get_display_x()*32.0f, -get_display_y()*32.0f, 0.0f);
     glm::mat4 translated = glm::translate(model, translate);
-    
+
     //Draw all the layers, from base to top to get the correct draw order
     int layer_num = 0;
     for(auto layer: map->get_layers()) {
@@ -94,7 +93,7 @@ void MapViewer::render_map() {
 
 
         layer_render_component->bind_vbos();
-        
+
         layer_render_component->bind_textures();
 
         //Calculate the offsets for drawing
@@ -131,11 +130,10 @@ void MapViewer::render_sprites() {
 
             //Move sprite to the required position
             glm::mat4 model1 = glm::mat4(1.0f);
-            glm::vec3 translate1 = glm::vec3(
-
-                (float(sprite->get_x_position()) - get_display_x()) * 32.0f,
-                (float(sprite->get_y_position()) - get_display_y()) * 32.0f,
-                0.0f
+            glm::vec3 translate1(
+                32.0f * (sprite->get_position().x - get_display_x()),
+                32.0f * (sprite->get_position().y - get_display_y()),
+                 0.0f
             );
             glm::mat4 translated1 = glm::translate(model1, translate1);
             sprite_render_component->set_modelview_matrix(translated1);
@@ -181,11 +179,10 @@ void MapViewer::render_objects() {
 
             //Move object to the required position
             glm::mat4 model1 = glm::mat4(1.0f);
-            glm::vec3 translate1 = glm::vec3(
-
-                (float(object->get_x_position()) - get_display_x()) * 32.0f,
-                (float(object->get_y_position()) - get_display_y()) * 32.0f,
-                0.0f
+            glm::vec3 translate1(
+                32.0f * (object->get_position().x - get_display_x()),
+                32.0f * (object->get_position().y - get_display_y()),
+                 0.0f
             );
             glm::mat4 translated1 = glm::translate(model1, translate1);
             object_render_component->set_modelview_matrix(translated1);
@@ -342,18 +339,18 @@ void MapViewer::refocus_map() {
 
     std::shared_ptr<Sprite> sprite = object_manager.get_object<Sprite>(map_focus_object);
 
-    //If such an sprite exists, move the map to it
+    // If such an sprite exists, move the map to it
     if(sprite) {
         set_display_x(centre_point_in_range(
             // half-tile offset to take centre of sprite
-            /* point  */ float(sprite->get_x_position()) + 0.5f,
+            /* point  */ float(sprite->get_position().x) + 0.5f,
             /* length */ float(map->get_width()),
             /* bound  */ get_display_width()
         ));
 
         set_display_y(centre_point_in_range(
             // half-tile offset to take centre of sprite
-            /* point  */ float(sprite->get_y_position()) + 0.5f,
+            /* point  */ float(sprite->get_position().y) + 0.5f,
             /* length */ float(map->get_height()),
             /* bound  */ get_display_height()
         ));
@@ -392,36 +389,20 @@ Map* MapViewer::get_map() {
 }
 
 
+glm::vec2 MapViewer::pixel_to_tile(glm::ivec2 pixel_location) {
+    float scale(Engine::get_tile_size() * Engine::get_global_scale());
 
-Vec2D MapViewer::pixel_to_tile(Vec2D pixel_location) {
-    float scale(Engine::get_tile_size()*Engine::get_global_scale());
-    // convert pixel location to absolute instead of relative to current window
+    glm::vec2 display_position(get_display_x(), get_display_y());
 
-    Vec2D map_pixel(pixel_location + Vec2D(int(get_display_x() * scale),
-                                           int(get_display_y() * scale)));
-
-    // convert from pixel to map ints
-    return Vec2D(int(float(map_pixel.x) / scale),
-                 int(float(map_pixel.y) / scale));
+    return (glm::vec2(pixel_location) / scale) + display_position;
 }
 
-Vec2D MapViewer::tile_to_pixel(Vec2D tile_location) {
-    float scale(Engine::get_tile_size()*Engine::get_global_scale());
+#include <iostream>
+glm::ivec2 MapViewer::tile_to_pixel(glm::vec2 tile_location) {
+    float scale(Engine::get_tile_size() * Engine::get_global_scale());
 
-    Vec2D results(int(float(tile_location.x) * scale),
-                  int(float(tile_location.y) * scale));
+    glm::vec2 display_position(get_display_x(), get_display_y());
 
-    results -= Vec2D(int(get_display_x() * scale),
-                     int(get_display_y() * scale));
-    return results;
+    // Screen offset is reduced by the offset of the display
+    return (tile_location - display_position) * scale;
 }
-
-Vec2D MapViewer::tile_to_pixel(std::pair<double,double> tile_location) {
-    double scale(Engine::get_tile_size()*Engine::get_global_scale());
-
-    std::pair<double,double> results(tile_location.first * scale, tile_location.second * scale);
-    results.first = results.first - (get_display_x() * scale) ;
-    results.second = results.second - (get_display_y() * scale) ;
-    return Vec2D( (int)results.first, (int)results.second);
-}    
-

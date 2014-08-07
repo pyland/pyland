@@ -33,12 +33,11 @@ protected:
 
 
 public:
-
-    Sprite(int _x_position, int _y_position, std::string _name);
+    Sprite(glm::ivec2 position, std::string name);
     virtual ~Sprite();
 
     // TODO: Comment
-    void set_state_on_moving_start(Vec2D target);
+    void set_state_on_moving_start(glm::ivec2 target);
     void set_state_on_moving_finish();
 
 

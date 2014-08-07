@@ -1,12 +1,14 @@
+#include <algorithm>
 #include <cstdlib>
 #include <future>
 #include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <memory>
 #include <utility>
 #include <vector>
 #include <iostream>
 
-#include "engine_api.hpp"
+#include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
 #include "gil_safe_future.hpp"
@@ -21,28 +23,29 @@ MapViewer* Engine::map_viewer = nullptr;
 Text* Engine::dialogue_box = nullptr;
 int Engine::tile_size= 16;
 int Engine::global_scale = 2;
-Notification Engine::notifcation_stack = Notification();
+Notification Engine::notification_stack = Notification();
 
 
-//TODO: THis needs to work with renderable objects
+// TODO: This needs to work with renderable objects
 
-void Engine::move_sprite(int id, Vec2D move_by) {
+void Engine::move_sprite(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
     Engine::move_sprite(id, move_by, GilSafeFuture<bool>());
 }
 
 //TODO: This needs to work with renderable objects
-void Engine::move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeeded_return) {
+void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return) {
 
     auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
 
     if (!sprite || sprite->is_moving()) { return; }
 
-    Vec2D location(int(sprite->get_x_position()), int(sprite->get_y_position()));
-    Vec2D target = location + move_by;
+    // Position should be integral at this point
+    glm::vec2 target(sprite->get_position());
+    auto location(target);
+    target += move_by;
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
-    VLOG(2) << "Tile blocker count is " << get_map_viewer()->get_map()->blocker.at(target.x).at(target.y);
 
     // TODO: animate walking in-place
     if (!walkable(target)) { return; }
@@ -54,19 +57,15 @@ void Engine::move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeed
         get_map_viewer()->get_map()->event_step_off.trigger(location, id);
     });
 
-    // move text with charcters
-    // Vec2D pixel_target = get_map_viewer()->get_map()->tile_to_pixel(target);
-    // sprite->get_sprite_text()->move(pixel_target.x, pixel_target.y);
-
     // Motion
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.07),
-        [walk_succeeded_return, location, target, id] (double completion) mutable {
+        [walk_succeeded_return, location, target, id] (float completion) mutable {
             auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             if (!sprite) { return false; }
 
-            sprite->set_x_position(location.x * (1-completion) + target.x * completion);
-            sprite->set_y_position(location.y * (1-completion) + target.y * completion);
+            glm::vec2 tweened_position = location * (1-completion) + target * completion;
+            sprite->set_position(tweened_position);
 
             if (completion == 1.0) {
                 sprite->set_state_on_moving_finish();
@@ -91,7 +90,7 @@ void Engine::move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeed
     );
 }
 
-bool Engine::walkable(Vec2D location) {
+bool Engine::walkable(glm::ivec2 location) {
     int map_width = map_viewer->get_map()->get_width();
     int map_height = map_viewer->get_map()->get_height();
 
@@ -116,39 +115,13 @@ bool Engine::walkable(Vec2D location) {
     return true;
 }
 
-bool Engine::change_tile(Vec2D tile, int layer_num, int tile_id) {
+void Engine::change_tile(glm::ivec2 tile, int layer_num, int tile_id) {
     map_viewer->get_map()->update_tile(tile.x, tile.y, layer_num, tile_id);
-    return true;
-}
-
-std::vector<int> Engine::get_tiles(Vec2D) {
-    std::vector<int> tiles;
-    return tiles;
-}
-
-std::vector<int> Engine::get_objects(Vec2D) {
-    std::vector<int> objects;
-    return objects;
-}
-std::vector<int> Engine::get_sprites(Vec2D) {
-    std::vector<int> objects;
-    return objects;
-}
-
-bool Engine::load_map(int) {
-    return false;
 }
 
 
-Vec2D Engine::find_object(int id) {
-    if (!Engine::map_viewer) {
-        throw std::runtime_error("Object Requested could not be found");
-    }
-
-    Map* map = map_viewer->get_map();
-    if (!map) {
-        throw std::runtime_error("Object Requested could not be found");
-    }
+glm::vec2 Engine::find_object(int id) {
+    Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
 
     //Check the object is on the map
     auto map_objects = map->get_map_objects();
@@ -157,8 +130,7 @@ Vec2D Engine::find_object(int id) {
         if(object_id == id) {
             //Object is on the map so now get its location
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-            return Vec2D(int(object->get_x_position()),
-                         int(object->get_y_position()));
+            return object->get_position();
         }
     }
 
@@ -166,77 +138,51 @@ Vec2D Engine::find_object(int id) {
         if(object_id == id) {
             //Object is on the map so now get its location
             auto object = ObjectManager::get_instance().get_object<Sprite>(id);
-            return Vec2D(int(object->get_x_position()),
-                         int(object->get_y_position()));
+            return object->get_position();
         }
     }
+
     //Not on the map
     throw std::runtime_error("Object is not in the map");
 }
 
-bool Engine::open_editor(std::string filename) {
+void Engine::open_editor(std::string filename) {
     LOG(INFO) << "Opening editor";
+
     //TODO remove this function in the final version
-    std::string bash_command = editor + std::string(" python_embed/scripts/") + filename;
-    std::thread TEXT_EDIT([] (std::string command) { system(command.c_str()); }, bash_command);
-    TEXT_EDIT.detach();
-    return true;
+    std::string command(editor + std::string(" python_embed/scripts/") + filename);
+
+    // TODO: Make this close safely.
+    std::thread([command] () { system(command.c_str()); }).detach();
 }
 
 
-std::vector<int> Engine::get_objects_at(Vec2D location) {
-    Map* map = map_viewer->get_map();
-    if (!map) {
-        throw std::runtime_error("Map not avalaible");
-    }
+static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<int> objects) {
+    auto &object_manager(ObjectManager::get_instance());
 
     std::vector<int> results;
-    //Check the object is on the map
-
-    auto map_objects = map->get_map_objects();
-    for(int object_id : map_objects) {
-        //Object is on the map so now get its locationg
-        auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
-        Vec2D current_location(int(object->get_x_position()),
-                               int(object->get_y_position()));
-
-        if (current_location == location) {
-            results.push_back(object_id);
+    std::copy_if(std::begin(objects), std::end(objects), std::back_inserter(results),
+        [&] (int object_id) {
+            auto where(object_manager.get_object<MapObject>(object_id)->get_position());
+            return where == location;
         }
-    }
-
+    );
     return results;
 }
 
-std::vector<int> Engine::get_sprites_at(Vec2D location) {
-    Map* map = map_viewer->get_map();
-    if (!map) {
-        throw std::runtime_error("Map not avalaible");
-    }
+std::vector<int> Engine::get_objects_at(glm::vec2 location) {
+    return location_filter_objects(location, map_viewer->get_map()->get_map_objects());
+}
 
-    std::vector<int> results;
-    //Check the object is on the map
-
-    auto sprites = map->get_sprites();
-    for(int object_id : sprites) {
-        //Object is on the map so now get its locationg
-        auto object = ObjectManager::get_instance().get_object<Sprite>(object_id);
-        Vec2D current_location(int(object->get_x_position()),
-                               int(object->get_y_position()));
-
-        if (current_location == location) {
-            results.push_back(object_id);
-        }
-    }
-
-    return results;
+std::vector<int> Engine::get_sprites_at(glm::vec2 location) {
+    return location_filter_objects(location, map_viewer->get_map()->get_map_objects());
 }
 
 std::string Engine::editor = DEFAULT_PY_EDITOR;
 
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
-    notifcation_stack.add_new(text_to_display);
+    notification_stack.add_new(text_to_display);
     EventManager::get_instance().add_event(
         [text_to_display] () {
             Engine::get_dialogue_box()->set_text(text_to_display);
@@ -245,62 +191,50 @@ void Engine::print_dialogue(std::string name, std::string text) {
     );
 }
 
+// TODO (Joshua): make small wanted changes
 void Engine::move_notification(Direction direction) {
-    switch (direction) {
-        case (Next):
-            Engine::get_dialogue_box()->set_text(notifcation_stack.forward());
-            break;
-        case (Previous):
-            Engine::get_dialogue_box()->set_text(notifcation_stack.backward());
-            break;
-    }
+    Engine::get_dialogue_box()->set_text(
+        direction == Direction::NEXT ? notification_stack.forward()
+                                     : notification_stack.backward()
+    );
 }
 
 void Engine::text_displayer() {
-
-    Map* map = map_viewer->get_map();
-    if (!map) {
-        throw std::runtime_error("Map not avalaible");
-    }
+    Map *map = CHECK_NOTNULL(map_viewer->get_map());
 
     auto objects = map->get_sprites();
-    for(int object_id : objects) {
+    for (int object_id : objects) {
         //Object is on the map so now get its locationg
         auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
-        if (sprite->get_object_text() != nullptr) {
+        if (sprite->get_object_text()) {
             sprite->get_object_text()->display();
         }
-        if (sprite->get_status_text() != nullptr) {
+        if (sprite->get_status_text()) {
             sprite->get_status_text()->display();
         }
     }
 }
 
 void Engine::text_updater() {
-    Map* map = map_viewer->get_map();
-    if (!map) {
-        throw std::runtime_error("Map not avalaible");
-    }
+    Map *map = CHECK_NOTNULL(map_viewer->get_map());
 
     auto objects = map->get_sprites();
     for (int object_id : objects) {
-        //Object is on the map so now get its locationg
+        //Object is on the map so now get its location
         auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
 
-        std::pair<double,double> tile(sprite->get_x_position(), sprite->get_y_position());
-
-        Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(tile);
-
-        VLOG(2) << "sprite location" << sprite->get_x_position() << " " << sprite->get_y_position();
-        VLOG(2) << "Pixel position: " << pixel_position.to_string();
+        glm::ivec2 pixel_position(
+            Engine::get_map_viewer()->tile_to_pixel(sprite->get_position())
+        );
 
         sprite->get_object_text()->move(
-            pixel_position.x + int(0.5 * Engine::get_actual_tile_size()),
+            pixel_position.x + Engine::get_actual_tile_size() * 1 / 2,
             pixel_position.y
         );
+
         sprite->get_status_text()->move(
-            pixel_position.x + int(0.5 * Engine::get_actual_tile_size()),
-            pixel_position.y + int(1.5 * Engine::get_actual_tile_size())
+            pixel_position.x + Engine::get_actual_tile_size() * 1 / 2,
+            pixel_position.y + Engine::get_actual_tile_size() * 3 / 2
         );
     }
 
@@ -310,4 +244,3 @@ void Engine::update_status(int id, std::string status) {
     auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
     sprite->get_status_text()->set_text(status);
 }
-

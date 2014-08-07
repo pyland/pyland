@@ -2,27 +2,26 @@
 /// Defines the API used for the C++/Python integration
 ///
 
-#ifndef ENGINE_API_H
-#define ENGINE_API_H
+#ifndef ENGINE_H
+#define ENGINE_H
 
 #include <array>
 #include <future>
+#include <glm/vec2.hpp>
 #include <memory>
 #include <utility>
 #include <vector>
 
 #include "gil_safe_future.hpp"
-#include "notification.hpp"
+#include "notification_stack.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
 
-#include "api.hpp"
-
 class MapViewer;
 
-enum Status {RUNNING, STOPPED, FAILED};
-enum Direction {Next, Previous};
+enum class Status {RUNNING, STOPPED, FAILED};
+enum class Direction {NEXT, PREVIOUS};
 
 ///
 /// default python editor, used as long as another isn't passed as command line arg
@@ -47,8 +46,8 @@ private:
     ///
     /// cache for hold past notification
     ///
-    static Notification notifcation_stack; 
-    
+    static Notification notification_stack;
+
     ///
     /// The size of a tile
     ///
@@ -61,11 +60,11 @@ private:
     static int global_scale;
 public:
     ///
-    /// Get the global scale 
+    /// Get the global scale
     /// @return the global scale
     ///
     static int get_global_scale() { return global_scale; }
-    
+
     ///
     /// Set the global scaling factor
     /// @param _global_scale the scaling factor
@@ -105,8 +104,8 @@ public:
     /// @param dx move in x by dx tiles
     /// @param dy move in x by dy tiles
     ///
-    static void move_sprite(int id, Vec2D move_by);
-    static void move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeeded_return);
+    static void move_sprite(int id, glm::ivec2 move_by);
+    static void move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return);
 
     ///
     /// Determine if a location can be walked on
@@ -114,7 +113,7 @@ public:
     /// @param y_pos the y position to test
     /// @return true if the position can be walked on, false if not
     ///
-    static bool walkable(Vec2D location);
+    static bool walkable(glm::ivec2 location);
 
     ///
     /// Change the tile in the map in the given layer at the provided position
@@ -124,42 +123,7 @@ public:
     /// @param layer the layer of the tile to change
     /// @return indicates if the operation completed successfully
     ///
-    static bool change_tile(Vec2D tile, int layer_num, int tile_id);
-
-    ///
-    /// Gets the ids of the tiles at this location. Layer 0 is the first
-    /// element in the vector. Then each layer follows. If the id is 0
-    /// then this  means that there is no tile in this layer
-    /// @param x the x location to fetch the tile list for
-    /// @param y the y location to fetch the tile list for
-    /// @return a vector of the tiles, stored in layer order with layer 0
-    /// as the first element. A 0 is stored for a layer if there is no
-    /// tile there
-    ///
-    static std::vector<int> get_tiles(Vec2D location);
-
-    ///
-    /// Get the objects at the given map position if any, empty if no objects
-    /// @param x the x position on the map
-    /// @param y the y position on the map
-    /// @return a vector of all the objects at that position on the map
-    ///
-    static std::vector<int> get_objects(Vec2D location);
-
-    ///
-    /// Get the sprites at the given map position if any, empty if no objects
-    /// @param x the x position on the map
-    /// @param y the y position on the map
-    /// @return a vector of all the objects at that position on the map
-    ///
-    static std::vector<int> get_sprites(Vec2D location);
-
-    ///
-    /// Load the map specified by the ap id
-    /// @param map_id the id of the map to load
-    /// @return indicate if the map was successfully loaded
-    ///
-    static bool load_map(int map_id);
+    static void change_tile(glm::ivec2 tile, int layer_num, int tile_id);
 
     ///
     /// Get the location of the map object or sprite in the map, throws exception if
@@ -167,42 +131,25 @@ public:
     /// @id the id of the object
     /// @return a pair which is the (x, y) tuple of the object position
     ///
-    static Vec2D find_object(int id);
+    static glm::vec2 find_object(int id);
 
     ///
     /// Open a text editor for the user to edit a file
     /// @param filename name of file in scripts directory
     ///
-    static bool open_editor(std::string filename);
+    static void open_editor(std::string filename);
 
     ///
     /// Get a list of objects at this point
     /// @return a vector of object ids
     ///
-    static std::vector<int> get_objects_at(Vec2D location);
+    static std::vector<int> get_objects_at(glm::vec2 location);
 
     ///
     /// Get a list of sprites at this point
     /// @return a vector of object ids
     ///
-    static std::vector<int> get_sprites_at(Vec2D location);
-
-
-    ///
-    /// Add an object to the map at the given location
-    /// @param object_id the id of the object to add
-    /// @param x_pos the x position of the object
-    /// @param y_pos the y position of the object
-    ///
-    static void add_object(int object_id, Vec2D location);
-
-    ///
-    /// Remove an object from the map at a givene location
-    /// @param object_id the id of the object to add
-    /// @param x_pos the x position of the object
-    /// @param y_pos the y position of the object
-    ///
-    static void remove_object(int object_id, Vec2D location);
+    static std::vector<int> get_sprites_at(glm::vec2 location);
 
     ///
     /// set the text editor, opened by the challenges
@@ -220,4 +167,5 @@ public:
     static void update_status(int id, std::string status);
 
 };
+
 #endif

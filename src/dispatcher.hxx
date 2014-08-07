@@ -1,10 +1,10 @@
 #include <functional>
+#include <glm/vec2.hpp>
 #include <map>
 
 template <typename... Arguments>
-typename Dispatcher<Arguments...>::CallbackID Dispatcher<Arguments...>::register_callback(
-    std::function<bool (Arguments...)> callback
-) {
+typename Dispatcher<Arguments...>::CallbackID
+Dispatcher<Arguments...>::register_callback(std::function<bool (Arguments...)> callback) {
     functions[++maxid] = callback;
     return maxid;
 }
@@ -30,7 +30,7 @@ void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
 }
 
 template <typename... Arguments>
-PositionDispatcher<Arguments...>::PositionDispatcher (Vec2D location):
+PositionDispatcher<Arguments...>::PositionDispatcher (glm::ivec2 location):
     callback_map(
         location.x,
         std::vector<std::map<CallbackTileID, std::function<bool (Arguments...)>>>(
@@ -41,8 +41,8 @@ PositionDispatcher<Arguments...>::PositionDispatcher (Vec2D location):
 {}
 
 template <typename... Arguments>
-typename PositionDispatcher<Arguments...>::CallbackID PositionDispatcher<Arguments...>::register_callback(
-        Vec2D tile, std::function<bool (Arguments...)> callback) {
+typename PositionDispatcher<Arguments...>::CallbackID
+PositionDispatcher<Arguments...>::register_callback(glm::ivec2 tile, std::function<bool (Arguments...)> callback) {
     callback_map[tile.x][tile.y][++maxid] = callback;
     return std::make_pair(tile, maxid);
 }
@@ -53,7 +53,7 @@ bool PositionDispatcher<Arguments...>::unregister(PositionDispatcher<Arguments..
 }
 
 template <typename... Arguments>
-void PositionDispatcher<Arguments...>::trigger(Vec2D tile, Arguments... arguments) {
+void PositionDispatcher<Arguments...>::trigger(glm::ivec2 tile, Arguments... arguments) {
     // Do increments inline
     for (auto it = callback_map.at(tile.x).at(tile.y).cbegin(); it != callback_map.at(tile.x).at(tile.y).cend(); ) {
         if (!(*it).second(arguments...)) {

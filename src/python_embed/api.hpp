@@ -4,67 +4,11 @@
 #include "python_embed_headers.hpp"
 
 #include <boost/python.hpp>
+#include <glm/vec2.hpp>
+#include <ostream>
 #include <string>
 
 namespace py = boost::python;
-
-///
-/// Vector displacement.
-///
-class Vec2D {
-    public:
-        ///
-        /// Tempoarily public position attributes.
-        ///
-        int x;
-        int y;
-
-        ///
-        /// Vec2D constructor
-        ///
-        /// @param x
-        ///     x-axis position
-        ///
-        /// @param y
-        ///     y-axis position
-        ///
-        /// @return
-        ///     Instance of Vec2D
-        ///
-        Vec2D(int x, int y);
-
-        ///
-        /// Addition of Vec2Ds, not mutating either vector
-        ///
-        /// @param other
-        ///     Coordinate being added
-        ///
-        /// @return
-        ///     New instance of Vec2D
-        ///
-        Vec2D operator+(Vec2D other);
-        Vec2D operator-(Vec2D other);
-        Vec2D operator/(Vec2D other);
-        Vec2D operator*(Vec2D other);
-        bool operator==(Vec2D other);
-
-        ///
-        /// In-place addition of Vec2Ds
-        ///
-        /// @param other
-        ///     The other coordinate being added
-        ///
-        void operator+=(Vec2D other);
-        void operator-=(Vec2D other);
-
-
-        ///
-        /// Convert Vec2D to a std::string
-        ///
-        /// @return String representation of Vec2D
-        ///
-        std::string to_string();
-};
 
 ///
 /// Player object passable to Python after wrapping.
@@ -74,8 +18,8 @@ class Entity {
         ///
         /// Starting postiton for this entity, used to reset location when entity dies.
         ///
-        Vec2D start;
-        
+        glm::vec2 start;
+
         ///
         /// The wrapped python script.
         ///
@@ -90,8 +34,8 @@ class Entity {
         /// will be a deprecated or randomly-generated feature.
         ///
         std::string name;
-        
-        /// 
+
+        ///
         /// ID of entity, referring to in-game object that the API calls are passed to.
         ///
         int id;
@@ -119,7 +63,7 @@ class Entity {
         /// @return
         ///     New instance of Entity
         ///
-        Entity(Vec2D start, std::string name, int id);
+        Entity(glm::vec2 start, std::string name, int id);
 
         ///
         /// Move entity relative to current location.
@@ -139,7 +83,7 @@ class Entity {
         /// Checks if player can move by the vector given.
         ///
         /// @param by
-        ///     Vec2D representing movement in the axes.
+        ///     position representing movement in the axes.
         ///     TODO: replace so as to not require vector displacements.
         ///
         /// @return
@@ -150,7 +94,7 @@ class Entity {
         ///
         /// Prints to standard output the name and position of entity.
         ///
-        void monologue(); 
+        void monologue();
 
         void py_print_debug(std::string text);
         void py_print_dialogue(std::string text);

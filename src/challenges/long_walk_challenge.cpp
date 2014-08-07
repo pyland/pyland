@@ -10,39 +10,39 @@
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "long_walk_challenge.hpp"
-#include "engine_api.hpp"
+#include "engine.hpp"
 #include "map_viewer.hpp"
 
 //TODO: later this will be fetched from the map
-std::map<std::string, std::vector<Vec2D>> targets = {
+std::map<std::string, std::vector<glm::ivec2>> targets = {
     {"start", {
-        Vec2D(   4, 29-14)
+        glm::ivec2(   4, 29-14)
     }},
     {"room:exit:first", {
-        Vec2D(  11, 29-14),
-        Vec2D(  11, 29-15)
+        glm::ivec2(  11, 29-14),
+        glm::ivec2(  11, 29-15)
     }},
     {"treasure:path:medium", {
-        Vec2D(  24, 29-14)
+        glm::ivec2(  24, 29-14)
     }},
     {"wall:path:medium", {
-        Vec2D(  31, 29-13),
-        Vec2D(  31, 29-14),
-        Vec2D(  31, 29-15),
-        Vec2D(  31, 29-16)
+        glm::ivec2(  31, 29-13),
+        glm::ivec2(  31, 29-14),
+        glm::ivec2(  31, 29-15),
+        glm::ivec2(  31, 29-16)
     }},
     {"treasure:path:long", {
-        Vec2D( 114, 29-15)
+        glm::ivec2( 114, 29-15)
     }},
     {"wall:path:long", {
-        Vec2D( 116, 29-13),
-        Vec2D( 116, 29-14),
-        Vec2D( 116, 29-15),
-        Vec2D( 116, 29-16)
+        glm::ivec2( 116, 29-13),
+        glm::ivec2( 116, 29-14),
+        glm::ivec2( 116, 29-15),
+        glm::ivec2( 116, 29-16)
     }},
     {"end", {
-        Vec2D(1499, 29-14),
-        Vec2D(1499, 29-15)
+        glm::ivec2(1499, 29-14),
+        glm::ivec2(1499, 29-15)
     }}
 };
 
@@ -62,7 +62,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
     // Set up notifications about walls
     for (auto wall_location : targets.at("wall:path:medium")) {
         wall_path_medium_callbacks.push_back(map->event_step_on.register_callback(
-            wall_location + Vec2D(-1, 0),
+            wall_location + glm::ivec2(-1, 0),
             [&] (int) {
                 Engine::print_dialogue("Tom", "Get the treasure and press \"e\" to view it!\n");
 
@@ -80,7 +80,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
 
     for (auto wall_location : targets.at("wall:path:long")) {
         wall_path_long_callbacks.push_back(map->event_step_on.register_callback(
-            wall_location + Vec2D(-1, 0),
+            wall_location + glm::ivec2(-1, 0),
             [&] (int) {
                 Engine::print_dialogue("Tom", "Hey... you missed the treasure!\n");
 

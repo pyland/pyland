@@ -1,12 +1,13 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <memory>
+#include <string>
+
 #include "map.hpp"
 #include "renderable_component.hpp"
 #include "walkability.hpp"
 
-#include <memory>
-#include <string>
 
 class LockableEntityThread;
 

@@ -1,9 +1,11 @@
 #include <chrono>
 #include <functional>
 #include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <iostream>
 #include <mutex>
 #include <thread>
+
 #include "entitythread.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"

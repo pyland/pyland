@@ -1,73 +1,69 @@
-#include "map_object.hpp"
-#include "image.hpp"
-#include "engine_api.hpp"
+#include <fstream>
+#include <glog/logging.h>
+#include <glm/vec2.hpp>
+#include <iostream>
+#include <new>
+
+#include "engine.hpp"
 #include "entitythread.hpp"
+#include "image.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "renderable_component.hpp"
 
-#include <new>
-#include <glog/logging.h>
-#include <iostream>
-#include <fstream>
-
-
 #ifdef USE_GLES
-
 #include <GLES2/gl2.h>
-
 #endif
 
 #ifdef USE_GL
-
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
-
 #endif
-MapObject::MapObject() {
 
-    LOG(INFO) << "MapObject created";
+// WTF
+MapObject::MapObject() {
+    LOG(INFO) << "Empty MapObject created";
 }
 
-MapObject::MapObject(int _x_position, int _y_position, std::string _name) {
-    LOG(INFO) << "register new map object called " << _name;
-    x_position = _x_position;
-    y_position = _y_position;
-    name = _name;
+// WTF
+MapObject::MapObject(glm::vec2 position, std::string name): position(position)  {
+    VLOG(2) << "New map object: " << name;
+
+    set_name(name);
 
     init_shaders();
     load_textures();
     generate_tex_data();
     generate_vertex_data();
 
-    // setting up sprite text
+    auto map_viewer(Engine::get_map_viewer());
+
+    // Setting up sprite text
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
     TextFont myfont(mytype, 18);
+
+    // TODO: Smart pointer
     object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
     object_text->set_text(name);
-    Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    object_text->move(pixel_position.x ,pixel_position.y );
+    glm::ivec2 pixel_position(map_viewer->tile_to_pixel(position));
+    object_text->move(pixel_position.x, pixel_position.y);
     object_text->resize(100,100);
-    LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
+    LOG(INFO) << "Setting up text at " << pixel_position.x << ", " << pixel_position.y;
 
     // setting up status text
-    status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+    status_text = new Text(map_viewer->get_window(), myfont, true);
     status_text->set_text("awaiting...");
-    Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    status_text->move(pixel_text.x ,pixel_text.y + 100);
+    glm::ivec2 pixel_text(map_viewer->tile_to_pixel(position));
+    status_text->move(pixel_text.x, pixel_text.y + 100);
     status_text->resize(100,100);
 
-    // Starting positions should be integral
-    assert(trunc(x_position) == x_position);
-    assert(trunc(y_position) == y_position);
-
-    //Make a map object blocked
-    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
-        Vec2D(int(x_position), int(y_position))
-    )));
-
+    // TODO: Starting positions should be integral as of currently. Check or fix.
+    //
+    // Make a map object blocked
+    // In future this might not be needed
+    blocked_tiles.insert(std::make_pair("stood on", map_viewer->get_map()->block_tile(position)));
 
     LOG(INFO) << "MapObject initialized";
-
 }
 
 MapObject::~MapObject() {
@@ -77,7 +73,7 @@ MapObject::~MapObject() {
 }
 
 
-void MapObject::set_state_on_moving_start(Vec2D target) {
+void MapObject::set_state_on_moving_start(glm::ivec2 target) {
     moving = true;
     blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
 }
@@ -179,7 +175,8 @@ void MapObject::generate_vertex_data() {
     renderable_component.set_vertex_data(map_object_vert_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }
-#include <iostream>
+
+// TODO: rewrite
 void MapObject::load_textures() {
     Image* texture_image = nullptr;
 
@@ -209,5 +206,6 @@ bool MapObject::init_shaders() {
 
     //Set the shader
     renderable_component.set_shader(shader);
+    return true;
 }
 

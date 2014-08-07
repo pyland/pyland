@@ -1,7 +1,6 @@
 #ifndef MAPVIEWER_H
 #define MAPVIEWER_H
 
-
 #include "gui/gui_manager.hpp"
 
 class GameWindow;
@@ -13,7 +12,7 @@ class MapViewer {
     /// The Map we are currently rendering
     ///
     Map* map = nullptr;
-   
+
     ///
     /// The GUI manager this viewer is using
     ///
@@ -21,17 +20,12 @@ class MapViewer {
 
     ///
     /// Object to focus the map on
-    /// 
+    ///
     int map_focus_object = 0;
     ///
     /// The reference to the window object in which we render the map.
     ///
     GameWindow *window = nullptr;
-
-    ///
-    /// The speed at which we scroll the map.
-    ///
-    float map_scroll_speed = 32.0f;
 
     ///
     /// The far left  x position where we display the map
@@ -54,10 +48,10 @@ class MapViewer {
     float map_display_height = 30;
 
     ///
-    /// Render the GUI 
+    /// Render the GUI
     ///
     void render_gui();
-    
+
     ///
     /// Render the map
     ///
@@ -79,13 +73,13 @@ public:
 
     ///
     /// Refocus the map back onto the object it is focusses on
-    /// 
+    ///
     void refocus_map();
 
     ///
-    /// Set the id of the object to focus on 
+    /// Set the id of the object to focus on
     /// @param object_id the id of the object to focus the map view on
-    ///  
+    ///
     void set_map_focus_object(int object_id);
 
     ///
@@ -109,7 +103,7 @@ public:
     /// Return the map instance the viewer is managing
     /// @return The map instance the viewer manages
     Map* get_map();
-    
+
     ///
     /// Get the game window associated with this map viewer
     /// @return the game window used to view the map
@@ -168,12 +162,13 @@ public:
     ///
     /// converts pixel location inside window to a map tile
     ///
-    Vec2D pixel_to_tile (Vec2D pixel_location);
+    glm::vec2 pixel_to_tile (glm::ivec2 pixel_location);
 
     ///
     /// converts a tile in map to a pixel location in window of the bottem left corner of tile
-    Vec2D tile_to_pixel (Vec2D tile_location);
-    Vec2D tile_to_pixel(std::pair<double,double> tile_location) ;
+    ///
+    glm::ivec2 tile_to_pixel(glm::vec2 tile_location) ;
 
 };
+
 #endif

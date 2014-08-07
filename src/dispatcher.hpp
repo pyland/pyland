@@ -2,10 +2,9 @@
 #define DISPATCHER_H
 
 #include <functional>
+#include <glm/vec2.hpp>
 #include <map>
 #include <utility>
-
-#include "api.hpp"
 
 template <typename... Arguments>
 class Dispatcher {
@@ -23,12 +22,12 @@ class Dispatcher {
 template <typename... Arguments>
 class PositionDispatcher {
     public:
-        PositionDispatcher(Vec2D location);
+        PositionDispatcher(glm::ivec2 location);
         using CallbackTileID = uint64_t;
-        using CallbackID = std::pair<Vec2D, CallbackTileID>;
-        CallbackID register_callback(Vec2D tile, std::function<bool (Arguments...)> callback);
+        using CallbackID = std::pair<glm::ivec2, CallbackTileID>;
+        CallbackID register_callback(glm::ivec2 tile, std::function<bool (Arguments...)> callback);
         bool unregister(CallbackID callback);
-        void trigger(Vec2D tile, Arguments... arguments);
+        void trigger(glm::ivec2 tile, Arguments... arguments);
 
     private:
         uint64_t maxid = 0;

@@ -19,6 +19,7 @@
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
@@ -28,7 +29,7 @@
 #include "api.hpp"
 #include "button.hpp"
 #include "component.hpp"
-#include "engine_api.hpp"
+#include "engine.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
 #include "game_window.hpp"
@@ -70,24 +71,18 @@
 
 using namespace std;
 
-enum arrow_key {UP, DOWN, LEFT, RIGHT};
-
 #define TEXT_BORDER_WIDTH 20
 #define TEXT_HEIGHT 80
-
-static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
 int create_sprite(Interpreter &interpreter) {
     LOG(INFO) << "Creating sprite";
 
-
-    int start_x = 4;
-    int start_y = 15;
+    glm::ivec2 start(4, 15);
 
     // Registering new sprite with game engine
-    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start_x, start_y, "John");
+    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start, "John");
     LOG(INFO) << "Adding sprite";
     ObjectManager::get_instance().add_object(new_sprite);
     Engine::get_map_viewer()->get_map()->add_sprite(new_sprite->get_id());
@@ -98,12 +93,10 @@ int create_sprite(Interpreter &interpreter) {
 
     // Register user controled sprite
     // Yes, this is a memory leak. Deal with it.
-    Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_sprite->get_name(), new_sprite->get_id());
+    Entity *a_thing = new Entity(start, new_sprite->get_name(), new_sprite->get_id());
 
     LOG(INFO) << "Registering sprite";
-
     new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
-
     LOG(INFO) << "Done!";
 
     return new_sprite->get_id();
@@ -111,16 +104,16 @@ int create_sprite(Interpreter &interpreter) {
 
 class CallbackState {
     public:
-        CallbackState(Interpreter &interpreter,
-                      std::string name):
+        CallbackState(Interpreter &interpreter, std::string name):
             interpreter(interpreter),
-            name(name){
+            name(name) {
         }
 
-        void register_number_key(int key) {
+        void register_number_key(unsigned int key) {
             LOG(INFO) << "changing focus to " << key;
 
-            if (!(0 <= key && size_t(key) < key_to_id.size())) {
+            // Note: unsigned
+            if (key >= key_to_id.size()) {
                 LOG(INFO) << "changing focus aborted; no such id";
                 return;
             }
@@ -171,30 +164,15 @@ class CallbackState {
             active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
         }
 
-        void man_move (arrow_key direction) {
-            VLOG(3) << "arrow key pressed";
+        void man_move(glm::vec2 direction) {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            switch (direction) {
-                case (UP):
-                    Engine::move_sprite(id,Vec2D(0,1));
-                    break;
-                case (DOWN):
-                    Engine::move_sprite(id,Vec2D(0,-1));
-                    break;
-                case (RIGHT):
-                    Engine::move_sprite(id,Vec2D(-1,0));
-                    break;
-                case (LEFT):
-                    Engine::move_sprite(id,Vec2D(1,0));
-                    break;
-            }
-
+            Engine::move_sprite(id, direction);
         }
 
         void monologue () {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            Vec2D location =  Engine::find_object(id);
-            std::cout << "You are at " << location.to_string() <<std::endl;
+            auto location =  Engine::find_object(id);
+            std::cout << "You are at " << location.x << ", " << location.y << std::endl;
         }
 
     private:
@@ -274,7 +252,7 @@ int main(int argc, const char* argv[]) {
     backward_button->set_text("backward");
     backward_button->set_on_click([&] () {
         LOG(INFO) << "backward button pressed";  
-        Engine::move_notification(Previous); 
+        Engine::move_notification(Direction::PREVIOUS); 
     });
     backward_button->set_width(button_size);
     backward_button->set_height(button_size);
@@ -290,7 +268,7 @@ int main(int argc, const char* argv[]) {
     forward_button->set_text("forward");
     forward_button->set_on_click([&] () {
         LOG(INFO) << "forward button pressed"; 
-        Engine::move_notification(Next); 
+        Engine::move_notification(Direction::NEXT); 
     });
     forward_button->set_width(button_size);
     forward_button->set_height(button_size);
@@ -381,22 +359,22 @@ int main(int argc, const char* argv[]) {
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_HELD}), KEY({"Up", "W"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, 1)); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_HELD}), KEY({"Down","S"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, -1)); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_HELD}), KEY({"Right","D"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 1,  0)); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_HELD}), KEY({"Left","A"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2(-1,  0)); }
     ));
 
     Lifeline monologue_callback = input_manager->register_keyboard_handler(filter(
@@ -411,7 +389,7 @@ int main(int argc, const char* argv[]) {
 
 
     std::vector<Lifeline> digit_callbacks;
-    for (int i=0; i<10; ++i) {
+    for (unsigned int i=0; i<10; ++i) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
                 {KEY_PRESS, KEY(std::to_string(i))},
@@ -423,8 +401,9 @@ int main(int argc, const char* argv[]) {
     Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})},
         [&] (MouseInputEvent event) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
-            Vec2D tile_clicked = Engine::get_map_viewer()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
-            LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
+            glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
+            LOG(INFO) << "iteracting with tile " << tile_clicked.x << ", " << tile_clicked.y;
+
             auto objects = Engine::get_objects_at(tile_clicked);
             if (objects.size() == 1) {
                 callbackstate.register_number_id(objects[0]);

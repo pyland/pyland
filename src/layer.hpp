@@ -1,13 +1,14 @@
 #ifndef LAYER_H
 #define LAYER_H
 
-#include "object.hpp"
-
 #include <exception>
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "object.hpp"
+
 
 ///
 /// A layer on the map. These
@@ -20,7 +21,7 @@ public:
     ///
     enum class Packing {
         ///
-        /// We have a dense layer 
+        /// We have a dense layer
         ///
         DENSE,
         ///
@@ -44,7 +45,7 @@ private:
     /// The name of the layer
     ///
     std::string name;
-    
+
     ///
     /// The layer data stored as tilesetname, tile id pair
     ///
@@ -63,16 +64,16 @@ public:
     ///
     /// Construct the new Layer
     ///
-    Layer(int _width_tiles, int _height_tiles, std::string _name);
+    Layer(int width_tiles, int height_tiles, std::string name);
 
     ///
     /// Add a tile to the layer. This adds the tile to the end of the tile list.
     /// Note: this does NOT add the tile to the geometry. It adds it to the list of tiles on this layer.
-    /// 
+    ///
     void add_tile(const std::string tileset, int tile_id);
 
     ///
-    /// Update a tile. This  function is used to put a new tile on the layer or to update an  
+    /// Update a tile. This  function is used to put a new tile on the layer or to update an
     /// existing tile on the layer.
     /// @param x_pos the x position
     /// @param y_pos the y position
@@ -116,14 +117,14 @@ public:
 
     ///
     /// Get the width of the layer in tiles
-    /// 
+    ///
     int get_width_tiles() { return width_tiles; }
 
     ///
     /// Get the height of the layer
     ///
     int get_height_tiles() { return height_tiles; }
-    
+
     ///
     /// Get the layer's data as a shared_ptr
     ///
