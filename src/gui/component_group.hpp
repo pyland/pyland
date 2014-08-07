@@ -65,7 +65,7 @@ public:
     ///
     /// Gets a vector of all the GUIText elements for this component
     ///
-    std::vector<std::shared_ptr<GUIText>> generate_text_data();
+    std::vector<std::shared_ptr<GUITextData>> generate_text_data();
 
     ///
     /// This function is called by generate vertex data (See Call Super on wikipedia)

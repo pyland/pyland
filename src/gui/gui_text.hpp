@@ -21,22 +21,12 @@ class GUIText : public Component {
     /// The transformed y pixels offset in to global space
     ///
     int transformed_y_pixel_offset;
-
+    
     ///
-    /// The typeface to use for the font
+    /// The text data
     ///
-    std::shared_ptr<Typeface> typeface;
-
-    ///
-    /// The font to use
-    ///
-    std::shared_ptr<TextFont> font;
-
-    ///
-    /// The text to render
-    ///
-    std::shared_ptr<Text> text;
-
+    std::shared_ptr<GUITextData> text_data;
+ 
 public:
     GUIText();
     ~GUIText();
@@ -69,47 +59,42 @@ public:
     /// Get the typeface for the text
     /// @return the typeface
     ///
-    std::shared_ptr<Typeface> get_typeface() { return typeface; }
+    std::shared_ptr<Typeface> get_typeface(); 
   
     ///
     /// Set the typeface for the font
     /// @param _typeface the typeface to use
     ///
-    void set_typeface(std::shared_ptr<Typeface> _typeface) { typeface = _typeface; }
+    void set_typeface(std::shared_ptr<Typeface> _typeface); 
 
     ///
     /// Get the text's font
     /// @return the text font
     ///
-    std::shared_ptr<TextFont> get_text_font() { return font; }
+    std::shared_ptr<TextFont> get_text_font();
 
     ///
     /// Set the text's font
     /// @param _textfont the text's font
     ///
-    void set_text_font(std::shared_ptr<TextFont> _textfont) { font = _textfont; }
+    void set_text_font(std::shared_ptr<TextFont> _textfont);
 
     ///
     /// Get the text 
     /// @return the text
     ///
-    std::shared_ptr<Text> get_text() { return text; }
+    std::shared_ptr<Text> get_text();
 
     ///
     /// Set the text
     /// @_text the new text
     ///
-    void set_text(std::shared_ptr<Text> _text) { text = _text; }
-
-    ///
-    /// Display the text at the pixel x and y positions
-    ///
-    void display();
+    void set_text(std::shared_ptr<Text> _text);
 
     //Overloads from Component
     std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
     std::vector<std::pair<GLfloat*, int>> generate_texture_data();
-    std::vector<std::shared_ptr<GUIText>> generate_text_data();
+    std::vector<std::shared_ptr<GUITextData>> generate_text_data();
 };
 
 #endif
