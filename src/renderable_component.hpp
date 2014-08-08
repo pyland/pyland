@@ -80,7 +80,7 @@ class RenderableComponent {
     /// The vertex buffer object identifier for the vertex buffer
     ///
     GLuint vbo_vertex_id = 0;
-  
+
     ///
     /// The vertex buffer object identifier for the texture buffer
     ///
@@ -114,7 +114,7 @@ class RenderableComponent {
 
     ///
     /// the current modelview matrix
-    /// 
+    ///
     glm::mat4 modelview_matrix  = glm::mat4(1.0);
 
 
@@ -143,7 +143,7 @@ public:
     ///
     /// Set the modelview matrix for this component
     /// @param new_modelview_matrix the new modelview matrix
-    /// 
+    ///
     void set_modelview_matrix(glm::mat4 new_modelview_matrix) { modelview_matrix = new_modelview_matrix; }
 
     ///
@@ -167,7 +167,7 @@ public:
     std::shared_ptr<Shader> get_shader() { return shader; }
 
     ///
-    /// Bind the vertex buffers 
+    /// Bind the vertex buffers
     ///
     void bind_vbos();
 
@@ -199,11 +199,11 @@ public:
     ///o
     GLfloat* get_texture_coords_data() { return texture_coords_data; }
 
-    /// 
+    ///
     /// Set the texture coordinate data to use for this component
     /// @param new_texture_data The new data to use for ther tehadxture coordinates of this object
     /// @param data_size The size of the data in bytes
-    /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static 
+    /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static
     ///
     void set_texture_coords_data(GLfloat* new_texture_data, size_t data_size, bool is_dynamic);
 
@@ -216,7 +216,7 @@ public:
     ///
     /// @param image An Image containing the texture data and metadata.
     ///
-    void set_texture_image(Image* image);        
+    void set_texture_image(Image* image);
 
 
     ///
@@ -224,20 +224,20 @@ public:
     ///
     /// @returnimage An Image containing the texture data and metadata.
     ///
-    Image* get_texture_image() { return texture_image; }        
+    Image* get_texture_image() { return texture_image; }
 
 
     ///
     /// Get the width of the component
     /// @return The width of the component
-    /// 
+    ///
     int get_width() { return width; }
 
     ///
     /// Get the height of the component
     /// @return The height of the component
     ///
-    int get_height() { return height; } 
+    int get_height() { return height; }
 
     ///
     /// Bind the texture objects
@@ -265,7 +265,7 @@ public:
     /// @param size the size of the data to put into the buffer in bytes
     /// @param data the data to put into the buffer
     ///
-    void update_texture_buffer(int offset, size_t size, GLfloat* data);
+    void update_texture_buffer(GLintptr offset, size_t size, GLfloat* data);
 
     ///
     /// Update the vertex buffer
@@ -273,7 +273,7 @@ public:
     /// @param size the size of the data to put into the buffer in bytes
     /// @param data the data to put into the buffer
     ///
-    void update_vertex_buffer(int offset, size_t size, GLfloat* data);
+    void update_vertex_buffer(GLintptr offset, size_t size, GLfloat* data);
 
 };
 

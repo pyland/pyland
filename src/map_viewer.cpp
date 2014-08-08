@@ -1,6 +1,6 @@
 #include <algorithm>
+#include <glog/logging.h>
 #include <glm/vec2.hpp>
-#include <iostream>
 #include <map>
 #include <memory>
 #include <vector>
@@ -17,44 +17,51 @@
 #include "sprite.hpp"
 
 
-MapViewer::MapViewer(GameWindow* new_window, GUIManager* new_gui_manager) {
+MapViewer::MapViewer(GameWindow *window, GUIManager* gui_manager):
+    gui_manager(CHECK_NOTNULL(gui_manager)),
+    window(CHECK_NOTNULL(window)) {
 
-    if(new_window == nullptr) {
-        LOG(ERROR) << "MapViewer::MapViewer: GameWindow should not be null";
-    }
-    window = new_window;
+        resize();
 
-    if(new_gui_manager == nullptr) {
-        std::cerr << "INVALID PASSING NULL GUIManager" << std::endl;
-    }
-    gui_manager = new_gui_manager;
-
-    // Set background color and clear buffers
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    // Disable writing to the alpha channel.
-    // Fixes a bug where EGL layer becomes transparent.
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
-    // L./eave this here!!!
-    //Disable back face culling.
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glEnable(GL_SCISSOR_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // Set background color and clear buffers
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        // Disable writing to the alpha channel.
+        // Fixes a bug where EGL layer becomes transparent.
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+        // L./eave this here!!!
+        //Disable back face culling.
+        glDisable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glEnable(GL_SCISSOR_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 
-MapViewer::~MapViewer() {
+MapViewer::~MapViewer() {}
 
+void MapViewer::resize() {
+    LOG(INFO) << "Map resizing";
+    std::pair<int, int> size(window->get_size());
+
+    // Adjust the view to show only tiles the user can see
+    set_display_width (float(size.first)  / Engine::get_actual_tile_size());
+    set_display_height(float(size.second) / Engine::get_actual_tile_size());
+
+    // Set the viewable fragments
+    glScissor(0, 0, size.first, size.second);
+    glViewport(0, 0, size.first, size.second);
+
+    if (get_map()) {
+        // Readjust the map focus
+        refocus_map();
+    }
 }
 
 void MapViewer::render() {
-   if(map == nullptr) {
-        LOG(ERROR) << "MapViewer::render_map: Map should not be null";
-        return;
-    }
+    CHECK_NOTNULL(map);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -229,7 +236,7 @@ void MapViewer::render_gui() {
 
     Shader* gui_shader = gui_render_component->get_shader().get();
     if(gui_shader == nullptr) {
-        std::cerr << "ERROR: Shader is NULL in MapViewer::render_map" << std::endl;
+        LOG(ERROR) << "ERROR: Shader is NULL in MapViewer::render_map";
         return;
     }
 
@@ -340,7 +347,7 @@ void MapViewer::refocus_map() {
     std::shared_ptr<Sprite> sprite = object_manager.get_object<Sprite>(map_focus_object);
 
     // If such an sprite exists, move the map to it
-    if(sprite) {
+    if (sprite) {
         set_display_x(centre_point_in_range(
             // half-tile offset to take centre of sprite
             /* point  */ float(sprite->get_position().x) + 0.5f,
@@ -390,16 +397,15 @@ Map* MapViewer::get_map() {
 
 
 glm::vec2 MapViewer::pixel_to_tile(glm::ivec2 pixel_location) {
-    float scale(Engine::get_tile_size() * Engine::get_global_scale());
+    float scale(Engine::get_actual_tile_size());
 
     glm::vec2 display_position(get_display_x(), get_display_y());
 
     return (glm::vec2(pixel_location) / scale) + display_position;
 }
 
-#include <iostream>
 glm::ivec2 MapViewer::tile_to_pixel(glm::vec2 tile_location) {
-    float scale(Engine::get_tile_size() * Engine::get_global_scale());
+    float scale(Engine::get_actual_tile_size());
 
     glm::vec2 display_position(get_display_x(), get_display_y());
 

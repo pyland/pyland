@@ -1,7 +1,6 @@
 #include <exception>
 #include <fstream>
 #include <glog/logging.h>
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -230,55 +229,57 @@ void Map::generate_tileset_coords(Image* texture_image) {
 void Map::generate_data() {
     LOG(INFO) << "Generating map data";
 
-    //Get each layer of the map
-    //Start at layer 0
+    // Get each layer of the map
+    // Start at layer 0
     int layer_num = 0;
-    for(auto layer_iter = layers.begin(); layer_iter != layers.end(); ++layer_iter) {
-        auto layer_data = (*layer_iter)->get_layer_data();
+    for (auto layer : layers) {
+        auto layer_data = layer->get_layer_data();
 
 
-        //Build the mapping from (x, y) to offsets in the vertex and texture buffers
-        std::shared_ptr<std::map<int, int>> buffer_map = std::make_shared<std::map<int, int>>();
+        // Build the mapping from (x, y) to offsets in the vertex and texture buffers
+        auto buffer_map = std::make_shared<std::map<int, int>>();
         layer_mappings[layer_num] = buffer_map;
 
 
-        //Don't generate data for the collisions layer
-        //TODO: handle this not being in layer_mappings
-        if ((*layer_iter)->get_name() == "Collisions") {
+        // Don't generate data for the collisions layer
+        // TODO: handle this not being in layer_mappings
+        if (layer->get_name() == "Collisions") {
             layer_num++;
             continue;
         }
 
 
-        //Work out if we need a dense or a sparse buffer
+        // Work out if we need a dense or a sparse buffer
         int total_tiles = 0;
         int num_blank_tiles = 0;
-        //Get all the tiles in the layer, moving from left to right and down
-        for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
-            int tile_id = tile_data->second;
-            if(tile_id == 0) {
-                num_blank_tiles++;
-            }
+
+        // Get all the tiles in the layer, moving from left to right and down
+        for (auto &tile_data : *layer_data) {
+            int tile_id = tile_data.second;
+            if (!tile_id) { num_blank_tiles++; }
+
             total_tiles++;
         }
 
-        //Spare packing by default
-        Layer::Packing layer_packing = Layer::Packing::SPARSE;
+        // Spare packing by default
+        auto layer_packing(Layer::Packing::SPARSE);
 
-        //If more than 50% of layer has tiles, make it dense
-        if(num_blank_tiles < total_tiles/2 ) {
+        // If more than 50% of layer has tiles, make it dense
+        if (num_blank_tiles < total_tiles / 2) {
             layer_packing = Layer::Packing::DENSE;
         }
 
-        (*layer_iter)->set_packing(layer_packing);
+        layer->set_packing(layer_packing);
 
-        //Create the buffer for the layer
-        int num_tiles = total_tiles - num_blank_tiles;
-        //The number of bytes needed - *6 for the GLTRIANGLES
-        int tex_data_size = sizeof(GLfloat)*num_tiles*num_tile_vertices*num_tile_dimensions;
-        int vert_data_size = sizeof(GLfloat)*num_tiles*num_tile_vertices*num_tile_dimensions;
-        GLfloat* layer_tex_coords = nullptr;
-        GLfloat* layer_vert_coords = nullptr;
+        // Create the buffer for the layer
+        int num_tiles(total_tiles - num_blank_tiles);
+
+        // The number of bytes needed - *6 for the GLTRIANGLES
+        // WTF: num_tile_vertices??
+        size_t tex_data_size (sizeof(GLfloat) * num_tiles * num_tile_vertices * num_tile_dimensions);
+        size_t vert_data_size(sizeof(GLfloat) * num_tiles * num_tile_vertices * num_tile_dimensions);
+        GLfloat* layer_tex_coords(nullptr);
+        GLfloat* layer_vert_coords(nullptr);
 
         try {
             layer_tex_coords = new GLfloat[tex_data_size];
@@ -289,41 +290,42 @@ void Map::generate_data() {
             return;
         }
 
-        //Build the layer data based on the
-        if(layer_packing == Layer::Packing::DENSE) {
-            generate_dense_layer_tex_coords(layer_tex_coords, *layer_iter);
-            generate_dense_layer_vert_coords(layer_vert_coords, *layer_iter);
+        // Build the layer data based on the
+        if (layer_packing == Layer::Packing::DENSE) {
+            generate_dense_layer_tex_coords(layer_tex_coords, layer);
+            generate_dense_layer_vert_coords(layer_vert_coords, layer);
         }
         else {
-            generate_sparse_layer_tex_coords(layer_tex_coords, *layer_iter);
-            generate_sparse_layer_vert_coords(layer_vert_coords, *layer_iter);
+            generate_sparse_layer_tex_coords(layer_tex_coords, layer);
+            generate_sparse_layer_vert_coords(layer_vert_coords, layer);
         }
-        //Set this data in the renderable component for the layer
-        RenderableComponent* renderable_component = (*layer_iter)->get_renderable_component();
+        // Set this data in the renderable component for the layer
+        RenderableComponent* renderable_component = layer->get_renderable_component();
         renderable_component->set_texture_coords_data(layer_tex_coords, tex_data_size, false);
         renderable_component->set_vertex_data(layer_vert_coords, vert_data_size, false);
         renderable_component->set_num_vertices_render(num_tiles*num_tile_vertices);
 
-        //Generate the mappings
-        int x = 0;
-        int y = 0;
-        int idx = 0;
-        for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
-            int tile_id = tile_data->second;
+        // Generate the mappings
+        // WTF: Read-only zeros?
+        int x(0);
+        int y(0);
+        int idx(0);
+        for (auto &tile_data : *layer_data) {
+            int tile_id = tile_data.second;
 
-            //Set the index into the buffer
+            // Set the index into the buffer
             (*buffer_map)[y*map_width+ x] = idx;
 
-            //Calculate the next index
-            //If we're not looking at a blank tile
-            if(tile_id != 0) {
-                //Calculate the new offset
-                idx += num_tile_dimensions*num_tile_vertices;
+            // Calculate the next index
+            // If we're not looking at a blank tile
+            if (tile_id) {
+                // Calculate the new offset
+                idx += num_tile_dimensions * num_tile_vertices;
             }
-            //ELSE: Offset unchanged
+            else {
+                // offset unchanged
+            }
         }
-
-
 
         layer_num++;
     }
@@ -333,8 +335,8 @@ void Map::generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer,
     auto layer_data = layer->get_layer_data();
 
     //Get all the tiles in the layer, moving from left to right and down
-    int offset = 0;
-    int num_floats = 12;
+    int offset(0);
+    const int num_floats(12);
     for (auto &tile_data : *layer_data) {
         std::string tileset_name = tile_data.first;
         int tile_id = tile_data.second;
@@ -342,7 +344,7 @@ void Map::generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer,
         //IF WE ARE GENERATING A SPARSE LAYER
         //Skip out blank tiles:
         //This get's us our sparse data structure
-        if(!(dense || tile_id))
+        if (!(dense || tile_id))
             continue;
 
         //Get the texture coordinates for this tile
@@ -388,9 +390,9 @@ void Map::generate_dense_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> 
 void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer, bool dense) {
     LOG(INFO) << "Generating map coordinate data";
 
-    float scale = (float)(Engine::get_tile_size() * Engine::get_global_scale());
-    int num_floats = 12;
-    int offset = 0;
+    float scale(Engine::get_actual_tile_size());
+    int num_floats(12);
+    int offset(0);
     ///
     /// Vertex winding order:
     /// 1, 3   4
@@ -493,8 +495,8 @@ Map::Blocker::Blocker(glm::ivec2 tile, std::vector <std::vector<int>>* blocker):
         (*blocker)[tile.x][tile.y]++;
 
         VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
-          << " increased from " << (*blocker)[tile.x][tile.y] - 1
-          << " to " << (*blocker)[tile.x][tile.y] << ".";
+                << " increased from " << (*blocker)[tile.x][tile.y] - 1
+                << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
 Map::Blocker::Blocker(const Map::Blocker &other):
@@ -502,8 +504,8 @@ Map::Blocker::Blocker(const Map::Blocker &other):
         (*blocker)[tile.x][tile.y]++;
 
         VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
-          << " increased from " << (*blocker)[tile.x][tile.y] - 1
-          << " to " << (*blocker)[tile.x][tile.y] << ".";
+                << " increased from " << (*blocker)[tile.x][tile.y] - 1
+                << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
 Map::Blocker::~Blocker() {
@@ -512,8 +514,8 @@ Map::Blocker::~Blocker() {
     blocker->at(tile.x).at(tile.y) -= 1;
 
     VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
-      << " decreased from " << (*blocker)[tile.x][tile.y] + 1
-      << " to " << (*blocker)[tile.x][tile.y] << ".";
+            << " decreased from " << (*blocker)[tile.x][tile.y] + 1
+            << " to " << (*blocker)[tile.x][tile.y] << ".";
 }
 
 Map::Blocker Map::block_tile(glm::ivec2 tile) {
@@ -613,25 +615,27 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
 
     int tile_offset = 0;
 
-    //Perform O(1) update. no need to do mapping changes
+    // Perform O(1) update. no need to do mapping changes
     if(packing == Layer::Packing::DENSE) {
-
         tile_offset = y_pos*map_width + x_pos;
 
-        //Update the buffer
-        //Just update that tile directly
-        RenderableComponent* layer_renderable_component = layer->get_renderable_component();
-        layer_renderable_component->update_texture_buffer(tile_offset*num_tile_vertices*num_tile_dimensions*sizeof(GLfloat), data_size, data);
-
+        // Update the buffer
+        // Just update that tile directly
+        RenderableComponent *renderable_component(layer->get_renderable_component());
+        renderable_component->update_texture_buffer(
+            sizeof(GLfloat) * tile_offset * num_tile_vertices * num_tile_dimensions,
+            data_size,
+            data
+        );
     }
     else {
-        //TODO: create a small buffer to hold these updates rather than rebuilding the entire buffer
+        // TODO: create a small buffer to hold these updates rather than rebuilding the entire buffer
 
-        //Generate the new tile's data
+        // Generate the new tile's data
         GLfloat* vertex_data = nullptr;
-        float scale = (float)(Engine::get_tile_size() * Engine::get_global_scale());
+        float scale(Engine::get_actual_tile_size());
 
-        //Get a buffer for the data
+        // Get a buffer for the data
         try {
             vertex_data = new GLfloat[data_size];
         }
@@ -641,68 +645,71 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
             return;
         }
 
-        //Set the needed data
+        // Set the needed data
 
-        //bottom left
+        // bottom left
         vertex_data[0] = scale * float(x_pos);
         vertex_data[1] = scale * float(y_pos);
 
-        //top left
+        // top left
         vertex_data[2] = scale * float(x_pos);
         vertex_data[3] = scale * float(y_pos + 1);
 
-        //bottom right
+        // bottom right
         vertex_data[4] = scale * float(x_pos + 1);
         vertex_data[5] = scale * float(y_pos);
 
-        //top left
+        // top left
         vertex_data[6]  = scale * float(x_pos);
         vertex_data[7] = scale * float(y_pos+1);
 
-        //top right
+        // top right
         vertex_data[8] = scale * float(x_pos+1);
         vertex_data[9] = scale * float(y_pos+1);
 
-        //bottom right
+        // bottom right
         vertex_data[10] = scale * float(x_pos+1);
         vertex_data[11] = scale * float(y_pos);
 
-        //Fetch the offset from the data buffer
+        // Fetch the offset from the data buffer
         tile_offset = (*layer_mappings[layer_num])[y_pos*map_width + x_pos];
 
-        //Recalculate the layer mappings
+        // Recalculate the layer mappings
         recalculate_layer_mappings(x_pos, y_pos, layer_num);
-        //The offset into the buffers
-        //The mappins have been updated by the previous function call
-        int offset = tile_offset*num_tile_vertices*num_tile_dimensions;
+        // The offset into the buffers
+        // The mappins have been updated by the previous function call
+        int offset(tile_offset * num_tile_vertices * num_tile_dimensions);
 
-        //TODO: small buffer
-        //Get the data
-        RenderableComponent* layer_renderable_component = layer->get_renderable_component();
-        GLfloat* layer_texture_data = layer_renderable_component->get_texture_coords_data();
-        GLfloat* layer_vertex_data = layer_renderable_component->get_vertex_data();
-        size_t texture_data_size =  layer_renderable_component->get_texture_coords_data_size();
-        size_t vertex_data_size = layer_renderable_component->get_vertex_data_size();
+        // TODO: small buffer
+        // Get the data
+        RenderableComponent* layer_renderable_component(layer->get_renderable_component());
+
+        GLfloat* layer_texture_data(layer_renderable_component->get_texture_coords_data());
+        GLfloat* layer_vertex_data (layer_renderable_component->get_vertex_data());
+
+        size_t texture_data_size(layer_renderable_component->get_texture_coords_data_size());
+        size_t vertex_data_size (layer_renderable_component->get_vertex_data_size());
+
 
         //Generate the new buffers
-        GLfloat* new_texture_data = nullptr;
-        GLfloat* new_vertex_data = nullptr;
-        size_t new_texture_data_size = texture_data_size + data_size;
-        size_t new_vertex_data_size = vertex_data_size + data_size;
+        GLfloat* new_texture_data(nullptr);
+        GLfloat* new_vertex_data(nullptr);
+        size_t new_texture_data_size(texture_data_size + data_size);
+        size_t new_vertex_data_size(vertex_data_size + data_size);
 
         try {
             new_texture_data = new GLfloat[new_texture_data_size];
-            new_vertex_data = new GLfloat[new_vertex_data_size];
+            new_vertex_data  = new GLfloat[new_vertex_data_size];
         }
         catch(std::bad_alloc& ba) {
             LOG(ERROR) << "Couldn't allocate memory for new texture and vertex buffers in Map::update_tile";
-            new_texture_data  = nullptr;
-            new_vertex_data = nullptr;
+            new_texture_data = nullptr;
+            new_vertex_data  = nullptr;
             return;
         }
 
         //Copy the first part of the original data
-        int data_length = num_tile_vertices*num_tile_dimensions;
+        int data_length(num_tile_vertices*num_tile_dimensions);
         std::copy(layer_vertex_data, &layer_vertex_data[offset], new_vertex_data);
         std::copy(layer_texture_data, &layer_texture_data[offset], new_texture_data);
 
@@ -722,10 +729,10 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
 }
 
 int Map::get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos) {
-     //Fetch the offset from the data buffer
-     int tile_offset = (*layer_mappings[layer_num])[y_pos*map_width + x_pos];
+     // Fetch the offset from the data buffer
+     int tile_offset((*layer_mappings[layer_num])[y_pos*map_width + x_pos]);
 
-     //The VBO offset is the tile offset times the dimenions and number of vertices
-     return tile_offset*num_tile_vertices*num_tile_dimensions;
+     // The VBO offset is the tile offset times the dimenions and number of vertices
+     return tile_offset * num_tile_vertices * num_tile_dimensions;
 }
 

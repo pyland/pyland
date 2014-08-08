@@ -182,16 +182,19 @@ class CallbackState {
 };
 
 
-int main(int argc, const char* argv[]) {
+int main(int argc, const char *argv[]) {
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance....
 
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
-    int map_width = 32, map_height = 32;
-    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), 
-        map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
+    int map_width(32);
+    int map_height(32);
+    GameWindow window(int(float(map_width)  * Engine::get_actual_tile_size()),
+                      int(float(map_height) * Engine::get_actual_tile_size()),
+                      false);
+
     window.use_context();
 
     Map map("../resources/map0.tmx");
@@ -242,7 +245,7 @@ int main(int argc, const char* argv[]) {
     // TODO: move notification button to be better home
 
     Typeface notification_buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont notification_buttonfont(buttontype, 30); 
+    TextFont notification_buttonfont(buttontype, 30);
 
     float button_size = 0.05f;
     std::pair<float,float> backward_loco(0.85f,0.05f);
@@ -251,29 +254,29 @@ int main(int argc, const char* argv[]) {
     std::shared_ptr<Button> backward_button = std::make_shared<Button>();
     backward_button->set_text("backward");
     backward_button->set_on_click([&] () {
-        LOG(INFO) << "backward button pressed";  
-        Engine::move_notification(Direction::PREVIOUS); 
+        LOG(INFO) << "backward button pressed";
+        Engine::move_notification(Direction::PREVIOUS);
     });
     backward_button->set_width(button_size);
     backward_button->set_height(button_size);
     backward_button->set_y_offset(backward_loco.second);
-    backward_button->set_x_offset(backward_loco.first);    
+    backward_button->set_x_offset(backward_loco.first);
     Text backward_text(&window, notification_buttonfont, true);
     backward_text.set_text("<-");
-    backward_text.move_ratio(backward_loco.first, backward_loco.second);  
+    backward_text.move_ratio(backward_loco.first, backward_loco.second);
     backward_text.resize_ratio(button_size,button_size);
 
 
     std::shared_ptr<Button> forward_button = std::make_shared<Button>();
     forward_button->set_text("forward");
     forward_button->set_on_click([&] () {
-        LOG(INFO) << "forward button pressed"; 
-        Engine::move_notification(Direction::NEXT); 
+        LOG(INFO) << "forward button pressed";
+        Engine::move_notification(Direction::NEXT);
     });
     forward_button->set_width(button_size);
     forward_button->set_height(button_size);
     forward_button->set_y_offset(forward_loco.second);
-    forward_button->set_x_offset(forward_loco.first);  
+    forward_button->set_x_offset(forward_loco.first);
     Text forward_text(&window, notification_buttonfont, true);
     forward_text.set_text("->");
     forward_text.move_ratio(forward_loco.first,forward_loco.second);
@@ -306,41 +309,14 @@ int main(int argc, const char* argv[]) {
 
 
 
-    MapViewer map_viewer(&window,&gui_manager);
+    MapViewer map_viewer(&window, &gui_manager);
     map_viewer.set_map(&map);
     Engine::set_map_viewer(&map_viewer);
 
-    //Setup the map resize callback
-    std::function<void(GameWindow*)> map_resize_func = [&] (GameWindow* game_window) { 
-        LOG(INFO) << "Map resizing"; 
-        std::pair<int, int> size = game_window->get_size();
-        //Adjust the view to show only tiles the user can see
-        int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
-        int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
-        //We make use of intege truncation to get these to numbers in terms of tiles
-        //        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
-        //    int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
-
-        //Set the viewable fragments
-        glScissor(0, 0, size.first, size.second);
-        glViewport(0, 0, size.first, size.second);
-
-        //do nothing if these are null
-        if(Engine::get_map_viewer() == nullptr || Engine::get_map_viewer()->get_map() == nullptr)
-            return;
-
-        //Set the display size
-        //Display one more tile so that we don't get an abrupt stop
-        Engine::get_map_viewer()->set_display_width(num_tiles_x_display+1);
-        Engine::get_map_viewer()->set_display_height(num_tiles_y_display+1);
-
-        //Readjust the map focus
-        Engine::get_map_viewer()->refocus_map();
-
-    };
-    Lifeline map_resize_lifeline = window.register_resize_handler(map_resize_func);
-
-
+    // WARNING: Fragile reference capture
+    Lifeline map_resize_lifeline = window.register_resize_handler([&] (GameWindow *) {
+        map_viewer.resize();
+    });
 
     InputManager* input_manager = window.get_input_manager();
 
@@ -436,9 +412,9 @@ int main(int argc, const char* argv[]) {
 
     Lifeline text_lifeline = window.register_resize_handler(func);
 
-    std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) { 
+    std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) {
         std::ignore = game_window;
-        LOG(INFO) << "text window resizing"; 
+        LOG(INFO) << "text window resizing";
         Engine::text_updater();
     };
 
@@ -451,8 +427,8 @@ int main(int argc, const char* argv[]) {
     };
 
     int new_id = callbackstate.spawn();
-    std::string bash_command = 
-        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_") 
+    std::string bash_command =
+        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
         + std::to_string(new_id) + std::string(".py");
     system(bash_command.c_str());
     LongWalkChallenge long_walk_challenge(input_manager);

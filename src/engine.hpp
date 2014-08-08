@@ -36,7 +36,7 @@ private:
     ///
     static std::string editor;
 
-    static MapViewer* map_viewer;
+    static MapViewer *map_viewer;
 
     ///
     /// pointer for text box
@@ -57,25 +57,26 @@ private:
     /// The global tile and object scaling factor, how much to multiply widths and heights
     /// by
     ///
-    static int global_scale;
+    static float global_scale;
+
 public:
     ///
     /// Get the global scale
     /// @return the global scale
     ///
-    static int get_global_scale() { return global_scale; }
+    static float get_global_scale() { return global_scale; }
 
     ///
     /// Set the global scaling factor
     /// @param _global_scale the scaling factor
     ///
-    static void set_global_scale(int _global_scale) { global_scale = _global_scale; }
+    static void set_global_scale(float global_scale) { Engine::global_scale = global_scale; }
 
     ///
     /// Set the tile size to be used by the engine
     /// @param _tile_size the tile size
     ///
-    static void set_tile_size(int _tile_size) { tile_size = _tile_size; }
+    static void set_tile_size(int tile_size) { Engine::tile_size = tile_size; }
 
     ///
     /// Get the tile size used by the engine  in pixels - we only support square ones
@@ -83,19 +84,19 @@ public:
     ///
     static int get_tile_size() { return tile_size; }
 
-    static int get_actual_tile_size() {return tile_size * global_scale; }
+    static float get_actual_tile_size() { return float(tile_size) * global_scale; }
     ///
     /// Set the map viewer attached to the engine
     /// @param _map_viewer the map viewer which is attached to the engine
     ///
-    static void set_map_viewer(MapViewer* _map_viewer) { map_viewer = _map_viewer; }
+    static void set_map_viewer(MapViewer *map_viewer) { Engine::map_viewer = map_viewer; }
 
 
     ///
     /// Get the map viewer attached to the engine
     /// @return a pointer to the map viewer
     ///
-    static MapViewer* get_map_viewer() { return map_viewer;    }
+    static MapViewer *get_map_viewer() { return map_viewer; }
 
     ///
     /// Move sprite onscreen
@@ -154,10 +155,10 @@ public:
     ///
     /// set the text editor, opened by the challenges
     ///
-    static void set_editor(std::string _editor) {editor = _editor; }
+    static void set_editor(std::string editor) { Engine::editor = editor; }
 
-    static void set_dialogue_box(Text* _dialogue_box) {dialogue_box = _dialogue_box; }
-    static Text* get_dialogue_box(){return dialogue_box; }
+    static void set_dialogue_box(Text *dialogue_box) { Engine::dialogue_box = dialogue_box; }
+    static Text *get_dialogue_box(){ return dialogue_box; }
 
     static void print_dialogue(std::string name, std::string text);
     static void move_notification(Direction direction);

@@ -27,6 +27,12 @@ Sprite::Sprite(glm::ivec2 position, std::string name): MapObject(position, name)
     // TODO: do this properly
     status_text->set_text("");
     LOG(INFO) << "Sprite initialized";
+
+    // TODO: Starting positions should be integral as of currently. Check or fix.
+    //
+    // Make a map object blocked
+    // In future this might not be needed
+    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(position)));
 }
 
 Sprite::~Sprite() {
@@ -94,9 +100,10 @@ void Sprite::generate_tex_data() {
 
 void Sprite::generate_vertex_data() {
     //holds the sprite vertex data
-    int num_dimensions = 2;
-    int num_floats = num_dimensions*6;//GLTRIANGLES
-    GLfloat* sprite_data = nullptr;
+    int num_dimensions(2);
+    int num_floats(num_dimensions * 6); // GL's Triangles
+    GLfloat *sprite_data(nullptr);
+
     try {
 
         sprite_data = new GLfloat[sizeof(GLfloat)*num_floats];
@@ -106,7 +113,7 @@ void Sprite::generate_vertex_data() {
         return;
     }
 
-    float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
+    float scale(Engine::get_actual_tile_size());
 
     //bottom left
     sprite_data[0] = 0;
@@ -132,11 +139,11 @@ void Sprite::generate_vertex_data() {
     sprite_data[10] = scale;
     sprite_data[11] = 0;
 
-    renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
+    renderable_component.set_vertex_data(sprite_data, sizeof(GLfloat)*num_floats, false);
+    renderable_component.set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
 }
 
-// TODO: Fix...
+// TODO: rewrite
 void Sprite::load_textures() {
     Image* texture_image = nullptr;
 
@@ -144,7 +151,6 @@ void Sprite::load_textures() {
         texture_image = new Image("../resources/characters_1.png");
     }
     catch(std::exception e) {
-        texture_image = nullptr;
         LOG(ERROR) << "Failed to create texture";
         return;
     }

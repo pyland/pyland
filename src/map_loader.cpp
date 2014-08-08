@@ -5,7 +5,6 @@
 #include "tileset.hpp"
 
 #include <glog/logging.h>
-#include <iostream>
 #include <map>
 #include <memory>
 #include <string>

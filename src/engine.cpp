@@ -22,7 +22,7 @@
 MapViewer* Engine::map_viewer = nullptr;
 Text* Engine::dialogue_box = nullptr;
 int Engine::tile_size= 16;
-int Engine::global_scale = 2;
+float Engine::global_scale(2.0f);
 Notification Engine::notification_stack = Notification();
 
 
@@ -215,6 +215,7 @@ void Engine::text_displayer() {
     }
 }
 
+#include <iostream>
 void Engine::text_updater() {
     Map *map = CHECK_NOTNULL(map_viewer->get_map());
 
@@ -228,13 +229,13 @@ void Engine::text_updater() {
         );
 
         sprite->get_object_text()->move(
-            pixel_position.x + Engine::get_actual_tile_size() * 1 / 2,
+            pixel_position.x + int(Engine::get_actual_tile_size() * 0.5),
             pixel_position.y
         );
 
         sprite->get_status_text()->move(
-            pixel_position.x + Engine::get_actual_tile_size() * 1 / 2,
-            pixel_position.y + Engine::get_actual_tile_size() * 3 / 2
+            pixel_position.x + int(Engine::get_actual_tile_size() * 0.5),
+            pixel_position.y + int(Engine::get_actual_tile_size() * 1.5)
         );
     }
 

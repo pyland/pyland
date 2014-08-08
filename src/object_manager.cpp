@@ -1,5 +1,4 @@
 #include <glog/logging.h>
-#include <iostream>
 #include <memory>
 #include <mutex>
 #include <thread>

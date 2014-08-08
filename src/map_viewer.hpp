@@ -40,12 +40,12 @@ class MapViewer {
     ///
     /// The width of the map to be displayed on screen.
     ///
-    float map_display_width = 30;
+    float map_display_width;
 
     ///
     /// The height of the map to be displayed on screen
     ///
-    float map_display_height = 30;
+    float map_display_height;
 
     ///
     /// Render the GUI
@@ -109,6 +109,11 @@ public:
     /// @return the game window used to view the map
     ///
     GameWindow* get_window() { return window; }
+
+    ///
+    /// Rejigg the map in response to the viewport size changing.
+    ///
+    void resize();
 
     ///
     /// Get the display width of the map

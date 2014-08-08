@@ -1,7 +1,6 @@
 #include <fstream>
 #include <glog/logging.h>
 #include <glm/vec2.hpp>
-#include <iostream>
 #include <new>
 
 #include "engine.hpp"
@@ -38,6 +37,8 @@ MapObject::MapObject(glm::vec2 position, std::string name): position(position)  
 
     auto map_viewer(Engine::get_map_viewer());
 
+
+    // WTF: why is text here?
     // Setting up sprite text
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
     TextFont myfont(mytype, 18);
@@ -47,7 +48,10 @@ MapObject::MapObject(glm::vec2 position, std::string name): position(position)  
     object_text->set_text(name);
     glm::ivec2 pixel_position(map_viewer->tile_to_pixel(position));
     object_text->move(pixel_position.x, pixel_position.y);
+
     object_text->resize(100,100);
+    object_text->align_centre();
+    object_text->align_at_origin(true);
     LOG(INFO) << "Setting up text at " << pixel_position.x << ", " << pixel_position.y;
 
     // setting up status text
@@ -55,13 +59,10 @@ MapObject::MapObject(glm::vec2 position, std::string name): position(position)  
     status_text->set_text("awaiting...");
     glm::ivec2 pixel_text(map_viewer->tile_to_pixel(position));
     status_text->move(pixel_text.x, pixel_text.y + 100);
-    status_text->resize(100,100);
 
-    // TODO: Starting positions should be integral as of currently. Check or fix.
-    //
-    // Make a map object blocked
-    // In future this might not be needed
-    blocked_tiles.insert(std::make_pair("stood on", map_viewer->get_map()->block_tile(position)));
+    status_text->resize(100,100);
+    status_text->align_centre();
+    status_text->align_at_origin(true);
 
     LOG(INFO) << "MapObject initialized";
 }
@@ -73,21 +74,8 @@ MapObject::~MapObject() {
 }
 
 
-void MapObject::set_state_on_moving_start(glm::ivec2 target) {
-    moving = true;
-    blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
-}
-
-void MapObject::set_state_on_moving_finish() {
-    moving = false;
-    blocked_tiles.erase("stood on");
-    blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
-    blocked_tiles.erase("walking to");
-}
-
-
 void MapObject::generate_tex_data() {
-  
+
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_floats = 12;
@@ -111,7 +99,7 @@ void MapObject::generate_tex_data() {
 
     //top left
     map_object_tex_data[2]  = offset_x * GLfloat(4.0);
-    map_object_tex_data[3]  = offset_y * GLfloat(8.0); 
+    map_object_tex_data[3]  = offset_y * GLfloat(8.0);
 
     //bottom right
     map_object_tex_data[4]  = offset_x * GLfloat(5.0);
@@ -130,13 +118,14 @@ void MapObject::generate_tex_data() {
     map_object_tex_data[11] = offset_y * GLfloat(7.0);
 
     renderable_component.set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
-} 
+}
 
 void MapObject::generate_vertex_data() {
     //holds the map object's vertex data
-    int num_dimensions = 2;
-    int num_floats = num_dimensions*6;//GLTRIANGLES
-    GLfloat* map_object_vert_data = nullptr;
+    int num_dimensions(2);
+    int num_floats(num_dimensions * 6); // GL's Triangles
+    GLfloat *map_object_vert_data(nullptr);
+
     try {
 
         map_object_vert_data = new GLfloat[sizeof(GLfloat)*num_floats];
@@ -146,9 +135,9 @@ void MapObject::generate_vertex_data() {
         return;
     }
 
-    float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
- 
-    //bottom left 
+    float scale(Engine::get_actual_tile_size());
+
+    //bottom left
     map_object_vert_data[0] = 0;
     map_object_vert_data[1] = 0;
 
@@ -172,20 +161,18 @@ void MapObject::generate_vertex_data() {
     map_object_vert_data[10] = scale;
     map_object_vert_data[11] = 0;
 
-    renderable_component.set_vertex_data(map_object_vert_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
+    renderable_component.set_vertex_data(map_object_vert_data, sizeof(GLfloat)*num_floats, false);
+    renderable_component.set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
 }
 
 // TODO: rewrite
 void MapObject::load_textures() {
-    Image* texture_image = nullptr;
+    Image *texture_image = nullptr;
 
     try {
         texture_image = new Image("../resources/characters_1.png");
     }
-    catch(std::exception e) {
-        delete texture_image;
-        texture_image = nullptr;
+    catch (std::exception e) {
         LOG(ERROR) << "Failed to create texture";
         return;
     }

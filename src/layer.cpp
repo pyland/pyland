@@ -1,6 +1,6 @@
-#include "layer.hpp"
 #include <exception>
-#include <iostream>
+
+#include "layer.hpp"
 
 Layer::Layer(int width_tiles, int height_tiles, std::string name) :
     width_tiles(width_tiles),

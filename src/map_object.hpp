@@ -62,12 +62,7 @@ public:
     /// Set the object's walkability
     /// @param _walkability the walkability of the object
     ///
-    void set_walkability(Walkability _walkability) { walkability = _walkability; }
-
-    // TODO Joshua: Comment
-    // TODO Joshua: Consider integer-ness.
-    void set_state_on_moving_start(glm::ivec2 target);
-    void set_state_on_moving_finish();
+    void set_walkability(Walkability walkability) { this->walkability = walkability; }
 
     ///
     /// Generate the texture coordinate data for the object
@@ -93,31 +88,31 @@ public:
     /// Get the object's text to display
     /// @return the object's text
     ///
-    Text* get_object_text() {return object_text; }
+    Text* get_object_text() { return object_text; }
 
     ///
     /// Set the object's text to be displayed
     /// @param _object_text the object's text
     ///
-    void set_object_text(Text* _object_text) {object_text = _object_text; }
+    void set_object_text(Text *object_text) { this->object_text = object_text; }
 
     ///
     /// Get the object's status text
     /// @return the object's status text
     ///
-    Text* get_status_text() {return status_text; }
+    Text *get_status_text() { return status_text; }
 
     ///
     /// Set the object's status text
     /// @param _status_text the object's status text
     ///
-    void set_status_text(Text* _status_text) {status_text = _status_text; }
+    void set_status_text(Text *status_text) { this->status_text = status_text; }
 
     ///
     /// Set the object's moving status
     /// @param _moving if the object is moving
     ///
-    void set_moving(bool _moving) { moving = _moving; }
+    void set_moving(bool moving) { this->moving = moving; }
 
     ///
     /// Get if the object is moving
