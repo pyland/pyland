@@ -79,6 +79,12 @@ void MapViewer::render_map() {
     //Draw all the layers, from base to top to get the correct draw order
     int layer_num = 0;
     for(auto layer: map->get_layers()) {
+        if(!layer) 
+            continue;
+
+        if(!layer->is_renderable())
+            continue;
+
         RenderableComponent* layer_render_component = layer->get_renderable_component();
         Shader* layer_shader = layer_render_component->get_shader().get();
 
@@ -127,6 +133,12 @@ void MapViewer::render_sprites() {
     for(auto it = sprites.begin(); it != sprites.end(); ++it) {
         if(*it != 0) {
             std::shared_ptr<Sprite> sprite = object_manager.get_object<Sprite>(*it);
+
+            if(!sprite) 
+                continue;
+
+            if(!sprite->is_renderable())
+                continue;
 
             RenderableComponent* sprite_render_component = sprite->get_renderable_component();
 
