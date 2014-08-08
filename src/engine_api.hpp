@@ -21,7 +21,6 @@
 
 class MapViewer;
 
-enum Status {RUNNING, STOPPED, FAILED};
 enum Direction {Next, Previous};
 
 ///

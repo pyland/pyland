@@ -343,3 +343,19 @@ bool Sprite::is_in_inventory(std::shared_ptr<MapObject> object) {
     auto it = std::find(std::begin(inventory), std::end(inventory), object);
     return (it != std::end(inventory)); 
 }
+
+
+Status Sprite::string_to_status(std::string status) {
+    std::map<std::string,Status> string_map;
+    string_map["running"] = RUNNING;
+    string_map["stopped"] = STOPPED; 
+    string_map[""] = NOTHING;
+    string_map["failed"] = FAILED;
+    string_map["killed"] = KILLED;
+    return string_map[status];
+}
+
+void Sprite::set_sprite_status(std::string _sprite_status) {
+        sprite_status = string_to_status(_sprite_status);
+        status_text->set_text(_sprite_status);
+}
