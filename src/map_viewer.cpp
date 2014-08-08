@@ -371,8 +371,17 @@ void MapViewer::set_map_focus_object(int object_id) {
     //Set the focus to the object if this is a valid object and it is on the map
     if(ObjectManager::is_valid_object_id(object_id)) {
         //        const std::vector<int>& sprites = map->get_sprites();
+
+        //moving in-focus icon
+        if(ObjectManager::is_valid_object_id(map_focus_object)) {
+            ObjectManager::get_instance().get_object<Sprite>(map_focus_object)->set_focus(false);
+        }
+        ObjectManager::get_instance().get_object<Sprite>(object_id)->set_focus(true);
+
+
         map_focus_object = object_id;
         refocus_map();
+
 
         //TODO: add this in again
         //If the object is on the map

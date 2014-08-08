@@ -4,6 +4,7 @@
 #include "map_viewer.hpp"
 #include "renderable_component.hpp"
 #include "sprite.hpp"
+#include "object_manager.hpp"
 
 #include <new>
 #include <glog/logging.h>
@@ -116,6 +117,14 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_
     blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
         Vec2D(int(x_position), int(y_position))
     )));
+
+    /// build focus icon
+    LOG(INFO) << "setting up focus icon";
+    focus_icon = std::make_shared<MapObject>(x_position, y_position, "focus icon",66);
+    ObjectManager::get_instance().add_object(focus_icon);
+    auto focus_icon_id = focus_icon->get_id();
+    LOG(INFO) << "created focus icon with id: " << focus_icon_id;
+    Engine::get_map_viewer()->get_map()->add_map_object(focus_icon_id);
 
 
     LOG(INFO) << "Sprite initialized";
@@ -302,6 +311,8 @@ void Sprite::set_y_position(int y_pos) {
         item->set_x_position(x_position);
         item->set_y_position(y_position);
     }
+    focus_icon->set_x_position(x_position);
+    focus_icon->set_y_position(y_position);
     y_position = y_pos; 
 }
 void Sprite::set_x_position(int x_pos) { 
@@ -309,6 +320,8 @@ void Sprite::set_x_position(int x_pos) {
         item->set_x_position(x_position);
         item->set_y_position(y_position);
     }
+    focus_icon->set_x_position(x_position);
+    focus_icon->set_y_position(y_position);
     x_position = x_pos; 
 }
 
@@ -317,6 +330,8 @@ void Sprite::set_y_position(double y_pos) {
         item->set_x_position(x_position);
         item->set_y_position(y_position);
     }
+    focus_icon->set_x_position(x_position);
+    focus_icon->set_y_position(y_position);
     y_position = y_pos; 
 }
 void Sprite::set_x_position(double x_pos) { 
@@ -324,6 +339,8 @@ void Sprite::set_x_position(double x_pos) {
         item->set_x_position(x_position);
         item->set_y_position(y_position);
     }
+    focus_icon->set_x_position(x_position);
+    focus_icon->set_y_position(y_position);
     x_position = x_pos; 
 }
 
@@ -359,3 +376,14 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
         sprite_status = string_to_status(_sprite_status);
         status_text->set_text(_sprite_status);
 }
+
+ void Sprite::set_focus(bool is_focus) {
+    LOG(INFO) << "trying to set focus to "<< is_focus;
+    if (is_focus) {
+        //TODO: replace with better way to hide icon
+        focus_icon->set_tile_sheet_id(96);
+    } else {
+        focus_icon->set_tile_sheet_id(119);
+    }
+
+ }

@@ -65,6 +65,11 @@ protected:
     ///
     std::vector<std::shared_ptr<MapObject>> inventory;
 
+    ///
+    /// The focus icon, to move with sprite and hide, depending on if sprite is in focus;
+    ///
+    std::shared_ptr<MapObject> focus_icon;
+
 public:
     Sprite();
     Sprite(int _x_position, int _y_position, std::string _name, int _sprite_sheet_id, std::string _sprite_sheet="../resources/characters_1.png");
@@ -173,6 +178,8 @@ public:
     void set_x_position(double x_pos);
 
     void set_sprite_status(std::string _sprite_status);
+
+    void set_focus(bool is_focus);
 };
 
 #endif

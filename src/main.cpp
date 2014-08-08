@@ -429,7 +429,7 @@ int main(int argc, const char* argv[]) {
             if (objects.size() == 1) {
                 callbackstate.register_number_id(objects[0]);
             } else if (objects.size() == 0) {
-                LOG(INFO) << "Not objects to interact with";
+                LOG(INFO) << "Not sprites to interact with";
             } else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
                 callbackstate.register_number_id(objects[0]);
