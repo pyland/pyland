@@ -163,6 +163,71 @@ public:
     void set_text(std::string text);
 
     ///
+    /// Calculates the size used by the text area.
+    ///
+    /// This is the size of what is actually displayed.
+    ///
+    std::pair<int,int> get_rendered_size();
+    ///
+    /// Calculates the ratio size used by the text area.
+    ///
+    /// This is the size of what is actually displayed.
+    ///
+    std::pair<float,float> get_rendered_size_ratio();
+
+    ///
+    /// Calculates the size wanted by the text.
+    ///
+    /// If there is too much text, this can be larger the the text area.
+    ///
+    std::pair<int,int> get_text_size();
+    ///
+    /// Calculates the ratio size wanted by the text.
+    ///
+    /// If there is too much text, this can be larger the the text area.
+    ///
+    std::pair<float,float> get_text_size_ratio();
+    
+    ///
+    /// Gets the size of the text area.
+    ///
+    /// This is the size allocated for the text area (by resize method).
+    ///
+    std::pair<int,int> get_size();
+    ///
+    /// Gets the ratio size of the text area.
+    ///
+    /// This is the size allocated for the text area (by resize method).
+    ///
+    std::pair<float,float> get_size_ratio();
+
+    ///
+    /// Gets the origin of the text area.
+    ///
+    /// This is the position set for the text area (by move method).
+    ///
+    std::pair<int,int> get_origin();
+    ///
+    /// Gets the ratio origin of the text area.
+    ///
+    /// This is the position set for the text area (by move method).
+    ///
+    std::pair<float,float> get_origin_ratio();
+    
+    ///
+    /// Gets the top-left corner of the text area.
+    ///
+    /// This is the position from the bottom-left of the window.
+    ///
+    std::pair<int,int> get_top_left();
+    ///
+    /// Gets the ratio top-left corner of the text area.
+    ///
+    /// This is the position from the bottom-left of the window.
+    ///
+    std::pair<float,float> get_top_left_ratio();
+
+    ///
     /// Aligns the text to the left.
     ///
     void align_left();

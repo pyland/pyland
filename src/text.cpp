@@ -430,44 +430,8 @@ void Text::generate_vbo() {
         }
     }
 
-    int x_final;
-    if (position_from_alignment) {
-        switch (alignment_h) {
-        default:
-        case Alignment::LEFT:
-            x_final = x;
-            break;
-        case Alignment::CENTRE:
-            x_final = x - (image.width / 2);
-            break;
-        case Alignment::RIGHT:
-            x_final = x - image.width;
-            break;
-        }
-    } else {
-        x_final = x;
-    }
-    
-    int y_final;
-    if (position_from_alignment) {
-        switch (alignment_v) {
-        default:
-        case Alignment::TOP:
-            y_final = y;
-            break;
-        case Alignment::CENTRE:
-            y_final = y + (image.height / 2);
-            break;
-        case Alignment::BOTTOM:
-            y_final = y + image.height;
-            break;
-        }
-    } else {
-        y_final = y;
-    }
-
-    std::pair<float, float> ratio_xy = window->get_ratio_from_pixels(std::pair<int,int>(x_final, y_final));
-    std::pair<float, float> ratio_wh = window->get_ratio_from_pixels(std::pair<int,int>(image.width, image.height));
+    std::pair<float, float> ratio_xy = get_top_left_ratio();
+    std::pair<float, float> ratio_wh = get_rendered_size_ratio();
     // We are working with opengl coordinates where we strech from -1.0
     // to 1.0 across the window.
     float rx = ratio_xy.first * 2.0f - 1.0f;
@@ -517,6 +481,100 @@ void Text::generate_vbo() {
 void Text::set_text(std::string text) {
     this->text = text;
     dirty_texture = true;
+}
+
+
+std::pair<int,int> Text::get_rendered_size() {
+    // Needed to update image size.
+    if (dirty_texture) {
+        render();
+    }
+    
+    return std::make_pair(image.width, image.height);
+}
+
+std::pair<float,float> Text::get_rendered_size_ratio() {
+    return window->get_ratio_from_pixels(get_rendered_size());
+}
+
+
+std::pair<int,int> Text::get_text_size() {
+    // Needed to update image size.
+    if (dirty_texture) {
+        render();
+    }
+    
+    return std::make_pair(used_width, used_height);
+}
+
+std::pair<float,float> Text::get_text_size_ratio() {
+    return window->get_ratio_from_pixels(get_text_size());
+}
+
+
+std::pair<int,int> Text::get_size() {
+    return std::make_pair(width, height);
+}
+
+std::pair<float,float> Text::get_size_ratio() {
+    return window->get_ratio_from_pixels(get_size());
+}
+
+std::pair<int,int> Text::get_origin() {
+    return std::make_pair(x, y);
+}
+
+std::pair<float,float> Text::get_origin_ratio() {
+    return window->get_ratio_from_pixels(get_origin());
+}
+
+std::pair<int,int> Text::get_top_left() {
+    // Needed to update image size.
+    if (dirty_texture) {
+        render();
+    }
+    
+    int x_final;
+    if (position_from_alignment) {
+        switch (alignment_h) {
+        default:
+        case Alignment::LEFT:
+            x_final = x;
+            break;
+        case Alignment::CENTRE:
+            x_final = x - (image.width / 2);
+            break;
+        case Alignment::RIGHT:
+            x_final = x - image.width;
+            break;
+        }
+    } else {
+        x_final = x;
+    }
+    
+    int y_final;
+    if (position_from_alignment) {
+        switch (alignment_v) {
+        default:
+        case Alignment::TOP:
+            y_final = y;
+            break;
+        case Alignment::CENTRE:
+            y_final = y + (image.height / 2);
+            break;
+        case Alignment::BOTTOM:
+            y_final = y + image.height;
+            break;
+        }
+    } else {
+        y_final = y;
+    }
+    
+    return std::make_pair(x_final, y_final);
+}
+
+std::pair<float,float> Text::get_top_left_ratio() {
+    return window->get_ratio_from_pixels(get_top_left());
 }
 
 
