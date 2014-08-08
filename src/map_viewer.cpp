@@ -178,6 +178,12 @@ void MapViewer::render_objects() {
         if(*it != 0) {
             std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(*it);
 
+            if(!object)
+                continue;
+
+            //If we can't render the object 
+            if(!object->is_renderable())
+                continue;
             RenderableComponent* object_render_component = object->get_renderable_component();
 
             //Move object to the required position
