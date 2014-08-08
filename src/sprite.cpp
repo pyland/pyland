@@ -65,9 +65,8 @@ Sprite::Sprite() {
 
     // Make a sprite blocked
     blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
-        Vec2D(int(x_position), int(y_position))
-    )));
-
+                                                                                                    Vec2D(int(x_position), int(y_position))
+                                                                                                    )));
 
     LOG(INFO) << "Sprite initialized";
 
@@ -86,6 +85,7 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_
     load_textures();
     generate_tex_data();
     generate_vertex_data();
+
 
     // setting up sprite name text
     Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
@@ -115,8 +115,8 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_
 
     // Make a sprite blocked
     blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
-        Vec2D(int(x_position), int(y_position))
-    )));
+                                                                                                    Vec2D(int(x_position), int(y_position))
+                                                                                                    )));
 
     /// build focus icon
     LOG(INFO) << "setting up focus icon";
@@ -157,11 +157,16 @@ void Sprite::generate_tex_data() {
   
     //holds the texture data
     //need 12 float for the 2D texture coordinates
-    int num_floats = 12;
+    int num_dimensions = 2;
+    int num_floats_per_tile = num_dimensions*6; //GLTRIANGLES so need 6 vertices
+    int num_floats = num_floats_per_tile;
+
+    //Add coordinates for overlays and underlays
+    num_floats += overlay_ids.size()*num_floats_per_tile;
+    num_floats += underlay_ids.size()*num_floats_per_tile;
 
     GLfloat* sprite_tex_data = nullptr;
     try {
-
         sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
     }
     catch(std::bad_alloc& ba) {
@@ -183,33 +188,110 @@ void Sprite::generate_tex_data() {
         return;
     }
 
+
     //Tile ids are from top left but opengl texture coordinates are bottom left so adjust as needed
-    GLfloat offset_x = (GLfloat)(sprite_sheet_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
-    GLfloat offset_y = (1.0f - inc_y)-  (GLfloat)(sprite_sheet_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
+    GLfloat offset_x = 0.0f;
+    GLfloat offset_y = 0.0f; 
+
+    //offset into texture buffer
+    int offset = 0;
+
+    //Underlays
+    for(int underlay_id : underlay_ids) {
+        offset_x =  (GLfloat)(underlay_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
+        offset_y = (1.0f - inc_y)-  (GLfloat)(underlay_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
+
+        //bottom left
+        sprite_tex_data[offset + 0]  = offset_x;
+        sprite_tex_data[offset + 1]  = offset_y;
+
+        //top left
+        sprite_tex_data[offset + 2]  = offset_x;
+        sprite_tex_data[offset + 3]  = offset_y + inc_y;
+
+        //bottom right
+        sprite_tex_data[offset + 4]  = offset_x + inc_x;
+        sprite_tex_data[offset + 5]  = offset_y;
+
+        //top left
+        sprite_tex_data[offset + 6]  = offset_x;
+        sprite_tex_data[offset + 7]  = offset_y + inc_y;
+
+        //top right
+        sprite_tex_data[offset + 8]  = offset_x + inc_x;
+        sprite_tex_data[offset + 9]  = offset_y + inc_y;
+
+        //bottom right
+        sprite_tex_data[offset + 10] = offset_x + inc_x;
+        sprite_tex_data[offset + 11] = offset_y; 
+
+
+        offset+= num_floats_per_tile;
+    }
+
+    offset_x = (GLfloat)(sprite_sheet_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
+    offset_y = (1.0f - inc_y)-  (GLfloat)(sprite_sheet_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
 
     //bottom left
-    sprite_tex_data[0]  = offset_x;
-    sprite_tex_data[1]  = offset_y;
+    sprite_tex_data[offset + 0]  = offset_x;
+    sprite_tex_data[offset + 1]  = offset_y;
 
     //top left
-    sprite_tex_data[2]  = offset_x;
-    sprite_tex_data[3]  = offset_y + inc_y;
+    sprite_tex_data[offset + 2]  = offset_x;
+    sprite_tex_data[offset + 3]  = offset_y + inc_y;
 
     //bottom right
-    sprite_tex_data[4]  = offset_x + inc_x;
-    sprite_tex_data[5]  = offset_y;
+    sprite_tex_data[offset + 4]  = offset_x + inc_x;
+    sprite_tex_data[offset + 5]  = offset_y;
 
     //top left
-    sprite_tex_data[6]  = offset_x;
-    sprite_tex_data[7]  = offset_y + inc_y;
+    sprite_tex_data[offset + 6]  = offset_x;
+    sprite_tex_data[offset + 7]  = offset_y + inc_y;
 
     //top right
-    sprite_tex_data[8]  = offset_x + inc_x;
-    sprite_tex_data[9]  = offset_y + inc_y;
+    sprite_tex_data[offset + 8]  = offset_x + inc_x;
+    sprite_tex_data[offset + 9]  = offset_y + inc_y;
 
     //bottom right
-    sprite_tex_data[10] = offset_x + inc_x;
-    sprite_tex_data[11] = offset_y; 
+    sprite_tex_data[offset + 10] = offset_x + inc_x;
+    sprite_tex_data[offset + 11] = offset_y; 
+
+    offset += num_floats_per_tile;
+
+    //Overlays
+
+    for(int overlay_id : overlay_ids) {
+        offset_x =  (GLfloat)(overlay_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
+        offset_y = (1.0f - inc_y)-  (GLfloat)(overlay_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
+
+        //bottom left
+        sprite_tex_data[offset + 0]  = offset_x;
+        sprite_tex_data[offset + 1]  = offset_y;
+
+        //top left
+        sprite_tex_data[offset + 2]  = offset_x;
+        sprite_tex_data[offset + 3]  = offset_y + inc_y;
+
+        //bottom right
+        sprite_tex_data[offset + 4]  = offset_x + inc_x;
+        sprite_tex_data[offset + 5]  = offset_y;
+
+        //top left
+        sprite_tex_data[offset + 6]  = offset_x;
+        sprite_tex_data[offset + 7]  = offset_y + inc_y;
+
+        //top right
+        sprite_tex_data[offset + 8]  = offset_x + inc_x;
+        sprite_tex_data[offset + 9]  = offset_y + inc_y;
+
+        //bottom right
+        sprite_tex_data[offset + 10] = offset_x + inc_x;
+        sprite_tex_data[offset + 11] = offset_y; 
+
+
+        offset+= num_floats_per_tile;
+    }
+
 
     renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
@@ -225,7 +307,14 @@ void Sprite::set_sprite_sheet(std::string _sprite_sheet) {
 void Sprite::generate_vertex_data() {
     //holds the sprite vertex data
     int num_dimensions = 2;
-    int num_floats = num_dimensions*6;//GLTRIANGLES
+    int num_floats_per_tile = num_dimensions*6; //GLTRIANGLES so need 6 vertices
+
+    int num_floats = num_floats_per_tile;
+
+    //Add coordinates for overlays and underlays
+    num_floats += overlay_ids.size()*num_floats_per_tile;
+    num_floats += underlay_ids.size()*num_floats_per_tile;
+
     GLfloat* sprite_data = nullptr;
     try {
 
@@ -237,30 +326,107 @@ void Sprite::generate_vertex_data() {
     }
 
     float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
- 
+
+    //offset into texture buffer
+    int offset = 0;
+    int index = 0;
+
+    //Underlays
+    for(int underlay_id : underlay_ids) {
+        GLfloat x_offset = (GLfloat)underlay_offsets[index].first;
+        GLfloat y_offset = (GLfloat)underlay_offsets[index].second;
+        GLfloat width = (GLfloat)underlay_dimensions[index].first;
+        GLfloat height = (GLfloat)underlay_dimensions[index].second;
+
+        //bottom left 
+        sprite_data[offset + 0] = x_offset*scale;
+        sprite_data[offset + 1] = y_offset*scale;
+
+        //top left
+        sprite_data[offset + 2] = x_offset*scale;
+        sprite_data[offset + 3] = y_offset*scale + scale * height;
+
+        //bottom right
+        sprite_data[offset + 4] = x_offset*scale + scale * width;
+        sprite_data[offset + 5] = y_offset*scale;
+
+        //top left
+        sprite_data[offset + 6] = x_offset*scale;
+        sprite_data[offset + 7] = y_offset*scale + scale * height;
+
+        //top right
+        sprite_data[offset + 8] = x_offset*scale + scale * width;
+        sprite_data[offset + 9] = y_offset*scale + scale * height;
+
+        //bottom right
+        sprite_data[offset + 10] = x_offset*scale + scale * width;
+        sprite_data[offset + 11] = y_offset*scale;
+
+        offset+= num_floats_per_tile;
+        index++;
+    }
     //bottom left 
-    sprite_data[0] = 0;
-    sprite_data[1] = 0;
+    sprite_data[offset + 0] = 0;
+    sprite_data[offset + 1] = 0;
 
     //top left
-    sprite_data[2] = 0;
-    sprite_data[3] = scale;
+    sprite_data[offset + 2] = 0;
+    sprite_data[offset + 3] = scale;
 
     //bottom right
-    sprite_data[4] = scale;
-    sprite_data[5] = 0;
+    sprite_data[offset + 4] = scale;
+    sprite_data[offset + 5] = 0;
 
     //top left
-    sprite_data[6] = 0;
-    sprite_data[7] = scale;
+    sprite_data[offset + 6] = 0;
+    sprite_data[offset + 7] = scale;
 
     //top right
-    sprite_data[8] = scale;
-    sprite_data[9] = scale;
+    sprite_data[offset + 8] = scale;
+    sprite_data[offset + 9] = scale;
 
     //bottom right
-    sprite_data[10] = scale;
-    sprite_data[11] = 0;
+    sprite_data[offset + 10] = scale;
+    sprite_data[offset + 11] = 0;
+
+    offset += num_floats_per_tile;
+
+    index = 0;
+    //Overlays
+    for(int overlay_id : overlay_ids) {
+        GLfloat x_offset = (GLfloat)overlay_offsets[index].first;
+        GLfloat y_offset = (GLfloat)overlay_offsets[index].second;
+        GLfloat width = (GLfloat)overlay_dimensions[index].first;
+        GLfloat height = (GLfloat)overlay_dimensions[index].second;
+
+        //bottom left 
+        sprite_data[offset + 0] = x_offset*scale;
+        sprite_data[offset + 1] = y_offset*scale;
+
+        //top left
+        sprite_data[offset + 2] = x_offset*scale;
+        sprite_data[offset + 3] = y_offset*scale + scale * height;
+
+        //bottom right
+        sprite_data[offset + 4] = x_offset*scale + scale * width;
+        sprite_data[offset + 5] = y_offset*scale;
+
+        //top left
+        sprite_data[offset + 6] = x_offset*scale;
+        sprite_data[offset + 7] = y_offset*scale + scale * height;
+
+        //top right
+        sprite_data[offset + 8] = x_offset*scale + scale * width;
+        sprite_data[offset + 9] = y_offset*scale + scale * height;
+
+        //bottom right
+        sprite_data[offset + 10] = x_offset*scale + scale * width;
+        sprite_data[offset + 11] = y_offset*scale;
+
+        offset+= num_floats_per_tile;
+        index++;
+    }
+
 
     renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
@@ -373,11 +539,11 @@ Status Sprite::string_to_status(std::string status) {
 }
 
 void Sprite::set_sprite_status(std::string _sprite_status) {
-        sprite_status = string_to_status(_sprite_status);
-        status_text->set_text(_sprite_status);
+    sprite_status = string_to_status(_sprite_status);
+    status_text->set_text(_sprite_status);
 }
 
- void Sprite::set_focus(bool is_focus) {
+void Sprite::set_focus(bool is_focus) {
     LOG(INFO) << "trying to set focus to "<< is_focus;
     if (is_focus) {
         //TODO: replace with better way to hide icon
@@ -385,5 +551,54 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
     } else {
         focus_icon->set_tile_sheet_id(119);
     }
+}
 
- }
+void Sprite::add_overlay(int overlay_id, float width, float height, float x_offset, float y_offset) {
+    overlay_ids.push_back(overlay_id);
+    std::pair<float, float> dimensions = std::make_pair(width,  height);
+    overlay_dimensions.push_back(dimensions);
+    std::pair<float, float> offsets = std::make_pair(x_offset, y_offset);
+    overlay_offsets.push_back(offsets);
+}
+
+void Sprite::remove_overlay(int overlay_id) {
+
+    //Index to delete at
+    int index = 0;
+
+    //Remove it from the vector
+    for(auto iter = overlay_ids.begin(); iter != overlay_ids.end(); ++iter) {
+        if(overlay_id == *iter) {
+            overlay_ids.erase(iter);
+            break;
+        }
+        index++;
+    }
+    overlay_dimensions.erase(overlay_dimensions.begin()+index);
+    overlay_offsets.erase(overlay_offsets.begin()+index);
+}
+
+void Sprite::add_underlay(int underlay_id, float width, float height, float x_offset, float y_offset) {
+    underlay_ids.push_back(underlay_id);
+    std::pair<float, float> dimensions = std::make_pair(width,  height);
+    underlay_dimensions.push_back(dimensions);
+    std::pair<float,float> offsets = std::make_pair(x_offset, y_offset);
+    underlay_offsets.push_back(offsets);
+}
+
+void Sprite::remove_underlay(int underlay_id)  {
+    //Index to delete at
+    int index = 0;
+
+    //Remove it from the vector
+    for(auto iter = underlay_ids.begin(); iter != underlay_ids.end(); ++iter) {
+        if(underlay_id == *iter) {
+            underlay_ids.erase(iter);
+            break;
+        }
+        index++;
+    }
+    underlay_dimensions.erase(underlay_dimensions.begin()+index);
+    underlay_offsets.erase(underlay_offsets.begin()+index);
+}
+

@@ -319,10 +319,6 @@ void Map::generate_data() {
                     y++;
                 }
             }
-            std::cout << "LAYER " << layer_num << std::endl;
-            std::cout << "IDX " << idx*sizeof(GLfloat) << std::endl;
-        std::cout << vert_data_size << std::endl;
-
         }
         //Set this data in the renderable component for the layer
         RenderableComponent* renderable_component = (*layer_iter)->get_renderable_component();
