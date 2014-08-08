@@ -149,7 +149,12 @@ public:
 
     std::vector<std::shared_ptr<MapObject>> get_inventory() {return inventory; }
 
-    void remove_from_inventory(std::shared_ptr<MapObject> old_object);
+    ///
+    /// remove the specified object from the sprites inventory, safe to use even if 
+    /// item isn't in inventory
+    /// @return
+    ///     true if successfully removed, false if it wasn't present
+    bool remove_from_inventory(std::shared_ptr<MapObject> old_object);
 
     bool is_in_inventory(std::shared_ptr<MapObject> object);
 

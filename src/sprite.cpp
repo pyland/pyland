@@ -327,12 +327,15 @@ void Sprite::set_x_position(double x_pos) {
     x_position = x_pos; 
 }
 
-void Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
+bool Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
     // there must be a better way to do this
     auto it = std::find(std::begin(inventory), std::end(inventory), old_object);
     if (it != std::end(inventory)) {
         inventory.erase(it);
         LOG(INFO) << "removing item to sprites inventory";
+        return true;
+    } else {
+        return false;
     }
 }
 
