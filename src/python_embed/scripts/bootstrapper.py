@@ -114,8 +114,8 @@ def start(entity, RESTART, STOP, KILL, waiting):
             continue
 
         except KILL:
-            entity.print_debug("DYING")
-            entity.update_status("dead")
+            entity.print_debug("KILLED")
+            entity.update_status("killed")
             raise
 
         # For all other errors, output and stop

@@ -6,6 +6,7 @@
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
+#include "engine_api.hpp"
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -16,11 +17,15 @@
 #include <GL/gl.h>
 #endif
 
+enum Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 
 ///
 /// Represents a sprite in the engine
 ///
 class Sprite : public MapObject {
+
+private:
+    Status string_to_status (std::string status);
 
 protected:
 
@@ -44,6 +49,10 @@ protected:
     ///
     Text* status_text = nullptr;
 
+    ///
+    /// status of sprite
+    /// TODO: this value isn't used at the moment, use for status images
+    Status sprite_status = NOTHING;
 
     ///
     /// Tiles that the object is blocking, probably
@@ -149,15 +158,21 @@ public:
 
     std::vector<std::shared_ptr<MapObject>> get_inventory() {return inventory; }
 
-    void remove_from_inventory(std::shared_ptr<MapObject> old_object);
+    ///
+    /// remove the specified object from the sprites inventory, safe to use even if 
+    /// item isn't in inventory
+    /// @return
+    ///     true if successfully removed, false if it wasn't present
+    bool remove_from_inventory(std::shared_ptr<MapObject> old_object);
 
     bool is_in_inventory(std::shared_ptr<MapObject> object);
 
-    /// TODO: add a remove from inventory method
     void set_y_position(int y_pos);
     void set_x_position(int x_pos);
     void set_y_position(double y_pos);
     void set_x_position(double x_pos);
+
+    void set_sprite_status(std::string _sprite_status);
 };
 
 #endif

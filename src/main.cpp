@@ -425,7 +425,7 @@ int main(int argc, const char* argv[]) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
             Vec2D tile_clicked = Engine::get_map_viewer()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
             LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
-            auto objects = Engine::get_objects_at(tile_clicked);
+            auto objects = Engine::get_sprites_at(tile_clicked);
             if (objects.size() == 1) {
                 callbackstate.register_number_id(objects[0]);
             } else if (objects.size() == 0) {
