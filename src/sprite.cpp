@@ -52,7 +52,6 @@ Sprite::Sprite() {
     LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // setting up status text
-    sprite_status = NOTHING;
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
     status_text->set_text("");
     Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
@@ -103,6 +102,7 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_
     LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // setting up status text
+    sprite_status = Status::NOTHING;
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
     status_text->set_text("");
     Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
@@ -360,11 +360,11 @@ bool Sprite::is_in_inventory(std::shared_ptr<MapObject> object) {
 
 Status Sprite::string_to_status(std::string status) {
     std::map<std::string,Status> string_map;
-    string_map["running"] = RUNNING;
-    string_map["stopped"] = STOPPED; 
-    string_map[""] = NOTHING;
-    string_map["failed"] = FAILED;
-    string_map["killed"] = KILLED;
+    string_map["running"] = Status::RUNNING;
+    string_map["stopped"] = Status::STOPPED; 
+    string_map[""] = Status::NOTHING;
+    string_map["failed"] = Status::FAILED;
+    string_map["killed"] = Status::KILLED;
     return string_map[status];
 }
 

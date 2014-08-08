@@ -17,7 +17,7 @@
 #include <GL/gl.h>
 #endif
 
-enum Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
+enum class Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 
 ///
 /// Represents a sprite in the engine
