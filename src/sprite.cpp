@@ -52,6 +52,7 @@ Sprite::Sprite() {
     LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // setting up status text
+    sprite_status = NOTHING;
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
     status_text->set_text("");
     Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));

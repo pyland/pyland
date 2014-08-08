@@ -52,7 +52,7 @@ protected:
     ///
     /// status of sprite
     /// TODO: this value isn't used at the moment, use for status images
-    Status sprite_status = NOTHING;
+    Status sprite_status;
 
     ///
     /// Tiles that the object is blocking, probably
