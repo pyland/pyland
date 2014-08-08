@@ -51,7 +51,10 @@ protected:
     ///
     std::map<std::string, Map::Blocker> blocked_tiles;
 
-
+    ///
+    /// Map_objects which move with the sprite
+    ///
+    std::vector<std::shared_ptr<MapObject>> inventory;
 
 public:
     Sprite();
@@ -138,6 +141,28 @@ public:
     /// @param _status_text the object's status text
     ///
     void set_status_text(Text* _status_text) {status_text = _status_text; }
+
+    ///
+    /// add map_object to sprites inventory
+    ///
+    void add_to_inventory(std::shared_ptr<MapObject> new_object);
+
+    std::vector<std::shared_ptr<MapObject>> get_inventory() {return inventory; }
+
+    ///
+    /// remove the specified object from the sprites inventory, safe to use even if 
+    /// item isn't in inventory
+    /// @return
+    ///     true if successfully removed, false if it wasn't present
+    bool remove_from_inventory(std::shared_ptr<MapObject> old_object);
+
+    bool is_in_inventory(std::shared_ptr<MapObject> object);
+
+    /// TODO: add a remove from inventory method
+    void set_y_position(int y_pos);
+    void set_x_position(int x_pos);
+    void set_y_position(double y_pos);
+    void set_x_position(double x_pos);
 };
 
 #endif
