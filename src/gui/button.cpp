@@ -14,13 +14,14 @@
 #endif
 
 Button::Button() {
-
+    button_text = std::make_shared<GUIText>();
+    add(button_text);
 }
 
 Button::Button(std::shared_ptr<Text>  _text, std::function<void (void)> on_click, 
                float _width, float _height, float _x_offset, float _y_offset) :
-    Component(on_click, _width, _height, _x_offset, _y_offset) {
-
+    ComponentGroup(on_click, _width, _height, _x_offset, _y_offset) {
+    button_text = std::make_shared<GUIText>();
     button_text->set_text(_text);
     button_text->set_width(0.7f);
     button_text->set_height(0.8f);
@@ -30,15 +31,14 @@ Button::Button(std::shared_ptr<Text>  _text, std::function<void (void)> on_click
 }
 
 std::shared_ptr<Text> Button::get_text() {
-    return button_text.get_text();
+    return button_text->get_text();
 }
 
 void Button::set_text(std::shared_ptr<Text> _text) {
-    button_text.set_text(_text);
+    button_text->set_text(_text);
 }
 
 std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
-
     delete []vertex_data;
     int num_floats = 12;
 
@@ -68,9 +68,12 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
     vertex_data[10] = (GLfloat)width_pixels;
     vertex_data[11] = 0;
 
+    size_vertex_data = num_floats;
+
     std::vector<std::pair<GLfloat*, int>> vertices;
     vertices.push_back(std::make_pair(vertex_data, num_floats));
     return vertices;
+
 }
 
 std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
@@ -104,14 +107,14 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
 
     texture_data[10] = offset_x * GLfloat(5.0);
     texture_data[11] = offset_y;
-
+    size_texture_data = num_floats;
     std::vector<std::pair<GLfloat*, int>> texture_coords;
     texture_coords.push_back(std::make_pair(texture_data, num_floats));
     return texture_coords;
 }
 
-std::vector<std::shared_ptr<GUITextData>> Button::generate_this_text_data() {
-    std::vector<std::shared_ptr<GUITextData>> text_data;
-    text_data.push_back(button_text.get_gui_text());
+std::vector<std::shared_ptr<GUIText>> Button::generate_this_text_data() {
+    std::vector<std::shared_ptr<GUIText>> text_data;
+    text_data.push_back(button_text);
     return text_data;
 }

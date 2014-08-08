@@ -2,6 +2,7 @@
 #define COMPONENTGROUP_H
 
 #include "component.hpp"
+#include "gui_text.hpp"
 #include "python_embed_headers.hpp"
 
 #include <map>
@@ -21,6 +22,9 @@ protected:
 public:
 
     ComponentGroup();
+    ComponentGroup(std::function<void (void)> on_click, float _width, float _height, float _xo_offset, float _y_offset);
+
+
     ~ComponentGroup();
 
     ///
@@ -65,7 +69,7 @@ public:
     ///
     /// Gets a vector of all the GUIText elements for this component
     ///
-    std::vector<std::shared_ptr<GUITextData>> generate_text_data();
+    std::vector<std::shared_ptr<GUIText>> generate_text_data();
 
     ///
     /// This function is called by generate vertex data (See Call Super on wikipedia)
@@ -87,7 +91,7 @@ public:
     /// This function is called by generate text data (See Call Super on wikipedia)
     /// to generate the text data for this actual component
     ///
-    virtual std::vector<std::shared_ptr<GUITextData>> generate_this_text_data() = 0;
+    virtual std::vector<std::shared_ptr<GUIText>> generate_this_text_data() = 0;
 
 };
 #endif

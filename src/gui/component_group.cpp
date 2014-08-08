@@ -32,6 +32,13 @@ ComponentGroup::ComponentGroup() {
 
 }
 
+ComponentGroup::ComponentGroup(std::function<void (void)> on_click, float _width,
+                     float _height, float _x_offset, float _y_offset) : 
+    Component(on_click, _width, _height, _x_offset, _y_offset)
+{
+
+}
+
 ComponentGroup::~ComponentGroup() {
 
 }
@@ -116,14 +123,14 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
     return group_data;
 }
 
-std::vector<std::shared_ptr<GUITextData>> ComponentGroup::generate_text_data() {
+std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
 
    //Call the implementation of this class  to generate it's data
-    std::vector<std::shared_ptr<GUITextData>> group_data = generate_this_text_data();;
+    std::vector<std::shared_ptr<GUIText>> group_data = generate_this_text_data();
 
    //Go through all the components in this group
     for(auto component_pair : components) {
-        std::vector<std::shared_ptr<GUITextData>> component_data = component_pair.second->generate_text_data();
+        std::vector<std::shared_ptr<GUIText>> component_data = component_pair.second->generate_text_data();
         
         //get all the text data in the component - deals with ComponentGroup children
         for(auto text_data : component_data) {
@@ -131,17 +138,18 @@ std::vector<std::shared_ptr<GUITextData>> ComponentGroup::generate_text_data() {
             std::cout << " MOVING" << std::endl;
             //Calcuate how far to translate this component
             int pixel_offset_x = 0; 
-            float component_x_offset = text_data->get_transformed_x_offset();
+            float component_x_offset = text_data->get_x_offset_pixels();
             int pixel_offset_y = 0 ;
-            float component_y_offset = text_data->get_transformed_y_offset();
+            float component_y_offset = text_data->get_y_offset_pixels();
 
             pixel_offset_x =(int)((float)width_pixels * component_x_offset);
             pixel_offset_y = (int)((float)height_pixels * component_y_offset);
 
             //Translate it
-            text_data->set_transformed_x_offset(component_x_offset + pixel_offset_x);
-            text_data->set_transformed_y_offset(component_y_offset + pixel_offset_y);
+            text_data->set_x_offset_pixels(component_x_offset + pixel_offset_x);
+            text_data->set_y_offset_pixels(component_y_offset + pixel_offset_y);
             std::cout << "OOFSET " << pixel_offset_x << std::endl;
+
             //add to this group
             group_data.push_back(text_data);
         }

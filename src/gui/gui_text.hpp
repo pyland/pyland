@@ -2,6 +2,7 @@
 #define GUI_TEXT_H
 
 #include "component.hpp"
+#include "gui_text_data.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
@@ -43,7 +44,7 @@ public:
     //Overloads from Component
     std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
     std::vector<std::pair<GLfloat*, int>> generate_texture_data();
-    std::vector<std::shared_ptr<GUITextData>> generate_text_data();
+    std::vector<std::shared_ptr<GUIText>> generate_text_data();
 };
 
 #endif

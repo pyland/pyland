@@ -2,7 +2,7 @@
 #define COMPONENT_H
 
 
-#include "gui_text_data.hpp"
+#include "gui_text.hpp"
 #include <cstddef>
 #include <exception>
 #include <functional>
@@ -143,7 +143,7 @@ public:
     /// Generates the text data for this component
     /// 
     /// 
-    virtual std::vector<std::shared_ptr<GUITextData>> generate_text_data() = 0;
+    virtual std::vector<std::shared_ptr<GUIText>> generate_text_data() = 0;
 
     ///
     /// Get the map listing all the components of the group.

@@ -223,9 +223,9 @@ void GUIManager::generate_text_data() {
 void GUIManager::render_text() {
     for(auto text_data : components_text) {
 
-        int x_pos = text_data->get_transformed_x_offset();
-        int y_pos = text_data->get_transformed_y_offset();
-
+        int x_pos = text_data->get_x_offset_pixels();
+        int y_pos = text_data->get_y_offset_pixels();
+        std::cout << " X PO " << x_pos << " Y PO " << y_pos << std::endl;
         text_data->get_text()->move(x_pos, y_pos);
         text_data->get_text()->display();
     }
