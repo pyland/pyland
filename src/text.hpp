@@ -33,7 +33,7 @@ class GameWindow;
 class Text {
 private:
     enum class Alignment {
-        LEFT, CENTRE, RIGHT
+        LEFT, RIGHT, TOP, BOTTOM, CENTRE
     };
     ///
     /// If true, the text needs to be re-rendered.
@@ -51,14 +51,27 @@ private:
     /// Position text based on alignment.
     ///
     /// If true, rather than the position representing the top left of
-    /// the text area, it will represent the top left, centre, right
-    /// depending on the alignment.
+    /// the text area, it will represent a position dependant on the
+    /// current alignment settings. The corner/edge/centre is the
+    /// alignment_v-alignment_h corner/edge/centre.
     ///
     bool position_from_alignment;
     ///
-    /// The justification
+    /// The horizontal justification
     ///
-    Alignment alignment;
+    Alignment alignment_h;
+    ///
+    /// The vertical justification
+    ///
+    Alignment alignment_v;
+    ///
+    /// The width of the text (not textbox).
+    ///
+    int used_width;
+    ///
+    /// The height of the text (not textbox).
+    ///
+    int used_height;
     ///
     /// If true, the text needs to be re-rendered.
     ///
@@ -154,7 +167,7 @@ public:
     ///
     void align_left();
     ///
-    /// Centres text.
+    /// Horizontally centres text.
     ///
     void align_centre();
     ///
@@ -162,12 +175,27 @@ public:
     ///
     void align_right();
     ///
+    /// Aligns the text to the top.
+    ///
+    void vertical_align_top();
+    ///
+    /// Vertically centres text.
+    ///
+    void vertical_align_centre();
+    ///
+    /// Aligns the text to the bottom.
+    ///
+    void vertical_align_bottom();
+    ///
     /// If true, the origin of the text will depend on alignment.
     ///
     /// When set to true:
-    /// if alignment is LEFT  , the origin is the top-left;
-    /// if alignment is CENTRE, the origin is the top-centre;
-    /// if alignment is RIGHT , the origin is the top-right;
+    /// if alignment_h is LEFT  , the origin is the Y-left;
+    /// if alignment_h is CENTRE, the origin is the Y-centre;
+    /// if alignment_h is RIGHT , the origin is the Y-right;
+    /// if alignment_v is TOP   , the origin is the top-X;
+    /// if alignment_v is CENTRE, the origin is the centre-X;
+    /// if alignment_v is BOTTOM, the origin is the bottom-X;
     ///
     void align_at_origin(bool aao);
 
