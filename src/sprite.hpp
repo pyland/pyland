@@ -6,6 +6,7 @@
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
+#include "engine.hpp"
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -16,13 +17,31 @@
 #include <GL/gl.h>
 #endif
 
+// TODO: enum class
+enum Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 
 ///
 /// Represents a sprite in the engine
 ///
 class Sprite : public MapObject {
+private:
+    Status string_to_status (std::string status);
 
 protected:
+    ///
+    /// The text to display above the object
+    ///
+    Text *object_text = nullptr;
+
+    ///
+    /// The status text for the object
+    ///
+    Text *status_text = nullptr;
+
+    ///
+    /// status of sprite
+    /// TODO: this value isn't used at the moment, use for status images
+    Status sprite_status = NOTHING;
 
     ///
     /// Tiles that the object is blocking, probably
@@ -30,36 +49,77 @@ protected:
     ///
     std::map<std::string, Map::Blocker> blocked_tiles;
 
-
+    ///
+    /// Map_objects which move with the sprite
+    ///
+    std::vector<std::shared_ptr<MapObject>> inventory;
 
 public:
-    Sprite(glm::ivec2 position, std::string name);
+    Sprite(glm::ivec2 position,
+           std::string name,
+           int sheet_id,
+           std::string sheet_name="../resources/characters_1.png");
+
     virtual ~Sprite();
 
-    // TODO: Comment
+    ///
+    /// manage collisions for spirtes as they move
+    /// @param target
+    ///     tile the sprite it moving to
+    ///
     void set_state_on_moving_start(glm::ivec2 target);
+
+    ///
+    /// manage collisions for sprites as they move
+    ///
     void set_state_on_moving_finish();
 
+    ///
+    /// Get the object's text to display
+    /// @return the object's text
+    ///
+    Text* get_object_text() {return object_text; }
 
     ///
-    /// Generate the texture coordinate data for the sprite
+    /// Set the object's text to be displayed
+    /// @param _object_text the object's text
     ///
-    void generate_tex_data();
+    void set_object_text(Text* _object_text) {object_text = _object_text; }
 
     ///
-    /// Generate the vertex data for the sprite
+    /// Get the object's status text
+    /// @return the object's status text
     ///
-    void generate_vertex_data();
+    Text* get_status_text() {return status_text; }
 
     ///
-    /// Load the textures that are being used by the sprite
+    /// Set the object's status text
+    /// @param _status_text the object's status text
     ///
-    void load_textures();
+    void set_status_text(Text* _status_text) {status_text = _status_text; }
 
     ///
-    /// Initialise the shaders that are being used by the sprite
+    /// add map_object to sprites inventory
     ///
-    bool init_shaders();
+    void add_to_inventory(std::shared_ptr<MapObject> new_object);
+
+    std::vector<std::shared_ptr<MapObject>> get_inventory() {return inventory; }
+
+    ///
+    /// remove the specified object from the sprites inventory, safe to use even if
+    /// item isn't in inventory
+    /// @return
+    ///     true if successfully removed, false if it wasn't present
+    bool remove_from_inventory(std::shared_ptr<MapObject> old_object);
+
+    bool is_in_inventory(std::shared_ptr<MapObject> object);
+
+    void set_y_position(int y_pos);
+    void set_x_position(int x_pos);
+    void set_y_position(double y_pos);
+    void set_x_position(double x_pos);
+
+    void set_sprite_status(std::string _sprite_status);
 };
 
 #endif

@@ -84,6 +84,8 @@ Text::Text(GameWindow* window, TextFont font, bool smooth):
     dirty_vbo(true),
     text(""),
     position_from_alignment(false),
+    alignment_h(Text::Alignment::LEFT),
+    alignment_v(Text::Alignment::TOP),
     smooth(smooth),
     width(0),
     height(0),
@@ -105,24 +107,32 @@ Text::~Text() {
 }
 
 
+// WARNING:
+//      This function contains an unusual amount of raw pointers, and is
+//      the most C-like function you can get without being C++.
+//      Sorry Joshua.
 void Text::render() {
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
     int lost_lines = 0;
 
+    int used_width = 0;
+
     int length = (int)text.length();
     // Entire text.
     const char* ctext = text.c_str();
 
-    image = Image(width, height, true);
-
     // Line of text.
     char* line = new char[length+1];
 
-    image.clear(0x00000000, 0xffffffff);
+    // Null-terminator separated lines of text.
+    char* lines = new char[length+1];
+    // Pointer to within lines.
+    char* lines_scan = lines;
+
     // Text indexing.
     for (int t = 0; t < length; t++) {
-        int line_width;
+        int line_width = 0;
         // Word indexing.
         int w = 0;
         // Stores (from the beginning) a word in ctext (copy).
@@ -163,6 +173,9 @@ void Text::render() {
             // Test line length.
             TTF_SizeUTF8(font.font, line, &line_width, NULL);
             if (line_width < width) {
+                if (line_width > used_width) {
+                    used_width = line_width;
+                }
                 // Mark current position as valid.
                 ll = l - t;
                 // If this is the end of a line, or whole text, stop.
@@ -215,32 +228,58 @@ void Text::render() {
                 break;
             }
         }
+
+        int i;
+        for (i = 0; line[i] != '\0'; i++) {
+            lines_scan[i] = line[i];
+         }
+        lines_scan[i] = '\0';
+        lines_scan = &lines_scan[i+1];
+
+        ++line_number;
+        LOG(WARNING) << line;
         if (line[0] == '\0') {
             // Check that we aren't going to chase our tailes trying to fit an unfittable character.
             if (ctext[w] != '\n') {
                 LOG(WARNING) << "Cannot render text: character too large.";
                 delete[] line;
-                throw Text::RenderException("A word is too long");
+                delete[] lines;
+                throw Text::RenderException("A character is too large");
             }
             else {
                 // It's a blank line.
-                line_number++;
                 continue;
             }
         }
+    }
+    int line_count = line_number;
+
+    int used_height = line_count * line_height;
+
+    image = Image(used_width, (used_height < height) ? used_height : height, true);
+    image.clear(0x00000000, 0xffffffff);
+
+    // Render all lines of text.
+    SDL_Color black;
+    black.r = black.g = black.b = black.a = 0;
+    SDL_Color white;
+    white.r = white.g = white.b = white.a = 255;
+    lines_scan = lines;
+    for (int line_number = 0; line_number < line_count; ++line_number) {
         // Render line
-        SDL_Color black;
-        black.r = black.g = black.b = black.a = 0;
-        SDL_Color white;
-        white.r = white.g = white.b = white.a = 255;
-        LOG(INFO) << "Rendering line of text: \"" << line << "\".";
+        LOG(INFO) << "Rendering line of text: \"" << lines_scan << "\".";
+        if (lines_scan[0] == '\0') {
+            // Skip it - it's a new line.
+            lines_scan = &lines_scan[1];
+            continue;
+        }
 
         SDL_Surface* rendered_line;
         if (smooth) {
-            rendered_line = TTF_RenderUTF8_Shaded(font.font, line, white, black);
+            rendered_line = TTF_RenderUTF8_Shaded(font.font, lines_scan, white, black);
         }
         else {
-            rendered_line = TTF_RenderUTF8_Solid(font.font, line, white);
+            rendered_line = TTF_RenderUTF8_Solid(font.font, lines_scan, white);
         }
 #ifdef TEXT_SAFE_SURFACE
         // This surface has a known format.
@@ -257,7 +296,7 @@ void Text::render() {
         SDL_SetSurfaceBlendMode(rendered_line, SDL_BLENDMODE_NONE);
         SDL_BlitSurface(rendered_line, NULL, compatible, NULL);
         SDL_LockSurface(compatible);
-        // pitch is in bytes, not pixels.
+        // pitch is in bytes, not pixels. RGBA = 4 bytes.
         int jump = compatible->pitch / 4;
 #else
         SDL_LockSurface(rendered_line);
@@ -270,33 +309,52 @@ void Text::render() {
         //   entirely, rather than checking it every single iteration.
         int _smooth = smooth;
         int x_offset;
-        switch (alignment) {
+        int y_offset;
+        switch (alignment_h) {
         default:
         case Alignment::LEFT:
             x_offset = 0;
             break;
         case Alignment::CENTRE:
-            x_offset = (image.width - rendered_line->w) / 2;
+            x_offset = (used_width - rendered_line->w) / 2;
             break;
         case Alignment::RIGHT:
-            x_offset = image.width - rendered_line->w;
+            x_offset = used_width - rendered_line->w;
             break;
         }
-        for (int y = 0; y < line_height; y++) {
-            int yi = y + line_number * line_height;
+        switch (alignment_v) {
+        default:
+        case Alignment::TOP:
+            y_offset = line_number * line_height;
+            break;
+        case Alignment::CENTRE:
+            y_offset = line_number * line_height - (used_height - image.height) / 2;
+            break;
+        case Alignment::BOTTOM:
+            y_offset = line_number * line_height - (used_height - image.height);
+            break;
+        }
+        // x surface
+        int xs;
+        // y surface
+        int ys;
+        for (ys = 0; ys < line_height; ++ys) {
+            int yi = ys + y_offset;
             if (yi >= image.height) {
                 lost_lines++;
                 break;
+            } else if (yi < 0) {
+                continue;
             }
-            for (int x = 0; x < rendered_line->w; x++) {
+            for (xs = 0; xs < rendered_line->w; ++xs) {
 #ifdef TEXT_SAFE_SURFACE
-                image.flipped_pixels[yi][x + x_offset].a = (((Uint32*)compatible->pixels)[(y*jump + x)]);
+                image.flipped_pixels[yi][xs + x_offset].a = (((Uint32*)compatible->pixels)[(ys*jump + xs)]);
 #else
                 if (_smooth) {
-                    image.flipped_pixels[yi][x + x_offset].a =(((Uint8*)rendered_line->pixels)[(y*jump + x)]);
+                    image.flipped_pixels[yi][xs + x_offset].a =(((Uint8*)rendered_line->pixels)[(ys*jump + xs)]);
                 }
                 else {
-                    image.flipped_pixels[yi][x + x_offset].a = (((Uint8*)rendered_line->pixels)[(y*jump + x)]) ? 255 : 0;
+                    image.flipped_pixels[yi][xs + x_offset].a = (((Uint8*)rendered_line->pixels)[(ys*jump + xs)]) ? 255 : 0;
                 }
 #endif
             }
@@ -308,14 +366,22 @@ void Text::render() {
         SDL_UnlockSurface(rendered_line);
 #endif
         SDL_FreeSurface(rendered_line);
-        line_number++;
-        if (y < line_height) {
+        if (ys < line_height) {
             LOG(WARNING) << "Text overflow.";
             break;
         }
+
+        // Set lines_scan to start next line
+        while (lines_scan[0] != '\0') {
+            lines_scan = &lines_scan[1];
+        }
+        lines_scan = &lines_scan[1];
     }
 
+    this->used_width  = used_width;
+    this->used_height = used_height;
     delete[] line;
+    delete[] lines;
     generate_texture();
     dirty_texture = false;
     dirty_vbo = true;
@@ -364,26 +430,8 @@ void Text::generate_vbo() {
         }
     }
 
-    int x_final;
-    if (position_from_alignment) {
-        switch (alignment) {
-        default:
-        case Alignment::LEFT:
-            x_final = x;
-            break;
-        case Alignment::CENTRE:
-            x_final = x - (image.width / 2);
-            break;
-        case Alignment::RIGHT:
-            x_final = x - image.width;
-            break;
-        }
-    } else {
-        x_final = x;
-    }
-
-    std::pair<float, float> ratio_xy = window->get_ratio_from_pixels(std::pair<int,int>(x_final, y));
-    std::pair<float, float> ratio_wh = window->get_ratio_from_pixels(std::pair<int,int>(width, height));
+    std::pair<float, float> ratio_xy = get_top_left_ratio();
+    std::pair<float, float> ratio_wh = get_rendered_size_ratio();
     // We are working with opengl coordinates where we strech from -1.0
     // to 1.0 across the window.
     float rx = ratio_xy.first * 2.0f - 1.0f;
@@ -436,23 +484,138 @@ void Text::set_text(std::string text) {
 }
 
 
+std::pair<int,int> Text::get_rendered_size() {
+    // Needed to update image size.
+    if (dirty_texture) {
+        render();
+    }
+
+    return std::make_pair(image.width, image.height);
+}
+
+std::pair<float,float> Text::get_rendered_size_ratio() {
+    return window->get_ratio_from_pixels(get_rendered_size());
+}
+
+
+std::pair<int,int> Text::get_text_size() {
+    // Needed to update image size.
+    if (dirty_texture) {
+        render();
+    }
+
+    return std::make_pair(used_width, used_height);
+}
+
+std::pair<float,float> Text::get_text_size_ratio() {
+    return window->get_ratio_from_pixels(get_text_size());
+}
+
+
+std::pair<int,int> Text::get_size() {
+    return std::make_pair(width, height);
+}
+
+std::pair<float,float> Text::get_size_ratio() {
+    return window->get_ratio_from_pixels(get_size());
+}
+
+std::pair<int,int> Text::get_origin() {
+    return std::make_pair(x, y);
+}
+
+std::pair<float,float> Text::get_origin_ratio() {
+    return window->get_ratio_from_pixels(get_origin());
+}
+
+std::pair<int,int> Text::get_top_left() {
+    // Needed to update image size.
+    if (dirty_texture) {
+        render();
+    }
+
+    int x_final;
+    if (position_from_alignment) {
+        switch (alignment_h) {
+        default:
+        case Alignment::LEFT:
+            x_final = x;
+            break;
+        case Alignment::CENTRE:
+            x_final = x - (image.width / 2);
+            break;
+        case Alignment::RIGHT:
+            x_final = x - image.width;
+            break;
+        }
+    } else {
+        x_final = x;
+    }
+
+    int y_final;
+    if (position_from_alignment) {
+        switch (alignment_v) {
+        default:
+        case Alignment::TOP:
+            y_final = y;
+            break;
+        case Alignment::CENTRE:
+            y_final = y + (image.height / 2);
+            break;
+        case Alignment::BOTTOM:
+            y_final = y + image.height;
+            break;
+        }
+    } else {
+        y_final = y;
+    }
+
+    return std::make_pair(x_final, y_final);
+}
+
+std::pair<float,float> Text::get_top_left_ratio() {
+    return window->get_ratio_from_pixels(get_top_left());
+}
+
+
 void Text::align_left() {
-    if (alignment != Alignment::LEFT) {
-        alignment = Alignment::LEFT;
+    if (alignment_h != Alignment::LEFT) {
+        alignment_h = Alignment::LEFT;
         dirty_texture = true;
     }
 }
 
 void Text::align_centre() {
-    if (alignment != Alignment::CENTRE) {
-        alignment = Alignment::CENTRE;
+    if (alignment_h != Alignment::CENTRE) {
+        alignment_h = Alignment::CENTRE;
         dirty_texture = true;
     }
 }
 
 void Text::align_right() {
-    if (alignment != Alignment::RIGHT) {
-        alignment = Alignment::RIGHT;
+    if (alignment_h != Alignment::RIGHT) {
+        alignment_h = Alignment::RIGHT;
+        dirty_texture = true;
+    }
+}
+
+void Text::vertical_align_top() {
+    if (alignment_v != Alignment::TOP) {
+        alignment_v = Alignment::TOP;
+        dirty_texture = true;
+    }
+}
+
+void Text::vertical_align_centre() {
+    if (alignment_v != Alignment::CENTRE) {
+        alignment_v = Alignment::CENTRE;
+        dirty_texture = true;
+    }
+}
+
+void Text::vertical_align_bottom() {
+    if (alignment_v != Alignment::BOTTOM) {
+        alignment_v = Alignment::BOTTOM;
         dirty_texture = true;
     }
 }
@@ -495,11 +658,6 @@ void Text::move(int x, int y) {
     }
     this->x = x;
     this->y = y;
-    // std::pair<int,int> window_size = window->get_size();
-    // display((float)x / (float)window_size.first,
-    //         (float)y / (float)window_size.second,
-    //         (float)(x + width) / (float)window_size.first,
-    //         (float)(y + height) / (float)window_size.second);
 }
 
 void Text::move_ratio(float x, float y) {
@@ -512,11 +670,6 @@ void Text::move_ratio(float x, float y) {
         this->y = iy;
         dirty_vbo = true;
     }
-    // std::pair<int,int> window_size = window->get_size();
-    // display(x,
-    //         y,
-    //         x + ((float)(width) / (float)window_size.first),
-    //         y + ((float)(height) / (float)window_size.second));
 }
 
 void Text::display() {

@@ -10,7 +10,9 @@
 #include "object.hpp"
 #include "object_manager.hpp"
 
-Object::Object() {
+Object::Object(): Object("") {}
+
+Object::Object(std::string name): name(name) {
     // Get a new id for the object
     ObjectManager& object_manager = ObjectManager::get_instance();
 

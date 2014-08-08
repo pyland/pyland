@@ -215,7 +215,6 @@ void Engine::text_displayer() {
     }
 }
 
-#include <iostream>
 void Engine::text_updater() {
     Map *map = CHECK_NOTNULL(map_viewer->get_map());
 
@@ -224,9 +223,7 @@ void Engine::text_updater() {
         //Object is on the map so now get its location
         auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
 
-        glm::ivec2 pixel_position(
-            Engine::get_map_viewer()->tile_to_pixel(sprite->get_position())
-        );
+        glm::ivec2 pixel_position(Engine::get_map_viewer()->tile_to_pixel(sprite->get_position()));
 
         sprite->get_object_text()->move(
             pixel_position.x + int(Engine::get_actual_tile_size() * 0.5),
@@ -243,5 +240,5 @@ void Engine::text_updater() {
 
 void Engine::update_status(int id, std::string status) {
     auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-    sprite->get_status_text()->set_text(status);
+    sprite->set_sprite_status(status);
 }

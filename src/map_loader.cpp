@@ -32,7 +32,6 @@ bool MapLoader::load_map(const std::string source) {
     map_width = map.GetWidth();
     map_height = map.GetHeight();
 
-    load_objects();
     load_layers();
     load_tileset();
 
@@ -74,35 +73,7 @@ void MapLoader::load_layers() {
     }
 }
 
-void MapLoader::load_objects() {
-    for (int i = 0; i < map.GetNumObjectGroups(); ++i) {
-        //Get an object group: Effecitively a map layer but just for objects
-        const Tmx::ObjectGroup *object_group = map.GetObjectGroup(i);
-
-        //Get all the objects in this object group
-        for (int j = 0; j < object_group->GetNumObjects(); ++j) {
-
-            //Get an object
-            const Tmx::Object* object = object_group->GetObject(j);
-
-            //Get object properties
-            const std::string name = object->GetName();
-
-            LOG(INFO) << "Loading object: " << object->GetName();
-
-            //Build a MapObject
-            std::shared_ptr<MapObject> map_object = std::make_shared<MapObject>();
-            map_object->set_name(name);
-            map_object->set_position(glm::vec2(object->GetX(), object->GetY()));
-
-            //Add it to the objects list
-            objects.push_back(map_object);
-        }
-    }
-}
-
 void MapLoader::load_tileset() {
-
     //For all the tilesets
     for (int i = 0; i < map.GetNumTilesets(); ++i) {
 

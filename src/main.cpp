@@ -82,7 +82,8 @@ int create_sprite(Interpreter &interpreter) {
     glm::ivec2 start(4, 15);
 
     // Registering new sprite with game engine
-    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start, "John");
+    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start, "John", 4);
+
     LOG(INFO) << "Adding sprite";
     ObjectManager::get_instance().add_object(new_sprite);
     Engine::get_map_viewer()->get_map()->add_sprite(new_sprite->get_id());
@@ -377,15 +378,19 @@ int main(int argc, const char *argv[]) {
     Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})},
         [&] (MouseInputEvent event) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
+
             glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
             LOG(INFO) << "iteracting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
             auto objects = Engine::get_objects_at(tile_clicked);
-            if (objects.size() == 1) {
+
+            if (objects.size() == 0) {
+                LOG(INFO) << "No objects to interact with";
+            }
+            else if (objects.size() == 1) {
                 callbackstate.register_number_id(objects[0]);
-            } else if (objects.size() == 0) {
-                LOG(INFO) << "Not objects to interact with";
-            } else {
+            }
+            else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
                 callbackstate.register_number_id(objects[0]);
             }

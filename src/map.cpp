@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <exception>
 #include <fstream>
 #include <glog/logging.h>
@@ -83,63 +84,30 @@ Map::~Map() {
 }
 
 bool Map::is_walkable(int x_pos, int y_pos) {
-    //Default is walkable
-    bool walkable = true;
-    //return true;
-    //Iterate through all sprites
-    for(auto sprite : sprite_ids) {
-        //If its an invalid object
-        if (sprite == 0)
-            continue;
+    return std::all_of(std::begin(layers), std::end(layers), [&] (std::shared_ptr<Layer> &layer) {
+        return (layer->get_name() == "Collisions") && layer->get_tile(x_pos, y_pos);
+    });
+}
 
-        std::shared_ptr<Sprite> object = ObjectManager::get_instance().get_object<Sprite>(sprite);
 
-        //If we cannot walk on this object
-        if(object) {
-            if(object->get_walkability() == Walkability::BLOCKED) {
-                walkable = false;
+void Map::add_map_object(int map_object_id) {
+    if(ObjectManager::is_valid_object_id(map_object_id))
+        map_object_ids.push_back(map_object_id);
+}
 
-                //We can stop checking further objects and tiles
-                return walkable;
+void Map::remove_map_object(int map_object_id) {
+    if(ObjectManager::is_valid_object_id(map_object_id)){
+        for(auto it = map_object_ids.begin(); it != map_object_ids.end(); ++it) {
+            //If a valid object
+            if(*it != 0) {
+                //remove it if its the map_object
+                if(*it == map_object_id) {
+                    map_object_ids.erase(it);
+                    return;
+                }
             }
         }
     }
-
-    //Iterate through all map objects
-    for(auto map_object : map_object_ids) {
-        //If its an invalid object
-        if (map_object == 0)
-            continue;
-
-        std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(map_object);
-
-        //If we cannot walk on this object
-        if(object) {
-            if(object->get_walkability() == Walkability::BLOCKED) {
-                walkable = false;
-
-                //We can stop checking further objects and tiles
-                return walkable;
-            }
-        }
-    }
-
-    //Iterate through all tiles
-    for(auto layer : layers ) {
-
-        //determine if we can walk on the map
-        if(layer->get_name() == "Collisions") {
-
-            //if there is a tile, treat it as blocked
-            if(layer->get_tile(x_pos, y_pos) != 0) {
-                 walkable = false;
-                 //We can stop checking further objects and tiles
-                 return walkable;
-            }
-        }
-    }
-
-    return walkable;
 }
 
 void Map::add_sprite(int sprite_id) {

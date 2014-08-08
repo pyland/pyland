@@ -20,104 +20,95 @@
 #endif
 
 // WTF
-MapObject::MapObject() {
-    LOG(INFO) << "Empty MapObject created";
-}
+MapObject::MapObject(glm::vec2 position, std::string name, int sheet_id, std::string sheet_name):
+    Object(name),
+    sheet_name(sheet_name),
+    sheet_id(sheet_id),
+    position(position) {
 
-// WTF
-MapObject::MapObject(glm::vec2 position, std::string name): position(position)  {
-    VLOG(2) << "New map object: " << name;
+        VLOG(2) << "New map object: " << name;
 
-    set_name(name);
+        init_shaders();
+        load_textures();
+        generate_tex_data();
+        generate_vertex_data();
 
-    init_shaders();
-    load_textures();
-    generate_tex_data();
-    generate_vertex_data();
-
-    auto map_viewer(Engine::get_map_viewer());
-
-
-    // WTF: why is text here?
-    // Setting up sprite text
-    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 18);
-
-    // TODO: Smart pointer
-    object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    object_text->set_text(name);
-    glm::ivec2 pixel_position(map_viewer->tile_to_pixel(position));
-    object_text->move(pixel_position.x, pixel_position.y);
-
-    object_text->resize(100,100);
-    object_text->align_centre();
-    object_text->align_at_origin(true);
-    LOG(INFO) << "Setting up text at " << pixel_position.x << ", " << pixel_position.y;
-
-    // setting up status text
-    status_text = new Text(map_viewer->get_window(), myfont, true);
-    status_text->set_text("awaiting...");
-    glm::ivec2 pixel_text(map_viewer->tile_to_pixel(position));
-    status_text->move(pixel_text.x, pixel_text.y + 100);
-
-    status_text->resize(100,100);
-    status_text->align_centre();
-    status_text->align_at_origin(true);
-
-    LOG(INFO) << "MapObject initialized";
+        LOG(INFO) << "MapObject initialized";
 }
 
 MapObject::~MapObject() {
-    delete object_text;
-    delete status_text;
     LOG(INFO) << "MapObject destructed";
 }
 
-
 void MapObject::generate_tex_data() {
 
-    //holds the texture data
-    //need 12 float for the 2D texture coordinates
+    // holds the texture data
+    // need 12 float for the 2D texture coordinates
     int num_floats = 12;
 
-    GLfloat* map_object_tex_data = nullptr;
+    GLfloat *map_object_tex_data;
     try {
-
         map_object_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
     }
-    catch(std::bad_alloc& ba) {
+    catch(std::bad_alloc &) {
         LOG(ERROR) << "ERROR in MapObject::generate_tex_data(), cannot allocate memory";
         return;
     }
 
-    GLfloat offset_x = GLfloat(Engine::get_tile_size()) / (GLfloat)renderable_component.get_texture_image()->store_width;
-    GLfloat offset_y = GLfloat(Engine::get_tile_size()) / (GLfloat)renderable_component.get_texture_image()->store_height;
+    int image_width = renderable_component.get_texture_image()->store_width;
+    int image_height = renderable_component.get_texture_image()->store_height;
+    if (image_width == 0 || image_height == 0 ) {
+        LOG(ERROR) << "At least one image dimension is 0";
+        return;
+    }
 
-    //bottom left
-    map_object_tex_data[0]  = offset_x * GLfloat(4.0);
-    map_object_tex_data[1]  = offset_y * GLfloat(7.0);
+    GLfloat inc_x(Engine::get_tile_size() / GLfloat(image_width));
+    GLfloat inc_y(Engine::get_tile_size() / GLfloat(image_height));
+    if (inc_x == 0.0f || inc_y == 0.0f) {
+        LOG(ERROR) << "Increments are 0";
+        return;
+    }
 
-    //top left
-    map_object_tex_data[2]  = offset_x * GLfloat(4.0);
-    map_object_tex_data[3]  = offset_y * GLfloat(8.0);
+    // Tile ids are from top left but opengl texture coordinates are bottom left so adjust as needed
+    GLfloat offset_x(               inc_x * GLfloat(sheet_id % int(image_width / Engine::get_tile_size())));
+    GLfloat offset_y(1.0f - inc_y - inc_y * GLfloat(sheet_id / int(image_width / Engine::get_tile_size())));
 
-    //bottom right
-    map_object_tex_data[4]  = offset_x * GLfloat(5.0);
-    map_object_tex_data[5]  = offset_y * GLfloat(7.0);
+    // bottom left
+    map_object_tex_data[0]  = offset_x;
+    map_object_tex_data[1]  = offset_y;
 
-    //top left
-    map_object_tex_data[6]  = offset_x * GLfloat(4.0);
-    map_object_tex_data[7]  = offset_y * GLfloat(8.0);
+    // top left
+    map_object_tex_data[2]  = offset_x;
+    map_object_tex_data[3]  = offset_y + inc_y;
 
-    //top right
-    map_object_tex_data[8]  = offset_x * GLfloat(5.0);
-    map_object_tex_data[9]  = offset_y * GLfloat(8.0);
+    // bottom right
+    map_object_tex_data[4]  = offset_x + inc_x;
+    map_object_tex_data[5]  = offset_y;
 
-    //bottom right
-    map_object_tex_data[10] = offset_x * GLfloat(5.0);
-    map_object_tex_data[11] = offset_y * GLfloat(7.0);
+    // top left
+    map_object_tex_data[6]  = offset_x;
+    map_object_tex_data[7]  = offset_y + inc_y;
+
+    // top right
+    map_object_tex_data[8]  = offset_x + inc_x;
+    map_object_tex_data[9]  = offset_y + inc_y;
+
+    // bottom right
+    map_object_tex_data[10] = offset_x + inc_x;
+    map_object_tex_data[11] = offset_y;
+
 
     renderable_component.set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
+}
+
+void MapObject::set_sheet_id(int sheet_id) {
+    this->sheet_id = sheet_id;
+    generate_tex_data();
+}
+
+void MapObject::set_sheet_name(std::string sheet_name) {
+    this->sheet_name = sheet_name;
+    generate_tex_data();
 }
 
 void MapObject::generate_vertex_data() {
@@ -170,7 +161,7 @@ void MapObject::load_textures() {
     Image *texture_image = nullptr;
 
     try {
-        texture_image = new Image("../resources/characters_1.png");
+        texture_image = new Image(sheet_name.c_str());
     }
     catch (std::exception e) {
         LOG(ERROR) << "Failed to create texture";
@@ -195,4 +186,3 @@ bool MapObject::init_shaders() {
     renderable_component.set_shader(shader);
     return true;
 }
-

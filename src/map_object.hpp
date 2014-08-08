@@ -14,23 +14,20 @@
 /// Represents an object which can be rendered on the map
 ///
 class MapObject : public Object {
-
 protected:
     ///
-    /// The text to display above the object
+    /// The name of the tilesheet to use for the map object
     ///
-    Text* object_text = nullptr;
+    std::string sheet_name;
 
     ///
-    /// The status text for the object
+    /// The id of the tile in the sheet
     ///
-    Text* status_text = nullptr;
+    int sheet_id;
 
     ///
-    /// Walkable: determine if the object can be walked over
+    /// The position of the object
     ///
-    Walkability walkability = Walkability::WALKABLE;
-
     glm::vec2 position;
 
     ///
@@ -46,23 +43,39 @@ protected:
 
 
 public:
-    MapObject();
-    MapObject(glm::vec2 position, std::string name);
+    MapObject(glm::vec2 position,
+              std::string name,
+              int sheet_id,
+              std::string sheet_name="../resources/basictiles_2.png");
+
     virtual ~MapObject();
 
     glm::vec2 get_position() { return position; }
     void set_position(glm::vec2 position) { this->position = position; }
 
     ///
-    /// Get the object's walkability
+    /// Set the tile sheet to use for this character
+    /// @param _tile_sheet the tile sheet
     ///
-    Walkability get_walkability() { return walkability; }
+    void set_sheet_name(std::string sheed_name);
 
     ///
-    /// Set the object's walkability
-    /// @param _walkability the walkability of the object
+    /// Get the tile sheet
+    /// @return the tile sheet
     ///
-    void set_walkability(Walkability walkability) { this->walkability = walkability; }
+    std::string get_sheet_name() { return sheet_name; }
+
+    ///
+    /// Set the id of the tile in the tile sheet
+    /// @param _tile_sheet_id the id of the tile in the tile sheet
+    ///
+    void set_sheet_id(int sheet_id);
+
+    ///
+    /// Get the id of the tile in the tile sheet
+    /// @return the tile sheet id
+    ///
+    int get_sheet_id() { return sheet_id; }
 
     ///
     /// Generate the texture coordinate data for the object
@@ -83,30 +96,6 @@ public:
     /// Initialise the shaders that are being used by the object
     ///
     bool init_shaders();
-
-    ///
-    /// Get the object's text to display
-    /// @return the object's text
-    ///
-    Text* get_object_text() { return object_text; }
-
-    ///
-    /// Set the object's text to be displayed
-    /// @param _object_text the object's text
-    ///
-    void set_object_text(Text *object_text) { this->object_text = object_text; }
-
-    ///
-    /// Get the object's status text
-    /// @return the object's status text
-    ///
-    Text *get_status_text() { return status_text; }
-
-    ///
-    /// Set the object's status text
-    /// @param _status_text the object's status text
-    ///
-    void set_status_text(Text *status_text) { this->status_text = status_text; }
 
     ///
     /// Set the object's moving status

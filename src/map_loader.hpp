@@ -36,11 +36,6 @@ class MapLoader {
     void load_layers();
 
     ///
-    /// Load objects from the TMX map
-    ///
-    void load_objects();
-
-    ///
     /// Load tilesets from the TMX map
     ///
     void load_tileset();
