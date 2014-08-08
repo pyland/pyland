@@ -70,11 +70,6 @@ void Engine::move_sprite(int id, Vec2D move_by, GilSafeFuture<bool> walk_succeed
             sprite->set_x_position(x_position);
             sprite->set_y_position(y_position);
 
-            for (auto item: sprite->get_inventory()) {
-                item->set_x_position(x_position);
-                item->set_y_position(y_position);
-            }
-
             if (completion == 1.0) {
                 sprite->set_state_on_moving_finish();
 
