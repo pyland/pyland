@@ -256,7 +256,7 @@ void Text::render() {
 
     int used_height = line_count * line_height;
     
-    image = Image(used_width, used_height, true);
+    image = Image(used_width, (used_height < height) ? used_height : height, true);
     image.clear(0x00000000, 0xffffffff);
     
     // Render all lines of text.
@@ -316,41 +316,45 @@ void Text::render() {
             x_offset = 0;
             break;
         case Alignment::CENTRE:
-            x_offset = (image.width - rendered_line->w) / 2;
+            x_offset = (used_width - rendered_line->w) / 2;
             break;
         case Alignment::RIGHT:
-            x_offset = image.width - rendered_line->w;
+            x_offset = used_width - rendered_line->w;
             break;
         }
         switch (alignment_v) {
         default:
         case Alignment::TOP:
-            y_offset = 0;
+            y_offset = line_number * line_height;
             break;
         case Alignment::CENTRE:
-            y_offset = (image.height - rendered_line->h) / 2;
+            y_offset = line_number * line_height - (used_height - image.height) / 2;
             break;
         case Alignment::BOTTOM:
-            y_offset = image.height - rendered_line->h;
+            y_offset = line_number * line_height - (used_height - image.height);
             break;
         }
-        for (int y = 0; y < line_height; y++) {
-            int yi = y + y_offset + line_number * line_height;
+        // x surface
+        int xs;
+        // y surface
+        int ys;
+        for (ys = 0; ys < line_height; ++ys) {
+            int yi = ys + y_offset;
             if (yi >= image.height) {
                 lost_lines++;
                 break;
             } else if (yi < 0) {
                 continue;
             }
-            for (int x = 0; x < rendered_line->w; x++) {
+            for (xs = 0; xs < rendered_line->w; ++xs) {
 #ifdef TEXT_SAFE_SURFACE
-                image.flipped_pixels[yi][x + x_offset].a = (((Uint32*)compatible->pixels)[(y*jump + x)]);
+                image.flipped_pixels[yi][xs + x_offset].a = (((Uint32*)compatible->pixels)[(ys*jump + xs)]);
 #else
                 if (_smooth) {
-                    image.flipped_pixels[yi][x + x_offset].a =(((Uint8*)rendered_line->pixels)[(y*jump + x)]);
+                    image.flipped_pixels[yi][xs + x_offset].a =(((Uint8*)rendered_line->pixels)[(ys*jump + xs)]);
                 }
                 else {
-                    image.flipped_pixels[yi][x + x_offset].a = (((Uint8*)rendered_line->pixels)[(y*jump + x)]) ? 255 : 0;
+                    image.flipped_pixels[yi][xs + x_offset].a = (((Uint8*)rendered_line->pixels)[(ys*jump + xs)]) ? 255 : 0;
                 }
 #endif
             }
@@ -362,7 +366,7 @@ void Text::render() {
         SDL_UnlockSurface(rendered_line);
 #endif
         SDL_FreeSurface(rendered_line);
-        if (y < line_height) {
+        if (ys < line_height) {
             LOG(WARNING) << "Text overflow.";
             break;
         }
@@ -434,10 +438,10 @@ void Text::generate_vbo() {
             x_final = x;
             break;
         case Alignment::CENTRE:
-            x_final = x - (used_width / 2);
+            x_final = x - (image.width / 2);
             break;
         case Alignment::RIGHT:
-            x_final = x - used_width;
+            x_final = x - image.width;
             break;
         }
     } else {
@@ -452,10 +456,10 @@ void Text::generate_vbo() {
             y_final = y;
             break;
         case Alignment::CENTRE:
-            y_final = y + (used_height / 2);
+            y_final = y + (image.height / 2);
             break;
         case Alignment::BOTTOM:
-            y_final = y + used_height;
+            y_final = y + image.height;
             break;
         }
     } else {
@@ -463,7 +467,7 @@ void Text::generate_vbo() {
     }
 
     std::pair<float, float> ratio_xy = window->get_ratio_from_pixels(std::pair<int,int>(x_final, y_final));
-    std::pair<float, float> ratio_wh = window->get_ratio_from_pixels(std::pair<int,int>(used_width, used_height));
+    std::pair<float, float> ratio_wh = window->get_ratio_from_pixels(std::pair<int,int>(image.width, image.height));
     // We are working with opengl coordinates where we strech from -1.0
     // to 1.0 across the window.
     float rx = ratio_xy.first * 2.0f - 1.0f;
