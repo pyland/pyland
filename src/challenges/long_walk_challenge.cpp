@@ -55,7 +55,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
     auto *map = Engine::get_map_viewer()->get_map();
 
     // testing micro-objects
-    std::shared_ptr<MapObject> test_chest = std::make_shared<MapObject>(10, 15, "test chest",5);
+    std::shared_ptr<MapObject> test_chest = std::make_shared<MapObject>(10, 15, "test chest",52);
     ObjectManager::get_instance().add_object(test_chest);
     auto chest_id = test_chest->get_id();
     LOG(INFO) << "created test_chest with id: " << chest_id;
@@ -77,6 +77,26 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                 ObjectManager::get_instance().get_object<Sprite>(id)->remove_from_inventory(test_chest);
                 return false;
     });
+
+    // testing lawn
+    auto lawn_area = {Vec2D(12,16),Vec2D(13,16),Vec2D(14,16)};
+    for (Vec2D lawn_tile: lawn_area) {
+        Engine::change_tile(lawn_tile,5,20);
+        map->event_step_on.register_callback(
+            lawn_tile,
+            [test_chest,lawn_tile] (int) {
+                int id = Engine::get_sprites_at(lawn_tile).front();
+                bool has_chest = ObjectManager::get_instance().get_object<Sprite>(id)->is_in_inventory(test_chest);
+                if (has_chest) {
+                    Engine::print_dialogue ("Grass","You're mowing, keep on going");
+                    Engine::change_tile(lawn_tile,5,10);
+                    return false;
+                } else {
+                    Engine::print_dialogue ("Grass","Don't forget the lawn mower");
+                    return true;
+                }
+            });
+    }
 
 
     // Set up blocking walls

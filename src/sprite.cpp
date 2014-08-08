@@ -335,3 +335,8 @@ void Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
         LOG(INFO) << "removing item to sprites inventory";
     }
 }
+
+bool Sprite::is_in_inventory(std::shared_ptr<MapObject> object) {
+    auto it = std::find(std::begin(inventory), std::end(inventory), object);
+    return (it != std::end(inventory)); 
+}

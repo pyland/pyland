@@ -146,10 +146,12 @@ public:
     /// add map_object to sprites inventory
     ///
     void add_to_inventory(std::shared_ptr<MapObject> new_object);
-    
+
     std::vector<std::shared_ptr<MapObject>> get_inventory() {return inventory; }
 
     void remove_from_inventory(std::shared_ptr<MapObject> old_object);
+
+    bool is_in_inventory(std::shared_ptr<MapObject> object);
 
     /// TODO: add a remove from inventory method
     void set_y_position(int y_pos);
