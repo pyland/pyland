@@ -103,6 +103,7 @@ void MapViewer::render_map() {
 
          //      int length = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x()+map->get_display_width() -1, 0);
          //    glDrawArrays(GL_TRIANGLES, offset, (length -offset) / 2); // no of vetices, divide by 2 dimenions
+
         glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
         //        std::cout <<" OOF " << offset << " " << length << std::endl;
         //Release the vertex buffers and texppptures
