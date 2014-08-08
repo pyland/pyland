@@ -25,6 +25,7 @@
 
 #endif
 
+/// TODO: REMOVE
 Sprite::Sprite() {
     sprite_sheet = "../resources/characters_1.png";
     sprite_sheet_id = 0;
@@ -120,7 +121,7 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_
 
     /// build focus icon
     LOG(INFO) << "setting up focus icon";
-    focus_icon = std::make_shared<MapObject>(x_position, y_position, "focus icon",66);
+    focus_icon = std::make_shared<MapObject>(x_position, y_position, "focus icon", 96);
     ObjectManager::get_instance().add_object(focus_icon);
     auto focus_icon_id = focus_icon->get_id();
     LOG(INFO) << "created focus icon with id: " << focus_icon_id;
@@ -379,11 +380,6 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
 
  void Sprite::set_focus(bool is_focus) {
     LOG(INFO) << "trying to set focus to "<< is_focus;
-    if (is_focus) {
-        //TODO: replace with better way to hide icon
-        focus_icon->set_tile_sheet_id(96);
-    } else {
-        focus_icon->set_tile_sheet_id(119);
-    }
+    focus_icon->set_renderable(is_focus);
 
  }
