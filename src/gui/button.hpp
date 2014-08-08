@@ -1,7 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "component.hpp"
+#include "component_group.hpp"
 #include "gui_text.hpp"
 #include "gui_text_data.hpp"
 #include "text.hpp"
@@ -25,8 +25,8 @@
 #endif
 
 
-class Button : public Component {
-    GUIText button_text;
+class Button : public ComponentGroup {
+    std::shared_ptr<GUIText> button_text;
 public:
     Button();
     Button(std::shared_ptr<Text> _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
@@ -35,11 +35,12 @@ public:
 
     void set_text(std::shared_ptr<Text>  _text);
 
-    std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
+    std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data();
 
-    std::vector<std::pair<GLfloat*, int>> generate_texture_data();
+    std::vector<std::pair<GLfloat*, int>> generate_this_texture_data();
 
-    std::vector<std::shared_ptr<GUITextData>> generate_text_data();
+    std::vector<std::shared_ptr<GUITextData>> generate_this_text_data();
+
 };
 
 #endif

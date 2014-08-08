@@ -278,8 +278,14 @@ int main(int argc, const char* argv[]) {
     std::pair<float,float> backward_loco(0.85f,0.05f);
     std::pair<float,float> forward_loco(0.95f,0.05f);
 
+    std::shared_ptr<Text> backwardtext = std::make_shared<Text>(&window, buttonfont, true);
+    std::shared_ptr<Text> forwardtext = std::make_shared<Text>(&window, buttonfont, true);
+    backwardtext->set_text("backward");
+    forwardtext->set_text("forward");
+      
+    
     std::shared_ptr<Button> backward_button = std::make_shared<Button>();
-    backward_button->set_text("backward");
+    backward_button->set_text(backwardtext);
     backward_button->set_on_click([&] () {
         LOG(INFO) << "backward button pressed";  
         Engine::move_notification(Previous); 
@@ -295,7 +301,7 @@ int main(int argc, const char* argv[]) {
 
 
     std::shared_ptr<Button> forward_button = std::make_shared<Button>();
-    forward_button->set_text("forward");
+    forward_button->set_text(forwardtext);
     forward_button->set_on_click([&] () {
         LOG(INFO) << "forward button pressed"; 
         Engine::move_notification(Next); 
@@ -525,8 +531,6 @@ int main(int argc, const char* argv[]) {
         VLOG(3) << "} RM | TD {";
         mytext.display();
         Engine::text_displayer();
-        stoptext.display();
-        runtext.display();
         forward_text.display();
         backward_text.display();
         cursor.display();

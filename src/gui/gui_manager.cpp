@@ -54,7 +54,7 @@ void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
             component->set_height_pixels((int)((float)height_pixels*component->get_height()));
             component->set_x_offset_pixels((int)((float)width_pixels*component->get_x_offset()));
             component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));              
-    
+            
             regenerate_offsets(component);
         }
     }
