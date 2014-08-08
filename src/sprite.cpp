@@ -308,40 +308,34 @@ void Sprite::add_to_inventory(std::shared_ptr<MapObject> new_object) {
 }
 
 void Sprite::set_y_position(int y_pos) { 
+    y_position = y_pos; 
     for (auto item: get_inventory()) {
-        item->set_x_position(x_position);
         item->set_y_position(y_position);
     }
-    focus_icon->set_x_position(x_position);
     focus_icon->set_y_position(y_position);
-    y_position = y_pos; 
 }
 void Sprite::set_x_position(int x_pos) { 
+    x_position = x_pos;
     for (auto item: get_inventory()) {
         item->set_x_position(x_position);
-        item->set_y_position(y_position);
     }
     focus_icon->set_x_position(x_position);
-    focus_icon->set_y_position(y_position);
     x_position = x_pos; 
 }
 
 void Sprite::set_y_position(double y_pos) { 
+    y_position = y_pos; 
     for (auto item: get_inventory()) {
-        item->set_x_position(x_position);
         item->set_y_position(y_position);
     }
-    focus_icon->set_x_position(x_position);
     focus_icon->set_y_position(y_position);
-    y_position = y_pos; 
 }
 void Sprite::set_x_position(double x_pos) { 
+    x_position = x_pos;
     for (auto item: get_inventory()) {
         item->set_x_position(x_position);
-        item->set_y_position(y_position);
     }
     focus_icon->set_x_position(x_position);
-    focus_icon->set_y_position(y_position);
     x_position = x_pos; 
 }
 
