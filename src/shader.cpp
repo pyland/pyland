@@ -1,12 +1,3 @@
-// //////////////////////////////////////////////////////////////
-// //////////////////////// CURRENT BUGS ////////////////////////
-// //////////////////////////////////////////////////////////////
-//  Shader caches are not cleaned up when a graphics context ends.
-//      Not really a problem unless using multiple contexts.
-//  Shader caches are created twice and destroyed once due to copying
-//      when inserting into the map (pair?). This doesn't do any harm,
-//      it's just weird.
-
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
@@ -18,10 +9,6 @@
 
 #include "shader.hpp"
 #include "graphics_context.hpp"
-
-
-
-std::map<GraphicsContext*, std::shared_ptr<Shader::ShaderCache>> Shader::shader_caches;
 
 
 
@@ -42,64 +29,9 @@ static std::string load_file(std::string filename) {
 
 
 
-Shader::ShaderCache::ShaderCache() {
-    LOG(INFO) << "Created shader cache " << this;
+std::shared_ptr<Shader> Shader::new_shared(const std::string resource_name) {
+    return std::make_shared<Shader>(resource_name);
 }
-
-
-Shader::ShaderCache::~ShaderCache() {
-    // We do not clean up the shaders here. This will be done by shared
-    // pointers after they are no longer needed.
-    LOG(INFO) << "Destroyed shader cache " << this;
-}
-
-
-std::shared_ptr<Shader> Shader::ShaderCache::get_shader(const std::string program_name) {
-    LOG(INFO) << "Getting shader \"" << program_name << "\" from cache " << this;
-    if (shaders.count(program_name) == 0) {
-        // First-time load.
-        try {
-            std::shared_ptr<Shader> shader = std::make_shared<Shader>(program_name);
-            shaders.insert(std::make_pair(program_name, shader));
-            shader->cache = this;
-            return shader;
-        }
-        catch (Shader::LoadException e) {
-            LOG(ERROR) << "Error creating shared shader \"" << program_name << "\": " << e.what();
-            throw e;
-        }
-    }
-    else {
-        // Get from cache.
-        std::shared_ptr<Shader> shader = shaders.find(program_name)->second.lock();
-        shader->cache = this;
-        // Some say we should check the pointer, but we don't keep dead
-        // weak pointers lying around for us to care.
-        return shader;
-    }
-}
-
-
-void Shader::ShaderCache::remove_shader(const std::string program_name) {
-    LOG(INFO) << "Removing shader \"" << program_name << "\" from cache " << this;
-    shaders.erase(program_name);
-}
-
-
-
-std::shared_ptr<Shader> Shader::get_shared_shader(const std::string program_name) {
-    GraphicsContext* context = GraphicsContext::get_current();
-
-    if (shader_caches.count(context) == 0) {
-        // Create a new ShaderCache as this is the first of its context.
-        std::shared_ptr<ShaderCache> shader_cache = std::make_shared<ShaderCache>();
-        shader_caches.insert(std::make_pair(context, shader_cache));
-        context->register_resource_releaser(std::function<void()>([context] () {Shader::shader_caches.erase(context);}));
-    }
-
-    return shader_caches.find(context)->second->get_shader(program_name);
-}
-
 
 Shader::Shader(const std::string program_name):
     Shader(
@@ -114,7 +46,7 @@ Shader::Shader(const std::string program_name):
            ) {
 }
 
-Shader::Shader(const std::string vs, const std::string fs) {
+Shader::Shader(const std::string vs, const std::string fs): CacheableResource() {
     GLint linked;
 
     //Load the fragment and vertex shaders
@@ -167,9 +99,6 @@ Shader::Shader(const std::string vs, const std::string fs) {
 
 
 Shader::~Shader() {
-    if (cache) {
-        cache->remove_shader(program_name);
-    }
     glDeleteShader(fragment_shader);
     glDeleteShader(vertex_shader);
     glDeleteProgram(program_obj);

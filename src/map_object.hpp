@@ -3,18 +3,36 @@
 
 #include <glm/vec2.hpp>
 #include <string>
+#include <vector>
 
 #include "image.hpp"
+#include "map.hpp"
 #include "object.hpp"
 #include "text.hpp"
 #include "text_font.hpp"
 #include "typeface.hpp"
+#include "walkability.hpp"
 
 ///
 /// Represents an object which can be rendered on the map
 ///
 class MapObject : public Object {
 protected:
+    ///
+    /// Whether you can step all over it
+    ///
+    Walkability walkability;
+
+    ///
+    /// Re-create the blockers for blocking one's path
+    ///
+    void regenerate_blockers();
+
+    ///
+    /// The blockers for blocking one's path
+    ///
+    std::vector<Map::Blocker> body_blockers;
+
     ///
     /// The name of the tilesheet to use for the map object
     ///
@@ -41,10 +59,10 @@ protected:
     ///
     bool moving = false;
 
-
 public:
     MapObject(glm::vec2 position,
               std::string name,
+              Walkability walkability,
               int sheet_id,
               std::string sheet_name="../resources/basictiles_2.png");
 
@@ -102,6 +120,16 @@ public:
     /// @param _moving if the object is moving
     ///
     void set_moving(bool moving) { this->moving = moving; }
+
+    ///
+    /// Set whether the object creates blockers
+    /// to prevent sprites moving onto the squares
+    /// occupied by the sprite.
+    ///
+    /// @param walkability
+    ///     The value to set the internal walkability to.
+    ///
+    void set_walkability(Walkability walkability);
 
     ///
     /// Get if the object is moving

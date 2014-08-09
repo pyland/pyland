@@ -1,3 +1,4 @@
+#include <cmath>
 #include <fstream>
 #include <glog/logging.h>
 #include <glm/vec2.hpp>
@@ -9,6 +10,7 @@
 #include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "renderable_component.hpp"
+#include "walkability.hpp"
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -20,13 +22,21 @@
 #endif
 
 // WTF
-MapObject::MapObject(glm::vec2 position, std::string name, int sheet_id, std::string sheet_name):
+MapObject::MapObject(glm::vec2 position,
+                     std::string name,
+                     Walkability walkability,
+                     int sheet_id,
+                     std::string sheet_name):
+
     Object(name),
+    walkability(walkability),
     sheet_name(sheet_name),
     sheet_id(sheet_id),
     position(position) {
 
         VLOG(2) << "New map object: " << name;
+
+        regenerate_blockers();
 
         init_shaders();
         load_textures();
@@ -38,6 +48,47 @@ MapObject::MapObject(glm::vec2 position, std::string name, int sheet_id, std::st
 
 MapObject::~MapObject() {
     LOG(INFO) << "MapObject destructed";
+}
+
+void MapObject::set_walkability(Walkability walkability) {
+    this->walkability = walkability;
+    regenerate_blockers();
+}
+
+void MapObject::regenerate_blockers() {
+    body_blockers.clear();
+    switch (walkability) {
+        case Walkability::WALKABLE: {
+            break;
+        }
+
+        case Walkability::BLOCKED: {
+            int x_left(int(position.x));
+            int y_bottom(int(position.y));
+
+            // If non-integral, the left or top have a higher
+            // tile number. If integral, they do not.
+            //
+            // The test is done by checking if the truncation
+            // changed the value
+            int x_right(x_left   + (float(x_left)   != position.x));
+            int y_top  (y_bottom + (float(y_bottom) != position.y));
+
+            auto *map = Engine::get_map_viewer()->get_map();
+            body_blockers = {
+                map->block_tile(glm::ivec2(x_left,  y_top)),
+                map->block_tile(glm::ivec2(x_left,  y_bottom)),
+                map->block_tile(glm::ivec2(x_right, y_top)),
+                map->block_tile(glm::ivec2(x_right, y_bottom))
+            };
+
+            break;
+        }
+
+        default: {
+            throw std::runtime_error("WTF do I do now?");
+        }
+    }
 }
 
 void MapObject::generate_tex_data() {
@@ -175,7 +226,7 @@ void MapObject::load_textures() {
 bool MapObject::init_shaders() {
     std::shared_ptr<Shader> shader;
     try {
-        shader = Shader::get_shared_shader("tile_shader");
+        shader = Shader::get_shared("tile_shader");
     }
     catch (std::exception e) {
         LOG(ERROR) << "Failed to create the shader";

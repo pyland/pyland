@@ -455,7 +455,7 @@ void Map::init_textures() {
 bool Map::init_shaders() {
     std::shared_ptr<Shader> shader;
     try {
-        shader = Shader::get_shared_shader("tile_shader");
+        shader = Shader::get_shared("tile_shader");
     }
     catch (std::exception e) {
         LOG(ERROR) << "Failed to create the shader";

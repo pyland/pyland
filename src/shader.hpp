@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <stdexcept>
+#include <string>
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -15,47 +16,19 @@
 #include <GL/gl.h>
 #endif
 
-#include <string>
+#include "resource_cache.hpp"
+#include "cacheable_resource.hpp"
 
 
 
 class GraphicsContext;
+class Shader;
 
 
 
-class Shader {
+class Shader : public CacheableResource<Shader> {
 private:
-    ///
-    /// Contains shaders asscociated with a common GL context.
-    ///
-    class ShaderCache {
-    private:
-        ///
-        /// Map from program paths to shaders.
-        ///
-        std::map<std::string, std::weak_ptr<Shader>> shaders;
-    public:
-        ShaderCache();
-        ~ShaderCache();
-        ///
-        /// Get a shader from a program path.
-        ///
-        /// If already loaded, retrieves a shader from the cache.
-        /// Otherwise, the shader is loaded.
-        ///
-        /// @param program_path Filename of a shader program description
-        ///        file.
-        /// @return A shared pointer to the relevant Shader.
-        ///
-        std::shared_ptr<Shader> get_shader(const std::string program_name);
-
-        ///
-        /// Removes a shader from the cache. Does not destroy it.
-        ///
-        void remove_shader(const std::string program_name);
-    };
-
-    friend class ShaderCache;
+    friend class ResourceCache<Shader>;
 
     ///
     /// Program base name (if constructed with program name).
@@ -82,17 +55,6 @@ private:
     ///
     GLuint vertex_shader = 0;
 
-    ///
-    /// The shader cache associated with the shader (if any)
-    ///
-    ShaderCache* cache;
-
-    ///
-    /// Map of graphics contexts to shader caches.
-    ///
-    static std::map<GraphicsContext*, std::shared_ptr<ShaderCache>> shader_caches;
-
-    ///
     /// This function loads the shaders
     /// @param type The type of the shader: fragment or vertex
     /// @param src The source file for the shader's source
@@ -110,24 +72,15 @@ public:
         LoadException(const std::string &message);
     };
 
-    // TODO Joshua: Comment
-    // TODO Joshua: Consider integer-ness.
-    void set_state_on_moving_start(glm::ivec2 target);
-    void set_state_on_moving_finish();
-
     ///
-    /// Get a commonly used Shader configuration.
-    ///
-    /// This function is used to share shaders between separate
-    /// graphical components. On first run with given parameters it will
-    /// load the shader, on other calls it will retrieve it from a
-    /// cache. There is a separate cache for each GL context.
+    /// Create a new shared shader from a resource name.
     ///
     /// @param program_name Base path of a shader program description
     ///        file, or platform's shader files.
     /// @return A shared pointer to the relevant Shader.
     ///
-    static std::shared_ptr<Shader> get_shared_shader(const std::string program_name);
+
+    static std::shared_ptr<Shader> new_shared(const std::string resource_name);
 
     ///
     /// This function creates the Opengl program from a program base
@@ -170,4 +123,7 @@ public:
     ///
     void link();
 };
+
+
+
 #endif

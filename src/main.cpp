@@ -49,6 +49,7 @@
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
+#include "walkability.hpp"
 
 // Include challenges
 // TODO: Rearchitechture
@@ -81,7 +82,7 @@ int create_sprite(Interpreter &interpreter) {
     glm::ivec2 start(4, 15);
 
     // Registering new sprite with game engine
-    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start, "John", 4);
+    auto new_sprite(make_shared<Sprite>(start, "John", Walkability::BLOCKED, 4));
 
     LOG(INFO) << "Adding sprite";
     ObjectManager::get_instance().add_object(new_sprite);
@@ -93,7 +94,7 @@ int create_sprite(Interpreter &interpreter) {
 
     // Register user controled sprite
     // Yes, this is a memory leak. Deal with it.
-    Entity *a_thing = new Entity(start, new_sprite->get_name(), new_sprite->get_id());
+    auto *a_thing(new Entity(start, new_sprite->get_name(), new_sprite->get_id()));
 
     LOG(INFO) << "Registering sprite";
     new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));

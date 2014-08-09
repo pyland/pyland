@@ -47,6 +47,13 @@ bool Entity::walkable(int x, int y) {
         },
         false
     );
+
+    // TODO (Joshua): Support:
+    //
+    //     return GilSafeFuture<bool>::execute_get([id, x, y] () {
+    //         return Engine::walkable(glm::ivec2(Engine::find_object(id)) + glm::ivec2(x, y));
+    //     });
+    //
 }
 
 void Entity::monologue() {

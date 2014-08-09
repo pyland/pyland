@@ -44,6 +44,10 @@ Image::Image():
     flipped_pixels(Flipper(0,0,nullptr)) {
 }
 
+Image::Image(const std::string filename, bool opengl):
+    Image(filename.c_str(), opengl) {
+}
+
 Image::Image(const char* filename, bool opengl) {
     if (opengl) {
         power_of_two = true;

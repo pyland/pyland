@@ -93,13 +93,13 @@ bool Engine::walkable(glm::ivec2 location) {
     int map_width = map_viewer->get_map()->get_width();
     int map_height = map_viewer->get_map()->get_height();
 
-    //Check bounds
-    if(location.x < 0 || location.x >= map_width || location.y < 0 || location.y >= map_height) {
+    // Check bounds
+    if(!(0 <= location.x && location.x < map_width) || !(0 <= location.y && location.y < map_height)) {
         VLOG(2) << "Cannot move to requested tile due to map bounds";
         return false;
     }
 
-    //Check for collidable objects
+    // Check against collidable layer
     if(!Engine::map_viewer->get_map()->is_walkable(location.x, location.y)) {
         VLOG(2) << "Cannot move to requested tile due to collidable objects";
         return false;

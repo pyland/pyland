@@ -6,7 +6,6 @@
 
 #include "map.hpp"
 #include "renderable_component.hpp"
-#include "walkability.hpp"
 
 
 class LockableEntityThread;

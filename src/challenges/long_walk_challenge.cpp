@@ -56,14 +56,11 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
     auto *map = Engine::get_map_viewer()->get_map();
 
     // testing micro-objects
-    auto test_chest(std::make_shared<MapObject>(glm::ivec2(10, 15), "test chest", 52));
+    auto test_chest(std::make_shared<MapObject>(glm::ivec2(10, 15), "test chest", Walkability::BLOCKED, 52));
     ObjectManager::get_instance().add_object(test_chest);
     auto chest_id = test_chest->get_id();
     LOG(INFO) << "created test_chest with id: " << chest_id;
     map->add_map_object(chest_id);
-
-    // TODO: Refixificate
-    // test_chest->set_walkability(Walkability::WALKABLE);
 
     ChallengeHelper::create_pickupable(
         glm::ivec2(10, 15),
@@ -95,22 +92,22 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
 
     // Set up blocking walls
     for (auto wall_location : targets.at("wall:path:medium")) {
-        std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location, "medium wall",5);
+        auto wall = std::make_shared<MapObject>(wall_location, "medium wall", Walkability::BLOCKED, 1);
         ObjectManager::get_instance().add_object(wall);
-        // TODO: Refixificate
-        // wall->set_walkability(Walkability::BLOCKED);
+
         wall_path_medium_objects.push_back(wall);
         map->add_map_object(wall->get_id());
     }
+    wall_path_medium_objects.back()->set_sheet_id(2);
 
     for (auto wall_location : targets.at("wall:path:long")) {
-        std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location, "medium wall",5);
+        auto wall = std::make_shared<MapObject>(wall_location, "medium wall", Walkability::BLOCKED, 1);
         ObjectManager::get_instance().add_object(wall);
-        // TODO: Refixificate
-        // wall->set_walkability(Walkability::BLOCKED);
+
         wall_path_long_objects.push_back(wall);
         map->add_map_object(wall->get_id());
     }
+    wall_path_long_objects.back()->set_sheet_id(2);
 
     // Set up notifications about walls
     for (auto wall_location : targets.at("wall:path:medium")) {
@@ -162,15 +159,14 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
             editor_lifeline = this->input_manager->register_keyboard_handler(filter(
                 {ANY_OF({KEY_HELD}), KEY({"E"})},
                 [&] (KeyboardInputEvent) {
-
                     std::string id = std::to_string(Engine::get_map_viewer()->get_map_focus_object());
                     std::string filename = "John_" + id + ".py";
                     Engine::open_editor(filename);
                     for (auto wall_object : wall_path_medium_objects) {
-                        // TODO: Refixificate
-                        // wall_object->set_walkability(Walkability::WALKABLE);
-                        wall_object->set_sheet_id(119);
-                    }}
+                        wall_object->set_sheet_id(14);
+                        wall_object->set_walkability(Walkability::WALKABLE);
+                    }
+                }
             ));
 
             return false;
@@ -188,9 +184,8 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
             );
 
             for (auto wall_object : wall_path_long_objects) {
-                // TODO: Refixificate
-                // wall_object->set_walkability(Walkability::WALKABLE);
-                wall_object->set_sheet_id(119);
+                wall_object->set_sheet_id(14);
+                wall_object->set_walkability(Walkability::WALKABLE);
             }
             return false;
         }

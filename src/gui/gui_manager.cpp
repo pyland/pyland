@@ -232,7 +232,7 @@ void GUIManager::load_textures() {
 bool GUIManager::init_shaders() {
     std::shared_ptr<Shader> shader;
     try {
-        shader = Shader::get_shared_shader("gui_shader");
+        shader = Shader::get_shared("gui_shader");
     }
     catch (std::exception e) {
         LOG(ERROR) << "Failed to create the shader";

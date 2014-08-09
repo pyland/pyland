@@ -1,12 +1,8 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include "image.hpp"
-#include "map_object.hpp"
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
-#include "engine.hpp"
+#include <algorithm>
+#include <vector>
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -16,6 +12,16 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#include "image.hpp"
+#include "map.hpp"
+#include "map_object.hpp"
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
+#include "engine.hpp"
+#include "walkability.hpp"
+
 
 enum class Sprite_Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 
@@ -61,6 +67,7 @@ protected:
 public:
     Sprite(glm::ivec2 position,
            std::string name,
+           Walkability walkability,
            int sheet_id,
            std::string sheet_name="../resources/characters_1.png");
 

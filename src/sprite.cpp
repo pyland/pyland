@@ -1,11 +1,3 @@
-#include "image.hpp"
-#include "engine.hpp"
-#include "entitythread.hpp"
-#include "map_viewer.hpp"
-#include "renderable_component.hpp"
-#include "sprite.hpp"
-#include "object_manager.hpp"
-
 #include <new>
 #include <glog/logging.h>
 #include <iostream>
@@ -20,8 +12,23 @@
 #include <GL/gl.h>
 #endif
 
-Sprite::Sprite(glm::ivec2 position, std::string name, int sheet_id, std::string sheet_name):
-    MapObject(position, name, sheet_id, sheet_name) {
+#include "image.hpp"
+#include "engine.hpp"
+#include "entitythread.hpp"
+#include "map_viewer.hpp"
+#include "renderable_component.hpp"
+#include "sprite.hpp"
+#include "object_manager.hpp"
+#include "walkability.hpp"
+
+
+Sprite::Sprite(glm::ivec2 position,
+               std::string name,
+               Walkability walkability,
+               int sheet_id,
+               std::string sheet_name):
+
+    MapObject(position, name, walkability, sheet_id, sheet_name) {
 
         auto map_viewer(Engine::get_map_viewer());
 
@@ -63,7 +70,7 @@ Sprite::Sprite(glm::ivec2 position, std::string name, int sheet_id, std::string 
 
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
-        focus_icon = std::make_shared<MapObject>(position, "focus icon", 96);
+        focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 96);
         ObjectManager::get_instance().add_object(focus_icon);
         auto focus_icon_id(focus_icon->get_id());
         LOG(INFO) << "created focus icon with id: " << focus_icon_id;
