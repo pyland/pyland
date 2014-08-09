@@ -6,7 +6,7 @@ EXECUTABLE = main.bin
 #
 
 BASE_OBJS = \
-	character.o      \
+	challenge_helper.o \
 	engine_api.o     \
 	event_manager.o  \
 	game_window.o    \
@@ -15,6 +15,7 @@ BASE_OBJS = \
 	layer.o          \
 	lifeline.o       \
 	lifeline_controller.o \
+	notification.o   \
 	main.o           \
 	map.o            \
 	map_loader.o     \
@@ -24,10 +25,11 @@ BASE_OBJS = \
 	object_manager.o \
 	renderable_component.o \
 	shader.o         \
+    sprite.o         \
 	text.o           \
 	text_font.o      \
 	tileset.o        \
-        typeface.o       \
+    typeface.o       \
 	game_time.o
 
 
@@ -40,7 +42,7 @@ HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}      \
 	${CHALLENGE_OBJS:.o=.d} \
 	${EXECUTABLE:.bin=.d}   \
-        ${GUI_OBJS:.o=.d}       \
+	${GUI_OBJS:.o=.d}       \
 	${INPUT_OBJS:.o=.d}     \
 	${PYTHON_OBJS:.o=.d}    \
 	${PYTHON_SHARED_OBJS:.so=.sd}
@@ -61,15 +63,16 @@ GUI_OBJS = \
 	gui/component.o	             \
 	gui/component_group.o        \
 	gui/gui_window.o             \
-	gui/gui_manager.o            
+	gui/gui_manager.o
 
 
 PYTHON_OBJS = \
-	python_embed/api.o           \
-	python_embed/interpreter.o   \
+	python_embed/api.o             \
+	python_embed/gil_safe_future.o \
+	python_embed/interpreter.o     \
 	python_embed/interpreter_context.o \
-	python_embed/locks.o         \
-	python_embed/entitythread.o  \
+	python_embed/locks.o           \
+	python_embed/entitythread.o    \
 	python_embed/thread_killer.o
 
 
@@ -79,6 +82,6 @@ PYTHON_HEADER = python_embed/python_embed_headers.hpp
 
 PYTHON_SHARED_OBJS = \
 	python_embed/wrapper_functions.so
-	
+
 PYTHON_SHARED_OBJS_DEPENDS = \
-	python_embed/api.o	
+	python_embed/api.o

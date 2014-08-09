@@ -66,19 +66,6 @@ void GUIManager::update_components() {
 void GUIManager::mouse_callback_function(MouseInputEvent event) {
 
     //Just get the end state for the moment
-    /*
-      std::cout << "X " << event.to.x << " Y " << event.to.y << std::endl;
-      if(event.button & MouseState::Button::LEFT) {
-      std::cout << "LEFT" << std::endl;
-      }
-      if(event.button & MouseState::Button::RIGHT) {
-      std::cout << "RIGHT" << std::endl;
-      }
-      if(event.button & MouseState::Button::MIDDLE) {
-      std::cout << "MIDDLE" << std::endl;
-      }
-     
-    */
     //Work out which component was clicked
     int mouse_x = event.to.x;
     int mouse_y = event.to.y;
@@ -245,12 +232,6 @@ void GUIManager::load_textures() {
 bool GUIManager::init_shaders() {
     std::shared_ptr<Shader> shader;
     try {
-// #ifdef USE_GLES
-//         shader = new Shader("vert_shader.glesv", "frag_gui_shader.glesf");
-// #endif
-// #ifdef USE_GL
-//         shader = new Shader("vert_shader.glv", "frag_gui_shader.glf");
-// #endif
         shader = Shader::get_shared("gui_shader");
     }
     catch (std::exception e) {

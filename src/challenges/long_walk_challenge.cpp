@@ -1,17 +1,23 @@
 #include <glog/logging.h>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "api.hpp"
 #include "challenge.hpp"
+#include "challenge_helper.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "long_walk_challenge.hpp"
 #include "engine_api.hpp"
 #include "map_viewer.hpp"
+#include "object_manager.hpp"
+#include "map_object.hpp"
+#include "walkability.hpp"
+#include "sprite.hpp"
 
 //TODO: later this will be fetched from the map
 std::map<std::string, std::vector<Vec2D>> targets = {
@@ -49,14 +55,52 @@ std::map<std::string, std::vector<Vec2D>> targets = {
 LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(input_manager) {
     auto *map = Engine::get_map_viewer()->get_map();
 
+    // testing micro-objects
+    std::shared_ptr<MapObject> test_chest = std::make_shared<MapObject>(10, 15, "test chest",52);
+    ObjectManager::get_instance().add_object(test_chest);
+    auto chest_id = test_chest->get_id();
+    LOG(INFO) << "created test_chest with id: " << chest_id;
+    map->add_map_object(chest_id);
+    test_chest->set_walkability(Walkability::WALKABLE);
+
+    ChallengeHelper::create_pickupable(Vec2D(10,15),Vec2D(10,14), test_chest);
+
+    // testing lawn
+    auto lawn_area = {Vec2D(12,16),Vec2D(13,16),Vec2D(14,16)};
+    for (Vec2D lawn_tile: lawn_area) {
+        Engine::change_tile(lawn_tile,5,20);
+        map->event_step_on.register_callback(
+            lawn_tile,
+            [test_chest,lawn_tile] (int) {
+                int id = Engine::get_sprites_at(lawn_tile).front();
+                bool has_chest = ObjectManager::get_instance().get_object<Sprite>(id)->is_in_inventory(test_chest);
+                if (has_chest) {
+                    Engine::print_dialogue ("Grass","You're mowing, keep on going");
+                    Engine::change_tile(lawn_tile,5,28);
+                    return false;
+                } else {
+                    Engine::print_dialogue ("Grass","Don't forget the lawn mower");
+                    return true;
+                }
+            });
+    }
+
+
     // Set up blocking walls
     for (auto wall_location : targets.at("wall:path:medium")) {
-        wall_path_medium_blockers.push_back(map->block_tile(wall_location));
-        Engine::change_tile(wall_location, 5, 3);
+        std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location.x, wall_location.y, "medium wall",5);
+        ObjectManager::get_instance().add_object(wall);
+        wall->set_walkability(Walkability::BLOCKED);
+        wall_path_medium_objects.push_back(wall);
+        map->add_map_object(wall->get_id());
     }
 
     for (auto wall_location : targets.at("wall:path:long")) {
-        wall_path_long_blockers.push_back(map->block_tile(wall_location));
+        std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location.x, wall_location.y, "medium wall",5);
+        ObjectManager::get_instance().add_object(wall);
+        wall->set_walkability(Walkability::BLOCKED);
+        wall_path_long_objects.push_back(wall);
+        map->add_map_object(wall->get_id());
     }
 
     // Set up notifications about walls
@@ -113,12 +157,10 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                     std::string id = std::to_string(Engine::get_map_viewer()->get_map_focus_object());
                     std::string filename = "John_" + id + ".py";
                     Engine::open_editor(filename);
-                    wall_path_medium_blockers.clear();
-
-                        for (auto wall_location : targets.at("wall:path:medium")) {
-                            Engine::change_tile(wall_location, 5, 120);
-                        }
-                }
+                    for (auto wall_object : wall_path_medium_objects) {
+                        wall_object->set_walkability(Walkability::WALKABLE);
+                        wall_object->set_tile_sheet_id(119);
+                    }}
             ));
 
             return false;
@@ -135,7 +177,10 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                 "You should try to program it.\n"
             );
 
-            wall_path_long_blockers.clear();
+            for (auto wall_object : wall_path_long_objects) {
+                wall_object->set_walkability(Walkability::WALKABLE);
+                wall_object->set_tile_sheet_id(119);
+            }
             return false;
         }
     );

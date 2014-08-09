@@ -21,8 +21,8 @@ class LongWalkChallenge : public Challenge {
         virtual void finish();
 
     private:
-        std::vector<Map::Blocker> wall_path_medium_blockers;
-        std::vector<Map::Blocker> wall_path_long_blockers;
+        std::vector<std::shared_ptr<MapObject>> wall_path_medium_objects;
+        std::vector<std::shared_ptr<MapObject>> wall_path_long_objects;
 
         std::vector<PositionDispatcher<int>::CallbackID> room_exit_first_callback;
         std::vector<PositionDispatcher<int>::CallbackID> wall_path_medium_callbacks;

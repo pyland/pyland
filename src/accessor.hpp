@@ -32,7 +32,7 @@ class Accessor {
         operator T() const { return getter(value); }
 
     private:
-        Accessor(const Accessor&);
+        Accessor(const Accessor &);
 
         T value;
         const std::function<T(const T &)> getter;

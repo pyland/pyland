@@ -14,8 +14,6 @@ class LockableEntityThread;
 /// The class to hold an object's information so that the Engine can
 /// manipulate it.
 ///
-///
-///
 class Object {
 
 private:
@@ -28,27 +26,12 @@ private:
     /// The object's id
     ///
     int id = 0;
-
-    ///
-    /// Walkable: determine if the object can be walked over
-    ///
-    Walkability walkability = Walkability::WALKABLE;
 protected:
 
     ///
     /// The object's renderable component
     ///
     RenderableComponent renderable_component;
-
-    ///
-    /// The x position of the object
-    ///
-    double x_position = 0;
-
-    ///
-    /// The y position of the object
-    ///
-    double y_position = 0;
 
     ///
     /// The name of the object
@@ -68,43 +51,6 @@ public:
     void set_id(int new_id);
 
     ///TODO REMOVE THIS FROM HERE
-    ///
-    /// Get the object's walkability
-    ///
-    Walkability get_walkability() { return walkability; }
-
-    ///
-    /// Set the object's walkability
-    /// @param _walkability the walkability of the object
-    ///
-    void set_walkability(Walkability _walkability) { walkability = _walkability; }
-
-    ///
-    /// Set the object's x position in tiles
-    /// @param x_pos the new x position in tiles
-    ///
-    void set_x_position(int x_pos);
-    void set_x_position(double x_pos);
-
-    ///
-    /// Get the object's x position in tiles
-    /// @return the object's x position in tiles
-    ///
-    double get_x_position() { return x_position; }
-
-    ///
-    /// Set the object's y position in tiles
-    /// @param y_pos
-    ///
-    void set_y_position(int y_pos);
-    void set_y_position(double y_pos);
-
-    ///
-    /// Get the object's y position in tiles
-    /// @return the object's y position in tiles
-    ///
-    double get_y_position() { return y_position; }
-
 
     ///
     /// Get the id of the object
@@ -141,9 +87,8 @@ public:
     ///
     void set_renderable(bool can_render) { renderable = can_render; }
 
+    ///TODO: Joshua comment
     std::unique_ptr<LockableEntityThread> daemon;
-
-    bool moving = false;
 };
 
 #endif

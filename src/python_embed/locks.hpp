@@ -137,6 +137,36 @@ namespace lock {
             ThreadGIL(const ThreadGIL&) = delete;
     };
 
+    ///
+    /// A RAII lock for PyThreadState GIL releasing. Usage:
+    ///
+    ///     {
+    ///         ThreadGILRelease unlock_thread;
+    ///         stuff();
+    ///     }
+    ///
+    class ThreadGILRelease {
+        public:
+            ///
+            /// Unlock the thread. Lock on destruction.
+            ///
+            ThreadGILRelease();
+
+            ///
+            /// Lock thread.
+            ///
+            ~ThreadGILRelease();
+
+        private:
+            // Can't copy locks
+            ThreadGILRelease(const ThreadGILRelease&) = delete;
+
+            ///
+            /// Associated PyThreadState.
+            ///
+            PyThreadState *threadstate;
+    };
+
 
     ///
     /// A wrapper class largely equivalent to pair<T, std::mutex>.
