@@ -8,11 +8,11 @@ std::shared_ptr<R> ObjectManager::get_object(int object_id) {
         return nullptr;
     }
 
-    //If the object isn't in the database
-    if(objects.find(object_id) == objects.end()) {
+    // If the object isn't in the database
+    if (!objects.count(object_id)) {
         return nullptr;
     }
 
-    //Returns null if the object is not of the required type
+    // Returns null if the object is not of the required type
     return std::dynamic_pointer_cast<R>(objects[object_id]);
 }

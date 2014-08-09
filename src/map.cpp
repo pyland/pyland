@@ -85,7 +85,8 @@ Map::~Map() {
 
 bool Map::is_walkable(int x_pos, int y_pos) {
     return std::all_of(std::begin(layers), std::end(layers), [&] (std::shared_ptr<Layer> &layer) {
-        return (layer->get_name() == "Collisions") && layer->get_tile(x_pos, y_pos);
+        // Block only in the case where we're on the collisions layer and the tile is set
+        return !(layer->get_name() == "Collisions" && layer->get_tile(x_pos, y_pos));
     });
 }
 
@@ -702,7 +703,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
 
             //Set the new data
             layer_renderable_component->set_vertex_data(new_vertex_data, new_vertex_data_size, false);
-            layer_renderable_component->set_num_vertices_render(new_texture_data_size / (sizeof(GLfloat) * num_tile_dimensions));
+            layer_renderable_component->set_num_vertices_render(new_texture_data_size / (int(sizeof(GLfloat)) * num_tile_dimensions));
             layer_renderable_component->set_texture_coords_data(new_texture_data, new_texture_data_size, false);
         }
         delete[] vertex_data;

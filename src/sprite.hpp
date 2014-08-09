@@ -82,7 +82,7 @@ public:
     /// Get the object's text to display
     /// @return the object's text
     ///
-    Text* get_object_text() {return object_text; }
+    Text* get_object_text() { return object_text; }
 
     ///
     /// Set the object's text to be displayed
@@ -94,7 +94,7 @@ public:
     /// Get the object's status text
     /// @return the object's status text
     ///
-    Text* get_status_text() {return status_text; }
+    Text* get_status_text() { return status_text; }
 
     ///
     /// Set the object's status text
@@ -107,7 +107,9 @@ public:
     ///
     void add_to_inventory(std::shared_ptr<MapObject> new_object);
 
-    std::vector<std::shared_ptr<MapObject>> get_inventory() {return inventory; }
+    std::vector<std::shared_ptr<MapObject>> get_inventory() { return inventory; }
+
+    void set_position(glm::vec2 position);
 
     ///
     /// remove the specified object from the sprites inventory, safe to use even if

@@ -56,7 +56,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
     auto *map = Engine::get_map_viewer()->get_map();
 
     // testing micro-objects
-    std::shared_ptr<MapObject> test_chest = std::make_shared<MapObject>(glm::ivec2(10, 15), "test chest", 52);
+    auto test_chest(std::make_shared<MapObject>(glm::ivec2(10, 15), "test chest", 52));
     ObjectManager::get_instance().add_object(test_chest);
     auto chest_id = test_chest->get_id();
     LOG(INFO) << "created test_chest with id: " << chest_id;
@@ -78,9 +78,9 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
         map->event_step_on.register_callback(
             lawn_tile,
             [test_chest,lawn_tile] (int) {
-                int id = Engine::get_sprites_at(lawn_tile).front();
-                bool has_chest = ObjectManager::get_instance().get_object<Sprite>(id)->is_in_inventory(test_chest);
-                if (has_chest) {
+                int id(Engine::get_sprites_at(lawn_tile).front());
+                auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
+                if (sprite->is_in_inventory(test_chest)) {
                     Engine::print_dialogue("Grass", "You're mowing, keep on going");
                     Engine::change_tile(lawn_tile, 5, 28);
                     return false;

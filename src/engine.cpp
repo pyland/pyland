@@ -19,15 +19,14 @@
 #include "sprite.hpp"
 
 ///Static variables
-MapViewer* Engine::map_viewer = nullptr;
-Text* Engine::dialogue_box = nullptr;
-int Engine::tile_size= 16;
+MapViewer* Engine::map_viewer(nullptr);
+Text* Engine::dialogue_box(nullptr);
+int Engine::tile_size(16);
 float Engine::global_scale(2.0f);
 Notification Engine::notification_stack = Notification();
 
 
 // TODO: This needs to work with renderable objects
-
 void Engine::move_sprite(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
     Engine::move_sprite(id, move_by, GilSafeFuture<bool>());
@@ -156,15 +155,14 @@ void Engine::open_editor(std::string filename) {
     std::thread([command] () { system(command.c_str()); }).detach();
 }
 
-
 static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<int> objects) {
     auto &object_manager(ObjectManager::get_instance());
 
     std::vector<int> results;
     std::copy_if(std::begin(objects), std::end(objects), std::back_inserter(results),
         [&] (int object_id) {
-            auto where(object_manager.get_object<MapObject>(object_id)->get_position());
-            return where == location;
+            auto object(object_manager.get_object<MapObject>(object_id));
+            return object && object->get_position() == location;
         }
     );
     return results;
@@ -176,7 +174,7 @@ std::vector<int> Engine::get_objects_at(glm::vec2 location) {
 
 // TODO: Also return MapObjects
 std::vector<int> Engine::get_sprites_at(glm::vec2 location) {
-    return location_filter_objects(location, map_viewer->get_map()->get_map_objects());
+    return location_filter_objects(location, map_viewer->get_map()->get_sprites());
 }
 
 // TODO: Consider whether finding the object and checking its position is saner

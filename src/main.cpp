@@ -50,7 +50,6 @@
 #include "text_font.hpp"
 #include "text.hpp"
 
-
 // Include challenges
 // TODO: Rearchitechture
 #include "challenge.hpp"
@@ -340,17 +339,17 @@ int main(int argc, const char *argv[]) {
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Down","S"})},
+        {ANY_OF({KEY_HELD}), KEY({"Down", "S"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, -1)); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Right","D"})},
+        {ANY_OF({KEY_HELD}), KEY({"Right", "D"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 1,  0)); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Left","A"})},
+        {ANY_OF({KEY_HELD}), KEY({"Left", "A"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2(-1,  0)); }
     ));
 
@@ -409,7 +408,7 @@ int main(int argc, const char *argv[]) {
     mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
     Engine::set_dialogue_box(&mytext);
 
-    std::function<void(GameWindow*)> func = [&] (GameWindow* game_window) {
+    std::function<void(GameWindow *)> func = [&] (GameWindow *game_window) {
         LOG(INFO) << "text window resizing";
         auto window_size = (*game_window).get_size();
         mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
@@ -417,8 +416,7 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline = window.register_resize_handler(func);
 
-    std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) {
-        std::ignore = game_window;
+    std::function<void (GameWindow *)> func_char = [&] (GameWindow *) {
         LOG(INFO) << "text window resizing";
         Engine::text_updater();
     };
