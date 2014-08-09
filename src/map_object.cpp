@@ -113,8 +113,8 @@ void MapObject::generate_tex_data() {
         return;
     }
 
-    GLfloat inc_x(Engine::get_tile_size() / GLfloat(image_width));
-    GLfloat inc_y(Engine::get_tile_size() / GLfloat(image_height));
+    GLfloat inc_x(GLfloat(Engine::get_tile_size()) / GLfloat(image_width));
+    GLfloat inc_y(GLfloat(Engine::get_tile_size()) / GLfloat(image_height));
     if (inc_x == 0.0f || inc_y == 0.0f) {
         LOG(ERROR) << "Increments are 0";
         return;

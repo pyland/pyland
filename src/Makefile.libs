@@ -11,7 +11,7 @@ BOOST_LDLIBS   = \
 
 GLOG_CPPFLAGS = $(shell pkg-config libglog --cflags)
 GLOG_CXXFLAGS =
-GLOG_LDFLAGS  = 
+GLOG_LDFLAGS  =
 GLOG_LDLIBS   = $(shell pkg-config libglog --libs)
 
 
@@ -19,7 +19,7 @@ GLOG_LDLIBS   = $(shell pkg-config libglog --libs)
 ifeq "$(PLATFORM)" "desktop"
 	GL_CPPFLAGS = $(shell pkg-config gl --cflags)
 	GL_CXXFLAGS =
-	GL_LDFLAGS  = 
+	GL_LDFLAGS  =
 	GL_LDLIBS   = $(shell pkg-config gl --libs)
 
 	GRAPHICS_CPPFLAGS = $(GL_CPPFLAGS)
@@ -27,6 +27,8 @@ ifeq "$(PLATFORM)" "desktop"
 	GRAPHICS_LDFLAGS  = $(GL_LDFLAGS)
 	GRAPHICS_LDLIBS   = $(GL_LDLIBS)
 	CPPFLAGS += -DUSE_GL
+
+	WARNINGS += -Werror
 else
         X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
         X11_CXXFLAGS =
