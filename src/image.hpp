@@ -122,6 +122,7 @@ public:
     ///
     Image();
     Image(const char* filename, bool opengl = true);
+    Image(const std::string filename, bool opengl = true);
     Image(int width, int height, bool opengl = true);
     ~Image();
 

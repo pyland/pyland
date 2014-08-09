@@ -204,7 +204,7 @@ bool Character::init_shaders() {
 // #ifdef USE_GL
 //         shader = new Shader("vert_shader.glv", "frag_shader.glf");
 // #endif
-        shader = Shader::get_shared_shader("tile_shader");
+        shader = Shader::get_shared("tile_shader");
     }
     catch (std::exception e) {
         LOG(ERROR) << "Failed to create the shader";

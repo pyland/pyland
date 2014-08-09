@@ -251,7 +251,7 @@ bool GUIManager::init_shaders() {
 // #ifdef USE_GL
 //         shader = new Shader("vert_shader.glv", "frag_gui_shader.glf");
 // #endif
-        shader = Shader::get_shared_shader("gui_shader");
+        shader = Shader::get_shared("gui_shader");
     }
     catch (std::exception e) {
         LOG(ERROR) << "Failed to create the shader";
