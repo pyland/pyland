@@ -174,8 +174,18 @@ std::vector<int> Engine::get_objects_at(glm::vec2 location) {
     return location_filter_objects(location, map_viewer->get_map()->get_map_objects());
 }
 
+// TODO: Also return MapObjects
 std::vector<int> Engine::get_sprites_at(glm::vec2 location) {
     return location_filter_objects(location, map_viewer->get_map()->get_map_objects());
+}
+
+// TODO: Consider whether finding the object and checking its position is saner
+bool Engine::is_object_at(glm::ivec2 location, int object_id) {
+    auto objects(get_objects_at(location));
+
+    return std::any_of(std::begin(objects), std::end(objects), [&] (int id) {
+        return id == object_id;
+    });
 }
 
 std::string Engine::editor = DEFAULT_PY_EDITOR;

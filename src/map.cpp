@@ -266,34 +266,45 @@ void Map::generate_data() {
         else {
             generate_sparse_layer_tex_coords(layer_tex_coords, layer);
             generate_sparse_layer_vert_coords(layer_vert_coords, layer);
+
+            //Generate the mappings
+            //ONLY NEEDED FOR SPARSE
+            int x(0);
+            int y(0);
+            int idx(0);
+
+            for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
+                int tile_id = tile_data->second;
+
+                //Set the index into the buffer
+                (*buffer_map)[y*map_width+ x] = idx;
+
+                //Calculate the next index
+                //If we're not looking at a blank tile
+                if(tile_id != 0) {
+                    //Calculate the new offset
+                    idx += num_tile_dimensions*num_tile_vertices;
+
+                }
+
+                //ELSE: Offset unchanged
+
+                //Next tile
+                x++;
+
+                //if we're on a new layer
+                if(x >= map_width) {
+                    x = 0;
+                    y++;
+                }
+            }
         }
+
         // Set this data in the renderable component for the layer
         RenderableComponent* renderable_component = layer->get_renderable_component();
         renderable_component->set_texture_coords_data(layer_tex_coords, tex_data_size, false);
         renderable_component->set_vertex_data(layer_vert_coords, vert_data_size, false);
         renderable_component->set_num_vertices_render(num_tiles*num_tile_vertices);
-
-        // Generate the mappings
-        // WTF: Read-only zeros?
-        int x(0);
-        int y(0);
-        int idx(0);
-        for (auto &tile_data : *layer_data) {
-            int tile_id = tile_data.second;
-
-            // Set the index into the buffer
-            (*buffer_map)[y*map_width+ x] = idx;
-
-            // Calculate the next index
-            // If we're not looking at a blank tile
-            if (tile_id) {
-                // Calculate the new offset
-                idx += num_tile_dimensions * num_tile_vertices;
-            }
-            else {
-                // offset unchanged
-            }
-        }
 
         layer_num++;
     }
@@ -490,23 +501,19 @@ Map::Blocker Map::block_tile(glm::ivec2 tile) {
     return Blocker(tile, &blocker);
 }
 
-void Map::recalculate_layer_mappings(int x_pos, int y_pos, int layer_num) {
+bool Map::recalculate_layer_mappings(int x_pos, int y_pos, int layer_num) {
     if (y_pos < 0 || x_pos < 0) {
-        return;
+        return false;
     }
 
     auto layer(layer_mappings[layer_num]);
     int index(y_pos * map_width + x_pos);
     int size(int(layer->size()));
 
-    // Note: unsigned
-    if (index >= size) {
-        return;
-    }
-
-    // Handle last element
-    if (index + 1 == size) {
-        return;
+    // Handle last element and those outside of range
+    // Note: index ≥ 0 by y_pos, map_width, x_pos > 0
+    if (index + 1 >= size) {
+        return false;
     }
 
     // Do we need to increment mappings?
@@ -518,74 +525,74 @@ void Map::recalculate_layer_mappings(int x_pos, int y_pos, int layer_num) {
         // Shift all of the offsets down as we're putting a tile into
         // this position
         for (auto i = index + 1; i < size; i++) {
-            (*layer)[i]++;
+            (*layer)[i] += num_tile_dimensions * num_tile_vertices;;
         }
+
+        return false;
     }
     else {
-        // there is already a tile here, so don't mutate
+        // There is already a tile here, so don't mutate
+
+        // You can directly insert the tile
+        return true;
     }
 }
 
 void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
-    //BUILD THE DATA
-    //Data for the update
-    GLfloat* data = nullptr;
-    size_t data_size = (size_t)(sizeof(GLfloat)*num_tile_dimensions*num_tile_vertices);
+    // Build the data for the update
+    GLfloat *data;
+    size_t data_size(sizeof(GLfloat) * num_tile_dimensions * num_tile_vertices);
 
-    //Get a buffer for the data
+    // Get a buffer for the data
     try {
         data = new GLfloat[data_size];
     }
     catch(std::bad_alloc& ba) {
         LOG(ERROR) << "Couldn't allocate memory in Map::update_tile";
-        data = nullptr;
         return;
     }
-    //Set the needed data
 
-    //Vertex
-
-    //Get the texture coordinates for this tile
+    // Get the texture coordinates for this tile
     GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8]; //*8 as 8 coordinates per tile
 
-    //bottom left
+    // bottom left
     data[0] = tileset_ptr[0];
     data[1] = tileset_ptr[1];
 
-    //top left
+    // top left
     data[2] = tileset_ptr[2];
     data[3] = tileset_ptr[3];
 
-    //bottom right
+    // bottom right
     data[4] = tileset_ptr[4];
     data[5] = tileset_ptr[5];
 
-    //top left
+    // top left
     data[6] = tileset_ptr[2];
     data[7] = tileset_ptr[3];
 
-    //top right
+    // top right
     data[8] = tileset_ptr[6];
     data[9] = tileset_ptr[7];
 
-    //bottom right
+    // bottom right
     data[10] = tileset_ptr[4];
     data[11] = tileset_ptr[5];
 
-    //PUT IT INTO THE BUFFERS
 
-    //Determine if the layer is dense or sparse
-    std::shared_ptr<Layer> layer = layers[layer_num];
-    Layer::Packing packing = layer->get_packing();
+    // Put it into the buffers
 
-    //Add this tile to the layer data structure
+    std::shared_ptr<Layer> layer(layers[layer_num]);
+    Layer::Packing packing(layer->get_packing());
+
+    // Add this tile to the layer data structure
     layer->update_tile(x_pos, y_pos, tile_id, "");
 
-    int tile_offset = 0;
+    int tile_offset;
 
     // Perform O(1) update. no need to do mapping changes
-    if(packing == Layer::Packing::DENSE) {
-        tile_offset = y_pos*map_width + x_pos;
+    if (packing == Layer::Packing::DENSE) {
+        tile_offset = y_pos * map_width + x_pos;
 
         // Update the buffer
         // Just update that tile directly
@@ -640,13 +647,11 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
         vertex_data[11] = scale * float(y_pos);
 
         // Fetch the offset from the data buffer
-        tile_offset = (*layer_mappings[layer_num])[y_pos*map_width + x_pos];
+        // Tile offset in floats
+        int offset((*layer_mappings[layer_num])[y_pos*map_width + x_pos]);
 
         // Recalculate the layer mappings
-        recalculate_layer_mappings(x_pos, y_pos, layer_num);
-        // The offset into the buffers
-        // The mappins have been updated by the previous function call
-        int offset(tile_offset * num_tile_vertices * num_tile_dimensions);
+        bool overwrite(recalculate_layer_mappings(x_pos, y_pos, layer_num));
 
         // TODO: small buffer
         // Get the data
@@ -658,42 +663,51 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
         size_t texture_data_size(layer_renderable_component->get_texture_coords_data_size());
         size_t vertex_data_size (layer_renderable_component->get_vertex_data_size());
 
-
-        //Generate the new buffers
-        GLfloat* new_texture_data(nullptr);
-        GLfloat* new_vertex_data(nullptr);
-        size_t new_texture_data_size(texture_data_size + data_size);
-        size_t new_vertex_data_size(vertex_data_size + data_size);
-
-        try {
-            new_texture_data = new GLfloat[new_texture_data_size];
-            new_vertex_data  = new GLfloat[new_vertex_data_size];
+        if (overwrite) {
+            // We just need to overwrite the tile
+            // Update the buffer
+            // Just update that tile directly
+            layer_renderable_component->update_texture_buffer(offset*sizeof(GLfloat), data_size, data);
         }
-        catch(std::bad_alloc& ba) {
-            LOG(ERROR) << "Couldn't allocate memory for new texture and vertex buffers in Map::update_tile";
-            new_texture_data = nullptr;
-            new_vertex_data  = nullptr;
-            return;
+        else {
+            // We need to insert the tile: expand the buffers
+
+            //Generate the new buffers
+            GLfloat *new_texture_data;
+            GLfloat *new_vertex_data;
+            int new_texture_data_size(int(texture_data_size + data_size));
+            int new_vertex_data_size (int( vertex_data_size + data_size));
+
+            try {
+                new_texture_data = new GLfloat[new_texture_data_size];
+                new_vertex_data  = new GLfloat[new_vertex_data_size];
+            }
+            catch(std::bad_alloc& ba) {
+                LOG(ERROR) << "Couldn't allocate memory for new texture and vertex buffers in Map::update_tile";
+                return;
+            }
+
+            //Copy the first part of the original data
+            int data_length(num_tile_vertices * num_tile_dimensions);
+            std::copy(layer_vertex_data, &layer_vertex_data[offset], new_vertex_data);
+            std::copy(layer_texture_data, &layer_texture_data[offset], new_texture_data);
+
+            //Insert the new data into the correct position
+            std::copy(vertex_data, &vertex_data[data_length], &new_vertex_data[offset]);
+            std::copy(data, &data[data_length], &new_texture_data[offset]);
+
+            //Copy the rest of the original data
+            std::copy(&layer_vertex_data[offset], &layer_vertex_data[vertex_data_size], &new_vertex_data[offset + data_length]);
+            std::copy(&layer_texture_data[offset], &layer_texture_data[texture_data_size], &new_texture_data[offset + data_length]);
+
+            //Set the new data
+            layer_renderable_component->set_vertex_data(new_vertex_data, new_vertex_data_size, false);
+            layer_renderable_component->set_num_vertices_render(new_texture_data_size / (sizeof(GLfloat) * num_tile_dimensions));
+            layer_renderable_component->set_texture_coords_data(new_texture_data, new_texture_data_size, false);
         }
-
-        //Copy the first part of the original data
-        int data_length(num_tile_vertices*num_tile_dimensions);
-        std::copy(layer_vertex_data, &layer_vertex_data[offset], new_vertex_data);
-        std::copy(layer_texture_data, &layer_texture_data[offset], new_texture_data);
-
-        //Insert the new data into the correct position
-        std::copy(vertex_data, &vertex_data[data_length], &new_vertex_data[offset]);
-        std::copy(data, &data[data_length], &new_texture_data[offset]);
-
-        //Copy the rest of the original data
-        std::copy(&layer_vertex_data[offset], &layer_vertex_data[vertex_data_size], &new_vertex_data[offset + data_length]);
-        std::copy(&layer_texture_data[offset], &layer_texture_data[texture_data_size], &new_texture_data[offset + data_length]);
-
-
-        //Set the new data
-        layer_renderable_component->set_vertex_data(new_vertex_data, new_vertex_data_size, false);
-        layer_renderable_component->set_texture_coords_data(new_texture_data, new_texture_data_size, false);
+        delete[] vertex_data;
     }
+    delete[] data;
 }
 
 int Map::get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos) {
@@ -703,4 +717,3 @@ int Map::get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos) {
      // The VBO offset is the tile offset times the dimenions and number of vertices
      return tile_offset * num_tile_vertices * num_tile_dimensions;
 }
-

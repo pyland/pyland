@@ -85,6 +85,12 @@ void MapViewer::render_map() {
     //Draw all the layers, from base to top to get the correct draw order
     int layer_num = 0;
     for(auto layer: map->get_layers()) {
+        if(!layer) 
+            continue;
+
+        if(!layer->is_renderable())
+            continue;
+
         RenderableComponent* layer_render_component = layer->get_renderable_component();
         Shader* layer_shader = layer_render_component->get_shader().get();
 
@@ -109,6 +115,7 @@ void MapViewer::render_map() {
 
          //      int length = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x()+map->get_display_width() -1, 0);
          //    glDrawArrays(GL_TRIANGLES, offset, (length -offset) / 2); // no of vetices, divide by 2 dimenions
+
         glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
         //        std::cout <<" OOF " << offset << " " << length << std::endl;
         //Release the vertex buffers and texppptures
@@ -132,6 +139,12 @@ void MapViewer::render_sprites() {
     for(auto it = sprites.begin(); it != sprites.end(); ++it) {
         if(*it != 0) {
             std::shared_ptr<Sprite> sprite = object_manager.get_object<Sprite>(*it);
+
+            if(!sprite) 
+                continue;
+
+            if(!sprite->is_renderable())
+                continue;
 
             RenderableComponent* sprite_render_component = sprite->get_renderable_component();
 
@@ -182,6 +195,12 @@ void MapViewer::render_objects() {
         if(*it != 0) {
             std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(*it);
 
+            if(!object)
+                continue;
+
+            //If we can't render the object 
+            if(!object->is_renderable())
+                continue;
             RenderableComponent* object_render_component = object->get_renderable_component();
 
             //Move object to the required position
@@ -375,8 +394,17 @@ void MapViewer::set_map_focus_object(int object_id) {
     //Set the focus to the object if this is a valid object and it is on the map
     if(ObjectManager::is_valid_object_id(object_id)) {
         //        const std::vector<int>& sprites = map->get_sprites();
+
+        //moving in-focus icon
+        if(ObjectManager::is_valid_object_id(map_focus_object)) {
+            ObjectManager::get_instance().get_object<Sprite>(map_focus_object)->set_focus(false);
+        }
+        ObjectManager::get_instance().get_object<Sprite>(object_id)->set_focus(true);
+
+
         map_focus_object = object_id;
         refocus_map();
+
 
         //TODO: add this in again
         //If the object is on the map

@@ -4,6 +4,7 @@
 #include "map_viewer.hpp"
 #include "renderable_component.hpp"
 #include "sprite.hpp"
+#include "object_manager.hpp"
 
 #include <new>
 #include <glog/logging.h>
@@ -55,7 +56,20 @@ Sprite::Sprite(glm::ivec2 position, std::string name, int sheet_id, std::string 
         //
         // Make a map object blocked
         // In future this might not be needed
-        blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(position)));
+        blocked_tiles.insert(std::make_pair(
+            "stood on",
+            Engine::get_map_viewer()->get_map()->block_tile(position)
+        ));
+
+        /// build focus icon
+        LOG(INFO) << "setting up focus icon";
+        focus_icon = std::make_shared<MapObject>(position, "focus icon", 96);
+        ObjectManager::get_instance().add_object(focus_icon);
+        auto focus_icon_id(focus_icon->get_id());
+        LOG(INFO) << "created focus icon with id: " << focus_icon_id;
+        Engine::get_map_viewer()->get_map()->add_map_object(focus_icon_id);
+
+        LOG(INFO) << "Sprite initialized";
 }
 
 Sprite::~Sprite() {
@@ -85,35 +99,35 @@ void Sprite::add_to_inventory(std::shared_ptr<MapObject> new_object) {
     inventory.push_back(new_object);
 }
 
-// TODO: reimplement for changing position
-
 // void Sprite::set_y_position(int y_pos) {
+//     y_position = y_pos;
 //     for (auto item: get_inventory()) {
-//         item->set_x_position(x_position);
 //         item->set_y_position(y_position);
 //     }
-//     y_position = y_pos;
+//     focus_icon->set_y_position(y_position);
 // }
 // void Sprite::set_x_position(int x_pos) {
+//     x_position = x_pos;
 //     for (auto item: get_inventory()) {
 //         item->set_x_position(x_position);
-//         item->set_y_position(y_position);
 //     }
+//     focus_icon->set_x_position(x_position);
 //     x_position = x_pos;
 // }
-//
+
 // void Sprite::set_y_position(double y_pos) {
+//     y_position = y_pos;
 //     for (auto item: get_inventory()) {
-//         item->set_x_position(x_position);
 //         item->set_y_position(y_position);
 //     }
-//     y_position = y_pos;
+//     focus_icon->set_y_position(y_position);
 // }
 // void Sprite::set_x_position(double x_pos) {
+//     x_position = x_pos;
 //     for (auto item: get_inventory()) {
 //         item->set_x_position(x_position);
-//         item->set_y_position(y_position);
 //     }
+//     focus_icon->set_x_position(x_position);
 //     x_position = x_pos;
 // }
 
@@ -135,13 +149,15 @@ bool Sprite::is_in_inventory(std::shared_ptr<MapObject> object) {
 }
 
 
-Status Sprite::string_to_status(std::string status) {
-    std::map<std::string,Status> string_map;
-    string_map["running"] = RUNNING;
-    string_map["stopped"] = STOPPED;
-    string_map[""] = NOTHING;
-    string_map["failed"] = FAILED;
-    string_map["killed"] = KILLED;
+Sprite_Status Sprite::string_to_status(std::string status) {
+    std::map<std::string,Sprite_Status> string_map = {
+        { "",        Sprite_Status::NOTHING },
+        { "failed",  Sprite_Status::FAILED  },
+        { "killed",  Sprite_Status::KILLED  },
+        { "running", Sprite_Status::RUNNING },
+        { "stopped", Sprite_Status::STOPPED }
+    };
+
     return string_map[status];
 }
 
@@ -149,3 +165,8 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
         sprite_status = string_to_status(_sprite_status);
         status_text->set_text(_sprite_status);
 }
+
+ void Sprite::set_focus(bool is_focus) {
+    LOG(INFO) << "trying to set focus to "<< is_focus;
+    focus_icon->set_renderable(is_focus);
+ }

@@ -17,15 +17,14 @@
 #include <GL/gl.h>
 #endif
 
-// TODO: enum class
-enum Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
+enum class Sprite_Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 
 ///
 /// Represents a sprite in the engine
 ///
 class Sprite : public MapObject {
 private:
-    Status string_to_status (std::string status);
+    Sprite_Status string_to_status (std::string status);
 
 protected:
     ///
@@ -41,7 +40,7 @@ protected:
     ///
     /// status of sprite
     /// TODO: this value isn't used at the moment, use for status images
-    Status sprite_status = NOTHING;
+    Sprite_Status sprite_status;
 
     ///
     /// Tiles that the object is blocking, probably
@@ -53,6 +52,11 @@ protected:
     /// Map_objects which move with the sprite
     ///
     std::vector<std::shared_ptr<MapObject>> inventory;
+
+    ///
+    /// The focus icon, to move with sprite and hide, depending on if sprite is in focus;
+    ///
+    std::shared_ptr<MapObject> focus_icon;
 
 public:
     Sprite(glm::ivec2 position,
@@ -120,6 +124,8 @@ public:
     void set_x_position(double x_pos);
 
     void set_sprite_status(std::string _sprite_status);
+
+    void set_focus(bool is_focus);
 };
 
 #endif

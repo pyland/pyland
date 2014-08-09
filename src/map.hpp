@@ -194,8 +194,9 @@ class Map {
     /// @param x_pos
     /// @param y_pos
     /// @param layer_num the layer
+    /// @return true if the tile can just be overwritten,false if it needs to be inserted
     ///
-    void recalculate_layer_mappings(int x_pos, int y_pos, int layer_num);
+    bool recalculate_layer_mappings(int x_pos, int y_pos, int layer_num);
 
     ///
     /// Initialises the textures

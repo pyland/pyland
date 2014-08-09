@@ -152,6 +152,11 @@ public:
     static std::vector<int> get_sprites_at(glm::vec2 location);
 
     ///
+    /// Get whether a sprite with a certain id is at this tile
+    ///
+    static bool is_object_at(glm::ivec2 location, int object_id);
+
+    ///
     /// set the text editor, opened by the challenges
     ///
     static void set_editor(std::string editor) { Engine::editor = editor; }

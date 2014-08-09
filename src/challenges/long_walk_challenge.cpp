@@ -61,14 +61,13 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
     auto chest_id = test_chest->get_id();
     LOG(INFO) << "created test_chest with id: " << chest_id;
     map->add_map_object(chest_id);
+
     // TODO: Refixificate
     // test_chest->set_walkability(Walkability::WALKABLE);
 
     ChallengeHelper::create_pickupable(
         glm::ivec2(10, 15),
         glm::ivec2(10, 14),
-        glm::ivec2(15, 15),
-        glm::ivec2(15, 14),
         test_chest
     );
 
@@ -82,10 +81,11 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
                 int id = Engine::get_sprites_at(lawn_tile).front();
                 bool has_chest = ObjectManager::get_instance().get_object<Sprite>(id)->is_in_inventory(test_chest);
                 if (has_chest) {
-                    Engine::print_dialogue("Grass","You're mowing, keep on going");
-                    Engine::change_tile(lawn_tile, 5, 10);
+                    Engine::print_dialogue("Grass", "You're mowing, keep on going");
+                    Engine::change_tile(lawn_tile, 5, 28);
                     return false;
-                } else {
+                }
+                else {
                     Engine::print_dialogue ("Grass","Don't forget the lawn mower");
                     return true;
                 }
