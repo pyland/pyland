@@ -20,8 +20,7 @@ void Layer::add_tile(const std::string tileset, int tile_id) {
 
 int Layer::get_tile(int x_pos, int y_pos) {
     //Fetch the tile at the required position
-    int tile_id = (*layer).at(x_pos + (y_pos)*width_tiles).second;
-    return tile_id;
+    return layer->at(x_pos + y_pos * width_tiles).second;
 }
 
 void Layer::update_tile(int x_pos, int y_pos, int tile_id, std::string tileset) {
