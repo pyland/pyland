@@ -140,7 +140,7 @@ public:
     static void open_editor(std::string filename);
 
     ///
-    /// Get a list of objects at this point
+    /// Get a list of objects at this point, doesn't include sprites
     /// @return a vector of object ids
     ///
     static std::vector<int> get_objects_at(glm::vec2 location);
@@ -170,6 +170,8 @@ public:
     static void text_displayer();
     static void text_updater();
     static void update_status(int id, std::string status);
+    static TextFont get_game_font();
+    static Typeface get_game_typeface();
 
 };
 

@@ -35,8 +35,7 @@ Sprite::Sprite(glm::ivec2 position,
         // WTF: why is text here?
         // TODO: Serious spring cleaning
         // Setting up sprite text
-        Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-        TextFont myfont(mytype, 18);
+        TextFont myfont = Engine::get_game_font();
 
         // TODO: Smart pointer
         object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);

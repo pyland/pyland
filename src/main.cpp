@@ -206,8 +206,7 @@ int main(int argc, const char *argv[]) {
     GUIManager gui_manager;
 
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont buttonfont(buttontype, 18);
+    TextFont buttonfont = Engine::get_game_font();
     Text stoptext(&window, buttonfont, true);
     Text runtext(&window, buttonfont, true);
     stoptext.set_text("Stop");
@@ -243,8 +242,7 @@ int main(int argc, const char *argv[]) {
 
     // TODO: move notification button to be better home
 
-    Typeface notification_buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont notification_buttonfont(buttontype, 30);
+    TextFont notification_buttonfont = Engine::get_game_font();
 
     float button_size = 0.05f;
     std::pair<float,float> backward_loco(0.85f,0.05f);
@@ -381,25 +379,24 @@ int main(int argc, const char *argv[]) {
             glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
             LOG(INFO) << "interacting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
-            auto objects = Engine::get_objects_at(tile_clicked);
+            auto sprites = Engine::get_sprites_at(tile_clicked);
 
-            if (objects.size() == 0) {
-                LOG(INFO) << "No objects to interact with";
+            if (sprites.size() == 0) {
+                LOG(INFO) << "No sprites to interact with";
             }
-            else if (objects.size() == 1) {
-                callbackstate.register_number_id(objects[0]);
+            else if (sprites.size() == 1) {
+                callbackstate.register_number_id(sprites[0]);
             }
             else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number_id(objects[0]);
+                callbackstate.register_number_id(sprites[0]);
             }
         }
     ));
 
     EventManager &em = EventManager::get_instance();
 
-    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 18);
+    TextFont myfont = Engine::get_game_font();
     Text mytext(&window, myfont, true);
     mytext.set_text("John");
     // referring to top left corner of text window
@@ -423,8 +420,6 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-    std::string editor;
-
     if (argc >= 2) {
         Engine::set_editor(argv[1]);
     }
@@ -437,7 +432,7 @@ int main(int argc, const char *argv[]) {
     LongWalkChallenge long_walk_challenge(input_manager);
     long_walk_challenge.start();
 
-    TextFont big_font(mytype, 50);
+    TextFont big_font(Engine::get_game_typeface(), 50);
     Text cursor(&window, big_font, true);
     cursor.move(0, 0);
     cursor.resize(50, 50);

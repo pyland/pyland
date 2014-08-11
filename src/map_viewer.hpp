@@ -167,7 +167,7 @@ public:
     ///
     /// converts pixel location inside window to a map tile
     ///
-    glm::vec2 pixel_to_tile (glm::ivec2 pixel_location);
+    glm::ivec2 pixel_to_tile (glm::ivec2 pixel_location);
 
     ///
     /// converts a tile in map to a pixel location in window of the bottem left corner of tile
