@@ -207,9 +207,6 @@ int main(int argc, const char *argv[]) {
 
     //BUILD the GUI
     GUIManager gui_manager;
-
-    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
-
     MapViewer map_viewer(&window, &gui_manager);
     map_viewer.set_map(&map);
     Engine::set_map_viewer(&map_viewer);
@@ -326,7 +323,8 @@ int main(int argc, const char *argv[]) {
 
     Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(
         filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {
-            (gui_manager.*mouse_callback_function) (event);})
+            gui_manager.mouse_callback_function(event);
+        })
     );
 
 
@@ -345,7 +343,7 @@ int main(int argc, const char *argv[]) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
 
             glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
-            LOG(INFO) << "iteracting with tile " << tile_clicked.x << ", " << tile_clicked.y;
+            LOG(INFO) << "interacting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
             auto sprites = Engine::get_sprites_at(tile_clicked);
 

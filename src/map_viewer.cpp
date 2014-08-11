@@ -358,7 +358,7 @@ void MapViewer::refocus_map() {
     //Get the object
     ObjectManager& object_manager = ObjectManager::get_instance();
 
-    if(map_focus_object == 0) {
+    if (map_focus_object == 0) {
         LOG(INFO) << "MapViewer::refocus_map: No focus.";
         return;
     }
