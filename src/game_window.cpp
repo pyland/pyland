@@ -91,7 +91,7 @@ GameWindow::InitException::InitException(const std::string &message): std::runti
 
 
 #ifdef USE_GLES
-#include <regex>
+#include <boost/regex.hpp>
 
 ///
 /// Queries the overscan values to compensate the window position.
@@ -101,11 +101,11 @@ GameWindow::InitException::InitException(const std::string &message): std::runti
 /// For now, we are forced to read the /boot/config.txt file.
 ///
 static std::pair<int, int> query_overscan(int top, int left) {
-    static const std::regex match_line(
+    static const boost::regex match_line(
         "(disable_overscan|overscan_left|overscan_top)=(\\d+)"
         "(?:\\s.*)?" // Optionally allow anything else after a space
     );
-    std::smatch match;
+    boost::smatch match;
 
     std::map<std::string, int> values({
         { "disable_overscan", 0    },
@@ -122,7 +122,7 @@ static std::pair<int, int> query_overscan(int top, int left) {
 
     std::string line;
     while (std::getline(boot_config_file, line)) {
-        if (std::regex_match(line, match, match_line)) {
+        if (boost::regex_match(line, match, match_line)) {
             try {
                 values[match[1]] = std::stoi(match[2]);
             }
