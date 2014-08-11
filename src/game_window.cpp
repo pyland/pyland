@@ -118,7 +118,7 @@ static std::pair<int, int> query_overscan(int top, int left) {
         return std::make_pair(values["overscan_top"], values["overscan_left"]);
     }
 
-    for (std::string line; std::getline(ifs, line); ) {
+    for (std::string line; std::getline(boot_config_file, line); ) {
         std::regex_match match(line, match_line);
         if (match) {
             try {
