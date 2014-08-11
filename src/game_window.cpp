@@ -105,11 +105,11 @@ static std::pair<int, int> query_overscan(int top, int left) {
         "(?:\\s.*)?" // Optionally allow anything else after a space
     );
 
-    std::map<std::string, int> values {
+    std::map<std::string, int> values({
         { "disable_overscan": 0    },
         { "overscan_top":     top  },
         { "overscan_left":    left }
-    };
+    });
 
     std::ifstream boot_config_file("/boot/config.txt");
 
