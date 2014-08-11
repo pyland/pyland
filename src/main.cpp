@@ -205,8 +205,6 @@ int main(int argc, const char *argv[]) {
     //BUILD the GUI
     GUIManager gui_manager;
 
-    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
-
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
     Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
     TextFont buttonfont(buttontype, 18);
@@ -361,7 +359,8 @@ int main(int argc, const char *argv[]) {
 
     Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(
         filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {
-            (gui_manager.*mouse_callback_function) (event);})
+            gui_manager.mouse_callback_function(event);
+        })
     );
 
 
@@ -380,7 +379,7 @@ int main(int argc, const char *argv[]) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
 
             glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
-            LOG(INFO) << "iteracting with tile " << tile_clicked.x << ", " << tile_clicked.y;
+            LOG(INFO) << "interacting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
             auto objects = Engine::get_objects_at(tile_clicked);
 
@@ -428,7 +427,7 @@ int main(int argc, const char *argv[]) {
 
     if (argc >= 2) {
         Engine::set_editor(argv[1]);
-    };
+    }
 
     int new_id = callbackstate.spawn();
     std::string bash_command =
