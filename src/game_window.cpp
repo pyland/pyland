@@ -119,7 +119,7 @@ static std::pair<int, int> query_overscan(int top, int left) {
     }
 
     for (std::string line; std::getline(ifs, line); ) {
-        std::regex_match match(line, match_line)
+        std::regex_match match(line, match_line);
         if (match) {
             try {
                 values[match[1]] = std::stoi(match[2]);
