@@ -29,7 +29,7 @@ static std::string load_file(std::string filename) {
 
 
 
-std::shared_ptr<Shader> Shader::new_shared(const std::string resource_name) {
+std::shared_ptr<Shader> Shader::new_resource(const std::string resource_name) {
     return std::make_shared<Shader>(resource_name);
 }
 

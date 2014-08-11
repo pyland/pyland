@@ -38,6 +38,7 @@ class Texture;
 ///
 class TextureAtlas : public CacheableResource<TextureAtlas> {
 private:
+    friend class CacheableResource<TextureAtlas>;
     friend class Texture;
     ///
     /// Image used to store the pixel data in main memory.
@@ -47,10 +48,6 @@ private:
     /// The GL texture id
     ///
     GLuint gl_texture;
-    ///
-    /// The shared textures which use this atlas.
-    ///
-    std::vector<std::weak_ptr<Texture>> textures;
     ///
     /// The width of a single indexable texture.
     ///
@@ -67,11 +64,24 @@ private:
     /// The number of rows of units in the texture.
     ///
     int unit_rows;
+    ///
+    /// The shared textures which use this atlas.
+    ///
+    std::vector<std::weak_ptr<Texture>> textures;
     
-    // ///
-    // /// Map of graphics contexts to atlas caches.
-    // ///
-    // static std::map<GraphicsContext*, std::shared_ptr<ResourceCache<TextureAtlas>>> atlas_caches;
+    ///
+    /// Get a commonly used texture.
+    ///
+    /// This function is used to share textures between separate
+    /// enitities and maps. On first run with given parameters it will
+    /// load the texture, on other calls it will retrieve it from a
+    /// cache. There is a separate cache for each GL context.
+    ///
+    /// @param resource_name Base path of a texture image file. This file
+    ///        does not contain a filename extension.
+    /// @return A shared pointer to the relevant Texture.
+    ///
+    static std::shared_ptr<TextureAtlas> new_resource(const std::string resource_name);
 
 public:
     ///
@@ -82,20 +92,6 @@ public:
         LoadException(const char  *message);
         LoadException(const std::string &message);
     };
-    
-    ///
-    /// Get a commonly used texture.
-    ///
-    /// This function is used to share textures between separate
-    /// enitities and maps. On first run with given parameters it will
-    /// load the texture, on other calls it will retrieve it from a
-    /// cache. There is a separate cache for each GL context.
-    ///
-    /// @param program_name Base path of a texture image file. This file
-    ///        does not contain a filename extension.
-    /// @return A shared pointer to the relevant Texture.
-    ///
-    static std::shared_ptr<TextureAtlas> new_shared(const std::string resource_name);
     
     ///
     /// Load a texture from a given file path.
@@ -112,6 +108,10 @@ public:
     /// Gets the size of the image in pixels.
     ///
     std::pair<int,int> get_atlas_size();
+    ///
+    /// Gets the number of textures which are stored in the image.
+    ///
+    int get_texture_count();
     ///
     /// Gets the size of the smallest indexable unit in pixels.
     ///

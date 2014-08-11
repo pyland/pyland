@@ -28,6 +28,7 @@
 #include "object.hpp"
 #include "object_manager.hpp"
 #include "sprite.hpp"
+#include "texture_atlas.hpp"
 #include "walkability.hpp"
 
 
@@ -71,12 +72,11 @@ Map::Map(const std::string map_src):
         //Generate the geometry needed for this map
         init_shaders();
         init_textures();
-        generate_tileset_coords(&texture_images[0]);
+        generate_tileset_coords(texture_atlases[0]);
         generate_data();
 }
 
 Map::~Map() {
-    // texture_images stored within struct, implicit destruction.
     // release buffers
     delete[] tileset_tex_coords;
     delete[] tileset_tex_data;
@@ -134,7 +134,9 @@ void Map::remove_sprite(int sprite_id) {
 /**
  * The function used to generate the cache of tile texture coordinates.
  */
-void Map::generate_tileset_coords(Image* texture_image) {
+void Map::generate_tileset_coords(std::shared_ptr<TextureAtlas> atlas) {
+    int texture_count = atlas->get_texture_count();
+    
     LOG(INFO) << "Generating tileset texture coords";
 
     if(Engine::get_tile_size() == 0) {
@@ -142,56 +144,36 @@ void Map::generate_tileset_coords(Image* texture_image) {
         return;
     }
 
-    int num_tiles_x = texture_image->width / Engine::get_tile_size();
-    int num_tiles_y = texture_image->height / Engine::get_tile_size();
-    LOG(INFO) << "Tileset size: " << num_tiles_x << " " << num_tiles_y;
+    LOG(INFO) << "Tileset texture count: " << texture_count;
 
     //Each tile needs 8 floats to describe its position in the image
     try {
-        tileset_tex_coords = new GLfloat[sizeof(GLfloat)* num_tiles_x * num_tiles_y * 4 * 2];
+        tileset_tex_coords = new GLfloat[sizeof(GLfloat)* texture_count * 4 * 2];
     }
     catch (std::bad_alloc& ba) {
         LOG(ERROR) << "Out of Memory in Map::generate_tileset_coords";
         return;
     }
 
-    //Check tileset dimensions
-    if(texture_image->store_width == 0 || texture_image->store_height == 0) {
-        LOG(ERROR) << "Texture image has 0 in at least one dimension in Map::generate_tileset_coords";
-        return;
-    }
+    int data_i = 0;
+    for (int i = 0; i < texture_count; ++i) {
+        std::tuple<float,float,float,float> bounds = atlas->index_to_coords(i);
 
-    //Tiles are indexed from top left but Openl uses texture coordinates from bottom left
-    //so we remap these
-    GLfloat tileset_inc_x = GLfloat(texture_image->width) / GLfloat(texture_image->store_width) / static_cast<GLfloat>(num_tiles_x);
-    GLfloat tileset_inc_y = GLfloat(texture_image->height) / GLfloat(texture_image->store_height) / static_cast<GLfloat>(num_tiles_y);
-    //We work from left to right, moving down the gl texture
-    GLfloat tileset_offset_x = 0.0;
-    GLfloat tileset_offset_y = GLfloat(num_tiles_y - 1) * tileset_inc_y;
+        // bottom left
+        tileset_tex_coords[data_i++] = std::get<0>(bounds);
+        tileset_tex_coords[data_i++] = std::get<2>(bounds);
 
-    //generate the coordinates for each tile
-    for (int y = 0; y < num_tiles_y; y++) {
-        for (int x = 0; x < num_tiles_x; x++) {
-            //bottom left
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+0] = tileset_offset_x;
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+1] = tileset_offset_y;
+        // top left
+        tileset_tex_coords[data_i++] = std::get<0>(bounds);
+        tileset_tex_coords[data_i++] = std::get<3>(bounds);
 
-            //top left
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+2] = tileset_offset_x;
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+3] = tileset_offset_y + tileset_inc_y;
+        // bottom right
+        tileset_tex_coords[data_i++] = std::get<1>(bounds);
+        tileset_tex_coords[data_i++] = std::get<2>(bounds);
 
-            //bottom right
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+4] = tileset_offset_x + tileset_inc_x;
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+5] = tileset_offset_y;
-
-            //top right
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+6] = tileset_offset_x + tileset_inc_x;
-            tileset_tex_coords[y* num_tiles_x*4*2+x*4*2+7] = tileset_offset_y + tileset_inc_y;
-
-            tileset_offset_x += tileset_inc_x;
-        }
-        tileset_offset_x = 0.0;
-        tileset_offset_y -= tileset_inc_y;
+        // top right
+        tileset_tex_coords[data_i++] = std::get<1>(bounds);
+        tileset_tex_coords[data_i++] = std::get<3>(bounds);
     }
 }
 
@@ -441,11 +423,11 @@ void Map::generate_sparse_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer
 }
 
 void Map::init_textures() {
-    texture_images[0] = Image("../resources/basictiles_2.png");
+    texture_atlases[0] = TextureAtlas::get_shared("../resources/basictiles_2");
 
     //Set the texture data in the rederable component for each layer
     for (auto layer : layers) {
-        layer->get_renderable_component()->set_texture_image(&texture_images[0]);
+        layer->get_renderable_component()->set_texture(Texture::get_shared(texture_atlases[0], 0));
     }
 }
 

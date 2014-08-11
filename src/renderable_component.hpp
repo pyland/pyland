@@ -1,9 +1,10 @@
 #ifndef RENDERABLE_COMPONENT_H
 #define RENDERABLE_COMPONENT_H
 
-#include "image.hpp"
+#include "texture.hpp"
 #include "shader.hpp"
 
+#include <memory>
 #include <string>
 
 //Include GLM
@@ -72,9 +73,9 @@ class RenderableComponent {
     size_t texture_coords_data_size = 0;
 
     ///
-    /// Image containing all texture image data and metadata.
+    /// Texture holding abstracted image and texture management.
     ///
-    Image* texture_image = nullptr;
+    std::shared_ptr<Texture> texture;
 
     ///
     /// The vertex buffer object identifier for the vertex buffer
@@ -216,7 +217,7 @@ public:
     ///
     /// @param image An Image containing the texture data and metadata.
     ///
-    void set_texture_image(Image* image);
+    void set_texture(std::shared_ptr<Texture> texture);
 
 
     ///
@@ -224,7 +225,7 @@ public:
     ///
     /// @returnimage An Image containing the texture data and metadata.
     ///
-    Image* get_texture_image() { return texture_image; }
+    std::shared_ptr<Texture> get_texture() { return texture; }
 
 
     ///

@@ -72,13 +72,13 @@ public:
     ///
     /// Load a texture using an atlas resource name and texture index.
     ///
-    std::shared_ptr<Texture> get_shared(const std::string atlas_name, int index);
+    static std::shared_ptr<Texture> get_shared(const std::string atlas_name, int index);
     ///
     /// Load a shared texture from an atlas.
     ///
     /// Load a texture using an atlas shared pointer and texture index.
     ///
-    std::shared_ptr<Texture> get_shared(std::shared_ptr<TextureAtlas> atlas, int index);
+    static std::shared_ptr<Texture> get_shared(std::shared_ptr<TextureAtlas> atlas, int index);
 
     ///
     /// Load a texture using an altas resource name and texture index.
@@ -93,6 +93,10 @@ public:
     /// Get the underlying GL texture id.
     ///
     GLuint get_gl_texture();
+    ///
+    /// Get the texture atlas of the texture.
+    ///
+    std::shared_ptr<TextureAtlas> get_atlas();
     ///
     /// Get the gl texture boundaries for displaying the texture.
     ///

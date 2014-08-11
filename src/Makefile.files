@@ -33,7 +33,6 @@ BASE_OBJS = \
 	texture_atlas.o        \
 	tileset.o              \
 	typeface.o             \
-	game_time.o            \
 
 
 CHALLENGE_OBJS = \

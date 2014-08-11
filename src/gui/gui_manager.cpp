@@ -1,6 +1,5 @@
 #include "component.hpp"
 #include "gui_manager.hpp"
-#include "image.hpp"
 #include <new>
 #include <fstream>
 #include <glog/logging.h>
@@ -8,6 +7,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include "texture.hpp"
 #include <utility>
 #include <vector>
 
@@ -214,20 +214,20 @@ void GUIManager::generate_vertex_data() {
 }
 
 void GUIManager::load_textures() {
-    Image* texture_image = nullptr;
+    // Image* texture_image = nullptr;
 
-    try {
-        texture_image = new Image("../resources/characters_1.png");
-    }
-    catch(std::exception e) {
-        delete texture_image;
-        texture_image = nullptr;
-        LOG(ERROR) << "Failed to create texture";
-        return;
-    }
+    // try {
+    //     texture_image = new Image("../resources/characters_1.png");
+    // }
+    // catch(std::exception e) {
+    //     delete texture_image;
+    //     texture_image = nullptr;
+    //     LOG(ERROR) << "Failed to create texture";
+    //     return;
+    // }
 
     //Set the texture data in the rederable component
-    renderable_component.set_texture_image(texture_image);
+    renderable_component.set_texture(Texture::get_shared("../resources/characters_1", 0));
 }
 bool GUIManager::init_shaders() {
     std::shared_ptr<Shader> shader;

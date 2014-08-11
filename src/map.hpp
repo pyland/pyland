@@ -93,9 +93,9 @@ class Map {
 
 
     ///
-    /// The texture buffer pointers
+    /// The texture atlases which store the map tile textures
     ///
-    Image texture_images[1];
+    std::shared_ptr<TextureAtlas> texture_atlases[1];
 
     ///
     /// The number of dimensions in the vertex and texture buffers for a tile: (x, y) here
@@ -110,7 +110,7 @@ class Map {
     ///
     /// The function used to generate the cache of tile texture coordinates.
     ///
-    void generate_tileset_coords(Image* texture_image);
+    void generate_tileset_coords(std::shared_ptr<TextureAtlas> texture);
 
     ///
     /// Generate the map's texture and vertex data

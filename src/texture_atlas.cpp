@@ -16,6 +16,7 @@ extern "C" {
 
 #include "texture_atlas.hpp"
 
+#include "engine.hpp"
 #include "image.hpp"
 
 
@@ -31,14 +32,19 @@ TextureAtlas::LoadException::LoadException(const std::string &message): std::run
 
 
 
-std::shared_ptr<TextureAtlas> TextureAtlas::new_shared(const std::string resource_name) {
+std::shared_ptr<TextureAtlas> TextureAtlas::new_resource(const std::string resource_name) {
     return std::make_shared<TextureAtlas>(resource_name + ".png");
 }
 
 
 
 TextureAtlas::TextureAtlas(const std::string image_path):
-    image(image_path, true)
+    image(image_path, true),
+    unit_w(Engine::get_tile_size()),
+    unit_h(Engine::get_tile_size()),
+    unit_columns(image.width  / unit_w),
+    unit_rows   (image.height / unit_h),
+    textures(unit_columns * unit_rows)
 {
     glGenTextures(1, &gl_texture);
     
@@ -50,15 +56,15 @@ TextureAtlas::TextureAtlas(const std::string image_path):
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gl_texture);
     glGetError();
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
     if (int e = glGetError()) {
         std::stringstream hex_error_code;
         hex_error_code << std::hex << e;
         glDeleteTextures(1, &gl_texture);
         throw TextureAtlas::LoadException("Unable to load texture into GPU: " + hex_error_code.str());
     }
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -80,6 +86,11 @@ std::pair<int,int> TextureAtlas::get_atlas_size() {
 }
 
 
+int TextureAtlas::get_texture_count() {
+    return unit_columns * unit_rows;
+}
+
+
 std::pair<int,int> TextureAtlas::get_unit_size() {
     return std::make_pair(unit_w, unit_h);
 }
@@ -93,13 +104,13 @@ std::pair<float,float> TextureAtlas::get_unit_size_ratio() {
 
 std::pair<int,int> TextureAtlas::index_to_units(int index) {
     return std::make_pair(index % unit_columns,
-                          index / unit_rows);
+                          index / unit_columns);
 }
 
 
 std::pair<float,float> TextureAtlas::units_to_floats(std::pair<int,int> units) {
     return std::make_pair(float(units.first  * unit_w) / float(image.store_width),
-                          float(units.second * unit_h) / float(image.store_height));
+                          float(image.height - units.second * unit_h) / float(image.store_height));
 }
 
 
@@ -107,9 +118,9 @@ std::tuple<float,float,float,float> TextureAtlas::index_to_coords(int index) {
     std::pair<int,int> units = index_to_units(index);
     return std::make_tuple<float,float,float,float>
         (
-         ((units.first     ) * unit_w) / float(image.store_width ),
-         ((units.first  + 1) * unit_w) / float(image.store_width ),
-         ((units.second    ) * unit_h) / float(image.store_height),
-         ((units.second + 1) * unit_h) / float(image.store_height)
+         float((units.first    ) * unit_w) / float(image.store_width),
+         float((units.first + 1) * unit_w) / float(image.store_width),
+         float(image.height - (units.second + 1) * unit_h) / float(image.store_height),
+         float(image.height - (units.second    ) * unit_h) / float(image.store_height)
          );
 }

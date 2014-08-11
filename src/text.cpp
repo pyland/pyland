@@ -237,7 +237,6 @@ void Text::render() {
         lines_scan = &lines_scan[i+1];
 
         ++line_number;
-        LOG(WARNING) << line;
         if (line[0] == '\0') {
             // Check that we aren't going to chase our tailes trying to fit an unfittable character.
             if (ctext[w] != '\n') {

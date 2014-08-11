@@ -28,7 +28,7 @@ std::shared_ptr<Texture> Texture::get_shared(const std::string atlas_name, int i
 }
 
 std::shared_ptr<Texture> Texture::get_shared(std::shared_ptr<TextureAtlas> atlas, int index) {
-    if (index > 0 && index < atlas->unit_columns * atlas->unit_rows) {
+    if (index >= 0 && index < atlas->get_texture_count()) {
         // Check if the atlas has a shared texture stored.
         std::shared_ptr<Texture> texture = atlas->textures[index].lock();
         if (!texture) {
@@ -69,6 +69,11 @@ Texture::Texture(std::shared_ptr<TextureAtlas> atlas, int index):
 
 GLuint Texture::get_gl_texture() {
     return atlas->get_gl_texture();
+}
+
+
+std::shared_ptr<TextureAtlas> Texture::get_atlas() {
+    return atlas;
 }
 
 
