@@ -25,11 +25,13 @@ BASE_OBJS = \
 	object_manager.o \
 	renderable_component.o \
 	shader.o         \
-    sprite.o         \
+	sprite.o         \
 	text.o           \
 	text_font.o      \
+	texture.o        \
+	texture_atlas.o  \
 	tileset.o        \
-    typeface.o       \
+	typeface.o       \
 	game_time.o
 
 
