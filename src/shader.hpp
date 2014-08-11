@@ -28,6 +28,7 @@ class Shader;
 
 class Shader : public CacheableResource<Shader> {
 private:
+    friend class CacheableResource<Shader>;
     friend class ResourceCache<Shader>;
 
     ///
@@ -62,6 +63,15 @@ private:
     ///
     GLuint load_shader(GLenum type, const std::string src);
 
+    ///
+    /// Create a new shared shader from a resource name.
+    ///
+    /// @param resource_name Base path of a shader program description
+    ///        file or platform's shader files.
+    /// @return A shared pointer to the relevant Shader.
+    ///
+    static std::shared_ptr<Shader> new_resource(const std::string resource_name);
+
 public:
     ///
     /// Represents a failure when loading the shader.
@@ -71,16 +81,6 @@ public:
         LoadException(const char *message);
         LoadException(const std::string &message);
     };
-
-    ///
-    /// Create a new shared shader from a resource name.
-    ///
-    /// @param program_name Base path of a shader program description
-    ///        file, or platform's shader files.
-    /// @return A shared pointer to the relevant Shader.
-    ///
-
-    static std::shared_ptr<Shader> new_shared(const std::string resource_name);
 
     ///
     /// This function creates the Opengl program from a program base

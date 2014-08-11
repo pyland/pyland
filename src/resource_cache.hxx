@@ -17,7 +17,9 @@
 
 
 template<typename Res>
-ResourceCache<Res>::ResourceCache(GraphicsContext*) {
+ResourceCache<Res>::ResourceCache(GraphicsContext*):
+    weak_this()
+{
     LOG(INFO) << "Created resource cache " << this;
 }
 
@@ -38,7 +40,7 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
         try {
             std::shared_ptr<Res> resource = Res::new_shared(resource_name);
             resources.insert(std::make_pair(resource_name, std::weak_ptr<Res>(resource)));
-            resource->resource_cache = this;
+            resource->resource_cache = weak_this;
             return resource;
         }
         catch (std::exception e) {
@@ -49,9 +51,10 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
     else {
         // Get from cache.
         std::shared_ptr<Res> resource = resources.find(resource_name)->second.lock();
-        resource->resource_cache = this;
+        // resource->resource_cache = weak_this;
+        
         // Some say we should check the pointer, but we don't keep dead
-        // weak pointers lying around for us to care.
+        // weak pointers lying around for us to care about.
         return resource;
     }
 }

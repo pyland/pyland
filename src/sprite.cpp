@@ -146,11 +146,11 @@ Sprite_Status Sprite::string_to_status(std::string status) {
 }
 
 void Sprite::set_sprite_status(std::string _sprite_status) {
-        sprite_status = string_to_status(_sprite_status);
-        status_text->set_text(_sprite_status);
+    sprite_status = string_to_status(_sprite_status);
+    status_text->set_text(_sprite_status);
 }
 
- void Sprite::set_focus(bool is_focus) {
+void Sprite::set_focus(bool is_focus) {
     LOG(INFO) << "trying to set focus to "<< is_focus;
     focus_icon->set_renderable(is_focus);
- }
+}

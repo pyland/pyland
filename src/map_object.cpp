@@ -10,6 +10,8 @@
 #include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "renderable_component.hpp"
+#include "texture.hpp"
+#include "texture_atlas.hpp"
 #include "walkability.hpp"
 
 #ifdef USE_GLES
@@ -92,7 +94,6 @@ void MapObject::regenerate_blockers() {
 }
 
 void MapObject::generate_tex_data() {
-
     // holds the texture data
     // need 12 float for the 2D texture coordinates
     int num_floats = 12;
@@ -106,48 +107,31 @@ void MapObject::generate_tex_data() {
         return;
     }
 
-    int image_width (renderable_component.get_texture_image()->store_width);
-    int image_height(renderable_component.get_texture_image()->store_height);
-    if (image_width == 0 || image_height == 0 ) {
-        LOG(ERROR) << "At least one image dimension is 0";
-        return;
-    }
-
-    GLfloat inc_x(GLfloat(Engine::get_tile_size()) / GLfloat(image_width));
-    GLfloat inc_y(GLfloat(Engine::get_tile_size()) / GLfloat(image_height));
-    if (inc_x == 0.0f || inc_y == 0.0f) {
-        LOG(ERROR) << "Increments are 0";
-        return;
-    }
-
-    // Tile ids are from top left but opengl texture coordinates are bottom left so adjust as needed
-    GLfloat offset_x(               inc_x * GLfloat(sheet_id % int(image_width / Engine::get_tile_size())));
-    GLfloat offset_y(1.0f - inc_y - inc_y * GLfloat(sheet_id / int(image_width / Engine::get_tile_size())));
-
+    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(sheet_id);
+    
     // bottom left
-    map_object_tex_data[0]  = offset_x;
-    map_object_tex_data[1]  = offset_y;
+    map_object_tex_data[ 0] = std::get<0>(bounds);
+    map_object_tex_data[ 1] = std::get<2>(bounds);
 
     // top left
-    map_object_tex_data[2]  = offset_x;
-    map_object_tex_data[3]  = offset_y + inc_y;
+    map_object_tex_data[ 2] = std::get<0>(bounds);
+    map_object_tex_data[ 3] = std::get<3>(bounds);
 
     // bottom right
-    map_object_tex_data[4]  = offset_x + inc_x;
-    map_object_tex_data[5]  = offset_y;
+    map_object_tex_data[ 4] = std::get<1>(bounds);
+    map_object_tex_data[ 5] = std::get<2>(bounds);
 
     // top left
-    map_object_tex_data[6]  = offset_x;
-    map_object_tex_data[7]  = offset_y + inc_y;
+    map_object_tex_data[ 6] = std::get<0>(bounds);
+    map_object_tex_data[ 7] = std::get<3>(bounds);
 
     // top right
-    map_object_tex_data[8]  = offset_x + inc_x;
-    map_object_tex_data[9]  = offset_y + inc_y;
+    map_object_tex_data[ 8] = std::get<1>(bounds);
+    map_object_tex_data[ 9] = std::get<3>(bounds);
 
     // bottom right
-    map_object_tex_data[10] = offset_x + inc_x;
-    map_object_tex_data[11] = offset_y;
-
+    map_object_tex_data[10] = std::get<1>(bounds);
+    map_object_tex_data[11] = std::get<2>(bounds);
 
     renderable_component.set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
 }
@@ -209,18 +193,20 @@ void MapObject::generate_vertex_data() {
 
 // TODO: rewrite
 void MapObject::load_textures() {
-    Image *texture_image = nullptr;
+    // Image *texture_image = nullptr;
 
-    try {
-        texture_image = new Image(sheet_name.c_str());
-    }
-    catch (std::exception e) {
-        LOG(ERROR) << "Failed to create texture";
-        return;
-    }
+    // try {
+    //     texture_image = new Image(sheet_name.c_str());
+    // }
+    // catch (std::exception e) {
+    //     LOG(ERROR) << "Failed to create texture";
+    //     return;
+    // }
 
-    //Set the texture data in the rederable component
-    renderable_component.set_texture_image(texture_image);
+    // //Set the texture data in the rederable component
+    // renderable_component.set_texture_image(texture_image);
+    
+    renderable_component.set_texture(Texture::get_shared(sheet_name.c_str(), 0));
 }
 
 bool MapObject::init_shaders() {

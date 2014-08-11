@@ -21,16 +21,19 @@ BASE_OBJS = \
 	map_loader.o           \
 	map_object.o           \
 	map_viewer.o           \
+	notification_bar.o     \
 	notification_stack.o   \
 	object.o               \
 	object_manager.o       \
 	renderable_component.o \
 	shader.o               \
-    sprite.o               \
+	sprite.o               \
 	text.o                 \
 	text_font.o            \
+	texture.o              \
+	texture_atlas.o        \
 	tileset.o              \
-    typeface.o             \
+	typeface.o             \
 
 
 CHALLENGE_OBJS = \

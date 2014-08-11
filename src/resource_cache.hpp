@@ -9,6 +9,11 @@
 
 
 
+template<typename Res>
+class CacheableResource;
+
+
+
 ///
 /// Contains resources asscociated with a common GL context.
 ///
@@ -17,6 +22,11 @@
 template<typename Res>
 class ResourceCache {
 private:
+    friend class CacheableResource<Res>;
+    ///
+    /// A weak pointer to itself, which can be given to resources.
+    ///
+    std::weak_ptr<ResourceCache<Res>> weak_this;
     ///
     /// Map from names to resource pointers.
     ///

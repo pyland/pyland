@@ -1,7 +1,11 @@
 #ifndef CACHEABLE_RESOURCE_H
 #define CACHEABLE_RESOURCE_H
 
+#include <map>
+#include <memory>
 #include <string>
+
+#include "graphics_context.hpp"
 
 
 
@@ -15,7 +19,8 @@ class ResourceCache;
 ///
 /// To make a resource, Res, cacheable:
 ///     make Res inherit from CacheableResource<Res>,
-///     implement void Res::new_shared(std::string resource_name)
+///     make Res friend CacheableResource<Res>,
+///     implement void Res::new_resource(const std::string resource_name)
 ///
 template<typename Res>
 class CacheableResource {
@@ -26,13 +31,17 @@ private:
     ///
     /// Resources don't require caching, so this is optional.
     ///
-    ResourceCache<Res>* resource_cache = nullptr;
+    std::weak_ptr<ResourceCache<Res>> resource_cache;
     
     ///
     /// Map of graphics contexts to shader caches.
     ///
     static std::map<GraphicsContext*, std::shared_ptr<ResourceCache<Res>>> resource_caches;
-    
+
+    ///
+    /// Creates a new resource using the give resource name.
+    ///
+    static std::shared_ptr<Res> new_shared(const std::string resource_name);
 protected:
     ///
     /// The name which was used to load the resource.
