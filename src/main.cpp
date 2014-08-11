@@ -19,6 +19,7 @@
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
@@ -28,7 +29,7 @@
 #include "api.hpp"
 #include "button.hpp"
 #include "component.hpp"
-#include "engine_api.hpp"
+#include "engine.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
 #include "game_window.hpp"
@@ -48,7 +49,7 @@
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
-
+#include "walkability.hpp"
 
 // Include challenges
 // TODO: Rearchitechture
@@ -70,24 +71,19 @@
 
 using namespace std;
 
-enum arrow_key {UP, DOWN, LEFT, RIGHT};
-
 #define TEXT_BORDER_WIDTH 20
 #define TEXT_HEIGHT 80
-
-static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
 int create_sprite(Interpreter &interpreter) {
     LOG(INFO) << "Creating sprite";
 
+    glm::ivec2 start(4, 15);
 
-    int start_x = 4;
-    int start_y = 15;
-    
     // Registering new sprite with game engine
-    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start_x, start_y, "John", 4);
+    auto new_sprite(make_shared<Sprite>(start, "John", Walkability::BLOCKED, 4));
+
     LOG(INFO) << "Adding sprite";
     ObjectManager::get_instance().add_object(new_sprite);
     Engine::get_map_viewer()->get_map()->add_sprite(new_sprite->get_id());
@@ -98,12 +94,10 @@ int create_sprite(Interpreter &interpreter) {
 
     // Register user controled sprite
     // Yes, this is a memory leak. Deal with it.
-    Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_sprite->get_name(), new_sprite->get_id());
+    auto *a_thing(new Entity(start, new_sprite->get_name(), new_sprite->get_id()));
 
     LOG(INFO) << "Registering sprite";
-
     new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
-
     LOG(INFO) << "Done!";
 
     return new_sprite->get_id();
@@ -111,16 +105,16 @@ int create_sprite(Interpreter &interpreter) {
 
 class CallbackState {
     public:
-        CallbackState(Interpreter &interpreter,
-                      std::string name):
+        CallbackState(Interpreter &interpreter, std::string name):
             interpreter(interpreter),
-            name(name){
+            name(name) {
         }
 
-        void register_number_key(int key) {
+        void register_number_key(unsigned int key) {
             LOG(INFO) << "changing focus to " << key;
 
-            if (!(0 <= key && size_t(key) < key_to_id.size())) {
+            // Note: unsigned
+            if (key >= key_to_id.size()) {
                 LOG(INFO) << "changing focus aborted; no such id";
                 return;
             }
@@ -171,30 +165,15 @@ class CallbackState {
             active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
         }
 
-        void man_move (arrow_key direction) {
-            VLOG(3) << "arrow key pressed";
+        void man_move(glm::vec2 direction) {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            switch (direction) {
-                case (UP):
-                    Engine::move_sprite(id,Vec2D(0,1));
-                    break;
-                case (DOWN):
-                    Engine::move_sprite(id,Vec2D(0,-1));
-                    break;
-                case (RIGHT):
-                    Engine::move_sprite(id,Vec2D(-1,0));
-                    break;
-                case (LEFT):
-                    Engine::move_sprite(id,Vec2D(1,0));
-                    break;
-            }
-
+            Engine::move_sprite(id, direction);
         }
 
         void monologue () {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            Vec2D location =  Engine::find_object(id);
-            std::cout << "You are at " << location.to_string() <<std::endl;
+            auto location =  Engine::find_object(id);
+            std::cout << "You are at " << location.x << ", " << location.y << std::endl;
         }
 
     private:
@@ -204,16 +183,19 @@ class CallbackState {
 };
 
 
-int main(int argc, const char* argv[]) {
+int main(int argc, const char *argv[]) {
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance....
 
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
-    int map_width = 32, map_height = 32;
-    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), 
-        map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
+    int map_width(32);
+    int map_height(32);
+    GameWindow window(int(float(map_width)  * Engine::get_actual_tile_size()),
+                      int(float(map_height) * Engine::get_actual_tile_size()),
+                      false);
+
     window.use_context();
 
     Map map("../resources/map0.tmx");
@@ -264,7 +246,7 @@ int main(int argc, const char* argv[]) {
     // TODO: move notification button to be better home
 
     Typeface notification_buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont notification_buttonfont(buttontype, 30); 
+    TextFont notification_buttonfont(buttontype, 30);
 
     float button_size = 0.05f;
     std::pair<float,float> backward_loco(0.85f,0.05f);
@@ -273,29 +255,29 @@ int main(int argc, const char* argv[]) {
     std::shared_ptr<Button> backward_button = std::make_shared<Button>();
     backward_button->set_text("backward");
     backward_button->set_on_click([&] () {
-        LOG(INFO) << "backward button pressed";  
-        Engine::move_notification(Previous); 
+        LOG(INFO) << "backward button pressed";
+        Engine::move_notification(Direction::PREVIOUS);
     });
     backward_button->set_width(button_size);
     backward_button->set_height(button_size);
     backward_button->set_y_offset(backward_loco.second);
-    backward_button->set_x_offset(backward_loco.first);    
+    backward_button->set_x_offset(backward_loco.first);
     Text backward_text(&window, notification_buttonfont, true);
     backward_text.set_text("<-");
-    backward_text.move_ratio(backward_loco.first, backward_loco.second);  
+    backward_text.move_ratio(backward_loco.first, backward_loco.second);
     backward_text.resize_ratio(button_size,button_size);
 
 
     std::shared_ptr<Button> forward_button = std::make_shared<Button>();
     forward_button->set_text("forward");
     forward_button->set_on_click([&] () {
-        LOG(INFO) << "forward button pressed"; 
-        Engine::move_notification(Next); 
+        LOG(INFO) << "forward button pressed";
+        Engine::move_notification(Direction::NEXT);
     });
     forward_button->set_width(button_size);
     forward_button->set_height(button_size);
     forward_button->set_y_offset(forward_loco.second);
-    forward_button->set_x_offset(forward_loco.first);  
+    forward_button->set_x_offset(forward_loco.first);
     Text forward_text(&window, notification_buttonfont, true);
     forward_text.set_text("->");
     forward_text.move_ratio(forward_loco.first,forward_loco.second);
@@ -328,41 +310,14 @@ int main(int argc, const char* argv[]) {
 
 
 
-    MapViewer map_viewer(&window,&gui_manager);
+    MapViewer map_viewer(&window, &gui_manager);
     map_viewer.set_map(&map);
     Engine::set_map_viewer(&map_viewer);
 
-    //Setup the map resize callback
-    std::function<void(GameWindow*)> map_resize_func = [&] (GameWindow* game_window) { 
-        LOG(INFO) << "Map resizing"; 
-        std::pair<int, int> size = game_window->get_size();
-        //Adjust the view to show only tiles the user can see
-        int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
-        int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
-        //We make use of intege truncation to get these to numbers in terms of tiles
-        //        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
-        //    int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
-
-        //Set the viewable fragments
-        glScissor(0, 0, size.first, size.second);
-        glViewport(0, 0, size.first, size.second);
-
-        //do nothing if these are null
-        if(Engine::get_map_viewer() == nullptr || Engine::get_map_viewer()->get_map() == nullptr)
-            return;
-
-        //Set the display size
-        //Display one more tile so that we don't get an abrupt stop
-        Engine::get_map_viewer()->set_display_width(num_tiles_x_display+1);
-        Engine::get_map_viewer()->set_display_height(num_tiles_y_display+1);
-
-        //Readjust the map focus
-        Engine::get_map_viewer()->refocus_map();
-
-    };
-    Lifeline map_resize_lifeline = window.register_resize_handler(map_resize_func);
-
-
+    // WARNING: Fragile reference capture
+    Lifeline map_resize_lifeline = window.register_resize_handler([&] (GameWindow *) {
+        map_viewer.resize();
+    });
 
     InputManager* input_manager = window.get_input_manager();
 
@@ -381,22 +336,22 @@ int main(int argc, const char* argv[]) {
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_HELD}), KEY({"Up", "W"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, 1)); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Down","S"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
+        {ANY_OF({KEY_HELD}), KEY({"Down", "S"})},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, -1)); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Right","D"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
+        {ANY_OF({KEY_HELD}), KEY({"Right", "D"})},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 1,  0)); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Left","A"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
+        {ANY_OF({KEY_HELD}), KEY({"Left", "A"})},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2(-1,  0)); }
     ));
 
     Lifeline monologue_callback = input_manager->register_keyboard_handler(filter(
@@ -411,7 +366,7 @@ int main(int argc, const char* argv[]) {
 
 
     std::vector<Lifeline> digit_callbacks;
-    for (int i=0; i<10; ++i) {
+    for (unsigned int i=0; i<10; ++i) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
                 {KEY_PRESS, KEY(std::to_string(i))},
@@ -423,14 +378,19 @@ int main(int argc, const char* argv[]) {
     Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})},
         [&] (MouseInputEvent event) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
-            Vec2D tile_clicked = Engine::get_map_viewer()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
-            LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
-            auto objects = Engine::get_sprites_at(tile_clicked);
-            if (objects.size() == 1) {
+
+            glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
+            LOG(INFO) << "iteracting with tile " << tile_clicked.x << ", " << tile_clicked.y;
+
+            auto objects = Engine::get_objects_at(tile_clicked);
+
+            if (objects.size() == 0) {
+                LOG(INFO) << "No objects to interact with";
+            }
+            else if (objects.size() == 1) {
                 callbackstate.register_number_id(objects[0]);
-            } else if (objects.size() == 0) {
-                LOG(INFO) << "Not sprites to interact with";
-            } else {
+            }
+            else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
                 callbackstate.register_number_id(objects[0]);
             }
@@ -449,7 +409,7 @@ int main(int argc, const char* argv[]) {
     mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
     Engine::set_dialogue_box(&mytext);
 
-    std::function<void(GameWindow*)> func = [&] (GameWindow* game_window) {
+    std::function<void(GameWindow *)> func = [&] (GameWindow *game_window) {
         LOG(INFO) << "text window resizing";
         auto window_size = (*game_window).get_size();
         mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
@@ -457,9 +417,8 @@ int main(int argc, const char* argv[]) {
 
     Lifeline text_lifeline = window.register_resize_handler(func);
 
-    std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) { 
-        std::ignore = game_window;
-        LOG(INFO) << "text window resizing"; 
+    std::function<void (GameWindow *)> func_char = [&] (GameWindow *) {
+        LOG(INFO) << "text window resizing";
         Engine::text_updater();
     };
 
@@ -472,8 +431,8 @@ int main(int argc, const char* argv[]) {
     };
 
     int new_id = callbackstate.spawn();
-    std::string bash_command = 
-        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_") 
+    std::string bash_command =
+        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
         + std::to_string(new_id) + std::string(".py");
     system(bash_command.c_str());
     LongWalkChallenge long_walk_challenge(input_manager);
@@ -530,4 +489,3 @@ int main(int argc, const char* argv[]) {
 
     return 0;
 }
-//

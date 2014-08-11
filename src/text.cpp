@@ -115,13 +115,13 @@ void Text::render() {
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
     int lost_lines = 0;
-    
+
     int used_width = 0;
 
     int length = (int)text.length();
     // Entire text.
     const char* ctext = text.c_str();
-    
+
     // Line of text.
     char* line = new char[length+1];
 
@@ -228,14 +228,14 @@ void Text::render() {
                 break;
             }
         }
-        
+
         int i;
         for (i = 0; line[i] != '\0'; i++) {
             lines_scan[i] = line[i];
          }
         lines_scan[i] = '\0';
         lines_scan = &lines_scan[i+1];
-        
+
         ++line_number;
         LOG(WARNING) << line;
         if (line[0] == '\0') {
@@ -255,10 +255,10 @@ void Text::render() {
     int line_count = line_number;
 
     int used_height = line_count * line_height;
-    
+
     image = Image(used_width, (used_height < height) ? used_height : height, true);
     image.clear(0x00000000, 0xffffffff);
-    
+
     // Render all lines of text.
     SDL_Color black;
     black.r = black.g = black.b = black.a = 0;
@@ -440,14 +440,14 @@ void Text::generate_vbo() {
     float rh = ratio_wh.second * 2.0f;
     float tw = (float)image.width  / (float)image.store_width;
     float th = 1.0f - ((float)image.height / (float)image.store_height);
-    
+
     // float rx = -1.0f;
     // float ry = -1.0f;
     // float rw = 2.0f;
     // float rh = 2.0f;
     // float tw = 1.0f;
     // float th = 1.0f;
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     // There are 4 vertices in a rectangle, but we use 6 vertices in 2
     // triangles to make the rectangle.
@@ -470,7 +470,7 @@ void Text::generate_vbo() {
         //     Bottom-right (1, 0)
         rx + rw, ry - rh, tw  , th  ,
     };
-    
+
     glBufferData(GL_ARRAY_BUFFER, sizeof(vbo_data), vbo_data, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -489,7 +489,7 @@ std::pair<int,int> Text::get_rendered_size() {
     if (dirty_texture) {
         render();
     }
-    
+
     return std::make_pair(image.width, image.height);
 }
 
@@ -503,7 +503,7 @@ std::pair<int,int> Text::get_text_size() {
     if (dirty_texture) {
         render();
     }
-    
+
     return std::make_pair(used_width, used_height);
 }
 
@@ -533,7 +533,7 @@ std::pair<int,int> Text::get_top_left() {
     if (dirty_texture) {
         render();
     }
-    
+
     int x_final;
     if (position_from_alignment) {
         switch (alignment_h) {
@@ -551,7 +551,7 @@ std::pair<int,int> Text::get_top_left() {
     } else {
         x_final = x;
     }
-    
+
     int y_final;
     if (position_from_alignment) {
         switch (alignment_v) {
@@ -569,7 +569,7 @@ std::pair<int,int> Text::get_top_left() {
     } else {
         y_final = y;
     }
-    
+
     return std::make_pair(x_final, y_final);
 }
 
@@ -692,7 +692,7 @@ void Text::display() {
             return;
         }
     }
-    
+
     if (shaders.count(window) == 0) {
         load_program(window);
     }
@@ -722,9 +722,9 @@ void Text::display() {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);

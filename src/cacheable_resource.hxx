@@ -25,7 +25,7 @@ CacheableResource<Res>::~CacheableResource() {
 template<typename Res>
 std::shared_ptr<Res> CacheableResource<Res>::get_shared(const std::string program_name) {
     GraphicsContext* context = GraphicsContext::get_current();
-    
+
     if (resource_caches.count(context) == 0) {
         // Create a new resource cache as this is the first of its context.
         std::shared_ptr<ResourceCache<Res>> resource_cache = std::make_shared<ResourceCache<Res>>(context);

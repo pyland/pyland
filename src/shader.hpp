@@ -1,6 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <glm/vec2.hpp>
 #include <map>
 #include <memory>
 #include <stdexcept>
@@ -33,7 +34,7 @@ private:
     /// Program base name (if constructed with program name).
     ///
     std::string program_name;
-    
+
     ///
     /// Indicate if the shader loaded correctly
     ///
@@ -44,7 +45,7 @@ private:
     ///
     GLuint program_obj = 0;
 
-    /// 
+    ///
     /// The Opengl object identifier for the fragment shader
     ///
     GLuint fragment_shader = 0;
@@ -54,12 +55,11 @@ private:
     ///
     GLuint vertex_shader = 0;
 
-    ///
     /// This function loads the shaders
     /// @param type The type of the shader: fragment or vertex
     /// @param src The source file for the shader's source
     /// @return The id of the shader
-    /// 
+    ///
     GLuint load_shader(GLenum type, const std::string src);
 
 public:
@@ -68,10 +68,10 @@ public:
     ///
     class LoadException: public std::runtime_error {
     public:
-        LoadException(const char  *message);
+        LoadException(const char *message);
         LoadException(const std::string &message);
     };
-    
+
     ///
     /// Create a new shared shader from a resource name.
     ///
@@ -79,16 +79,17 @@ public:
     ///        file, or platform's shader files.
     /// @return A shared pointer to the relevant Shader.
     ///
+
     static std::shared_ptr<Shader> new_shared(const std::string resource_name);
-    
-    /// 
+
+    ///
     /// This function creates the Opengl program from a program base
     /// name.
     /// @param program_name The base name/path of the shader files.
     /// @return A shader ready to be used.
     ///
     Shader(const std::string program_name);
-    /// 
+    ///
     /// This function creates the Opengl program
     /// @param vs The source file for the vertex source
     /// @param fs The source file for the fragment source

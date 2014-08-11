@@ -21,7 +21,6 @@
 
 
 #include <glog/logging.h>
-#include <iostream>
 #include <fstream>
 #include <map>
 #include <utility>
@@ -108,7 +107,7 @@ static void query_overscan(int* overscan_left, int* overscan_top) {
     int disable = 0;
     int left = *overscan_left;
     int top  = *overscan_top;
-    
+
     input.open("/boot/config.txt");
     if (input.fail()) {
         LOG(ERROR) << "Unable to query overscan using /boot/config.txt. Using defaults.";
@@ -150,7 +149,7 @@ static void query_overscan(int* overscan_left, int* overscan_top) {
                     }
                     else if (param_s == "overscan_top") {
                         top = stoi(value_s);
-                    }                        
+                    }
                 }
                 catch (std::exception) {
                     LOG(WARNING) << "/boot/config.txt parse error: line: " << line;
@@ -193,7 +192,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
     graphics_context(this)
 {
     input_manager = new InputManager(this);
-    
+
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
     }
@@ -223,7 +222,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
     // events are not generated for the first time focus is changed.
     // SEE ALSO BELOW IN THIS FUNCTION
     SDL_HideWindow(window);
-    
+
 #ifdef USE_GLES
     SDL_GetWindowWMInfo(window, &wm_info);
 #endif
@@ -238,7 +237,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
     sdl_window_surface = SDL_GetWindowSurface(window);
     background_surface = nullptr;
 #endif
-    
+
     try {
         init_gl();
     }
@@ -268,31 +267,31 @@ GameWindow::~GameWindow() {
     vc_dispmanx_display_close(dispmanDisplay); // (???)
 #endif
     windows.erase(SDL_GetWindowID(window));
-    
+
     SDL_DestroyWindow (window);
     if (windows.size() == 0) {
         deinit_sdl();
     }
 
     callback_controller.disable();
-    
+
     delete input_manager;
 }
 
 
 void GameWindow::init_sdl() {
     int result;
-    
+
 #ifdef USE_GLES
     bcm_host_init();
 #ifndef STATIC_OVERSCAN
     query_overscan(&GameWindow::overscan_left, &GameWindow::overscan_top);
 #endif
 #endif
-    
+
     LOG(INFO) << "Initializing SDL...";
     result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-  
+
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");
     }
@@ -300,25 +299,25 @@ void GameWindow::init_sdl() {
 #ifdef USE_GLES
     SDL_VERSION(&wm_info.version);
 #endif
-    
+
     LOG(INFO) << "SDL initialized.";
 }
 
 
 void GameWindow::deinit_sdl() {
     LOG(INFO) << "Deinitializing SDL...";
-    
+
     // Should always work.
     SDL_Quit ();
-    
+
     LOG(INFO) << "SDL deinitialized.";
 }
 
 
 void GameWindow::init_gl() {
-#ifdef USE_GLES  
+#ifdef USE_GLES
     EGLBoolean result;
-  
+
     static const EGLint attribute_list[] = {
         EGL_RED_SIZE, 8,
         EGL_GREEN_SIZE, 8,
@@ -394,7 +393,7 @@ void GameWindow::init_surface() {
     // enough, as it reports for the window border, not the rendering
     // area. For the time being, we shall be using LibX11 to query the
     // window's position.
-    
+
     // child is just a place to put something. We don't need it.
     Window child;
     XTranslateCoordinates(wm_info.info.x11.display,
@@ -422,19 +421,19 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     change_surface = InitAction::DO_INIT;
 #ifdef USE_GLES
     EGLSurface new_surface;
-    
+
     EGLBoolean result;
 
     if (foreground) {
         // Rendering directly to screen.
-        
+
         VC_RECT_T destination;
         VC_RECT_T source;
-  
+
         static EGL_DISPMANX_WINDOW_T nativeWindow;
 
         LOG(INFO) << "Initializing window surface.";
-  
+
         // Create EGL window surface.
 
         destination.x = x + GameWindow::overscan_left;
@@ -461,7 +460,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
         nativeWindow.width = w; // (???)
         nativeWindow.height = h; // (???)
         vc_dispmanx_update_submit_sync(dispmanUpdate); // (???)
-    
+
         new_surface = eglCreateWindowSurface(display, config, &nativeWindow, nullptr);
         if (new_surface == EGL_NO_SURFACE) {
             std::stringstream hex_error_code;
@@ -475,7 +474,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
             EGL_HEIGHT, h,
             EGL_NONE
         };
-        
+
         LOG(INFO) << "New surface: " << w << "x" << h << " (Pixel Buffer).";
 
         new_surface = eglCreatePbufferSurface(display, config, attribute_list);
@@ -487,7 +486,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
         }
 
         sdl_window_surface = SDL_GetWindowSurface(window);
-        
+
         // Create an SDL surface for background blitting. RGBX
         background_surface = SDL_CreateRGBSurface(0,
                                                   sdl_window_surface->w,
@@ -547,7 +546,7 @@ void GameWindow::deinit_surface() {
                 background_surface = nullptr;
             }
         }
-        
+
         eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         result = eglDestroySurface(display, surface);
         if (result == EGL_FALSE) {
@@ -563,12 +562,12 @@ void GameWindow::deinit_surface() {
 void GameWindow::update() {
     SDL_Event event;
     bool close_all = false;
-    
+
     for (auto pair : windows) {
         GameWindow* window = pair.second;
         window->input_manager->clean();
     }
-    
+
     while (SDL_PollEvent(&event)) {
         GameWindow* window;
         switch (event.type) {
@@ -650,7 +649,7 @@ void GameWindow::update() {
             window->change_surface = InitAction::DO_INIT;
         }
 #endif
-        
+
         switch (window->change_surface) {
         case InitAction::DO_INIT:
             try {
@@ -673,7 +672,7 @@ void GameWindow::update() {
             window->resizing = false;
         }
         window->input_manager->run_callbacks();
-        
+
         if (close_all) {
             window->request_close();
         }

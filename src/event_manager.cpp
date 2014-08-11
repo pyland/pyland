@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <functional>
 #include <glog/logging.h>
-#include <iostream>
 #include <list>
 #include <mutex>
 #include <thread>

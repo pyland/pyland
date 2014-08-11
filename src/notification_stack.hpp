@@ -1,5 +1,6 @@
-#ifndef NOTIFICATION_H
-#define NOTIFICATION_H
+#ifndef NOTIFICATION_STACK_H
+#define NOTIFICATION_STACK_H
+
 #include <list>
 #include <string>
 
@@ -11,7 +12,7 @@ class Notification {
         ///
         /// stack list of current and passed messages
         ///
-        std::list<std::string> stack;
+        std::list<std::string> message_stack;
 
         ///
         /// iterator to locate the users position in the notification history

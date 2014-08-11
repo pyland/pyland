@@ -19,8 +19,7 @@ PyInterpreterState *InterpreterContext::get_interpreterstate() {
 }
 
 
-py::api::object InterpreterContext::import_file(boost::filesystem::path filename) {    
-
+py::api::object InterpreterContext::import_file(boost::filesystem::path filename) {
     std::string name = filename.stem().string();
 
     py::list paths;

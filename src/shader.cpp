@@ -19,31 +19,12 @@ Shader::LoadException::LoadException(const std::string &message): std::runtime_e
 
 
 
-static char* load_file(std::string filename) {
-    char* content;
-    std::ifstream file;
-    
-    file.open(filename);
-    
-    // If you ever need [more than] 2GiB, you are doing something
-    // seriously wrong.
-    file.seekg(0, std::ios_base::end);
-    int file_size = (int)file.tellg();
-    file.seekg(0, std::ios_base::beg);
-    
-    content = new char[file_size+1];
-    file.read(content, file_size);
-    if (file.gcount() != file_size) {
-        LOG(ERROR) << "Unable to load shader file \"" << filename << "\".";
-        throw Shader::LoadException("Unable to load shader file");
-    }
-    
-    file.close();
+static std::string load_file(std::string filename) {
+    std::ifstream file(filename);
+    std::stringstream output;
 
-    // Add null terminator.
-    content[file_size] = '\0';
-    
-    return content;
+    output << file.rdbuf();
+    return output.str();
 }
 
 
@@ -51,8 +32,6 @@ static char* load_file(std::string filename) {
 std::shared_ptr<Shader> Shader::new_shared(const std::string resource_name) {
     return std::make_shared<Shader>(resource_name);
 }
-
-
 
 Shader::Shader(const std::string program_name):
     Shader(
@@ -70,19 +49,13 @@ Shader::Shader(const std::string program_name):
 Shader::Shader(const std::string vs, const std::string fs): CacheableResource() {
     GLint linked;
 
-    char* vs_src = load_file(vs);
-    char* fs_src = load_file(fs);
-    
     //Load the fragment and vertex shaders
-    vertex_shader = load_shader(GL_VERTEX_SHADER, vs_src);
-    fragment_shader = load_shader(GL_FRAGMENT_SHADER, fs_src);
-
-    delete[] vs_src;
-    delete[] fs_src;
+    vertex_shader   = load_shader(GL_VERTEX_SHADER,   load_file(vs).c_str());
+    fragment_shader = load_shader(GL_FRAGMENT_SHADER, load_file(fs).c_str());
 
     //Create the program object
     program_obj = glCreateProgram();
-    
+
     if(program_obj == 0) {
         LOG(ERROR) << "Shader creation: Could not create program object.";
         LOG(ERROR) << "Flag: " << glGetError();
@@ -91,25 +64,26 @@ Shader::Shader(const std::string vs, const std::string fs): CacheableResource() 
 
     glAttachShader(program_obj, vertex_shader);
     glAttachShader(program_obj, fragment_shader);
-    
+
     // Temporary hack before restructuring.
-    glBindAttribLocation(program_obj,0 /* VERTEX_POS_INDX */, "a_position");
-    glBindAttribLocation(program_obj, 1/*VERTEX_TEXCOORD0_INDX*/, "a_texCoord");
-    
+    // TODO: Untemparary-ify this.
+    glBindAttribLocation(program_obj, /* VERTEX_POS_INDX       */ 0, "a_position");
+    glBindAttribLocation(program_obj, /* VERTEX_TEXCOORD0_INDX */ 1, "a_texCoord");
+
     //Link the program
     glLinkProgram(program_obj);
-    
+
     //Check to see if we have any log info
     glGetProgramiv(program_obj, GL_LINK_STATUS, &linked);
-    
-    if(!linked) {
+
+    if (!linked) {
         GLint info_len = 0;
-        
+
         glGetProgramiv(program_obj, GL_INFO_LOG_LENGTH, &info_len);
-        
+
         if(info_len > 1) {
             char* info_log = new char[sizeof(char)*info_len];
-        
+
             glGetProgramInfoLog(program_obj, info_len, nullptr, info_log);
             LOG(ERROR) << "Program linking:\n" << info_log;
             delete []info_log;
@@ -127,15 +101,15 @@ Shader::Shader(const std::string vs, const std::string fs): CacheableResource() 
 Shader::~Shader() {
     glDeleteShader(fragment_shader);
     glDeleteShader(vertex_shader);
-    glDeleteProgram(program_obj);  
+    glDeleteProgram(program_obj);
 }
 
 
 GLuint Shader::load_shader(GLenum type, const std::string src) {
     GLuint shader;
     GLint compiled = 0;
-    
-    // Create the shader object 
+
+    // Create the shader object
     shader = glCreateShader(type);
 
     if(shader == 0) {
@@ -156,9 +130,9 @@ GLuint Shader::load_shader(GLenum type, const std::string src) {
     // Handle the errors
     if(!compiled) {
         GLint info_len = 0;
-        
+
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_len);
-        
+
         if(info_len > 1) {
             char* info_log = new char[sizeof(char) * info_len];
 
@@ -171,7 +145,7 @@ GLuint Shader::load_shader(GLenum type, const std::string src) {
     }
     return shader;
 
-} 
+}
 
 
 void Shader::bind_location_to_attribute(GLuint location, const char* variable) {

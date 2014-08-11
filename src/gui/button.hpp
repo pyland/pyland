@@ -22,7 +22,6 @@
 class Button : public Component {
     std::string text;
 public:
-    
     ///
     /// Set the text for the button
     /// @param _text the button text
@@ -38,7 +37,6 @@ public:
     std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
 
     std::vector<std::pair<GLfloat*, int>> generate_texture_data();
-
 };
 
 #endif

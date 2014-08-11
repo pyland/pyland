@@ -13,17 +13,13 @@
 #include <GL/gl.h>
 #endif
 
-std::vector<std::shared_ptr<GUIText>> generate_font_data() {
-    std::shared_ptr<GUIText> text = std::make_shared<GUIText>();
-}
-
 std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
-    delete []vertex_data;
+    delete[] vertex_data;
     int num_floats = 12;
 
-    vertex_data = new GLfloat[sizeof(GLfloat)*num_floats];
+    vertex_data = new GLfloat[sizeof(GLfloat) * num_floats];
     //Generate coordinates in our local object space
-    //bottom left 
+    //bottom left
     vertex_data[0] = 0;
     vertex_data[1] = 0;
 
@@ -50,7 +46,6 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_vertex_data() {
     std::vector<std::pair<GLfloat*, int>> vertices;
     vertices.push_back(std::make_pair(vertex_data, num_floats));
     return vertices;
-
 }
 
 std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
@@ -66,7 +61,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_texture_data() {
 
     //top left
     texture_data[2]  = offset_x * GLfloat(4.0);
-    texture_data[3]  = 0.0f; 
+    texture_data[3]  = 0.0f;
 
     //bottom right
     texture_data[4]  = offset_x * GLfloat(5.0);

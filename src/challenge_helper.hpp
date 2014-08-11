@@ -1,20 +1,26 @@
 ///
 /// Challenge Helper is collection of static methods to aid/abstract with challenge writing
 ///
-#include "api.hpp"
+#include <glm/vec2.hpp>
+
 #include "map_object.hpp"
 
 class ChallengeHelper {
 public:
+    ///
+    /// Given an object, allow it to picked up and dropped off at specific locations
+    /// Only one pick up and drop off is permitted
+    ///
+    static void create_pickupable(glm::ivec2 start_tile,
+                                  glm::ivec2 pickup_tile,
+                                  glm::ivec2 finish_tile,
+                                  glm::ivec2 dropoff_tile,
+                                  std::shared_ptr<MapObject> object);
 
     ///
-    /// given an object, allow it to picked up and dropped off at specific locations
-    /// only one pick up and drop off is permitted
+    /// Allow an object to picked up / dropped off at the same location
     ///
-    static void create_pickupable(Vec2D start_tile, Vec2D pickup_tile, 
-                           Vec2D finish_tile, Vec2D dropoff_tile, 
-                           std::shared_ptr<MapObject> object);
-
-    /// allowing an object to picked up / dropped off at the same location
-    static void create_pickupable(Vec2D start_tile, Vec2D pickup_tile, std::shared_ptr<MapObject> object );
+    static void create_pickupable(glm::ivec2 start_tile,
+                                  glm::ivec2 pickup_tile,
+                                  std::shared_ptr<MapObject> object);
 };

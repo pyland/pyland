@@ -44,12 +44,14 @@ void GilSafeFuture<T>::set(typename std::enable_if<!std::is_void<E>::value, E>::
 }
 
 template <typename T>
-T GilSafeFuture<T>::execute(std::function<void (GilSafeFuture<T>)> callback) {
+static T _gsf_execute(std::function<void (GilSafeFuture<T>)> callback,
+                      std::function<GilSafeFuture<T> (std::shared_ptr<std::promise<T>>)> get_gsf) {
+
     auto return_value_promise = std::make_shared<std::promise<T>>();
     auto return_value_future = return_value_promise->get_future();
 
     {
-        GilSafeFuture<T> gil_safe_return_value(return_value_promise);
+        auto gil_safe_return_value = get_gsf(return_value_promise);
         EventManager::get_instance().add_event(std::bind(callback, gil_safe_return_value));
     }
 
@@ -60,19 +62,19 @@ T GilSafeFuture<T>::execute(std::function<void (GilSafeFuture<T>)> callback) {
 }
 
 template <typename T>
+T GilSafeFuture<T>::execute(std::function<void (GilSafeFuture<T>)> callback) {
+    return _gsf_execute<T>(
+        callback,
+        [&] (std::shared_ptr<std::promise<T>> p) { return GilSafeFuture<T>(p); }
+    );
+}
+
+template <typename T>
 template <typename E>
 T GilSafeFuture<T>::execute(std::function<void (GilSafeFuture<T>)> callback,
                             typename std::enable_if<!std::is_void<E>::value, E>::type default_value) {
-    auto return_value_promise = std::make_shared<std::promise<T>>();
-    auto return_value_future = return_value_promise->get_future();
-
-    {
-        GilSafeFuture<T> gil_safe_return_value(return_value_promise, default_value);
-        EventManager::get_instance().add_event(std::bind(callback, gil_safe_return_value));
-    }
-
-    {
-        lock::ThreadGILRelease unlock_thread;
-        return return_value_future.get();
-    }
+    return _gsf_execute<T>(
+        callback,
+        [&] (std::shared_ptr<std::promise<T>> p) { return GilSafeFuture<T>(p, default_value); }
+    );
 }

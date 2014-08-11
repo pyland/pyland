@@ -7,7 +7,6 @@
 enum class Walkability {
     WALKABLE,
     BLOCKED,
-    DEFAULT
 };
 
 #endif

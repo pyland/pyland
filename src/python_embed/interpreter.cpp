@@ -5,6 +5,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/python.hpp>
 #include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <mutex>
 #include <string>
 #include "api.hpp"
@@ -29,7 +30,7 @@ Interpreter::Interpreter(boost::filesystem::path function_wrappers):
         thread_killer = std::make_unique<ThreadKiller>(entitythreads);
         LOG(INFO) << "Interpreter: Spawned Kill thread";
 
-        // All Python errors should result in a Python traceback    
+        // All Python errors should result in a Python traceback
         try {
             // Import to allow conversion of classes, but no need to keep module reference
             interpreter_context.import_file(function_wrappers);
@@ -68,7 +69,7 @@ PyThreadState *Interpreter::initialize_python() {
 LockableEntityThread Interpreter::register_entity(Entity &entity) {
     // Create thread and move to vector.
     auto new_entity = std::make_shared<EntityThread>(interpreter_context, entity);
-    
+
     std::lock_guard<std::mutex> lock(*entitythreads.lock);
     entitythreads.value.push_back(std::weak_ptr<EntityThread>(new_entity));
 
