@@ -250,3 +250,11 @@ void Engine::update_status(int id, std::string status) {
     auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
     sprite->set_sprite_status(status);
 }
+
+TextFont Engine::get_game_font() {
+    return TextFont(get_game_typeface(), 18);
+}
+
+Typeface Engine::get_game_typeface() {
+    return Typeface("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+}

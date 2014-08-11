@@ -208,8 +208,7 @@ int main(int argc, const char *argv[]) {
     void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
 
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont buttonfont(buttontype, 18);
+    TextFont buttonfont = Engine::get_game_font();
     Text stoptext(&window, buttonfont, true);
     Text runtext(&window, buttonfont, true);
     stoptext.set_text("Stop");
@@ -245,8 +244,7 @@ int main(int argc, const char *argv[]) {
 
     // TODO: move notification button to be better home
 
-    Typeface notification_buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont notification_buttonfont(buttontype, 30);
+    TextFont notification_buttonfont = Engine::get_game_font();
 
     float button_size = 0.05f;
     std::pair<float,float> backward_loco(0.85f,0.05f);
@@ -399,8 +397,7 @@ int main(int argc, const char *argv[]) {
 
     EventManager &em = EventManager::get_instance();
 
-    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 18);
+    TextFont myfont = Engine::get_game_font();
     Text mytext(&window, myfont, true);
     mytext.set_text("John");
     // referring to top left corner of text window
@@ -436,7 +433,7 @@ int main(int argc, const char *argv[]) {
     LongWalkChallenge long_walk_challenge(input_manager);
     long_walk_challenge.start();
 
-    TextFont big_font(mytype, 50);
+    TextFont big_font(Engine::get_game_typeface(), 50);
     Text cursor(&window, big_font, true);
     cursor.move(0, 0);
     cursor.resize(50, 50);

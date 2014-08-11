@@ -170,6 +170,8 @@ public:
     static void text_displayer();
     static void text_updater();
     static void update_status(int id, std::string status);
+    static TextFont get_game_font();
+    static Typeface get_game_typeface();
 
 };
 
