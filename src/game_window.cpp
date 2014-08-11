@@ -100,7 +100,7 @@ GameWindow::InitException::InitException(const std::string &message): std::runti
 /// that is very good at ignoring disable_overscan.
 /// For now, we are forced to read the /boot/config.txt file.
 ///
-static std::pair<int, int> query_overscan(int top, int left) {
+static std::pair<int, int> query_overscan(int left, int top) {
     static const boost::regex match_line(
         "(disable_overscan|overscan_left|overscan_top)=(\\d+)"
         "(?:\\s.*)?" // Optionally allow anything else after a space
@@ -109,15 +109,15 @@ static std::pair<int, int> query_overscan(int top, int left) {
 
     std::map<std::string, int> values({
         { "disable_overscan", 0    },
-        { "overscan_top",     top  },
-        { "overscan_left",    left }
+        { "overscan_left",    left },
+        { "overscan_top",     top  }
     });
 
     std::ifstream boot_config_file("/boot/config.txt");
 
     if (boot_config_file.fail()) {
         LOG(ERROR) << "Unable to query overscan using /boot/config.txt. Using defaults.";
-        return std::make_pair(values["overscan_top"], values["overscan_left"]);
+        return std::make_pair(values["overscan_left"], values["overscan_top"]);
     }
 
     std::string line;
@@ -141,7 +141,7 @@ static std::pair<int, int> query_overscan(int top, int left) {
         LOG(INFO) << "Overscan is enabled - compensation set to "
                   << values["overscan_left"] << ", " << values["overscan_top"];
 
-        return std::make_pair(values["overscan_top"], values["overscan_left"]);
+        return std::make_pair(values["overscan_left"], values["overscan_top"]);
     }
 }
 #endif
