@@ -5,7 +5,11 @@
 #define TEXTURE_ATLAS_H
 
 #include <memory>
+#include <stdexcept>
+#include <tuple>
+#include <utility>
 
+extern "C" {
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
 #endif
@@ -13,8 +17,14 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+}
 
+#include "cacheable_resource.hpp"
 #include "image.hpp"
+
+
+
+class Texture;
 
 
 
@@ -28,6 +38,7 @@
 ///
 class TextureAtlas : public CacheableResource<TextureAtlas> {
 private:
+    friend class Texture;
     ///
     /// Image used to store the pixel data in main memory.
     ///
@@ -57,10 +68,10 @@ private:
     ///
     int unit_rows;
     
-    ///
-    /// Map of graphics contexts to atlas caches.
-    ///
-    static std::map<GraphicsContext*, std::shared_ptr<ResourceCache<TextureAtlas>>> atlas_caches;
+    // ///
+    // /// Map of graphics contexts to atlas caches.
+    // ///
+    // static std::map<GraphicsContext*, std::shared_ptr<ResourceCache<TextureAtlas>>> atlas_caches;
 
 public:
     ///
@@ -84,7 +95,7 @@ public:
     ///        does not contain a filename extension.
     /// @return A shared pointer to the relevant Texture.
     ///
-    static std::shared_ptr<Texture> new_shared(const std::string resource_name);
+    static std::shared_ptr<TextureAtlas> new_shared(const std::string resource_name);
     
     ///
     /// Load a texture from a given file path.
@@ -127,10 +138,6 @@ public:
     /// @return The left, right, bottom, and top boundaries.
     ///
     std::tuple<float,float,float,float> index_to_coords(int index);
-    ///
-    /// Register a texture for association with the atlas
-    ///
-    std::tuple<float,float,float,float> register_texture(Texture* texture);
 };
 
 

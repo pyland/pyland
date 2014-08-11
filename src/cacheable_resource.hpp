@@ -1,7 +1,11 @@
 #ifndef CACHEABLE_RESOURCE_H
 #define CACHEABLE_RESOURCE_H
 
+#include <map>
+#include <memory>
 #include <string>
+
+#include "graphics_context.hpp"
 
 
 

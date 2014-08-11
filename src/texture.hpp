@@ -2,7 +2,10 @@
 #define TEXTURE_H
 
 #include <memory>
+#include <stdexcept>
+#include <tuple>
 
+extern "C" {
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
 #endif
@@ -10,6 +13,11 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+}
+
+
+
+class TextureAtlas;
 
 
 
@@ -64,7 +72,7 @@ public:
     ///
     /// Load a texture using an atlas resource name and texture index.
     ///
-    std::shared_ptr<Texture> get_shared(std::string atlas_name, int index);
+    std::shared_ptr<Texture> get_shared(const std::string atlas_name, int index);
     ///
     /// Load a shared texture from an atlas.
     ///
@@ -75,7 +83,7 @@ public:
     ///
     /// Load a texture using an altas resource name and texture index.
     ///
-    Texture(std::string atlas_name, int index);
+    Texture(const std::string atlas_name, int index);
     ///
     /// Load a texture using an atlas shared pointer and texture index.
     ///

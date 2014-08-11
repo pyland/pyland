@@ -1,5 +1,7 @@
 #include <memory>
+#include <tuple>
 
+extern "C" {
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
 #endif
@@ -7,24 +9,32 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+}
 
 #include "texture.hpp"
 #include "texture_atlas.hpp"
 
 
 
-std::shared_ptr<Texture> Texture::get_shared(std::string atlas_name, int index) {
-    return get_shader(TextureAtlas::get_shared(atlas_name), index);
+// Need to inherit constructors manually.
+// NOTE: This will, and are required to, copy the message.
+Texture::LoadException::LoadException(const char *message): std::runtime_error(message) {}
+Texture::LoadException::LoadException(const std::string &message): std::runtime_error(message) {}
+
+
+
+std::shared_ptr<Texture> Texture::get_shared(const std::string atlas_name, int index) {
+    return Texture::get_shared(TextureAtlas::get_shared(atlas_name), index);
 }
 
 std::shared_ptr<Texture> Texture::get_shared(std::shared_ptr<TextureAtlas> atlas, int index) {
-    if (index > 0 && index < unit_columns * unit_rows) {
+    if (index > 0 && index < atlas->unit_columns * atlas->unit_rows) {
         // Check if the atlas has a shared texture stored.
         std::shared_ptr<Texture> texture = atlas->textures[index].lock();
         if (!texture) {
             // Generate the texture, as there wasn't a shared one.
             texture = std::make_shared<Texture>(atlas, index);
-            atlas->textures[index] = std::weak_ptr(texture);
+            atlas->textures[index] = std::weak_ptr<Texture>(texture);
             LOG(INFO) << "Created texture " << index << " from atlas " << atlas;
         }
         else {
@@ -40,7 +50,7 @@ std::shared_ptr<Texture> Texture::get_shared(std::shared_ptr<TextureAtlas> atlas
 
 
 
-Texture::Texture(std::string atlas_name, int index):
+Texture::Texture(const std::string atlas_name, int index):
     Texture(TextureAtlas::get_shared(atlas_name), index) {
 }
 
@@ -62,6 +72,6 @@ GLuint Texture::get_gl_texture() {
 }
 
 
-std::tuple<float,float,float,float> Texture::get_bounds();
+std::tuple<float,float,float,float> Texture::get_bounds() {
     return atlas->index_to_coords(index);
 }

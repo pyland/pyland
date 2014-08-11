@@ -1,14 +1,26 @@
 // Try funky initialization in if.
 
 #include <memory>
+#include <tuple>
+#include <utility>
 
-#include "texture_atlas.h"
+extern "C" {
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+#ifdef USE_GL
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#endif
+}
+
+#include "texture_atlas.hpp"
 
 #include "image.hpp"
 
 
 
-std::map<GraphicsContext*, std::shared_ptr<ResourceCache<TextureAtlas>>> TextureAtlas::atlas_caches;
+// std::map<GraphicsContext*, std::shared_ptr<ResourceCache<TextureAtlas>>> TextureAtlas::atlas_caches;
 
 
 
@@ -64,30 +76,30 @@ GLuint TextureAtlas::get_gl_texture() {
 
 
 std::pair<int,int> TextureAtlas::get_atlas_size() {
-    return std::make_pair<int,int>(image.width, image.height);
+    return std::make_pair(image.width, image.height);
 }
 
 
 std::pair<int,int> TextureAtlas::get_unit_size() {
-    return std::make_pair<int,int>(unit_w, unit_h);
+    return std::make_pair(unit_w, unit_h);
 }
 
 
 std::pair<float,float> TextureAtlas::get_unit_size_ratio() {
-    return std::make_pair<float,float>(float(unit_w) / float(image.store_width),
-                                       float(unit_h) / float(image.store_height));
+    return std::make_pair(float(unit_w) / float(image.store_width),
+                          float(unit_h) / float(image.store_height));
 }
 
 
 std::pair<int,int> TextureAtlas::index_to_units(int index) {
-    return std::make_pair<int,int>(index % unit_columns,
-                                   index / unit_rows)
+    return std::make_pair(index % unit_columns,
+                          index / unit_rows);
 }
 
 
 std::pair<float,float> TextureAtlas::units_to_floats(std::pair<int,int> units) {
-    return std::make_pair<float,float>(float(units.first  * unit_w) / float(image.store_width),
-                                       float(units.second * unit_h) / float(image.store_height));
+    return std::make_pair(float(units.first  * unit_w) / float(image.store_width),
+                          float(units.second * unit_h) / float(image.store_height));
 }
 
 
