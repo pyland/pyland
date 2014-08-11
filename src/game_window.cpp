@@ -253,7 +253,7 @@ void GameWindow::init_sdl() {
 #ifdef USE_GLES
     bcm_host_init();
 #ifndef STATIC_OVERSCAN
-    std::tie(overscan_left, overscan_top) = query_overscan();
+    std::tie(overscan_left, overscan_top) = query_overscan(overscan_left, overscan_top);
 #endif
 #endif
 
