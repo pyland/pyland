@@ -5,7 +5,7 @@ BOOST_LDLIBS   = \
 	-l${LIBBOOST_PYTHON} \
 	-lboost_filesystem   \
 	-lboost_system       \
-	-lboost_regex
+	-lboost_regex        \
 
 
 
@@ -30,16 +30,16 @@ ifeq "$(PLATFORM)" "desktop"
 
 	WARNINGS += -Werror
 else
-        X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
-        X11_CXXFLAGS =
-        X11_LDFLAGS  =
-        X11_LDLIBS   = $(shell pkg-config x11 --libs)
+	X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
+	X11_CXXFLAGS =
+	X11_LDFLAGS  =
+	X11_LDLIBS   = $(shell pkg-config x11 --libs)
 
 	# From hello_triangle
 	GLES_CPPFLAGS = \
-		-I/opt/vc/include \
+		-I/opt/vc/include                           \
 		-I/opt/vc/include/interface/vmcs_host/linux \
-		-I/opt/vc/include/interface/vcos/pthreads
+		-I/opt/vc/include/interface/vcos/pthreads   \
 
 	GLES_CXXFLAGS =
 	GLES_LDFLAGS  = -L/opt/vc/lib/
