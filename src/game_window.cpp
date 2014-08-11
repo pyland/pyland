@@ -20,9 +20,10 @@
 
 
 
-#include <glog/logging.h>
 #include <fstream>
+#include <glog/logging.h>
 #include <map>
+#include <string>
 #include <utility>
 
 // Include position important.
@@ -104,6 +105,7 @@ static std::pair<int, int> query_overscan(int top, int left) {
         "(disable_overscan|overscan_left|overscan_top)=(\\d+)"
         "(?:\\s.*)?" // Optionally allow anything else after a space
     );
+    std::smatch match;
 
     std::map<std::string, int> values({
         { "disable_overscan", 0    },
@@ -118,9 +120,9 @@ static std::pair<int, int> query_overscan(int top, int left) {
         return std::make_pair(values["overscan_top"], values["overscan_left"]);
     }
 
-    for (std::string line; std::getline(boot_config_file, line); ) {
-        std::regex_match match(line, match_line);
-        if (match) {
+    std::string line;
+    while (std::getline(boot_config_file, line)) {
+        if (std::regex_match(line, match, match_line)) {
             try {
                 values[match[1]] = std::stoi(match[2]);
             }
@@ -136,7 +138,9 @@ static std::pair<int, int> query_overscan(int top, int left) {
         return std::make_pair(0, 0);
     }
     else {
-        LOG(INFO) << "Overscan is enabled - compensation set to (" << *overscan_left << ", " << *overscan_top << ").";
+        LOG(INFO) << "Overscan is enabled - compensation set to "
+                  << values["overscan_left"] << ", " << values["overscan_top"];
+
         return std::make_pair(values["overscan_top"], values["overscan_left"]);
     }
 }
