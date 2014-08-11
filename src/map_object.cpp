@@ -106,8 +106,8 @@ void MapObject::generate_tex_data() {
         return;
     }
 
-    int image_width = renderable_component.get_texture_image()->store_width;
-    int image_height = renderable_component.get_texture_image()->store_height;
+    int image_width (renderable_component.get_texture_image()->store_width);
+    int image_height(renderable_component.get_texture_image()->store_height);
     if (image_width == 0 || image_height == 0 ) {
         LOG(ERROR) << "At least one image dimension is 0";
         return;
