@@ -140,7 +140,7 @@ public:
     static void open_editor(std::string filename);
 
     ///
-    /// Get a list of objects at this point
+    /// Get a list of objects at this point, doesn't include sprites
     /// @return a vector of object ids
     ///
     static std::vector<int> get_objects_at(glm::vec2 location);

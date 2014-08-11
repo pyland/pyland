@@ -382,17 +382,17 @@ int main(int argc, const char *argv[]) {
             glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
             LOG(INFO) << "iteracting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
-            auto objects = Engine::get_objects_at(tile_clicked);
+            auto sprites = Engine::get_sprites_at(tile_clicked);
 
-            if (objects.size() == 0) {
-                LOG(INFO) << "No objects to interact with";
+            if (sprites.size() == 0) {
+                LOG(INFO) << "No sprites to interact with";
             }
-            else if (objects.size() == 1) {
-                callbackstate.register_number_id(objects[0]);
+            else if (sprites.size() == 1) {
+                callbackstate.register_number_id(sprites[0]);
             }
             else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number_id(objects[0]);
+                callbackstate.register_number_id(sprites[0]);
             }
         }
     ));
