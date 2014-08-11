@@ -358,7 +358,7 @@ void MapViewer::refocus_map() {
     //Get the object
     ObjectManager& object_manager = ObjectManager::get_instance();
 
-    if(map_focus_object == 0) {
+    if (map_focus_object == 0) {
         LOG(INFO) << "MapViewer::refocus_map: No focus.";
         return;
     }
@@ -424,12 +424,12 @@ Map* MapViewer::get_map() {
 }
 
 
-glm::vec2 MapViewer::pixel_to_tile(glm::ivec2 pixel_location) {
+glm::ivec2 MapViewer::pixel_to_tile(glm::ivec2 pixel_location) {
     float scale(Engine::get_actual_tile_size());
 
     glm::vec2 display_position(get_display_x(), get_display_y());
-
-    return (glm::vec2(pixel_location) / scale) + display_position;
+    glm::vec2 float_result = (glm::vec2(pixel_location) / scale) + display_position;
+    return (glm::ivec2)float_result;
 }
 
 glm::ivec2 MapViewer::tile_to_pixel(glm::vec2 tile_location) {

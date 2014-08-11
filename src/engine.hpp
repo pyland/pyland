@@ -13,14 +13,13 @@
 #include <vector>
 
 #include "gil_safe_future.hpp"
-#include "notification_stack.hpp"
+#include "notification_bar.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
 
 class MapViewer;
 
-enum class Direction {NEXT, PREVIOUS};
 
 ///
 /// default python editor, used as long as another isn't passed as command line arg
@@ -37,15 +36,7 @@ private:
 
     static MapViewer *map_viewer;
 
-    ///
-    /// pointer for text box
-    ///
-    static Text* dialogue_box;
-
-    ///
-    /// cache for hold past notification
-    ///
-    static Notification notification_stack;
+    static NotificationBar* notification_bar;
 
     ///
     /// The size of a tile
@@ -140,7 +131,7 @@ public:
     static void open_editor(std::string filename);
 
     ///
-    /// Get a list of objects at this point
+    /// Get a list of objects at this point, doesn't include sprites
     /// @return a vector of object ids
     ///
     static std::vector<int> get_objects_at(glm::vec2 location);
@@ -161,15 +152,17 @@ public:
     ///
     static void set_editor(std::string editor) { Engine::editor = editor; }
 
-    static void set_dialogue_box(Text *dialogue_box) { Engine::dialogue_box = dialogue_box; }
-    static Text *get_dialogue_box(){ return dialogue_box; }
-
+    static void set_notification_bar(NotificationBar *notification_bar) { Engine::notification_bar = notification_bar; }
     static void print_dialogue(std::string name, std::string text);
-    static void move_notification(Direction direction);
 
+    /// method for handling sprite test
     static void text_displayer();
     static void text_updater();
     static void update_status(int id, std::string status);
+
+    /// global access to game font
+    static TextFont get_game_font();
+    static Typeface get_game_typeface();
 
 };
 

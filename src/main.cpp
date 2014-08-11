@@ -44,6 +44,7 @@
 #include "make_unique.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
+#include "notification_bar.hpp"
 #include "object_manager.hpp"
 #include "sprite.hpp"
 #include "typeface.hpp"
@@ -70,9 +71,6 @@
 
 
 using namespace std;
-
-#define TEXT_BORDER_WIDTH 20
-#define TEXT_HEIGHT 80
 
 static std::mt19937 random_generator;
 
@@ -184,6 +182,11 @@ class CallbackState {
 
 
 int main(int argc, const char *argv[]) {
+    // allows you to pass an alternative text editor to app, otherwise
+    // defaults to gedit
+    if (argc >= 2) {
+        Engine::set_editor(argv[1]);
+    };
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance....
 
@@ -204,12 +207,12 @@ int main(int argc, const char *argv[]) {
 
     //BUILD the GUI
     GUIManager gui_manager;
-
-    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
+    MapViewer map_viewer(&window, &gui_manager);
+    map_viewer.set_map(&map);
+    Engine::set_map_viewer(&map_viewer);
 
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont buttonfont(buttontype, 18);
+    TextFont buttonfont = Engine::get_game_font();
     Text stoptext(&window, buttonfont, true);
     Text runtext(&window, buttonfont, true);
     stoptext.set_text("Stop");
@@ -220,7 +223,7 @@ int main(int argc, const char *argv[]) {
     stoptext.resize(window.get_size().first-20, 80 + 20);
     runtext.resize(window.get_size().first-20, 80 + 20);
 
-
+    // create first character, TODO: move this into challenge
     CallbackState callbackstate(interpreter, "John");
 
 
@@ -243,51 +246,16 @@ int main(int argc, const char *argv[]) {
     stop_button->set_y_offset(0.8f);
     stop_button->set_x_offset(0.8f);
 
-    // TODO: move notification button to be better home
-
-    Typeface notification_buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont notification_buttonfont(buttontype, 30);
-
-    float button_size = 0.05f;
-    std::pair<float,float> backward_loco(0.85f,0.05f);
-    std::pair<float,float> forward_loco(0.95f,0.05f);
-
-    std::shared_ptr<Button> backward_button = std::make_shared<Button>();
-    backward_button->set_text("backward");
-    backward_button->set_on_click([&] () {
-        LOG(INFO) << "backward button pressed";
-        Engine::move_notification(Direction::PREVIOUS);
-    });
-    backward_button->set_width(button_size);
-    backward_button->set_height(button_size);
-    backward_button->set_y_offset(backward_loco.second);
-    backward_button->set_x_offset(backward_loco.first);
-    Text backward_text(&window, notification_buttonfont, true);
-    backward_text.set_text("<-");
-    backward_text.move_ratio(backward_loco.first, backward_loco.second);
-    backward_text.resize_ratio(button_size,button_size);
-
-
-    std::shared_ptr<Button> forward_button = std::make_shared<Button>();
-    forward_button->set_text("forward");
-    forward_button->set_on_click([&] () {
-        LOG(INFO) << "forward button pressed";
-        Engine::move_notification(Direction::NEXT);
-    });
-    forward_button->set_width(button_size);
-    forward_button->set_height(button_size);
-    forward_button->set_y_offset(forward_loco.second);
-    forward_button->set_x_offset(forward_loco.first);
-    Text forward_text(&window, notification_buttonfont, true);
-    forward_text.set_text("->");
-    forward_text.move_ratio(forward_loco.first,forward_loco.second);
-    forward_text.resize_ratio(button_size,button_size);
-
+    // build navigation bar buttons
+    NotificationBar notification_bar;
+    Engine::set_notification_bar(&notification_bar);
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
-    sprite_window->add(backward_button);
-    sprite_window->add(forward_button);
+    for (auto button: notification_bar.get_navigation_buttons()) {
+        sprite_window->add(button);
+    }
+
 
     gui_manager.set_root(sprite_window);
 
@@ -307,12 +275,6 @@ int main(int argc, const char *argv[]) {
     };
     Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
 
-
-
-
-    MapViewer map_viewer(&window, &gui_manager);
-    map_viewer.set_map(&map);
-    Engine::set_map_viewer(&map_viewer);
 
     // WARNING: Fragile reference capture
     Lifeline map_resize_lifeline = window.register_resize_handler([&] (GameWindow *) {
@@ -361,7 +323,8 @@ int main(int argc, const char *argv[]) {
 
     Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(
         filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {
-            (gui_manager.*mouse_callback_function) (event);})
+            gui_manager.mouse_callback_function(event);
+        })
     );
 
 
@@ -380,42 +343,24 @@ int main(int argc, const char *argv[]) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
 
             glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
-            LOG(INFO) << "iteracting with tile " << tile_clicked.x << ", " << tile_clicked.y;
+            LOG(INFO) << "interacting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
-            auto objects = Engine::get_objects_at(tile_clicked);
+            auto sprites = Engine::get_sprites_at(tile_clicked);
 
-            if (objects.size() == 0) {
-                LOG(INFO) << "No objects to interact with";
+            if (sprites.size() == 0) {
+                LOG(INFO) << "No sprites to interact with";
             }
-            else if (objects.size() == 1) {
-                callbackstate.register_number_id(objects[0]);
+            else if (sprites.size() == 1) {
+                callbackstate.register_number_id(sprites[0]);
             }
             else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number_id(objects[0]);
+                callbackstate.register_number_id(sprites[0]);
             }
         }
     ));
 
     EventManager &em = EventManager::get_instance();
-
-    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 18);
-    Text mytext(&window, myfont, true);
-    mytext.set_text("John");
-    // referring to top left corner of text window
-    mytext.move(TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
-    auto window_size = window.get_size();
-    mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
-    Engine::set_dialogue_box(&mytext);
-
-    std::function<void(GameWindow *)> func = [&] (GameWindow *game_window) {
-        LOG(INFO) << "text window resizing";
-        auto window_size = (*game_window).get_size();
-        mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
-    };
-
-    Lifeline text_lifeline = window.register_resize_handler(func);
 
     std::function<void (GameWindow *)> func_char = [&] (GameWindow *) {
         LOG(INFO) << "text window resizing";
@@ -423,12 +368,6 @@ int main(int argc, const char *argv[]) {
     };
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
-
-    std::string editor;
-
-    if (argc >= 2) {
-        Engine::set_editor(argv[1]);
-    };
 
     int new_id = callbackstate.spawn();
     std::string bash_command =
@@ -438,7 +377,7 @@ int main(int argc, const char *argv[]) {
     LongWalkChallenge long_walk_challenge(input_manager);
     long_walk_challenge.start();
 
-    TextFont big_font(mytype, 50);
+    TextFont big_font(Engine::get_game_typeface(), 50);
     Text cursor(&window, big_font, true);
     cursor.move(0, 0);
     cursor.resize(50, 50);
@@ -474,12 +413,10 @@ int main(int argc, const char *argv[]) {
         map_viewer.render();
 
         VLOG(3) << "} RM | TD {";
-        mytext.display();
         Engine::text_displayer();
         stoptext.display();
         runtext.display();
-        forward_text.display();
-        backward_text.display();
+        notification_bar.text_displayer();
         cursor.display();
 
         VLOG(3) << "} TD | SB {";

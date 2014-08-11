@@ -34,24 +34,24 @@ void GUIManager::parse_components() {
 }
 
 void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
-    if(!parent) 
+    if(!parent)
         return;
 
     try{
         //Go through all the children of this component
         for(auto component_pair : parent->get_components()) {
             std::shared_ptr<Component> component = component_pair.second;
-            
+
             //Recalculate the dimensions
             int width_pixels = parent->get_width_pixels();
             int height_pixels = parent->get_height_pixels();
 
             //calculate the pixel locations for this component, using the parent's dimensions
-            component->set_width_pixels((int)((float)width_pixels*component->get_width()));
-            component->set_height_pixels((int)((float)height_pixels*component->get_height()));
-            component->set_x_offset_pixels((int)((float)width_pixels*component->get_x_offset()));
-            component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));              
-    
+            component->set_width_pixels   (int(float( width_pixels) * component->get_width()));
+            component->set_height_pixels  (int(float(height_pixels) * component->get_height()));
+            component->set_x_offset_pixels(int(float( width_pixels) * component->get_x_offset()));
+            component->set_y_offset_pixels(int(float(height_pixels) * component->get_y_offset()));
+
             regenerate_offsets(component);
         }
     }
@@ -60,7 +60,7 @@ void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
     }
 }
 void GUIManager::update_components() {
-    
+
 }
 
 void GUIManager::mouse_callback_function(MouseInputEvent event) {
@@ -82,7 +82,7 @@ bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x
         //Go through all the children of this component
         for(auto component_pair : root->get_components()) {
             std::shared_ptr<Component> component = component_pair.second;
-            
+
             //Get the component dimensions
             int component_width_pixels = component->get_width_pixels();
             int component_x_offset_pixels = component->get_x_offset_pixels();
@@ -99,14 +99,14 @@ bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x
 
             //bounds test
             //Check to see if the click is where this component sits
-            if(mouse_x >= x_offset && mouse_x <= x_right_offset && 
+            if(mouse_x >= x_offset && mouse_x <= x_right_offset &&
                mouse_y >= y_offset && mouse_y <= y_top_offset) {
                 //Ok, so this component is in bounds - check if its is clickable or has children
 
                 if(component->is_clickable()) {
                     //Call the click event handler
                     component->call_on_click();
-                
+
                     //The click has been handled
                     return true;
                 }
@@ -116,7 +116,7 @@ bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x
                     //Click has been handled
                     return true;
                 }
-                
+
                 //Click has not been handled
                 //Move onto next component in the tree (Next sibling).
             }
@@ -138,7 +138,7 @@ GUIManager::~GUIManager() {
 
 
 void GUIManager::generate_tex_data() {
-    
+
     //generate the texture data data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
 
@@ -151,7 +151,7 @@ void GUIManager::generate_tex_data() {
     GLfloat* gui_tex_data = nullptr;
     //Create a buffer for the data
     try {
-        gui_tex_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+        gui_tex_data  = new GLfloat[sizeof(GLfloat)*num_floats];
     }
     catch(std::bad_alloc& ba) {
         LOG(ERROR) << "ERROR: bad_alloc caught in GUIManager::generate_tex_data()" << ba.what();
@@ -174,7 +174,7 @@ void GUIManager::generate_tex_data() {
 
     //Generate the data
     renderable_component.set_texture_coords_data(gui_tex_data, sizeof(GLfloat)*num_floats, false);
-} 
+}
 
 void GUIManager::generate_vertex_data() {
     //generate the vertex data
@@ -190,7 +190,7 @@ void GUIManager::generate_vertex_data() {
     //Create a buffer for the data
     GLfloat* gui_data = nullptr;
     try {
-        gui_data  = new GLfloat[sizeof(GLfloat)*num_floats]; 
+        gui_data  = new GLfloat[sizeof(GLfloat)*num_floats];
     }
     catch(std::bad_alloc& ba) {
         LOG(ERROR) << "bad_alloc caught in GUIManager::generate_vertex_data()" << ba.what();
@@ -202,7 +202,7 @@ void GUIManager::generate_vertex_data() {
     for(auto component_vertex_data : components_data) {
         GLfloat* vertices = component_vertex_data.first;
         size_t vertices_size = size_t(component_vertex_data.second);
-        
+
         //copy data into buffer
         std::copy(vertices, &vertices[vertices_size], &gui_data[gui_data_offset]);
 
