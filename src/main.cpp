@@ -424,8 +424,6 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-    std::string editor;
-
     if (argc >= 2) {
         Engine::set_editor(argv[1]);
     };
