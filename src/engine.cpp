@@ -20,11 +20,9 @@
 
 ///Static variables
 MapViewer* Engine::map_viewer(nullptr);
-Text* Engine::dialogue_box(nullptr);
+NotificationBar* Engine::notification_bar(nullptr);
 int Engine::tile_size(16);
 float Engine::global_scale(2.0f);
-Notification Engine::notification_stack = Notification();
-
 
 // TODO: This needs to work with renderable objects
 void Engine::move_sprite(int id, glm::ivec2 move_by) {
@@ -190,22 +188,9 @@ std::string Engine::editor = DEFAULT_PY_EDITOR;
 
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
-    notification_stack.add_new(text_to_display);
-    EventManager::get_instance().add_event(
-        [text_to_display] () {
-            Engine::get_dialogue_box()->set_text(text_to_display);
-            std::cout << text_to_display << std::endl;
-        }
-    );
+    notification_bar->add_notification(text_to_display);
 }
 
-// TODO (Joshua): make small wanted changes
-void Engine::move_notification(Direction direction) {
-    Engine::get_dialogue_box()->set_text(
-        direction == Direction::NEXT ? notification_stack.forward()
-                                     : notification_stack.backward()
-    );
-}
 
 void Engine::text_displayer() {
     Map *map = CHECK_NOTNULL(map_viewer->get_map());
