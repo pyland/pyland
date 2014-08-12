@@ -88,11 +88,6 @@ class RenderableComponent {
     GLuint vbo_texture_id = 0;
 
     ///
-    /// The texture object identifier for the texture used by this component
-    ///
-    GLuint texture_obj_id = 0;
-
-    ///
     /// The width of this component
     ///
     int width = 0;
