@@ -98,6 +98,8 @@ int create_sprite(Interpreter &interpreter) {
     new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
     LOG(INFO) << "Done!";
 
+    Engine::get_sprite_switcher()->add_sprite(new_sprite->get_id());
+
     return new_sprite->get_id();
 }
 
@@ -249,6 +251,8 @@ int main(int argc, const char *argv[]) {
     // build navigation bar buttons
     NotificationBar notification_bar;
     Engine::set_notification_bar(&notification_bar);
+    SpriteSwitcher sprite_switcher;
+    Engine::set_sprite_switcher(&sprite_switcher);
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
@@ -256,7 +260,7 @@ int main(int argc, const char *argv[]) {
         sprite_window->add(button);
     }
 
-
+    Engine::set_gui_window(sprite_window);
     gui_manager.set_root(sprite_window);
 
     // quick fix so buttons in correct location in initial window before gui_resize_func callback
@@ -391,25 +395,19 @@ int main(int argc, const char *argv[]) {
     );
 #endif
 
-    auto last_clock = std::chrono::steady_clock::now();
-    auto average_time = std::chrono::steady_clock::duration(0);
+    auto last_clock(std::chrono::steady_clock::now());
 
     VLOG(3) << "{";
     while (!window.check_close()) {
-        auto new_clock = std::chrono::steady_clock::now();
-        auto new_time = new_clock - last_clock;
-        last_clock = new_clock;
-        average_time = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
-            average_time * 0.99 + new_time * 0.01
-        );
+        last_clock = std::chrono::steady_clock::now();
 
-        VLOG_EVERY_N(1, 10) << std::chrono::seconds(1) / average_time;
+        do {
+            VLOG(3) << "} SB | IM {";
+            GameWindow::update();
 
-        VLOG(3) << "} SB | IM {";
-        GameWindow::update();
-
-        VLOG(3) << "} IM | EM {";
-        em.process_events();
+            VLOG(3) << "} IM | EM {";
+            em.process_events();
+        } while (std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60));
 
         VLOG(3) << "} EM | RM {";
         map_viewer.render();
