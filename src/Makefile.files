@@ -28,6 +28,7 @@ BASE_OBJS = \
 	renderable_component.o \
 	shader.o               \
 	sprite.o               \
+	sprite_switcher.o      \
 	text.o                 \
 	text_font.o            \
 	texture.o              \

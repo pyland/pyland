@@ -110,6 +110,8 @@ public:
     ///
     GameWindow* get_window() { return window; }
 
+    GUIManager* get_gui_manager() { return gui_manager; }  
+
     ///
     /// Rejigg the map in response to the viewport size changing.
     ///

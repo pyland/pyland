@@ -98,6 +98,8 @@ int create_sprite(Interpreter &interpreter) {
     new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
     LOG(INFO) << "Done!";
 
+    Engine::get_sprite_switcher()->add_sprite(new_sprite->get_id());
+
     return new_sprite->get_id();
 }
 
@@ -249,6 +251,8 @@ int main(int argc, const char *argv[]) {
     // build navigation bar buttons
     NotificationBar notification_bar;
     Engine::set_notification_bar(&notification_bar);
+    SpriteSwitcher sprite_switcher;
+    Engine::set_sprite_switcher(&sprite_switcher);
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
@@ -256,7 +260,7 @@ int main(int argc, const char *argv[]) {
         sprite_window->add(button);
     }
 
-
+    Engine::set_gui_window(sprite_window);
     gui_manager.set_root(sprite_window);
 
     // quick fix so buttons in correct location in initial window before gui_resize_func callback
