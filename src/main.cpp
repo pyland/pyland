@@ -377,6 +377,7 @@ int main(int argc, const char *argv[]) {
     LongWalkChallenge long_walk_challenge(input_manager);
     long_walk_challenge.start();
 
+#ifdef USE_GLES
     TextFont big_font(Engine::get_game_typeface(), 50);
     Text cursor(&window, big_font, true);
     cursor.move(0, 0);
@@ -388,6 +389,7 @@ int main(int argc, const char *argv[]) {
             cursor.move(event.to.x, event.to.y+25);
         })
     );
+#endif
 
     auto last_clock(std::chrono::steady_clock::now());
 
@@ -411,7 +413,9 @@ int main(int argc, const char *argv[]) {
         stoptext.display();
         runtext.display();
         notification_bar.text_displayer();
+#ifdef USE_GLES
         cursor.display();
+#endif
 
         VLOG(3) << "} TD | SB {";
         window.swap_buffers();
