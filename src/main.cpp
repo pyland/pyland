@@ -381,6 +381,7 @@ int main(int argc, const char *argv[]) {
     LongWalkChallenge long_walk_challenge(input_manager);
     long_walk_challenge.start();
 
+#ifdef USE_GLES
     TextFont big_font(Engine::get_game_typeface(), 50);
     Text cursor(&window, big_font, true);
     cursor.move(0, 0);
@@ -392,26 +393,21 @@ int main(int argc, const char *argv[]) {
             cursor.move(event.to.x, event.to.y+25);
         })
     );
+#endif
 
-    auto last_clock = std::chrono::steady_clock::now();
-    auto average_time = std::chrono::steady_clock::duration(0);
+    auto last_clock(std::chrono::steady_clock::now());
 
     VLOG(3) << "{";
     while (!window.check_close()) {
-        auto new_clock = std::chrono::steady_clock::now();
-        auto new_time = new_clock - last_clock;
-        last_clock = new_clock;
-        average_time = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
-            average_time * 0.99 + new_time * 0.01
-        );
+        last_clock = std::chrono::steady_clock::now();
 
-        VLOG_EVERY_N(1, 10) << std::chrono::seconds(1) / average_time;
+        do {
+            VLOG(3) << "} SB | IM {";
+            GameWindow::update();
 
-        VLOG(3) << "} SB | IM {";
-        GameWindow::update();
-
-        VLOG(3) << "} IM | EM {";
-        em.process_events();
+            VLOG(3) << "} IM | EM {";
+            em.process_events();
+        } while (std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60));
 
         VLOG(3) << "} EM | RM {";
         map_viewer.render();
@@ -421,7 +417,9 @@ int main(int argc, const char *argv[]) {
         stoptext.display();
         runtext.display();
         notification_bar.text_displayer();
+#ifdef USE_GLES
         cursor.display();
+#endif
 
         VLOG(3) << "} TD | SB {";
         window.swap_buffers();
