@@ -222,10 +222,14 @@ void MapViewer::render_objects() {
                 return;
             }
 
-            //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
-            glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(object_render_component->get_projection_matrix()));
+            // TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
+            GLuint mat_projection(glGetUniformLocation(shader->get_program(), "mat_projection"));
+            glUniformMatrix4fv(mat_projection, 1, GL_FALSE,
+                               glm::value_ptr(object_render_component->get_projection_matrix()));
 
-            glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(object_render_component->get_modelview_matrix()));
+            GLuint mat_modelview(glGetUniformLocation(shader->get_program(), "mat_modelview"));
+            glUniformMatrix4fv(mat_modelview, 1, GL_FALSE,
+                               glm::value_ptr(object_render_component->get_modelview_matrix()));
 
             object_render_component->bind_vbos();
             object_render_component->bind_textures();
