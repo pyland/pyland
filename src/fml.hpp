@@ -10,7 +10,9 @@ class FML {
         template <typename T=std::string>
         T get(std::string where);
 
-        std::shared_ptr<std::map<std::string, std::string>> values;
+        std::map<std::string, std::string> export();
+
     private:
+        std::shared_ptr<std::map<std::string, std::string>> values;
         bool error;
 };
