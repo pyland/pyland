@@ -201,88 +201,18 @@ int main(int argc, const char *argv[]) {
 
     window.use_context();
 
-    Map map("../resources/map0.tmx");
-
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
-
-    //BUILD the GUI
+  
+   
+    InputManager* input_manager = window.get_input_manager();
     GUIManager gui_manager;
+
     MapViewer map_viewer(&window, &gui_manager);
-    map_viewer.set_map(&map);
     Engine::set_map_viewer(&map_viewer);
 
-    //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    TextFont buttonfont = Engine::get_game_font();
-    Text stoptext(&window, buttonfont, true);
-    Text runtext(&window, buttonfont, true);
-    stoptext.set_text("Stop");
-    runtext.set_text("Run");
-    // referring to top left corner of text window
-    stoptext.move(105, 240 + 20);
-    runtext.move(5, 240 + 20);
-    stoptext.resize(window.get_size().first-20, 80 + 20);
-    runtext.resize(window.get_size().first-20, 80 + 20);
-
-    // create first character, TODO: move this into challenge
-    CallbackState callbackstate(interpreter, "John");
-
-
-    std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
-    sprite_window->set_width_pixels(300);
-    sprite_window->set_height_pixels(300);
-    std::shared_ptr<Button> run_button = std::make_shared<Button>();
-    run_button->set_text("Run");
-    run_button->set_on_click([&] () { LOG(ERROR) << "RUN"; callbackstate.restart(); });
-    run_button->set_width(0.2f);
-    run_button->set_height(0.2f);
-    run_button->set_y_offset(0.8f);
-    run_button->set_x_offset(0.0f);
-
-    std::shared_ptr<Button> stop_button = std::make_shared<Button>();
-    stop_button->set_text("Stop");
-    stop_button->set_on_click([&] () {LOG(ERROR) << "STOP";  callbackstate.stop(); });
-    stop_button->set_width(0.2f);
-    stop_button->set_height(0.2f);
-    stop_button->set_y_offset(0.8f);
-    stop_button->set_x_offset(0.8f);
-
-    // build navigation bar buttons
-    NotificationBar notification_bar;
-    Engine::set_notification_bar(&notification_bar);
-    SpriteSwitcher sprite_switcher;
-
-    sprite_window->add(run_button);
-    sprite_window->add(stop_button);
-    for (auto button: notification_bar.get_navigation_buttons()) {
-        sprite_window->add(button);
-    }
-
-    Engine::set_gui_window(sprite_window);
-    gui_manager.set_root(sprite_window);
-
-    // quick fix so buttons in correct location in initial window before gui_resize_func callback
-    auto original_window_size = window.get_size();
-    sprite_window->set_width_pixels(original_window_size.first);
-    sprite_window->set_height_pixels(original_window_size.second);
-
-    gui_manager.parse_components();
-
-    std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) {
-        LOG(INFO) << "GUI resizing";
-        auto window_size = (*game_window).get_size();
-        sprite_window->set_width_pixels(window_size.first);
-        sprite_window->set_height_pixels(window_size.second);
-        gui_manager.parse_components();
-    };
-    Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
-
-
-    // WARNING: Fragile reference capture
-    Lifeline map_resize_lifeline = window.register_resize_handler([&] (GameWindow *) {
-        map_viewer.resize();
-    });
-
-    InputManager* input_manager = window.get_input_manager();
+    ChallengeBase base_challenge(&interpreter, &gui_manager);
+    base_challenge.create_gui();
+    map_viewer.set_map(base_challenge->get_map());
 
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("H")},
@@ -375,8 +305,12 @@ int main(int argc, const char *argv[]) {
         std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
         + std::to_string(new_id) + std::string(".py");
     system(bash_command.c_str());
+
+
+
     LongWalkChallenge long_walk_challenge(input_manager);
     long_walk_challenge.start();
+
 
 #ifdef USE_GLES
     TextFont big_font(Engine::get_game_typeface(), 50);
@@ -411,8 +345,6 @@ int main(int argc, const char *argv[]) {
 
         VLOG(3) << "} RM | TD {";
         Engine::text_displayer();
-        stoptext.display();
-        runtext.display();
         notification_bar.text_displayer();
 #ifdef USE_GLES
         cursor.display();
