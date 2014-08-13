@@ -214,20 +214,8 @@ void GUIManager::generate_vertex_data() {
 }
 
 void GUIManager::load_textures() {
-    // Image* texture_image = nullptr;
-
-    // try {
-    //     texture_image = new Image("../resources/characters_1.png");
-    // }
-    // catch(std::exception e) {
-    //     delete texture_image;
-    //     texture_image = nullptr;
-    //     LOG(ERROR) << "Failed to create texture";
-    //     return;
-    // }
-
     //Set the texture data in the rederable component
-    renderable_component.set_texture(Texture::get_shared("../resources/characters_1", 0));
+    renderable_component.set_texture(TextureAtlas::get_shared("../resources/characters_1.png"));
 }
 bool GUIManager::init_shaders() {
     std::shared_ptr<Shader> shader;

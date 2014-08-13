@@ -64,7 +64,7 @@ public:
               std::string name,
               Walkability walkability,
               int sheet_id,
-              std::string sheet_name="../resources/basictiles_2");
+              std::string sheet_name="../resources/basictiles_2.png");
 
     virtual ~MapObject();
 

@@ -107,7 +107,7 @@ void MapObject::generate_tex_data() {
         return;
     }
 
-    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(sheet_id);
+    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(sheet_id);
     
     // bottom left
     map_object_tex_data[ 0] = std::get<0>(bounds);
@@ -206,7 +206,7 @@ void MapObject::load_textures() {
     // //Set the texture data in the rederable component
     // renderable_component.set_texture_image(texture_image);
     
-    renderable_component.set_texture(Texture::get_shared(sheet_name.c_str(), 0));
+    renderable_component.set_texture(TextureAtlas::get_shared(sheet_name.c_str()));
 }
 
 bool MapObject::init_shaders() {

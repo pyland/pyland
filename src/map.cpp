@@ -300,7 +300,6 @@ void Map::generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer,
     int offset(0);
     const int num_floats(12);
     for (auto &tile_data : *layer_data) {
-        std::string tileset_name = tile_data.first;
         int tile_id = tile_data.second;
 
         //IF WE ARE GENERATING A SPARSE LAYER
@@ -423,12 +422,12 @@ void Map::generate_sparse_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer
 }
 
 void Map::init_textures() {
-    texture_atlases[0] = TextureAtlas::get_shared("../resources/basictiles_2");
+    texture_atlases[0] = TextureAtlas::get_shared("../resources/basictiles_2.png");
 
-    //Set the texture data in the rederable component for each layer
-    for (auto layer : layers) {
-        layer->get_renderable_component()->set_texture(Texture::get_shared(texture_atlases[0], 0));
-    }
+    // //Set the texture data in the rederable component for each layer
+    // for (auto layer : layers) {
+    //     layer->get_renderable_component()->set_texture(Texture::get_shared(layer, 0));
+    // }
 }
 
 /**
@@ -569,7 +568,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
     Layer::Packing packing(layer->get_packing());
 
     // Add this tile to the layer data structure
-    layer->update_tile(x_pos, y_pos, tile_id, "");
+    layer->update_tile(x_pos, y_pos, tile_id, nullptr);
 
     int tile_offset;
 

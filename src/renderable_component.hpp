@@ -1,7 +1,7 @@
 #ifndef RENDERABLE_COMPONENT_H
 #define RENDERABLE_COMPONENT_H
 
-#include "texture.hpp"
+#include "texture_atlas.hpp"
 #include "shader.hpp"
 
 #include <memory>
@@ -73,9 +73,9 @@ class RenderableComponent {
     size_t texture_coords_data_size = 0;
 
     ///
-    /// Texture holding abstracted image and texture management.
+    /// Texture atlas holding abstracted and managed gl texture.
     ///
-    std::shared_ptr<Texture> texture;
+    std::shared_ptr<TextureAtlas> texture_atlas;
 
     ///
     /// The vertex buffer object identifier for the vertex buffer
@@ -192,7 +192,7 @@ public:
 
     ///
     /// Get a pointer to the texture coordinate data
-    ///o
+    ///
     GLfloat* get_texture_coords_data() { return texture_coords_data; }
 
     ///
@@ -208,11 +208,9 @@ public:
     ///
     size_t get_texture_coords_data_size() { return texture_coords_data_size; }
     ///
-    /// Set the texture image data and metadata of this component.
+    /// Set the texture atlas.
     ///
-    /// @param image An Image containing the texture data and metadata.
-    ///
-    void set_texture(std::shared_ptr<Texture> texture);
+    void set_texture(std::shared_ptr<TextureAtlas> texture_atlas);
 
 
     ///
@@ -220,7 +218,7 @@ public:
     ///
     /// @returnimage An Image containing the texture data and metadata.
     ///
-    std::shared_ptr<Texture> get_texture() { return texture; }
+    std::shared_ptr<TextureAtlas> get_texture() { return texture_atlas; }
 
 
     ///
