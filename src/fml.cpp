@@ -96,6 +96,10 @@ int FML::get<int>(std::string where) {
     return std::stoi(this->get<std::string>(where));
 }
 
+std::map<std::string, std::string> export() {
+    return *values;
+}
+
 SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
 
     GIVEN( "A basic configuration" ) {
@@ -103,8 +107,10 @@ SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
         std::string fake_file_contents(
             "this/\n"
             "    is/quite/simple/\n"
+            "    \n"
             "        for/most: true but/not/all: 12\n"
             "    m/g/\n"
+            "# Hyar we go...\n"
             "        kz:lol mbar: 123ttx___\n"
             "and/some/more: 7\n"
         );

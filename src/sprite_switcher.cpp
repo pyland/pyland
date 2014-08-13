@@ -1,7 +1,9 @@
 #include <glog/logging.h>
 
+#include "dispatcher.hpp"
 #include "engine.hpp"
 #include "sprite_switcher.hpp"
+#include "map.hpp"
 #include "map_viewer.hpp"
 #include "gui_window.hpp"
 #include "component_group.hpp"
@@ -33,11 +35,17 @@ void SpriteSwitcher::add_sprite(int id) {
 
     // add button to GUI
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
-    Engine::get_gui_window()->add(new_button);
+    gui_manager->get_root()->add(new_button);
     gui_manager->parse_components();
 
 }
 
 SpriteSwitcher::SpriteSwitcher() {
     switcher_buttons = std::vector<std::shared_ptr<Button>>();
+    Engine::get_map_viewer()->get_map()->event_sprite_add.register_callback(
+        [&] (int id) {
+            add_sprite(id);
+            return true;
+        }
+    );
 }

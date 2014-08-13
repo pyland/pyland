@@ -112,7 +112,6 @@ void MapObject::generate_tex_data() {
     // bottom left
     map_object_tex_data[ 0] = std::get<0>(bounds);
     map_object_tex_data[ 1] = std::get<2>(bounds);
-
     // top left
     map_object_tex_data[ 2] = std::get<0>(bounds);
     map_object_tex_data[ 3] = std::get<3>(bounds);
