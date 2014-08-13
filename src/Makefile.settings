@@ -15,6 +15,7 @@ WARNINGS = \
 	-pedantic                       \
 	-isystem ./tmx-parser           \
 	-isystem ./tmx-parser/TmxParser \
+	-isystem ./catch                \
 
 CXXFLAGS = \
 	-std=c++11   \
@@ -24,6 +25,7 @@ CXXFLAGS = \
 
 CPPFLAGS = \
 	-I./                  \
+	-I./catch             \
 	-I./challenges        \
 	-I./input_management  \
 	-I./gui               \
