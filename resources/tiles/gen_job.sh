@@ -48,7 +48,7 @@ then
         fi
     done < "$LIST_FILE"
 
-    mv "$JOB_FILE" "$2"
+    sort -V "$JOB_FILE" > "$2"
 
     if (grep ' ' "$2" > "$WORK_DIR/spaces.lst")
     then
