@@ -7,15 +7,15 @@ MKDIR = mkdir -p
 COMPILER = g++
 
 WARNINGS = \
+	-isystem ./catch                \
+	-isystem ./tmx-parser           \
+	-isystem ./tmx-parser/TmxParser \
+	-pedantic                       \
 	-Wall -Wextra                   \
 	-Wconversion                    \
 	-Wmissing-braces                \
-	-Wpointer-arith                 \
 	-Wno-sign-conversion            \
-	-pedantic                       \
-	-isystem ./tmx-parser           \
-	-isystem ./tmx-parser/TmxParser \
-	-isystem ./catch                \
+	-Wpointer-arith                 \
 
 CXXFLAGS = \
 	-std=c++11   \

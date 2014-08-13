@@ -1,3 +1,6 @@
+#ifndef FML_H
+#define FML_H
+
 #include <boost/lexical_cast.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <istream>
@@ -51,3 +54,5 @@ class FML {
             return std::make_pair(other.first, boost::lexical_cast<T>(other.second));
         }
 };
+
+#endif

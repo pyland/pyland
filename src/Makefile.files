@@ -1,4 +1,8 @@
 EXECUTABLE = main.bin
+EXECUTABLE_OBJ = main.o
+
+TEST_EXECUTABLE = test/test.bin
+TEST_EXECUTABLE_OBJ = test/test.o
 
 #
 # Lists of files!
@@ -17,7 +21,6 @@ BASE_OBJS = \
 	layer.o                \
 	lifeline.o             \
 	lifeline_controller.o  \
-	main.o                 \
 	map.o                  \
 	map_loader.o           \
 	map_object.o           \
@@ -91,3 +94,7 @@ PYTHON_SHARED_OBJS = \
 
 PYTHON_SHARED_OBJS_DEPENDS = \
 	python_embed/api.o
+
+
+TEST_OBJS = \
+	test/test_fml.o \
