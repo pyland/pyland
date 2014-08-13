@@ -25,6 +25,7 @@ int Engine::tile_size(16);
 float Engine::global_scale(2.0f);
 std::shared_ptr<GUIWindow> Engine::gui_window(nullptr);
 
+
 // TODO: This needs to work with renderable objects
 void Engine::move_sprite(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly

@@ -214,6 +214,9 @@ int main(int argc, const char *argv[]) {
     base_challenge.create_gui();
     map_viewer.set_map(base_challenge->get_map());
 
+    // create first character, TODO: move this into challenge
+    CallbackState callbackstate(interpreter, "John");
+
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(); }
@@ -300,7 +303,9 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-    int new_id = callbackstate.spawn();
+    //TODO: CHallenge specific
+    //default script
+    int new_id = callbackstate.spawn(); //create a character
     std::string bash_command =
         std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
         + std::to_string(new_id) + std::string(".py");
