@@ -6,16 +6,19 @@ Layer::Layer(int width_tiles, int height_tiles, std::string name) :
     width_tiles(width_tiles),
     height_tiles(height_tiles),
     name(name),
-    layer(std::make_shared<std::vector<std::pair<std::string, int>>>()),
+    layer(std::make_shared<std::vector<std::pair<std::shared_ptr<TileSet>, int>>>()),
     packing(Packing::DENSE),
     location_texture_vbo_offset_map() {
 }
 
-void Layer::add_tile(const std::string tileset, int tile_id) {
+void Layer::add_tile(std::shared_ptr<TileSet> tileset, int tile_id) {
 
-   //Add to the layer the tileset and tile id pair
+    //Add to the layer the tileset and tile id pair
     layer->push_back(std::make_pair(tileset, tile_id));
-
+    // Temporary single-tileset hack.
+    if (tileset) {
+        renderable_component.set_texture(tileset->get_atlas());
+    }
 }
 
 int Layer::get_tile(int x_pos, int y_pos) {
@@ -23,7 +26,7 @@ int Layer::get_tile(int x_pos, int y_pos) {
     return layer->at(x_pos + y_pos * width_tiles).second;
 }
 
-void Layer::update_tile(int x_pos, int y_pos, int tile_id, std::string tileset) {
+void Layer::update_tile(int x_pos, int y_pos, int tile_id, std::shared_ptr<TileSet> tileset) {
     LayerInvalidException layer_invalid_exception;
     if(x_pos < 0 || x_pos >= width_tiles || y_pos < 0 || y_pos >= height_tiles)
         throw layer_invalid_exception;

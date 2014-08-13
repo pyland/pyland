@@ -31,8 +31,6 @@ Sprite::Sprite(glm::ivec2 position,
     MapObject(position, name, walkability, sheet_id, sheet_name) {
         auto map_viewer(Engine::get_map_viewer());
 
-        // WTF: why is text here?
-        // TODO: Serious spring cleaning
         // Setting up sprite text
         TextFont myfont = Engine::get_game_font();
 
@@ -110,7 +108,8 @@ void Sprite::generate_tex_data() {
         return;
     }
 
-    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(sheet_id);
+
+    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(sheet_id);
 
     //bottom left
     sprite_tex_data[0]  = std::get<0>(bounds);
@@ -133,6 +132,7 @@ void Sprite::generate_tex_data() {
     sprite_tex_data[9]  = std::get<3>(bounds);
 
     //bottom right
+
     sprite_tex_data[10] = std::get<1>(bounds);
     sprite_tex_data[11] = std::get<2>(bounds);
 

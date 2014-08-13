@@ -2,7 +2,7 @@
 
 #include <glog/logging.h>
 
-#include "texture.hpp"
+#include "texture_atlas.hpp"
 #include "renderable_component.hpp"
 
 #define VERTEX_POS_INDX 0
@@ -50,8 +50,8 @@ void RenderableComponent::set_vertex_data(GLfloat* new_vertex_data, size_t data_
     glUseProgram(id);
 }
 
-void RenderableComponent::set_texture(std::shared_ptr<Texture> texture) {
-    this->texture = texture;
+void RenderableComponent::set_texture(std::shared_ptr<TextureAtlas> texture_atlas) {
+    this->texture_atlas = texture_atlas;
 }
 
 void RenderableComponent::set_texture_coords_data(GLfloat* new_texture_data, size_t data_size, bool is_dynamic) {
@@ -100,7 +100,7 @@ void RenderableComponent::bind_textures() {
     glActiveTexture(GL_TEXTURE0);
 
     //Bind tiles texture
-    glBindTexture(GL_TEXTURE_2D,texture->get_gl_texture());
+    glBindTexture(GL_TEXTURE_2D,texture_atlas->get_gl_texture());
 }
 
 void RenderableComponent::release_textures() {

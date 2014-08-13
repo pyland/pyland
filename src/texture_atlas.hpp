@@ -77,8 +77,7 @@ private:
     /// load the texture, on other calls it will retrieve it from a
     /// cache. There is a separate cache for each GL context.
     ///
-    /// @param resource_name Base path of a texture image file. This file
-    ///        does not contain a filename extension.
+    /// @param resource_name Path of a texture image file.
     /// @return A shared pointer to the relevant Texture.
     ///
     static std::shared_ptr<TextureAtlas> new_resource(const std::string resource_name);

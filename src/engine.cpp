@@ -74,9 +74,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
                 }
 
                 // Step-on events
-                EventManager::get_instance().add_event([target, id] () {
-                    get_map_viewer()->get_map()->event_step_on.trigger(target, id);
-                });
+                get_map_viewer()->get_map()->event_step_on.trigger(target, id);
 
                 walk_succeeded_return.set(true);
             }
