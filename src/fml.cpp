@@ -199,7 +199,6 @@ SCENARIO("FML can handle somewhat broken configuration", "[fml][error]" ) {
     }
 }
 
-#include <iostream>
 SCENARIO("FML can be iterated", "[fml][iterate]" ) {
 
     std::map<std::string, std::string> map_equivalent({
@@ -227,9 +226,7 @@ SCENARIO("FML can be iterated", "[fml][iterate]" ) {
 
             THEN("the output is iterable") {
 
-                std::cout << "xxx" << std::endl;
                 for (const auto pair : my_data) {
-                    std::cout << pair.first << std::endl;
                     REQUIRE(pair.second == "0");
                 }
 
