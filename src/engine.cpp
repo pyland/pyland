@@ -23,7 +23,6 @@ MapViewer* Engine::map_viewer(nullptr);
 NotificationBar* Engine::notification_bar(nullptr);
 int Engine::tile_size(16);
 float Engine::global_scale(2.0f);
-SpriteSwitcher* Engine::sprite_switcher(nullptr);
 std::shared_ptr<GUIWindow> Engine::gui_window(nullptr);
 
 // TODO: This needs to work with renderable objects

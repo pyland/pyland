@@ -51,7 +51,6 @@ private:
     ///
     static float global_scale;
 
-    static SpriteSwitcher* sprite_switcher;
     static std::shared_ptr<GUIWindow> gui_window;
 
 public:
@@ -169,8 +168,6 @@ public:
     static TextFont get_game_font();
     static Typeface get_game_typeface();
 
-    static SpriteSwitcher* get_sprite_switcher() {return sprite_switcher;}
-    static void set_sprite_switcher(SpriteSwitcher* _sprite_switcher) {sprite_switcher = _sprite_switcher;}
 
     static std::shared_ptr<GUIWindow> get_gui_window() {return gui_window;}
     static void set_gui_window(std::shared_ptr<GUIWindow> _gui_window) {gui_window = _gui_window;}

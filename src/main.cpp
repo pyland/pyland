@@ -98,8 +98,6 @@ int create_sprite(Interpreter &interpreter) {
     new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
     LOG(INFO) << "Done!";
 
-    Engine::get_sprite_switcher()->add_sprite(new_sprite->get_id());
-
     return new_sprite->get_id();
 }
 
@@ -252,7 +250,6 @@ int main(int argc, const char *argv[]) {
     NotificationBar notification_bar;
     Engine::set_notification_bar(&notification_bar);
     SpriteSwitcher sprite_switcher;
-    Engine::set_sprite_switcher(&sprite_switcher);
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
