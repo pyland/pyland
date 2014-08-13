@@ -62,7 +62,7 @@ protected:
     ///
     /// The focus icon, to move with sprite and hide, depending on if sprite is in focus;
     ///
-    std::shared_ptr<MapObject> focus_icon;
+    bool is_focus;
 
     ///
     /// Overlays
@@ -210,7 +210,7 @@ public:
 
     void set_sprite_status(std::string _sprite_status);
 
-    void set_focus(bool is_focus);
+    void set_focus(bool _is_focus);
 };
 
 #endif
