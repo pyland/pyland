@@ -39,7 +39,7 @@ FML::FML(std::istream &input):
     error(false) {
 
         // For keeping track of the current "path"
-        std::list<std::pair<int, std::vector<std::string>>> stack;
+        std::list<std::pair<ssize_t, std::vector<std::string>>> stack;
         stack.push_back(std::make_pair(-1, std::vector<std::string>({""})));
 
         // For each line
@@ -57,7 +57,7 @@ FML::FML(std::istream &input):
             // Get the indentation
             boost::smatch indents;
             boost::regex_match(line, indents, start_indentation);
-            int indentation(indents[1].str().size());
+            ssize_t indentation(ssize_t(indents[1].str().size()));
 
             // Reset the stack and add a fresh level
             while (indentation <= stack.back().first) { stack.pop_back(); }
@@ -88,25 +88,9 @@ FML::FML(std::istream &input):
         }
 }
 
-template <>
-std::string FML::get<std::string>(std::string where) {
-    return values->at(where);
-}
-
-template <>
-int FML::get<int>(std::string where) {
-    return std::stoi(this->get<std::string>(where));
-}
-
 std::map<std::string, std::string> FML::as_map() {
     return *values;
 }
-
-FML::const_iterator FML::begin()  const { return values->cbegin(); }
-FML::const_iterator FML::cbegin() const { return values->cbegin(); }
-
-FML::const_iterator FML::end()  const { return values->cend(); }
-FML::const_iterator FML::cend() const { return values->cend(); }
 
 bool FML::valid() {
     return !error;
@@ -215,6 +199,7 @@ SCENARIO("FML can handle somewhat broken configuration", "[fml][error]" ) {
     }
 }
 
+#include <iostream>
 SCENARIO("FML can be iterated", "[fml][iterate]" ) {
 
     std::map<std::string, std::string> map_equivalent({
@@ -242,12 +227,13 @@ SCENARIO("FML can be iterated", "[fml][iterate]" ) {
 
             THEN("the output is iterable") {
 
+                std::cout << "xxx" << std::endl;
                 for (const auto pair : my_data) {
+                    std::cout << pair.first << std::endl;
                     REQUIRE(pair.second == "0");
                 }
 
-                std::equal(my_data.cbegin(),        my_data.cend(),
-                           map_equivalent.cbegin());
+                std::equal(my_data.cbegin(), my_data.cend(), map_equivalent.cbegin());
 
             }
 
