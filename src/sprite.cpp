@@ -120,7 +120,7 @@ void Sprite::generate_tex_data() {
 
     //Underlays
     for(int underlay_id : underlay_ids) {
-        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(underlay_id);
+        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(underlay_id);
 
         //bottom left
         sprite_tex_data[offset + 0]  = std::get<0>(bounds);
@@ -150,7 +150,7 @@ void Sprite::generate_tex_data() {
         offset+= num_floats_per_tile;
     }
 
-    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(sheet_id);
+    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(sheet_id);
 
     //bottom left
     sprite_tex_data[offset + 0]  = std::get<0>(bounds);
@@ -182,7 +182,7 @@ void Sprite::generate_tex_data() {
 
     for(int overlay_id : overlay_ids) {
 
-        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(overlay_id);
+        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(overlay_id);
 
         //bottom left
         sprite_tex_data[offset + 0]  = std::get<0>(bounds);

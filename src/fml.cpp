@@ -1,5 +1,7 @@
+#include <algorithm>
 #include <boost/regex.hpp>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <sstream>
@@ -47,7 +49,7 @@ FML::FML(std::istream &input):
             if (boost::regex_match(line, ignored_line)) { continue; }
 
             // And check if the line is valid
-            error |= boost::regex_match(line, valid_line);
+            error |= !boost::regex_match(line, valid_line);
 
             // If not, still continue to see what can be understood from the file,
             // as the tokens are still valid; it's just some text is ignored
@@ -96,13 +98,24 @@ int FML::get<int>(std::string where) {
     return std::stoi(this->get<std::string>(where));
 }
 
-std::map<std::string, std::string> export() {
+std::map<std::string, std::string> FML::as_map() {
     return *values;
 }
 
+FML::const_iterator FML::begin()  const { return values->cbegin(); }
+FML::const_iterator FML::cbegin() const { return values->cbegin(); }
+
+FML::const_iterator FML::end()  const { return values->cend(); }
+FML::const_iterator FML::cend() const { return values->cend(); }
+
+bool FML::valid() {
+    return !error;
+}
+
+
 SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
 
-    GIVEN( "A basic configuration" ) {
+    GIVEN("a basic configuration") {
 
         std::string fake_file_contents(
             "this/\n"
@@ -119,6 +132,10 @@ SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
         WHEN("parsed") {
             FML my_data(fake_file);
 
+            THEN("the output is valid") {
+                REQUIRE(my_data.valid());
+            }
+
             THEN("strings can be accessed") {
 
                 REQUIRE(my_data.get<std::string>("this/m/g/kz") == "lol");
@@ -130,6 +147,113 @@ SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
             THEN("integers can be accessed") {
 
                 REQUIRE(my_data.get<int>("this/is/quite/simple/for/but/not/all") == 12);
+
+            }
+        }
+    }
+}
+
+SCENARIO("FML can parse duplicated structure", "[fml][parse]" ) {
+
+    GIVEN("configuration with duplicated paths") {
+
+        std::string fake_file_contents(
+            "path/1/x:0\n"
+            "path/2/y:0\n"
+            "    z:0\n"
+            "path/\n"
+            "    1/y:0\n"
+            "        z:0\n"
+        );
+        std::istringstream fake_file(fake_file_contents);
+
+        WHEN("parsed") {
+            FML my_data(fake_file);
+
+            THEN("the output is valid") {
+                REQUIRE(my_data.valid());
+            }
+
+            THEN("everything exists") {
+
+                REQUIRE(my_data.get<int>("path/1/x") == 0);
+                REQUIRE(my_data.get<int>("path/1/y") == 0);
+                REQUIRE(my_data.get<int>("path/1/z") == 0);
+                REQUIRE(my_data.get<int>("path/2/y") == 0);
+                REQUIRE(my_data.get<int>("path/2/z") == 0);
+
+            }
+        }
+    }
+}
+
+
+SCENARIO("FML can handle somewhat broken configuration", "[fml][error]" ) {
+
+    GIVEN("configuration with broken syntax") {
+
+        std::string fake_file_contents(
+            "x:0\n"
+            "sdaf adsf m:0\n"
+        );
+        std::istringstream fake_file(fake_file_contents);
+
+        WHEN("parsed") {
+            FML my_data(fake_file);
+
+            THEN("the output is not valid") {
+                REQUIRE(!my_data.valid());
+            }
+
+            THEN("some things exists") {
+
+                REQUIRE(my_data.get<int>("x") == 0);
+                REQUIRE(my_data.get<int>("m") == 0);
+
+            }
+        }
+    }
+}
+
+SCENARIO("FML can be iterated", "[fml][iterate]" ) {
+
+    std::map<std::string, std::string> map_equivalent({
+        { "path/1/x", "0" },
+        { "path/1/y", "0" },
+        { "path/1/z", "0" },
+        { "path/2/y", "0" },
+        { "path/2/z", "0" }
+    });
+
+    GIVEN("a basic configuration") {
+
+        std::string fake_file_contents(
+            "path/1/x:0\n"
+            "path/2/y:0\n"
+            "    z:0\n"
+            "path/\n"
+            "    1/y:0\n"
+            "        z:0\n"
+        );
+        std::istringstream fake_file(fake_file_contents);
+
+        WHEN("parsed") {
+            FML my_data(fake_file);
+
+            THEN("the output is iterable") {
+
+                for (const auto pair : my_data) {
+                    REQUIRE(pair.second == "0");
+                }
+
+                std::equal(my_data.cbegin(),        my_data.cend(),
+                           map_equivalent.cbegin());
+
+            }
+
+            THEN("the output is exportable") {
+
+                REQUIRE(my_data.as_map() == map_equivalent);
 
             }
         }
