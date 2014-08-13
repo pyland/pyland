@@ -19,7 +19,7 @@ template <typename... Arguments>
 void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
     // Do increments inline
     for (auto it = functions.cbegin(); it != functions.cend(); ) {
-        if (!(*it)(arguments...)) {
+        if (!(*it).second(arguments...)) {
             // erase by iterator returns the next valid iterator
             it = functions.erase(it);
         }
