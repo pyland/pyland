@@ -13,7 +13,9 @@
 #include <vector>
 
 #include "gil_safe_future.hpp"
+#include "gui_window.hpp"
 #include "notification_bar.hpp"
+#include "sprite_switcher.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
@@ -163,7 +165,6 @@ public:
     /// global access to game font
     static TextFont get_game_font();
     static Typeface get_game_typeface();
-
 };
 
 #endif

@@ -1,0 +1,4 @@
+glowing_goal: 0
+glowing_goal_selected: 1
+selected_hero_or_islander: 2
+blank: 3

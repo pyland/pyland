@@ -249,14 +249,14 @@ int main(int argc, const char *argv[]) {
     // build navigation bar buttons
     NotificationBar notification_bar;
     Engine::set_notification_bar(&notification_bar);
+    SpriteSwitcher sprite_switcher;
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
     for (auto button: notification_bar.get_navigation_buttons()) {
         sprite_window->add(button);
     }
-
-
+    
     gui_manager.set_root(sprite_window);
 
     // quick fix so buttons in correct location in initial window before gui_resize_func callback

@@ -112,8 +112,10 @@ void Map::remove_map_object(int map_object_id) {
 }
 
 void Map::add_sprite(int sprite_id) {
-    if(ObjectManager::is_valid_object_id(sprite_id))
+    if (ObjectManager::is_valid_object_id(sprite_id)) {
+        event_sprite_add.trigger(sprite_id);
         sprite_ids.push_back(sprite_id);
+    }
 }
 
 void Map::remove_sprite(int sprite_id) {
