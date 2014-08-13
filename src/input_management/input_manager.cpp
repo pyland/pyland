@@ -1,3 +1,4 @@
+#include <boost/range/adaptor/reversed.hpp>
 #include <iostream>
 #include <functional>
 #include <queue>
@@ -59,7 +60,7 @@ void InputManager::handle_event(SDL_Event* event) {
     int height_inv = window->get_size().second - 1;
     switch (event->type) {
     case SDL_KEYDOWN:
-        if (down_keys.count(event->key.keysym.scancode) == 0) {
+        if (down_keys.find(event->key.keysym.scancode) == std::end(down_keys)) {
             down_keys.insert(event->key.keysym.scancode);
             pressed_keys.insert(event->key.keysym.scancode);
             key_events.push(KeyboardInputEvent(this, event->key.keysym.scancode, true, true, true));
@@ -110,6 +111,7 @@ void InputManager::handle_event(SDL_Event* event) {
 }
 
 
+#include <iostream>
 void InputManager::run_callbacks() {
     while (!key_events.empty()) {
         KeyboardInputEvent& event = key_events.front();
@@ -130,7 +132,9 @@ void InputManager::run_callbacks() {
         }
         key_events.pop();
     }
-    for (int key : down_keys) {
+    // Reverse it to make sure the most recent key overrides the least recent.
+    // .get<insertion_order>() returns a list view.
+    for (int key : boost::adaptors::reverse(down_keys.get<insertion_order>())) {
         // Don't duplicate events
         if (pressed_keys.count(key) == 0 && typed_keys.count(key) == 0) {
             KeyboardInputEvent event(this, key, true, false, false);
@@ -151,32 +155,32 @@ void InputManager::run_callbacks() {
 
 
 bool InputManager::is_scan_down(int key) {
-    return (down_keys.count(key) == 1);
+    return down_keys.find(key) != std::end(down_keys);
 }
 
 
 bool InputManager::is_key_down(int key) {
-    return (down_keys.count(SDL_GetScancodeFromKey(key)) == 1);
+    return down_keys.find(SDL_GetScancodeFromKey(key)) != std::end(down_keys);
 }
 
 
 bool InputManager::is_scan_pressed(int key) {
-    return (pressed_keys.count(key) == 1);
+    return pressed_keys.find(key) != std::end(pressed_keys);
 }
 
 
 bool InputManager::is_key_pressed(int key) {
-    return (pressed_keys.count(SDL_GetScancodeFromKey(key)) == 1);
+    return pressed_keys.find(SDL_GetScancodeFromKey(key)) != std::end(pressed_keys);
 }
 
 
 bool InputManager::is_scan_released(int key) {
-    return (released_keys.count(key) == 1);
+    return released_keys.find(key) != std::end(released_keys);
 }
 
 
 bool InputManager::is_key_released(int key) {
-    return (released_keys.count(SDL_GetScancodeFromKey(key)) == 1);
+    return released_keys.find(SDL_GetScancodeFromKey(key)) != std::end(released_keys);
 }
 
 

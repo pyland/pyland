@@ -1,6 +1,10 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/sequenced_index.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/identity.hpp>
 #include <functional>
 #include <queue>
 #include <set>
@@ -16,11 +20,19 @@ extern "C" {
 #include "keyboard_input_event.hpp"
 #include "mouse_input_event.hpp"
 
-
+struct insertion_order {};
+template <typename T>
+using OrderedSet = boost::multi_index_container<
+    T,
+    boost::multi_index::indexed_by<
+        // ordered by value (like std::map)
+        boost::multi_index::ordered_unique<boost::multi_index::identity<T>>,
+        // ordered by insertion (like std::list)
+        boost::multi_index::sequenced<boost::multi_index::tag<insertion_order>>
+    >
+>;
 
 class GameWindow;
-
-
 
 ///
 /// Handles SDL input such that it can be accessed reliably and on
@@ -34,13 +46,13 @@ private:
     /// The associate GameWindow to handle events for.
     ///
     GameWindow* window;
-    
+
     ///
     /// Set of currently depressed keys (scancodes).
     ///
     /// Use this when the key's layout is important.
     ///
-    std::set<int> down_keys;
+    OrderedSet<int> down_keys;
     ///
     /// Set of recently pressed keys (scancodes).
     ///
@@ -78,7 +90,7 @@ private:
     /// Queue of mouse events to be sent to callbacks.
     ///
     std::queue<MouseInputEvent> mouse_events;
-    
+
 
     ///
     /// Keyboard callback registry.
@@ -122,7 +134,7 @@ private:
     /// Clears pressed and released keys and mouse buttons.
     ///
     void clean();
-    
+
     ///
     /// Update the state using the given SDL_Event.
     ///
@@ -192,7 +204,7 @@ public:
     /// @param key The keycode of the key.
     ///
     bool is_key_released(int key);
-    
+
     ///
     /// Query whether a mouse button is down.
     ///
@@ -308,7 +320,7 @@ public:
     /// @return A lifeline which keeps the callback active.
     ///
     Lifeline register_key_release_handler(std::function<void(KeyboardInputEvent)> func);
-    
+
     ///
     /// Registers a callback function for mouse input event handling.
     ///
