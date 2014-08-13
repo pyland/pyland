@@ -203,10 +203,6 @@ public:
 
     bool is_in_inventory(std::shared_ptr<MapObject> object);
 
-    void set_y_position(int y_pos);
-    void set_x_position(int x_pos);
-    void set_y_position(double y_pos);
-    void set_x_position(double x_pos);
 
     void set_sprite_status(std::string _sprite_status);
 
