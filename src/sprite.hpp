@@ -64,44 +64,6 @@ protected:
     ///
     bool is_focus;
 
-    ///
-    /// Overlays
-    ///
-    std::vector<int> overlay_ids;
-    
-    ///
-    /// The dimensions of the overlays (width, height).
-    /// 1.0 means the overlays is the same size as the engine's tile size * global scale.
-    ///
-    std::vector<std::pair<float, float>> overlay_dimensions;
-
-    ///
-    /// The offsets of the overlays (x, y ).
-    /// (0.0, 0.0) is the bottom left of the sprite. These offsets follow
-    /// cartesian quadrants in offsetting.
-    ///  1.0 means the offset is the same size as the engine's tile size * global scale.
-    ///
-    std::vector<std::pair<float, float>> overlay_offsets;
-
-    ///
-    /// Underlays
-    ///
-    std::vector<int> underlay_ids;
-    
-    ///
-    /// The dimensions of the underlays (width, height)
-    /// 1.0 means the underlays is the same size as the engine's tile size * global scale.
-    ///
-    std::vector<std::pair<float, float>> underlay_dimensions;
-
-    ///
-    /// The offsets of the underlays (x, y ).
-    /// (0.0, 0.0) is the bottom left of the sprite. These offsets follow
-    /// cartesian quadrants in offsetting.
-    ///  1.0 means the offset is the same size as the engine's tile size * global scale.
-    ///
-    std::vector<std::pair<float, float>> underlay_offsets;
-
 public:
     Sprite();
 
@@ -112,30 +74,6 @@ public:
            std::string sheet_name="../resources/characters_1");
 
     virtual ~Sprite();
-
-    ///
-    /// Add an overlay to the sprite
-    /// @param overlay_id The tile id
-    ///
-    void add_overlay(int overlay_id, float width=1.0f, float height=1.0f, float x_offset=0.0f, float y_offset=0.0f);
-
-    ///
-    /// Remove an overlay from the sprite
-    /// @param overlay_id the tile id
-    ///
-    void remove_overlay(int overlay_id);
-
-    ///
-    /// Add an underlay to the sprite
-    /// @param underlay_id
-    /// 
-    void add_underlay(int underlay_id, float width=1.0f, float height=1.0f, float x_offset=0.0f, float y_offset=0.0f);
-
-    ///
-    /// Remove an underlay from the sprite
-    /// @param underlay_id the underlay id
-    ///
-    void remove_underlay(int underlay_id);
 
     ///
     /// manage collisions for spirtes as they move

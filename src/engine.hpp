@@ -117,7 +117,7 @@ public:
     /// @return indicates if the operation completed successfully
     ///
     static void change_tile(glm::ivec2 tile, int layer_num, int tile_id);
-
+ 
     ///
     /// Get the location of the map object or sprite in the map, throws exception if
     /// there is the object is not on the map
