@@ -12,11 +12,11 @@ debug: all
 
 tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 	@echo "${bold}[ Compiling tmx-parser library ]${normal}"
-	@if [ "$(SANITIZE)" == "1" ]; then \
-		$(MAKE) -C tmx-parser -f Makefile.linux; \
-	else \
+	@if [ "$(SANITIZE)" == "1" ]; then                          \
+		$(MAKE) -C tmx-parser -f Makefile.linux;                \
+	else                                                        \
 		$(MAKE) CXXFLAGS=-fPIC -C tmx-parser -f Makefile.linux; \
-	fi
+	fi                                                          \
 
 
 #
@@ -56,7 +56,7 @@ $(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON
 		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS) $(TMXPARSER_CXXFLAGS) \
 		$(TINYXML_LDFLAGS)   $(TINYXML_LDLIBS)   $(TINYXML_CXXFLAGS)   \
 		$(ZLIB_LDFLAGS)      $(ZLIB_LDLIBS)      $(ZLIB_CXXFLAGS)      \
-		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)
+		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)           \
 
 
 #
@@ -76,7 +76,7 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(TINYXML_CPPFLAGS)   $(TINYXML_CXXFLAGS)   \
 		$(TMXPARSER_CPPFLAGS) $(TMXPARSER_CXXFLAGS) \
 		$(ZLIB_CPPFLAGS)      $(ZLIB_CXXFLAGS)      \
-		$(CPPFLAGS)           $(CXXFLAGS)
+		$(CPPFLAGS)           $(CXXFLAGS)           \
 
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 	@echo "${bold}[ Compiling input object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -84,7 +84,7 @@ $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
 		$(SDL_CPPFLAGS)  $(SDL_CXXFLAGS)  \
-		$(CPPFLAGS)      $(CXXFLAGS)
+		$(CPPFLAGS)      $(CXXFLAGS)      \
 
 
 $(GUI_OBJS): %.o : %.cpp | dependencies/gui
@@ -95,7 +95,7 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS) \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)      \
 		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)         \
-		$(CPPFLAGS)        $(CXXFLAGS)
+		$(CPPFLAGS)        $(CXXFLAGS)             \
 
 
 
@@ -106,7 +106,7 @@ $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
 		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
 		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
 		$(PYTHON_CPPFLAGS)   $(PYTHON_CXXFLAGS)   \
-		$(CPPFLAGS)          $(CXXFLAGS)
+		$(CPPFLAGS)          $(CXXFLAGS)          \
 
 $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/python_embed
 	@echo "${bold}[ Compiling Python object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -116,7 +116,7 @@ $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | d
 		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS) \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)      \
 		$(PYTHON_INCLUDE_PCH)                      \
-		$(CXXFLAGS) $(CPPFLAGS)
+		$(CXXFLAGS) $(CPPFLAGS)                    \
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
 	@echo "${bold}[ Compiling Python shared object file ${green}$*.so${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -125,7 +125,7 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS)             \
-		-MF dependencies/$*.sd
+		-MF dependencies/$*.sd              \
 
 
 #
@@ -141,7 +141,7 @@ $(PYTHON_HEADER).gch: $(PYTHON_HEADER)
 
 	@$(COMPILER) $< -o $<.gch \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
-		$(CPPFLAGS)        $(CXXFLAGS)
+		$(CPPFLAGS)        $(CXXFLAGS)        \
 
 # This largely assumes the setup is constant for clang.
 # clang with precompiled headers may work, but is not guaranteed.
@@ -154,12 +154,12 @@ $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
 			"$(BOOST_CPPFLAGS)" "$(BOOST_CXXFLAGS)"   \
 			"$(PYTHON_CPPFLAGS)" "$(PYTHON_CXXFLAGS)" \
 			"$(CXXFLAGS)"                             \
-		| sed                       \
-		 	-e 's/-mtune=[^ ]*//g'  \
-		 	-e 's/-generic//g'      \
-		 	-e 's/--param=[^ ]*//g' \
-		 	-e 's/-M[^ ]*//g'       \
-		)
+		| sed                                         \
+		 	-e 's/-mtune=[^ ]*//g'                    \
+		 	-e 's/-generic//g'                        \
+		 	-e 's/--param=[^ ]*//g'                   \
+		 	-e 's/-M[^ ]*//g'                         \
+		)                                             \
 
 
 #
@@ -176,7 +176,7 @@ debug:
 
 # Dependency hack to keep away uninteresting errors
 clean: dependencies dependencies/python_embed dependencies/challenges dependencies/input_management
-	@-$(RM) $(EXECUTABLE) 
+	@-$(RM) $(EXECUTABLE)
 
 	@-$(RM) \
 		$(BASE_OBJS)          \
@@ -184,7 +184,7 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 		$(GUI_OBJS)           \
 		$(INPUT_OBJS)         \
 		$(PYTHON_OBJS)        \
-		$(PYTHON_SHARED_OBJS)
+		$(PYTHON_SHARED_OBJS) \
 
 	@-$(RM) $(HEADER_DEPENDS)
 
@@ -192,7 +192,7 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 		dependencies/challenges       \
 		dependencies/input_management \
 		dependencies/python_embed     \
-		dependencies
+		dependencies                  \
 
 	@echo "${bold}${green}Made clean${normal}"
 

@@ -12,7 +12,7 @@
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "long_walk_challenge.hpp"
-#include "engine_api.hpp"
+#include "engine.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
 #include "map_object.hpp"
@@ -20,35 +20,35 @@
 #include "sprite.hpp"
 
 //TODO: later this will be fetched from the map
-std::map<std::string, std::vector<Vec2D>> targets = {
+std::map<std::string, std::vector<glm::ivec2>> targets = {
     {"start", {
-        Vec2D(   4, 29-14)
+        glm::ivec2(   4, 29-14)
     }},
     {"room:exit:first", {
-        Vec2D(  11, 29-14),
-        Vec2D(  11, 29-15)
+        glm::ivec2(  11, 29-14),
+        glm::ivec2(  11, 29-15)
     }},
     {"treasure:path:medium", {
-        Vec2D(  24, 29-14)
+        glm::ivec2(  24, 29-14)
     }},
     {"wall:path:medium", {
-        Vec2D(  31, 29-13),
-        Vec2D(  31, 29-14),
-        Vec2D(  31, 29-15),
-        Vec2D(  31, 29-16)
+        glm::ivec2(  31, 29-13),
+        glm::ivec2(  31, 29-14),
+        glm::ivec2(  31, 29-15),
+        glm::ivec2(  31, 29-16)
     }},
     {"treasure:path:long", {
-        Vec2D( 114, 29-15)
+        glm::ivec2( 114, 29-15)
     }},
     {"wall:path:long", {
-        Vec2D( 116, 29-13),
-        Vec2D( 116, 29-14),
-        Vec2D( 116, 29-15),
-        Vec2D( 116, 29-16)
+        glm::ivec2( 116, 29-13),
+        glm::ivec2( 116, 29-14),
+        glm::ivec2( 116, 29-15),
+        glm::ivec2( 116, 29-16)
     }},
     {"end", {
-        Vec2D(1499, 29-14),
-        Vec2D(1499, 29-15)
+        glm::ivec2(1499, 29-14),
+        glm::ivec2(1499, 29-15)
     }}
 };
 
@@ -56,57 +56,63 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
     auto *map = Engine::get_map_viewer()->get_map();
 
     // testing micro-objects
-    std::shared_ptr<MapObject> test_chest = std::make_shared<MapObject>(10, 15, "test chest",52);
+    auto test_chest(std::make_shared<MapObject>(glm::ivec2(10, 15), "test chest", Walkability::BLOCKED, 52));
     ObjectManager::get_instance().add_object(test_chest);
     auto chest_id = test_chest->get_id();
     LOG(INFO) << "created test_chest with id: " << chest_id;
     map->add_map_object(chest_id);
-    test_chest->set_walkability(Walkability::WALKABLE);
 
-    ChallengeHelper::create_pickupable(Vec2D(10,15),Vec2D(10,14), test_chest);
+    ChallengeHelper::create_pickupable(
+        glm::ivec2(10, 15),
+        glm::ivec2(10, 14),
+        test_chest
+    );
 
     // testing lawn
-    auto lawn_area = {Vec2D(12,16),Vec2D(13,16),Vec2D(14,16)};
-    for (Vec2D lawn_tile: lawn_area) {
-        Engine::change_tile(lawn_tile,5,20);
+    auto lawn_area = { glm::ivec2(12, 16), glm::ivec2(13, 16), glm::ivec2(14, 16) };
+    for (glm::ivec2 lawn_tile : lawn_area) {
+        Engine::change_tile(lawn_tile, 5, 20);
         map->event_step_on.register_callback(
             lawn_tile,
             [test_chest,lawn_tile] (int) {
-                int id = Engine::get_sprites_at(lawn_tile).front();
-                bool has_chest = ObjectManager::get_instance().get_object<Sprite>(id)->is_in_inventory(test_chest);
-                if (has_chest) {
-                    Engine::print_dialogue ("Grass","You're mowing, keep on going");
-                    Engine::change_tile(lawn_tile,5,28);
+                int id(Engine::get_sprites_at(lawn_tile).front());
+                auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
+                if (sprite->is_in_inventory(test_chest)) {
+                    Engine::print_dialogue("Grass", "You're mowing, keep on going");
+                    Engine::change_tile(lawn_tile, 5, 28);
                     return false;
-                } else {
+                }
+                else {
                     Engine::print_dialogue ("Grass","Don't forget the lawn mower");
                     return true;
                 }
-            });
+            }
+        );
     }
-
 
     // Set up blocking walls
     for (auto wall_location : targets.at("wall:path:medium")) {
-        std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location.x, wall_location.y, "medium wall",5);
+        auto wall = std::make_shared<MapObject>(wall_location, "medium wall", Walkability::BLOCKED, 1);
         ObjectManager::get_instance().add_object(wall);
-        wall->set_walkability(Walkability::BLOCKED);
+
         wall_path_medium_objects.push_back(wall);
         map->add_map_object(wall->get_id());
     }
+    wall_path_medium_objects.back()->set_sheet_id(2);
 
     for (auto wall_location : targets.at("wall:path:long")) {
-        std::shared_ptr<MapObject> wall = std::make_shared<MapObject>(wall_location.x, wall_location.y, "medium wall",5);
+        auto wall = std::make_shared<MapObject>(wall_location, "medium wall", Walkability::BLOCKED, 1);
         ObjectManager::get_instance().add_object(wall);
-        wall->set_walkability(Walkability::BLOCKED);
+
         wall_path_long_objects.push_back(wall);
         map->add_map_object(wall->get_id());
     }
+    wall_path_long_objects.back()->set_sheet_id(2);
 
     // Set up notifications about walls
     for (auto wall_location : targets.at("wall:path:medium")) {
         wall_path_medium_callbacks.push_back(map->event_step_on.register_callback(
-            wall_location + Vec2D(-1, 0),
+            wall_location + glm::ivec2(-1, 0),
             [&] (int) {
                 Engine::print_dialogue("Tom", "Get the treasure and press \"e\" to view it!\n");
 
@@ -124,7 +130,7 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
 
     for (auto wall_location : targets.at("wall:path:long")) {
         wall_path_long_callbacks.push_back(map->event_step_on.register_callback(
-            wall_location + Vec2D(-1, 0),
+            wall_location + glm::ivec2(-1, 0),
             [&] (int) {
                 Engine::print_dialogue("Tom", "Hey... you missed the treasure!\n");
 
@@ -153,14 +159,14 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
             editor_lifeline = this->input_manager->register_keyboard_handler(filter(
                 {ANY_OF({KEY_HELD}), KEY({"E"})},
                 [&] (KeyboardInputEvent) {
-
                     std::string id = std::to_string(Engine::get_map_viewer()->get_map_focus_object());
                     std::string filename = "John_" + id + ".py";
                     Engine::open_editor(filename);
                     for (auto wall_object : wall_path_medium_objects) {
+                        wall_object->set_sheet_id(14);
                         wall_object->set_walkability(Walkability::WALKABLE);
-                        wall_object->set_tile_sheet_id(119);
-                    }}
+                    }
+                }
             ));
 
             return false;
@@ -178,8 +184,8 @@ LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(inp
             );
 
             for (auto wall_object : wall_path_long_objects) {
+                wall_object->set_sheet_id(14);
                 wall_object->set_walkability(Walkability::WALKABLE);
-                wall_object->set_tile_sheet_id(119);
             }
             return false;
         }

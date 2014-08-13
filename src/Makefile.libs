@@ -5,13 +5,13 @@ BOOST_LDLIBS   = \
 	-l${LIBBOOST_PYTHON} \
 	-lboost_filesystem   \
 	-lboost_system       \
-	-lboost_regex
+	-lboost_regex        \
 
 
 
 GLOG_CPPFLAGS = $(shell pkg-config libglog --cflags)
 GLOG_CXXFLAGS =
-GLOG_LDFLAGS  = 
+GLOG_LDFLAGS  =
 GLOG_LDLIBS   = $(shell pkg-config libglog --libs)
 
 
@@ -19,7 +19,7 @@ GLOG_LDLIBS   = $(shell pkg-config libglog --libs)
 ifeq "$(PLATFORM)" "desktop"
 	GL_CPPFLAGS = $(shell pkg-config gl --cflags)
 	GL_CXXFLAGS =
-	GL_LDFLAGS  = 
+	GL_LDFLAGS  =
 	GL_LDLIBS   = $(shell pkg-config gl --libs)
 
 	GRAPHICS_CPPFLAGS = $(GL_CPPFLAGS)
@@ -27,17 +27,19 @@ ifeq "$(PLATFORM)" "desktop"
 	GRAPHICS_LDFLAGS  = $(GL_LDFLAGS)
 	GRAPHICS_LDLIBS   = $(GL_LDLIBS)
 	CPPFLAGS += -DUSE_GL
+
+	WARNINGS += -Werror
 else
-        X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
-        X11_CXXFLAGS =
-        X11_LDFLAGS  =
-        X11_LDLIBS   = $(shell pkg-config x11 --libs)
+	X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
+	X11_CXXFLAGS =
+	X11_LDFLAGS  =
+	X11_LDLIBS   = $(shell pkg-config x11 --libs)
 
 	# From hello_triangle
 	GLES_CPPFLAGS = \
-		-I/opt/vc/include \
+		-I/opt/vc/include                           \
 		-I/opt/vc/include/interface/vmcs_host/linux \
-		-I/opt/vc/include/interface/vcos/pthreads
+		-I/opt/vc/include/interface/vcos/pthreads   \
 
 	GLES_CXXFLAGS =
 	GLES_LDFLAGS  = -L/opt/vc/lib/

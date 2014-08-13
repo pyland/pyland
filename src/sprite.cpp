@@ -1,146 +1,89 @@
-#include "image.hpp"
-#include "engine_api.hpp"
-#include "entitythread.hpp"
-#include "map_viewer.hpp"
-#include "renderable_component.hpp"
-#include "sprite.hpp"
-#include "object_manager.hpp"
-
 #include <new>
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
 
-
 #ifdef USE_GLES
-
 #include <GLES2/gl2.h>
-
 #endif
 
 #ifdef USE_GL
-
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
-
 #endif
 
-/// TODO: REMOVE
-Sprite::Sprite() {
-    sprite_sheet = "../resources/characters_1.png";
-    sprite_sheet_id = 0;
-    x_position = 0;
-    y_position = 0;
-    name = "";
+#include "image.hpp"
+#include "engine.hpp"
+#include "entitythread.hpp"
+#include "map_viewer.hpp"
+#include "renderable_component.hpp"
+#include "sprite.hpp"
+#include "object_manager.hpp"
+#include "walkability.hpp"
 
-    init_shaders();
-    load_textures();
-    generate_tex_data();
-    generate_vertex_data();
+Sprite::Sprite(glm::ivec2 position,
+               std::string name,
+               Walkability walkability,
+               int sheet_id,
+               std::string sheet_name):
 
-    // setting up sprite name text
-    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 18);
-    object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    object_text->set_text(name);
-    Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    object_text->move(pixel_position.x ,pixel_position.y );
-    object_text->resize(100,100);
-    object_text->align_centre();
-    object_text->align_at_origin(true);
+    MapObject(position, name, walkability, sheet_id, sheet_name) {
+        auto map_viewer(Engine::get_map_viewer());
 
-    LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
+        // WTF: why is text here?
+        // TODO: Serious spring cleaning
+        // Setting up sprite text
+        TextFont myfont = Engine::get_game_font();
 
-    // setting up status text
-    status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    status_text->set_text("");
-    Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    status_text->move(pixel_text.x ,pixel_text.y);
-    status_text->resize(100,100);
-    status_text->align_centre();
-    status_text->align_at_origin(true);
+        // TODO: Smart pointer
+        object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+        object_text->set_text(name);
+        glm::ivec2 pixel_position(map_viewer->tile_to_pixel(position));
+        object_text->move(pixel_position.x, pixel_position.y);
 
-    // Starting positions should be integral
-    assert(trunc(x_position) == x_position);
-    assert(trunc(y_position) == y_position);
+        object_text->resize(100,100);
+        object_text->align_centre();
+        object_text->align_at_origin(true);
+        LOG(INFO) << "Setting up text at " << pixel_position.x << ", " << pixel_position.y;
 
-    // Make a sprite blocked
-    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
-                                                                                                    Vec2D(int(x_position), int(y_position))
-                                                                                                    )));
+        // setting up status text
+        status_text = new Text(map_viewer->get_window(), myfont, true);
+        status_text->set_text("awaiting...");
+        glm::ivec2 pixel_text(map_viewer->tile_to_pixel(position));
+        status_text->move(pixel_text.x, pixel_text.y + 100);
 
-    LOG(INFO) << "Sprite initialized";
+        status_text->resize(100,100);
+        status_text->align_centre();
+        status_text->align_at_origin(true);
 
-}
-Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_sheet_id, std::string _sprite_sheet) {
-    LOG(INFO) << "register new sprite called " << _name;
+        // TODO: Starting positions should be integral as of currently. Check or fix.
+        //
+        // Make a map object blocked
+        // In future this might not be needed
+        blocked_tiles.insert(std::make_pair(
+            "stood on",
+            Engine::get_map_viewer()->get_map()->block_tile(position)
+        ));
 
-    // set name & positon 
-    x_position = _x_position;
-    y_position = _y_position;
-    name = _name;
-    sprite_sheet_id = _sprite_sheet_id;
-    sprite_sheet = _sprite_sheet;
+        /// build focus icon
+        LOG(INFO) << "setting up focus icon";
+        focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 96);
+        ObjectManager::get_instance().add_object(focus_icon);
+        auto focus_icon_id(focus_icon->get_id());
+        LOG(INFO) << "created focus icon with id: " << focus_icon_id;
+        Engine::get_map_viewer()->get_map()->add_map_object(focus_icon_id);
 
-    init_shaders();
-    load_textures();
-    generate_tex_data();
-    generate_vertex_data();
-
-
-    // setting up sprite name text
-    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 18);
-    object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    object_text->set_text(name);
-    Vec2D pixel_position = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    object_text->move(pixel_position.x ,pixel_position.y );
-    object_text->resize(100,100);
-    object_text->align_centre();
-    object_text->align_at_origin(true);
-
-    LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
-
-    // setting up status text
-    sprite_status = Sprite_Status::NOTHING;
-    status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
-    status_text->set_text("");
-    Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
-    status_text->move(pixel_text.x ,pixel_text.y);
-    status_text->resize(100,100);
-    status_text->align_centre();
-    status_text->align_at_origin(true);
-
-    // Starting positions should be integral
-    assert(trunc(x_position) == x_position);
-    assert(trunc(y_position) == y_position);
-
-    // Make a sprite blocked
-    blocked_tiles.insert(std::make_pair("stood on", Engine::get_map_viewer()->get_map()->block_tile(
-                                                                                                    Vec2D(int(x_position), int(y_position))
-                                                                                                    )));
-
-    /// build focus icon
-    LOG(INFO) << "setting up focus icon";
-    focus_icon = std::make_shared<MapObject>(x_position, y_position, "focus icon", 96);
-    ObjectManager::get_instance().add_object(focus_icon);
-    auto focus_icon_id = focus_icon->get_id();
-    LOG(INFO) << "created focus icon with id: " << focus_icon_id;
-    Engine::get_map_viewer()->get_map()->add_map_object(focus_icon_id);
-
-
-    LOG(INFO) << "Sprite initialized";
-
+        LOG(INFO) << "Sprite initialized";
 }
 
 Sprite::~Sprite() {
+    // TODO: Smart pointers
     delete object_text;
     delete status_text;
     LOG(INFO) << "Sprite destructed";
 }
 
-
-void Sprite::set_state_on_moving_start(Vec2D target) {
+void Sprite::set_state_on_moving_start(glm::ivec2 target) {
     moving = true;
     // adding blocker to new tile
     blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
@@ -153,7 +96,6 @@ void Sprite::set_state_on_moving_finish() {
     blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
     blocked_tiles.erase("walking to");
 }
-
 
 void Sprite::generate_tex_data() {
   
@@ -297,15 +239,7 @@ void Sprite::generate_tex_data() {
 
     renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
 } 
-void Sprite::set_sprite_sheet_id(int _sprite_sheet_id) {
-    sprite_sheet_id  = _sprite_sheet_id; 
-    
-    generate_tex_data();
-}
-void Sprite::set_sprite_sheet(std::string _sprite_sheet) {
-    sprite_sheet = _sprite_sheet; 
-    generate_tex_data();
-}
+
 void Sprite::generate_vertex_data() {
     //holds the sprite vertex data
     int num_dimensions = 2;
@@ -434,76 +368,20 @@ void Sprite::generate_vertex_data() {
     renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }
 
-void Sprite::load_textures() {
-    Image* texture_image = nullptr;
-
-    try {
-        texture_image = new Image(sprite_sheet.c_str());
-    }
-    catch(std::exception e) {
-        texture_image = nullptr;
-        LOG(ERROR) << "Failed to create texture";
-        return;
-    }
-
-    //Set the texture data in the rederable component
-    renderable_component.set_texture_image(texture_image);
-}
-
-bool Sprite::init_shaders() {
-    std::shared_ptr<Shader> shader;
-    try {
-        shader = Shader::get_shared_shader("tile_shader");
-    }
-    catch (std::exception e) {
-        LOG(ERROR) << "Failed to create the shader";
-        return false;
-    }
-
-    //Set the shader
-    renderable_component.set_shader(shader);
-
-    return true;
-
-}
-
 void Sprite::add_to_inventory(std::shared_ptr<MapObject> new_object) {
     LOG(INFO) << "adding item to sprites inventory";
-    new_object->set_x_position(x_position);
-    new_object->set_y_position(y_position);
+    new_object->set_position(position);
     inventory.push_back(new_object);
 }
 
-void Sprite::set_y_position(int y_pos) { 
-    y_position = y_pos; 
-    for (auto item: get_inventory()) {
-        item->set_y_position(y_position);
-    }
-    focus_icon->set_y_position(y_position);
-}
-void Sprite::set_x_position(int x_pos) { 
-    x_position = x_pos;
-    for (auto item: get_inventory()) {
-        item->set_x_position(x_position);
-    }
-    focus_icon->set_x_position(x_position);
-    x_position = x_pos; 
-}
+void Sprite::set_position(glm::vec2 position) {
+    MapObject::set_position(position);
 
-void Sprite::set_y_position(double y_pos) { 
-    y_position = y_pos; 
-    for (auto item: get_inventory()) {
-        item->set_y_position(y_position);
+    for (auto item : get_inventory()) {
+        item->set_position(position);
     }
-    focus_icon->set_y_position(y_position);
-}
-void Sprite::set_x_position(double x_pos) { 
-    x_position = x_pos;
-    for (auto item: get_inventory()) {
-        item->set_x_position(x_position);
-    }
-    focus_icon->set_x_position(x_position);
-    x_position = x_pos; 
+
+    focus_icon->set_position(position);
 }
 
 bool Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
@@ -520,17 +398,19 @@ bool Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
 
 bool Sprite::is_in_inventory(std::shared_ptr<MapObject> object) {
     auto it = std::find(std::begin(inventory), std::end(inventory), object);
-    return (it != std::end(inventory)); 
+    return it != std::end(inventory);
 }
 
 
 Sprite_Status Sprite::string_to_status(std::string status) {
-    std::map<std::string,Sprite_Status> string_map;
-    string_map["running"] = Sprite_Status::RUNNING;
-    string_map["stopped"] = Sprite_Status::STOPPED; 
-    string_map[""] = Sprite_Status::NOTHING;
-    string_map["failed"] = Sprite_Status::FAILED;
-    string_map["killed"] = Sprite_Status::KILLED;
+    std::map<std::string,Sprite_Status> string_map = {
+        { "",        Sprite_Status::NOTHING },
+        { "failed",  Sprite_Status::FAILED  },
+        { "killed",  Sprite_Status::KILLED  },
+        { "running", Sprite_Status::RUNNING },
+        { "stopped", Sprite_Status::STOPPED }
+    };
+
     return string_map[status];
 }
 
@@ -592,4 +472,3 @@ void Sprite::remove_underlay(int underlay_id)  {
     underlay_dimensions.erase(underlay_dimensions.begin()+index);
     underlay_offsets.erase(underlay_offsets.begin()+index);
 }
-

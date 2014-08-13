@@ -1,9 +1,10 @@
 #ifndef RENDERABLE_COMPONENT_H
 #define RENDERABLE_COMPONENT_H
 
-#include "image.hpp"
+#include "texture.hpp"
 #include "shader.hpp"
 
+#include <memory>
 #include <string>
 
 //Include GLM
@@ -72,24 +73,19 @@ class RenderableComponent {
     size_t texture_coords_data_size = 0;
 
     ///
-    /// Image containing all texture image data and metadata.
+    /// Texture holding abstracted image and texture management.
     ///
-    Image* texture_image = nullptr;
+    std::shared_ptr<Texture> texture;
 
     ///
     /// The vertex buffer object identifier for the vertex buffer
     ///
     GLuint vbo_vertex_id = 0;
-  
+
     ///
     /// The vertex buffer object identifier for the texture buffer
     ///
     GLuint vbo_texture_id = 0;
-
-    ///
-    /// The texture object identifier for the texture used by this component
-    ///
-    GLuint texture_obj_id = 0;
 
     ///
     /// The width of this component
@@ -114,7 +110,7 @@ class RenderableComponent {
 
     ///
     /// the current modelview matrix
-    /// 
+    ///
     glm::mat4 modelview_matrix  = glm::mat4(1.0);
 
 
@@ -143,7 +139,7 @@ public:
     ///
     /// Set the modelview matrix for this component
     /// @param new_modelview_matrix the new modelview matrix
-    /// 
+    ///
     void set_modelview_matrix(glm::mat4 new_modelview_matrix) { modelview_matrix = new_modelview_matrix; }
 
     ///
@@ -167,7 +163,7 @@ public:
     std::shared_ptr<Shader> get_shader() { return shader; }
 
     ///
-    /// Bind the vertex buffers 
+    /// Bind the vertex buffers
     ///
     void bind_vbos();
 
@@ -199,11 +195,11 @@ public:
     ///o
     GLfloat* get_texture_coords_data() { return texture_coords_data; }
 
-    /// 
+    ///
     /// Set the texture coordinate data to use for this component
     /// @param new_texture_data The new data to use for ther tehadxture coordinates of this object
     /// @param data_size The size of the data in bytes
-    /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static 
+    /// @param is_dynamic If true, then the data for this buffer will be changed often. If false, it is static
     ///
     void set_texture_coords_data(GLfloat* new_texture_data, size_t data_size, bool is_dynamic);
 
@@ -216,7 +212,7 @@ public:
     ///
     /// @param image An Image containing the texture data and metadata.
     ///
-    void set_texture_image(Image* image);        
+    void set_texture(std::shared_ptr<Texture> texture);
 
 
     ///
@@ -224,20 +220,20 @@ public:
     ///
     /// @returnimage An Image containing the texture data and metadata.
     ///
-    Image* get_texture_image() { return texture_image; }        
+    std::shared_ptr<Texture> get_texture() { return texture; }
 
 
     ///
     /// Get the width of the component
     /// @return The width of the component
-    /// 
+    ///
     int get_width() { return width; }
 
     ///
     /// Get the height of the component
     /// @return The height of the component
     ///
-    int get_height() { return height; } 
+    int get_height() { return height; }
 
     ///
     /// Bind the texture objects
@@ -265,7 +261,7 @@ public:
     /// @param size the size of the data to put into the buffer in bytes
     /// @param data the data to put into the buffer
     ///
-    void update_texture_buffer(int offset, size_t size, GLfloat* data);
+    void update_texture_buffer(GLintptr offset, size_t size, GLfloat* data);
 
     ///
     /// Update the vertex buffer
@@ -273,7 +269,7 @@ public:
     /// @param size the size of the data to put into the buffer in bytes
     /// @param data the data to put into the buffer
     ///
-    void update_vertex_buffer(int offset, size_t size, GLfloat* data);
+    void update_vertex_buffer(GLintptr offset, size_t size, GLfloat* data);
 
 };
 

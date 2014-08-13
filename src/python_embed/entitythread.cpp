@@ -4,6 +4,7 @@
 #include <boost/python.hpp>
 #include <future>
 #include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <thread>
 
 #include "entitythread.hpp"

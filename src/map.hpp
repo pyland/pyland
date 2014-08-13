@@ -10,6 +10,7 @@
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
@@ -92,9 +93,9 @@ class Map {
 
 
     ///
-    /// The texture buffer pointers
+    /// The texture atlases which store the map tile textures
     ///
-    Image texture_images[1];
+    std::shared_ptr<TextureAtlas> texture_atlases[1];
 
     ///
     /// The number of dimensions in the vertex and texture buffers for a tile: (x, y) here
@@ -109,7 +110,7 @@ class Map {
     ///
     /// The function used to generate the cache of tile texture coordinates.
     ///
-    void generate_tileset_coords(Image* texture_image);
+    void generate_tileset_coords(std::shared_ptr<TextureAtlas> texture);
 
     ///
     /// Generate the map's texture and vertex data
@@ -127,7 +128,7 @@ class Map {
     /// @layer the layer to generate the texture coordinates for
     /// @dense if the layer is dense or sparse 
     ///
-    void generate_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer, bool dense=true);
+    void generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer, bool dense=true);
 
     ///
     /// Generates a layer's vertex coordinates. Handles generating the
@@ -140,7 +141,7 @@ class Map {
     /// @layer the layer to generate the texture coordinates for
     /// @dense if the layer is dense or sparse 
     ///
-    void generate_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer, bool dense=true);
+    void generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer, bool dense=true);
 
     ///
     /// Calls genenerate_layer_vert_coords to generate a layer's vertex data
@@ -151,7 +152,7 @@ class Map {
     /// @layer the layer to generate the texture coordinates for
     /// @dense if the layer is dense or sparse 
     ///
-    void generate_dense_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+    void generate_dense_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
     ///
     /// Calls generate_layer_tex_coords
@@ -162,7 +163,7 @@ class Map {
     /// @layer the layer to generate the texture coordinates for
     /// @dense if the layer is dense or sparse 
     ///
-    void generate_dense_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+    void generate_dense_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
     ///
     /// Calls generate_layer_vert_coords
@@ -173,7 +174,7 @@ class Map {
     /// @layer the layer to generate the texture coordinates for
     /// @dense if the layer is dense or sparse 
     ///
-    void generate_sparse_layer_vert_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+    void generate_sparse_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
     ///
     /// Calls generate_layer_tex_coords
@@ -184,7 +185,7 @@ class Map {
     /// @layer the layer to generate the texture coordinates for
     /// @dense if the layer is dense or sparse 
     ///
-    void generate_sparse_layer_tex_coords(GLfloat* data, int data_size, int num_tiles, std::shared_ptr<Layer> layer);
+    void generate_sparse_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
     ///
     /// Used when a tile needs to be added at a point. This function
@@ -277,14 +278,14 @@ public:
     ///
     class Blocker {
         public:
-            Blocker(Vec2D tile, std::vector <std::vector<int>>* blocker);
+            Blocker(glm::ivec2 tile, std::vector <std::vector<int>>* blocker);
             ~Blocker();
             Blocker(const Map::Blocker &other);
-            Vec2D tile;
+            glm::ivec2 tile;
             std::vector <std::vector<int>>* blocker;
     };
 
-    Blocker block_tile(Vec2D tile);
+    Blocker block_tile(glm::ivec2 tile);
 
     ///
     /// Get the layers on this map
@@ -300,7 +301,7 @@ public:
     /// @param tileset_name the tileset name, default tileset used if
     /// not specified
     ///
-    void update_tile(int x_pos, int y_pos, int layer_num, int tile_id, std::string tileset_name="");
+    void update_tile(int x_pos, int y_pos, int layer_num, int tile_id);
 
 
     ///

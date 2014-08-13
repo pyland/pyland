@@ -1,44 +1,52 @@
 #ifndef MAP_OBJECT_H
 #define MAP_OBJECT_H
 
+#include <glm/vec2.hpp>
+#include <string>
+#include <vector>
+
 #include "image.hpp"
+#include "map.hpp"
 #include "object.hpp"
 #include "text.hpp"
 #include "text_font.hpp"
 #include "typeface.hpp"
-#include <string>
+#include "walkability.hpp"
 
 ///
 /// Represents an object which can be rendered on the map
 ///
-class MapObject : public Object{
-
+class MapObject : public Object {
 protected:
+    ///
+    /// Whether you can step all over it
+    ///
+    Walkability walkability;
 
     ///
-    /// Walkable: determine if the object can be walked over
+    /// Re-create the blockers for blocking one's path
     ///
-    Walkability walkability = Walkability::WALKABLE;
+    void regenerate_blockers();
+
+    ///
+    /// The blockers for blocking one's path
+    ///
+    std::vector<Map::Blocker> body_blockers;
 
     ///
     /// The name of the tilesheet to use for the map object
     ///
-    std::string tile_sheet;
+    std::string sheet_name;
 
     ///
     /// The id of the tile in the sheet
     ///
-    int tile_sheet_id;
+    int sheet_id;
 
     ///
-    /// The x position of the object
+    /// The position of the object
     ///
-    double x_position = 0;
-
-    ///
-    /// The y position of the object
-    ///
-    double y_position = 0;
+    glm::vec2 position;
 
     ///
     /// Tiles that the object is blocking, probably
@@ -51,79 +59,41 @@ protected:
     ///
     bool moving = false;
 
-
 public:
-    MapObject();
-    MapObject(int _x_position, int _y_position, std::string _name, int _tile_sheet_id, std::string _tile_sheet="../resources/basictiles_2.png");
+    MapObject(glm::vec2 position,
+              std::string name,
+              Walkability walkability,
+              int sheet_id,
+              std::string sheet_name="../resources/basictiles_2");
+
     virtual ~MapObject();
+
+    glm::vec2 get_position() { return position; }
+    void set_position(glm::vec2 position) { this->position = position; }
 
     ///
     /// Set the tile sheet to use for this character
     /// @param _tile_sheet the tile sheet
     ///
-    void set_tile_sheet(std::string _tile_sheet);
+    void set_sheet_name(std::string sheed_name);
 
     ///
     /// Get the tile sheet
     /// @return the tile sheet
     ///
-    std::string get_tile_sheet() { return tile_sheet; }
+    std::string get_sheet_name() { return sheet_name; }
 
     ///
     /// Set the id of the tile in the tile sheet
     /// @param _tile_sheet_id the id of the tile in the tile sheet
     ///
-    void set_tile_sheet_id(int _tile_sheet_id);
+    void set_sheet_id(int sheet_id);
 
     ///
     /// Get the id of the tile in the tile sheet
     /// @return the tile sheet id
     ///
-    int get_tile_sheet_id() { return tile_sheet_id; }
-
-    ///
-    /// Set the object's x position in tiles
-    /// @param x_pos the new x position in tiles
-    ///
-    void set_x_position(int x_pos) { x_position = x_pos; }
-    void set_x_position(double x_pos) { x_position = x_pos; }
-
-    ///
-    /// Get the object's x position in tiles
-    /// @return the object's x position in tiles
-    ///
-    double get_x_position() { return x_position; }
-
-    ///
-    /// Set the object's y position in tiles
-    /// @param y_pos
-    ///
-    void set_y_position(int y_pos) { y_position = y_pos; }
-    void set_y_position(double y_pos) { y_position = y_pos; }
-
-    ///
-    /// Get the object's y position in tiles
-    /// @return the object's y position in tiles
-    ///
-    double get_y_position() { return y_position; }
-
-
-   
-
-    ///
-    /// Get the object's walkability
-    ///
-    Walkability get_walkability() { return walkability; }
-
-    ///
-    /// Set the object's walkability
-    /// @param _walkability the walkability of the object
-    ///
-    void set_walkability(Walkability _walkability);
-
-    // TODO Joshua: Comment
-    void set_state_on_moving_start(Vec2D target);
-    void set_state_on_moving_finish();
+    int get_sheet_id() { return sheet_id; }
 
     ///
     /// Generate the texture coordinate data for the object
@@ -145,10 +115,21 @@ public:
     ///
     bool init_shaders();
 
+    ///
     /// Set the object's moving status
     /// @param _moving if the object is moving
     ///
-    void set_moving(bool _moving) { moving = _moving; }
+    void set_moving(bool moving) { this->moving = moving; }
+
+    ///
+    /// Set whether the object creates blockers
+    /// to prevent sprites moving onto the squares
+    /// occupied by the sprite.
+    ///
+    /// @param walkability
+    ///     The value to set the internal walkability to.
+    ///
+    void set_walkability(Walkability walkability);
 
     ///
     /// Get if the object is moving

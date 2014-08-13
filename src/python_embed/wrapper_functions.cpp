@@ -18,9 +18,4 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("print_debug",      &Entity::py_print_debug)
         .def("print_dialogue",   &Entity::py_print_dialogue)
         .def("update_status",    &Entity::py_update_status);
-
-    py::class_<Vec2D>("Vec2D", py::init<int, int>())
-        .def(py::self + py::other<Vec2D>())
-        .def_readwrite("x", &Vec2D::x)
-        .def_readwrite("y", &Vec2D::y);
 }
