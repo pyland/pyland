@@ -5,10 +5,11 @@
 #include "map_object.hpp"
 #include "tileset.hpp"
 
-#include <utility>
+#include <map>
 #include <memory>
 #include <string>
 #include <Tmx.h>
+#include <utility>
 #include <vector>
 
 ///
@@ -44,6 +45,11 @@ class MapLoader {
     /// Vector of tilesets
     ///
     std::vector<std::shared_ptr<TileSet>> tilesets;
+
+    ///
+    /// Map of tileset names to tilesets
+    ///
+    std::map<std::string,std::shared_ptr<TileSet>> tilesets_by_name;
 
     ///
     /// Array of layers

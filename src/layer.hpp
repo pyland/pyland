@@ -8,6 +8,8 @@
 #include <vector>
 
 #include "object.hpp"
+#include "tileset.hpp"
+
 
 
 ///
@@ -27,7 +29,7 @@ public:
         ///
         /// We have a sparse layer
         ///
-       SPARSE
+        SPARSE
     };
 
 private:
@@ -49,7 +51,7 @@ private:
     ///
     /// The layer data stored as tilesetname, tile id pair
     ///
-    std::shared_ptr<std::vector<std::pair<std::string, int>>> layer;
+    std::shared_ptr<std::vector<std::pair<std::shared_ptr<TileSet>, int>>> layer;
 
     ///
     /// The packing of the layer
@@ -70,7 +72,7 @@ public:
     /// Add a tile to the layer. This adds the tile to the end of the tile list.
     /// Note: this does NOT add the tile to the geometry. It adds it to the list of tiles on this layer.
     ///
-    void add_tile(const std::string tileset, int tile_id);
+    void add_tile(std::shared_ptr<TileSet> tileset, int tile_id);
 
     ///
     /// Update a tile. This  function is used to put a new tile on the layer or to update an
@@ -81,7 +83,7 @@ public:
     /// @param tileset the name of the tileset for this tile
     /// Throws, LayerInvalidException if the x and y position is out of bounds
     ///
-    void update_tile(int x_pos, int y_pos, int tile_id, std::string tileset);
+    void update_tile(int x_pos, int y_pos, int tile_id, std::shared_ptr<TileSet> tileset);
 
     ///
     /// Get the id of the tile at the specified location
@@ -128,7 +130,7 @@ public:
     ///
     /// Get the layer's data as a shared_ptr
     ///
-    std::shared_ptr<std::vector<std::pair<std::string, int>>> get_layer_data() { return layer; }
+    std::shared_ptr<std::vector<std::pair<std::shared_ptr<TileSet>, int>>> get_layer_data() { return layer; }
 };
 
 ///

@@ -31,8 +31,6 @@ Sprite::Sprite(glm::ivec2 position,
     MapObject(position, name, walkability, sheet_id, sheet_name) {
         auto map_viewer(Engine::get_map_viewer());
 
-        // WTF: why is text here?
-        // TODO: Serious spring cleaning
         // Setting up sprite text
         TextFont myfont = Engine::get_game_font();
 
@@ -67,7 +65,7 @@ Sprite::Sprite(glm::ivec2 position,
         ));
 
         // TESTING
-        add_overlay(10,1.0f,1.0f,0.0f,0.0f);
+        add_underlay(10,1.0f,1.0f,0.0f,0.0f);
 
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
@@ -122,7 +120,7 @@ void Sprite::generate_tex_data() {
 
     //Underlays
     for(int underlay_id : underlay_ids) {
-        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(underlay_id);
+        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(underlay_id);
 
         //bottom left
         sprite_tex_data[offset + 0]  = std::get<0>(bounds);
@@ -152,7 +150,7 @@ void Sprite::generate_tex_data() {
         offset+= num_floats_per_tile;
     }
 
-    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(sheet_id);
+    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(sheet_id);
 
     //bottom left
     sprite_tex_data[offset + 0]  = std::get<0>(bounds);
@@ -184,7 +182,7 @@ void Sprite::generate_tex_data() {
 
     for(int overlay_id : overlay_ids) {
 
-        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(overlay_id);
+        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(overlay_id);
 
         //bottom left
         sprite_tex_data[offset + 0]  = std::get<0>(bounds);
@@ -417,6 +415,7 @@ void Sprite::add_overlay(int overlay_id, float width, float height, float x_offs
     overlay_dimensions.push_back(dimensions);
     std::pair<float, float> offsets = std::make_pair(x_offset, y_offset);
     overlay_offsets.push_back(offsets);
+    generate_tex_data();
 }
 
 void Sprite::remove_overlay(int overlay_id) {
@@ -434,6 +433,7 @@ void Sprite::remove_overlay(int overlay_id) {
     }
     overlay_dimensions.erase(overlay_dimensions.begin()+index);
     overlay_offsets.erase(overlay_offsets.begin()+index);
+    generate_tex_data();
 }
 
 void Sprite::add_underlay(int underlay_id, float width, float height, float x_offset, float y_offset) {
@@ -442,6 +442,7 @@ void Sprite::add_underlay(int underlay_id, float width, float height, float x_of
     underlay_dimensions.push_back(dimensions);
     std::pair<float,float> offsets = std::make_pair(x_offset, y_offset);
     underlay_offsets.push_back(offsets);
+    generate_tex_data();
 }
 
 void Sprite::remove_underlay(int underlay_id)  {
@@ -458,4 +459,5 @@ void Sprite::remove_underlay(int underlay_id)  {
     }
     underlay_dimensions.erase(underlay_dimensions.begin()+index);
     underlay_offsets.erase(underlay_offsets.begin()+index);
+    generate_tex_data();
 }

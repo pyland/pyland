@@ -1,11 +1,17 @@
 #ifndef TILESET_H
 #define TILESET_H
 
+#include <map>
+#include <memory>
 #include <string>
+
+#include "texture_atlas.hpp"
+
+
 
 ///
 /// A Tileset used in the map
-///kjkjdsk
+///
 class TileSet {
     ///
     /// The width of the tileset in pixels
@@ -21,12 +27,22 @@ class TileSet {
     /// The source file for the tileset
     /// 
     std::string name = "";
+
+    ///
+    /// The texture atlas this tileset uses.
+    ///
+    std::shared_ptr<TextureAtlas> texture_atlas;
+
+    ///
+    /// A map of tile names to tile indexes.
+    ///
+    std::map<std::string,int> names_to_tiles;
 public:
 
     ///
     /// Construct a tileset
     ///
-    TileSet(std::string _name, int _width, int _height) : width(_width), height(_height), name(_name) {}
+    TileSet(const std::string name, int width, int height, const std::string atlas);
 
     ///
     /// Get the width of the tileset in pixels
@@ -47,7 +63,11 @@ public:
     /// Set the height of the tileset in pixels
     /// 
     void set_height(int new_height) { height = new_height; }
-        
+
+    ///
+    /// Get the texture atlas.
+    ///
+    std::shared_ptr<TextureAtlas> get_atlas() { return texture_atlas; }
 };
 
 #endif
