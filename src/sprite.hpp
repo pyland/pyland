@@ -17,7 +17,7 @@
 #include <GL/gl.h>
 #endif
 
-enum Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
+enum class Sprite_Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 
 ///
 /// Represents a sprite in the engine
@@ -25,7 +25,7 @@ enum Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 class Sprite : public MapObject {
 
 private:
-    Status string_to_status (std::string status);
+    Sprite_Status string_to_status (std::string status);
 
 protected:
 
@@ -52,7 +52,7 @@ protected:
     ///
     /// status of sprite
     /// TODO: this value isn't used at the moment, use for status images
-    Status sprite_status = NOTHING;
+    Sprite_Status sprite_status;
 
     ///
     /// Tiles that the object is blocking, probably

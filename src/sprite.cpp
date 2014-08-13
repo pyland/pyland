@@ -25,6 +25,7 @@
 
 #endif
 
+/// TODO: REMOVE
 Sprite::Sprite() {
     sprite_sheet = "../resources/characters_1.png";
     sprite_sheet_id = 0;
@@ -101,6 +102,7 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_
     LOG(INFO) << "setting up text at " << pixel_position.to_string() ;
 
     // setting up status text
+    sprite_status = Sprite_Status::NOTHING;
     status_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
     status_text->set_text("");
     Vec2D pixel_text = Engine::get_map_viewer()->tile_to_pixel(Vec2D(x_position, y_position));
@@ -120,7 +122,7 @@ Sprite::Sprite(int _x_position, int _y_position, std::string _name, int _sprite_
 
     /// build focus icon
     LOG(INFO) << "setting up focus icon";
-    focus_icon = std::make_shared<MapObject>(x_position, y_position, "focus icon",66);
+    focus_icon = std::make_shared<MapObject>(x_position, y_position, "focus icon", 96);
     ObjectManager::get_instance().add_object(focus_icon);
     auto focus_icon_id = focus_icon->get_id();
     LOG(INFO) << "created focus icon with id: " << focus_icon_id;
@@ -473,40 +475,34 @@ void Sprite::add_to_inventory(std::shared_ptr<MapObject> new_object) {
 }
 
 void Sprite::set_y_position(int y_pos) { 
+    y_position = y_pos; 
     for (auto item: get_inventory()) {
-        item->set_x_position(x_position);
         item->set_y_position(y_position);
     }
-    focus_icon->set_x_position(x_position);
     focus_icon->set_y_position(y_position);
-    y_position = y_pos; 
 }
 void Sprite::set_x_position(int x_pos) { 
+    x_position = x_pos;
     for (auto item: get_inventory()) {
         item->set_x_position(x_position);
-        item->set_y_position(y_position);
     }
     focus_icon->set_x_position(x_position);
-    focus_icon->set_y_position(y_position);
     x_position = x_pos; 
 }
 
 void Sprite::set_y_position(double y_pos) { 
+    y_position = y_pos; 
     for (auto item: get_inventory()) {
-        item->set_x_position(x_position);
         item->set_y_position(y_position);
     }
-    focus_icon->set_x_position(x_position);
     focus_icon->set_y_position(y_position);
-    y_position = y_pos; 
 }
 void Sprite::set_x_position(double x_pos) { 
+    x_position = x_pos;
     for (auto item: get_inventory()) {
         item->set_x_position(x_position);
-        item->set_y_position(y_position);
     }
     focus_icon->set_x_position(x_position);
-    focus_icon->set_y_position(y_position);
     x_position = x_pos; 
 }
 
@@ -528,13 +524,13 @@ bool Sprite::is_in_inventory(std::shared_ptr<MapObject> object) {
 }
 
 
-Status Sprite::string_to_status(std::string status) {
-    std::map<std::string,Status> string_map;
-    string_map["running"] = RUNNING;
-    string_map["stopped"] = STOPPED; 
-    string_map[""] = NOTHING;
-    string_map["failed"] = FAILED;
-    string_map["killed"] = KILLED;
+Sprite_Status Sprite::string_to_status(std::string status) {
+    std::map<std::string,Sprite_Status> string_map;
+    string_map["running"] = Sprite_Status::RUNNING;
+    string_map["stopped"] = Sprite_Status::STOPPED; 
+    string_map[""] = Sprite_Status::NOTHING;
+    string_map["failed"] = Sprite_Status::FAILED;
+    string_map["killed"] = Sprite_Status::KILLED;
     return string_map[status];
 }
 
@@ -545,12 +541,7 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
 
 void Sprite::set_focus(bool is_focus) {
     LOG(INFO) << "trying to set focus to "<< is_focus;
-    if (is_focus) {
-        //TODO: replace with better way to hide icon
-        focus_icon->set_tile_sheet_id(96);
-    } else {
-        focus_icon->set_tile_sheet_id(119);
-    }
+    focus_icon->set_renderable(is_focus);
 }
 
 void Sprite::add_overlay(int overlay_id, float width, float height, float x_offset, float y_offset) {

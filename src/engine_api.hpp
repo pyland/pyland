@@ -180,6 +180,8 @@ public:
     ///
     static std::vector<int> get_objects_at(Vec2D location);
 
+    static bool is_object_at(Vec2D location, int object_id);
+
     ///
     /// Get a list of sprites at this point
     /// @return a vector of object ids

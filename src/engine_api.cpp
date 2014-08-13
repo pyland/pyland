@@ -210,6 +210,15 @@ std::vector<int> Engine::get_objects_at(Vec2D location) {
     return results;
 }
 
+bool Engine::is_object_at(Vec2D location, int object_id) {
+    for (int id: get_objects_at(location)) {
+        if (id == object_id) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::vector<int> Engine::get_sprites_at(Vec2D location) {
     Map* map = map_viewer->get_map();
     if (!map) {
