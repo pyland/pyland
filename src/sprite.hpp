@@ -182,6 +182,18 @@ public:
 
     void set_position(glm::vec2 position);
 
+
+    ///
+    /// Generate the texture coordinate data for the object
+    ///
+    void generate_tex_data();
+
+    ///
+    /// Generate the vertex data for the object
+    ///
+    void generate_vertex_data();
+
+
     ///
     /// remove the specified object from the sprites inventory, safe to use even if
     /// item isn't in inventory

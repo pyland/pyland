@@ -19,6 +19,7 @@
 #include "renderable_component.hpp"
 #include "sprite.hpp"
 #include "object_manager.hpp"
+#include "texture_atlas.hpp"
 #include "walkability.hpp"
 
 Sprite::Sprite(glm::ivec2 position,
@@ -106,8 +107,8 @@ void Sprite::generate_tex_data() {
     int num_floats = num_floats_per_tile;
 
     //Add coordinates for overlays and underlays
-    num_floats += overlay_ids.size()*num_floats_per_tile;
-    num_floats += underlay_ids.size()*num_floats_per_tile;
+    num_floats += int(overlay_ids.size())*num_floats_per_tile;
+    num_floats += int(underlay_ids.size())*num_floats_per_tile;
 
     GLfloat* sprite_tex_data = nullptr;
     try {
@@ -118,120 +119,98 @@ void Sprite::generate_tex_data() {
         return;
     }
 
-    int image_width = renderable_component.get_texture_image()->store_width;
-    int image_height = renderable_component.get_texture_image()->store_height;
-    if(image_width == 0 || image_height == 0 ) {
-        LOG(ERROR) << "At least one image dimension is 0";
-        return;
-    }
-
-    GLfloat inc_x = GLfloat(Engine::get_tile_size()) / (GLfloat)image_width;
-    GLfloat inc_y = GLfloat(Engine::get_tile_size()) / (GLfloat)image_height;
-    if(inc_x == 0.0f  ||inc_y == 0.0f) {
-        LOG(ERROR) << "Increments are 0";
-        return;
-    }
-
-
-    //Tile ids are from top left but opengl texture coordinates are bottom left so adjust as needed
-    GLfloat offset_x = 0.0f;
-    GLfloat offset_y = 0.0f; 
-
     //offset into texture buffer
     int offset = 0;
 
     //Underlays
     for(int underlay_id : underlay_ids) {
-        offset_x =  (GLfloat)(underlay_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
-        offset_y = (1.0f - inc_y)-  (GLfloat)(underlay_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
+        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(underlay_id);
 
         //bottom left
-        sprite_tex_data[offset + 0]  = offset_x;
-        sprite_tex_data[offset + 1]  = offset_y;
+        sprite_tex_data[offset + 0]  = std::get<0>(bounds);
+        sprite_tex_data[offset + 1]  = std::get<2>(bounds);
 
         //top left
-        sprite_tex_data[offset + 2]  = offset_x;
-        sprite_tex_data[offset + 3]  = offset_y + inc_y;
+        sprite_tex_data[offset + 2]  = std::get<0>(bounds);
+        sprite_tex_data[offset + 3]  = std::get<3>(bounds);
 
         //bottom right
-        sprite_tex_data[offset + 4]  = offset_x + inc_x;
-        sprite_tex_data[offset + 5]  = offset_y;
+        sprite_tex_data[offset + 4]  = std::get<1>(bounds);
+        sprite_tex_data[offset + 5]  = std::get<2>(bounds);
 
         //top left
-        sprite_tex_data[offset + 6]  = offset_x;
-        sprite_tex_data[offset + 7]  = offset_y + inc_y;
+        sprite_tex_data[offset + 6]  = std::get<0>(bounds);
+        sprite_tex_data[offset + 7]  = std::get<3>(bounds);
 
         //top right
-        sprite_tex_data[offset + 8]  = offset_x + inc_x;
-        sprite_tex_data[offset + 9]  = offset_y + inc_y;
+        sprite_tex_data[offset + 8]  = std::get<1>(bounds);
+        sprite_tex_data[offset + 9]  = std::get<3>(bounds);
 
         //bottom right
-        sprite_tex_data[offset + 10] = offset_x + inc_x;
-        sprite_tex_data[offset + 11] = offset_y; 
+        sprite_tex_data[offset + 10] = std::get<1>(bounds);
+        sprite_tex_data[offset + 11] = std::get<2>(bounds);
 
 
         offset+= num_floats_per_tile;
     }
 
-    offset_x = (GLfloat)(sprite_sheet_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
-    offset_y = (1.0f - inc_y)-  (GLfloat)(sprite_sheet_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
+    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(sheet_id);
 
     //bottom left
-    sprite_tex_data[offset + 0]  = offset_x;
-    sprite_tex_data[offset + 1]  = offset_y;
+    sprite_tex_data[offset + 0]  = std::get<0>(bounds);
+    sprite_tex_data[offset + 1]  = std::get<2>(bounds);
 
     //top left
-    sprite_tex_data[offset + 2]  = offset_x;
-    sprite_tex_data[offset + 3]  = offset_y + inc_y;
+    sprite_tex_data[offset + 2]  = std::get<0>(bounds);
+    sprite_tex_data[offset + 3]  = std::get<3>(bounds);
 
     //bottom right
-    sprite_tex_data[offset + 4]  = offset_x + inc_x;
-    sprite_tex_data[offset + 5]  = offset_y;
+    sprite_tex_data[offset + 4]  = std::get<1>(bounds);
+    sprite_tex_data[offset + 5]  = std::get<2>(bounds);
 
     //top left
-    sprite_tex_data[offset + 6]  = offset_x;
-    sprite_tex_data[offset + 7]  = offset_y + inc_y;
+    sprite_tex_data[offset + 6]  = std::get<0>(bounds);
+    sprite_tex_data[offset + 7]  = std::get<3>(bounds);
 
     //top right
-    sprite_tex_data[offset + 8]  = offset_x + inc_x;
-    sprite_tex_data[offset + 9]  = offset_y + inc_y;
+    sprite_tex_data[offset + 8]  = std::get<1>(bounds);
+    sprite_tex_data[offset + 9]  = std::get<3>(bounds);
 
     //bottom right
-    sprite_tex_data[offset + 10] = offset_x + inc_x;
-    sprite_tex_data[offset + 11] = offset_y; 
+    sprite_tex_data[offset + 10] = std::get<1>(bounds);
+    sprite_tex_data[offset + 11] = std::get<2>(bounds);
 
     offset += num_floats_per_tile;
 
     //Overlays
 
     for(int overlay_id : overlay_ids) {
-        offset_x =  (GLfloat)(overlay_id % (int)(image_width/Engine::get_tile_size()))*inc_x;
-        offset_y = (1.0f - inc_y)-  (GLfloat)(overlay_id / (int)(image_width/Engine::get_tile_size()))*inc_y;
+
+        std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->get_atlas()->index_to_coords(overlay_id);
 
         //bottom left
-        sprite_tex_data[offset + 0]  = offset_x;
-        sprite_tex_data[offset + 1]  = offset_y;
+        sprite_tex_data[offset + 0]  = std::get<0>(bounds);
+        sprite_tex_data[offset + 1]  = std::get<2>(bounds);
 
         //top left
-        sprite_tex_data[offset + 2]  = offset_x;
-        sprite_tex_data[offset + 3]  = offset_y + inc_y;
+        sprite_tex_data[offset + 2]  = std::get<0>(bounds);
+        sprite_tex_data[offset + 3]  = std::get<3>(bounds);
 
         //bottom right
-        sprite_tex_data[offset + 4]  = offset_x + inc_x;
-        sprite_tex_data[offset + 5]  = offset_y;
+        sprite_tex_data[offset + 4]  = std::get<1>(bounds);
+        sprite_tex_data[offset + 5]  = std::get<2>(bounds);
 
         //top left
-        sprite_tex_data[offset + 6]  = offset_x;
-        sprite_tex_data[offset + 7]  = offset_y + inc_y;
+        sprite_tex_data[offset + 6]  = std::get<0>(bounds);
+        sprite_tex_data[offset + 7]  = std::get<3>(bounds);
 
         //top right
-        sprite_tex_data[offset + 8]  = offset_x + inc_x;
-        sprite_tex_data[offset + 9]  = offset_y + inc_y;
+        sprite_tex_data[offset + 8]  = std::get<1>(bounds);
+        sprite_tex_data[offset + 9]  = std::get<3>(bounds);
 
         //bottom right
-        sprite_tex_data[offset + 10] = offset_x + inc_x;
-        sprite_tex_data[offset + 11] = offset_y; 
-
+        sprite_tex_data[offset + 10] = std::get<1>(bounds);
+        sprite_tex_data[offset + 11] = std::get<2>(bounds);
 
         offset+= num_floats_per_tile;
     }
@@ -248,8 +227,8 @@ void Sprite::generate_vertex_data() {
     int num_floats = num_floats_per_tile;
 
     //Add coordinates for overlays and underlays
-    num_floats += overlay_ids.size()*num_floats_per_tile;
-    num_floats += underlay_ids.size()*num_floats_per_tile;
+    num_floats += int(overlay_ids.size())*num_floats_per_tile;
+    num_floats += int(underlay_ids.size())*num_floats_per_tile;
 
     GLfloat* sprite_data = nullptr;
     try {
@@ -261,14 +240,14 @@ void Sprite::generate_vertex_data() {
         return;
     }
 
-    float scale =(float)( Engine::get_tile_size() * Engine::get_global_scale());
+    float scale =  float(Engine::get_tile_size()) * Engine::get_global_scale();
 
     //offset into texture buffer
     int offset = 0;
     int index = 0;
 
     //Underlays
-    for(int underlay_id : underlay_ids) {
+    for(int i = 0; i < int(underlay_ids.size()); i++) {
         GLfloat x_offset = (GLfloat)underlay_offsets[index].first;
         GLfloat y_offset = (GLfloat)underlay_offsets[index].second;
         GLfloat width = (GLfloat)underlay_dimensions[index].first;
@@ -329,7 +308,7 @@ void Sprite::generate_vertex_data() {
 
     index = 0;
     //Overlays
-    for(int overlay_id : overlay_ids) {
+    for(int i = 0; int(overlay_ids.size()); i++) {
         GLfloat x_offset = (GLfloat)overlay_offsets[index].first;
         GLfloat y_offset = (GLfloat)overlay_offsets[index].second;
         GLfloat width = (GLfloat)overlay_dimensions[index].first;
