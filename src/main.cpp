@@ -256,8 +256,7 @@ int main(int argc, const char *argv[]) {
     for (auto button: notification_bar.get_navigation_buttons()) {
         sprite_window->add(button);
     }
-
-    Engine::set_gui_window(sprite_window);
+    
     gui_manager.set_root(sprite_window);
 
     // quick fix so buttons in correct location in initial window before gui_resize_func callback
