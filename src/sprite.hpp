@@ -68,7 +68,7 @@ protected:
     /// Overlays
     ///
     std::vector<int> overlay_ids;
-    
+
     ///
     /// The dimensions of the overlays (width, height).
     /// 1.0 means the overlays is the same size as the engine's tile size * global scale.
@@ -87,7 +87,7 @@ protected:
     /// Underlays
     ///
     std::vector<int> underlay_ids;
-    
+
     ///
     /// The dimensions of the underlays (width, height)
     /// 1.0 means the underlays is the same size as the engine's tile size * global scale.
@@ -128,7 +128,7 @@ public:
     ///
     /// Add an underlay to the sprite
     /// @param underlay_id
-    /// 
+    ///
     void add_underlay(int underlay_id, float width=1.0f, float height=1.0f, float x_offset=0.0f, float y_offset=0.0f);
 
     ///

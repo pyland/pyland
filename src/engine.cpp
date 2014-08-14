@@ -33,7 +33,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by) {
 //TODO: This needs to work with renderable objects
 void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return) {
 
-    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+    auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
 
     if (!sprite || sprite->is_moving()) { return; }
 
