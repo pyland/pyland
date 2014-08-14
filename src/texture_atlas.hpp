@@ -70,6 +70,11 @@ private:
     std::vector<std::weak_ptr<Texture>> textures;
     
     ///
+    /// A map of texture names to texture indexes.
+    ///
+    std::map<std::string,int> names_to_indexes;
+    
+    ///
     /// Get a commonly used texture.
     ///
     /// This function is used to share textures between separate
@@ -81,7 +86,7 @@ private:
     /// @return A shared pointer to the relevant Texture.
     ///
     static std::shared_ptr<TextureAtlas> new_resource(const std::string resource_name);
-
+    
 public:
     ///
     /// Represents a failure when loading the texture atlas.
@@ -137,6 +142,22 @@ public:
     /// @return The left, right, bottom, and top boundaries.
     ///
     std::tuple<float,float,float,float> index_to_coords(int index);
+    
+    ///
+    /// Attempt to load the name-index mappings from a file.
+    ///
+    void load_names(const std::string filename);
+    ///
+    /// Set the mapping of a name to an index.
+    ///
+    void set_name_index(const std::string name, int index);
+
+    ///
+    /// Get the mapping of a name to an index.
+    ///
+    /// @return Non-negative value of an index, or -1 if not found.
+    ///
+    int get_name_index(const std::string name);
 };
 
 

@@ -110,13 +110,12 @@ public:
 
     ///
     /// Change the tile in the map in the given layer at the provided position
-    /// @param new_id the id of the new tile
-    /// @param x the x position of the tile to change
-    /// @param y the y position of the tile to change
+    /// @param tile the x,y position of the tile to change
     /// @param layer the layer of the tile to change
+    /// @param tile_name the global name of the new tile
     /// @return indicates if the operation completed successfully
     ///
-    static void change_tile(glm::ivec2 tile, int layer_num, int tile_id);
+    static void change_tile(glm::ivec2 tile, int layer_num, std::string tile_name);
 
     ///
     /// Get the location of the map object or sprite in the map, throws exception if
