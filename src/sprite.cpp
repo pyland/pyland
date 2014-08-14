@@ -193,17 +193,24 @@ void Sprite::generate_vertex_data() {
     renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }
 
-void Sprite::add_to_inventory(std::shared_ptr<MapObject> new_object) {
+void Sprite::add_to_inventory(int new_object_id) {
     LOG(INFO) << "adding item to sprites inventory";
+        
+    auto new_object = ObjectManager::get_instance().get_object<MapObject>(new_object_id);
+    if (!new_object) {
+        LOG(ERROR) << "Object manager no longer has focus_icon";
+        return;
+    }
+
     new_object->set_position(position);
-    inventory.push_back(new_object);
+    inventory.push_back(new_object_id);
 }
 
 void Sprite::set_position(glm::vec2 position) {
     MapObject::set_position(position);
 
-    for (auto item : get_inventory()) {
-        item->set_position(position);
+    for (int item_id : get_inventory()) {
+        ObjectManager::get_instance().get_object<MapObject>(item_id)->set_position(position);
     }
 
     auto focus_icon = ObjectManager::get_instance().get_object<MapObject>(focus_icon_id);
@@ -214,7 +221,7 @@ void Sprite::set_position(glm::vec2 position) {
     focus_icon->set_position(position);
 }
 
-bool Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
+bool Sprite::remove_from_inventory(int old_object) {
     // there must be a better way to do this
     auto it = std::find(std::begin(inventory), std::end(inventory), old_object);
     if (it != std::end(inventory)) {
@@ -226,7 +233,7 @@ bool Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
     }
 }
 
-bool Sprite::is_in_inventory(std::shared_ptr<MapObject> object) {
+bool Sprite::is_in_inventory(int object) {
     auto it = std::find(std::begin(inventory), std::end(inventory), object);
     return it != std::end(inventory);
 }
