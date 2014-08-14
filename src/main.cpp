@@ -246,6 +246,8 @@ int main(int argc, const char *argv[]) {
     stop_button->set_y_offset(0.8f);
     stop_button->set_x_offset(0.8f);
 
+    gui_manager.set_root(sprite_window);
+
     // build navigation bar buttons
     NotificationBar notification_bar;
     Engine::set_notification_bar(&notification_bar);
@@ -253,11 +255,7 @@ int main(int argc, const char *argv[]) {
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
-    for (auto button: notification_bar.get_navigation_buttons()) {
-        sprite_window->add(button);
-    }
-    
-    gui_manager.set_root(sprite_window);
+
 
     // quick fix so buttons in correct location in initial window before gui_resize_func callback
     auto original_window_size = window.get_size();

@@ -43,6 +43,12 @@ NotificationBar::NotificationBar() {
     forward_button->set_y_offset(forward_loco.second);
     forward_button->set_x_offset(forward_loco.first);
 
+    GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
+    CHECK_NOTNULL(gui_manager);
+    gui_manager->get_root()->add(backward_button);
+    gui_manager->get_root()->add(forward_button);
+    gui_manager->parse_components();
+
     // button text as Button::set_text() don't currently work
     backward_text.reset(new Text(window, notification_buttonfont, true));
     backward_text->set_text("<-");
@@ -73,10 +79,6 @@ NotificationBar::NotificationBar() {
 
     notification_stack = Notification();
 
-}
-
-std::vector<std::shared_ptr<Button>> NotificationBar::get_navigation_buttons() {
-    return {backward_button,forward_button};
 }
 
 void NotificationBar::text_displayer() {
@@ -119,3 +121,7 @@ void NotificationBar::add_notification(std::string text_to_display) {
     }
 
  }
+
+ NotificationBar::~NotificationBar() {
+    
+}
