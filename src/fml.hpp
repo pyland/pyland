@@ -1,9 +1,12 @@
 #ifndef FML_H
 #define FML_H
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <istream>
+#include <iostream>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <string>
@@ -39,22 +42,19 @@ class FML {
         T get(std::string where) { return boost::lexical_cast<T>(values->at(where)); }
 
         // Iterator is always const
-        const_iterator begin () const { return make_iter(values->cbegin()); }
-        const_iterator cbegin() const { return make_iter(values->cbegin()); }
-        const_iterator end   () const { return make_iter(values->cend  ()); }
-        const_iterator cend  () const { return make_iter(values->cend  ()); }
+        const_iterator begin () const;
+        const_iterator cbegin() const;
+        const_iterator end   () const;
+        const_iterator cend  () const;
+
+        const_iterator begin(std::string directory) const;
+        const_iterator end  (std::string directory) const;
 
     private:
-        const_iterator make_iter(StringMap::const_iterator mapiter) const {
-            return boost::make_transform_iterator(
-                mapiter,
-                [] (StringMap::value_type pair) { return CastablePair(pair); }
-            );
-        }
+        const_iterator make_iter(StringMap::const_iterator mapiter, size_t chop=0) const;
 
         std::shared_ptr<StringMap> values;
         bool error;
-
 };
 
 #endif

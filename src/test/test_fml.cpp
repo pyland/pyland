@@ -141,6 +141,18 @@ SCENARIO("FML can be iterated", "[fml][iterate]" ) {
                 for (auto pair : my_data) { new_map.insert(pair); }
                 REQUIRE(map_equivalent == new_map);
             }
+
+            THEN("a subsection is iterable") {
+                REQUIRE(std::distance(my_data.begin("path/1"),
+                                      my_data.end  ("path/1")) == 3);
+
+                for_each(my_data.begin("path/2"), my_data.end("path/2"),
+                    [] (std::pair<std::string, int> pair) {
+                        // Need brackets to prevent "too complex error"
+                        REQUIRE((pair.first == "y" || pair.first == "z"));
+                    }
+                );
+            }
         }
     }
 }
