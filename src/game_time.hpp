@@ -9,9 +9,9 @@ class GameTime {
     public:
         // Basically makes this a clock class
         // without Clock::now
-        using duration   = std::chrono::duration<double>;
-        using rep        = duration::rep;
-        using period     = duration::period;
+        using duration = std::chrono::duration<double>;
+        using rep      = duration::rep;
+        using period   = duration::period;
 
         // I'm not sure if I'm really allowed to do this
         // without a declaration of GameTime::now,

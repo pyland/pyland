@@ -19,6 +19,11 @@
 class MapObject : public Object {
 protected:
     ///
+    /// Render the object above sprites as an overlay
+    ///
+    bool render_above_sprite;
+
+    ///
     /// Whether you can step all over it
     ///
     Walkability walkability;
@@ -70,6 +75,18 @@ public:
 
     glm::vec2 get_position() { return position; }
     void set_position(glm::vec2 position) { this->position = position; }
+
+    ///
+    /// Determine if the object should be rendered above sprites
+    /// @return if the object should render above sprites
+    ///
+    bool render_above_sprites() { return render_above_sprite; }
+
+    ///
+    /// If the object is to be rendered above sprites
+    /// @param _render_above_sprites true if the object should be above sprites
+    ///
+    void set_render_above_sprites(bool _render_above_sprites) { render_above_sprite = _render_above_sprites; }
 
     ///
     /// Set the tile sheet to use for this character

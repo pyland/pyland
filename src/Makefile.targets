@@ -1,5 +1,7 @@
 all: $(EXECUTABLE) python_embed/wrapper_functions.so
 
+test: all $(TEST_EXECUTABLE)
+
 debug: CXXFLAGS += -g
 debug: CXXFLAGS += -O0
 debug: CPPFLAGS += -DDEBUG
@@ -26,28 +28,55 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 dependencies:
 	@-${MKDIR} dependencies
 
+dependencies/challenges: | dependencies
+	@-${MKDIR} dependencies/challenges
+
 dependencies/gui: | dependencies
 	@-${MKDIR} dependencies/gui
+
+dependencies/input_management: | dependencies
+	@-${MKDIR} dependencies/input_management
 
 dependencies/python_embed: | dependencies
 	@-${MKDIR} dependencies/python_embed
 
-dependencies/challenges: | dependencies
-	@-${MKDIR} dependencies/challenges
+dependencies/test: | dependencies
+	@-${MKDIR} dependencies/test
 
-dependencies/input_management: | dependencies
-	@-${MKDIR} dependencies/input_management
 
 
 #
 # Executables
 # DO NOT RE-ORDER - tmx parser must come before tinyxml in ldlibs
 
-$(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
+$(EXECUTABLE): $(BASE_OBJS)              \
+               $(CHALLENGE_OBJS)         \
+               $(EXECUTABLE_OBJ)         \
+               $(GUI_OBJS)               \
+               $(INPUT_OBJS)             \
+               $(PYTHON_OBJS)            \
+               tmx-parser/libtmxparser.a \
+               | dependencies            \
+
 	@echo "${bold}${green}[ Compiling $(EXECUTABLE) ]${normal}"
 
-	@$(COMPILER) -o $@ \
+	@$(COMPILER) -o $@ $(EXECUTABLE_OBJ) \
 		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
+		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
+		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
+		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
+		$(PYTHON_LDFLAGS)    $(PYTHON_LDLIBS)    $(PYTHON_CXXFLAGS)    \
+		$(SDL_LDFLAGS)       $(SDL_LDLIBS)       $(SDL_CXXFLAGS)       \
+		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS) $(TMXPARSER_CXXFLAGS) \
+		$(TINYXML_LDFLAGS)   $(TINYXML_LDLIBS)   $(TINYXML_CXXFLAGS)   \
+		$(ZLIB_LDFLAGS)      $(ZLIB_LDLIBS)      $(ZLIB_CXXFLAGS)      \
+		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)           \
+
+$(TEST_EXECUTABLE): $(EXECUTABLE) $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS)
+	@echo "${bold}${green}[ Compiling $(TEST_EXECUTABLE) ]${normal}"
+
+	@$(COMPILER) -o $@ $(TEST_EXECUTABLE_OBJ) \
+		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(TEST_OBJS) \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
@@ -63,7 +92,8 @@ $(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON
 # Object files
 #
 
-$(BASE_OBJS): %.o : %.cpp | dependencies
+$(TEST_EXECUTABLE_OBJ) $(TEST_OBJS): | dependencies/test
+$(TEST_EXECUTABLE_OBJ) $(TEST_OBJS) $(EXECUTABLE_OBJ) $(BASE_OBJS): %.o : %.cpp | dependencies
 	@echo "${bold}[ Compiling base object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
@@ -179,6 +209,7 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 	@-$(RM) $(EXECUTABLE)
 
 	@-$(RM) \
+		$(EXECUTABLE_OBJ)     \
 		$(BASE_OBJS)          \
 		$(CHALLENGE_OBJS)     \
 		$(GUI_OBJS)           \
@@ -211,4 +242,5 @@ veryclean: clean
 .PHONY: all
 .PHONY: clean
 .PHONY: debug
+.PHONY: test
 .PHONY: veryclean

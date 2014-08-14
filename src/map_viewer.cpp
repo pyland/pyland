@@ -66,8 +66,9 @@ void MapViewer::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     render_map();
-    render_objects();
+    render_objects(false);
     render_sprites();
+    render_objects(true);
     render_gui();
 }
 
@@ -184,7 +185,7 @@ void MapViewer::render_sprites() {
         }
     }
 }
-void MapViewer::render_objects() {
+void MapViewer::render_objects(bool above_sprite) {
     //Calculate the projection matrix
     std::pair<int, int> size = window->get_size();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
@@ -201,6 +202,10 @@ void MapViewer::render_objects() {
             //If we can't render the object 
             if(!object->is_renderable())
                 continue;
+
+            if(!above_sprite && object->render_above_sprites())
+                continue;
+
             RenderableComponent* object_render_component = object->get_renderable_component();
 
             //Move object to the required position
