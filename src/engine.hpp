@@ -51,8 +51,6 @@ private:
     ///
     static float global_scale;
 
-    static std::shared_ptr<GUIWindow> gui_window;
-
     ///
     /// The current challenge
     ///
@@ -136,7 +134,7 @@ public:
     /// @return indicates if the operation completed successfully
     ///
     static void change_tile(glm::ivec2 tile, int layer_num, int tile_id);
-
+ 
     ///
     /// Get the location of the map object or sprite in the map, throws exception if
     /// there is the object is not on the map
@@ -184,10 +182,6 @@ public:
     /// global access to game font
     static TextFont get_game_font();
     static Typeface get_game_typeface();
-
-
-    static std::shared_ptr<GUIWindow> get_gui_window() {return gui_window;}
-    static void set_gui_window(std::shared_ptr<GUIWindow> _gui_window) {gui_window = _gui_window;}
 };
 
 #endif

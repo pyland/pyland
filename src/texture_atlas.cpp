@@ -33,7 +33,7 @@ TextureAtlas::LoadException::LoadException(const std::string &message): std::run
 
 
 std::shared_ptr<TextureAtlas> TextureAtlas::new_resource(const std::string resource_name) {
-    return std::make_shared<TextureAtlas>(resource_name + ".png");
+    return std::make_shared<TextureAtlas>(resource_name);
 }
 
 

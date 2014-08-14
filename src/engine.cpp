@@ -23,7 +23,6 @@ MapViewer* Engine::map_viewer(nullptr);
 NotificationBar* Engine::notification_bar(nullptr);
 int Engine::tile_size(16);
 float Engine::global_scale(2.0f);
-std::shared_ptr<GUIWindow> Engine::gui_window(nullptr);
 
 
 // TODO: This needs to work with renderable objects
@@ -52,9 +51,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     sprite->set_state_on_moving_start(target);
 
     // Step-off events
-    EventManager::get_instance().add_event([location, id] () {
-        get_map_viewer()->get_map()->event_step_off.trigger(location, id);
-    });
+    get_map_viewer()->get_map()->event_step_off.trigger(location, id);
 
     // Motion
     EventManager::get_instance().add_timed_event(
@@ -76,9 +73,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
                 }
 
                 // Step-on events
-                EventManager::get_instance().add_event([target, id] () {
-                    get_map_viewer()->get_map()->event_step_on.trigger(target, id);
-                });
+                get_map_viewer()->get_map()->event_step_on.trigger(target, id);
 
                 walk_succeeded_return.set(true);
             }

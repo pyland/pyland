@@ -1,13 +1,13 @@
+#include <algorithm>
 #include <boost/regex.hpp>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
 
-#define CATCH_CONFIG_MAIN
-#include "catch.hpp"
 #include "fml.hpp"
 
 static const boost::regex ignored_line(" *(?:#.*)?");
@@ -37,7 +37,7 @@ FML::FML(std::istream &input):
     error(false) {
 
         // For keeping track of the current "path"
-        std::list<std::pair<int, std::vector<std::string>>> stack;
+        std::list<std::pair<ssize_t, std::vector<std::string>>> stack;
         stack.push_back(std::make_pair(-1, std::vector<std::string>({""})));
 
         // For each line
@@ -47,7 +47,7 @@ FML::FML(std::istream &input):
             if (boost::regex_match(line, ignored_line)) { continue; }
 
             // And check if the line is valid
-            error |= boost::regex_match(line, valid_line);
+            error |= !boost::regex_match(line, valid_line);
 
             // If not, still continue to see what can be understood from the file,
             // as the tokens are still valid; it's just some text is ignored
@@ -55,7 +55,7 @@ FML::FML(std::istream &input):
             // Get the indentation
             boost::smatch indents;
             boost::regex_match(line, indents, start_indentation);
-            int indentation(indents[1].str().size());
+            ssize_t indentation(ssize_t(indents[1].str().size()));
 
             // Reset the stack and add a fresh level
             while (indentation <= stack.back().first) { stack.pop_back(); }
@@ -86,46 +86,10 @@ FML::FML(std::istream &input):
         }
 }
 
-template <>
-std::string FML::get<std::string>(std::string where) {
-    return values->at(where);
+std::map<std::string, std::string> FML::as_map() {
+    return *values;
 }
 
-template <>
-int FML::get<int>(std::string where) {
-    return std::stoi(this->get<std::string>(where));
-}
-
-SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
-
-    GIVEN( "A basic configuration" ) {
-
-        std::string fake_file_contents(
-            "this/\n"
-            "    is/quite/simple/\n"
-            "        for/most: true but/not/all: 12\n"
-            "    m/g/\n"
-            "        kz:lol mbar: 123ttx___\n"
-            "and/some/more: 7\n"
-        );
-        std::istringstream fake_file(fake_file_contents);
-
-        WHEN("parsed") {
-            FML my_data(fake_file);
-
-            THEN("strings can be accessed") {
-
-                REQUIRE(my_data.get<std::string>("this/m/g/kz") == "lol");
-
-                REQUIRE(my_data.get<std::string>("this/is/quite/simple/for/most") == "true");
-
-            }
-
-            THEN("integers can be accessed") {
-
-                REQUIRE(my_data.get<int>("this/is/quite/simple/for/but/not/all") == 12);
-
-            }
-        }
-    }
+bool FML::valid() {
+    return !error;
 }

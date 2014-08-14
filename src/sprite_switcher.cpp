@@ -35,7 +35,7 @@ void SpriteSwitcher::add_sprite(int id) {
 
     // add button to GUI
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
-    Engine::get_gui_window()->add(new_button);
+    gui_manager->get_root()->add(new_button);
     gui_manager->parse_components();
 
 }

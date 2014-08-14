@@ -3,6 +3,7 @@
 
 
 #include "component.hpp"
+#include "component_group.hpp"
 #include "input_manager.hpp"
 #include "callback.hpp"
 #include "lifeline.hpp"
@@ -26,7 +27,7 @@ class GUIManager : public Object {
     ///
     /// The root component of the tree
     ///
-    std::shared_ptr<Component> root;
+    std::shared_ptr<ComponentGroup> root;
 
 
     ///
@@ -94,13 +95,13 @@ public:
     /// Set the root component of the component tree
     /// @param component the root
     ///
-    void set_root(std::shared_ptr<Component> component) { root = component; }
+    void set_root(std::shared_ptr<ComponentGroup> component) { root = component; }
 
     ///
     /// Get the root component of the tree
     /// @return the root
     ///
-    std::shared_ptr<Component> get_root() { return root; }
+    std::shared_ptr<ComponentGroup> get_root() { return root; }
 
 
 };

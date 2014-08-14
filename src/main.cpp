@@ -217,6 +217,62 @@ int main(int argc, const char *argv[]) {
     // create first character, TODO: move this into challenge
     CallbackState callbackstate(interpreter, "John");
 
+    std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
+    sprite_window->set_width_pixels(300);
+    sprite_window->set_height_pixels(300);
+    std::shared_ptr<Button> run_button = std::make_shared<Button>();
+    run_button->set_text("Run");
+    run_button->set_on_click([&] () { LOG(ERROR) << "RUN"; callbackstate.restart(); });
+    run_button->set_width(0.2f);
+    run_button->set_height(0.2f);
+    run_button->set_y_offset(0.8f);
+    run_button->set_x_offset(0.0f);
+
+    std::shared_ptr<Button> stop_button = std::make_shared<Button>();
+    stop_button->set_text("Stop");
+    stop_button->set_on_click([&] () {LOG(ERROR) << "STOP";  callbackstate.stop(); });
+    stop_button->set_width(0.2f);
+    stop_button->set_height(0.2f);
+    stop_button->set_y_offset(0.8f);
+    stop_button->set_x_offset(0.8f);
+
+    // build navigation bar buttons
+    NotificationBar notification_bar;
+    Engine::set_notification_bar(&notification_bar);
+    SpriteSwitcher sprite_switcher;
+
+    sprite_window->add(run_button);
+    sprite_window->add(stop_button);
+    for (auto button: notification_bar.get_navigation_buttons()) {
+        sprite_window->add(button);
+    }
+    
+    gui_manager.set_root(sprite_window);
+
+    // quick fix so buttons in correct location in initial window before gui_resize_func callback
+    auto original_window_size = window.get_size();
+    sprite_window->set_width_pixels(original_window_size.first);
+    sprite_window->set_height_pixels(original_window_size.second);
+
+    gui_manager.parse_components();
+
+    std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) {
+        LOG(INFO) << "GUI resizing";
+        auto window_size = (*game_window).get_size();
+        sprite_window->set_width_pixels(window_size.first);
+        sprite_window->set_height_pixels(window_size.second);
+        gui_manager.parse_components();
+    };
+    Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
+
+
+    // WARNING: Fragile reference capture
+    Lifeline map_resize_lifeline = window.register_resize_handler([&] (GameWindow *) {
+        map_viewer.resize();
+    });
+
+    InputManager* input_manager = window.get_input_manager();
+
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(); }

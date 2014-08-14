@@ -62,45 +62,12 @@ protected:
     ///
     /// The focus icon, to move with sprite and hide, depending on if sprite is in focus;
     ///
+    bool is_focus;
+
+    ///
+    /// The focus icon, to move with sprite and hide, depending on if sprite is in focus;
+    ///
     std::shared_ptr<MapObject> focus_icon;
-
-    ///
-    /// Overlays
-    ///
-    std::vector<int> overlay_ids;
-    
-    ///
-    /// The dimensions of the overlays (width, height).
-    /// 1.0 means the overlays is the same size as the engine's tile size * global scale.
-    ///
-    std::vector<std::pair<float, float>> overlay_dimensions;
-
-    ///
-    /// The offsets of the overlays (x, y ).
-    /// (0.0, 0.0) is the bottom left of the sprite. These offsets follow
-    /// cartesian quadrants in offsetting.
-    ///  1.0 means the offset is the same size as the engine's tile size * global scale.
-    ///
-    std::vector<std::pair<float, float>> overlay_offsets;
-
-    ///
-    /// Underlays
-    ///
-    std::vector<int> underlay_ids;
-    
-    ///
-    /// The dimensions of the underlays (width, height)
-    /// 1.0 means the underlays is the same size as the engine's tile size * global scale.
-    ///
-    std::vector<std::pair<float, float>> underlay_dimensions;
-
-    ///
-    /// The offsets of the underlays (x, y ).
-    /// (0.0, 0.0) is the bottom left of the sprite. These offsets follow
-    /// cartesian quadrants in offsetting.
-    ///  1.0 means the offset is the same size as the engine's tile size * global scale.
-    ///
-    std::vector<std::pair<float, float>> underlay_offsets;
 
 public:
     Sprite();
@@ -109,33 +76,9 @@ public:
            std::string name,
            Walkability walkability,
            int sheet_id,
-           std::string sheet_name="../resources/characters_1");
+           std::string sheet_name="../resources/characters_1.png");
 
     virtual ~Sprite();
-
-    ///
-    /// Add an overlay to the sprite
-    /// @param overlay_id The tile id
-    ///
-    void add_overlay(int overlay_id, float width=1.0f, float height=1.0f, float x_offset=0.0f, float y_offset=0.0f);
-
-    ///
-    /// Remove an overlay from the sprite
-    /// @param overlay_id the tile id
-    ///
-    void remove_overlay(int overlay_id);
-
-    ///
-    /// Add an underlay to the sprite
-    /// @param underlay_id
-    /// 
-    void add_underlay(int underlay_id, float width=1.0f, float height=1.0f, float x_offset=0.0f, float y_offset=0.0f);
-
-    ///
-    /// Remove an underlay from the sprite
-    /// @param underlay_id the underlay id
-    ///
-    void remove_underlay(int underlay_id);
 
     ///
     /// manage collisions for spirtes as they move
@@ -203,14 +146,10 @@ public:
 
     bool is_in_inventory(std::shared_ptr<MapObject> object);
 
-    void set_y_position(int y_pos);
-    void set_x_position(int x_pos);
-    void set_y_position(double y_pos);
-    void set_x_position(double x_pos);
 
     void set_sprite_status(std::string _sprite_status);
 
-    void set_focus(bool is_focus);
+    void set_focus(bool _is_focus);
 };
 
 #endif

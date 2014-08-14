@@ -32,8 +32,8 @@ bool MapLoader::load_map(const std::string source) {
     map_width = map.GetWidth();
     map_height = map.GetHeight();
 
-    load_layers();
     load_tileset();
+    load_layers();
 
     return true;
 }
@@ -61,13 +61,13 @@ void MapLoader::load_layers() {
                 int tileset_index = layer->GetTileTilesetIndex(x, y);
                 if(tileset_index == -1) {
                     //Add the default tile
-                    layer_ptr->add_tile("", tile_id);
+                    layer_ptr->add_tile(nullptr, tile_id);
                     continue;
                 }
-                const Tmx::Tileset* tileset = map.GetTileset(tileset_index);
+                const std::string tileset_name = map.GetTileset(tileset_index)->GetName();
 
                 //Add the tile to the layer
-                layer_ptr->add_tile(tileset->GetName(), tile_id);
+                layer_ptr->add_tile(tilesets_by_name.find(tileset_name)->second, tile_id);
             }
         }
     }
@@ -84,10 +84,12 @@ void MapLoader::load_tileset() {
         const std::string tileset_name(tileset->GetName());
         int tileset_width = tileset->GetImage()->GetWidth();
         int tileset_height = tileset->GetImage()->GetHeight();
+        const std::string tileset_atlas(tileset->GetImage()->GetSource());
 
         //Create a new tileset and add it to the map
-        std::shared_ptr<TileSet> map_tileset = std::make_shared<TileSet>(tileset_name, tileset_width, tileset_height);
+        std::shared_ptr<TileSet> map_tileset = std::make_shared<TileSet>(tileset_name, tileset_width, tileset_height, tileset_atlas);
         tilesets.push_back(map_tileset);
+        tilesets_by_name.insert(std::make_pair(tileset_name, map_tileset));
 
         //We use the tileset properties to define collidable tiles for our collision
         //detection

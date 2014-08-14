@@ -59,8 +59,9 @@ class MapViewer {
 
     ///
     /// Render objects on the map
+    /// @param above_sprite if the object is to be rendered above the sprites
     ///
-    void render_objects();
+    void render_objects(bool above_sprite);
 
     ///
     /// Render sprites on the map
