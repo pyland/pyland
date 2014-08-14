@@ -1,6 +1,9 @@
 // Try funky initialization in if.
 
+#include <algorithm>
+#include <fstream>
 #include <memory>
+#include <stdexcept>
 #include <tuple>
 #include <utility>
 
@@ -17,6 +20,7 @@ extern "C" {
 #include "texture_atlas.hpp"
 
 #include "engine.hpp"
+#include "fml.hpp"
 #include "image.hpp"
 
 
@@ -33,7 +37,15 @@ TextureAtlas::LoadException::LoadException(const std::string &message): std::run
 
 
 std::shared_ptr<TextureAtlas> TextureAtlas::new_resource(const std::string resource_name) {
-    return std::make_shared<TextureAtlas>(resource_name);
+    std::shared_ptr<TextureAtlas> atlas = std::make_shared<TextureAtlas>(resource_name);
+
+    try {
+        atlas->load_names(resource_name.substr(0, resource_name.find_last_of('.')));
+    }
+    catch (std::exception &e) {
+        LOG(WARNING) << "No names loaded for texture atlas \"" << resource_name << "\": " << e.what();
+    }
+    return atlas;
 }
 
 
@@ -44,7 +56,8 @@ TextureAtlas::TextureAtlas(const std::string image_path):
     unit_h(Engine::get_tile_size()),
     unit_columns(image.width  / unit_w),
     unit_rows   (image.height / unit_h),
-    textures(unit_columns * unit_rows)
+    textures(unit_columns * unit_rows),
+    names_to_indexes()
 {
     glGenTextures(1, &gl_texture);
     
@@ -123,4 +136,36 @@ std::tuple<float,float,float,float> TextureAtlas::index_to_coords(int index) {
          float(image.height - (units.second + 1) * unit_h) / float(image.store_height),
          float(image.height - (units.second    ) * unit_h) / float(image.store_height)
          );
+}
+
+
+void TextureAtlas::load_names(const std::string filename) {
+    std::ifstream file(filename + ".fml");
+
+    if (file.fail()) {
+        throw TextureAtlas::LoadException("File \"" + filename + ".fml\" could not be opened.");
+    }
+
+    FML names_fml(file);
+
+    for_each(names_fml.begin<int>(), names_fml.end<int>(), [&] (std::pair<std::string, int> kv)
+             {
+                 set_name_index(kv.first, kv.second);
+             });
+}
+
+
+void TextureAtlas::set_name_index(const std::string name, int index) {
+    names_to_indexes.insert(std::make_pair(name, index));
+    LOG(INFO) << "Added name index mapping: " << name << ": " << index;
+}
+
+
+int TextureAtlas::get_name_index(const std::string name) {
+    if (names_to_indexes.count(name+" ") == 0) {
+        LOG(INFO) << "Name to index: " << name << ": " << names_to_indexes.find(name)->second;
+        return names_to_indexes.find(name)->second;
+    } else {
+        return -1;
+    }
 }

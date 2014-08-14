@@ -91,6 +91,7 @@ void NotificationBar::move_notification(Direction direction) {
         direction == Direction::NEXT ? notification_stack.forward()
                                      : notification_stack.backward()
     );
+    hide_buttons();
 }
 
 void NotificationBar::add_notification(std::string text_to_display) {
@@ -101,4 +102,20 @@ void NotificationBar::add_notification(std::string text_to_display) {
             //std::cout << text_to_display << std::endl;
         }
     );
+    hide_buttons();
+ }
+
+ void NotificationBar::hide_buttons(){
+    if (notification_stack.can_forward) {
+        forward_text->set_text("->");
+    } else {
+        forward_text->set_text("");
+    }
+
+    if (notification_stack.can_backward) {
+        backward_text->set_text("<-");
+    } else {
+        backward_text->set_text("");
+    }
+
  }

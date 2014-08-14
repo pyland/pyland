@@ -108,8 +108,8 @@ bool Engine::walkable(glm::ivec2 location) {
     return true;
 }
 
-void Engine::change_tile(glm::ivec2 tile, int layer_num, int tile_id) {
-    map_viewer->get_map()->update_tile(tile.x, tile.y, layer_num, tile_id);
+void Engine::change_tile(glm::ivec2 tile, int layer_num, std::string tile_name) {
+    map_viewer->get_map()->update_tile(tile.x, tile.y, layer_num, tile_name);
 }
 
 
