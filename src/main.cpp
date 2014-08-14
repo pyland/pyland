@@ -28,6 +28,7 @@
 
 #include "api.hpp"
 #include "button.hpp"
+#include "callback_state.hpp"
 #include "component.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
@@ -41,7 +42,6 @@
 #include "lifeline.hpp"
 #include "locks.hpp"
 #include "main.hpp"
-#include "make_unique.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
@@ -68,118 +68,9 @@
 #include <GL/gl.h>
 #endif
 
-
-
 using namespace std;
 
 static std::mt19937 random_generator;
-
-int create_sprite(Interpreter &interpreter) {
-    LOG(INFO) << "Creating sprite";
-
-    glm::ivec2 start(4, 15);
-
-    // Registering new sprite with game engine
-    auto new_sprite(make_shared<Sprite>(start, "John", Walkability::BLOCKED, 4));
-
-    LOG(INFO) << "Adding sprite";
-    ObjectManager::get_instance().add_object(new_sprite);
-    Engine::get_map_viewer()->get_map()->add_sprite(new_sprite->get_id());
-
-    Engine::get_map_viewer()->set_map_focus_object(new_sprite->get_id());
-    LOG(INFO) << "Creating sprite wrapper";
-    LOG(INFO) << "ID " << new_sprite->get_id();
-
-    // Register user controled sprite
-    // Yes, this is a memory leak. Deal with it.
-    auto *a_thing(new Entity(start, new_sprite->get_name(), new_sprite->get_id()));
-
-    LOG(INFO) << "Registering sprite";
-    new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
-    LOG(INFO) << "Done!";
-
-    return new_sprite->get_id();
-}
-
-class CallbackState {
-    public:
-        CallbackState(Interpreter &interpreter, std::string name):
-            interpreter(interpreter),
-            name(name) {
-        }
-
-        void register_number_key(unsigned int key) {
-            LOG(INFO) << "changing focus to " << key;
-
-            // Note: unsigned
-            if (key >= key_to_id.size()) {
-                LOG(INFO) << "changing focus aborted; no such id";
-                return;
-            }
-
-            Engine::get_map_viewer()->set_map_focus_object(key_to_id[key]);
-        }
-
-        void register_number_id(int id) {
-            LOG(INFO) << "changing focus to " << id;
-
-            //TODO: handle incorrect ID
-
-            Engine::get_map_viewer()->set_map_focus_object(id);
-        }
-
-        int spawn() {
-            int id = create_sprite(interpreter);
-            key_to_id.push_back(id);
-            return id;
-        }
-
-        void restart() {
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-
-            if (!active_player) { return; }
-
-            active_player->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-        }
-
-        void stop() {
-
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-
-            if (!active_player) { return; }
-
-            active_player->daemon->value->halt_soft(EntityThread::Signal::STOP);
-        }
-
-        void kill() {
-
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-
-            if (!active_player) { return; }
-
-            active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
-        }
-
-        void man_move(glm::vec2 direction) {
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            Engine::move_sprite(id, direction);
-        }
-
-        void monologue () {
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto location =  Engine::find_object(id);
-            std::cout << "You are at " << location.x << ", " << location.y << std::endl;
-        }
-
-    private:
-        Interpreter &interpreter;
-        std::string name;
-        std::vector<int> key_to_id;
-};
-
 
 int main(int argc, const char *argv[]) {
     // allows you to pass an alternative text editor to app, otherwise
@@ -195,27 +86,32 @@ int main(int argc, const char *argv[]) {
 
     int map_width(32);
     int map_height(32);
+
+/// CREATE GLOBAL OBJECTS
+
+    //Create the game window to present to the users
     GameWindow window(int(float(map_width)  * Engine::get_actual_tile_size()),
                       int(float(map_height) * Engine::get_actual_tile_size()),
                       false);
-
     window.use_context();
 
+    //Create the interpreter
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
-  
-   
+    //Create the input manager
     InputManager* input_manager = window.get_input_manager();
-    GUIManager gui_manager;
 
+    //Create the GUI manager
+    GUIManager gui_manager;
+    
+    //Create the map viewer
     MapViewer map_viewer(&window, &gui_manager);
     Engine::set_map_viewer(&map_viewer);
 
-    ChallengeBase base_challenge(&interpreter, &gui_manager);
-    base_challenge.create_gui();
-    map_viewer.set_map(base_challenge->get_map());
+    //Create the callbackstate
+    CallbackState callbackstate();
 
-    // create first character, TODO: move this into challenge
-    CallbackState callbackstate(interpreter, "John");
+    //Create the event manager
+    EventManager &em = EventManager::get_instance();
 
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
     sprite_window->set_width_pixels(300);
@@ -239,7 +135,7 @@ int main(int argc, const char *argv[]) {
     // build navigation bar buttons
     NotificationBar notification_bar;
     Engine::set_notification_bar(&notification_bar);
-    SpriteSwitcher sprite_switcher;
+    //    SpriteSwitcher sprite_switcher;
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
@@ -256,6 +152,7 @@ int main(int argc, const char *argv[]) {
 
     gui_manager.parse_components();
 
+    //The GUI resize function
     std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) {
         LOG(INFO) << "GUI resizing";
         auto window_size = (*game_window).get_size();
@@ -266,21 +163,18 @@ int main(int argc, const char *argv[]) {
     Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
 
 
+    //The callbacks
     // WARNING: Fragile reference capture
     Lifeline map_resize_lifeline = window.register_resize_handler([&] (GameWindow *) {
         map_viewer.resize();
     });
 
-    InputManager* input_manager = window.get_input_manager();
 
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(); }
     ));
-    Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("N")},
-        [&] (KeyboardInputEvent) { callbackstate.spawn(); }
-    ));
+
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("R")},
         [&] (KeyboardInputEvent) { callbackstate.restart(); }
@@ -350,8 +244,6 @@ int main(int argc, const char *argv[]) {
         }
     ));
 
-    EventManager &em = EventManager::get_instance();
-
     std::function<void (GameWindow *)> func_char = [&] (GameWindow *) {
         LOG(INFO) << "text window resizing";
         Engine::text_updater();
@@ -361,15 +253,13 @@ int main(int argc, const char *argv[]) {
 
     //TODO: CHallenge specific
     //default script
-    int new_id = callbackstate.spawn(); //create a character
-    std::string bash_command =
-        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
-        + std::to_string(new_id) + std::string(".py");
-    system(bash_command.c_str());
+    //    int new_id = callbackstate.spawn(); //create a character
+    //    std::string bash_command =
+    //        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
+    //        + std::to_string(new_id) + std::string(".py");
+    //    system(bash_command.c_str());
 
-
-
-    LongWalkChallenge long_walk_challenge(input_manager);
+    LongWalkChallenge long_walk_challenge(std::string("../resources/map0.tmx"), &interpreter, &gui_manager, &window, input_manager, &map_viewer);
     long_walk_challenge.start();
 
 

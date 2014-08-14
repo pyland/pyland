@@ -3,25 +3,76 @@
 
 #include "challenge.hpp"
 #include "input_manager.hpp"
+#include "make_unique.hpp"
 
-Challenge::~Challenge() {}
-
-Challenge::Challenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager *input_manager) :
+Challenge::Challenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager *_input_manager, MapViewer* _map_viewer) :
     interpreter(_interpreter), gui_manager(_gui_manager),
-    game_window(_game_window), input_manager(input_manager)
+    game_window(_game_window), input_manager(_input_manager),
+    map_viewer(_map_viewer)
 {
     map_name = "../resources/map0.tmx";
     map = new Map(map_name);
-    
-
 }
 
 Challenge::~Challenge() {
+    
+    //Remove all sprites
+    for(int sprite_id : sprite_ids) {
+        ObjectManager::get_instance().remove_object(sprite_id);
+    }
+    
+    //Remove all map objects
+    for(int map_object_id : map_object_ids) {
+        ObjectManager::get_instance().remove_object(map_object_id);
+    }
+
+    //Delete the map
     delete map;
     
 }
 
-void ChallengeBase::create_gui() {
+int Challenge::make_map_object(glm::vec2 position, std::string name, Walkability walkability, int sheet_id, std::string sheet_name) {
+    auto new_object(std::make_shared<MapObject>(position, name, walkability, sheet_id, sheet_name));
+    ObjectManager::get_instance().add_object(new_object);
+    auto new_object_id = new_object->get_id();
+    map_object_ids.push_back(new_object_id);
+    LOG(INFO) << "created new_object with id: " << new_object_id;
+    map->add_map_object(new_object_id);
+    
+    return new_object_id;
+}
+
+int Challenge::make_sprite(glm::vec2 position, std::string name, Walkability walkability, int sheet_id, std::string sheet_name) {
+    LOG(INFO) << "Creating sprite";
+
+    // Registering new sprite with game engine
+    auto new_sprite(std::make_shared<Sprite>(position, name, walkability, sheet_id, sheet_name));
+
+    LOG(INFO) << "Adding sprite";
+    ObjectManager::get_instance().add_object(new_sprite);
+
+    int sprite_id = new_sprite->get_id();
+    sprite_ids.push_back(sprite_id);
+
+
+    map->add_sprite(sprite_id);
+    map_viewer->set_map_focus_object(sprite_id);
+    LOG(INFO) << "Creating sprite wrapper";
+    LOG(INFO) << "ID " << sprite_id;
+
+    // Register user controled sprite
+    // Yes, this is a memory leak. Deal with it.
+    auto *a_thing(new Entity(position, name, sprite_id));
+
+    LOG(INFO) << "Registering sprite";
+    new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter->register_entity(*a_thing));
+    LOG(INFO) << "Done!";
+
+    return sprite_id;
+}
+
+/*
+void Challenge::create_gui() {
 
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
     TextFont buttonfont = Engine::get_game_font();
@@ -89,6 +140,5 @@ void ChallengeBase::create_gui() {
     Lifeline map_resize_lifeline = window.register_resize_handler([&] (GameWindow *) {
         map_viewer.resize();
     });
-
-
 }
+*/

@@ -22,7 +22,7 @@
 #include "text.hpp"
 
 class MapViewer;
-
+class Challenge;
 ///
 /// default python editor, used as long as another isn't passed as command line arg
 #define DEFAULT_PY_EDITOR "gedit"

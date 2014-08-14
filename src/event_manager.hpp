@@ -68,6 +68,11 @@ public:
     GameTime time;
 
     ///
+    /// Cleans out the current and next frame event queues.
+    ///
+    void flush();
+
+    ///
     /// Getter for the main global event manager.
     /// @return a reference to the global event manager
     ///

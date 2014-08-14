@@ -11,6 +11,7 @@
 #include "interpreter.hpp"
 #include "lifeline.hpp"
 #include "map.hpp"
+#include "map_viewer.hpp"
 #include "sprite.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
@@ -20,7 +21,7 @@ class InputManager;
 
 class LongWalkChallenge : public Challenge {
 public:
-    LongWalkChallenge(InputManager* input_manager);
+    LongWalkChallenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager* _input_manager, MapViewer* _map_viewer);
 
         virtual void start();
         virtual void finish();

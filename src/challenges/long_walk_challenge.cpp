@@ -52,7 +52,8 @@ std::map<std::string, std::vector<glm::ivec2>> targets = {
     }}
 };
 
-LongWalkChallenge::LongWalkChallenge(InputManager *input_manager): Challenge(input_manager) {
+LongWalkChallenge::LongWalkChallenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager* _input_manager, MapViewer* _map_viewer) :
+    Challenge(map_name, _interpreter, _gui_manager, _game_window, _input_manager, _map_viewer) {
     auto *map = Engine::get_map_viewer()->get_map();
 
     // testing micro-objects

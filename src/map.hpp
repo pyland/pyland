@@ -91,7 +91,6 @@ class Map {
     ///
     int map_width = 16;
 
-
     ///
     /// The texture atlases which store the map tile textures
     ///

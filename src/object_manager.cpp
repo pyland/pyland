@@ -1,7 +1,9 @@
 #include <glog/logging.h>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <utility>
 
 #include "object.hpp"
 #include "object_manager.hpp"
@@ -46,5 +48,16 @@ bool ObjectManager::add_object(std::shared_ptr<Object> new_object) {
 }
 
 void ObjectManager::remove_object(int object_id) {
-    objects.erase(object_id);
+    if(ObjectManager::is_valid_object_id(object_id))    
+        objects.erase(object_id);
+}
+
+void ObjectManager::print_debug() {
+
+    std::cout <<" OBJECT MANAGER:: " << std::endl;
+    for(std::pair<int, std::shared_ptr<Object>> object_pair : objects) {
+        std::cout << "OBJECT ("  << object_pair.first << ") ";
+        std::cout << " REF COUNT: " << object_pair.second.use_count() << std::endl;
+    }
+    std::cout << "DONE." << std::endl;
 }

@@ -115,5 +115,3 @@ void MapLoader::load_tileset() {
         }
     }
 }
-
-.

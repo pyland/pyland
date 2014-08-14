@@ -48,11 +48,6 @@ protected:
     /// TODO: this value isn't used at the moment, use for status images
     Sprite_Status sprite_status;
 
-    ///
-    /// Tiles that the object is blocking, probably
-    /// by standing on.
-    ///
-    std::map<std::string, Map::Blocker> blocked_tiles;
 
     ///
     /// Map_objects which move with the sprite
@@ -69,9 +64,22 @@ protected:
     ///
     std::shared_ptr<MapObject> focus_icon;
 
+    ///
+    /// Tiles that the object is blocking, probably
+    /// by standing on.
+    ///
+    std::map<std::string, Map::Blocker> blocked_tiles;
+
 public:
     Sprite();
-
+    ///
+    /// Constructs a sprite
+    /// @param position the (x, y) position of the sprite on the map
+    /// @param name the name of the sprite
+    /// @param walkability the walkability properties of the sprite
+    /// @param sheet_id the id of the image of the sprite in its sprite sheet
+    /// @param sheet_name the name of the sprite sheet
+    ///
     Sprite(glm::ivec2 position,
            std::string name,
            Walkability walkability,
@@ -151,5 +159,6 @@ public:
 
     void set_focus(bool _is_focus);
 };
+
 
 #endif

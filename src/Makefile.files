@@ -10,6 +10,7 @@ TEST_EXECUTABLE_OBJ = test/test.o
 #
 
 BASE_OBJS = \
+        callback_state.o       \
         challenge_base.o       \
 	challenge_helper.o     \
 	engine.o               \

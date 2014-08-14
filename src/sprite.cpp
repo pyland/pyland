@@ -2,6 +2,18 @@
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
+#include <memory>
+
+//Include GLM
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -12,12 +24,15 @@
 #include <GL/gl.h>
 #endif
 
+#include "interpreter.hpp"
 #include "image.hpp"
 #include "engine.hpp"
 #include "entitythread.hpp"
 #include "map_viewer.hpp"
+#include "make_unique.hpp"
 #include "renderable_component.hpp"
 #include "sprite.hpp"
+#include "object.hpp"
 #include "object_manager.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
@@ -252,52 +267,3 @@ void Sprite::set_focus(bool _is_focus) {
     }
 }
 
-void Sprite::add_overlay(int overlay_id, float width, float height, float x_offset, float y_offset) {
-    overlay_ids.push_back(overlay_id);
-    std::pair<float, float> dimensions = std::make_pair(width,  height);
-    overlay_dimensions.push_back(dimensions);
-    std::pair<float, float> offsets = std::make_pair(x_offset, y_offset);
-    overlay_offsets.push_back(offsets);
-    generate_tex_data();
-}
-
-void Sprite::remove_overlay(int overlay_id) {
-
-    //Index to delete at
-    int index = 0;
-
-    //Remove it from the vector
-    for(auto iter = overlay_ids.begin(); iter != overlay_ids.end(); ++iter) {
-        if(overlay_id == *iter) {
-            overlay_ids.erase(iter);
-            break;
-        }
-        index++;
-    }
-    overlay_dimensions.erase(overlay_dimensions.begin()+index);
-    overlay_offsets.erase(overlay_offsets.begin()+index);
-    generate_tex_data();
-}
-
-void Sprite::add_underlay(int underlay_id, float width, float height, float x_offset, float y_offset) {
-    underlay_ids.push_back(underlay_id);
-    std::pair<float, float> dimensions = std::make_pair(width,  height);
-    underlay_dimensions.push_back(dimensions);
-    std::pair<float,float> offsets = std::make_pair(x_offset, y_offset);
-    underlay_offsets.push_back(offsets);
-    generate_tex_data();
-}
-
-void Sprite::remove_underlay(int underlay_id)  {
-    //Index to delete at
-    int index = 0;
-
-    //Remove it from the vector
-    for(auto iter = underlay_ids.begin(); iter != underlay_ids.end(); ++iter) {
-        if(underlay_id == *iter) {
-            underlay_ids.erase(iter);
-            break;
->>>>>>> 0709a67a1e8f99dd8d554978a5edd95152d4a115
-        }
-    }
-}
