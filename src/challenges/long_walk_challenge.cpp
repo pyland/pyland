@@ -72,15 +72,15 @@ LongWalkChallenge::LongWalkChallenge(std::string map_name, Interpreter* _interpr
     // testing lawn
     auto lawn_area = { glm::ivec2(12, 16), glm::ivec2(13, 16), glm::ivec2(14, 16) };
     for (glm::ivec2 lawn_tile : lawn_area) {
-        Engine::change_tile(lawn_tile, 5, 20);
+        Engine::change_tile(lawn_tile, 5, "lawn");
         map->event_step_on.register_callback(
             lawn_tile,
             [test_chest,lawn_tile] (int) {
                 int id(Engine::get_sprites_at(lawn_tile).front());
                 auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
-                if (sprite->is_in_inventory(test_chest)) {
+                if (sprite->is_in_inventory(test_chest->get_id())) {
                     Engine::print_dialogue("Grass", "You're mowing, keep on going");
-                    Engine::change_tile(lawn_tile, 5, 28);
+                    Engine::change_tile(lawn_tile, 5, "lawn_mown");
                     return false;
                 }
                 else {

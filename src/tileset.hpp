@@ -33,10 +33,6 @@ class TileSet {
     ///
     std::shared_ptr<TextureAtlas> texture_atlas;
 
-    ///
-    /// A map of tile names to tile indexes.
-    ///
-    std::map<std::string,int> names_to_tiles;
 public:
 
     ///

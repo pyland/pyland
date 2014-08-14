@@ -93,7 +93,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             execution_scope = create_execution_scope(entity)
 
-            entity.__set_game_speed(1000000000);
+            entity.__set_game_speed(64);
             try:
                 entity.update_status("running")
                 exec(script, execution_scope)

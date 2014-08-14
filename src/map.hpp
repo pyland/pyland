@@ -296,11 +296,9 @@ public:
     /// Update the tile at a given point in the map
     /// @param x_pos the x position of the tile
     /// @param y_pos the y position of the tile
-    /// @param tile_id the id of the tile
-    /// @param tileset_name the tileset name, default tileset used if
-    /// not specified
+    /// @param tile_name the global name of the tile
     ///
-    void update_tile(int x_pos, int y_pos, int layer_num, int tile_id);
+    void update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name);
 
 
     ///

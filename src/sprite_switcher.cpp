@@ -29,7 +29,7 @@ void SpriteSwitcher::add_sprite(int id) {
     new_button->set_x_offset(x_offset);
 
     // store button locally for later extensions
-    switcher_buttons.push_back(new_button);
+    switcher_buttons.push_back(new_button->get_id());
 
     button_num++;
 
@@ -41,11 +41,18 @@ void SpriteSwitcher::add_sprite(int id) {
 }
 
 SpriteSwitcher::SpriteSwitcher() {
-    switcher_buttons = std::vector<std::shared_ptr<Button>>();
+    switcher_buttons = std::vector<int>();
     Engine::get_map_viewer()->get_map()->event_sprite_add.register_callback(
         [&] (int id) {
             add_sprite(id);
             return true;
         }
     );
+}
+SpriteSwitcher::~SpriteSwitcher() {
+    GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
+    CHECK_NOTNULL(gui_manager);
+    for (int button_id: switcher_buttons) {
+        gui_manager->get_root()->remove(button_id);
+    }
 }
