@@ -14,8 +14,8 @@ class NotificationBar {
         Notification notification_stack;
         Text* notification_text;
 
-        std::shared_ptr<Button> forward_button;
-        std::shared_ptr<Button> backward_button;
+        int forward_button_id;
+        int backward_button_id;
 
         std::unique_ptr<Text> backward_text;
         std::unique_ptr<Text> forward_text;
