@@ -86,10 +86,6 @@ FML::FML(std::istream &input):
         }
 }
 
-std::map<std::string, std::string> FML::as_map() {
-    return *values;
-}
-
 bool FML::valid() {
     return !error;
 }

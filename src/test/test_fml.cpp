@@ -26,17 +26,12 @@ SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
             }
 
             THEN("strings can be accessed") {
-
                 REQUIRE(my_data.get<std::string>("this/m/g/kz") == "lol");
-
                 REQUIRE(my_data.get<std::string>("this/is/quite/simple/for/most") == "true");
-
             }
 
             THEN("integers can be accessed") {
-
                 REQUIRE(my_data.get<int>("this/is/quite/simple/for/but/not/all") == 12);
-
             }
         }
     }
@@ -64,13 +59,11 @@ SCENARIO("FML can parse duplicated structure", "[fml][parse]" ) {
             }
 
             THEN("everything exists") {
-
                 REQUIRE(my_data.get<int>("path/1/x") == 0);
                 REQUIRE(my_data.get<int>("path/1/y") == 0);
                 REQUIRE(my_data.get<int>("path/1/z") == 0);
                 REQUIRE(my_data.get<int>("path/2/y") == 0);
                 REQUIRE(my_data.get<int>("path/2/z") == 0);
-
             }
         }
     }
@@ -95,10 +88,8 @@ SCENARIO("FML can handle somewhat broken configuration", "[fml][error]" ) {
             }
 
             THEN("some things exists") {
-
                 REQUIRE(my_data.get<int>("x") == 0);
                 REQUIRE(my_data.get<int>("m") == 0);
-
             }
         }
     }
@@ -106,12 +97,12 @@ SCENARIO("FML can handle somewhat broken configuration", "[fml][error]" ) {
 
 SCENARIO("FML can be iterated", "[fml][iterate]" ) {
 
-    std::map<std::string, std::string> map_equivalent({
-        { "path/1/x", "0" },
-        { "path/1/y", "0" },
-        { "path/1/z", "0" },
-        { "path/2/y", "0" },
-        { "path/2/z", "0" }
+    std::map<std::string, int> map_equivalent({
+        { "path/1/x", 0 },
+        { "path/1/y", 0 },
+        { "path/1/z", 0 },
+        { "path/2/y", 0 },
+        { "path/2/z", 0 }
     });
 
     GIVEN("a basic configuration") {
@@ -130,19 +121,25 @@ SCENARIO("FML can be iterated", "[fml][iterate]" ) {
             FML my_data(fake_file);
 
             THEN("the output is iterable") {
-
-                for (const auto pair : my_data) {
+                for (auto pair : my_data) {
                     REQUIRE(pair.second == "0");
                 }
 
-                std::equal(my_data.cbegin(), my_data.cend(), map_equivalent.cbegin());
-
+                for (std::pair<std::string, int> pair : my_data) {
+                    REQUIRE(map_equivalent.at(pair.first) == pair.second);
+                }
             }
 
-            THEN("the output is exportable") {
+            THEN("the output is can be accessed") {
+                for (auto pair : map_equivalent) {
+                    REQUIRE(my_data.get<int>(pair.first) == pair.second);
+                }
+            }
 
-                REQUIRE(my_data.as_map() == map_equivalent);
-
+            THEN("the output is convertable to a map") {
+                std::map<std::string, int> new_map;
+                for (auto pair : my_data) { new_map.insert(pair); }
+                REQUIRE(map_equivalent == new_map);
             }
         }
     }

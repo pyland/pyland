@@ -11,48 +11,50 @@
 #include <utility>
 
 class FML {
-    using str = std::string;
+    private:
+        using StringMap = std::map<std::string, std::string>;
+
+        class CastablePair: public std::remove_const<StringMap::value_type>::type {
+            public:
+                CastablePair(std::remove_const<StringMap::value_type>::type other):
+                    std::remove_const<StringMap::value_type>::type(other) {}
+
+                template <typename S, typename T>
+                operator const std::pair<S, T>() {
+                    return std::make_pair(first, boost::lexical_cast<T>(second));
+                }
+        };
 
     public:
-        template <typename T=str>
         using const_iterator = boost::transform_iterator<
-            std::function<std::pair<str const, T> (std::pair<str const, str>)>,
-            std::map<str, str>::const_iterator
+            std::function<CastablePair (StringMap::value_type)>,
+            StringMap::const_iterator
         >;
 
         explicit FML(std::istream &input);
 
-        template <typename T=str>
-        T get(str where) { return boost::lexical_cast<T>(values->at(where)); }
-
-        std::map<str, str> as_map();
-
-        template <typename T=str>
-        const_iterator<T> begin() const { return this->cbegin<T>(); }
-
-        template <typename T=str>
-        const_iterator<T> end() const { return this->cend<T>(); }
-
-        template <typename T=str>
-        const_iterator<T> cbegin() const {
-            return boost::make_transform_iterator(values->cbegin(), &FML::lexical_pair_cast<T>);
-        }
-
-        template <typename T=str>
-        const_iterator<T> cend() const {
-            return boost::make_transform_iterator(values->cend(), &FML::lexical_pair_cast<T>);
-        }
-
         bool valid();
 
+        template <typename T=std::string>
+        T get(std::string where) { return boost::lexical_cast<T>(values->at(where)); }
+
+        // Iterator is always const
+        const_iterator begin () const { return make_iter(values->cbegin()); }
+        const_iterator cbegin() const { return make_iter(values->cbegin()); }
+        const_iterator end   () const { return make_iter(values->cend  ()); }
+        const_iterator cend  () const { return make_iter(values->cend  ()); }
+
     private:
-        std::shared_ptr<std::map<str, str>> values;
+        const_iterator make_iter(StringMap::const_iterator mapiter) const {
+            return boost::make_transform_iterator(
+                mapiter,
+                [] (StringMap::value_type pair) { return CastablePair(pair); }
+            );
+        }
+
+        std::shared_ptr<StringMap> values;
         bool error;
 
-        template <typename T>
-        static std::pair<str, T> lexical_pair_cast(std::pair<str, str> other) {
-            return std::make_pair(other.first, boost::lexical_cast<T>(other.second));
-        }
 };
 
 #endif
