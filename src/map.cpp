@@ -522,7 +522,22 @@ bool Map::recalculate_layer_mappings(int x_pos, int y_pos, int layer_num) {
     }
 }
 
-void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
+void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name) {
+    int tile_id = -1;
+    std::shared_ptr<TileSet> tileset;
+    for (auto tileset_i : tilesets) {
+        tile_id = tileset_i->get_atlas()->get_name_index(tile_name);
+        if (tile_id != -1) {
+            tileset = tileset_i;
+            break;
+        }
+    }
+    if (tile_id == -1) {
+        // Tile not found.
+        LOG(FATAL) << "BAAADDD!!!! BAD, BAD, BAD!! Bad tile name: \"" << tile_name << "\"... I should make this softer...";
+        return;
+    }
+    
     // Build the data for the update
     GLfloat *data;
     size_t data_size(sizeof(GLfloat) * num_tile_dimensions * num_tile_vertices);
@@ -570,7 +585,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, int tile_id) {
     Layer::Packing packing(layer->get_packing());
 
     // Add this tile to the layer data structure
-    layer->update_tile(x_pos, y_pos, tile_id, nullptr);
+    layer->update_tile(x_pos, y_pos, tile_id, tileset);
 
     int tile_offset;
 
