@@ -64,6 +64,11 @@ protected:
     ///
     bool is_focus;
 
+    ///
+    /// The focus icon, to move with sprite and hide, depending on if sprite is in focus;
+    ///
+    std::shared_ptr<MapObject> focus_icon;
+
 public:
     Sprite();
 

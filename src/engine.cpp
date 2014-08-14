@@ -50,9 +50,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     sprite->set_state_on_moving_start(target);
 
     // Step-off events
-    EventManager::get_instance().add_event([location, id] () {
-        get_map_viewer()->get_map()->event_step_off.trigger(location, id);
-    });
+    get_map_viewer()->get_map()->event_step_off.trigger(location, id);
 
     // Motion
     EventManager::get_instance().add_timed_event(

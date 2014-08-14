@@ -66,7 +66,12 @@ Sprite::Sprite(glm::ivec2 position,
 
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
-        is_focus = false;
+        focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 96);
+        ObjectManager::get_instance().add_object(focus_icon);
+        auto focus_icon_id(focus_icon->get_id());
+        LOG(INFO) << "created focus icon with id: " << focus_icon_id;
+        Engine::get_map_viewer()->get_map()->add_map_object(focus_icon_id);
+
         LOG(INFO) << "Sprite initialized";
 }
 
@@ -199,6 +204,8 @@ void Sprite::set_position(glm::vec2 position) {
     for (auto item : get_inventory()) {
         item->set_position(position);
     }
+
+    focus_icon->set_position(position);
 }
 
 bool Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
@@ -241,12 +248,56 @@ void Sprite::set_focus(bool _is_focus) {
     if (_is_focus != is_focus) {
         LOG(INFO) << "trying to set focus to "<< is_focus;
         is_focus = _is_focus;
+        focus_icon->set_renderable(is_focus);
+    }
+}
 
+void Sprite::add_overlay(int overlay_id, float width, float height, float x_offset, float y_offset) {
+    overlay_ids.push_back(overlay_id);
+    std::pair<float, float> dimensions = std::make_pair(width,  height);
+    overlay_dimensions.push_back(dimensions);
+    std::pair<float, float> offsets = std::make_pair(x_offset, y_offset);
+    overlay_offsets.push_back(offsets);
+    generate_tex_data();
+}
 
-        if (is_focus) {
-            LOG(INFO) << "setting focus";
-        } else {
-            LOG(INFO) << "remove focus";
+void Sprite::remove_overlay(int overlay_id) {
+
+    //Index to delete at
+    int index = 0;
+
+    //Remove it from the vector
+    for(auto iter = overlay_ids.begin(); iter != overlay_ids.end(); ++iter) {
+        if(overlay_id == *iter) {
+            overlay_ids.erase(iter);
+            break;
+        }
+        index++;
+    }
+    overlay_dimensions.erase(overlay_dimensions.begin()+index);
+    overlay_offsets.erase(overlay_offsets.begin()+index);
+    generate_tex_data();
+}
+
+void Sprite::add_underlay(int underlay_id, float width, float height, float x_offset, float y_offset) {
+    underlay_ids.push_back(underlay_id);
+    std::pair<float, float> dimensions = std::make_pair(width,  height);
+    underlay_dimensions.push_back(dimensions);
+    std::pair<float,float> offsets = std::make_pair(x_offset, y_offset);
+    underlay_offsets.push_back(offsets);
+    generate_tex_data();
+}
+
+void Sprite::remove_underlay(int underlay_id)  {
+    //Index to delete at
+    int index = 0;
+
+    //Remove it from the vector
+    for(auto iter = underlay_ids.begin(); iter != underlay_ids.end(); ++iter) {
+        if(underlay_id == *iter) {
+            underlay_ids.erase(iter);
+            break;
+>>>>>>> 0709a67a1e8f99dd8d554978a5edd95152d4a115
         }
     }
 }
