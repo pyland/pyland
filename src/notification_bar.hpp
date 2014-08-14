@@ -21,12 +21,16 @@ class NotificationBar {
 
         void move_notification(Direction direction);
 
+        /// update buttons depending on the notification_stach flags
+        void hide_buttons();
+
 
     public:
         Notification notification_stack;
         Text* notification_text;
 
         NotificationBar();
+
         ///
         /// generate the backward and forward navigation buttons for the notification bar
         ///

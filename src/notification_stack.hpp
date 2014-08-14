@@ -19,9 +19,13 @@ class Notification {
         ///
         std::list<std::string>::iterator stack_iterator;
 
-    public:
-        Notification();
+        void update_flags();
 
+    public:     
+        Notification();
+       
+        bool can_forward;
+        bool can_backward;
         ///
         /// add news appends a new notifcation string to the history
         /// @param new_notification
