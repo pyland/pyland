@@ -66,9 +66,9 @@ Sprite::Sprite(glm::ivec2 position,
 
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
-        focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 96);
+        std::shared_ptr<MapObject> focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 96);
         ObjectManager::get_instance().add_object(focus_icon);
-        auto focus_icon_id(focus_icon->get_id());
+        focus_icon_id = focus_icon->get_id();
         LOG(INFO) << "created focus icon with id: " << focus_icon_id;
         Engine::get_map_viewer()->get_map()->add_map_object(focus_icon_id);
 
@@ -76,6 +76,7 @@ Sprite::Sprite(glm::ivec2 position,
 }
 
 Sprite::~Sprite() {
+    ObjectManager::get_instance().remove_object(focus_icon_id);
     // TODO: Smart pointers
     delete object_text;
     delete status_text;
@@ -205,6 +206,11 @@ void Sprite::set_position(glm::vec2 position) {
         item->set_position(position);
     }
 
+    auto focus_icon = ObjectManager::get_instance().get_object<MapObject>(focus_icon_id);
+    if (!focus_icon) {
+        LOG(ERROR) << "Object manager no longer has focus_icon";
+        return;
+    }
     focus_icon->set_position(position);
 }
 
@@ -248,6 +254,11 @@ void Sprite::set_focus(bool _is_focus) {
     if (_is_focus != is_focus) {
         LOG(INFO) << "trying to set focus to "<< is_focus;
         is_focus = _is_focus;
+        auto focus_icon = ObjectManager::get_instance().get_object<MapObject>(focus_icon_id);
+        if (!focus_icon) {
+            LOG(ERROR) << "Object manager no longer has focus_icon";
+            return;
+        }
         focus_icon->set_renderable(is_focus);
     }
 }
