@@ -47,7 +47,7 @@ bool ObjectManager::add_object(std::shared_ptr<Object> new_object) {
 
 void ObjectManager::remove_object(int object_id) {
     if (objects.count(object_id)>0) {
-    objects.erase(object_id);
+        objects.erase(object_id);
     } else {
         LOG(ERROR) << "trying to remove object that either doesn't exist or there are multiple";
     }
