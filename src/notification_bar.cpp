@@ -20,7 +20,7 @@ NotificationBar::NotificationBar() {
     TextFont notification_buttonfont = Engine::get_game_font();
 
     /// build back button
-    backward_button = std::make_shared<Button>();
+    std::shared_ptr<Button> backward_button = std::make_shared<Button>();
     backward_button->set_text("backward");
     backward_button->set_on_click([&] () {
         LOG(INFO) << "backward button pressed";
@@ -30,9 +30,10 @@ NotificationBar::NotificationBar() {
     backward_button->set_height(button_size);
     backward_button->set_y_offset(backward_loco.second);
     backward_button->set_x_offset(backward_loco.first);
+    backward_button_id = backward_button->get_id();
 
     //build forwards button
-    forward_button = std::make_shared<Button>();
+    std::shared_ptr<Button> forward_button = std::make_shared<Button>();
     forward_button->set_text("forward");
     forward_button->set_on_click([&] () {
         LOG(INFO) << "forward button pressed";
@@ -42,6 +43,13 @@ NotificationBar::NotificationBar() {
     forward_button->set_height(button_size);
     forward_button->set_y_offset(forward_loco.second);
     forward_button->set_x_offset(forward_loco.first);
+    forward_button_id = forward_button->get_id();
+
+    GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
+    CHECK_NOTNULL(gui_manager);
+    gui_manager->get_root()->add(backward_button);
+    gui_manager->get_root()->add(forward_button);
+    gui_manager->parse_components();
 
     // button text as Button::set_text() don't currently work
     backward_text.reset(new Text(window, notification_buttonfont, true));
@@ -75,10 +83,6 @@ NotificationBar::NotificationBar() {
 
 }
 
-std::vector<std::shared_ptr<Button>> NotificationBar::get_navigation_buttons() {
-    return {backward_button,forward_button};
-}
-
 void NotificationBar::text_displayer() {
     notification_text->display();
     backward_text->display();
@@ -106,6 +110,8 @@ void NotificationBar::add_notification(std::string text_to_display) {
  }
 
  void NotificationBar::hide_buttons(){
+    // TODO: this is a hack until I can hide buttons
+
     if (notification_stack.can_forward) {
         forward_text->set_text("->");
     } else {
@@ -119,3 +125,10 @@ void NotificationBar::add_notification(std::string text_to_display) {
     }
 
  }
+
+ NotificationBar::~NotificationBar() {
+    GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
+    CHECK_NOTNULL(gui_manager);
+    gui_manager->get_root()->remove(backward_button_id);
+    gui_manager->get_root()->remove(forward_button_id);
+}

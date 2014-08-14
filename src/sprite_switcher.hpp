@@ -8,9 +8,10 @@ private:
     ///
     /// storing switcher buttons, useful for later
     ///
-    std::vector<std::shared_ptr<Button>> switcher_buttons;
+    std::vector<int> switcher_buttons;
 public:
     SpriteSwitcher();
+    ~SpriteSwitcher();
 
     ///
     /// call this when adding a new sprite
