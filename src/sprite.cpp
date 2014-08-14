@@ -64,12 +64,14 @@ Sprite::Sprite(glm::ivec2 position,
             Engine::get_map_viewer()->get_map()->block_tile(position)
         ));
 
-        // TESTING
-        add_underlay(10,1.0f,1.0f,0.0f,0.0f);
-
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
-        is_focus = false;
+        focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 96);
+        ObjectManager::get_instance().add_object(focus_icon);
+        auto focus_icon_id(focus_icon->get_id());
+        LOG(INFO) << "created focus icon with id: " << focus_icon_id;
+        Engine::get_map_viewer()->get_map()->add_map_object(focus_icon_id);
+
         LOG(INFO) << "Sprite initialized";
 }
 
@@ -355,6 +357,8 @@ void Sprite::set_position(glm::vec2 position) {
     for (auto item : get_inventory()) {
         item->set_position(position);
     }
+
+    focus_icon->set_position(position);
 }
 
 bool Sprite::remove_from_inventory(std::shared_ptr<MapObject> old_object) {
@@ -397,15 +401,7 @@ void Sprite::set_focus(bool _is_focus) {
     if (_is_focus != is_focus) {
         LOG(INFO) << "trying to set focus to "<< is_focus;
         is_focus = _is_focus;
-        int focus_icon_id = 13;
-
-        if (is_focus) {
-            LOG(INFO) << "setting focus";
-            add_overlay(focus_icon_id,0.5f,0.5f,0.0,0.0); 
-        } else {
-            LOG(INFO) << "remove focus";
-            remove_overlay(focus_icon_id);
-        }
+        focus_icon->set_renderable(is_focus);
     }
 }
 
