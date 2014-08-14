@@ -114,5 +114,14 @@ void MapLoader::load_tileset() {
             }
         }
     }
+
+    // Merge the tilesets.
+    std::vector<std::shared_ptr<TextureAtlas>> atlases;
+    for (auto tileset : tilesets) {
+        if (tileset->get_atlas()) {
+            atlases.push_back(tileset->get_atlas());
+        }
+    }
+    TextureAtlas::merge(atlases);
 }
 

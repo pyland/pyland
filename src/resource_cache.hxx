@@ -43,7 +43,7 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
             resource->resource_cache = weak_this;
             return resource;
         }
-        catch (std::exception e) {
+        catch (std::exception &e) {
             LOG(ERROR) << "Error creating shared resource \"" << resource_name << "\": " << e.what();
             throw e;
         }
