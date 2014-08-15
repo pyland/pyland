@@ -53,19 +53,18 @@ Challenge::~Challenge() {
 }
 
 void Challenge::run() {
-
 #ifdef USE_GLES
     TextFont big_font(Engine::get_game_typeface(), 50);
-    Text cursor(&window, big_font, true);
+    Text cursor(challenge_data->game_window, big_font, true);
     cursor.move(0, 0);
     cursor.resize(50, 50);
     cursor.set_text("<");
 
-    Lifeline cursor_lifeline = input_manager->register_mouse_handler(
+    Lifeline cursor_lifeline(challenge_data->input_manager->register_mouse_handler(
         filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
             cursor.move(event.to.x, event.to.y+25);
         })
-    );
+    ));
 #endif
 
 
@@ -90,17 +89,17 @@ void Challenge::run() {
         VLOG(3) << "} RM | TD {";
         Engine::text_displayer();
         challenge_data->notification_bar->text_displayer();
+
 #ifdef USE_GLES
-        cursor->display();
+        cursor.display();
 #endif
 
         VLOG(3) << "} TD | SB {";
         challenge_data->game_window->swap_buffers();
     }
     VLOG(3) << "}";
-
-
 }
+
 
 int Challenge::make_map_object(glm::vec2 position,
                                std::string name,
