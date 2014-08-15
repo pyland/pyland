@@ -171,6 +171,8 @@ public:
     static void set_editor(std::string editor) { Engine::editor = editor; }
 
     static void set_notification_bar(NotificationBar *notification_bar) { Engine::notification_bar = notification_bar; }
+
+    static NotificationBar* get_notification_bar() { return Engine::notification_bar; } 
     static void print_dialogue(std::string name, std::string text);
 
     /// method for handling sprite test

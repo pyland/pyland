@@ -1,3 +1,4 @@
+
 #include <boost/filesystem.hpp>
 #include <cassert>
 #include <cmath>
@@ -258,7 +259,7 @@ int main(int argc, const char *argv[]) {
 
 
     while(!window.check_close() && run_game) {   
-        std::cout << "SETTING UP" << std::endl;
+
         //Setup challenge
         ChallengeData* challenge_data = new ChallengeData(
                                                           std::string("../resources/map0.tmx"),
@@ -277,8 +278,9 @@ int main(int argc, const char *argv[]) {
         //Run the challenge - returns after challenge completes
         long_walk_challenge.run();
 
-        //Clean up after the challenge
+        //Clean up after the challenge - additional, non-challenge clean-up
         em.flush();
+
     }
 
     return 0;
