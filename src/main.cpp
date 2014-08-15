@@ -46,6 +46,7 @@
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
 #include "object_manager.hpp"
+#include "player.hpp"
 #include "sprite.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
@@ -249,16 +250,8 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-    //TODO: CHallenge specific
-    //default script
-
-    
-    int new_id = callbackstate.spawn(); //create a character
-    std::string bash_command =
-        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
-        + std::to_string(new_id) + std::string(".py");
-    system(bash_command.c_str());
-
+    //Create a player to maintain their state between challenges
+    std::shared_ptr<Player> player = std::make_shared<Player>();
 
     //Run the map
     bool run_game = true;
@@ -270,6 +263,7 @@ int main(int argc, const char *argv[]) {
                                                           &interpreter,
                                                           &gui_manager,
                                                           &window,
+                                                          player,
                                                           input_manager,
                                                           &notification_bar);
 

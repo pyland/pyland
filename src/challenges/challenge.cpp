@@ -16,6 +16,15 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
     }
 
     map_viewer->set_map(map);
+
+    //Build a sprite for the player
+    int sprite_id = make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1.png");
+    std::string bash_command =
+        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
+        + std::to_string(sprite_id) + std::string(".py");
+    system(bash_command.c_str());
+
+
 }
 
 Challenge::~Challenge() {

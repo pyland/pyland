@@ -40,7 +40,9 @@ MapViewer::MapViewer(GameWindow *window, GUIManager* gui_manager):
 }
 
 
-MapViewer::~MapViewer() {}
+MapViewer::~MapViewer() {
+    LOG(INFO) << "MapViewer DESTROYED";
+}
 
 void MapViewer::resize() {
     LOG(INFO) << "Map resizing";

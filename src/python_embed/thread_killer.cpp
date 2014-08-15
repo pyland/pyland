@@ -118,3 +118,4 @@ void ThreadKiller::finish() {
     kill_thread_finish_signal.unlock();
     thread.join();
 }
+

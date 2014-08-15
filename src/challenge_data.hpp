@@ -11,6 +11,7 @@
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
+#include "player.hpp"
 #include "sprite.hpp"
 
 ///
@@ -25,19 +26,17 @@ public:
     GUIManager* gui_manager;
     GameWindow* game_window;
 
-    std::shared_ptr<Sprite> player;
+    std::shared_ptr<Player> player;
     InputManager *input_manager;
     NotificationBar* notification_bar;
-    Lifeline map_resize_lifeline;
 
-    Challenge(std::string _map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, std::shared_ptr<Sprite> _player, InputManager* _input_manager, NotificationBar* _notification_bar, Lifeline _map_resize_lifeline):
-             interpreter(_interpreter),
+    ChallengeData(std::string _map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, std::shared_ptr<Player> _player, InputManager* _input_manager, NotificationBar* _notification_bar):
+        interpreter(_interpreter),
         gui_manager(_gui_manager),
         game_window(_game_window),
         player(_player),
         input_manager(_input_manager),
-        notification_bar(_notification_bar),
-        map_resize_lifeline(_map_resize_lifeline)
+        notification_bar(_notification_bar)
     {
         map_name = _map_name;
     }
