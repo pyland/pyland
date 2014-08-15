@@ -310,33 +310,38 @@ void Map::generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer,
         if (!(dense || tile_id))
             continue;
 
-        //Get the texture coordinates for this tile
-        // GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8]; //*8 as 8 coordinates per tile
-        std::tuple<float,float,float,float> coords(tileset->get_atlas()->index_to_coords(tile_id));
+        // If this is a dense layer and the tile is blank, then we don't
+        // actually care about the texture coordinates. Only create data
+        // when we have a tileset.
+        if (tileset) {
+            //Get the texture coordinates for this tile
+            // GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8]; //*8 as 8 coordinates per tile
+            std::tuple<float,float,float,float> coords(tileset->get_atlas()->index_to_coords(tile_id));
 
-        //bottom left
-        data[offset+0]  = std::get<0>(coords);
-        data[offset+1]  = std::get<2>(coords);
+            //bottom left
+            data[offset+0]  = std::get<0>(coords);
+            data[offset+1]  = std::get<2>(coords);
 
-        //top left
-        data[offset+2]  = std::get<0>(coords);
-        data[offset+3]  = std::get<3>(coords);
+            //top left
+            data[offset+2]  = std::get<0>(coords);
+            data[offset+3]  = std::get<3>(coords);
 
-        //bottom right
-        data[offset+4]  = std::get<1>(coords);
-        data[offset+5]  = std::get<2>(coords);
+            //bottom right
+            data[offset+4]  = std::get<1>(coords);
+            data[offset+5]  = std::get<2>(coords);
 
-        //top left
-        data[offset+6]  = std::get<0>(coords);
-        data[offset+7]  = std::get<3>(coords);
+            //top left
+            data[offset+6]  = std::get<0>(coords);
+            data[offset+7]  = std::get<3>(coords);
 
-        //top right
-        data[offset+8]  = std::get<1>(coords);
-        data[offset+9]  = std::get<3>(coords);
+            //top right
+            data[offset+8]  = std::get<1>(coords);
+            data[offset+9]  = std::get<3>(coords);
 
-        //bottom right
-        data[offset+10] = std::get<1>(coords);
-        data[offset+11] = std::get<2>(coords);
+            //bottom right
+            data[offset+10] = std::get<1>(coords);
+            data[offset+11] = std::get<2>(coords);
+        }
 
         offset += num_floats;
     }
@@ -379,36 +384,51 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
                 return;
             }
 
+            std::shared_ptr<TileSet> tileset(tile_data->first);
+            int tile_id(tile_data->second);
+            
             //IF GENERATING A SPARSE LAYER
             //Skip empty tiles
-            int tile_id = tile_data->second;
             if(dense == false && tile_id == 0) {
                 ++tile_data;
                 continue;
             }
+
+            // Default to invisible.
+            float vx1(-1.0f), vy1(-1.0f);
+            float vx2(-1.0f), vy2(-1.0f);
+            
+            if(tileset) {
+                // The tile is not blank, so set its x, y.
+                vx1 = float(x);
+                vy1 = float(y);
+                vx2 = float(x + 1);
+                vy2 = float(y + 1);
+            }
+            
             //bottom left
-            data[offset+ 0] = scale * float(x);
-            data[offset+ 1] = scale * float(y);
+            data[offset+ 0] = scale * vx1;
+            data[offset+ 1] = scale * vy1;
 
             //top left
-            data[offset+ 2] = scale * float(x);
-            data[offset+ 3] = scale * float(y + 1);
+            data[offset+ 2] = scale * vx1;
+            data[offset+ 3] = scale * vy2;
 
             //bottom right
-            data[offset+ 4] = scale * float(x + 1);
-            data[offset+ 5] = scale * float(y);
+            data[offset+ 4] = scale * vx2;
+            data[offset+ 5] = scale * vy1;
 
             //top left
-            data[offset+ 6]  = scale * float(x);
-            data[offset+ 7] = scale * float(y+1);
+            data[offset+ 6] = scale * vx1;
+            data[offset+ 7] = scale * vy2;
 
             //top right
-            data[offset+ 8] = scale * float(x+1);
-            data[offset+ 9] = scale * float(y+1);
+            data[offset+ 8] = scale * vx2;
+            data[offset+ 9] = scale * vy2;
 
             //bottom right
-            data[offset+10] = scale * float(x+1);
-            data[offset+11] = scale * float(y);
+            data[offset+10] = scale * vx2;
+            data[offset+11] = scale * vy1;
 
             offset += num_floats;
             ++tile_data;
