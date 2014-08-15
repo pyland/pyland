@@ -26,19 +26,17 @@ Challenge::~Challenge() {
     //Remove all sprites
     for(int sprite_id : sprite_ids) {
         ObjectManager::get_instance().remove_object(sprite_id);
-        std::cout << " REMOVED " << sprite_id << std::endl;
     }
     
     //Remove all map objects
     for(int map_object_id : map_object_ids) {
         ObjectManager::get_instance().remove_object(map_object_id);
-        std::cout << " REMOVED " << map_object_id << std::endl;
     }
-        ObjectManager::get_instance().print_debug();
+
     //Delete the map
     delete map;    
     //All threads created for the challenge should have terminated now
-    std::cout << " CHALLENGE DESTROYED " << std::endl;
+    LOG(INFO) << " CHALLENGE DESTROYED ";
 }
 
 void Challenge::run() {

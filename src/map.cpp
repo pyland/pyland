@@ -57,6 +57,7 @@ Map::Map(const std::string map_src):
         std::vector<std::shared_ptr<Layer>> layers = map_loader.get_layers();
         for(auto layer : layers) {
             layer_ids.push_back(layer->get_id());
+            ObjectManager::get_instance().add_object(layer);
         }
 
         tilesets = map_loader.get_tilesets();
@@ -78,11 +79,17 @@ Map::Map(const std::string map_src):
         generate_tileset_coords(texture_atlases[0]);
         generate_data();
 }
-
+#include <iostream>
 Map::~Map() {
+    
+    for(int layer_id : layer_ids) {
+        ObjectManager::get_instance().remove_object(layer_id);
+    }
+
     // release buffers
     delete[] tileset_tex_coords;
     delete[] tileset_tex_data;
+
     LOG(INFO) << "Map destructed";
 }
 

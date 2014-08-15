@@ -1,3 +1,4 @@
+#include <iostream>
 #include <glog/logging.h>
 #include <string>
 #include <utility>
@@ -23,7 +24,7 @@ Object::Object(std::string name): name(name) {
 }
 
 Object::~Object() {
-    std::cout << "DESTROYING " << name << std::endl;
+    LOG(INFO) << "OBJECT DESTROYING (" << id << ")  " << name << std::endl;
 }
 
 void Object::set_id(int new_id) {

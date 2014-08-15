@@ -261,6 +261,7 @@ int main(int argc, const char *argv[]) {
     //Run the map
     bool run_game = true;
     while(!window.check_close() && run_game) {   
+
         //Setup challenge
         LongWalkChallenge long_walk_challenge(std::string("../resources/map0.tmx"), &interpreter, &gui_manager, &window, input_manager, &map_viewer, &notification_bar);
         long_walk_challenge.start();
@@ -271,10 +272,7 @@ int main(int argc, const char *argv[]) {
 
         //Clean up after the challenge
         em.flush();
-        run_game = false;
     }
-    std::cout << "HERE " << std::endl;
-    ObjectManager::get_instance().print_debug();
 
     return 0;
 }
