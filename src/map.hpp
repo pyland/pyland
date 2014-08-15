@@ -42,9 +42,9 @@ class Map {
     std::vector<std::shared_ptr<TileSet>> tilesets;
 
     ///
-    /// Array of layers
+    /// Array of layers. Layers are objects so they have ids
     ///
-    std::vector<std::shared_ptr<Layer>> layers;
+    std::vector<int> layer_ids;
 
     ///
     /// A vector of layers which maps the (x, y) position in the map
@@ -290,7 +290,7 @@ public:
     /// Get the layers on this map
     /// @return the layers
     ///
-    std::vector<std::shared_ptr<Layer>> get_layers() { return layers; }
+    std::vector<int> get_layers() { return layer_ids; }
 
     ///
     /// Update the tile at a given point in the map

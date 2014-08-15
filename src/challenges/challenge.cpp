@@ -6,10 +6,10 @@
 #include "input_manager.hpp"
 #include "make_unique.hpp"
 
-Challenge::Challenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager *_input_manager, MapViewer* _map_viewer) :
+Challenge::Challenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager *_input_manager, MapViewer* _map_viewer, NotificationBar* _notification_bar) :
     interpreter(_interpreter), gui_manager(_gui_manager),
     game_window(_game_window), input_manager(_input_manager),
-    map_viewer(_map_viewer)
+    map_viewer(_map_viewer), notification_bar(_notification_bar)
 {
     map_name = "../resources/map0.tmx";
     map = new Map(map_name);
@@ -26,16 +26,69 @@ Challenge::~Challenge() {
     //Remove all sprites
     for(int sprite_id : sprite_ids) {
         ObjectManager::get_instance().remove_object(sprite_id);
+        std::cout << " REMOVED " << sprite_id << std::endl;
     }
     
     //Remove all map objects
     for(int map_object_id : map_object_ids) {
         ObjectManager::get_instance().remove_object(map_object_id);
+        std::cout << " REMOVED " << map_object_id << std::endl;
     }
-
+        ObjectManager::get_instance().print_debug();
     //Delete the map
-    delete map;
-    
+    delete map;    
+    //All threads created for the challenge should have terminated now
+    std::cout << " CHALLENGE DESTROYED " << std::endl;
+}
+
+void Challenge::run() {
+
+#ifdef USE_GLES
+    TextFont big_font(Engine::get_game_typeface(), 50);
+    Text cursor(&window, big_font, true);
+    cursor.move(0, 0);
+    cursor.resize(50, 50);
+    cursor.set_text("<");
+
+    Lifeline cursor_lifeline = input_manager->register_mouse_handler(
+        filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
+            cursor.move(event.to.x, event.to.y+25);
+        })
+    );
+#endif
+
+
+    auto last_clock(std::chrono::steady_clock::now());
+
+    VLOG(3) << "{";
+    while (!game_window->check_close()) {
+        last_clock = std::chrono::steady_clock::now();
+
+        do {
+            VLOG(3) << "} SB | IM {";
+            GameWindow::update();
+
+            VLOG(3) << "} IM | EM {";
+            EventManager::get_instance().process_events();
+
+        } while (std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60));
+
+        VLOG(3) << "} EM | RM {";
+        map_viewer->render();
+
+        VLOG(3) << "} RM | TD {";
+        Engine::text_displayer();
+        notification_bar->text_displayer();
+#ifdef USE_GLES
+        cursor->display();
+#endif
+
+        VLOG(3) << "} TD | SB {";
+        game_window->swap_buffers();
+    }
+    VLOG(3) << "}";
+
+
 }
 
 int Challenge::make_map_object(glm::vec2 position, std::string name, Walkability walkability, int sheet_id, std::string sheet_name) {

@@ -257,52 +257,24 @@ int main(int argc, const char *argv[]) {
     //        + std::to_string(new_id) + std::string(".py");
     //    system(bash_command.c_str());
 
-    LongWalkChallenge long_walk_challenge(std::string("../resources/map0.tmx"), &interpreter, &gui_manager, &window, input_manager, &map_viewer);
-    long_walk_challenge.start();
+
+    //Run the map
+    bool run_game = true;
+    while(!window.check_close() && run_game) {   
+        //Setup challenge
+        LongWalkChallenge long_walk_challenge(std::string("../resources/map0.tmx"), &interpreter, &gui_manager, &window, input_manager, &map_viewer, &notification_bar);
+        long_walk_challenge.start();
 
 
-#ifdef USE_GLES
-    TextFont big_font(Engine::get_game_typeface(), 50);
-    Text cursor(&window, big_font, true);
-    cursor.move(0, 0);
-    cursor.resize(50, 50);
-    cursor.set_text("<");
+        //Run the challenge - returns after challenge completes
+        long_walk_challenge.run();
 
-    Lifeline cursor_lifeline = input_manager->register_mouse_handler(
-        filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
-            cursor.move(event.to.x, event.to.y+25);
-        })
-    );
-#endif
-
-    auto last_clock(std::chrono::steady_clock::now());
-
-    VLOG(3) << "{";
-    while (!window.check_close()) {
-        last_clock = std::chrono::steady_clock::now();
-
-        do {
-            VLOG(3) << "} SB | IM {";
-            GameWindow::update();
-
-            VLOG(3) << "} IM | EM {";
-            em.process_events();
-        } while (std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60));
-
-        VLOG(3) << "} EM | RM {";
-        map_viewer.render();
-
-        VLOG(3) << "} RM | TD {";
-        Engine::text_displayer();
-        notification_bar.text_displayer();
-#ifdef USE_GLES
-        cursor.display();
-#endif
-
-        VLOG(3) << "} TD | SB {";
-        window.swap_buffers();
+        //Clean up after the challenge
+        em.flush();
+        run_game = false;
     }
-    VLOG(3) << "}";
+    std::cout << "HERE " << std::endl;
+    ObjectManager::get_instance().print_debug();
 
     return 0;
 }

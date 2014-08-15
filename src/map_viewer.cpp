@@ -85,7 +85,8 @@ void MapViewer::render_map() {
 
     //Draw all the layers, from base to top to get the correct draw order
     int layer_num = 0;
-    for(auto layer: map->get_layers()) {
+    for(int layer_id: map->get_layers()) {
+        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
         if(!layer) 
             continue;
 

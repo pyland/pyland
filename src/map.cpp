@@ -54,8 +54,11 @@ Map::Map(const std::string map_src):
         event_step_off = PositionDispatcher<int>(glm::ivec2(map_width, map_height));
 
         LOG(INFO) << "Map width: " << map_width << " Map height: " << map_height;
+        std::vector<std::shared_ptr<Layer>> layers = map_loader.get_layers();
+        for(auto layer : layers) {
+            layer_ids.push_back(layer->get_id());
+        }
 
-        layers = map_loader.get_layers();
         tilesets = map_loader.get_tilesets();
 
         for(auto map_object : map_loader.get_objects()) {
@@ -84,7 +87,8 @@ Map::~Map() {
 }
 
 bool Map::is_walkable(int x_pos, int y_pos) {
-    return std::all_of(std::begin(layers), std::end(layers), [&] (std::shared_ptr<Layer> &layer) {
+    return std::all_of(std::begin(layer_ids), std::end(layer_ids), [&] (int layer_id) {
+            std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
         // Block only in the case where we're on the collisions layer and the tile is set
         return !(layer->get_name() == "Collisions" && layer->get_tile(x_pos, y_pos));
     });
@@ -185,7 +189,9 @@ void Map::generate_data() {
     // Get each layer of the map
     // Start at layer 0
     int layer_num = 0;
-    for (auto layer : layers) {
+    for (int layer_id : layer_ids) {
+        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
+
         auto layer_data = layer->get_layer_data();
 
 
@@ -446,7 +452,8 @@ bool Map::init_shaders() {
     }
 
     //Set the shader for each layer
-    for (auto layer : layers) {
+    for (int layer_id : layer_ids) {
+        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
         layer->get_renderable_component()->set_shader(shader);
     }
 
@@ -580,8 +587,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name
 
 
     // Put it into the buffers
-
-    std::shared_ptr<Layer> layer(layers[layer_num]);
+    std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_ids[layer_num]);
     Layer::Packing packing(layer->get_packing());
 
     // Add this tile to the layer data structure

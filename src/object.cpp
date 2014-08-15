@@ -22,7 +22,9 @@ Object::Object(std::string name): name(name) {
     // TODO: Maybe add the object to the object manager here
 }
 
-Object::~Object() {}
+Object::~Object() {
+    std::cout << "DESTROYING " << name << std::endl;
+}
 
 void Object::set_id(int new_id) {
     id = new_id;

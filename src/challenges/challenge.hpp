@@ -7,8 +7,10 @@
 #include "gui_manager.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
+#include "lifeline.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
+#include "notification_bar.hpp"
 #include "object_manager.hpp"
 #include "sprite.hpp"
 #include "typeface.hpp"
@@ -28,17 +30,24 @@ protected:
     Sprite* player;
     InputManager *input_manager;
     MapViewer* map_viewer;
+    NotificationBar* notification_bar;
+    Lifeline map_resize_lifeline;
     std::vector<int> sprite_ids;
     std::vector<int> map_object_ids;
 public:
     // TODO: Make the editor part of the core
     // engine, not the challenge class
-    Challenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager* _input_manager, MapViewer* map_viewer);
+    Challenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager* _input_manager, MapViewer* map_viewer, NotificationBar* _notification_bar);
 
     virtual ~Challenge();
 
     virtual void start() = 0;
     virtual void finish() = 0;
+
+    ///
+    /// Runs the challenge by calling all the needed subsystems
+    ///
+    void run();
 
     ///
     /// Makes a sprite and adds it to the object manager and the current map
