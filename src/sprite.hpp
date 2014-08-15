@@ -48,16 +48,11 @@ protected:
     /// TODO: this value isn't used at the moment, use for status images
     Sprite_Status sprite_status;
 
-    ///
-    /// Tiles that the object is blocking, probably
-    /// by standing on.
-    ///
-    std::map<std::string, Map::Blocker> blocked_tiles;
 
     ///
     /// Map_objects which move with the sprite
     ///
-    std::vector<std::shared_ptr<MapObject>> inventory;
+    std::vector<int> inventory;
 
     ///
     /// The focus icon, to move with sprite and hide, depending on if sprite is in focus;
@@ -67,11 +62,24 @@ protected:
     ///
     /// The focus icon, to move with sprite and hide, depending on if sprite is in focus;
     ///
-    std::shared_ptr<MapObject> focus_icon;
+    int focus_icon_id;
+
+    ///
+    /// Tiles that the object is blocking, probably
+    /// by standing on.
+    ///
+    std::map<std::string, Map::Blocker> blocked_tiles;
 
 public:
     Sprite();
-
+    ///
+    /// Constructs a sprite
+    /// @param position the (x, y) position of the sprite on the map
+    /// @param name the name of the sprite
+    /// @param walkability the walkability properties of the sprite
+    /// @param sheet_id the id of the image of the sprite in its sprite sheet
+    /// @param sheet_name the name of the sprite sheet
+    ///
     Sprite(glm::ivec2 position,
            std::string name,
            Walkability walkability,
@@ -119,9 +127,9 @@ public:
     ///
     /// add map_object to sprites inventory
     ///
-    void add_to_inventory(std::shared_ptr<MapObject> new_object);
+    void add_to_inventory(int new_object);
 
-    std::vector<std::shared_ptr<MapObject>> get_inventory() { return inventory; }
+    std::vector<int> get_inventory() { return inventory; }
 
     void set_position(glm::vec2 position);
 
@@ -142,14 +150,15 @@ public:
     /// item isn't in inventory
     /// @return
     ///     true if successfully removed, false if it wasn't present
-    bool remove_from_inventory(std::shared_ptr<MapObject> old_object);
+    bool remove_from_inventory(int old_object);
 
-    bool is_in_inventory(std::shared_ptr<MapObject> object);
+    bool is_in_inventory(int object);
 
 
     void set_sprite_status(std::string _sprite_status);
 
     void set_focus(bool _is_focus);
 };
+
 
 #endif

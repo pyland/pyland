@@ -22,6 +22,7 @@ class MapViewer {
     /// Object to focus the map on
     ///
     int map_focus_object = 0;
+
     ///
     /// The reference to the window object in which we render the map.
     ///

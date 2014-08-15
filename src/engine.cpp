@@ -19,12 +19,14 @@
 #include "sprite.hpp"
 
 ///Static variables
+Challenge* Engine::challenge(nullptr);
 MapViewer* Engine::map_viewer(nullptr);
 NotificationBar* Engine::notification_bar(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(0.5f);
 
-// TODO: This needs to work with renderable objects
+
+
 void Engine::move_sprite(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
     Engine::move_sprite(id, move_by, GilSafeFuture<bool>());
@@ -33,7 +35,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by) {
 //TODO: This needs to work with renderable objects
 void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return) {
 
-    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+    auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
 
     if (!sprite || sprite->is_moving()) { return; }
 

@@ -40,7 +40,9 @@ MapViewer::MapViewer(GameWindow *window, GUIManager* gui_manager):
 }
 
 
-MapViewer::~MapViewer() {}
+MapViewer::~MapViewer() {
+    LOG(INFO) << "MapViewer DESTROYED";
+}
 
 void MapViewer::resize() {
     LOG(INFO) << "Map resizing";
@@ -85,12 +87,15 @@ void MapViewer::render_map() {
 
     //Draw all the layers, from base to top to get the correct draw order
     int layer_num = 0;
-    for(auto layer: map->get_layers()) {
-        if(!layer) 
+    for (int layer_id: map->get_layers()) {
+        auto layer(ObjectManager::get_instance().get_object<Layer>(layer_id));
+        if (!layer) {
             continue;
+        }
 
-        if(!layer->is_renderable())
+        if (!layer->is_renderable()) {
             continue;
+        }
 
         RenderableComponent* layer_render_component = layer->get_renderable_component();
         Shader* layer_shader = layer_render_component->get_shader().get();
@@ -396,7 +401,14 @@ void MapViewer::refocus_map() {
 }
 
 void MapViewer::set_map(Map* new_map) {
+    //Reset the map and associated data
     map = new_map;
+    map_focus_object = 0;
+    map_display_x = 0.0f;
+    map_display_y = 0.0f;
+    
+    //Resize the map display
+    resize();
 }
 
 void MapViewer::set_map_focus_object(int object_id) {

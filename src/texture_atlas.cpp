@@ -187,12 +187,12 @@ TextureAtlas::~TextureAtlas() {
 void TextureAtlas::init_texture() {
     deinit_texture();
     glGenTextures(1, &gl_texture);
-    
+
     if (gl_texture == 0) {
         LOG(ERROR) << "Unable to generate GL texture.";
         throw TextureAtlas::LoadException("Unable to generate GL texture");
     }
-    
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gl_texture);
     glGetError();
@@ -322,10 +322,9 @@ void TextureAtlas::load_names(const std::string filename) {
 
     FML names_fml(file);
 
-    for_each(names_fml.begin<int>(), names_fml.end<int>(), [&] (std::pair<std::string, int> kv)
-             {
-                 set_name_index(kv.first, kv.second);
-             });
+    for (std::pair<std::string, int> kv : names_fml) {
+         set_name_index(kv.first, kv.second);
+    }
 }
 
 

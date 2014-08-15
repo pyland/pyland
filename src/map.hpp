@@ -26,9 +26,11 @@
 #include <GL/gl.h>
 #endif
 
-
 #include "dispatcher.hpp"
+#include "fml.hpp"
+#include "map_loader.hpp"
 #include "renderable_component.hpp"
+
 
 class Sprite;
 class Layer;
@@ -42,16 +44,16 @@ class Map {
     std::vector<std::shared_ptr<TileSet>> tilesets;
 
     ///
-    /// Array of layers
+    /// Array of layers. Layers are objects so they have ids
     ///
-    std::vector<std::shared_ptr<Layer>> layers;
+    std::vector<int> layer_ids;
 
     ///
     /// A vector of layers which maps the (x, y) position in the map
     /// onto the offset in the buffer. The offsets are based off of
     /// the number of vertices and the number of dimensions. It gives
     /// the GLfloat offset.
-    ///.This allows us to update the buffers to change the map. 
+    ///.This allows us to update the buffers to change the map.
     /// First param: layer number, starts at 0
     /// Second param: Map of (x, y) positions, flattened to a single
     ///               number, this is x+ y*map_width, which maps these
@@ -83,7 +85,6 @@ class Map {
     /// The width of the map in tiles
     ///
     int map_width = 16;
-
 
     ///
     /// The texture atlases which store the map tile textures
@@ -176,7 +177,7 @@ class Map {
     /// @data_size the size of he array in bytes
     /// @num_tiles the number of tiles to generate data for
     /// @layer the layer to generate the texture coordinates for
-    /// @dense if the layer is dense or sparse 
+    /// @dense if the layer is dense or sparse
     ///
     void generate_sparse_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
@@ -200,6 +201,8 @@ class Map {
     /// Initialises this Map's shaders
     ///
     bool init_shaders();
+
+    std::vector<ObjectProperties> objprop_ids_to_instances;
 
 public:
 
@@ -235,6 +238,9 @@ public:
     ///
     void remove_map_object(int map_object_id);
 
+    FML locations;
+
+    ObjectProperties obj_from_id(int id);
 
     ///
     /// Get the sprites that are on this map
@@ -284,7 +290,7 @@ public:
     /// Get the layers on this map
     /// @return the layers
     ///
-    std::vector<std::shared_ptr<Layer>> get_layers() { return layers; }
+    std::vector<int> get_layers() { return layer_ids; }
 
     ///
     /// Update the tile at a given point in the map

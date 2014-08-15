@@ -75,6 +75,11 @@ public:
     ///
     template <typename R>
     std::shared_ptr<R> get_object(int object_id);
+
+    ///
+    /// Prints debug information
+    ///
+    void print_debug();
 };
 
 #include "object_manager.hxx"

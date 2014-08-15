@@ -1,11 +1,19 @@
+// Fixes bug with lambdas for transform_iterator on older compilers
+#define BOOST_RESULT_OF_USE_DECLTYPE
+
 #include <algorithm>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/iterator/transform_iterator.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
-#include <iostream>
+#include <istream>
 #include <iterator>
 #include <map>
 #include <memory>
 #include <sstream>
 #include <string>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "fml.hpp"
@@ -30,7 +38,6 @@ static const boost::regex tokens(
         "([^\\s/:]+):\\s*" // a file...
         "([^\\s]+)"        // ...and its contents
 );
-
 
 FML::FML(std::istream &input):
     values(std::make_shared<std::map<std::string, std::string>>()),
@@ -86,10 +93,46 @@ FML::FML(std::istream &input):
         }
 }
 
-std::map<std::string, std::string> FML::as_map() {
-    return *values;
-}
+FML FML::unsafe_from_map(std::map<std::string, std::string> &mapping) { return FML(mapping); }
+FML::FML(std::map<std::string, std::string> &mapping):
+    values(std::make_shared<StringMap>(mapping)),
+    error(false)
+    {}
 
 bool FML::valid() {
     return !error;
+}
+
+// Iterator is always const
+FML::const_iterator FML::begin () const { return make_iter(values->cbegin()); }
+FML::const_iterator FML::cbegin() const { return make_iter(values->cbegin()); }
+FML::const_iterator FML::end   () const { return make_iter(values->cend  ()); }
+FML::const_iterator FML::cend  () const { return make_iter(values->cend  ()); }
+
+FML::const_iterator FML::begin(std::string directory) const {
+    return make_iter(
+        values->lower_bound(directory + "/"),
+        directory.size() + 1
+    );
+}
+
+FML::const_iterator FML::end(std::string directory) const {
+    return make_iter(
+        std::find_if(values->lower_bound(directory + "/"), std::end(*values),
+            [&] (StringMap::value_type pair) {
+                // The end is the first item that fails the test
+                return !boost::starts_with(pair.first, directory + "/");
+            }
+        ),
+        directory.size() + 1
+    );
+}
+
+FML::const_iterator FML::make_iter(StringMap::const_iterator mapiter, size_t chop) const {
+    return boost::make_transform_iterator(
+        mapiter,
+        [chop] (StringMap::value_type pair) {
+            return CastablePair(std::make_pair(pair.first.substr(chop), pair.second));
+        }
+    );
 }

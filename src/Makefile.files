@@ -10,6 +10,9 @@ TEST_EXECUTABLE_OBJ = test/test.o
 #
 
 BASE_OBJS = \
+        callback_state.o       \
+        challenge_base.o       \
+        challenge_data.o       \
 	challenge_helper.o     \
 	engine.o               \
 	event_manager.o        \
@@ -29,6 +32,7 @@ BASE_OBJS = \
 	notification_stack.o   \
 	object.o               \
 	object_manager.o       \
+        player.o               \
 	renderable_component.o \
 	shader.o               \
 	sprite.o               \
@@ -50,10 +54,14 @@ HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}            \
 	${CHALLENGE_OBJS:.o=.d}       \
 	${EXECUTABLE:.bin=.d}         \
+	${EXECUTABLE_OBJ:.o=.d}       \
 	${GUI_OBJS:.o=.d}             \
 	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd} \
+	${TEST_EXECUTABLE:.bin=.d}    \
+	${TEST_EXECUTABLE_OBJ:.o=.d}  \
+	${TEST_OBJS:.o=.d}            \
 
 HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 

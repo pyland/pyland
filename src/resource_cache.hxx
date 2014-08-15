@@ -52,7 +52,7 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
         // Get from cache.
         std::shared_ptr<Res> resource = resources.find(resource_name)->second.lock();
         // resource->resource_cache = weak_this;
-        
+
         // Some say we should check the pointer, but we don't keep dead
         // weak pointers lying around for us to care about.
         return resource;

@@ -206,16 +206,18 @@ debug:
 
 # Dependency hack to keep away uninteresting errors
 clean: dependencies dependencies/python_embed dependencies/challenges dependencies/input_management
-	@-$(RM) $(EXECUTABLE)
+	@-$(RM) $(EXECUTABLE) $(TEST_EXECUTABLE)
 
 	@-$(RM) \
-		$(EXECUTABLE_OBJ)     \
-		$(BASE_OBJS)          \
-		$(CHALLENGE_OBJS)     \
-		$(GUI_OBJS)           \
-		$(INPUT_OBJS)         \
-		$(PYTHON_OBJS)        \
-		$(PYTHON_SHARED_OBJS) \
+		$(BASE_OBJS)           \
+		$(CHALLENGE_OBJS)      \
+		$(EXECUTABLE_OBJ)      \
+		$(GUI_OBJS)            \
+		$(INPUT_OBJS)          \
+		$(PYTHON_OBJS)         \
+		$(PYTHON_SHARED_OBJS)  \
+		$(TEST_EXECUTABLE_OBJ) \
+		$(TEST_OBJS)           \
 
 	@-$(RM) $(HEADER_DEPENDS)
 
