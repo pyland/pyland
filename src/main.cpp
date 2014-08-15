@@ -104,7 +104,7 @@ int main(int argc, const char *argv[]) {
 
     //Create the GUI manager
     GUIManager gui_manager;
-    
+
     //Create the map viewer
     MapViewer map_viewer(&window, &gui_manager);
     Engine::set_map_viewer(&map_viewer);
@@ -210,6 +210,17 @@ int main(int argc, const char *argv[]) {
             gui_manager.mouse_callback_function(event);
         })
     );
+
+
+    Lifeline zoom_in_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_PRESS}), KEY("-")},
+        [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() + 0.1f); }
+    ));
+
+    Lifeline zoom_out_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_PRESS}), KEY("=")},
+        [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() - 0.1f); }
+    ));
 
 
     std::vector<Lifeline> digit_callbacks;
