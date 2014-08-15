@@ -108,7 +108,7 @@ int main(int argc, const char *argv[]) {
     Engine::set_map_viewer(&map_viewer);
 
     //Create the callbackstate
-    CallbackState callbackstate();
+    CallbackState callbackstate;
 
     //Create the event manager
     EventManager &em = EventManager::get_instance();

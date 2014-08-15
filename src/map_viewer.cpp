@@ -396,7 +396,14 @@ void MapViewer::refocus_map() {
 }
 
 void MapViewer::set_map(Map* new_map) {
+    //Reset the map and associated data
     map = new_map;
+    map_focus_object = 0;
+    map_display_x = 0.0f;
+    map_display_y = 0.0f;
+    
+    //Resize the map display
+    resize();
 }
 
 void MapViewer::set_map_focus_object(int object_id) {

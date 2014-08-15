@@ -1,3 +1,4 @@
+#include <exception>
 #include <string>
 #include <iostream>
 
@@ -12,6 +13,12 @@ Challenge::Challenge(std::string map_name, Interpreter* _interpreter, GUIManager
 {
     map_name = "../resources/map0.tmx";
     map = new Map(map_name);
+    MapViewer* map_viewer = Engine::get_map_viewer();
+    if(map_viewer == nullptr) {
+        throw std::logic_error("MapViewer is not intialised in Engine. In Challenge()");
+    }
+
+    map_viewer->set_map(map);
 }
 
 Challenge::~Challenge() {
