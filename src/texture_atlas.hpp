@@ -1,6 +1,3 @@
-// HARD-CODED:
-//      Unit sizes are currently fixed at 32x32 pixels
-
 #ifndef TEXTURE_ATLAS_H
 #define TEXTURE_ATLAS_H
 

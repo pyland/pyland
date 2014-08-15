@@ -115,34 +115,48 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
 {
     int texture_count = 0;
     // Assume all tiles are the same size. They should be...
-    int unit_w = Engine::get_tile_size();
-    int unit_h = Engine::get_tile_size();
     for (auto atlas : atlases) {
         texture_count += atlas->get_texture_count();
     }
 
-    image = Image(unit_w * texture_count, unit_h, true);
+    int max_texture_size;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+    int max_columns = max_texture_size / unit_w;
 
-    unit_columns = image.width  / unit_w;
-    unit_rows    = image.height / unit_h;
+    // Naive method for getting a fitting atlas size.
+    if (max_columns >= texture_count) {
+        unit_columns = texture_count;
+        unit_rows    = 1;
+    }
+    else {
+        unit_columns = max_columns;
+        // Round up divide.
+        unit_rows    = (texture_count + max_columns - 1) / max_columns;
+    }
+    image = Image(unit_w * unit_columns, unit_h * unit_rows, true);
+    
+    LOG(INFO) << "Generating super atlas: textures: " << texture_count << " = (" << unit_columns << ", " << unit_rows << ") => pixels: (" << image.width << ", " << image.height << ")";
+
     textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
     
-    int dst_x_offset = 0;
-    // dst_y_offset is always 0
+    int super_i = 0;
     for (auto atlas : atlases) {
         LOG(INFO) << "Merging: " << this << " << " << atlas;
         // Cached dereference.
         Image* src = &atlas->image;
-        for (int i = 0, end = atlas->get_texture_count(); i < end; ++i) {
+        for (int i = 0, end = atlas->get_texture_count(); i < end; ++i, ++super_i) {
+            std::pair<int,int> super_units(index_to_units(super_i));
+            int dst_x_offset = super_units.first  * unit_w;
+            int dst_y_offset = super_units.second * unit_h;
             std::pair<int,int> units(atlas->index_to_units(i));
             int src_x_offset = units.first  * unit_w;
             int src_y_offset = units.second * unit_h;
+            LOG(INFO) << "Sub-super mapping: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> " << super_i << ": (" << dst_x_offset << ", " << dst_y_offset << ")";
             for (int y = 0; y < unit_h; ++y) {
                 for (int x = 0; x < unit_w; ++x) {
-                    image.flipped_pixels[y][dst_x_offset + x] = (*src).flipped_pixels[src_y_offset + y][src_x_offset + x];
+                    image.flipped_pixels[dst_y_offset + y][dst_x_offset + x] = (*src).flipped_pixels[src_y_offset + y][src_x_offset + x];
                 }
             }
-            dst_x_offset += unit_w;
         }
     }
     

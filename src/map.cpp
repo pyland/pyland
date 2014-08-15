@@ -71,15 +71,14 @@ Map::Map(const std::string map_src):
 
         //Generate the geometry needed for this map
         init_shaders();
-        init_textures();
-        generate_tileset_coords(texture_atlases[0]);
+        // init_textures();
+        // generate_tileset_coords(texture_atlases[0]);
         generate_data();
 }
 
 Map::~Map() {
     // release buffers
-    delete[] tileset_tex_coords;
-    delete[] tileset_tex_data;
+    // delete[] tileset_tex_coords;
     LOG(INFO) << "Map destructed";
 }
 
@@ -302,7 +301,8 @@ void Map::generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer,
     int offset(0);
     const int num_floats(12);
     for (auto &tile_data : *layer_data) {
-        int tile_id = tile_data.second;
+        std::shared_ptr<TileSet> tileset(tile_data.first);
+        int tile_id(tile_data.second);
 
         //IF WE ARE GENERATING A SPARSE LAYER
         //Skip out blank tiles:
@@ -311,31 +311,32 @@ void Map::generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer,
             continue;
 
         //Get the texture coordinates for this tile
-        GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8]; //*8 as 8 coordinates per tile
+        // GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8]; //*8 as 8 coordinates per tile
+        std::tuple<float,float,float,float> coords(tileset->get_atlas()->index_to_coords(tile_id));
 
         //bottom left
-        data[offset+0] = tileset_ptr[0];
-        data[offset+1] = tileset_ptr[1];
+        data[offset+0]  = std::get<0>(coords);
+        data[offset+1]  = std::get<2>(coords);
 
         //top left
-        data[offset+2] = tileset_ptr[2];
-        data[offset+3] = tileset_ptr[3];
+        data[offset+2]  = std::get<0>(coords);
+        data[offset+3]  = std::get<3>(coords);
 
         //bottom right
-        data[offset+4] = tileset_ptr[4];
-        data[offset+5] = tileset_ptr[5];
+        data[offset+4]  = std::get<1>(coords);
+        data[offset+5]  = std::get<2>(coords);
 
         //top left
-        data[offset+6] = tileset_ptr[2];
-        data[offset+7] = tileset_ptr[3];
+        data[offset+6]  = std::get<0>(coords);
+        data[offset+7]  = std::get<3>(coords);
 
         //top right
-        data[offset+8] = tileset_ptr[6];
-        data[offset+9] = tileset_ptr[7];
+        data[offset+8]  = std::get<1>(coords);
+        data[offset+9]  = std::get<3>(coords);
 
         //bottom right
-        data[offset+10] = tileset_ptr[4];
-        data[offset+11] = tileset_ptr[5];
+        data[offset+10] = std::get<1>(coords);
+        data[offset+11] = std::get<2>(coords);
 
         offset += num_floats;
     }
@@ -424,7 +425,7 @@ void Map::generate_sparse_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer
 }
 
 void Map::init_textures() {
-    texture_atlases[0] = TextureAtlas::get_shared("../resources/basictiles_2.png");
+    // texture_atlases[0] = TextureAtlas::get_shared("../resources/basictiles_2.png");
 
     // //Set the texture data in the rederable component for each layer
     // for (auto layer : layers) {
@@ -552,31 +553,32 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name
     }
 
     // Get the texture coordinates for this tile
-    GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8]; //*8 as 8 coordinates per tile
+    // GLfloat *tileset_ptr = &tileset_tex_coords[(tile_id)*8]; //*8 as 8 coordinates per tile
+    std::tuple<float,float,float,float> coords(tileset->get_atlas()->index_to_coords(tile_id));
 
-    // bottom left
-    data[0] = tileset_ptr[0];
-    data[1] = tileset_ptr[1];
+    //bottom left
+    data[0]  = std::get<0>(coords);
+    data[1]  = std::get<2>(coords);
 
-    // top left
-    data[2] = tileset_ptr[2];
-    data[3] = tileset_ptr[3];
+    //top left
+    data[2]  = std::get<0>(coords);
+    data[3]  = std::get<3>(coords);
 
-    // bottom right
-    data[4] = tileset_ptr[4];
-    data[5] = tileset_ptr[5];
+    //bottom right
+    data[4]  = std::get<1>(coords);
+    data[5]  = std::get<2>(coords);
 
-    // top left
-    data[6] = tileset_ptr[2];
-    data[7] = tileset_ptr[3];
+    //top left
+    data[6]  = std::get<0>(coords);
+    data[7]  = std::get<3>(coords);
 
-    // top right
-    data[8] = tileset_ptr[6];
-    data[9] = tileset_ptr[7];
+    //top right
+    data[8]  = std::get<1>(coords);
+    data[9]  = std::get<3>(coords);
 
-    // bottom right
-    data[10] = tileset_ptr[4];
-    data[11] = tileset_ptr[5];
+    //bottom right
+    data[10] = std::get<1>(coords);
+    data[11] = std::get<2>(coords);
 
 
     // Put it into the buffers

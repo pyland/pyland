@@ -75,13 +75,6 @@ class Map {
     GLfloat* tileset_tex_coords = nullptr;
 
     ///
-    /// The texture data for the tileset. This is the cached entries
-    /// which allow generation of the map texture coordinates for a
-    /// particular tile.
-    ///
-    GLfloat* tileset_tex_data = nullptr;
-
-    ///
     /// This is the height of the map in tiles
     ///
     int map_height = 16;

@@ -76,7 +76,7 @@ public:
            std::string name,
            Walkability walkability,
            int sheet_id,
-           std::string sheet_name="../resources/characters_1.png");
+           std::string sheet_name="../resources/characters_1_64.png");
 
     virtual ~Sprite();
 

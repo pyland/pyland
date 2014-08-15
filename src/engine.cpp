@@ -21,8 +21,8 @@
 ///Static variables
 MapViewer* Engine::map_viewer(nullptr);
 NotificationBar* Engine::notification_bar(nullptr);
-int Engine::tile_size(16);
-float Engine::global_scale(2.0f);
+int Engine::tile_size(64);
+float Engine::global_scale(0.5f);
 
 // TODO: This needs to work with renderable objects
 void Engine::move_sprite(int id, glm::ivec2 move_by) {

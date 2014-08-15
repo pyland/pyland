@@ -215,7 +215,7 @@ void GUIManager::generate_vertex_data() {
 
 void GUIManager::load_textures() {
     //Set the texture data in the rederable component
-    renderable_component.set_texture(TextureAtlas::get_shared("../resources/characters_1.png"));
+    renderable_component.set_texture(TextureAtlas::get_shared("../resources/characters_1_64.png"));
 }
 bool GUIManager::init_shaders() {
     std::shared_ptr<Shader> shader;
