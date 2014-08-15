@@ -1,4 +1,3 @@
-glowing_goal: 0
-glowing_goal_selected: 1
-selected_hero_or_islander: 2
-blank: 3
+gui/highlight/goal: 0
+gui/highlight/goal_selected: 1
+gui/highlight/selected_object: 2
