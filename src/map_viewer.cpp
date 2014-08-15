@@ -82,7 +82,11 @@ void MapViewer::render_map() {
     std::pair<int, int> size = window->get_size();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 translate = glm::vec3(-get_display_x()*32.0f, -get_display_y()*32.0f, 0.0f);
+    glm::vec3 translate = glm::vec3(
+        -get_display_x() * Engine::get_actual_tile_size(),
+        -get_display_y() * Engine::get_actual_tile_size(),
+        0.0f
+    );
     glm::mat4 translated = glm::translate(model, translate);
 
     //Draw all the layers, from base to top to get the correct draw order
@@ -157,9 +161,9 @@ void MapViewer::render_sprites() {
             //Move sprite to the required position
             glm::mat4 model1 = glm::mat4(1.0f);
             glm::vec3 translate1(
-                32.0f * (sprite->get_position().x - get_display_x()),
-                32.0f * (sprite->get_position().y - get_display_y()),
-                 0.0f
+                Engine::get_actual_tile_size() * (sprite->get_position().x - get_display_x()),
+                Engine::get_actual_tile_size() * (sprite->get_position().y - get_display_y()),
+                0.0f
             );
             glm::mat4 translated1 = glm::translate(model1, translate1);
             sprite_render_component->set_modelview_matrix(translated1);
@@ -204,7 +208,7 @@ void MapViewer::render_objects(bool above_sprite) {
             if(!object)
                 continue;
 
-            //If we can't render the object 
+            //If we can't render the object
             if(!object->is_renderable())
                 continue;
 
@@ -216,9 +220,9 @@ void MapViewer::render_objects(bool above_sprite) {
             //Move object to the required position
             glm::mat4 model1 = glm::mat4(1.0f);
             glm::vec3 translate1(
-                32.0f * (object->get_position().x - get_display_x()),
-                32.0f * (object->get_position().y - get_display_y()),
-                 0.0f
+                Engine::get_actual_tile_size() * (object->get_position().x - get_display_x()),
+                Engine::get_actual_tile_size() * (object->get_position().y - get_display_y()),
+                0.0f
             );
             glm::mat4 translated1 = glm::translate(model1, translate1);
             object_render_component->set_modelview_matrix(translated1);
