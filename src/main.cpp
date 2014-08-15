@@ -251,11 +251,13 @@ int main(int argc, const char *argv[]) {
 
     //TODO: CHallenge specific
     //default script
-    //    int new_id = callbackstate.spawn(); //create a character
-    //    std::string bash_command =
-    //        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
-    //        + std::to_string(new_id) + std::string(".py");
-    //    system(bash_command.c_str());
+
+    
+    int new_id = callbackstate.spawn(); //create a character
+    std::string bash_command =
+        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
+        + std::to_string(new_id) + std::string(".py");
+    system(bash_command.c_str());
 
 
     //Run the map
@@ -263,7 +265,15 @@ int main(int argc, const char *argv[]) {
     while(!window.check_close() && run_game) {   
 
         //Setup challenge
-        LongWalkChallenge long_walk_challenge(std::string("../resources/map0.tmx"), &interpreter, &gui_manager, &window, input_manager, &map_viewer, &notification_bar);
+        ChallengeData* challenge_data = new ChallengeData(
+                                                          std::string("../resources/map0.tmx"),
+                                                          &interpreter,
+                                                          &gui_manager,
+                                                          &window,
+                                                          input_manager,
+                                                          &notification_bar);
+
+        LongWalkChallenge long_walk_challenge(challenge_data);
         long_walk_challenge.start();
 
 

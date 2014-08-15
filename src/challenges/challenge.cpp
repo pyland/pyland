@@ -6,13 +6,10 @@
 #include "input_manager.hpp"
 #include "make_unique.hpp"
 
-Challenge::Challenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager *_input_manager, MapViewer* _map_viewer, NotificationBar* _notification_bar) :
-    interpreter(_interpreter), gui_manager(_gui_manager),
-    game_window(_game_window), input_manager(_input_manager),
-    map_viewer(_map_viewer), notification_bar(_notification_bar)
+Challenge::Challenge(ChallengeData* _challenge_data) :
+    challenge_data(_challenge_data), map(nullptr)
 {
-    map_name = "../resources/map0.tmx";
-    map = new Map(map_name);
+    map = new Map(challenge_data->map_name);
     MapViewer* map_viewer = Engine::get_map_viewer();
     if(map_viewer == nullptr) {
         throw std::logic_error("MapViewer is not intialised in Engine. In Challenge()");
@@ -54,12 +51,12 @@ void Challenge::run() {
         })
     );
 #endif
-
+    
 
     auto last_clock(std::chrono::steady_clock::now());
 
     VLOG(3) << "{";
-    while (!game_window->check_close()) {
+    while (!challenge_data->game_window->check_close()) {
         last_clock = std::chrono::steady_clock::now();
 
         do {
@@ -72,17 +69,17 @@ void Challenge::run() {
         } while (std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60));
 
         VLOG(3) << "} EM | RM {";
-        map_viewer->render();
+        Engine::get_map_viewer()->render();
 
         VLOG(3) << "} RM | TD {";
         Engine::text_displayer();
-        notification_bar->text_displayer();
+        challenge_data->notification_bar->text_displayer();
 #ifdef USE_GLES
         cursor->display();
 #endif
 
         VLOG(3) << "} TD | SB {";
-        game_window->swap_buffers();
+        challenge_data->game_window->swap_buffers();
     }
     VLOG(3) << "}";
 
@@ -114,7 +111,7 @@ int Challenge::make_sprite(glm::vec2 position, std::string name, Walkability wal
 
 
     map->add_sprite(sprite_id);
-    map_viewer->set_map_focus_object(sprite_id);
+    Engine::get_map_viewer()->set_map_focus_object(sprite_id);
     LOG(INFO) << "Creating sprite wrapper";
     LOG(INFO) << "ID " << sprite_id;
 
@@ -123,7 +120,7 @@ int Challenge::make_sprite(glm::vec2 position, std::string name, Walkability wal
     auto *a_thing(new Entity(position, name, sprite_id));
 
     LOG(INFO) << "Registering sprite";
-    new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter->register_entity(*a_thing));
+    new_sprite->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
     LOG(INFO) << "Done!";
 
     return sprite_id;

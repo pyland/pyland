@@ -21,20 +21,20 @@ class InputManager;
 
 class LongWalkChallenge : public Challenge {
 public:
-    LongWalkChallenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager* _input_manager, MapViewer* _map_viewer, NotificationBar* _notification_bar);
+    LongWalkChallenge(ChallengeData* _challenge_data);
 
-        virtual void start();
-        virtual void finish();
+    virtual void start();
+    virtual void finish();
 
-    private:
-        std::vector<int> wall_path_medium_objects;
-        std::vector<int> wall_path_long_objects;
+private:
+    std::vector<int> wall_path_medium_objects;
+    std::vector<int> wall_path_long_objects;
 
-        std::vector<PositionDispatcher<int>::CallbackID> room_exit_first_callback;
-        std::vector<PositionDispatcher<int>::CallbackID> wall_path_medium_callbacks;
-        std::vector<PositionDispatcher<int>::CallbackID> wall_path_long_callbacks;
+    std::vector<PositionDispatcher<int>::CallbackID> room_exit_first_callback;
+    std::vector<PositionDispatcher<int>::CallbackID> wall_path_medium_callbacks;
+    std::vector<PositionDispatcher<int>::CallbackID> wall_path_long_callbacks;
 
-        Lifeline editor_lifeline;
+    Lifeline editor_lifeline;
 };
 
 #endif

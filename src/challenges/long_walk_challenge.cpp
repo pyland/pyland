@@ -53,8 +53,9 @@ std::map<std::string, std::vector<glm::ivec2>> targets = {
     }}
 };
 
-LongWalkChallenge::LongWalkChallenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager* _input_manager, MapViewer* _map_viewer, NotificationBar* _notification_bar) :
-    Challenge(map_name, _interpreter, _gui_manager, _game_window, _input_manager, _map_viewer, _notification_bar) {
+LongWalkChallenge::LongWalkChallenge(ChallengeData* _challenge_data) :
+                                                  Challenge(_challenge_data) {
+
     auto *map = Engine::get_map_viewer()->get_map();
     std::shared_ptr<MapObject> object;
     //Test chest
@@ -156,7 +157,7 @@ LongWalkChallenge::LongWalkChallenge(std::string map_name, Interpreter* _interpr
                 "To open it up and see what's inside, press \"e\".\n"
             );
 
-            editor_lifeline = this->input_manager->register_keyboard_handler(filter(
+            editor_lifeline = challenge_data->input_manager->register_keyboard_handler(filter(
                 {ANY_OF({KEY_HELD}), KEY({"E"})},
                 [&] (KeyboardInputEvent) {
                     std::string id = std::to_string(Engine::get_map_viewer()->get_map_focus_object());

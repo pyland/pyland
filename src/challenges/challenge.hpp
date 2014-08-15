@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "challenge_data.hpp"
 #include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "input_manager.hpp"
@@ -18,26 +19,18 @@
 #include "text.hpp"
 
 class InputManager;
+class ChallengeData;
 
 class Challenge {
 protected:
-
-    Interpreter* interpreter;
-    GUIManager* gui_manager;
-    GameWindow* game_window;
+    ChallengeData* challenge_data;
     Map* map;
-
-    Sprite* player;
-    InputManager *input_manager;
-    MapViewer* map_viewer;
-    NotificationBar* notification_bar;
-    Lifeline map_resize_lifeline;
     std::vector<int> sprite_ids;
     std::vector<int> map_object_ids;
 public:
     // TODO: Make the editor part of the core
     // engine, not the challenge class
-    Challenge(std::string map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, InputManager* _input_manager, MapViewer* map_viewer, NotificationBar* _notification_bar);
+    Challenge(ChallengeData* _challenge_data);
 
     virtual ~Challenge();
 
