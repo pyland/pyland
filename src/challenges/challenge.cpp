@@ -7,15 +7,15 @@
 #include "make_unique.hpp"
 
 Challenge::Challenge(ChallengeData* _challenge_data) :
-    challenge_data(_challenge_data), map(nullptr)
+    challenge_data(_challenge_data), map(nullptr), run_challenge(true)
 {
     map = new Map(challenge_data->map_name);
     MapViewer* map_viewer = Engine::get_map_viewer();
     if(map_viewer == nullptr) {
         throw std::logic_error("MapViewer is not intialised in Engine. In Challenge()");
     }
-
     map_viewer->set_map(map);
+
 
     //Build a sprite for the player
     int sprite_id = make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1.png");
@@ -24,7 +24,10 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         + std::to_string(sprite_id) + std::string(".py");
     system(bash_command.c_str());
 
-
+     esc_callback = challenge_data->input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_HELD}), KEY({"Escape"})},
+        [&] (KeyboardInputEvent) { run_challenge = false; }
+    ));
 }
 
 Challenge::~Challenge() {
@@ -38,6 +41,9 @@ Challenge::~Challenge() {
     for(int map_object_id : map_object_ids) {
         ObjectManager::get_instance().remove_object(map_object_id);
     }
+
+    Engine::get_map_viewer()->set_map(nullptr);
+    Engine::set_challenge(nullptr);
 
     //Delete the map
     delete map;    
@@ -65,7 +71,7 @@ void Challenge::run() {
     auto last_clock(std::chrono::steady_clock::now());
 
     VLOG(3) << "{";
-    while (!challenge_data->game_window->check_close()) {
+    while (!challenge_data->game_window->check_close() && run_challenge) {
         last_clock = std::chrono::steady_clock::now();
 
         do {

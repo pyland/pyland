@@ -25,6 +25,8 @@ class Challenge {
 protected:
     ChallengeData* challenge_data;
     Map* map;
+    Lifeline esc_callback;
+    bool run_challenge;
     std::vector<int> sprite_ids;
     std::vector<int> map_object_ids;
 public:

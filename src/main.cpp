@@ -255,8 +255,10 @@ int main(int argc, const char *argv[]) {
 
     //Run the map
     bool run_game = true;
-    while(!window.check_close() && run_game) {   
 
+
+    while(!window.check_close() && run_game) {   
+        std::cout << "SETTING UP" << std::endl;
         //Setup challenge
         ChallengeData* challenge_data = new ChallengeData(
                                                           std::string("../resources/map0.tmx"),
@@ -268,6 +270,7 @@ int main(int argc, const char *argv[]) {
                                                           &notification_bar);
 
         LongWalkChallenge long_walk_challenge(challenge_data);
+        Engine::set_challenge(&long_walk_challenge);
         long_walk_challenge.start();
 
 
