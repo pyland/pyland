@@ -15,12 +15,12 @@ public:
                                   glm::ivec2 pickup_tile,
                                   glm::ivec2 finish_tile,
                                   glm::ivec2 dropoff_tile,
-                                  std::shared_ptr<MapObject> object);
+                                  int object_id);
 
     ///
     /// Allow an object to picked up / dropped off at the same location
     ///
     static void create_pickupable(glm::ivec2 start_tile,
                                   glm::ivec2 pickup_tile,
-                                  std::shared_ptr<MapObject> object);
+                                  int object_id);
 };

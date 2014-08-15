@@ -65,6 +65,14 @@ protected:
     bool moving = false;
 
 public:
+    ///
+    /// Constructs a map object
+    /// @param position the (x, y) position of the map object on the map
+    /// @param name the name of the map object
+    /// @param walkability the walkability properties of the map object
+    /// @param sheet_id the id of the image of the map object in its map object sheet
+    /// @param sheet_name the name of the map object sheet
+    ///
     MapObject(glm::vec2 position,
               std::string name,
               Walkability walkability,

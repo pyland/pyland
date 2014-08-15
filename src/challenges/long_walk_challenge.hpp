@@ -11,6 +11,7 @@
 #include "interpreter.hpp"
 #include "lifeline.hpp"
 #include "map.hpp"
+#include "map_viewer.hpp"
 #include "sprite.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
@@ -20,20 +21,20 @@ class InputManager;
 
 class LongWalkChallenge : public Challenge {
 public:
-    LongWalkChallenge(InputManager* input_manager);
+    LongWalkChallenge(ChallengeData* _challenge_data);
 
-        virtual void start();
-        virtual void finish();
+    virtual void start();
+    virtual void finish();
 
-    private:
-        std::vector<std::shared_ptr<MapObject>> wall_path_medium_objects;
-        std::vector<std::shared_ptr<MapObject>> wall_path_long_objects;
+private:
+    std::vector<int> wall_path_medium_objects;
+    std::vector<int> wall_path_long_objects;
 
-        std::vector<PositionDispatcher<int>::CallbackID> room_exit_first_callback;
-        std::vector<PositionDispatcher<int>::CallbackID> wall_path_medium_callbacks;
-        std::vector<PositionDispatcher<int>::CallbackID> wall_path_long_callbacks;
+    std::vector<PositionDispatcher<int>::CallbackID> room_exit_first_callback;
+    std::vector<PositionDispatcher<int>::CallbackID> wall_path_medium_callbacks;
+    std::vector<PositionDispatcher<int>::CallbackID> wall_path_long_callbacks;
 
-        Lifeline editor_lifeline;
+    Lifeline editor_lifeline;
 };
 
 #endif

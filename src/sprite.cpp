@@ -2,6 +2,18 @@
 #include <glog/logging.h>
 #include <iostream>
 #include <fstream>
+#include <memory>
+
+//Include GLM
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -12,12 +24,15 @@
 #include <GL/gl.h>
 #endif
 
+#include "interpreter.hpp"
 #include "image.hpp"
 #include "engine.hpp"
 #include "entitythread.hpp"
 #include "map_viewer.hpp"
+#include "make_unique.hpp"
 #include "renderable_component.hpp"
 #include "sprite.hpp"
+#include "object.hpp"
 #include "object_manager.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
@@ -261,13 +276,14 @@ void Sprite::set_focus(bool _is_focus) {
     if (_is_focus != is_focus) {
         LOG(INFO) << "trying to set focus to "<< is_focus;
         is_focus = _is_focus;
+
         auto focus_icon = ObjectManager::get_instance().get_object<MapObject>(focus_icon_id);
         if (!focus_icon) {
             LOG(ERROR) << "Object manager no longer has focus_icon";
             return;
         }
+
         focus_icon->set_renderable(is_focus);
     }
 }
-
 

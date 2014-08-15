@@ -2,6 +2,7 @@
 
 #include "layer.hpp"
 #include "map_object.hpp"
+#include "object_manager.hpp"
 #include "tileset.hpp"
 
 #include <glog/logging.h>
@@ -49,7 +50,7 @@ void MapLoader::load_layers() {
         //Generate a new layer
         std::shared_ptr<Layer> layer_ptr = std::make_shared<Layer>(num_tiles_x, num_tiles_y, name);
         layers.push_back(layer_ptr);
-
+        ObjectManager::get_instance().add_object(layer_ptr);
         //Get the tiles
         //The TMX le has origin in top left, ours id bottom right
         for (int y = num_tiles_y - 1; y >= 0; --y) {
@@ -115,4 +116,3 @@ void MapLoader::load_tileset() {
         }
     }
 }
-

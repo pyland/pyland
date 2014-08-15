@@ -24,6 +24,7 @@ NotificationBar* Engine::notification_bar(nullptr);
 int Engine::tile_size(16);
 float Engine::global_scale(2.0f);
 
+
 // TODO: This needs to work with renderable objects
 void Engine::move_sprite(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly

@@ -10,6 +10,9 @@ TEST_EXECUTABLE_OBJ = test/test.o
 #
 
 BASE_OBJS = \
+        callback_state.o       \
+        challenge_base.o       \
+        challenge_data.o       \
 	challenge_helper.o     \
 	engine.o               \
 	event_manager.o        \
@@ -29,6 +32,7 @@ BASE_OBJS = \
 	notification_stack.o   \
 	object.o               \
 	object_manager.o       \
+        player.o               \
 	renderable_component.o \
 	shader.o               \
 	sprite.o               \
