@@ -262,7 +262,7 @@ int main(int argc, const char *argv[]) {
 
         //Setup challenge
         ChallengeData* challenge_data = new ChallengeData(
-                                                          std::string("../resources/map0.tmx"),
+                                                          std::string("../maps/map0.tmx"),
                                                           &interpreter,
                                                           &gui_manager,
                                                           &window,
