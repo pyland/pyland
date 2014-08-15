@@ -1,13 +1,16 @@
 #ifndef LAYER_H
 #define LAYER_H
 
-#include "object.hpp"
-
 #include <exception>
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "object.hpp"
+#include "tileset.hpp"
+
+
 
 ///
 /// A layer on the map. These
@@ -20,13 +23,13 @@ public:
     ///
     enum class Packing {
         ///
-        /// We have a dense layer 
+        /// We have a dense layer
         ///
         DENSE,
         ///
         /// We have a sparse layer
         ///
-       SPARSE
+        SPARSE
     };
 
 private:
@@ -44,11 +47,11 @@ private:
     /// The name of the layer
     ///
     std::string name;
-    
+
     ///
     /// The layer data stored as tilesetname, tile id pair
     ///
-    std::shared_ptr<std::vector<std::pair<std::string, int>>> layer;
+    std::shared_ptr<std::vector<std::pair<std::shared_ptr<TileSet>, int>>> layer;
 
     ///
     /// The packing of the layer
@@ -63,16 +66,16 @@ public:
     ///
     /// Construct the new Layer
     ///
-    Layer(int _width_tiles, int _height_tiles, std::string _name);
+    Layer(int width_tiles, int height_tiles, std::string name);
 
     ///
     /// Add a tile to the layer. This adds the tile to the end of the tile list.
     /// Note: this does NOT add the tile to the geometry. It adds it to the list of tiles on this layer.
-    /// 
-    void add_tile(const std::string tileset, int tile_id);
+    ///
+    void add_tile(std::shared_ptr<TileSet> tileset, int tile_id);
 
     ///
-    /// Update a tile. This  function is used to put a new tile on the layer or to update an  
+    /// Update a tile. This  function is used to put a new tile on the layer or to update an
     /// existing tile on the layer.
     /// @param x_pos the x position
     /// @param y_pos the y position
@@ -80,7 +83,7 @@ public:
     /// @param tileset the name of the tileset for this tile
     /// Throws, LayerInvalidException if the x and y position is out of bounds
     ///
-    void update_tile(int x_pos, int y_pos, int tile_id, std::string tileset);
+    void update_tile(int x_pos, int y_pos, int tile_id, std::shared_ptr<TileSet> tileset);
 
     ///
     /// Get the id of the tile at the specified location
@@ -116,18 +119,18 @@ public:
 
     ///
     /// Get the width of the layer in tiles
-    /// 
+    ///
     int get_width_tiles() { return width_tiles; }
 
     ///
     /// Get the height of the layer
     ///
     int get_height_tiles() { return height_tiles; }
-    
+
     ///
     /// Get the layer's data as a shared_ptr
     ///
-    std::shared_ptr<std::vector<std::pair<std::string, int>>> get_layer_data() { return layer; }
+    std::shared_ptr<std::vector<std::pair<std::shared_ptr<TileSet>, int>>> get_layer_data() { return layer; }
 };
 
 ///

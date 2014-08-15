@@ -4,6 +4,7 @@
 #include <boost/python.hpp>
 #include <future>
 #include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <thread>
 
 #include "entitythread.hpp"
@@ -119,6 +120,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
             }
             else if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::KILL], type)) {
                 // We are done.
+                LOG(ERROR) << "DIEDIEDIE";
                 return;
             }
             else {

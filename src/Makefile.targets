@@ -1,5 +1,7 @@
 all: $(EXECUTABLE) python_embed/wrapper_functions.so
 
+test: all $(TEST_EXECUTABLE)
+
 debug: CXXFLAGS += -g
 debug: CXXFLAGS += -O0
 debug: CPPFLAGS += -DDEBUG
@@ -12,11 +14,11 @@ debug: all
 
 tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 	@echo "${bold}[ Compiling tmx-parser library ]${normal}"
-	@if [ "$(SANITIZE)" == "1" ]; then \
-		$(MAKE) -C tmx-parser -f Makefile.linux; \
-	else \
+	@if [ "$(SANITIZE)" == "1" ]; then                          \
+		$(MAKE) -C tmx-parser -f Makefile.linux;                \
+	else                                                        \
 		$(MAKE) CXXFLAGS=-fPIC -C tmx-parser -f Makefile.linux; \
-	fi
+	fi                                                          \
 
 
 #
@@ -26,27 +28,39 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 dependencies:
 	@-${MKDIR} dependencies
 
+dependencies/challenges: | dependencies
+	@-${MKDIR} dependencies/challenges
+
 dependencies/gui: | dependencies
 	@-${MKDIR} dependencies/gui
+
+dependencies/input_management: | dependencies
+	@-${MKDIR} dependencies/input_management
 
 dependencies/python_embed: | dependencies
 	@-${MKDIR} dependencies/python_embed
 
-dependencies/challenges: | dependencies
-	@-${MKDIR} dependencies/challenges
+dependencies/test: | dependencies
+	@-${MKDIR} dependencies/test
 
-dependencies/input_management: | dependencies
-	@-${MKDIR} dependencies/input_management
 
 
 #
 # Executables
 # DO NOT RE-ORDER - tmx parser must come before tinyxml in ldlibs
 
-$(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) tmx-parser/libtmxparser.a | dependencies
+$(EXECUTABLE): $(BASE_OBJS)              \
+               $(CHALLENGE_OBJS)         \
+               $(EXECUTABLE_OBJ)         \
+               $(GUI_OBJS)               \
+               $(INPUT_OBJS)             \
+               $(PYTHON_OBJS)            \
+               tmx-parser/libtmxparser.a \
+               | dependencies            \
+
 	@echo "${bold}${green}[ Compiling $(EXECUTABLE) ]${normal}"
 
-	@$(COMPILER) -o $@ \
+	@$(COMPILER) -o $@ $(EXECUTABLE_OBJ) \
 		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
@@ -56,14 +70,30 @@ $(EXECUTABLE): $(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON
 		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS) $(TMXPARSER_CXXFLAGS) \
 		$(TINYXML_LDFLAGS)   $(TINYXML_LDLIBS)   $(TINYXML_CXXFLAGS)   \
 		$(ZLIB_LDFLAGS)      $(ZLIB_LDLIBS)      $(ZLIB_CXXFLAGS)      \
-		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)
+		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)           \
+
+$(TEST_EXECUTABLE): $(EXECUTABLE) $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS)
+	@echo "${bold}${green}[ Compiling $(TEST_EXECUTABLE) ]${normal}"
+
+	@$(COMPILER) -o $@ $(TEST_EXECUTABLE_OBJ) \
+		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(TEST_OBJS) \
+		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
+		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
+		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
+		$(PYTHON_LDFLAGS)    $(PYTHON_LDLIBS)    $(PYTHON_CXXFLAGS)    \
+		$(SDL_LDFLAGS)       $(SDL_LDLIBS)       $(SDL_CXXFLAGS)       \
+		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS) $(TMXPARSER_CXXFLAGS) \
+		$(TINYXML_LDFLAGS)   $(TINYXML_LDLIBS)   $(TINYXML_CXXFLAGS)   \
+		$(ZLIB_LDFLAGS)      $(ZLIB_LDLIBS)      $(ZLIB_CXXFLAGS)      \
+		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)           \
 
 
 #
 # Object files
 #
 
-$(BASE_OBJS): %.o : %.cpp | dependencies
+$(TEST_EXECUTABLE_OBJ) $(TEST_OBJS): | dependencies/test
+$(TEST_EXECUTABLE_OBJ) $(TEST_OBJS) $(EXECUTABLE_OBJ) $(BASE_OBJS): %.o : %.cpp | dependencies
 	@echo "${bold}[ Compiling base object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
@@ -76,7 +106,7 @@ $(BASE_OBJS): %.o : %.cpp | dependencies
 		$(TINYXML_CPPFLAGS)   $(TINYXML_CXXFLAGS)   \
 		$(TMXPARSER_CPPFLAGS) $(TMXPARSER_CXXFLAGS) \
 		$(ZLIB_CPPFLAGS)      $(ZLIB_CXXFLAGS)      \
-		$(CPPFLAGS)           $(CXXFLAGS)
+		$(CPPFLAGS)           $(CXXFLAGS)           \
 
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 	@echo "${bold}[ Compiling input object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -84,7 +114,7 @@ $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
 		$(SDL_CPPFLAGS)  $(SDL_CXXFLAGS)  \
-		$(CPPFLAGS)      $(CXXFLAGS)
+		$(CPPFLAGS)      $(CXXFLAGS)      \
 
 
 $(GUI_OBJS): %.o : %.cpp | dependencies/gui
@@ -95,7 +125,7 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS) \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)      \
 		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)         \
-		$(CPPFLAGS)        $(CXXFLAGS)
+		$(CPPFLAGS)        $(CXXFLAGS)             \
 
 
 
@@ -106,7 +136,7 @@ $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
 		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
 		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
 		$(PYTHON_CPPFLAGS)   $(PYTHON_CXXFLAGS)   \
-		$(CPPFLAGS)          $(CXXFLAGS)
+		$(CPPFLAGS)          $(CXXFLAGS)          \
 
 $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/python_embed
 	@echo "${bold}[ Compiling Python object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -116,7 +146,7 @@ $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | d
 		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS) \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)      \
 		$(PYTHON_INCLUDE_PCH)                      \
-		$(CXXFLAGS) $(CPPFLAGS)
+		$(CXXFLAGS) $(CPPFLAGS)                    \
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
 	@echo "${bold}[ Compiling Python shared object file ${green}$*.so${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -125,7 +155,7 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS)             \
-		-MF dependencies/$*.sd
+		-MF dependencies/$*.sd              \
 
 
 #
@@ -141,7 +171,7 @@ $(PYTHON_HEADER).gch: $(PYTHON_HEADER)
 
 	@$(COMPILER) $< -o $<.gch \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
-		$(CPPFLAGS)        $(CXXFLAGS)
+		$(CPPFLAGS)        $(CXXFLAGS)        \
 
 # This largely assumes the setup is constant for clang.
 # clang with precompiled headers may work, but is not guaranteed.
@@ -154,12 +184,12 @@ $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
 			"$(BOOST_CPPFLAGS)" "$(BOOST_CXXFLAGS)"   \
 			"$(PYTHON_CPPFLAGS)" "$(PYTHON_CXXFLAGS)" \
 			"$(CXXFLAGS)"                             \
-		| sed                       \
-		 	-e 's/-mtune=[^ ]*//g'  \
-		 	-e 's/-generic//g'      \
-		 	-e 's/--param=[^ ]*//g' \
-		 	-e 's/-M[^ ]*//g'       \
-		)
+		| sed                                         \
+		 	-e 's/-mtune=[^ ]*//g'                    \
+		 	-e 's/-generic//g'                        \
+		 	-e 's/--param=[^ ]*//g'                   \
+		 	-e 's/-M[^ ]*//g'                         \
+		)                                             \
 
 
 #
@@ -176,15 +206,18 @@ debug:
 
 # Dependency hack to keep away uninteresting errors
 clean: dependencies dependencies/python_embed dependencies/challenges dependencies/input_management
-	@-$(RM) $(EXECUTABLE) 
+	@-$(RM) $(EXECUTABLE) $(TEST_EXECUTABLE)
 
 	@-$(RM) \
-		$(BASE_OBJS)          \
-		$(CHALLENGE_OBJS)     \
-		$(GUI_OBJS)           \
-		$(INPUT_OBJS)         \
-		$(PYTHON_OBJS)        \
-		$(PYTHON_SHARED_OBJS)
+		$(BASE_OBJS)           \
+		$(CHALLENGE_OBJS)      \
+		$(EXECUTABLE_OBJ)      \
+		$(GUI_OBJS)            \
+		$(INPUT_OBJS)          \
+		$(PYTHON_OBJS)         \
+		$(PYTHON_SHARED_OBJS)  \
+		$(TEST_EXECUTABLE_OBJ) \
+		$(TEST_OBJS)           \
 
 	@-$(RM) $(HEADER_DEPENDS)
 
@@ -192,7 +225,7 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 		dependencies/challenges       \
 		dependencies/input_management \
 		dependencies/python_embed     \
-		dependencies
+		dependencies                  \
 
 	@echo "${bold}${green}Made clean${normal}"
 
@@ -211,4 +244,5 @@ veryclean: clean
 .PHONY: all
 .PHONY: clean
 .PHONY: debug
+.PHONY: test
 .PHONY: veryclean

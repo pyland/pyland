@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <functional>
 #include <glog/logging.h>
-#include <iostream>
 #include <list>
 #include <mutex>
 #include <thread>
@@ -27,6 +26,33 @@ EventManager& EventManager::get_instance() {
     static EventManager global_instance;
 
     return global_instance;
+}
+
+void EventManager::flush() {
+    ///
+    /// This will clear both lists out. Now, if another thread tries
+    /// to add something but blocks before getting a lock (but is stil
+    /// in an add_event function), then, once this method completes,
+    /// that event would still be added to the queue. 
+    ///
+    /// The intention of this function is to be used once all the
+    /// threads that are putting data onto the event queues are finished.
+    /// Essentially, it is run after maps are unloaded and we are
+    /// preparing for a new map.
+    ///
+
+    //The lock_guard is exception safe and releases the mutex when
+    //it goes out of scope. So we introduce scope here to release
+    //the mutex 
+    {
+        //Lock the lists
+        std::lock_guard<std::mutex> lock(queue_mutex);
+
+        //Clear both lists
+        curr_frame_queue->clear();
+        next_frame_queue->clear();
+
+    } // Lock released
 }
 
 void EventManager::process_events() {
@@ -91,7 +117,7 @@ void EventManager::add_event_next_frame(std::function<void ()> func) {
     next_frame_queue->push_back(func);
 }
 
-void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (double)> func) {
+void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (float)> func) {
     // This needs to be thread-safe, so wrap it in an event.
     // Also, this holds the initialisation, so as to keep it static
     // between all of the events.
@@ -103,13 +129,13 @@ void EventManager::add_timed_event(GameTime::duration duration, std::function<bo
 
         // Convert a timed callback to a void lambda by creating a wrapper
         // that keeps track of the completion and deals with re-registering.
-        static std::function<void (GameTime::duration,          std::function<bool (double)>,      GameTime::time_point)> callback =
-               [&]                (GameTime::duration duration, std::function<bool (double)> func, GameTime::time_point start_time) {
+        static std::function<void (GameTime::duration,          std::function<bool (float)>,      GameTime::time_point)> callback =
+               [&]                (GameTime::duration duration, std::function<bool (float)> func, GameTime::time_point start_time) {
 
             auto completion = time.time() - start_time;
 
             // Don't allow finite polling speed to allow > 100% completion.
-            double fraction_complete = std::min(completion / duration, 1.0);
+            float fraction_complete(float(std::min(completion / duration, 1.0)));
 
             if (func(fraction_complete) && fraction_complete < 1.0) {
                 // Repeat if the callback wishes and the event isn't complete.

@@ -14,23 +14,23 @@ class Object;
 ///
 class ObjectManager {
 
-    /// 
+    ///
     /// The object manager isn't designed to be thread safe but, i
     /// want to lock the generation of ids so that this bit is
-    /// 
+    ///
     std::mutex object_manager_mutex;
-   
+
     ///
     /// The id for the next object to be added to the object manager
     /// to manage. Starts at 1. An invalid object is indicated by an
     /// id of 0.
-    /// 
+    ///
     static int next_object_id;
-    
+
     ///
     /// The collection of all the objects the manager is currently managing
     /// Stored using the object id as the identifier
-    /// 
+    ///
     std::map<int, std::shared_ptr<Object>> objects;
 
     ObjectManager() {};
@@ -49,7 +49,7 @@ public:
     /// used by the majority of the engine
     /// You cannot have more than one global object manager
     ///
-    static ObjectManager& get_instance();
+    static ObjectManager &get_instance();
 
     ///
     /// Gets a new, globally unique id for an object. Starts at  as 0
@@ -57,7 +57,7 @@ public:
     /// @param object the object to set the id for
     ///
     int get_next_id(Object* const object);
-    
+
     ///
     /// Add an object to the object manager to manage
     ///
@@ -69,12 +69,17 @@ public:
     ///
     void remove_object(int object_id);
 
-    /// 
+    ///
     /// Get an object from the object manager
     /// @return the requested object
     ///
     template <typename R>
     std::shared_ptr<R> get_object(int object_id);
+
+    ///
+    /// Prints debug information
+    ///
+    void print_debug();
 };
 
 #include "object_manager.hxx"

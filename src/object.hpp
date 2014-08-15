@@ -1,12 +1,12 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "map.hpp"
-#include "renderable_component.hpp"
-#include "walkability.hpp"
-
 #include <memory>
 #include <string>
+
+#include "map.hpp"
+#include "renderable_component.hpp"
+
 
 class LockableEntityThread;
 
@@ -36,11 +36,13 @@ protected:
     ///
     /// The name of the object
     ///
-    std::string name = "";
+    std::string name;
 
 public:
     Object();
-    //= default not supported in g++-4.8
+    Object(std::string name);
+
+    // "= default" not supported in g++-4.8
     virtual ~Object();
 
     ///
@@ -49,8 +51,6 @@ public:
     /// @param new_id the object's id
     ///
     void set_id(int new_id);
-
-    ///TODO REMOVE THIS FROM HERE
 
     ///
     /// Get the id of the object

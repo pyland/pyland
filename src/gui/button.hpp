@@ -33,13 +33,24 @@ public:
 
     std::shared_ptr<Text> get_text();
 
-    void set_text(std::shared_ptr<Text>  _text);
-
     std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data();
 
     std::vector<std::pair<GLfloat*, int>> generate_this_texture_data();
 
     std::vector<std::shared_ptr<GUITextData>> generate_this_text_data();
+
+
+    ///
+    /// Set the text for the button
+    /// @param _text the button text
+    ///
+    void set_text(std::string _text) { text = _text; }
+
+    ///
+    ///o Get the button's text
+    /// @return the text
+    ///
+    std::string get_text() { return text; }
 
 };
 

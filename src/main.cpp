@@ -1,3 +1,4 @@
+
 #include <boost/filesystem.hpp>
 #include <cassert>
 #include <cmath>
@@ -19,6 +20,7 @@
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
@@ -27,8 +29,9 @@
 
 #include "api.hpp"
 #include "button.hpp"
+#include "callback_state.hpp"
 #include "component.hpp"
-#include "engine_api.hpp"
+#include "engine.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
 #include "game_window.hpp"
@@ -40,15 +43,16 @@
 #include "lifeline.hpp"
 #include "locks.hpp"
 #include "main.hpp"
-#include "make_unique.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
+#include "notification_bar.hpp"
 #include "object_manager.hpp"
+#include "player.hpp"
 #include "sprite.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
-
+#include "walkability.hpp"
 
 // Include challenges
 // TODO: Rearchitechture
@@ -66,162 +70,44 @@
 #include <GL/gl.h>
 #endif
 
-
-
 using namespace std;
-
-enum arrow_key {UP, DOWN, LEFT, RIGHT};
-
-#define TEXT_BORDER_WIDTH 20
-#define TEXT_HEIGHT 80
-
-static volatile int shutdown;
 
 static std::mt19937 random_generator;
 
-int create_sprite(Interpreter &interpreter) {
-    LOG(INFO) << "Creating sprite";
-
-
-    int start_x = 4;
-    int start_y = 15;
-    
-    // Registering new sprite with game engine
-    shared_ptr<Sprite> new_sprite = make_shared<Sprite>(start_x, start_y, "John", 4);
-    LOG(INFO) << "Adding sprite";
-    ObjectManager::get_instance().add_object(new_sprite);
-    Engine::get_map_viewer()->get_map()->add_sprite(new_sprite->get_id());
-
-    Engine::get_map_viewer()->set_map_focus_object(new_sprite->get_id());
-    LOG(INFO) << "Creating sprite wrapper";
-    LOG(INFO) << "ID " << new_sprite->get_id();
-
-    // Register user controled sprite
-    // Yes, this is a memory leak. Deal with it.
-    Entity *a_thing = new Entity(Vec2D(start_x, start_y), new_sprite->get_name(), new_sprite->get_id());
-
-    LOG(INFO) << "Registering sprite";
-
-    new_sprite->daemon = std::make_unique<LockableEntityThread>(interpreter.register_entity(*a_thing));
-
-    LOG(INFO) << "Done!";
-
-    return new_sprite->get_id();
-}
-
-class CallbackState {
-    public:
-        CallbackState(Interpreter &interpreter,
-                      std::string name):
-            interpreter(interpreter),
-            name(name){
-        }
-
-        void register_number_key(int key) {
-            LOG(INFO) << "changing focus to " << key;
-
-            if (!(0 <= key && size_t(key) < key_to_id.size())) {
-                LOG(INFO) << "changing focus aborted; no such id";
-                return;
-            }
-
-            Engine::get_map_viewer()->set_map_focus_object(key_to_id[key]);
-        }
-
-        void register_number_id(int id) {
-            LOG(INFO) << "changing focus to " << id;
-
-            //TODO: handle incorrect ID
-
-            Engine::get_map_viewer()->set_map_focus_object(id);
-        }
-
-        int spawn() {
-            int id = create_sprite(interpreter);
-            key_to_id.push_back(id);
-            return id;
-        }
-
-        void restart() {
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-
-            if (!active_player) { return; }
-
-            active_player->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-        }
-
-        void stop() {
-
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-
-            if (!active_player) { return; }
-
-            active_player->daemon->value->halt_soft(EntityThread::Signal::STOP);
-        }
-
-        void kill() {
-
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-
-            if (!active_player) { return; }
-
-            active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
-        }
-
-        void man_move (arrow_key direction) {
-            VLOG(3) << "arrow key pressed";
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            switch (direction) {
-                case (UP):
-                    Engine::move_sprite(id,Vec2D(0,1));
-                    break;
-                case (DOWN):
-                    Engine::move_sprite(id,Vec2D(0,-1));
-                    break;
-                case (RIGHT):
-                    Engine::move_sprite(id,Vec2D(-1,0));
-                    break;
-                case (LEFT):
-                    Engine::move_sprite(id,Vec2D(1,0));
-                    break;
-            }
-
-        }
-
-        void monologue () {
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            Vec2D location =  Engine::find_object(id);
-            std::cout << "You are at " << location.to_string() <<std::endl;
-        }
-
-    private:
-        Interpreter &interpreter;
-        std::string name;
-        std::vector<int> key_to_id;
-};
-
-
-int main(int argc, const char* argv[]) {
+int main(int argc, const char *argv[]) {
+    // allows you to pass an alternative text editor to app, otherwise
+    // defaults to gedit
+    if (argc >= 2) {
+        Engine::set_editor(argv[1]);
+    };
     // TODO: Support no window
     // Can't do this cleanly at the moment as the MapViewer needs the window instance....
 
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
-    int map_width = 32, map_height = 32;
-    GameWindow window(map_width*Engine::get_tile_size()*Engine::get_global_scale(), 
-        map_height*Engine::get_tile_size()*Engine::get_global_scale(), false);
+    int map_width(32);
+    int map_height(32);
+
+/// CREATE GLOBAL OBJECTS
+
+    //Create the game window to present to the users
+    GameWindow window(int(float(map_width)  * Engine::get_actual_tile_size()),
+                      int(float(map_height) * Engine::get_actual_tile_size()),
+                      false);
     window.use_context();
 
-    Map map("../resources/map0.tmx");
-
+    //Create the interpreter
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
+    //Create the input manager
+    InputManager* input_manager = window.get_input_manager();
 
-    //BUILD the GUI
+    //Create the GUI manager
     GUIManager gui_manager;
+    
+    //Create the map viewer
+    MapViewer map_viewer(&window, &gui_manager);
+    Engine::set_map_viewer(&map_viewer);
 
     void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
 
@@ -248,7 +134,11 @@ int main(int argc, const char* argv[]) {
     stoptext->set_text("Stop");
     runtext->set_text("Run");
 
-    CallbackState callbackstate(interpreter, "John");
+    //Create the callbackstate
+    CallbackState callbackstate;
+
+    //Create the event manager
+    EventManager &em = EventManager::get_instance();
 
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
     sprite_window->set_width_pixels(300);
@@ -269,59 +159,17 @@ int main(int argc, const char* argv[]) {
     stop_button->set_y_offset(0.8f);
     stop_button->set_x_offset(0.8f);
 
-    // TODO: move notification button to be better home
 
-    Typeface notification_buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont notification_buttonfont(buttontype, 30); 
+    gui_manager.set_root(sprite_window);
 
-    float button_size = 0.05f;
-    std::pair<float,float> backward_loco(0.85f,0.05f);
-    std::pair<float,float> forward_loco(0.95f,0.05f);
-
-    std::shared_ptr<Text> backwardtext = std::make_shared<Text>(&window, buttonfont, true);
-    std::shared_ptr<Text> forwardtext = std::make_shared<Text>(&window, buttonfont, true);
-    backwardtext->set_text("backward");
-    forwardtext->set_text("forward");
-      
-    
-    std::shared_ptr<Button> backward_button = std::make_shared<Button>();
-    backward_button->set_text(backwardtext);
-    backward_button->set_on_click([&] () {
-        LOG(INFO) << "backward button pressed";  
-        Engine::move_notification(Previous); 
-    });
-    backward_button->set_width(button_size);
-    backward_button->set_height(button_size);
-    backward_button->set_y_offset(backward_loco.second);
-    backward_button->set_x_offset(backward_loco.first);    
-    Text backward_text(&window, notification_buttonfont, true);
-    backward_text.set_text("<-");
-    backward_text.move_ratio(backward_loco.first, backward_loco.second);  
-    backward_text.resize_ratio(button_size,button_size);
-
-
-    std::shared_ptr<Button> forward_button = std::make_shared<Button>();
-    forward_button->set_text(forwardtext);
-    forward_button->set_on_click([&] () {
-        LOG(INFO) << "forward button pressed"; 
-        Engine::move_notification(Next); 
-    });
-    forward_button->set_width(button_size);
-    forward_button->set_height(button_size);
-    forward_button->set_y_offset(forward_loco.second);
-    forward_button->set_x_offset(forward_loco.first);  
-    Text forward_text(&window, notification_buttonfont, true);
-    forward_text.set_text("->");
-    forward_text.move_ratio(forward_loco.first,forward_loco.second);
-    forward_text.resize_ratio(button_size,button_size);
-
+    // build navigation bar buttons
+    NotificationBar notification_bar;
+    Engine::set_notification_bar(&notification_bar);
+    //    SpriteSwitcher sprite_switcher;
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
-    sprite_window->add(backward_button);
-    sprite_window->add(forward_button);
 
-    gui_manager.set_root(sprite_window);
 
     // quick fix so buttons in correct location in initial window before gui_resize_func callback
     auto original_window_size = window.get_size();
@@ -330,6 +178,7 @@ int main(int argc, const char* argv[]) {
 
     gui_manager.parse_components();
 
+    //The GUI resize function
     std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window) {
         LOG(INFO) << "GUI resizing";
         auto window_size = (*game_window).get_size();
@@ -340,54 +189,18 @@ int main(int argc, const char* argv[]) {
     Lifeline gui_resize_lifeline = window.register_resize_handler(gui_resize_func);
 
 
+    //The callbacks
+    // WARNING: Fragile reference capture
+    Lifeline map_resize_lifeline = window.register_resize_handler([&] (GameWindow *) {
+        map_viewer.resize();
+    });
 
-
-    MapViewer map_viewer(&window,&gui_manager);
-    map_viewer.set_map(&map);
-    Engine::set_map_viewer(&map_viewer);
-
-    //Setup the map resize callback
-    std::function<void(GameWindow*)> map_resize_func = [&] (GameWindow* game_window) { 
-        LOG(INFO) << "Map resizing"; 
-        std::pair<int, int> size = game_window->get_size();
-        //Adjust the view to show only tiles the user can see
-        int num_tiles_x_display = size.first / (Engine::get_tile_size() * Engine::get_global_scale());
-        int num_tiles_y_display = size.second / (Engine::get_tile_size() * Engine::get_global_scale());
-        //We make use of intege truncation to get these to numbers in terms of tiles
-        //        int display_width = num_tiles_x_display*Engine::get_tile_size()*Engine::get_global_scale();
-        //    int display_height = num_tiles_y_display*Engine::get_tile_size()*Engine::get_global_scale();
-
-        //Set the viewable fragments
-        glScissor(0, 0, size.first, size.second);
-        glViewport(0, 0, size.first, size.second);
-
-        //do nothing if these are null
-        if(Engine::get_map_viewer() == nullptr || Engine::get_map_viewer()->get_map() == nullptr)
-            return;
-
-        //Set the display size
-        //Display one more tile so that we don't get an abrupt stop
-        Engine::get_map_viewer()->set_display_width(num_tiles_x_display+1);
-        Engine::get_map_viewer()->set_display_height(num_tiles_y_display+1);
-
-        //Readjust the map focus
-        Engine::get_map_viewer()->refocus_map();
-
-    };
-    Lifeline map_resize_lifeline = window.register_resize_handler(map_resize_func);
-
-
-
-    InputManager* input_manager = window.get_input_manager();
 
     Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("H")},
         [&] (KeyboardInputEvent) { callbackstate.stop(); }
     ));
-    Lifeline spawn_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("N")},
-        [&] (KeyboardInputEvent) { callbackstate.spawn(); }
-    ));
+
     Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("R")},
         [&] (KeyboardInputEvent) { callbackstate.restart(); }
@@ -395,22 +208,22 @@ int main(int argc, const char* argv[]) {
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_HELD}), KEY({"Up", "W"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(UP); }
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, 1)); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Down","S"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(DOWN); }
+        {ANY_OF({KEY_HELD}), KEY({"Down", "S"})},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, -1)); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Right","D"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(LEFT); }
+        {ANY_OF({KEY_HELD}), KEY({"Right", "D"})},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 1,  0)); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Left","A"})},
-        [&] (KeyboardInputEvent) { callbackstate.man_move(RIGHT); }
+        {ANY_OF({KEY_HELD}), KEY({"Left", "A"})},
+        [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2(-1,  0)); }
     ));
 
     Lifeline monologue_callback = input_manager->register_keyboard_handler(filter(
@@ -420,12 +233,13 @@ int main(int argc, const char* argv[]) {
 
     Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(
         filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {
-            (gui_manager.*mouse_callback_function) (event);})
+            gui_manager.mouse_callback_function(event);
+        })
     );
 
 
     std::vector<Lifeline> digit_callbacks;
-    for (int i=0; i<10; ++i) {
+    for (unsigned int i=0; i<10; ++i) {
         digit_callbacks.push_back(
             input_manager->register_keyboard_handler(filter(
                 {KEY_PRESS, KEY(std::to_string(i))},
@@ -437,109 +251,63 @@ int main(int argc, const char* argv[]) {
     Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})},
         [&] (MouseInputEvent event) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
-            Vec2D tile_clicked = Engine::get_map_viewer()->pixel_to_tile(Vec2D(event.to.x, event.to.y));
-            LOG(INFO) << "iteracting with tile " << tile_clicked.to_string();
-            auto objects = Engine::get_objects_at(tile_clicked);
-            if (objects.size() == 1) {
-                callbackstate.register_number_id(objects[0]);
-            } else if (objects.size() == 0) {
-                LOG(INFO) << "Not objects to interact with";
-            } else {
+
+            glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
+            LOG(INFO) << "interacting with tile " << tile_clicked.x << ", " << tile_clicked.y;
+
+            auto sprites = Engine::get_sprites_at(tile_clicked);
+
+            if (sprites.size() == 0) {
+                LOG(INFO) << "No sprites to interact with";
+            }
+            else if (sprites.size() == 1) {
+                callbackstate.register_number_id(sprites[0]);
+            }
+            else {
                 LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number_id(objects[0]);
+                callbackstate.register_number_id(sprites[0]);
             }
         }
     ));
 
-    EventManager &em = EventManager::get_instance();
-
-    Typeface mytype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont myfont(mytype, 18);
-    Text mytext(&window, myfont, true);
-    mytext.set_text("John");
-    // referring to top left corner of text window
-    mytext.move(TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
-    auto window_size = window.get_size();
-    mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
-    Engine::set_dialogue_box(&mytext);
-
-    std::function<void(GameWindow*)> func = [&] (GameWindow* game_window) {
+    std::function<void (GameWindow *)> func_char = [&] (GameWindow *) {
         LOG(INFO) << "text window resizing";
-        auto window_size = (*game_window).get_size();
-        mytext.resize(window_size.first-TEXT_BORDER_WIDTH, TEXT_HEIGHT + TEXT_BORDER_WIDTH);
-    };
-
-    Lifeline text_lifeline = window.register_resize_handler(func);
-
-    std::function<void(GameWindow* game_window)> func_char = [&] (GameWindow* game_window) { 
-        std::ignore = game_window;
-        LOG(INFO) << "text window resizing"; 
         Engine::text_updater();
     };
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-    std::string editor;
+    //Create a player to maintain their state between challenges
+    std::shared_ptr<Player> player = std::make_shared<Player>();
 
-    if (argc >= 2) {
-        Engine::set_editor(argv[1]);
-    };
+    //Run the map
+    bool run_game = true;
 
-    int new_id = callbackstate.spawn();
-    std::string bash_command = 
-        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_") 
-        + std::to_string(new_id) + std::string(".py");
-    system(bash_command.c_str());
-    LongWalkChallenge long_walk_challenge(input_manager);
-    long_walk_challenge.start();
 
-    TextFont big_font(mytype, 50);
-    Text cursor(&window, big_font, true);
-    cursor.move(0, 0);
-    cursor.resize(50, 50);
-    cursor.set_text("<");
+    while(!window.check_close() && run_game) {   
 
-    Lifeline cursor_lifeline = input_manager->register_mouse_handler(
-        filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
-            cursor.move(event.to.x, event.to.y+25);
-        })
-    );
+        //Setup challenge
+        ChallengeData* challenge_data = new ChallengeData(
+                                                          std::string("../resources/map0.tmx"),
+                                                          &interpreter,
+                                                          &gui_manager,
+                                                          &window,
+                                                          player,
+                                                          input_manager,
+                                                          &notification_bar);
 
-    auto last_clock = std::chrono::steady_clock::now();
-    auto average_time = std::chrono::steady_clock::duration(0);
+        LongWalkChallenge long_walk_challenge(challenge_data);
+        Engine::set_challenge(&long_walk_challenge);
+        long_walk_challenge.start();
 
-    VLOG(3) << "{";
-    while (!window.check_close()) {
-        auto new_clock = std::chrono::steady_clock::now();
-        auto new_time = new_clock - last_clock;
-        last_clock = new_clock;
-        average_time = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
-            average_time * 0.99 + new_time * 0.01
-        );
 
-        VLOG_EVERY_N(1, 10) << std::chrono::seconds(1) / average_time;
+        //Run the challenge - returns after challenge completes
+        long_walk_challenge.run();
 
-        VLOG(3) << "} SB | IM {";
-        GameWindow::update();
+        //Clean up after the challenge - additional, non-challenge clean-up
+        em.flush();
 
-        VLOG(3) << "} IM | EM {";
-        em.process_events();
-
-        VLOG(3) << "} EM | RM {";
-        map_viewer.render();
-
-        VLOG(3) << "} RM | TD {";
-        mytext.display();
-        Engine::text_displayer();
-        forward_text.display();
-        backward_text.display();
-        cursor.display();
-
-        VLOG(3) << "} TD | SB {";
-        window.swap_buffers();
     }
-    VLOG(3) << "}";
 
     return 0;
 }
-//

@@ -1,9 +1,11 @@
 #include <chrono>
 #include <functional>
 #include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <iostream>
 #include <mutex>
 #include <thread>
+
 #include "entitythread.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
@@ -76,7 +78,6 @@ void thread_killer(std::timed_mutex &finish_signal,
         }
 
         LOG(INFO) << "Kill thread woke up";
-        LOG(INFO) << "111" << entitythreads.value.size();
 
         std::lock_guard<std::mutex> lock(*entitythreads.lock);
 
@@ -117,3 +118,4 @@ void ThreadKiller::finish() {
     kill_thread_finish_signal.unlock();
     thread.join();
 }
+

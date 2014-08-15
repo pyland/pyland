@@ -1,4 +1,8 @@
 EXECUTABLE = main.bin
+EXECUTABLE_OBJ = main.o
+
+TEST_EXECUTABLE = test/test.bin
+TEST_EXECUTABLE_OBJ = test/test.o
 
 #
 # Lists of files!
@@ -6,45 +10,58 @@ EXECUTABLE = main.bin
 #
 
 BASE_OBJS = \
-	engine_api.o     \
-	event_manager.o  \
-	game_window.o    \
-	graphics_context.o \
-	image.o          \
-	layer.o          \
-	lifeline.o       \
-	lifeline_controller.o \
-	notification.o   \
-	main.o           \
-	map.o            \
-	map_loader.o     \
-	map_object.o     \
-	map_viewer.o     \
-	object.o         \
-	object_manager.o \
+        callback_state.o       \
+        challenge_base.o       \
+        challenge_data.o       \
+	challenge_helper.o     \
+	engine.o               \
+	event_manager.o        \
+	fml.o                  \
+	game_time.o            \
+	game_window.o          \
+	graphics_context.o     \
+	image.o                \
+	layer.o                \
+	lifeline.o             \
+	lifeline_controller.o  \
+	map.o                  \
+	map_loader.o           \
+	map_object.o           \
+	map_viewer.o           \
+	notification_bar.o     \
+	notification_stack.o   \
+	object.o               \
+	object_manager.o       \
+        player.o               \
 	renderable_component.o \
-	shader.o         \
-        sprite.o         \
-	text.o           \
-	text_font.o      \
-	tileset.o        \
-        typeface.o       \
-	game_time.o
+	shader.o               \
+	sprite.o               \
+	sprite_switcher.o      \
+	text.o                 \
+	text_font.o            \
+	texture.o              \
+	texture_atlas.o        \
+	tileset.o              \
+	typeface.o             \
 
 
 CHALLENGE_OBJS = \
-	challenges/challenge.o \
-	challenges/long_walk_challenge.o
+	challenges/challenge.o           \
+	challenges/long_walk_challenge.o \
 
 
 HEADER_DEPENDS_ROOT = \
-	${BASE_OBJS:.o=.d}      \
-	${CHALLENGE_OBJS:.o=.d} \
-	${EXECUTABLE:.bin=.d}   \
-        ${GUI_OBJS:.o=.d}       \
-	${INPUT_OBJS:.o=.d}     \
-	${PYTHON_OBJS:.o=.d}    \
-	${PYTHON_SHARED_OBJS:.so=.sd}
+	${BASE_OBJS:.o=.d}            \
+	${CHALLENGE_OBJS:.o=.d}       \
+	${EXECUTABLE:.bin=.d}         \
+	${EXECUTABLE_OBJ:.o=.d}       \
+	${GUI_OBJS:.o=.d}             \
+	${INPUT_OBJS:.o=.d}           \
+	${PYTHON_OBJS:.o=.d}          \
+	${PYTHON_SHARED_OBJS:.so=.sd} \
+	${TEST_EXECUTABLE:.bin=.d}    \
+	${TEST_EXECUTABLE_OBJ:.o=.d}  \
+	${TEST_OBJS:.o=.d}            \
 
 HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 
@@ -55,7 +72,7 @@ INPUT_OBJS = \
 	input_management/input_manager.o        \
 	input_management/keyboard_input_event.o \
 	input_management/mouse_input_event.o    \
-	input_management/mouse_state.o
+	input_management/mouse_state.o          \
 
 GUI_OBJS = \
 	gui/button.o                 \
@@ -64,21 +81,22 @@ GUI_OBJS = \
         gui/gui_text.o               \
         gui/gui_text_data.o          \
 	gui/gui_window.o             \
-	gui/gui_manager.o
+	gui/gui_manager.o            \
 
 
 PYTHON_OBJS = \
-	python_embed/api.o             \
-	python_embed/gil_safe_future.o \
-	python_embed/interpreter.o     \
+	python_embed/api.o                 \
+	python_embed/gil_safe_future.o     \
+	python_embed/interpreter.o         \
 	python_embed/interpreter_context.o \
-	python_embed/locks.o           \
-	python_embed/entitythread.o    \
-	python_embed/thread_killer.o
+	python_embed/locks.o               \
+	python_embed/entitythread.o        \
+	python_embed/thread_killer.o       \
 
 
 # For precompiling
-PYTHON_HEADER = python_embed/python_embed_headers.hpp
+PYTHON_HEADER = \
+	python_embed/python_embed_headers.hpp
 
 
 PYTHON_SHARED_OBJS = \
@@ -86,3 +104,7 @@ PYTHON_SHARED_OBJS = \
 
 PYTHON_SHARED_OBJS_DEPENDS = \
 	python_embed/api.o
+
+
+TEST_OBJS = \
+	test/test_fml.o \

@@ -7,31 +7,32 @@ MKDIR = mkdir -p
 COMPILER = g++
 
 WARNINGS = \
-	-Wall -Wextra          \
-	-Wconversion           \
-	-Wmissing-braces       \
-	-Wpointer-arith        \
-	-Wno-sign-conversion   \
-        -Wreorder              \
-	-pedantic              \
-	-isystem ./tmx-parser  \
-	-isystem ./tmx-parser/TmxParser
+	-isystem ./catch                \
+	-isystem ./tmx-parser           \
+	-isystem ./tmx-parser/TmxParser \
+	-pedantic                       \
+	-Wall -Wextra                   \
+	-Wconversion                    \
+	-Wmissing-braces                \
+	-Wno-sign-conversion            \
+	-Wpointer-arith                 \
 
 CXXFLAGS = \
-	-std=c++11  \
-	-O3         \
-	${WARNINGS} \
-	${CXX_EXTRA}
+	-std=c++11   \
+	-O3          \
+	${WARNINGS}  \
+	${CXX_EXTRA} \
 
 CPPFLAGS = \
 	-I./                  \
+	-I./catch             \
 	-I./challenges        \
 	-I./input_management  \
 	-I./gui               \
 	-I./python_embed      \
 	-MMD -MP              \
 	-MF dependencies/$*.d \
-	${CPP_EXTRA}
+	${CPP_EXTRA}          \
 
 LDFLAGS =
 LDLIBS  =

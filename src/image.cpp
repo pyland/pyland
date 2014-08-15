@@ -1,8 +1,7 @@
 #include <cstring>
-#include <stdexcept>
 #include <glog/logging.h>
-#include <iostream>
 #include <new>
+#include <stdexcept>
 
 extern "C" {
 #include <SDL2/SDL.h>
@@ -43,6 +42,10 @@ Image::Pixel::Pixel():
 
 Image::Image():
     flipped_pixels(Flipper(0,0,nullptr)) {
+}
+
+Image::Image(const std::string filename, bool opengl):
+    Image(filename.c_str(), opengl) {
 }
 
 Image::Image(const char* filename, bool opengl) {
@@ -116,7 +119,7 @@ void Image::load_file(const char* filename) {
     if ((IMG_Init(IMG_INIT_TIF) & IMG_INIT_TIF) == 0) {
         LOG(WARNING) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
     }
-    
+
     loaded = IMG_Load(filename);
 
     if (loaded == nullptr) {
@@ -125,7 +128,7 @@ void Image::load_file(const char* filename) {
 
         throw Image::LoadException(error_message.str());
     }
-    
+
     // This surface has a known format.
     compatible = SDL_CreateRGBSurface(0, // Unsed
                                       loaded->w,
@@ -149,10 +152,10 @@ void Image::load_file(const char* filename) {
         pixels = nullptr;
         throw Image::LoadException("Failed to allocate space.");
     }
-    
+
     SDL_BlitSurface(loaded, NULL, compatible, NULL);
     SDL_FreeSurface(loaded);
-    
+
     try {
         create_blank(compatible->w, compatible->h);
     }

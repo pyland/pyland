@@ -22,7 +22,7 @@ class GilSafeFuture {
 
     public:
         GilSafeFuture();
-        GilSafeFuture(const GilSafeFuture<T> &other) = default;
+        GilSafeFuture(const GilSafeFuture<T> &) = default;
 
         template <typename E=T, typename=typename std::enable_if<std::is_void<E>::value, E>::type>
         void set();

@@ -170,10 +170,10 @@ void ComponentGroup::add(std::shared_ptr<Component> component) {
     component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));                }
 
 void ComponentGroup::remove(int component_id) {
-    components.erase(component_id);
-    std::shared_ptr<Component> component = components[component->get_id()];
-    //no longer the parent
+    std::shared_ptr<Component> component = components[component_id];
     component->set_parent(nullptr);
+    components.erase(component_id);
+        //no longer the parent
 }
 
 std::shared_ptr<Component> ComponentGroup::get_component(int component_id) {
