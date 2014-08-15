@@ -18,7 +18,7 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
 
 
     //Build a sprite for the player
-    int sprite_id = make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1.png");
+    int sprite_id = make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1_64.png");
     std::string bash_command =
         std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
         + std::to_string(sprite_id) + std::string(".py");

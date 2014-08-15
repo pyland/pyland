@@ -60,7 +60,7 @@ namespace ChallengeHelper {
     void create_pickupable(glm::ivec2 start_tile,
                            glm::ivec2 pickup_tile,
                            int object_id);
-};
+}
 
 #include "challenge_helper.hxx"
 

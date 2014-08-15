@@ -27,7 +27,7 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
         "test chest",
         Walkability::BLOCKED,
         52,
-        "../resources/basictiles_2.png"
+        "../resources/basictiles_2_64.png"
     ));
 
     ChallengeHelper::create_pickupable(
