@@ -9,7 +9,7 @@ then
     exit 1
 fi
 
-WORK_DIR="/tmp/tile-gen-job-work-$(date +%s)"
+WORK_DIR="/tmp/tile-santiser-work-$(date +%s)"
 LIST_FILE="$WORK_DIR/tiles.lst"
 
 if mkdir "$WORK_DIR"
@@ -24,8 +24,8 @@ then
 
     while read ITEM
     do
-        ITEM_NEW=${ITEM// /_}
-        ITEM_NEW=${ITEM_NEW//:/_}
+        ITEM_NEW=${ITEM//[ :]/_}
+#        ITEM_NEW=${ITEM_NEW//:/_}
         if [ "$ITEM" != "$ITEM_NEW" ]
         then
             read -p "Confirm: $ITEM    ->    $ITEM_NEW: " -n 1 -r <&1
