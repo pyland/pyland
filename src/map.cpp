@@ -4,6 +4,7 @@
 #include <glog/logging.h>
 #include <memory>
 #include <string>
+#include <tuple>
 
 //Include GLM
 #define GLM_FORCE_RADIANS
@@ -22,6 +23,7 @@
 
 #include "api.hpp"
 #include "engine.hpp"
+#include "fml.hpp"
 #include "layer.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
@@ -45,6 +47,8 @@ Map::Map(const std::string map_src):
             return;
         }
 
+        std::tie(locations, objprop_ids_to_instances) = map_loader.get_object_mapping();
+
         //Get the loaded map data
         map_width = map_loader.get_map_width();
         map_height = map_loader.get_map_height();
@@ -58,7 +62,7 @@ Map::Map(const std::string map_src):
         layers = map_loader.get_layers();
         tilesets = map_loader.get_tilesets();
 
-        for(auto map_object : map_loader.get_objects()) {
+        for (auto map_object : map_loader.get_objects()) {
             //Add the object to the object manager and the map
             ObjectManager::get_instance().add_object(map_object);
             map_object_ids.push_back(map_object->get_id());
@@ -74,6 +78,10 @@ Map::Map(const std::string map_src):
         init_textures();
         generate_tileset_coords(texture_atlases[0]);
         generate_data();
+}
+
+ObjectProperties Map::obj_from_id(int id) {
+    return objprop_ids_to_instances.at(id);
 }
 
 Map::~Map() {
@@ -426,10 +434,12 @@ void Map::generate_sparse_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer
 void Map::init_textures() {
     texture_atlases[0] = TextureAtlas::get_shared("../resources/basictiles_2.png");
 
-    // //Set the texture data in the rederable component for each layer
-    // for (auto layer : layers) {
-    //     layer->get_renderable_component()->set_texture(Texture::get_shared(layer, 0));
-    // }
+    // WTF is going on?
+    // Set the texture data in the rederable component for each layer
+    for (auto layer : layers) {
+        // layer->get_renderable_component()->set_texture((*layer->get_layer_data())[0].first->get_atlas());
+        layer->get_renderable_component()->set_texture(tilesets[0]->get_atlas());
+    }
 }
 
 /**
@@ -537,7 +547,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name
         LOG(FATAL) << "BAAADDD!!!! BAD, BAD, BAD!! Bad tile name: \"" << tile_name << "\"... I should make this softer...";
         return;
     }
-    
+
     // Build the data for the update
     GLfloat *data;
     size_t data_size(sizeof(GLfloat) * num_tile_dimensions * num_tile_vertices);
@@ -581,7 +591,7 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name
 
     // Put it into the buffers
 
-    std::shared_ptr<Layer> layer(layers[layer_num]);
+    std::shared_ptr<Layer> layer(layers.at(layer_num));
     Layer::Packing packing(layer->get_packing());
 
     // Add this tile to the layer data structure

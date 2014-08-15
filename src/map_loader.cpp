@@ -1,14 +1,17 @@
-#include "map_loader.hpp"
-
-#include "layer.hpp"
-#include "map_object.hpp"
-#include "tileset.hpp"
-
 #include <glog/logging.h>
 #include <map>
 #include <memory>
 #include <string>
 #include <Tmx.h>
+#include <utility>
+
+#include "engine.hpp"
+#include "fml.hpp"
+#include "layer.hpp"
+#include "map_loader.hpp"
+#include "map_object.hpp"
+#include "tileset.hpp"
+
 
 ///
 /// See: https://github.com/bjorn/tiled/wiki/TMX-Map-Format
@@ -73,6 +76,48 @@ void MapLoader::load_layers() {
     }
 }
 
+std::pair<FML, std::vector<ObjectProperties>> MapLoader::get_object_mapping() {
+    std::vector<ObjectProperties> object_properties_mapping;
+    std::map<std::string, std::string> named_tiles_mapping;
+
+    for (int i = 0; i < map.GetNumObjectGroups(); ++i) {
+        // Get an object group: effecitively a map layer but just for objects
+        const Tmx::ObjectGroup *object_group(map.GetObjectGroup(i));
+
+        // Get all the objects in this object group
+        for (int j = 0; j < object_group->GetNumObjects(); ++j) {
+
+            // Get an object
+            const Tmx::Object *object(object_group->GetObject(j));
+
+            // For all the tilesets, with guaranteed increasing FirstGid values
+            const Tmx::Tileset *tileset(nullptr);
+            for (int i = 0; i < map.GetNumTilesets(); ++i) {
+                // Stop looking if too large
+                if (map.GetTileset(i)->GetFirstGid() > object->GetGid()) { break; }
+
+                // Save if succeeded
+                tileset = map.GetTileset(i);
+            }
+
+            CHECK_NOTNULL(tileset);
+
+            object_properties_mapping.push_back({
+                glm::ivec2(             object->GetX() / Engine::get_tile_size(),
+                           map_height - object->GetY() / Engine::get_tile_size()),
+                object->GetGid() - tileset->GetFirstGid(),
+                tileset->GetName(),
+                "../resources/" + tileset->GetImage()->GetSource()
+            });
+
+            auto fullname(object_group->GetName() + "/" + object->GetName());
+            named_tiles_mapping[fullname] = std::to_string(object_properties_mapping.size()-1);
+        }
+    }
+
+    return std::make_pair(FML::unsafe_from_map(named_tiles_mapping), object_properties_mapping);
+}
+
 void MapLoader::load_tileset() {
     //For all the tilesets
     for (int i = 0; i < map.GetNumTilesets(); ++i) {
@@ -84,7 +129,7 @@ void MapLoader::load_tileset() {
         const std::string tileset_name(tileset->GetName());
         int tileset_width = tileset->GetImage()->GetWidth();
         int tileset_height = tileset->GetImage()->GetHeight();
-        const std::string tileset_atlas(tileset->GetImage()->GetSource());
+        const std::string tileset_atlas("../resources/" + tileset->GetImage()->GetSource());
 
         //Create a new tileset and add it to the map
         std::shared_ptr<TileSet> map_tileset = std::make_shared<TileSet>(tileset_name, tileset_width, tileset_height, tileset_atlas);

@@ -100,7 +100,7 @@ void RenderableComponent::bind_textures() {
     glActiveTexture(GL_TEXTURE0);
 
     //Bind tiles texture
-    glBindTexture(GL_TEXTURE_2D,texture_atlas->get_gl_texture());
+    glBindTexture(GL_TEXTURE_2D, texture_atlas->get_gl_texture());
 }
 
 void RenderableComponent::release_textures() {

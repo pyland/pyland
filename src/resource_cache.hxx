@@ -43,7 +43,7 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
             resource->resource_cache = weak_this;
             return resource;
         }
-        catch (std::exception e) {
+        catch (std::exception &e) {
             LOG(ERROR) << "Error creating shared resource \"" << resource_name << "\": " << e.what();
             throw e;
         }
@@ -52,7 +52,7 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
         // Get from cache.
         std::shared_ptr<Res> resource = resources.find(resource_name)->second.lock();
         // resource->resource_cache = weak_this;
-        
+
         // Some say we should check the pointer, but we don't keep dead
         // weak pointers lying around for us to care about.
         return resource;

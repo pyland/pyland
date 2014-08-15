@@ -85,12 +85,14 @@ void MapViewer::render_map() {
 
     //Draw all the layers, from base to top to get the correct draw order
     int layer_num = 0;
-    for(auto layer: map->get_layers()) {
-        if(!layer) 
+    for (auto layer: map->get_layers()) {
+        if (!layer) {
             continue;
+        }
 
-        if(!layer->is_renderable())
+        if (!layer->is_renderable()) {
             continue;
+        }
 
         RenderableComponent* layer_render_component = layer->get_renderable_component();
         Shader* layer_shader = layer_render_component->get_shader().get();

@@ -34,7 +34,9 @@ class FML {
             StringMap::const_iterator
         >;
 
+        FML() = default;
         explicit FML(std::istream &input);
+        static FML unsafe_from_map(std::map<std::string, std::string> &input);
 
         bool valid();
 
@@ -51,6 +53,8 @@ class FML {
         const_iterator end  (std::string directory) const;
 
     private:
+        explicit FML(std::map<std::string, std::string> &input);
+
         const_iterator make_iter(StringMap::const_iterator mapiter, size_t chop=0) const;
 
         std::shared_ptr<StringMap> values;

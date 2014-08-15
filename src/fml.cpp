@@ -90,6 +90,12 @@ FML::FML(std::istream &input):
         }
 }
 
+FML FML::unsafe_from_map(std::map<std::string, std::string> &mapping) { return FML(mapping); }
+FML::FML(std::map<std::string, std::string> &mapping):
+    values(std::make_shared<StringMap>(mapping)),
+    error(false)
+    {}
+
 bool FML::valid() {
     return !error;
 }

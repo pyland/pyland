@@ -1,10 +1,7 @@
 #ifndef MAP_LOADER_HPP
 #define MAP_LOADER_HPP
 
-#include "layer.hpp"
-#include "map_object.hpp"
-#include "tileset.hpp"
-
+#include <glm/vec2.hpp>
 #include <map>
 #include <memory>
 #include <string>
@@ -12,9 +9,21 @@
 #include <utility>
 #include <vector>
 
+#include "layer.hpp"
+#include "tileset.hpp"
+
+class MapObject;
+
+struct ObjectProperties {
+    const glm::ivec2 location;
+    const int tileset_id;
+    const std::string tileset_name;
+    const std::string atlas_name;
+};
+
 ///
 /// Class to load a map from a TMX file
-/// 
+///
 class MapLoader {
     ///
     /// The TMX map file
@@ -55,16 +64,22 @@ class MapLoader {
     /// Array of layers
     ///
     std::vector<std::shared_ptr<Layer>> layers;
-    
+
     ///
     /// Array of objects
     ///
-    std::vector<std::shared_ptr<MapObject>> objects;    
- public:
+    std::vector<std::shared_ptr<MapObject>> objects;
+
+public:
+    ///
+    /// Load objects from the TMX map to create a mapping
+    /// from names to places and tile ids
+    ///
+    std::pair<FML, std::vector<ObjectProperties>> get_object_mapping();
 
     ///
     /// Load the TMX map from the source file
-    /// 
+    ///
     bool load_map(const std::string source);
 
     ///
