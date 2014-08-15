@@ -404,9 +404,9 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
 
             std::shared_ptr<TileSet> tileset(tile_data->first);
             int tile_id(tile_data->second);
-            
-            //IF GENERATING A SPARSE LAYER
-            //Skip empty tiles
+
+            // IF GENERATING A SPARSE LAYER
+            // Skip empty tiles
             if(dense == false && tile_id == 0) {
                 ++tile_data;
                 continue;
@@ -415,7 +415,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
             // Default to invisible.
             float vx1(-1.0f), vy1(-1.0f);
             float vx2(-1.0f), vy2(-1.0f);
-            
+
             if(tileset) {
                 // The tile is not blank, so set its x, y.
                 vx1 = float(x);
@@ -423,7 +423,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
                 vx2 = float(x + 1);
                 vy2 = float(y + 1);
             }
-            
+
             //bottom left
             data[offset+ 0] = scale * vx1;
             data[offset+ 1] = scale * vy1;
