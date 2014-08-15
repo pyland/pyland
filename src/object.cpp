@@ -1,3 +1,4 @@
+#include <iostream>
 #include <glog/logging.h>
 #include <string>
 #include <utility>
@@ -22,7 +23,9 @@ Object::Object(std::string name): name(name) {
     // TODO: Maybe add the object to the object manager here
 }
 
-Object::~Object() {}
+Object::~Object() {
+    LOG(INFO) << "OBJECT DESTROYING (" << id << ")  " << name << std::endl;
+}
 
 void Object::set_id(int new_id) {
     id = new_id;

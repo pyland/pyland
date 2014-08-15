@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "challenge.hpp"
 #include "event_manager.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
@@ -25,9 +26,12 @@ void ChallengeHelper::unregister_all(Container *callbacks) {
 }
 
 template <class OutputIt>
-void ChallengeHelper::make_objects(std::string name, Walkability walkability, OutputIt output) {
+void ChallengeHelper::make_objects(Challenge *challenge,
+                                   std::string name,
+                                   Walkability walkability,
+                                   OutputIt output) {
 
-    auto *map = Engine::get_map_viewer()->get_map();
+    auto *map(Engine::get_map_viewer()->get_map());
     auto begin(map->locations.begin("Objects/" + name));
     auto end  (map->locations.end  ("Objects/" + name));
 
@@ -39,18 +43,13 @@ void ChallengeHelper::make_objects(std::string name, Walkability walkability, Ou
         [&] (std::pair<std::string, int> name_id) {
             auto properties(map->obj_from_id(name_id.second));
 
-            auto object(std::make_shared<MapObject>(
+            return challenge->make_map_object(
                 properties.location,
                 name,
                 walkability,
                 properties.tileset_id,
                 properties.atlas_name
-            ));
-
-            ObjectManager::get_instance().add_object(object);
-            map->add_map_object(object->get_id());
-
-            return object;
+            );
         }
     );
 }

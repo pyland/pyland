@@ -60,3 +60,8 @@ void Notification::update_flags() {
         can_forward = true;
     }
 }
+
+void Notification::clear() {
+    message_stack.clear();
+    stack_iterator = std::end(message_stack);
+}

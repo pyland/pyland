@@ -1,5 +1,6 @@
 #include <glm/vec2.hpp>
 
+#include "challenge.hpp"
 #include "challenge_helper.hpp"
 #include "engine.hpp"
 #include "map.hpp"
@@ -7,26 +8,21 @@
 #include "object_manager.hpp"
 #include "sprite.hpp"
 
-
-std::shared_ptr<MapObject>
-ChallengeHelper::make_object(std::string name, Walkability walkability) {
+int ChallengeHelper::make_object(Challenge *challenge,
+                                 std::string name,
+                                 Walkability walkability) {
 
     auto *map = Engine::get_map_viewer()->get_map();
     auto id(map->locations.get<int>("Objects/" + name));
     auto properties(map->obj_from_id(id));
 
-    auto object(std::make_shared<MapObject>(
+    return challenge->make_map_object(
         properties.location,
         name,
         walkability,
         properties.tileset_id,
         properties.atlas_name
-    ));
-
-    ObjectManager::get_instance().add_object(object);
-    map->add_map_object(object->get_id());
-
-    return object;
+    );
 }
 
 PositionDispatcher<int>::CallbackID
@@ -46,10 +42,10 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
                                         glm::ivec2 pickup_tile,
                                         glm::ivec2 finish_tile,
                                         glm::ivec2 dropoff_tile,
-                                        std::shared_ptr<MapObject> object) {
+                                        int object_id) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-
+    std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
     object->set_position(start_tile);
 
     // Pick-up marker
@@ -57,13 +53,13 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
 
     map->event_step_on.register_callback(
         pickup_tile,
-        [object, pickup_tile, dropoff_tile] (int) {
+        [object_id, pickup_tile, dropoff_tile] (int) {
             int id(Engine::get_sprites_at(pickup_tile).front());
             auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
 
-            sprite->add_to_inventory(object->get_id());
-            Engine::change_tile(pickup_tile,  4, "blank");
-            Engine::change_tile(dropoff_tile, 4, "circle_yellow");
+            sprite->add_to_inventory(object_id);
+            Engine::change_tile(pickup_tile,  5, "blank");
+            Engine::change_tile(dropoff_tile, 5, "circle_yellow");
 
             // We only give out our item once
             return false;
@@ -75,11 +71,13 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
 
     map->event_step_on.register_callback(
         dropoff_tile,
-        [object, dropoff_tile, finish_tile] (int) {
+        [object_id, dropoff_tile, finish_tile] (int) {
             int id(Engine::get_sprites_at(dropoff_tile).front());
             auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
 
-            if (sprite->remove_from_inventory(object->get_id()) ) {
+            if (sprite->remove_from_inventory(object_id) ) {
+                std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+
                 object->set_position(finish_tile);
                 Engine::change_tile(dropoff_tile, 4, "blank");
 
@@ -95,10 +93,10 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
 
 void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
                                         glm::ivec2 pickup_tile,
-                                        std::shared_ptr<MapObject> object) {
+                                        int object_id) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-
+    std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
     object->set_position(object_tile);
 
     // Pick-up marker
@@ -106,14 +104,16 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
 
     map->event_step_on.register_callback(
         pickup_tile,
-        [object, pickup_tile, object_tile] (int) {
+        [object_id, pickup_tile, object_tile] (int) {
             int id(Engine::get_sprites_at(pickup_tile).front());
             auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
 
-            if (Engine::is_object_at(object_tile, object->get_id())) {
-                sprite->add_to_inventory(object->get_id());
+            if (Engine::is_object_at(object_tile, object_id)) {
+                sprite->add_to_inventory(object_id);
             }
-            else if (sprite->remove_from_inventory(object->get_id())) {
+            else if (sprite->remove_from_inventory(object_id)) {
+                std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+
                 object->set_position(object_tile);
             }
 

@@ -192,18 +192,6 @@ void MapObject::generate_vertex_data() {
 
 // TODO: rewrite
 void MapObject::load_textures() {
-    // Image *texture_image = nullptr;
-
-    // try {
-    //     texture_image = new Image(sheet_name.c_str());
-    // }
-    // catch (std::exception e) {
-    //     LOG(ERROR) << "Failed to create texture";
-    //     return;
-    // }
-
-    // //Set the texture data in the rederable component
-    // renderable_component.set_texture_image(texture_image);
     
     renderable_component.set_texture(TextureAtlas::get_shared(sheet_name.c_str()));
 }

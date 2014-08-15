@@ -58,8 +58,12 @@ Map::Map(const std::string map_src):
         event_step_off = PositionDispatcher<int>(glm::ivec2(map_width, map_height));
 
         LOG(INFO) << "Map width: " << map_width << " Map height: " << map_height;
+        std::vector<std::shared_ptr<Layer>> layers = map_loader.get_layers();
+        for(auto layer : layers) {
+            layer_ids.push_back(layer->get_id());
+            ObjectManager::get_instance().add_object(layer);
+        }
 
-        layers = map_loader.get_layers();
         tilesets = map_loader.get_tilesets();
 
         for (auto map_object : map_loader.get_objects()) {
@@ -85,14 +89,20 @@ ObjectProperties Map::obj_from_id(int id) {
 }
 
 Map::~Map() {
+    for(int layer_id : layer_ids) {
+        ObjectManager::get_instance().remove_object(layer_id);
+    }
+
     // release buffers
     delete[] tileset_tex_coords;
     delete[] tileset_tex_data;
+
     LOG(INFO) << "Map destructed";
 }
 
 bool Map::is_walkable(int x_pos, int y_pos) {
-    return std::all_of(std::begin(layers), std::end(layers), [&] (std::shared_ptr<Layer> &layer) {
+    return std::all_of(std::begin(layer_ids), std::end(layer_ids), [&] (int layer_id) {
+            std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
         // Block only in the case where we're on the collisions layer and the tile is set
         return !(layer->get_name() == "Collisions" && layer->get_tile(x_pos, y_pos));
     });
@@ -146,7 +156,7 @@ void Map::remove_sprite(int sprite_id) {
  */
 void Map::generate_tileset_coords(std::shared_ptr<TextureAtlas> atlas) {
     int texture_count = atlas->get_texture_count();
-    
+
     LOG(INFO) << "Generating tileset texture coords";
 
     if(Engine::get_tile_size() == 0) {
@@ -193,7 +203,9 @@ void Map::generate_data() {
     // Get each layer of the map
     // Start at layer 0
     int layer_num = 0;
-    for (auto layer : layers) {
+    for (int layer_id : layer_ids) {
+        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
+
         auto layer_data = layer->get_layer_data();
 
 
@@ -436,7 +448,8 @@ void Map::init_textures() {
 
     // WTF is going on?
     // Set the texture data in the rederable component for each layer
-    for (auto layer : layers) {
+    for (int layer_id : layer_ids) {
+        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
         // layer->get_renderable_component()->set_texture((*layer->get_layer_data())[0].first->get_atlas());
         layer->get_renderable_component()->set_texture(tilesets[0]->get_atlas());
     }
@@ -456,7 +469,8 @@ bool Map::init_shaders() {
     }
 
     //Set the shader for each layer
-    for (auto layer : layers) {
+    for (int layer_id : layer_ids) {
+        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
         layer->get_renderable_component()->set_shader(shader);
     }
 
@@ -590,8 +604,8 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name
 
 
     // Put it into the buffers
+    auto layer(ObjectManager::get_instance().get_object<Layer>(layer_ids[layer_num]));
 
-    std::shared_ptr<Layer> layer(layers.at(layer_num));
     Layer::Packing packing(layer->get_packing());
 
     // Add this tile to the layer data structure

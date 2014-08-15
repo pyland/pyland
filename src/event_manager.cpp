@@ -28,6 +28,33 @@ EventManager& EventManager::get_instance() {
     return global_instance;
 }
 
+void EventManager::flush() {
+    ///
+    /// This will clear both lists out. Now, if another thread tries
+    /// to add something but blocks before getting a lock (but is stil
+    /// in an add_event function), then, once this method completes,
+    /// that event would still be added to the queue. 
+    ///
+    /// The intention of this function is to be used once all the
+    /// threads that are putting data onto the event queues are finished.
+    /// Essentially, it is run after maps are unloaded and we are
+    /// preparing for a new map.
+    ///
+
+    //The lock_guard is exception safe and releases the mutex when
+    //it goes out of scope. So we introduce scope here to release
+    //the mutex 
+    {
+        //Lock the lists
+        std::lock_guard<std::mutex> lock(queue_mutex);
+
+        //Clear both lists
+        curr_frame_queue->clear();
+        next_frame_queue->clear();
+
+    } // Lock released
+}
+
 void EventManager::process_events() {
     //We need to process all the events in the queue
     //Problem is that, when events are being processed, they can add

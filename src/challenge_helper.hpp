@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include "challenge.hpp"
 #include "map_object.hpp"
 
 namespace ChallengeHelper {
@@ -20,14 +21,13 @@ namespace ChallengeHelper {
     ///
     /// Create MapObject from named location
     ///
-    std::shared_ptr<MapObject>
-    make_object(std::string name, Walkability walkability);
+    int make_object(Challenge *challenge, std::string name, Walkability walkability);
 
     ///
     /// Create MapObjects from named locations
     ///
     template <class OutputIt>
-    void make_objects(std::string name, Walkability walkability, OutputIt output);
+    void make_objects(Challenge *challenge, std::string name, Walkability walkability, OutputIt output);
 
     ///
     /// Attach callback to a position
@@ -52,14 +52,14 @@ namespace ChallengeHelper {
                            glm::ivec2 pickup_tile,
                            glm::ivec2 finish_tile,
                            glm::ivec2 dropoff_tile,
-                           std::shared_ptr<MapObject> object);
+                           int object_id);
 
     ///
     /// Allow an object to picked up / dropped off at the same location
     ///
     void create_pickupable(glm::ivec2 start_tile,
                            glm::ivec2 pickup_tile,
-                           std::shared_ptr<MapObject> object);
+                           int object_id);
 };
 
 #include "challenge_helper.hxx"

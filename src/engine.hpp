@@ -12,6 +12,7 @@
 #include <utility>
 #include <vector>
 
+#include "challenge.hpp"
 #include "gil_safe_future.hpp"
 #include "gui_window.hpp"
 #include "notification_bar.hpp"
@@ -21,8 +22,7 @@
 #include "text.hpp"
 
 class MapViewer;
-
-
+class Challenge;
 ///
 /// default python editor, used as long as another isn't passed as command line arg
 #define DEFAULT_PY_EDITOR "gedit"
@@ -51,32 +51,49 @@ private:
     ///
     static float global_scale;
 
+    ///
+    /// The current challenge
+    ///
+    static Challenge* challenge;
 public:
-    ///
-    /// Get the global scale
-    /// @return the global scale
-    ///
-    static float get_global_scale() { return global_scale; }
+     ///
+     /// Get the global scale
+     /// @return the global scale
+     ///
+     static float get_global_scale() { return global_scale; }
 
-    ///
-    /// Set the global scaling factor
-    /// @param _global_scale the scaling factor
-    ///
-    static void set_global_scale(float global_scale) { Engine::global_scale = global_scale; }
+     ///
+     /// Set the global scaling factor
+     /// @param _global_scale the scaling factor
+     ///
+     static void set_global_scale(float global_scale) { Engine::global_scale = global_scale; }
 
-    ///
-    /// Set the tile size to be used by the engine
-    /// @param _tile_size the tile size
-    ///
-    static void set_tile_size(int tile_size) { Engine::tile_size = tile_size; }
+     ///
+     /// Set the tile size to be used by the engine
+     /// @param _tile_size the tile size
+     ///
+     static void set_tile_size(int tile_size) { Engine::tile_size = tile_size; }
 
-    ///
-    /// Get the tile size used by the engine  in pixels - we only support square ones
-    /// @return the tile size
-    ///
-    static int get_tile_size() { return tile_size; }
+     ///
+     /// Get the tile size used by the engine  in pixels - we only support square ones
+     /// @return the tile size
+     ///
+     static int get_tile_size() { return tile_size; }
 
     static float get_actual_tile_size() { return float(tile_size) * global_scale; }
+
+    ///
+    /// Get the challenge currently being used
+    /// @return the challenge
+    ///
+    static Challenge* get_challenge() { return challenge; }
+
+    ///
+    /// Set the challenge currently being used
+    /// @param _challenge the challenge used
+    ///
+    static void set_challenge(Challenge* _challenge) { challenge = _challenge; }
+
     ///
     /// Set the map viewer attached to the engine
     /// @param _map_viewer the map viewer which is attached to the engine
@@ -154,6 +171,8 @@ public:
     static void set_editor(std::string editor) { Engine::editor = editor; }
 
     static void set_notification_bar(NotificationBar *notification_bar) { Engine::notification_bar = notification_bar; }
+
+    static NotificationBar* get_notification_bar() { return Engine::notification_bar; } 
     static void print_dialogue(std::string name, std::string text);
 
     /// method for handling sprite test

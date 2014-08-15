@@ -132,3 +132,8 @@ void NotificationBar::add_notification(std::string text_to_display) {
     gui_manager->get_root()->remove(backward_button_id);
     gui_manager->get_root()->remove(forward_button_id);
 }
+
+void NotificationBar::clear_text() {
+    notification_text->set_text("");
+    notification_stack.clear();
+}

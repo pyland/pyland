@@ -15,6 +15,7 @@
 ///
 class ThreadKiller {
     public:
+
         ///
         /// Spawn a thread to kill threads contained inside
         /// the passed lockable vector. If the contained EntityThread

@@ -115,7 +115,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
         except KILL:
             entity.print_debug("KILLED")
-            entity.update_status("killed")
+            #TODO: Joshua
             raise
 
         # For all other errors, output and stop

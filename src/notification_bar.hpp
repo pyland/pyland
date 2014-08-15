@@ -10,37 +10,45 @@
 enum class Direction {NEXT, PREVIOUS};
 
 class NotificationBar {
-    private:
-        Notification notification_stack;
-        Text* notification_text;
+private:
+    Notification notification_stack;
+    Text* notification_text;
 
-        int forward_button_id;
-        int backward_button_id;
+    int forward_button_id;
+    int backward_button_id;
 
-        std::unique_ptr<Text> backward_text;
-        std::unique_ptr<Text> forward_text;
-        Lifeline text_box;
+    std::unique_ptr<Text> backward_text;
+    std::unique_ptr<Text> forward_text;
+    Lifeline text_box;
 
-        void move_notification(Direction direction);
+    void move_notification(Direction direction);
 
-        ///
-        /// update buttons depending on the notification_stach flags
-        ///
-        void hide_buttons();
+    ///
+    /// update buttons depending on the notification_stach flags
+    ///
+    void hide_buttons();
 
-    public:
+public:
 
-        NotificationBar();
-        ~NotificationBar();
+    NotificationBar();
+    ~NotificationBar();
 
-        ///
-        /// generate the backward and forward navigation button text for the notification bar 
-        /// TODO: remove_this when GUI fonts is done
-        ///
-        void text_displayer();
+    ///
+    /// generate the backward and forward navigation button text for the notification bar 
+    /// TODO: remove_this when GUI fonts is done
+    ///
+    void text_displayer();
 
+    ///
+    /// Clears the notifications
+    ///
+    void clear_text();
 
-        void add_notification(std::string text_to_display);
+    ///
+    /// Add a notification to the bar
+    /// @param text_to_display the notification
+    ///
+    void add_notification(std::string text_to_display);
 };
 
 #endif
