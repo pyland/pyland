@@ -113,12 +113,10 @@ void Sprite::set_state_on_moving_finish() {
 }
 
 void Sprite::generate_tex_data() {
-  
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_dimensions = 2;
     int num_floats = num_dimensions*6;
-
 
     GLfloat* sprite_tex_data = nullptr;
     try {
@@ -128,7 +126,6 @@ void Sprite::generate_tex_data() {
         LOG(ERROR) << "ERROR in Sprite::generate_tex_data(), cannot allocate memory";
         return;
     }
-
 
     std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(sheet_id);
 
@@ -158,7 +155,7 @@ void Sprite::generate_tex_data() {
     sprite_tex_data[11] = std::get<2>(bounds);
 
     renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
-} 
+}
 
 void Sprite::generate_vertex_data() {
     //holds the sprite vertex data
@@ -178,30 +175,28 @@ void Sprite::generate_vertex_data() {
         return;
     }
 
-    float scale =  float(Engine::get_tile_size()) * Engine::get_global_scale();
-
-    //bottom left 
-    sprite_data[0] = 0;
-    sprite_data[1] = 0;
+    //bottom left
+    sprite_data[0]  = 0;
+    sprite_data[1]  = 0;
 
     //top left
-    sprite_data[2] = 0;
-    sprite_data[3] = scale;
+    sprite_data[2]  = 0;
+    sprite_data[3]  = 1;
 
     //bottom right
-    sprite_data[4] = scale;
-    sprite_data[5] = 0;
+    sprite_data[4]  = 1;
+    sprite_data[5]  = 0;
 
     //top left
-    sprite_data[6] = 0;
-    sprite_data[7] = scale;
+    sprite_data[6]  = 0;
+    sprite_data[7]  = 1;
 
     //top right
-    sprite_data[8] = scale;
-    sprite_data[9] = scale;
+    sprite_data[8]  = 1;
+    sprite_data[9]  = 1;
 
     //bottom right
-    sprite_data[10] = scale;
+    sprite_data[10] = 1;
     sprite_data[11] = 0;
 
     renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
@@ -210,7 +205,7 @@ void Sprite::generate_vertex_data() {
 
 void Sprite::add_to_inventory(int new_object_id) {
     LOG(INFO) << "adding item to sprites inventory";
-        
+
     auto new_object = ObjectManager::get_instance().get_object<MapObject>(new_object_id);
     if (!new_object) {
         LOG(ERROR) << "Object manager no longer has focus_icon";

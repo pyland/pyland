@@ -39,16 +39,6 @@ class MapViewer {
     float map_display_y = 0.0f;
 
     ///
-    /// The width of the map to be displayed on screen.
-    ///
-    float map_display_width;
-
-    ///
-    /// The height of the map to be displayed on screen
-    ///
-    float map_display_height;
-
-    ///
     /// Render the GUI
     ///
     void render_gui();
@@ -123,26 +113,13 @@ public:
     /// Get the display width of the map
     /// @return get the display width of the map
     ///
-    float get_display_width() { return map_display_width; }
-
-    ///
-    /// Set the display width of the map
-    /// @param display_width the new display width of the map
-    ///
-    void set_display_width(float display_width) { map_display_width = display_width; }
+    float get_display_width();
 
     ///
     /// Get the display height of the map
     /// @return get the display height of the map
     ///
-    float get_display_height() { return map_display_height; }
-
-    ///
-    /// Set the display height of the map
-    /// @param display_width the new display height of the map
-    ///
-    void set_display_height(float display_height) { map_display_height = display_height; }
-
+    float get_display_height();
 
     ///
     /// Get the map display lower left x position

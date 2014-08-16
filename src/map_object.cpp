@@ -108,7 +108,7 @@ void MapObject::generate_tex_data() {
     }
 
     std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(sheet_id);
-    
+
     // bottom left
     map_object_tex_data[ 0] = std::get<0>(bounds);
     map_object_tex_data[ 1] = std::get<2>(bounds);
@@ -152,7 +152,6 @@ void MapObject::generate_vertex_data() {
     GLfloat *map_object_vert_data(nullptr);
 
     try {
-
         map_object_vert_data = new GLfloat[sizeof(GLfloat)*num_floats];
     }
     catch(std::bad_alloc& ba) {
@@ -160,30 +159,28 @@ void MapObject::generate_vertex_data() {
         return;
     }
 
-    float scale(Engine::get_actual_tile_size());
-
     //bottom left
-    map_object_vert_data[0] = 0;
-    map_object_vert_data[1] = 0;
+    map_object_vert_data[0]  = 0;
+    map_object_vert_data[1]  = 0;
 
     //top left
-    map_object_vert_data[2] = 0;
-    map_object_vert_data[3] = scale;
+    map_object_vert_data[2]  = 0;
+    map_object_vert_data[3]  = 1;
 
     //bottom right
-    map_object_vert_data[4] = scale;
-    map_object_vert_data[5] = 0;
+    map_object_vert_data[4]  = 1;
+    map_object_vert_data[5]  = 0;
 
     //top left
-    map_object_vert_data[6] = 0;
-    map_object_vert_data[7] = scale;
+    map_object_vert_data[6]  = 0;
+    map_object_vert_data[7]  = 1;
 
     //top right
-    map_object_vert_data[8] = scale;
-    map_object_vert_data[9] = scale;
+    map_object_vert_data[8]  = 1;
+    map_object_vert_data[9]  = 1;
 
     //bottom right
-    map_object_vert_data[10] = scale;
+    map_object_vert_data[10] = 1;
     map_object_vert_data[11] = 0;
 
     renderable_component.set_vertex_data(map_object_vert_data, sizeof(GLfloat)*num_floats, false);
@@ -192,7 +189,6 @@ void MapObject::generate_vertex_data() {
 
 // TODO: rewrite
 void MapObject::load_textures() {
-    
     renderable_component.set_texture(TextureAtlas::get_shared(sheet_name.c_str()));
 }
 

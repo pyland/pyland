@@ -77,6 +77,7 @@ void MapLoader::load_layers() {
     }
 }
 
+// TODO (Joshua): Make code not terrible
 std::pair<FML, std::vector<ObjectProperties>> MapLoader::get_object_mapping() {
     std::vector<ObjectProperties> object_properties_mapping;
     std::map<std::string, std::string> named_tiles_mapping;
