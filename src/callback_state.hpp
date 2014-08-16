@@ -81,7 +81,6 @@ public:
     }
 
 private:
-
     std::vector<int> key_to_id;
 };
 
