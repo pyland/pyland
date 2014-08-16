@@ -86,14 +86,11 @@ int main(int argc, const char *argv[]) {
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
-    int map_width(32);
-    int map_height(32);
-
 /// CREATE GLOBAL OBJECTS
 
     //Create the game window to present to the users
-    GameWindow window(int(float(map_width)  * Engine::get_actual_tile_size()),
-                      int(float(map_height) * Engine::get_actual_tile_size()),
+    GameWindow window(800,
+                      600,
                       false);
     window.use_context();
 
