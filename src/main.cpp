@@ -1,74 +1,20 @@
+#define GLM_FORCE_RADIANS
 
-#include <boost/filesystem.hpp>
-#include <cassert>
-#include <cmath>
-#include <chrono>
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <fstream>
 #include <glog/logging.h>
 #include <iostream>
-#include <map>
-#include <memory>
-#include <random>
 #include <string>
-#include <sys/time.h>
-#include <thread>
-#include <unistd.h>
+#include <vector>
 
-//Include GLM
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "api.hpp"
-#include "button.hpp"
 #include "callback_state.hpp"
-#include "component.hpp"
-#include "engine.hpp"
-#include "event_manager.hpp"
-#include "filters.hpp"
-#include "game_window.hpp"
-#include "gui_manager.hpp"
-#include "gui_window.hpp"
-#include "input_manager.hpp"
-#include "interpreter.hpp"
-#include "keyboard_input_event.hpp"
-#include "lifeline.hpp"
-#include "locks.hpp"
-#include "main.hpp"
-#include "map.hpp"
-#include "map_viewer.hpp"
-#include "notification_bar.hpp"
-#include "object_manager.hpp"
-#include "player.hpp"
-#include "sprite.hpp"
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
-#include "walkability.hpp"
-
-// Include challenges
-// TODO: Rearchitechture
 #include "challenge.hpp"
 #include "long_walk_challenge.hpp"
-
-// Choose between GLES and GL
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "engine.hpp"
+#include "event_manager.hpp"
+#include "game_window.hpp"
+#include "gui/gui_manager.hpp"
+#include "lifeline.hpp"
+#include "map_viewer.hpp"
+#include "notification_bar.hpp"
 
 using namespace std;
 
@@ -80,22 +26,18 @@ int main(int argc, const char *argv[]) {
     // allows you to pass an alternative text editor to app, otherwise
     // defaults to gedit. Also allows specification of a map file.
     switch (argc) {
+        default:
+            std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;
+            return 1;
+
         // The lack of break statements is not an error!!!
-    case 3:
-        map_path = std::string(argv[2]);
-    case 2:
-        Engine::set_editor(argv[1]);
-    case 1:
-        break;
-    default:
-        std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;
-        return 1;
+        case 3:
+            map_path = std::string(argv[2]);
+        case 2:
+            Engine::set_editor(argv[1]);
+        case 1:
+            break;
     }
-    if (argc >= 2) {
-        Engine::set_editor(argv[1]);
-    };
-    // TODO: Support no window
-    // Can't do this cleanly at the moment as the MapViewer needs the window instance....
 
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
@@ -103,9 +45,7 @@ int main(int argc, const char *argv[]) {
     /// CREATE GLOBAL OBJECTS
 
     //Create the game window to present to the users
-    GameWindow window(800,
-                      600,
-                      false);
+    GameWindow window(800, 600, false);
     window.use_context();
 
     //Create the interpreter
@@ -273,9 +213,6 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-    //Create a player to maintain their state between challenges
-    std::shared_ptr<Player> player = std::make_shared<Player>();
-
     //Run the map
     bool run_game = true;
 
@@ -283,14 +220,14 @@ int main(int argc, const char *argv[]) {
     while(!window.check_close() && run_game) {
 
         //Setup challenge
-        ChallengeData* challenge_data = new ChallengeData(
-                                                          map_path,
-                                                          &interpreter,
-                                                          &gui_manager,
-                                                          &window,
-                                                          player,
-                                                          input_manager,
-                                                          &notification_bar);
+        ChallengeData *challenge_data(new ChallengeData(
+            map_path,
+            &interpreter,
+            &gui_manager,
+            &window,
+            input_manager,
+            &notification_bar
+        ));
 
         LongWalkChallenge long_walk_challenge(challenge_data);
         Engine::set_challenge(&long_walk_challenge);
