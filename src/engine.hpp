@@ -56,29 +56,29 @@ private:
     ///
     static Challenge* challenge;
 public:
-     ///
-     /// Get the global scale
-     /// @return the global scale
-     ///
-     static float get_global_scale() { return global_scale; }
+    ///
+    /// Get the global scale
+    /// @return the global scale
+    ///
+    static float get_global_scale() { return global_scale; }
 
-     ///
-     /// Set the global scaling factor
-     /// @param _global_scale the scaling factor
-     ///
-     static void set_global_scale(float global_scale) { Engine::global_scale = global_scale; }
+    ///
+    /// Set the global scaling factor
+    /// @param _global_scale the scaling factor
+    ///
+    static void set_global_scale(float global_scale) { Engine::global_scale = global_scale; }
 
-     ///
-     /// Set the tile size to be used by the engine
-     /// @param _tile_size the tile size
-     ///
-     static void set_tile_size(int tile_size) { Engine::tile_size = tile_size; }
+    ///
+    /// Set the tile size to be used by the engine
+    /// @param _tile_size the tile size
+    ///
+    static void set_tile_size(int tile_size) { Engine::tile_size = tile_size; }
 
-     ///
-     /// Get the tile size used by the engine  in pixels - we only support square ones
-     /// @return the tile size
-     ///
-     static int get_tile_size() { return tile_size; }
+    ///
+    /// Get the tile size used by the engine  in pixels - we only support square ones
+    /// @return the tile size
+    ///
+    static int get_tile_size() { return tile_size; }
 
     static float get_actual_tile_size() { return float(tile_size) * global_scale; }
 
