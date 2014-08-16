@@ -75,8 +75,22 @@ using namespace std;
 static std::mt19937 random_generator;
 
 int main(int argc, const char *argv[]) {
+    std::string map_path("../maps/map0.tmx");
+
     // allows you to pass an alternative text editor to app, otherwise
-    // defaults to gedit
+    // defaults to gedit. Also allows specification of a map file.
+    switch (argc) {
+        // The lack of break statements is not an error!!!
+    case 3:
+        map_path = std::string(argv[2]);
+    case 2:
+        Engine::set_editor(argv[1]);
+    case 1:
+        break;
+    default:
+        std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;
+        return 1;
+    }
     if (argc >= 2) {
         Engine::set_editor(argv[1]);
     };
@@ -86,7 +100,7 @@ int main(int argc, const char *argv[]) {
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
-/// CREATE GLOBAL OBJECTS
+    /// CREATE GLOBAL OBJECTS
 
     //Create the game window to present to the users
     GameWindow window(800,
@@ -270,7 +284,7 @@ int main(int argc, const char *argv[]) {
 
         //Setup challenge
         ChallengeData* challenge_data = new ChallengeData(
-                                                          std::string("../maps/map0.tmx"),
+                                                          map_path,
                                                           &interpreter,
                                                           &gui_manager,
                                                           &window,
