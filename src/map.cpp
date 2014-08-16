@@ -420,7 +420,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
                 vx1 = float(x);
                 vy1 = float(y);
                 vx2 = float(x + 1);
-                vy2 = float(y + 1);
+                vy2 = float(y + 1.001);
             }
 
             //bottom left
