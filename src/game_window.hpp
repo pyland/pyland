@@ -53,22 +53,22 @@ private:
         DO_INIT,
         DO_DEINIT
     };
-    
+
     ///
     /// Stores the SDL window.
     ///
     SDL_Window* window;
-    
+
     ///
     /// The surface of the SDL window.
     ///
     SDL_Surface* sdl_window_surface;
-    
+
     ///
     /// Used for background GL rendering.
     ///
     SDL_Surface* background_surface;
-    
+
     ///
     /// Stores the SDL renderer.
     ///
@@ -76,7 +76,7 @@ private:
     /// through opengl textures and rendering (e.g. fonts).
     ///
     // SDL_Renderer* renderer;
-    
+
     ///
     /// SDL window and EGL surface width.
     ///
@@ -147,7 +147,7 @@ private:
 
     DISPMANX_DISPLAY_HANDLE_T dispmanDisplay;
     DISPMANX_ELEMENT_HANDLE_T dispmanElement;
-    
+
     ///
     /// Overscan compensation (left border pixels)
     ///
@@ -156,7 +156,7 @@ private:
     /// Overscan compensation (top border pixels)
     ///
     static int overscan_top;
-    
+
     ///
     /// Stores X11 display and window information.
     ///
@@ -206,7 +206,7 @@ private:
     /// Deinitialize SDL.
     ///
     void deinit_sdl();
-    
+
     ///
     /// Initialize EGL. Done once per window.
     ///
