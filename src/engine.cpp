@@ -56,7 +56,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
     // Motion
     EventManager::get_instance().add_timed_event(
-        GameTime::duration(0.07),
+        GameTime::duration(0.14),
         [walk_succeeded_return, location, target, id] (float completion) mutable {
             auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             if (!sprite) { return false; }
