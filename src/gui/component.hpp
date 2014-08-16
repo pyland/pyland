@@ -72,7 +72,7 @@ protected:
     /// Width of the component relative to the parent
     ///
     float width;
-    
+
     ///
     /// Height of the component relative to the parent
     ///
@@ -118,7 +118,7 @@ protected:
     /// The lambda function that is called when the button is clicked
     ///
     std::function<void (void)> on_click_func;
-    
+
     ///
     /// Get the next unique identifier for the component - starting at 1.
     ///
@@ -143,8 +143,8 @@ public:
 
     ///
     /// Generates the font data for this component
-    /// 
-    /// 
+    ///
+    ///
     //TODO: finish fonts
     //    virtual std::vector<std::shared_ptr<GUIText>> generate_font_data() = 0;
 
@@ -152,7 +152,7 @@ public:
     /// Get the map listing all the components of the group.
     /// This returns an empty map for Component.
     /// @return a reference to a constant map object
-    /// 
+    ///
     virtual const std::map<int, std::shared_ptr<Component>>& get_components();
 
 
@@ -162,12 +162,12 @@ public:
     /// @return if the function registered correctly
     ///
     void set_on_click(std::function<void (void)> func);
-    
+
     ///
     /// Call the component's on click function
     ///
     void call_on_click() { on_click_func(); }
-    
+
     ///
     /// Clear the handler - replaces with a void lambda that does nothing
     ///
@@ -221,7 +221,7 @@ public:
 
     ///
     /// Set the width of the component in pixels
-    /// @param pixels the width of the component 
+    /// @param pixels the width of the component
     ///
     void set_width_pixels(int pixels) { width_pixels = pixels; }
 
@@ -231,7 +231,7 @@ public:
     ///
     int get_width_pixels() { return width_pixels; }
 
-    /// 
+    ///
     /// Set the height of the component in pixels
     /// @pixels the height
     ///
@@ -285,7 +285,7 @@ public:
     /// @param pixels the offset
     ///
     int get_x_offset_pixels() { return x_offset_pixels; }
-    
+
     ///
     /// Set the y offset of the component in pixels, relative to its parent
     /// @param pixels set the offset of this component in pixels
@@ -297,7 +297,7 @@ public:
     /// @param pixels the offset
     ///
     int get_y_offset_pixels() { return y_offset_pixels; }
-    
+
 
     ///
     /// Set the x offset of the component relative to its parent

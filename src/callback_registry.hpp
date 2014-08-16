@@ -15,7 +15,7 @@ private:
     /// All callbacks associated to the registry.
     ///
     std::set<Callback<Ret, Args...>> callbacks;
-    
+
 public:
     CallbackRegistry();
     ~CallbackRegistry();

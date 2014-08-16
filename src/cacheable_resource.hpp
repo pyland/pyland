@@ -32,7 +32,7 @@ private:
     /// Resources don't require caching, so this is optional.
     ///
     std::weak_ptr<ResourceCache<Res>> resource_cache;
-    
+
     ///
     /// Map of graphics contexts to shader caches.
     ///
@@ -47,10 +47,10 @@ protected:
     /// The name which was used to load the resource.
     ///
     std::string resource_name;
-    
+
     CacheableResource();
     ~CacheableResource();
-    
+
 public:
     ///
     /// Get a commonly used resource configuration.
