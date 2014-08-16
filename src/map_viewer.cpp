@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include <glog/logging.h>
 #include <glm/vec2.hpp>
 #include <map>
@@ -94,8 +95,8 @@ void MapViewer::render_map() {
             continue;
         }
 
-        RenderableComponent* layer_render_component = layer->get_renderable_component();
-        Shader* layer_shader = layer_render_component->get_shader().get();
+        RenderableComponent *layer_render_component(layer->get_renderable_component());
+        Shader *layer_shader(layer_render_component->get_shader().get());
 
         //Set the matrices
         layer_render_component->set_projection_matrix(projection_matrix);
@@ -104,23 +105,23 @@ void MapViewer::render_map() {
         layer_render_component->bind_shader();
 
         //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
-        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(layer_render_component->get_projection_matrix()));
-        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(layer_render_component->get_modelview_matrix()));
+        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_projection"),
+                           1,
+                           GL_FALSE,
+                           glm::value_ptr(layer_render_component->get_projection_matrix()));
+
+        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_modelview"),
+                           1,
+                           GL_FALSE,
+                           glm::value_ptr(layer_render_component->get_modelview_matrix()));
 
 
         layer_render_component->bind_vbos();
 
         layer_render_component->bind_textures();
 
-        //Calculate the offsets for drawing
-        //maps are built left to right, bottom to top
-        //        int offset = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x(), 0);
-
-         //      int length = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x()+map->get_display_width() -1, 0);
-         //    glDrawArrays(GL_TRIANGLES, offset, (length -offset) / 2); // no of vetices, divide by 2 dimenions
-
         glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
-        //        std::cout <<" OOF " << offset << " " << length << std::endl;
+
         //Release the vertex buffers and texppptures
         layer_render_component->release_textures();
         layer_render_component->release_vbos();
@@ -473,4 +474,16 @@ float MapViewer::get_display_width() {
 
 float MapViewer::get_display_height() {
     return float(window->get_size().second) / Engine::get_actual_tile_size();
+}
+
+float MapViewer::get_display_x() {
+    // Must be to nearest pixel for render accuracy
+    return std::trunc(map_display_x * Engine::get_actual_tile_size()) /
+           Engine::get_actual_tile_size();
+}
+
+float MapViewer::get_display_y() {
+    // Must be to nearest pixel for render accuracy
+    return std::trunc(map_display_y * Engine::get_actual_tile_size()) /
+           Engine::get_actual_tile_size();
 }

@@ -102,7 +102,7 @@ public:
     ///
     GameWindow* get_window() { return window; }
 
-    GUIManager* get_gui_manager() { return gui_manager; }  
+    GUIManager* get_gui_manager() { return gui_manager; }
 
     ///
     /// Rejigg the map in response to the viewport size changing.
@@ -125,8 +125,7 @@ public:
     /// Get the map display lower left x position
     /// @return the map display far left x position
     ///
-    float get_display_x() { return map_display_x; }
-
+    float get_display_x();
     ///
     /// Set the x display position of the map
     /// @param new_display_x the new display position
@@ -137,8 +136,7 @@ public:
     /// Get the map display bottom y position
     /// @return the map display bottom y  position
     ///
-    float get_display_y() { return map_display_y; }
-
+    float get_display_y();
     ///
     /// Set the y display position of the map
     /// @param new_display_y the new display position
