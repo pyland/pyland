@@ -49,26 +49,22 @@ Sprite::Sprite(glm::ivec2 position,
         // Setting up sprite text
         TextFont myfont = Engine::get_game_font();
 
-        // TODO: Smart pointer
         object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
         object_text->set_text(name);
-        glm::ivec2 pixel_position(map_viewer->tile_to_pixel(position));
-        object_text->move(pixel_position.x, pixel_position.y);
-
         object_text->resize(100,100);
+
         object_text->align_centre();
         object_text->align_at_origin(true);
-        LOG(INFO) << "Setting up text at " << pixel_position.x << ", " << pixel_position.y;
+        object_text->vertical_align_top();
 
-        // setting up status text
+
         status_text = new Text(map_viewer->get_window(), myfont, true);
         status_text->set_text("awaiting...");
-        glm::ivec2 pixel_text(map_viewer->tile_to_pixel(position));
-        status_text->move(pixel_text.x, pixel_text.y + 100);
-
         status_text->resize(100,100);
+
         status_text->align_centre();
         status_text->align_at_origin(true);
+        status_text->vertical_align_bottom();
 
         // TODO: Starting positions should be integral as of currently. Check or fix.
         //
