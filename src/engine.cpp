@@ -235,7 +235,7 @@ void Engine::update_status(int id, std::string status) {
 }
 
 TextFont Engine::get_game_font() {
-    return TextFont(get_game_typeface(), 18);
+    return TextFont(get_game_typeface(), 20);
 }
 
 Typeface Engine::get_game_typeface() {
