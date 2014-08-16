@@ -96,8 +96,6 @@ $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS): | dependencies/test
 $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS) $(EXECUTABLE_OBJ) $(BASE_OBJS): %.o : %.cpp | dependencies
 	@echo "${bold}[ Compiling base object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
-	@# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
-	@# This should not cause a large slowdown unless actually included in many files.
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS)  \
