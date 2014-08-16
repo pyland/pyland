@@ -468,9 +468,9 @@ glm::ivec2 MapViewer::tile_to_pixel(glm::vec2 tile_location) {
 }
 
 float MapViewer::get_display_width() {
-    return window->get_size().first / Engine::get_actual_tile_size();
+    return float(window->get_size().first) / Engine::get_actual_tile_size();
 }
 
 float MapViewer::get_display_height() {
-    return window->get_size().second / Engine::get_actual_tile_size();
+    return float(window->get_size().second) / Engine::get_actual_tile_size();
 }
