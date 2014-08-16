@@ -224,13 +224,13 @@ int main(int argc, const char *argv[]) {
 
 
     Lifeline zoom_in_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_PRESS}), KEY("-")},
-        [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() + 0.1f); }
+        {ANY_OF({KEY_HELD}), KEY("=")},
+        [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() * 1.01f); }
     ));
 
     Lifeline zoom_out_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_PRESS}), KEY("=")},
-        [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() - 0.1f); }
+        {ANY_OF({KEY_HELD}), KEY("-")},
+        [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() / 1.01f); }
     ));
 
 
@@ -280,7 +280,7 @@ int main(int argc, const char *argv[]) {
     bool run_game = true;
 
 
-    while(!window.check_close() && run_game) {   
+    while(!window.check_close() && run_game) {
 
         //Setup challenge
         ChallengeData* challenge_data = new ChallengeData(
