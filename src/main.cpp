@@ -216,9 +216,7 @@ int main(int argc, const char *argv[]) {
     //Run the map
     bool run_game = true;
 
-
     while(!window.check_close() && run_game) {
-
         //Setup challenge
         ChallengeData *challenge_data(new ChallengeData(
             map_path,
@@ -230,12 +228,58 @@ int main(int argc, const char *argv[]) {
         ));
 
         LongWalkChallenge long_walk_challenge(challenge_data);
-        Engine::set_challenge(&long_walk_challenge);
         long_walk_challenge.start();
 
 
         //Run the challenge - returns after challenge completes
-        long_walk_challenge.run();
+        #ifdef USE_GLES
+            TextFont big_font(Engine::get_game_typeface(), 50);
+            Text cursor(challenge_data->game_window, big_font, true);
+            cursor.move(0, 0);
+            cursor.resize(50, 50);
+            cursor.set_text("<");
+
+            Lifeline cursor_lifeline(challenge_data->input_manager->register_mouse_handler(
+                filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
+                    cursor.move(event.to.x, event.to.y+25);
+                })
+            ));
+        #endif
+
+        auto last_clock(std::chrono::steady_clock::now());
+
+        VLOG(3) << "{";
+        while (!challenge_data->game_window->check_close()) {
+            last_clock = std::chrono::steady_clock::now();
+
+            VLOG(3) << "} SB | IM {";
+            GameWindow::update();
+
+            VLOG(3) << "} IM | EM {";
+
+            do {
+                EventManager::get_instance().process_events();
+            } while (
+                  std::chrono::steady_clock::now() - last_clock
+                < std::chrono::nanoseconds(1000000000 / 60)
+            );
+
+            VLOG(3) << "} EM | RM {";
+            Engine::get_map_viewer()->render();
+
+            VLOG(3) << "} RM | TD {";
+            Engine::text_displayer();
+            challenge_data->notification_bar->text_displayer();
+
+            #ifdef USE_GLES
+                cursor.display();
+            #endif
+
+            VLOG(3) << "} TD | SB {";
+            challenge_data->game_window->swap_buffers();
+        }
+
+        VLOG(3) << "}";
 
         //Clean up after the challenge - additional, non-challenge clean-up
         em.flush();

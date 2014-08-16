@@ -51,10 +51,6 @@ private:
     ///
     static float global_scale;
 
-    ///
-    /// The current challenge
-    ///
-    static Challenge* challenge;
 public:
     ///
     /// Get the global scale
@@ -81,18 +77,6 @@ public:
     static int get_tile_size() { return tile_size; }
 
     static float get_actual_tile_size() { return float(tile_size) * global_scale; }
-
-    ///
-    /// Get the challenge currently being used
-    /// @return the challenge
-    ///
-    static Challenge* get_challenge() { return challenge; }
-
-    ///
-    /// Set the challenge currently being used
-    /// @param _challenge the challenge used
-    ///
-    static void set_challenge(Challenge* _challenge) { challenge = _challenge; }
 
     ///
     /// Set the map viewer attached to the engine

@@ -7,27 +7,22 @@
 #include "make_unique.hpp"
 
 Challenge::Challenge(ChallengeData* _challenge_data) :
-    challenge_data(_challenge_data), map(nullptr), run_challenge(true)
-{
-    map = new Map(challenge_data->map_name);
-    MapViewer* map_viewer = Engine::get_map_viewer();
-    if(map_viewer == nullptr) {
-        throw std::logic_error("MapViewer is not intialised in Engine. In Challenge()");
-    }
-    map_viewer->set_map(map);
+    challenge_data(_challenge_data), map(nullptr) {
+        map = new Map(challenge_data->map_name);
+        MapViewer* map_viewer = Engine::get_map_viewer();
+        if(map_viewer == nullptr) {
+            throw std::logic_error("MapViewer is not intialised in Engine. In Challenge()");
+        }
+        map_viewer->set_map(map);
 
+        //Build a sprite for the player
+        int sprite_id = make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1_64.png");
 
-    //Build a sprite for the player
-    int sprite_id = make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1_64.png");
-    std::string bash_command =
-        std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
-        + std::to_string(sprite_id) + std::string(".py");
-    system(bash_command.c_str());
-
-     esc_callback = challenge_data->input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Escape"})},
-        [&] (KeyboardInputEvent) { run_challenge = false; }
-    ));
+        // WTF
+        std::string bash_command =
+            std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
+            + std::to_string(sprite_id) + std::string(".py");
+        system(bash_command.c_str());
 }
 
 Challenge::~Challenge() {
@@ -44,64 +39,12 @@ Challenge::~Challenge() {
 
     Engine::get_notification_bar()->clear_text();
     Engine::get_map_viewer()->set_map(nullptr);
-    Engine::set_challenge(nullptr);
 
     //Delete the map
     delete map;
     //All threads created for the challenge should have terminated now
     LOG(INFO) << " CHALLENGE DESTROYED ";
 }
-
-void Challenge::run() {
-#ifdef USE_GLES
-    TextFont big_font(Engine::get_game_typeface(), 50);
-    Text cursor(challenge_data->game_window, big_font, true);
-    cursor.move(0, 0);
-    cursor.resize(50, 50);
-    cursor.set_text("<");
-
-    Lifeline cursor_lifeline(challenge_data->input_manager->register_mouse_handler(
-        filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
-            cursor.move(event.to.x, event.to.y+25);
-        })
-    ));
-#endif
-
-    auto last_clock(std::chrono::steady_clock::now());
-
-    VLOG(3) << "{";
-    while (!challenge_data->game_window->check_close() && run_challenge) {
-        last_clock = std::chrono::steady_clock::now();
-
-        VLOG(3) << "} SB | IM {";
-        GameWindow::update();
-
-        VLOG(3) << "} IM | EM {";
-
-        do {
-            EventManager::get_instance().process_events();
-        } while (
-            std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60)
-        );
-
-        VLOG(3) << "} EM | RM {";
-        Engine::get_map_viewer()->render();
-
-        VLOG(3) << "} RM | TD {";
-        Engine::text_displayer();
-        challenge_data->notification_bar->text_displayer();
-
-#ifdef USE_GLES
-        cursor.display();
-#endif
-
-        VLOG(3) << "} TD | SB {";
-        challenge_data->game_window->swap_buffers();
-    }
-
-    VLOG(3) << "}";
-}
-
 
 int Challenge::make_map_object(glm::vec2 position,
                                std::string name,

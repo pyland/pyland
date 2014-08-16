@@ -19,9 +19,8 @@
 #include "sprite.hpp"
 
 ///Static variables
-Challenge* Engine::challenge(nullptr);
-MapViewer* Engine::map_viewer(nullptr);
-NotificationBar* Engine::notification_bar(nullptr);
+MapViewer *Engine::map_viewer(nullptr);
+NotificationBar *Engine::notification_bar(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
 
