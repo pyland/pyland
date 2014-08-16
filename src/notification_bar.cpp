@@ -66,9 +66,12 @@ NotificationBar::NotificationBar() {
     notification_text = new Text(window, Engine::get_game_font(), true);
     notification_text->set_text("Welcome to Project Zygote");
     // referring to top left corner of text window
-    notification_text->move(text_border_width, text_height + text_border_width);
+    notification_text->move(text_border_width, text_border_width);
     auto window_size = window->get_size();
     notification_text->resize(window_size.first-text_border_width, text_height + text_border_width);
+    notification_text->align_at_origin(true);
+    notification_text->align_left();
+    notification_text->vertical_align_bottom();
 
     // callback to resize text when window size changes
     std::function<void (GameWindow *)> func = [&] (GameWindow *game_window) {
