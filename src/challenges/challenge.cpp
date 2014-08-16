@@ -67,21 +67,22 @@ void Challenge::run() {
     ));
 #endif
 
-
     auto last_clock(std::chrono::steady_clock::now());
 
     VLOG(3) << "{";
     while (!challenge_data->game_window->check_close() && run_challenge) {
         last_clock = std::chrono::steady_clock::now();
 
+        VLOG(3) << "} SB | IM {";
+        GameWindow::update();
+
+        VLOG(3) << "} IM | EM {";
+
         do {
-            VLOG(3) << "} SB | IM {";
-            GameWindow::update();
-
-            VLOG(3) << "} IM | EM {";
             EventManager::get_instance().process_events();
-
-        } while (std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60));
+        } while (
+            std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60)
+        );
 
         VLOG(3) << "} EM | RM {";
         Engine::get_map_viewer()->render();
@@ -97,6 +98,7 @@ void Challenge::run() {
         VLOG(3) << "} TD | SB {";
         challenge_data->game_window->swap_buffers();
     }
+
     VLOG(3) << "}";
 }
 
