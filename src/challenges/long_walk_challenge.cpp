@@ -91,7 +91,7 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
         );
 
         editor_lifeline = this->challenge_data->input_manager->register_keyboard_handler(filter(
-            {ANY_OF({KEY_HELD}), KEY({"E"})},
+            {ANY_OF({KEY_PRESS}), KEY({"E"})},
             [this] (KeyboardInputEvent) {
                 std::string id = std::to_string(Engine::get_map_viewer()->get_map_focus_object());
                 std::string filename = "John_" + id + ".py";
