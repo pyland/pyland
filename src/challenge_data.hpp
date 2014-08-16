@@ -11,7 +11,6 @@
 #include "map.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
-#include "player.hpp"
 #include "sprite.hpp"
 
 ///
@@ -25,20 +24,17 @@ class ChallengeData {
         GUIManager* gui_manager;
         GameWindow* game_window;
 
-        std::shared_ptr<Player> player;
         InputManager *input_manager;
         NotificationBar* notification_bar;
 
-        ChallengeData(std::string _map_name, Interpreter* _interpreter, GUIManager* _gui_manager, GameWindow* _game_window, std::shared_ptr<Player> _player, InputManager* _input_manager, NotificationBar* _notification_bar):
-            interpreter(_interpreter),
-            gui_manager(_gui_manager),
-            game_window(_game_window),
-            player(_player),
-            input_manager(_input_manager),
-            notification_bar(_notification_bar)
-        {
-            map_name = _map_name;
-        }
+        ChallengeData(std::string map_name, Interpreter* interpreter, GUIManager* gui_manager, GameWindow* game_window, InputManager* input_manager, NotificationBar* notification_bar):
+            map_name(map_name),
+            interpreter(interpreter),
+            gui_manager(gui_manager),
+            game_window(game_window),
+            input_manager(input_manager),
+            notification_bar(notification_bar)
+            {}
 };
 
 #endif
