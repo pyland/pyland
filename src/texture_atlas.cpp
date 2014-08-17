@@ -110,6 +110,7 @@ void TextureAtlas::merge(const std::vector<std::shared_ptr<TextureAtlas>> &atlas
 
 
 TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::owner_less<std::shared_ptr<TextureAtlas>>> &atlases):
+    gl_texture(0),
     unit_w(Engine::get_tile_size()),
     unit_h(Engine::get_tile_size()),
     sub_atlases(atlases.size()),
@@ -168,6 +169,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
 
 TextureAtlas::TextureAtlas(const std::string image_path):
     image(image_path, true),
+    gl_texture(0),
     unit_w(Engine::get_tile_size()),
     unit_h(Engine::get_tile_size()),
     unit_columns(image.width  / unit_w),

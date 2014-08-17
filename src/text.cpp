@@ -332,6 +332,14 @@ void Text::render() {
         else {
             rendered_line = TTF_RenderUTF8_Solid(font.font, lines_scan, colour);
         }
+
+        if (rendered_line == nullptr) {
+            LOG(INFO) << "Cannot render line of text: \"" << lines_scan << "\".";
+            delete[] line;
+            delete[] lines;
+            throw Text::RenderException("Cannot render line of text");
+        }
+
 #ifdef TEXT_SAFE_SURFACE
         // This surface has a known format.
         SDL_Surface* compatible = SDL_CreateRGBSurface(0, // Unsed
@@ -818,11 +826,13 @@ void Text::set_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     rgba[1] = g;
     rgba[2] = b;
     rgba[3] = a;
+    dirty_texture = true;
 }
 
 
 void Text::set_bloom_radius(int radius) {
     glow_radius = (radius >= 0) ? radius : 0;
+    dirty_texture = true;
 }
 
 
@@ -831,6 +841,7 @@ void Text::set_bloom_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     glow_rgba[1] = g;
     glow_rgba[2] = b;
     glow_rgba[3] = a;
+    dirty_texture = true;
 }
 
 
