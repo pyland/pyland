@@ -1,6 +1,7 @@
-#include <exception>
+#include <ext/alloc_traits.h>
 
 #include "layer.hpp"
+#include "tileset.hpp"
 
 Layer::Layer(int width_tiles, int height_tiles, std::string name) :
     width_tiles(width_tiles),

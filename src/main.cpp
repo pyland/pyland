@@ -1,20 +1,38 @@
 #define GLM_FORCE_RADIANS
 
 #include <glog/logging.h>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <chrono>
+#include <functional>
+#include <glm/vec2.hpp>
 #include <iostream>
+#include <memory>
+#include <random>
+#include <ratio>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "callback_state.hpp"
-#include "challenge.hpp"
-#include "long_walk_challenge.hpp"
+#include "challenge_data.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_window.hpp"
-#include "gui/gui_manager.hpp"
+#include "button.hpp"
+#include "gui_manager.hpp"
+#include "gui_window.hpp"
+#include "filters.hpp"
+#include "input_manager.hpp"
+#include "keyboard_input_event.hpp"
+#include "mouse_input_event.hpp"
+#include "mouse_state.hpp"
 #include "lifeline.hpp"
+#include "long_walk_challenge.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
+#include "python_embed/interpreter.hpp"
+
 
 using namespace std;
 

@@ -1,7 +1,9 @@
 #ifndef GAME_WINDOW_H
 #define GAME_WINDOW_H
 
+#include <functional>
 #include <stdexcept>
+#include <string>
 #include <map>
 #include <utility>
 

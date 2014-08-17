@@ -1,11 +1,9 @@
 #ifndef CALLBACK_H
 #define CALLBACK_H
 
-#include <set>
 #include <functional>
-#include <utility>
 #include <memory>
-
+#include <set>
 
 
 template <typename Ret, typename... Args>
@@ -74,8 +72,6 @@ public:
 };
 
 
-
-#include "callback_registry.hpp"
 
 #include "callback.hxx"
 

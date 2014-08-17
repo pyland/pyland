@@ -1,7 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <array>
 #include <map>
 #include <memory>
 #include <string>
@@ -9,13 +8,7 @@
 
 //Include GLM
 #define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
 #include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -29,12 +22,9 @@
 #include "dispatcher.hpp"
 #include "fml.hpp"
 #include "map_loader.hpp"
-#include "renderable_component.hpp"
 
-
-class Sprite;
 class Layer;
-class MapObject;
+class TextureAtlas;
 class TileSet;
 
 class Map {

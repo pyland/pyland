@@ -5,24 +5,17 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include <array>
-#include <future>
 #include <glm/vec2.hpp>
-#include <memory>
-#include <utility>
+#include <string>
 #include <vector>
 
-#include "challenge.hpp"
 #include "gil_safe_future.hpp"
-#include "gui_window.hpp"
-#include "notification_bar.hpp"
-#include "sprite_switcher.hpp"
-#include "typeface.hpp"
 #include "text_font.hpp"
-#include "text.hpp"
+#include "typeface.hpp"
 
 class MapViewer;
-class Challenge;
+class NotificationBar;
+
 ///
 /// default python editor, used as long as another isn't passed as command line arg
 #define DEFAULT_PY_EDITOR "gedit"
@@ -117,7 +110,7 @@ public:
     /// @return indicates if the operation completed successfully
     ///
     static void change_tile(glm::ivec2 tile, int layer_num, std::string tile_name);
- 
+
     ///
     /// Get the location of the map object or sprite in the map, throws exception if
     /// there is the object is not on the map
@@ -156,7 +149,7 @@ public:
 
     static void set_notification_bar(NotificationBar *notification_bar) { Engine::notification_bar = notification_bar; }
 
-    static NotificationBar* get_notification_bar() { return Engine::notification_bar; } 
+    static NotificationBar* get_notification_bar() { return Engine::notification_bar; }
     static void print_dialogue(std::string name, std::string text);
 
     /// method for handling sprite test

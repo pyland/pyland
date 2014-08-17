@@ -2,10 +2,6 @@
 #define GRAPHICS_CONTEXT_H
 
 extern "C" {
-#ifdef USE_GL
-#include <SDL2/SDL.h>
-#endif
-
 #ifdef USE_GLES
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -40,7 +36,7 @@ private:
     /// This is nullptr when no context is active.
     ///
     static GraphicsContext* current;
-    
+
     ///
     /// The window with the one-to-one mapping with the GL context.
     ///

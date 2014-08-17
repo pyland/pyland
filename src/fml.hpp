@@ -4,12 +4,10 @@
 // Fixes bug with lambdas for transform_iterator on older compilers
 #define BOOST_RESULT_OF_USE_DECLTYPE
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/iterator/transform_iterator.hpp>
+#include <functional>
 #include <istream>
-#include <iostream>
-#include <iterator>
 #include <map>
 #include <memory>
 #include <string>

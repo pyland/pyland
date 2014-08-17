@@ -5,10 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "api.hpp"
 #include "challenge.hpp"
 #include "challenge_helper.hpp"
-#include "event_manager.hpp"
 #include "filters.hpp"
 #include "long_walk_challenge.hpp"
 #include "notification_bar.hpp"

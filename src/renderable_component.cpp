@@ -1,7 +1,9 @@
 #include <memory>
+#include <ostream>
 
 #include <glog/logging.h>
 
+#include "shader.hpp"
 #include "texture_atlas.hpp"
 #include "renderable_component.hpp"
 

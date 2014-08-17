@@ -1,12 +1,16 @@
 // File included by callback.hpp
 
-#include "callback_registry.hpp"
+#include <stdint.h>
+#include <functional>
+#include <memory>
+#include <set>
 
+template <typename Ret, typename... Args>
+class CallbackRegistry;
 
 
 template <typename Ret, typename... Args>
 uint64_t Callback<Ret, Args...>::uid_count = 0;
-
 
 
 template <typename Ret, typename... Args>
@@ -16,12 +20,12 @@ Callback<Ret, Args...>::Callback(const std::function<Ret(Args...)>& func):
         uid = uid_count;
         uid_count++;
 }
-    
+
 template <typename Ret, typename... Args>
 Callback<Ret, Args...>::Callback(const Ret (&func)(Args...)):
     Callback(std::function<Ret(Args...)>(func)) {
 }
-    
+
 template <typename Ret, typename... Args>
 Callback<Ret, Args...>::~Callback() {
     // Deleting registry entries is not our job! It is handled by

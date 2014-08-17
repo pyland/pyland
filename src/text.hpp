@@ -2,24 +2,23 @@
 #define TEXT_H
 
 extern "C" {
-#include <SDL2/SDL_ttf.h>
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
 }
 
 #include <stdexcept>
+#include <string>
+#include <utility>
 
 #include "text_font.hpp"
 #include "image.hpp"
 #include "callback.hpp"
-
-
 
 class GameWindow;
 

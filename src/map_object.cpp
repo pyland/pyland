@@ -1,16 +1,16 @@
-#include <cmath>
+#include <exception>
 #include <fstream>
 #include <glog/logging.h>
-#include <glm/vec2.hpp>
+#include <memory>
 #include <new>
+#include <stdexcept>
+#include <tuple>
 
+#include "cacheable_resource.hpp"
 #include "engine.hpp"
-#include "entitythread.hpp"
-#include "image.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "renderable_component.hpp"
-#include "texture.hpp"
+#include "shader.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
 
@@ -31,6 +31,7 @@ MapObject::MapObject(glm::vec2 position,
                      std::string sheet_name):
 
     Object(name),
+    render_above_sprite(false),
     walkability(walkability),
     sheet_name(sheet_name),
     sheet_id(sheet_id),

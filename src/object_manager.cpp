@@ -2,7 +2,7 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
-#include <thread>
+#include <string>
 #include <utility>
 
 #include "object.hpp"

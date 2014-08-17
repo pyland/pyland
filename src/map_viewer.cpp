@@ -1,24 +1,46 @@
+// Needed to prevent warnings despite not being used AFAIK
+#define GLM_FORCE_RADIANS
+
 #include <algorithm>
 #include <cmath>
 #include <glog/logging.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
-#include <map>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <memory>
+#include <ostream>
+#include <utility>
 #include <vector>
 
 #include "engine.hpp"
 #include "game_window.hpp"
-#include "gui/gui_manager.hpp"
+#include "gui_manager.hpp"
 #include "layer.hpp"
 #include "map.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "object.hpp"
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
+#include "shader.hpp"
 #include "sprite.hpp"
 
+extern "C" {
+#ifdef USE_GL
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#endif
 
-MapViewer::MapViewer(GameWindow *window, GUIManager* gui_manager):
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+}
+
+
+MapViewer::MapViewer(GameWindow *window, GUIManager *gui_manager):
     gui_manager(CHECK_NOTNULL(gui_manager)),
     window(CHECK_NOTNULL(window)) {
 

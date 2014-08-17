@@ -1,16 +1,15 @@
 #include <algorithm>
 #include <exception>
+#include <ext/alloc_traits.h>
 #include <fstream>
+#include <glm/vec2.hpp>
 #include <glog/logging.h>
+#include <iterator>
 #include <memory>
+#include <new>
 #include <string>
 #include <tuple>
-
-//Include GLM
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <utility>
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -21,17 +20,19 @@
 #include <GL/gl.h>
 #endif
 
-#include "api.hpp"
+#include "cacheable_resource.hpp"
+#include "dispatcher.hpp"
 #include "engine.hpp"
 #include "fml.hpp"
 #include "layer.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
-#include "object.hpp"
+#include "map_object.hpp"
 #include "object_manager.hpp"
-#include "sprite.hpp"
+#include "renderable_component.hpp"
+#include "shader.hpp"
 #include "texture_atlas.hpp"
-#include "walkability.hpp"
+#include "tileset.hpp"
 
 
 Map::Map(const std::string map_src):

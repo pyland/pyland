@@ -1,10 +1,8 @@
-#include <map>
-#include <memory>
 #include <string>
 
-#include "tileset.hpp"
-
+#include "cacheable_resource.hpp"
 #include "texture_atlas.hpp"
+#include "tileset.hpp"
 
 
 

@@ -4,12 +4,14 @@
 ///
 /// Challenge Helper is collection of static methods to aid/abstract with challenge writing
 ///
+#include <functional>
 #include <glm/vec2.hpp>
 #include <string>
-#include <vector>
 
-#include "challenge.hpp"
-#include "map_object.hpp"
+#include "dispatcher.hpp"
+#include "walkability.hpp"
+class Challenge;
+
 
 namespace ChallengeHelper {
     ///

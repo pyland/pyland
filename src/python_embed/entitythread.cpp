@@ -7,6 +7,7 @@
 #include <glm/vec2.hpp>
 #include <thread>
 
+#include "api.hpp"
 #include "entitythread.hpp"
 #include "event_manager.hpp"
 #include "interpreter_context.hpp"

@@ -4,7 +4,6 @@
 #include <functional>
 #include <list>
 #include <mutex>
-#include <thread>
 
 #include "game_time.hpp"
 

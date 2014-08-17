@@ -1,7 +1,8 @@
 // Try funky initialization in if.
 
-#include <algorithm>
+#include <exception>
 #include <fstream>
+#include <glog/logging.h>
 #include <memory>
 #include <set>
 #include <stdexcept>
@@ -10,20 +11,22 @@
 #include <vector>
 
 extern "C" {
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
 }
 
-#include "texture_atlas.hpp"
-
+#include "cacheable_resource.hpp"
 #include "engine.hpp"
 #include "fml.hpp"
 #include "image.hpp"
+#include "resource_cache.hpp"
+#include "texture_atlas.hpp"
 
 
 

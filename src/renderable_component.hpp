@@ -1,34 +1,26 @@
 #ifndef RENDERABLE_COMPONENT_H
 #define RENDERABLE_COMPONENT_H
 
-#include "texture_atlas.hpp"
-#include "shader.hpp"
-
 #include <memory>
-#include <string>
 
 //Include GLM
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 
 #ifdef USE_GLES
-
 #include <GLES2/gl2.h>
-
 #endif
 
 #ifdef USE_GL
-
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
-
 #endif
+
+class Shader;
+class TextureAtlas;
+
 ///
 /// This class holds all the referrences to the data needed to render
 /// the geometry. The idea is that this data is generated and then put

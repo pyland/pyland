@@ -1,9 +1,10 @@
 #ifndef MAPVIEWER_H
 #define MAPVIEWER_H
 
-#include "gui/gui_manager.hpp"
+#include <glm/vec2.hpp>
 
 class GameWindow;
+class GUIManager;
 class Map;
 
 class MapViewer {

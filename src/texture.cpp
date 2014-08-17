@@ -1,16 +1,22 @@
+#include <ext/alloc_traits.h>
+#include <glog/logging.h>               // for LOG, LogMessage, etc
 #include <memory>
+#include <ostream>                      // for operator<<, basic_ostream, etc
 #include <tuple>
+#include <vector>                       // for vector
 
 extern "C" {
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
 }
 
+#include "cacheable_resource.hpp"
 #include "texture.hpp"
 #include "texture_atlas.hpp"
 

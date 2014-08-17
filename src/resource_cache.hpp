@@ -5,13 +5,10 @@
 #include <memory>
 #include <string>
 
-#include "graphics_context.hpp"
-
-
-
 template<typename Res>
 class CacheableResource;
 
+class GraphicsContext;
 
 
 ///

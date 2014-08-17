@@ -1,6 +1,7 @@
 #include <cstring>
 #include <glog/logging.h>
 #include <new>
+#include <ostream>
 #include <stdexcept>
 
 extern "C" {

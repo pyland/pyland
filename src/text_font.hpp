@@ -1,8 +1,8 @@
 #ifndef TEXT_FONT_H
 #define TEXT_FONT_H
 
-#include <memory>
 #include <stdexcept>
+#include <string>
 
 extern "C" {
 #include <SDL2/SDL_ttf.h>

@@ -4,6 +4,7 @@
 #include <functional>
 #include <glm/vec2.hpp>
 #include <map>
+#include <stdint.h>
 #include <utility>
 
 template <typename... Arguments>

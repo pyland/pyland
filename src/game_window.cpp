@@ -19,7 +19,6 @@
 //
 
 
-
 #include <fstream>
 #include <glog/logging.h>
 #include <map>
@@ -699,7 +698,7 @@ void GameWindow::disable_context() {
     eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 #endif
 #ifdef USE_GL
-    SDL_GL_MakeCurrent(window, NULL);
+    SDL_GL_MakeCurrent(window, nullptr);
 #endif
     GraphicsContext::current = nullptr;
 }

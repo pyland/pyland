@@ -1,14 +1,21 @@
 #include <glog/logging.h>
-#include <iostream>
 #include <fstream>
-#include <functional>
-#include <map>
 #include <memory>
 #include <stdexcept>
 #include <string>
 
+#ifdef USE_GL
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+
+#include "cacheable_resource.hpp"
+#include "resource_cache.hpp"
 #include "shader.hpp"
-#include "graphics_context.hpp"
 
 
 

@@ -1,9 +1,11 @@
 #include <algorithm>
+#include <chrono>
 #include <functional>
 #include <glog/logging.h>
 #include <list>
 #include <mutex>
-#include <thread>
+#include <ostream>
+#include <ratio>
 
 #include "event_manager.hpp"
 #include "game_time.hpp"
@@ -33,7 +35,7 @@ void EventManager::flush() {
     /// This will clear both lists out. Now, if another thread tries
     /// to add something but blocks before getting a lock (but is stil
     /// in an add_event function), then, once this method completes,
-    /// that event would still be added to the queue. 
+    /// that event would still be added to the queue.
     ///
     /// The intention of this function is to be used once all the
     /// threads that are putting data onto the event queues are finished.
@@ -43,7 +45,7 @@ void EventManager::flush() {
 
     //The lock_guard is exception safe and releases the mutex when
     //it goes out of scope. So we introduce scope here to release
-    //the mutex 
+    //the mutex
     {
         //Lock the lists
         std::lock_guard<std::mutex> lock(queue_mutex);

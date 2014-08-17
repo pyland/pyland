@@ -1,9 +1,18 @@
+#include <functional>
 #include <glog/logging.h>
+#include <ostream>
+#include <utility>
 
+#include "button.hpp"
 #include "engine.hpp"
+#include "event_manager.hpp"
 #include "game_window.hpp"
+#include "gui_manager.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
+#include "text.hpp"
+#include "text_font.hpp"
+
 
 // configuration of notification bar
 float button_size = 0.05f;

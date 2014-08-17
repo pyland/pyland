@@ -5,15 +5,14 @@
 //      When inserting into the map (pair?). This doesn't do any harm,
 //      it's just weird.
 
-#include <map>
+#include <exception>
+#include <glog/logging.h>
 #include <memory>
+#include <ostream>
 #include <utility>
 #include <string>
 
-#include "resource_cache.hpp"
-#include "cacheable_resource.hpp"
-#include "graphics_context.hpp"
-
+class GraphicsContext;
 
 
 template<typename Res>

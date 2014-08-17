@@ -1,19 +1,12 @@
-#include <new>
-#include <glog/logging.h>
-#include <iostream>
+#include <algorithm>
 #include <fstream>
-#include <memory>
-
-//Include GLM
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
+#include <glog/logging.h>
 #include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#include <iterator>
+#include <memory>
+#include <new>
+#include <tuple>
+#include <utility>
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -24,18 +17,15 @@
 #include <GL/gl.h>
 #endif
 
-#include "interpreter.hpp"
-#include "image.hpp"
 #include "engine.hpp"
-#include "entitythread.hpp"
 #include "map_viewer.hpp"
-#include "make_unique.hpp"
-#include "renderable_component.hpp"
-#include "sprite.hpp"
-#include "object.hpp"
 #include "object_manager.hpp"
+#include "sprite.hpp"
+#include "text.hpp"
+#include "text_font.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
+
 
 Sprite::Sprite(glm::ivec2 position,
                std::string name,
@@ -43,7 +33,9 @@ Sprite::Sprite(glm::ivec2 position,
                int sheet_id,
                std::string sheet_name):
 
-    MapObject(position, name, walkability, sheet_id, sheet_name) {
+    MapObject(position, name, walkability, sheet_id, sheet_name),
+    is_focus(false) {
+
         auto map_viewer(Engine::get_map_viewer());
 
         // Setting up sprite text

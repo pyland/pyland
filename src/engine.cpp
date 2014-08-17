@@ -1,22 +1,29 @@
+#include <ext/alloc_traits.h>
+#include <glog/logging.h>
 #include <algorithm>
 #include <cstdlib>
-#include <future>
-#include <glog/logging.h>
 #include <glm/vec2.hpp>
-#include <memory>
-#include <utility>
-#include <vector>
 #include <iostream>
+#include <iterator>
+#include <memory>
+#include <stdexcept>
+#include <thread>
+#include <vector>
 
+#include "dispatcher.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
 #include "gil_safe_future.hpp"
+#include "map.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "object.hpp"
+#include "notification_bar.hpp"
 #include "object_manager.hpp"
-#include "dispatcher.hpp"
+#include "gil_safe_future.hpp"
 #include "sprite.hpp"
+#include "text.hpp"
+
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);

@@ -2,7 +2,9 @@
 #include <string>
 #include <iostream>
 
+#include "api.hpp"
 #include "challenge.hpp"
+#include "engine.hpp"
 #include "input_manager.hpp"
 #include "make_unique.hpp"
 

@@ -1,6 +1,7 @@
 #include <glog/logging.h>
 #include <map>
 #include <memory>
+#include <ostream>
 #include <string>
 #include <Tmx.h>
 #include <utility>
@@ -9,8 +10,8 @@
 #include "fml.hpp"
 #include "layer.hpp"
 #include "map_loader.hpp"
-#include "map_object.hpp"
 #include "object_manager.hpp"
+#include "texture_atlas.hpp"
 #include "tileset.hpp"
 
 
