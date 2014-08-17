@@ -42,6 +42,7 @@ Sprite::Sprite(glm::ivec2 position,
         TextFont myfont = Engine::get_game_font();
 
         object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+        object_text->set_bloom_radius(6);
         object_text->set_text(name);
         object_text->resize(100,100);
 
@@ -51,6 +52,7 @@ Sprite::Sprite(glm::ivec2 position,
 
 
         status_text = new Text(map_viewer->get_window(), myfont, true);
+        status_text->set_bloom_radius(5);
         status_text->set_text("awaiting...");
         status_text->resize(100,100);
 

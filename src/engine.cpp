@@ -222,13 +222,13 @@ void Engine::text_updater() {
         glm::ivec2 pixel_position(Engine::get_map_viewer()->tile_to_pixel(sprite->get_position()));
 
         sprite->get_object_text()->move(
-            pixel_position.x + int(Engine::get_actual_tile_size() * 0.5),
+            pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
             pixel_position.y
         );
 
         sprite->get_status_text()->move(
-            pixel_position.x + int(Engine::get_actual_tile_size() * 0.5),
-            pixel_position.y + int(Engine::get_actual_tile_size() * 1.5)
+            pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
+            pixel_position.y + int(Engine::get_actual_tile_size() / 1.0f)
         );
     }
 
