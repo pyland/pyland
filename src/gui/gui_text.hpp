@@ -1,14 +1,14 @@
 #ifndef GUI_TEXT_H
 #define GUI_TEXT_H
 
-#include "component.hpp"
+
 #include "gui_text_data.hpp"
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
 
 #include <memory>
-
+class Component;
 ///
 /// A text component
 ///

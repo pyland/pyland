@@ -37,20 +37,7 @@ public:
 
     std::vector<std::pair<GLfloat*, int>> generate_this_texture_data();
 
-    std::vector<std::shared_ptr<GUITextData>> generate_this_text_data();
-
-
-    ///
-    /// Set the text for the button
-    /// @param _text the button text
-    ///
-    void set_text(std::string _text) { text = _text; }
-
-    ///
-    ///o Get the button's text
-    /// @return the text
-    ///
-    std::string get_text() { return text; }
+    std::vector<std::shared_ptr<GUIText>> generate_this_text_data();
 
 };
 

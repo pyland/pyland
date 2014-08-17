@@ -88,8 +88,8 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
     return texture_coords;
 }
 
-std::vector<std::shared_ptr<GUITextData>> GUIWindow::generate_this_text_data() {
-    std::vector<std::shared_ptr<GUITextData>> text_data; 
+std::vector<std::shared_ptr<GUIText>> GUIWindow::generate_this_text_data() {
+    std::vector<std::shared_ptr<GUIText>> text_data; 
 
     return text_data;
 }

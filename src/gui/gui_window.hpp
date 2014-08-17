@@ -13,7 +13,7 @@ public:
 
     std::vector<std::pair<GLfloat*, int>> generate_this_texture_data() override;
 
-    std::vector<std::shared_ptr<GUITextData>> generate_this_text_data() override;
+    std::vector<std::shared_ptr<GUIText>> generate_this_text_data() override;
 };
 
 #endif
