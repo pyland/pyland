@@ -148,7 +148,12 @@ void Text::render() {
             break;
         }
     }
-    
+
+    // If they are still zero, don't continue.
+    if (width == 0 || height == 0) {
+        throw Text::RenderException("Invalid dimensions after auto-sizing.");
+    }
+
     int available_width = width - glow_radius * 2;
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
