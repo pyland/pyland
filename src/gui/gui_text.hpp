@@ -1,11 +1,12 @@
 #ifndef GUI_TEXT_H
 #define GUI_TEXT_H
 
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
-
 #include <memory>
+
+#include Text;
+#include TextFont;
+#include Typeface;
+
 
 ///
 /// Structure to hold the GUI text data that the GUI manager needs to render a component's text

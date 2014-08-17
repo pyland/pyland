@@ -1,17 +1,14 @@
 #ifndef GUI_MANAGER_H
 #define GUI_MANAGER_H
 
+#include <memory>
 
-#include "component.hpp"
-#include "component_group.hpp"
-#include "input_manager.hpp"
-#include "callback.hpp"
-#include "lifeline.hpp"
-#include "filters.hpp"
-#include "mouse_input_event.hpp"
 #include "object.hpp"
 
-#include <memory>
+class Component;
+class ComponentGroup;
+struct MouseInputEvent;
+
 
 ///
 /// The GUIManager class manages all the components which have been

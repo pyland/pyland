@@ -1,21 +1,14 @@
-#include "python_embed_headers.hpp"
-
-#include <boost/python.hpp>
-#include <boost/regex.hpp>
-#include <fstream>
-#include <future>
-#include <glog/logging.h>
 #include <glm/vec2.hpp>
-#include <iostream>
-#include <sstream>
+#include <glog/logging.h>
+#include <ostream>
 #include <string>
 
+#include "accessor.hpp"
 #include "api.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
+#include "game_time.hpp"
 #include "gil_safe_future.hpp"
-
-namespace py = boost::python;
 
 Entity::Entity(glm::vec2 start, std::string name, int id):
     start(start), script(""), id(id), call_number(0) {

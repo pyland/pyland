@@ -253,6 +253,7 @@ int main(int argc, const char *argv[]) {
         #ifdef USE_GLES
             TextFont big_font(Engine::get_game_typeface(), 50);
             Text cursor(challenge_data->game_window, big_font, true);
+            cursor.set_bloom_radius(5);
             cursor.move(0, 0);
             cursor.resize(50, 50);
             cursor.set_text("<");

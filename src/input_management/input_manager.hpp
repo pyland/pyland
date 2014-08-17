@@ -1,13 +1,16 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/sequenced_index.hpp>
-#include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/indexed_by.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/sequenced_index.hpp>
+#include <boost/multi_index/tag.hpp>
+#include <boost/multi_index_container.hpp>
 #include <functional>
 #include <queue>
 #include <set>
+#include <utility>
 
 extern "C" {
 #include <SDL2/SDL.h>
@@ -17,8 +20,11 @@ extern "C" {
 #include "callback_registry.hpp"
 #include "lifeline.hpp"
 #include "lifeline_controller.hpp"
-#include "keyboard_input_event.hpp"
-#include "mouse_input_event.hpp"
+#include "mouse_state.hpp"
+
+struct KeyboardInputEvent;
+struct MouseInputEvent;
+
 
 struct insertion_order {};
 template <typename T>

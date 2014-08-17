@@ -1,7 +1,8 @@
 #include "python_embed_headers.hpp"
 
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/python.hpp>
+#include <boost/ref.hpp>
 #include <future>
 #include <glog/logging.h>
 #include <glm/vec2.hpp>

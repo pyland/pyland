@@ -1,21 +1,22 @@
-#include <glog/logging.h>
-#include <iostream>
-#include <map>
+#include <glm/vec2.hpp>
+#include <iterator>
 #include <memory>
-#include <string>
+#include <sstream>
 #include <vector>
 
 #include "challenge.hpp"
+#include "challenge_data.hpp"
 #include "challenge_helper.hpp"
-#include "filters.hpp"
-#include "long_walk_challenge.hpp"
-#include "notification_bar.hpp"
 #include "engine.hpp"
-#include "map_viewer.hpp"
-#include "object_manager.hpp"
+#include "filters.hpp"
+#include "input_manager.hpp"
+#include "keyboard_input_event.hpp"
+#include "long_walk_challenge.hpp"
 #include "map_object.hpp"
-#include "walkability.hpp"
+#include "object_manager.hpp"
 #include "sprite.hpp"
+#include "walkability.hpp"
+
 
 #include <iostream>
 LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {

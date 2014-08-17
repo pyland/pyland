@@ -6,8 +6,10 @@
 #include "input_event.hpp"
 #include "mouse_state.hpp"
 
+class InputManager;
 
-class MouseInputEvent : public InputEvent {
+
+struct MouseInputEvent : public InputEvent {
 public:
     friend std::ostream& operator<<(std::ostream& os, const MouseInputEvent& event);
 

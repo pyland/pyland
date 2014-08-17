@@ -1,13 +1,13 @@
 #ifndef FILTERS_H
 #define FILTERS_H
 
-#include <algorithm>
 #include <functional>
 #include <initializer_list>
-#include <SDL2/SDL.h>
+#include <string>
 
-#include "input_manager.hpp"
-#include "keyboard_input_event.hpp"
+struct MouseInputEvent;
+struct KeyboardInputEvent;
+
 
 using KeyboardFilter  = std::function<bool (KeyboardInputEvent)>;
 using KeyboardHandler = std::function<void (KeyboardInputEvent)>;

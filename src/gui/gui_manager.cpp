@@ -1,17 +1,18 @@
+#include <exception>
 #include <fstream>
 #include <glog/logging.h>
-#include <iostream>
-#include <map>
 #include <memory>
 #include <new>
-#include <string>
 #include <utility>
 #include <vector>
 
+#include "cacheable_resource.hpp"
 #include "component.hpp"
+#include "component_group.hpp"
 #include "gui_manager.hpp"
+#include "mouse_input_event.hpp"
+#include "mouse_state.hpp"
 #include "shader.hpp"
-#include "texture.hpp"
 #include "texture_atlas.hpp"
 
 #ifdef USE_GL

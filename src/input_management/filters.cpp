@@ -1,6 +1,6 @@
-#include <algorithm>
 #include <functional>
 #include <initializer_list>
+#include <set>
 #include <stdexcept>
 #include <vector>
 
@@ -11,6 +11,8 @@ extern "C" {
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "keyboard_input_event.hpp"
+#include "mouse_input_event.hpp"
+#include "mouse_state.hpp"
 
 
 

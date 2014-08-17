@@ -1,9 +1,8 @@
-#include <ext/alloc_traits.h>
-#include <glog/logging.h>               // for LOG, LogMessage, etc
+#include <glog/logging.h>
 #include <memory>
-#include <ostream>                      // for operator<<, basic_ostream, etc
+#include <ostream>
 #include <tuple>
-#include <vector>                       // for vector
+#include <vector>
 
 extern "C" {
 #ifdef USE_GL

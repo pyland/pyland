@@ -3,6 +3,7 @@
 #include <ostream>
 
 #include "button.hpp"
+#include "component_group.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
 #include "gui_manager.hpp"
