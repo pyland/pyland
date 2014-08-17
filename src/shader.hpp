@@ -1,28 +1,23 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <glm/vec2.hpp>
-#include <map>
 #include <memory>
 #include <stdexcept>
 #include <string>
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
 
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
 
-#include "resource_cache.hpp"
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+
 #include "cacheable_resource.hpp"
 
-
-
-class GraphicsContext;
-class Shader;
+template <typename Res>
+class ResourceCache;
 
 
 

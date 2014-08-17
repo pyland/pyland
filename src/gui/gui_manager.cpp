@@ -1,26 +1,28 @@
-#include "component.hpp"
-#include "gui_manager.hpp"
-#include <new>
 #include <fstream>
 #include <glog/logging.h>
 #include <iostream>
 #include <map>
 #include <memory>
+#include <new>
 #include <string>
-#include "texture.hpp"
 #include <utility>
 #include <vector>
 
-#ifdef USE_GLES
-
-#include <GLES2/gl2.h>
-
-#endif
+#include "component.hpp"
+#include "gui_manager.hpp"
+#include "shader.hpp"
+#include "texture.hpp"
+#include "texture_atlas.hpp"
 
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+
 
 void GUIManager::parse_components() {
     //Generate  the needed offsets

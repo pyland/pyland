@@ -1,27 +1,33 @@
+#include <ext/alloc_traits.h>
+#include <glog/logging.h>
 #include <algorithm>
 #include <cstdlib>
-#include <future>
-#include <glog/logging.h>
 #include <glm/vec2.hpp>
-#include <memory>
-#include <utility>
-#include <vector>
 #include <iostream>
+#include <iterator>
+#include <memory>
+#include <stdexcept>
+#include <thread>
+#include <vector>
 
+#include "dispatcher.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
 #include "gil_safe_future.hpp"
+#include "map.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "object.hpp"
+#include "notification_bar.hpp"
 #include "object_manager.hpp"
-#include "dispatcher.hpp"
+#include "gil_safe_future.hpp"
 #include "sprite.hpp"
+#include "text.hpp"
+
 
 ///Static variables
-Challenge* Engine::challenge(nullptr);
-MapViewer* Engine::map_viewer(nullptr);
-NotificationBar* Engine::notification_bar(nullptr);
+MapViewer *Engine::map_viewer(nullptr);
+NotificationBar *Engine::notification_bar(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
 
@@ -56,7 +62,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
     // Motion
     EventManager::get_instance().add_timed_event(
-        GameTime::duration(0.07),
+        GameTime::duration(0.14),
         [walk_succeeded_return, location, target, id] (float completion) mutable {
             auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             if (!sprite) { return false; }
@@ -235,7 +241,7 @@ void Engine::update_status(int id, std::string status) {
 }
 
 TextFont Engine::get_game_font() {
-    return TextFont(get_game_typeface(), 18);
+    return TextFont(get_game_typeface(), 20);
 }
 
 Typeface Engine::get_game_typeface() {

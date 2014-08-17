@@ -9,10 +9,9 @@
 #include <utility>
 #include <vector>
 
-#include "layer.hpp"
-#include "tileset.hpp"
-
+class Layer;
 class MapObject;
+class TileSet;
 
 struct ObjectProperties {
     const glm::ivec2 location;

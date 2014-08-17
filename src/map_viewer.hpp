@@ -1,9 +1,10 @@
 #ifndef MAPVIEWER_H
 #define MAPVIEWER_H
 
-#include "gui/gui_manager.hpp"
+#include <glm/vec2.hpp>
 
 class GameWindow;
+class GUIManager;
 class Map;
 
 class MapViewer {
@@ -37,16 +38,6 @@ class MapViewer {
     /// The lower y position we are currently displaying the map at.
     ///
     float map_display_y = 0.0f;
-
-    ///
-    /// The width of the map to be displayed on screen.
-    ///
-    float map_display_width;
-
-    ///
-    /// The height of the map to be displayed on screen
-    ///
-    float map_display_height;
 
     ///
     /// Render the GUI
@@ -112,7 +103,7 @@ public:
     ///
     GameWindow* get_window() { return window; }
 
-    GUIManager* get_gui_manager() { return gui_manager; }  
+    GUIManager* get_gui_manager() { return gui_manager; }
 
     ///
     /// Rejigg the map in response to the viewport size changing.
@@ -123,33 +114,19 @@ public:
     /// Get the display width of the map
     /// @return get the display width of the map
     ///
-    float get_display_width() { return map_display_width; }
-
-    ///
-    /// Set the display width of the map
-    /// @param display_width the new display width of the map
-    ///
-    void set_display_width(float display_width) { map_display_width = display_width; }
+    float get_display_width();
 
     ///
     /// Get the display height of the map
     /// @return get the display height of the map
     ///
-    float get_display_height() { return map_display_height; }
-
-    ///
-    /// Set the display height of the map
-    /// @param display_width the new display height of the map
-    ///
-    void set_display_height(float display_height) { map_display_height = display_height; }
-
+    float get_display_height();
 
     ///
     /// Get the map display lower left x position
     /// @return the map display far left x position
     ///
-    float get_display_x() { return map_display_x; }
-
+    float get_display_x();
     ///
     /// Set the x display position of the map
     /// @param new_display_x the new display position
@@ -160,8 +137,7 @@ public:
     /// Get the map display bottom y position
     /// @return the map display bottom y  position
     ///
-    float get_display_y() { return map_display_y; }
-
+    float get_display_y();
     ///
     /// Set the y display position of the map
     /// @param new_display_y the new display position

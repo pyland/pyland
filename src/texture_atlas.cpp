@@ -1,7 +1,8 @@
 // Try funky initialization in if.
 
-#include <algorithm>
+#include <exception>
 #include <fstream>
+#include <glog/logging.h>
 #include <memory>
 #include <set>
 #include <stdexcept>
@@ -10,20 +11,22 @@
 #include <vector>
 
 extern "C" {
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
 }
 
-#include "texture_atlas.hpp"
-
+#include "cacheable_resource.hpp"
 #include "engine.hpp"
 #include "fml.hpp"
 #include "image.hpp"
+#include "resource_cache.hpp"
+#include "texture_atlas.hpp"
 
 
 
@@ -203,8 +206,8 @@ void TextureAtlas::init_texture() {
         glDeleteTextures(1, &gl_texture);
         throw TextureAtlas::LoadException("Unable to load texture into GPU: " + hex_error_code.str());
     }
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

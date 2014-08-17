@@ -2,10 +2,10 @@
 #define IMAGE_H
 
 #include <stdexcept>
+#include <string>
 
 extern "C" {
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 }
 
 #include "lifeline.hpp"
@@ -23,7 +23,7 @@ private:
     /// Allocate memory for the pixel array.
     ///
     void create_blank(int w, int h);
-    
+
     ///
     /// Perform the loading of image data from a file.
     ///
@@ -37,7 +37,7 @@ public:
         LoadException(const char *message);
         LoadException(const std::string &message);
     };
-    
+
     ///
     /// An RGBA pixel
     ///
@@ -47,10 +47,10 @@ public:
         Uint8 g;
         Uint8 b;
         Uint8 a;
-        
+
         Pixel();
     };
-    
+
     ///
     /// Flipped pixel wrapper
     ///
@@ -84,7 +84,7 @@ public:
         }
     };
     Flipper flipped_pixels;
-    
+
     ///
     /// Width of the used image area.
     ///

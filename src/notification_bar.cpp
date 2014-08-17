@@ -1,9 +1,18 @@
+#include <functional>
 #include <glog/logging.h>
+#include <ostream>
+#include <utility>
 
+#include "button.hpp"
 #include "engine.hpp"
+#include "event_manager.hpp"
 #include "game_window.hpp"
+#include "gui_manager.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
+#include "text.hpp"
+#include "text_font.hpp"
+
 
 // configuration of notification bar
 float button_size = 0.05f;
@@ -66,9 +75,12 @@ NotificationBar::NotificationBar() {
     notification_text = new Text(window, Engine::get_game_font(), true);
     notification_text->set_text("Welcome to Project Zygote");
     // referring to top left corner of text window
-    notification_text->move(text_border_width, text_height + text_border_width);
+    notification_text->move(text_border_width, text_border_width);
     auto window_size = window->get_size();
     notification_text->resize(window_size.first-text_border_width, text_height + text_border_width);
+    notification_text->align_at_origin(true);
+    notification_text->align_left();
+    notification_text->vertical_align_bottom();
 
     // callback to resize text when window size changes
     std::function<void (GameWindow *)> func = [&] (GameWindow *game_window) {

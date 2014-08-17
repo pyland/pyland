@@ -1,15 +1,22 @@
 #include <algorithm>
+#include <boost/iterator/iterator_facade.hpp>
+#include <boost/iterator/transform_iterator.hpp>
 #include <functional>
-#include <iterator>
+#include <glm/vec2.hpp>
+#include <stdexcept>
 #include <string>
-#include <vector>
+#include <utility>
 
 #include "challenge.hpp"
-#include "event_manager.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
+#include "event_manager.hpp"
+#include "fml.hpp"
+#include "map.hpp"
+#include "map_loader.hpp"
 #include "map_viewer.hpp"
-#include "object_manager.hpp"
+#include "walkability.hpp"
+
 
 template <class Container>
 void ChallengeHelper::unregister_all(Container *callbacks) {

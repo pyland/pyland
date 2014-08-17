@@ -1,19 +1,15 @@
+#include <functional>
 #include <map>
 #include <memory>
-#include <utility>
 #include <string>
+#include <utility>
 
-
-
-#include "cacheable_resource.hpp"
-#include "resource_cache.hpp"
+#include "callback.hpp"
 #include "graphics_context.hpp"
-
-
+#include "resource_cache.hpp"
 
 template<typename Res>
 std::map<GraphicsContext*, std::shared_ptr<ResourceCache<Res>>> CacheableResource<Res>::resource_caches;
-
 
 
 template<typename Res>

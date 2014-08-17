@@ -26,7 +26,9 @@ protected:
     ChallengeData* challenge_data;
     Map* map;
     Lifeline esc_callback;
-    bool run_challenge;
+
+    Dispatcher<> event_finish;
+
     std::vector<int> sprite_ids;
     std::vector<int> map_object_ids;
 public:

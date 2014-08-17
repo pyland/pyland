@@ -2,15 +2,12 @@
 #define MAP_OBJECT_H
 
 #include <glm/vec2.hpp>
+#include <map>
 #include <string>
 #include <vector>
 
-#include "image.hpp"
 #include "map.hpp"
 #include "object.hpp"
-#include "text.hpp"
-#include "text_font.hpp"
-#include "typeface.hpp"
 #include "walkability.hpp"
 
 ///

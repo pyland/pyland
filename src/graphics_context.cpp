@@ -1,6 +1,5 @@
 #include <glog/logging.h>
-
-
+#include <ostream>
 
 #include "graphics_context.hpp"
 #include "game_window.hpp"

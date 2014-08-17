@@ -1,12 +1,19 @@
 #include <glm/vec2.hpp>
+#include <memory>
+#include <sstream>
+#include <vector>
 
 #include "challenge.hpp"
 #include "challenge_helper.hpp"
 #include "engine.hpp"
+#include "fml.hpp"
 #include "map.hpp"
+#include "map_loader.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
 #include "sprite.hpp"
+
 
 int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string name,

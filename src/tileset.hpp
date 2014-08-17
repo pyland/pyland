@@ -1,12 +1,10 @@
 #ifndef TILESET_H
 #define TILESET_H
 
-#include <map>
 #include <memory>
 #include <string>
 
-#include "texture_atlas.hpp"
-
+class TextureAtlas;
 
 
 ///
@@ -25,7 +23,7 @@ class TileSet {
 
     ///
     /// The source file for the tileset
-    /// 
+    ///
     std::string name = "";
 
     ///
@@ -42,12 +40,12 @@ public:
 
     ///
     /// Get the width of the tileset in pixels
-    /// 
+    ///
     int get_width() { return width; }
 
     ///
     /// Set the width of the tileset in pixels
-    /// 
+    ///
     void set_width(int new_width) { width = new_width; }
 
     ///
@@ -57,7 +55,7 @@ public:
 
     ///
     /// Set the height of the tileset in pixels
-    /// 
+    ///
     void set_height(int new_height) { height = new_height; }
 
     ///

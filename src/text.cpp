@@ -7,6 +7,8 @@
 //      performance boost by directly reading off the text.
 
 #include <cmath>
+#include <cstdio>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -17,21 +19,22 @@
 extern "C" {
 #include <SDL2/SDL_ttf.h>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
 }
 
-#include "text_font.hpp"
+#include "callback.hpp"
+#include "game_window.hpp"
 #include "image.hpp"
 #include "shader.hpp"
 #include "text.hpp"
-#include "game_window.hpp"
-#include "callback.hpp"
+#include "text_font.hpp"
 
 
 

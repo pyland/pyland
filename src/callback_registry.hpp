@@ -1,8 +1,11 @@
 #ifndef CALLBACK_REGISTRY_H
 #define CALLBACK_REGISTRY_H
 
+#include <glog/logging.h>
+#include <ostream>
 #include <set>
 
+#include "callback.hpp"
 
 
 ///
@@ -15,7 +18,7 @@ private:
     /// All callbacks associated to the registry.
     ///
     std::set<Callback<Ret, Args...>> callbacks;
-    
+
 public:
     CallbackRegistry();
     ~CallbackRegistry();
@@ -45,9 +48,6 @@ public:
     void broadcast(Args... args);
 };
 
-
-
-#include "callback.hpp"
 
 #include "callback_registry.hxx"
 

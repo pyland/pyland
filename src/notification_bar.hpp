@@ -1,11 +1,13 @@
 #ifndef NOTIFICATION_BAR_H
 #define NOTIFICATION_BAR_H
 
-#include "button.hpp"
+#include <memory>
+#include <string>
+
 #include "lifeline.hpp"
 #include "notification_stack.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
+
+class Text;
 
 enum class Direction {NEXT, PREVIOUS};
 

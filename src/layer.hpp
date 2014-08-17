@@ -3,14 +3,14 @@
 
 #include <exception>
 #include <memory>
+#include <map>
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "object.hpp"
-#include "tileset.hpp"
 
-
+class TileSet;
 
 ///
 /// A layer on the map. These

@@ -1,9 +1,11 @@
 #ifndef TEXTURE_ATLAS_H
 #define TEXTURE_ATLAS_H
 
+#include <map>
 #include <memory>
 #include <set>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 #include <utility>
 #include <vector>

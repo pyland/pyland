@@ -115,7 +115,9 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
         except KILL:
             entity.print_debug("KILLED")
-            #TODO: Joshua
+            # Printing from Python when the game is dead hangs
+            # everything, so don't do it.
+            # TODO (Joshua): Fix this problem
             raise
 
         # For all other errors, output and stop

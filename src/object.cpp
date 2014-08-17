@@ -1,14 +1,8 @@
-#include <iostream>
 #include <glog/logging.h>
 #include <string>
-#include <utility>
 
-#include "api.hpp"
-#include "engine.hpp"
-#include "entitythread.hpp"
-#include "map.hpp"
-#include "map_viewer.hpp"
 #include "object.hpp"
+#include "entitythread.hpp"
 #include "object_manager.hpp"
 
 Object::Object(): Object("") {}

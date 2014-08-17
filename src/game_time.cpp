@@ -1,4 +1,6 @@
 #include <chrono>
+#include <functional>
+#include <ratio>
 
 #include "accessor.hpp"
 #include "game_time.hpp"
