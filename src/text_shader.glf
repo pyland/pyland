@@ -2,15 +2,13 @@
 
 in vec2 f_texture_coord;
 uniform sampler2D texture;
-uniform vec4 colour;
 
 void main() {
-    float alpha = texture2D(texture, f_texture_coord).a;
+    vec4 colour = texture2D(texture, f_texture_coord);
     
-    if (alpha == 0.0) {
+    if (colour.a == 0.0) {
         discard;
     }
 
-    gl_FragColor.rgb   = colour.rgb;
-    gl_FragColor.a   = colour.a * alpha;
+    gl_FragColor.rgba   = colour.rgba;
 }

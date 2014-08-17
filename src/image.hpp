@@ -126,7 +126,14 @@ public:
     Image(int width, int height, bool opengl = true);
     ~Image();
 
-    void clear(Uint32 colour, Uint32 mask);
+    ///
+    /// Clear the screen using a colour and colour mask.
+    ///
+    void clear(uint32_t colour, uint32_t mask);
+    ///
+    /// Clear the screen using a colour and colour mask.
+    ///
+    void clear(uint8_t* colour, uint8_t* mask);
 
     ///
     /// Index a row in the image.

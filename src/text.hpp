@@ -77,6 +77,12 @@ private:
     ///
     bool smooth;
     ///
+    /// The radius of the glow effect in pixels.
+    ///
+    /// If set to 0, glow is disabled.
+    ///
+    int glow_radius;
+    ///
     /// The width of the textbox.
     ///
     int width;
@@ -116,7 +122,11 @@ private:
     ///
     /// The colour to render the text as.
     ///
-    GLfloat rgba[4];
+    uint8_t rgba[4];
+    ///
+    /// The colour to render the text as.
+    ///
+    uint8_t glow_rgba[4];
     ///
     /// Font to use.
     ///
@@ -134,6 +144,11 @@ private:
     /// Re-render the text.
     ///
     void render();
+
+    ///
+    /// Applies a bloom effect to text.
+    ///
+    void apply_newson_bloom();
 
     ///
     /// Create an OpenGL texture from the image.
@@ -265,17 +280,35 @@ public:
     void align_at_origin(bool aao);
 
     ///
+    /// Set the colour of text.
+    ///
+    void set_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+    ///
+    /// Apply a bloom effect of a certain size.
+    ///
+    /// @param radius The radius of the bloom effect in pixels. A value
+    ///               of 0 disables bloom.
+    ///
+    void set_bloom_radius(int radius);
+    ///
+    /// Set the colour of the bloom effect.
+    ///
+    void set_bloom_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+
+    ///
     /// Render the text to an image, and subsequently to an OpenGL
     /// texture, give size information.
     ///
-    /// Width and height are given in pixels.
+    /// Width and height are given in pixels. If a dimension is 0, then
+    /// it is automatically sized.
     ///
     void resize(int w, int h);
     ///
     /// Render the text to an image, and subsequently to an OpenGL
     /// texture, give size information.
     ///
-    /// Width and height are given in screen ratios.
+    /// Width and height are given in screen ratios. If a dimension is
+    /// 0, then it is automatically sized.
     ///
     void resize_ratio(float w, float h);
     ///
