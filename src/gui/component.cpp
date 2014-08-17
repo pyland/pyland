@@ -1,6 +1,6 @@
-#include "component.hpp"
 #include <mutex>
-#include <vector>
+
+#include "component.hpp"
 
 int Component::get_new_id() {
     static int next_component_id = 0;

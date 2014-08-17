@@ -1,8 +1,8 @@
-#include <SDL2/SDL.h>
-
-#include "input_manager.hpp"
+#include "input_event.hpp"
 #include "mouse_input_event.hpp"
+#include "mouse_state.hpp"
 
+class InputManager;
 
 
 MouseInputEvent::MouseInputEvent(InputManager* manager,

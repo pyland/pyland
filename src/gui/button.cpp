@@ -1,5 +1,4 @@
 #include "button.hpp"
-#include "gui_text.hpp"
 
 #include <utility>
 #include <vector>

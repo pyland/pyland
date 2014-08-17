@@ -1,5 +1,3 @@
-#include <ext/alloc_traits.h>
-
 #include "layer.hpp"
 #include "tileset.hpp"
 

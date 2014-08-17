@@ -1,5 +1,13 @@
-#include "catch.hpp"
+#include <algorithm>
+#include <boost/iterator/iterator_facade.hpp>
+#include <boost/iterator/transform_iterator.hpp>
+#include <iterator>
+#include <map>
+#include <sstream>
+#include <string>
+#include <utility>
 
+#include "catch.hpp"
 #include "fml.hpp"
 
 SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {

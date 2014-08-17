@@ -1,9 +1,6 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include "gui_text.hpp"
-
-#include <cstddef>
 #include <exception>
 #include <functional>
 #include <map>

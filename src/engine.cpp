@@ -1,4 +1,3 @@
-#include <ext/alloc_traits.h>
 #include <glog/logging.h>
 #include <algorithm>
 #include <cstdlib>

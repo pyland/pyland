@@ -1,7 +1,7 @@
 #include <ostream>
 #include <SDL2/SDL.h>
 
-#include "input_manager.hpp"
+#include "input_event.hpp"
 #include "keyboard_input_event.hpp"
 
 

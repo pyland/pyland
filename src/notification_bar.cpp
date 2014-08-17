@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "button.hpp"
+#include "component_group.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_window.hpp"

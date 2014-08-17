@@ -1,12 +1,25 @@
-#include <exception>
-#include <string>
+#include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <stdlib.h>
+#include <string>
 
 #include "api.hpp"
 #include "challenge.hpp"
+#include "challenge_data.hpp"
 #include "engine.hpp"
-#include "input_manager.hpp"
+#include "entitythread.hpp"
+#include "interpreter.hpp"
 #include "make_unique.hpp"
+#include "map.hpp"
+#include "map_object.hpp"
+#include "map_viewer.hpp"
+#include "notification_bar.hpp"
+#include "object_manager.hpp"
+#include "sprite.hpp"
+
 
 Challenge::Challenge(ChallengeData* _challenge_data) :
     challenge_data(_challenge_data), map(nullptr) {

@@ -1,6 +1,10 @@
+#include <boost/multi_index/detail/bidir_node_iterator.hpp>
+#include <boost/multi_index/detail/ord_index_node.hpp>
+#include <boost/operators.hpp>
 #include <boost/range/adaptor/reversed.hpp>
-#include <iostream>
 #include <functional>
+#include <glog/logging.h>
+#include <iterator>
 #include <queue>
 #include <set>
 
@@ -8,13 +12,14 @@ extern "C" {
 #include <SDL2/SDL.h>
 }
 
+#include "callback.hpp"
+#include "callback_registry.hpp"
 #include "input_manager.hpp"
 #include "game_window.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
 #include "lifeline_controller.hpp"
-
-
+#include "mouse_input_event.hpp"
 
 #ifdef DEBUG
 #define GAME_WINDOW_DEBUG
@@ -110,8 +115,6 @@ void InputManager::handle_event(SDL_Event* event) {
     }
 }
 
-
-#include <iostream>
 void InputManager::run_callbacks() {
     while (!key_events.empty()) {
         KeyboardInputEvent& event = key_events.front();

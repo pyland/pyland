@@ -1,25 +1,17 @@
 #ifndef CHALLENGE_H
 #define CHALLENGE_H
 
+#include <glm/vec2.hpp>
 #include <string>
+#include <vector>
 
-#include "challenge_data.hpp"
-#include "game_window.hpp"
-#include "gui_manager.hpp"
-#include "input_manager.hpp"
-#include "interpreter.hpp"
+#include "dispatcher.hpp"
 #include "lifeline.hpp"
-#include "map.hpp"
-#include "map_viewer.hpp"
-#include "notification_bar.hpp"
-#include "object_manager.hpp"
-#include "sprite.hpp"
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
+#include "walkability.hpp"
 
-class InputManager;
 class ChallengeData;
+class Map;
+
 
 class Challenge {
 protected:

@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <exception>
-#include <ext/alloc_traits.h>
 #include <fstream>
 #include <glm/vec2.hpp>
 #include <glog/logging.h>
