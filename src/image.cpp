@@ -180,16 +180,35 @@ void Image::load_file(const char* filename) {
 }
 
 
-void Image::clear(Uint32 colour, Uint32 mask) {
-    Uint32 invmask = ~mask;
-    Uint8 ri = (Uint8)(invmask >> 24);
-    Uint8 gi = (Uint8)(invmask >> 16);
-    Uint8 bi = (Uint8)(invmask >>  8);
-    Uint8 ai = (Uint8)(invmask >>  0);
-    Uint8 rc = (Uint8)(colour  >> 24);
-    Uint8 gc = (Uint8)(colour  >> 16);
-    Uint8 bc = (Uint8)(colour  >>  8);
-    Uint8 ac = (Uint8)(colour  >>  0);
+void Image::clear(uint32_t colour, uint32_t mask) {
+    uint32_t invmask = ~mask;
+    uint8_t ri = (uint8_t)(invmask >> 24);
+    uint8_t gi = (uint8_t)(invmask >> 16);
+    uint8_t bi = (uint8_t)(invmask >>  8);
+    uint8_t ai = (uint8_t)(invmask >>  0);
+    uint8_t rc = (uint8_t)(colour  >> 24);
+    uint8_t gc = (uint8_t)(colour  >> 16);
+    uint8_t bc = (uint8_t)(colour  >>  8);
+    uint8_t ac = (uint8_t)(colour  >>  0);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            (*this)[y][x].r = rc | ((*this)[y][x].r & ri);
+            (*this)[y][x].g = gc | ((*this)[y][x].g & gi);
+            (*this)[y][x].b = bc | ((*this)[y][x].b & bi);
+            (*this)[y][x].a = ac | ((*this)[y][x].a & ai);
+        }
+    }
+}
+
+void Image::clear(uint8_t* colour, uint8_t* mask) {
+    uint8_t ri = (uint8_t)(~mask[0]);
+    uint8_t gi = (uint8_t)(~mask[1]);
+    uint8_t bi = (uint8_t)(~mask[2]);
+    uint8_t ai = (uint8_t)(~mask[3]);
+    uint8_t rc = (uint8_t)(colour[0]);
+    uint8_t gc = (uint8_t)(colour[1]);
+    uint8_t bc = (uint8_t)(colour[2]);
+    uint8_t ac = (uint8_t)(colour[3]);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             (*this)[y][x].r = rc | ((*this)[y][x].r & ri);
