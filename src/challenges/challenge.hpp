@@ -7,6 +7,7 @@
 
 #include "dispatcher.hpp"
 #include "lifeline.hpp"
+#include "sprite_switcher.hpp"
 #include "walkability.hpp"
 
 class ChallengeData;
@@ -18,6 +19,7 @@ protected:
     ChallengeData* challenge_data;
     Map* map;
     Lifeline esc_callback;
+    SpriteSwitcher* sprite_switcher; 
 
     Dispatcher<> event_finish;
 

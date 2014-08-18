@@ -22,7 +22,7 @@
 
 
 Challenge::Challenge(ChallengeData* _challenge_data) :
-    challenge_data(_challenge_data), map(nullptr) {
+    challenge_data(_challenge_data), map(nullptr), sprite_switcher(nullptr) {
         map = new Map(challenge_data->map_name);
         MapViewer* map_viewer = Engine::get_map_viewer();
         if(map_viewer == nullptr) {
@@ -30,8 +30,13 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         }
         map_viewer->set_map(map);
 
+        //build sprite switcher 
+        sprite_switcher = new SpriteSwitcher();
+
         //Build a sprite for the player
         int sprite_id = make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1_64.png");
+        make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1_64.png");
+
 
         // WTF
         std::string bash_command =
@@ -41,6 +46,9 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
 }
 
 Challenge::~Challenge() {
+
+    // destruct sprite switch
+    delete sprite_switcher;
 
     //Remove all sprites
     for(int sprite_id : sprite_ids) {
