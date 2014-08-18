@@ -233,7 +233,7 @@ void MapViewer::render_objects(bool above_sprite) {
             if(!object->is_renderable())
                 continue;
 
-            if(!above_sprite && object->render_above_sprites())
+            if(above_sprite ^ object->render_above_sprites())
                 continue;
 
             RenderableComponent* object_render_component = object->get_renderable_component();
