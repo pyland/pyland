@@ -21,8 +21,6 @@ protected:
     Lifeline esc_callback;
     SpriteSwitcher* sprite_switcher; 
 
-    Dispatcher<> event_finish;
-
     std::vector<int> sprite_ids;
     std::vector<int> map_object_ids;
 public:
@@ -31,6 +29,8 @@ public:
     Challenge(ChallengeData* _challenge_data);
 
     virtual ~Challenge();
+
+    Dispatcher<> event_finish;
 
     virtual void start() = 0;
     virtual void finish() = 0;
