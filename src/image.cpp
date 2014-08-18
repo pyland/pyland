@@ -154,6 +154,7 @@ void Image::load_file(const char* filename) {
         throw Image::LoadException("Failed to allocate space.");
     }
 
+    SDL_SetSurfaceBlendMode(loaded, SDL_BLENDMODE_NONE);
     SDL_BlitSurface(loaded, NULL, compatible, NULL);
     SDL_FreeSurface(loaded);
 
