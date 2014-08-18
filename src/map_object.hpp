@@ -78,7 +78,11 @@ public:
 
     virtual ~MapObject();
 
-    glm::vec2 get_position() { return position; }
+    glm::vec2 get_position() {
+        return glm::vec2(
+            std::trunc(position.x * Engine::get_actual_tile_size()) / Engine::get_actual_tile_size(),
+            std::trunc(position.y * Engine::get_actual_tile_size()) / Engine::get_actual_tile_size()
+        ); }
     void set_position(glm::vec2 position) { this->position = position; }
 
     ///
