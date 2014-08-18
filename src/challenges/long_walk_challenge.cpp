@@ -20,6 +20,10 @@
 
 #include <iostream>
 LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
+    ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(this, "sprite/2", "Ashley", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(this, "sprite/3","Joshua", Walkability::BLOCKED);
+
     //Test chest
     int chest_id(make_map_object(
         glm::ivec2(10, 15),

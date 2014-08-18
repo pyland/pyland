@@ -26,6 +26,11 @@ namespace ChallengeHelper {
     int make_object(Challenge *challenge, std::string name, Walkability walkability);
 
     ///
+    /// Create Sprite from named location
+    ///
+    int make_sprite(Challenge *challenge, std::string marker_name, std::string sprite_name, Walkability walkability);
+
+    ///
     /// Create MapObjects from named locations
     ///
     template <class OutputIt>

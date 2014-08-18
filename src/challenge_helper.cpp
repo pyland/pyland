@@ -3,14 +3,18 @@
 #include <sstream>
 #include <vector>
 
+#include "api.hpp"
 #include "challenge.hpp"
+#include "challenge_data.hpp"
 #include "challenge_helper.hpp"
 #include "engine.hpp"
 #include "fml.hpp"
+#include "make_unique.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
+#include "interpreter.hpp"
 #include "object_manager.hpp"
 #include "sprite.hpp"
 
@@ -30,6 +34,40 @@ int ChallengeHelper::make_object(Challenge *challenge,
         properties.tileset_id,
         properties.atlas_name
     );
+}
+
+int ChallengeHelper::make_sprite(Challenge *challenge, std::string marker_name, std::string sprite_name, Walkability walkability) {
+    auto *map = Engine::get_map_viewer()->get_map();
+    auto id(map->locations.get<int>("Objects/" + marker_name));
+    auto properties(map->obj_from_id(id));
+
+    auto new_sprite(std::make_shared<Sprite>(properties.location, sprite_name, walkability, properties.tileset_id, properties.atlas_name));
+    ObjectManager::get_instance().add_object(new_sprite);
+
+    auto sprite_id(new_sprite->get_id());
+
+    LOG(INFO) << "Adding sprite";
+
+    challenge->sprite_ids.push_back(sprite_id);
+    map->add_sprite(sprite_id);
+    Engine::get_map_viewer()->set_map_focus_object(sprite_id);
+    LOG(INFO) << "Creating sprite wrapper";
+    LOG(INFO) << "ID " << sprite_id;
+
+    // Register user controled sprite
+    // Yes, this is a memory leak. Deal with it.
+    auto *a_thing(new Entity(properties.location, sprite_name, sprite_id));
+
+    LOG(INFO) << "Registering sprite";
+    new_sprite->daemon = std::make_unique<LockableEntityThread>(challenge->challenge_data->interpreter->register_entity(*a_thing));
+    LOG(INFO) << "Done!";
+
+    // std::string bash_command =
+    //     std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
+    //     + std::to_string(sprite_id) + std::string(".py");
+    //     system(bash_command.c_str());
+
+    return sprite_id;
 }
 
 PositionDispatcher<int>::CallbackID

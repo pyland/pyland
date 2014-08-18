@@ -22,7 +22,7 @@
 
 
 Challenge::Challenge(ChallengeData* _challenge_data) :
-    challenge_data(_challenge_data), map(nullptr), sprite_switcher(nullptr) {
+    map(nullptr), sprite_switcher(nullptr), challenge_data(_challenge_data) {
         map = new Map(challenge_data->map_name);
         MapViewer* map_viewer = Engine::get_map_viewer();
         if(map_viewer == nullptr) {
@@ -33,16 +33,8 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         //build sprite switcher 
         sprite_switcher = new SpriteSwitcher();
 
-        //Build a sprite for the player
-        int sprite_id = make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1_64.png");
-        make_sprite(glm::ivec2(7, 15), "John", Walkability::BLOCKED, 9,"../resources/characters_1_64.png");
-
-
         // WTF
-        std::string bash_command =
-            std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
-            + std::to_string(sprite_id) + std::string(".py");
-        system(bash_command.c_str());
+
 }
 
 Challenge::~Challenge() {
@@ -85,35 +77,6 @@ int Challenge::make_map_object(glm::vec2 position,
     map->add_map_object(new_object_id);
 
     return new_object_id;
-}
-
-int Challenge::make_sprite(glm::vec2 position, std::string name, Walkability walkability, int sheet_id, std::string sheet_name) {
-    LOG(INFO) << "Creating sprite";
-
-    // Registering new sprite with game engine
-    auto new_sprite(std::make_shared<Sprite>(position, name, walkability, sheet_id, sheet_name));
-
-    LOG(INFO) << "Adding sprite";
-    ObjectManager::get_instance().add_object(new_sprite);
-
-    int sprite_id = new_sprite->get_id();
-    sprite_ids.push_back(sprite_id);
-
-
-    map->add_sprite(sprite_id);
-    Engine::get_map_viewer()->set_map_focus_object(sprite_id);
-    LOG(INFO) << "Creating sprite wrapper";
-    LOG(INFO) << "ID " << sprite_id;
-
-    // Register user controled sprite
-    // Yes, this is a memory leak. Deal with it.
-    auto *a_thing(new Entity(position, name, sprite_id));
-
-    LOG(INFO) << "Registering sprite";
-    new_sprite->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
-    LOG(INFO) << "Done!";
-
-    return sprite_id;
 }
 
 /*
