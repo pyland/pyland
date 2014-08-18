@@ -11,7 +11,7 @@
 #include "gil_safe_future.hpp"
 
 Entity::Entity(glm::vec2 start, std::string name, int id):
-    start(start), script(""), id(id), call_number(0) {
+    start(start), id(id), call_number(0) {
         this->name = std::string(name);
 }
 

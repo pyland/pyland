@@ -20,13 +20,6 @@ class Entity {
         ///
         glm::vec2 start;
 
-        ///
-        /// The wrapped python script.
-        ///
-        /// @deprecated
-        ///
-        boost::python::api::object script;
-
 
     public:
         ///
