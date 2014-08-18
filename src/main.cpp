@@ -31,7 +31,14 @@
 #include "long_walk_challenge.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
-#include "python_embed/interpreter.hpp"
+#include "interpreter.hpp"
+
+#ifdef USE_GLES
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
+#endif
+
 
 
 using namespace std;

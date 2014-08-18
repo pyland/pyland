@@ -1,3 +1,11 @@
+// //////////////////////////////////////////////////////////////
+// //////////////////////// CURRENT BUGS ////////////////////////
+// //////////////////////////////////////////////////////////////
+// Possible SDL_ttf bug when rendering certain first characters.
+//      Workaround is to append and prepend a space character to lines.
+//      See render(): border, safe, safe_str.
+//
+
 // Behaviour modifiers (defines):
 //  TEXT_SAFE_SURFACE
 //      Text can be rendered less directly by defining this.  This
@@ -140,14 +148,14 @@ void Text::render() {
         switch (alignment_v) {
         default:
         case Alignment::TOP:
-            height = window_size.second - this->y;
+            height = this->y;
             break;
         case Alignment::CENTRE:
-            height = ((window_size.second / 2) < this->y) ? this->y
-                                                          : window_size.second - this->y;
+            height = ((window_size.second / 2) < this->y) ? window_size.second - this->y
+                                                          : this->y;
             break;
         case Alignment::BOTTOM:
-            height = this->y;
+            height = window_size.second - this->y;
             break;
         }
     }
@@ -158,6 +166,20 @@ void Text::render() {
     }
 
     int available_width = width - glow_radius * 2;
+    // It took a whole day to discover that there was a bug in
+    // SDL_ttf. Starting with certain characters on certain
+    // fonts seems to break it. :(
+    // As a hack, prepend and (for balance) append a space.
+    int border;
+    TTF_SizeUTF8(font.font, " ", &border, NULL);
+    border *= 2;
+    
+    // If they are still zero, don't continue.
+    if (available_width <= 0) {
+        throw Text::RenderException("No available width for rendering text.");
+    }
+    
+    // int available_height = height - glow_radius * 2;
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
     int lost_lines = 0;
@@ -172,7 +194,9 @@ void Text::render() {
     char* line = new char[length+1];
 
     // Null-terminator separated lines of text.
-    char* lines = new char[length+1];
+    // The worst case is a character per line, so we need to do
+    // 2 * length (character, null, character, null, ...).
+    char* lines = new char[2*length+1];
     // Pointer to within lines.
     char* lines_scan = lines;
 
@@ -218,9 +242,11 @@ void Text::render() {
             line[l - t] = '\0';
             // Test line length.
             TTF_SizeUTF8(font.font, line, &line_width, NULL);
-            if (line_width < available_width) {
+            // Part of SDL_ttf bug workaround.
+            line_width+=border;
+            if (line_width <= available_width) {
                 if (line_width > used_width) {
-                    used_width = line_width + glow_radius * 2;
+                    used_width = line_width;
                 }
                 // Mark current position as valid.
                 ll = l - t;
@@ -258,7 +284,12 @@ void Text::render() {
                         c = line[ls];
                         line[ls] = 0;
                         TTF_SizeUTF8(font.font, line, &line_width, NULL);
+                        // Part of SDL_ttf bug workaround.
+                        line_width+=border;
                         if (line_width <= available_width) {
+                            if (line_width > used_width) {
+                                used_width = line_width;
+                            }
                             left = ls;
                         }
                         else {
@@ -275,10 +306,11 @@ void Text::render() {
             }
         }
 
+        // Copy the line into lines (using lines_scan).
         int i;
-        for (i = 0; line[i] != '\0'; i++) {
+        for (i = 0; line[i] != '\0'; ++i) {
             lines_scan[i] = line[i];
-         }
+        }
         lines_scan[i] = '\0';
         lines_scan = &lines_scan[i+1];
 
@@ -300,6 +332,8 @@ void Text::render() {
     int line_count = line_number;
 
     int used_height = line_count * line_height + 2 * glow_radius;
+    
+    used_width += glow_radius * 2 + border;
 
     image = Image(used_width, (used_height < height) ? used_height : height, true);
     uint8_t clear_colour[4] = {rgba[0], rgba[1], rgba[2], 0x00};
@@ -326,11 +360,20 @@ void Text::render() {
         }
 
         SDL_Surface* rendered_line;
-        if (smooth) {
-            rendered_line = TTF_RenderUTF8_Shaded(font.font, lines_scan, colour, blank);
-        }
-        else {
-            rendered_line = TTF_RenderUTF8_Solid(font.font, lines_scan, colour);
+        {
+            // It took a whole day to discover that there was a bug in
+            // SDL_ttf. Starting with certain characters on certain
+            // fonts seems to break it. :(
+            // As a hack, prepend and (for balance) append a space.
+            std::stringstream safe;
+            safe << " " << lines_scan << " ";
+            std::string safe_str(safe.str());
+            if (smooth) {
+                rendered_line = TTF_RenderUTF8_Shaded(font.font, safe_str.c_str(), colour, blank);
+            }
+            else {
+                rendered_line = TTF_RenderUTF8_Solid(font.font, safe_str.c_str(), colour);
+            }
         }
 
         if (rendered_line == nullptr) {
@@ -378,7 +421,7 @@ void Text::render() {
             x_offset = (used_width - rendered_line->w) / 2;
             break;
         case Alignment::RIGHT:
-            x_offset = used_width - glow_radius - rendered_line->w;
+            x_offset = used_width - rendered_line->w - glow_radius;
             break;
         }
         switch (alignment_v) {
@@ -398,20 +441,23 @@ void Text::render() {
         int xs;
         // y surface
         int ys;
-        for (ys = 0; ys < line_height; ++ys) {
+        for (ys = 0; ys < rendered_line->h; ++ys) {
             int yi = ys + y_offset;
             if (yi >= image.height) {
                 lost_lines++;
                 break;
-            } else if (yi < 0) {
+            }
+            else if (yi < 0) {
                 continue;
             }
-            for (xs = 0; xs < rendered_line->w; ++xs) {
+            int begin_xs((x_offset >= 0) ? 0 : -x_offset);
+            int end_xs((rendered_line->w < image.width - x_offset) ? rendered_line->w : image.width - x_offset);
+            for (xs = begin_xs; xs < end_xs; ++xs) {
 #ifdef TEXT_SAFE_SURFACE
                 image.flipped_pixels[yi][xs + x_offset].a = (((Uint32*)compatible->pixels)[(ys*jump + xs)]);
 #else
                 if (_smooth) {
-                    image.flipped_pixels[yi][xs + x_offset].a =(((Uint8*)rendered_line->pixels)[(ys*jump + xs)]);
+                    image.flipped_pixels[yi][xs + x_offset].a = (((Uint8*)rendered_line->pixels)[(ys*jump + xs)]);
                 }
                 else {
                     image.flipped_pixels[yi][xs + x_offset].a = (((Uint8*)rendered_line->pixels)[(ys*jump + xs)]) ? 255 : 0;
