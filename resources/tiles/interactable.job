@@ -1,7 +1,13 @@
+interactable/boat/center
+interactable/boat/left
+interactable/boat/right
 interactable/crate/bananas
 interactable/crate/empty
 interactable/crate/oranges
 interactable/crate/pineapples
+interactable/plants/bananas_tree
+interactable/plants/orange_tree
+interactable/plants/pineapples
 interactable/treasure/closed
 interactable/treasure/open
 interactable/vines/cut/1

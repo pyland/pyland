@@ -1,3 +1,15 @@
+gui/clouds/1
+gui/clouds/2
+gui/clouds/3
+gui/clouds/4
+gui/clouds/5
+gui/clouds/6
+gui/clouds/7
+gui/clouds/8
+gui/clouds/9
 gui/highlight/goal
 gui/highlight/goal_selected
 gui/highlight/selected_object
+gui/status/failed
+gui/status/running
+gui/status/stationary
