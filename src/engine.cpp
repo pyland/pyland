@@ -205,9 +205,6 @@ void Engine::text_displayer() {
         if (sprite->get_object_text()) {
             sprite->get_object_text()->display();
         }
-        if (sprite->get_status_text()) {
-            sprite->get_status_text()->display();
-        }
     }
 }
 
@@ -224,11 +221,6 @@ void Engine::text_updater() {
         sprite->get_object_text()->move(
             pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
             pixel_position.y
-        );
-
-        sprite->get_status_text()->move(
-            pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
-            pixel_position.y + int(Engine::get_actual_tile_size() / 1.0f)
         );
     }
 

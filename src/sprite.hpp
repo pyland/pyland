@@ -30,7 +30,7 @@ protected:
     ///
     /// The status text for the object
     ///
-    Text *status_text = nullptr;
+    int status_icon_id;
 
     ///
     /// status of sprite
@@ -100,18 +100,6 @@ public:
     /// @param _object_text the object's text
     ///
     void set_object_text(Text* _object_text) {object_text = _object_text; }
-
-    ///
-    /// Get the object's status text
-    /// @return the object's status text
-    ///
-    Text* get_status_text() { return status_text; }
-
-    ///
-    /// Set the object's status text
-    /// @param _status_text the object's status text
-    ///
-    void set_status_text(Text* _status_text) {status_text = _status_text; }
 
     ///
     /// add map_object to sprites inventory

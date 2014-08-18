@@ -27,6 +27,10 @@
 #include "walkability.hpp"
 
 
+glm::vec2 pos_to_status (glm::vec2 position) {
+    return glm::vec2(position.x, position.y + 1.0);
+}
+
 Sprite::Sprite(glm::ivec2 position,
                std::string name,
                Walkability walkability,
@@ -35,8 +39,6 @@ Sprite::Sprite(glm::ivec2 position,
 
     MapObject(position, name, walkability, sheet_id, sheet_name),
     is_focus(false) {
-
-        auto map_viewer(Engine::get_map_viewer());
 
         // Setting up sprite text
         TextFont myfont = Engine::get_game_font();
@@ -50,15 +52,12 @@ Sprite::Sprite(glm::ivec2 position,
         object_text->align_at_origin(true);
         object_text->vertical_align_top();
 
-
-        status_text = new Text(map_viewer->get_window(), myfont, true);
-        status_text->set_bloom_radius(5);
-        status_text->set_text("awaiting...");
-        status_text->resize(100,100);
-
-        status_text->align_centre();
-        status_text->align_at_origin(true);
-        status_text->vertical_align_bottom();
+        std::shared_ptr<MapObject> status_icon = std::make_shared<MapObject>(pos_to_status(position), "status icon", Walkability::WALKABLE, 14, "../resources/tiles/gui.png");
+        status_icon->set_render_above_sprites(true);
+        ObjectManager::get_instance().add_object(status_icon);
+        status_icon_id = status_icon->get_id();
+        LOG(INFO) << "created focus icon with id: " << status_icon_id;
+        Engine::get_map_viewer()->get_map()->add_map_object(status_icon_id);
 
         // TODO: Starting positions should be integral as of currently. Check or fix.
         //
@@ -71,7 +70,9 @@ Sprite::Sprite(glm::ivec2 position,
 
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
-        std::shared_ptr<MapObject> focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 96);
+        // this is hack and wants to use string to pair instead
+        std::shared_ptr<MapObject> focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 11, "../resources/tiles/gui.png");
+        focus_icon->set_render_above_sprites(false);
         ObjectManager::get_instance().add_object(focus_icon);
         focus_icon_id = focus_icon->get_id();
         LOG(INFO) << "created focus icon with id: " << focus_icon_id;
@@ -84,7 +85,7 @@ Sprite::~Sprite() {
     ObjectManager::get_instance().remove_object(focus_icon_id);
     // TODO: Smart pointers
     delete object_text;
-    delete status_text;
+    ObjectManager::get_instance().remove_object(status_icon_id);
     LOG(INFO) << "Sprite destructed";
 }
 
@@ -219,6 +220,13 @@ void Sprite::set_position(glm::vec2 position) {
         return;
     }
     focus_icon->set_position(position);
+
+    auto status_icon = ObjectManager::get_instance().get_object<MapObject>(status_icon_id);
+    if (!status_icon) {
+        LOG(ERROR) << "Object manager no longer has status_icon";
+        return;
+    }
+    status_icon->set_position(pos_to_status(position));
 }
 
 bool Sprite::remove_from_inventory(int old_object) {
@@ -253,7 +261,32 @@ Sprite_Status Sprite::string_to_status(std::string status) {
 
 void Sprite::set_sprite_status(std::string _sprite_status) {
     sprite_status = string_to_status(_sprite_status);
-    status_text->set_text(_sprite_status);
+
+    auto status_icon = ObjectManager::get_instance().get_object<MapObject>(status_icon_id);
+    if (!status_icon) {
+        LOG(ERROR) << "Object manager no longer has status_icon";
+        return;
+    }
+
+    switch (sprite_status) {
+
+        case (Sprite_Status::NOTHING): 
+        case (Sprite_Status::KILLED):
+        case (Sprite_Status::STOPPED): 
+        status_icon->set_sheet_id(14);
+        break;
+
+        case (Sprite_Status::RUNNING):
+        status_icon->set_sheet_id(13);
+        break;
+
+        case (Sprite_Status::FAILED):
+        // TODO: stopping should also be here
+        status_icon->set_sheet_id(12);
+        break;
+    }
+
+    
 }
 
 void Sprite::set_focus(bool _is_focus) {
