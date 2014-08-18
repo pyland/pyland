@@ -81,7 +81,7 @@ void MapLoader::load_layers() {
 // TODO (Joshua): Make code not terrible
 std::pair<FML, std::vector<ObjectProperties>> MapLoader::get_object_mapping() {
     std::vector<ObjectProperties> object_properties_mapping;
-    std::map<std::string, std::string> named_tiles_mapping;
+    auto named_tiles_mapping(std::make_shared<std::map<std::string, std::string>>());
 
     for (int i = 0; i < map.GetNumObjectGroups(); ++i) {
         // Get an object group: effecitively a map layer but just for objects
@@ -114,7 +114,7 @@ std::pair<FML, std::vector<ObjectProperties>> MapLoader::get_object_mapping() {
             });
 
             auto fullname(object_group->GetName() + "/" + object->GetName());
-            named_tiles_mapping[fullname] = std::to_string(object_properties_mapping.size()-1);
+            (*named_tiles_mapping)[fullname] = std::to_string(object_properties_mapping.size()-1);
         }
     }
 
