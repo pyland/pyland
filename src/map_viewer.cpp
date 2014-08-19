@@ -500,12 +500,10 @@ float MapViewer::get_display_height() {
 
 float MapViewer::get_display_x() {
     // Must be to nearest pixel for render accuracy
-    return std::trunc(map_display_x * Engine::get_actual_tile_size()) /
-           Engine::get_actual_tile_size();
+    return map_display_x;
 }
 
 float MapViewer::get_display_y() {
     // Must be to nearest pixel for render accuracy
-    return std::trunc(map_display_y * Engine::get_actual_tile_size()) /
-           Engine::get_actual_tile_size();
+    return map_display_y;
 }

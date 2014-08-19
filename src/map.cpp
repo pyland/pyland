@@ -419,7 +419,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
                 // The tile is not blank, so set its x, y.
                 vx1 = float(x);
                 vy1 = float(y);
-                vx2 = float(x + 1);
+                vx2 = float(x + 1.001);
                 vy2 = float(y + 1.001);
             }
 
