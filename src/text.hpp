@@ -167,7 +167,7 @@ public:
         RenderException(const char  *message);
         RenderException(const std::string &message);
     };
-    
+
     Text(GameWindow* window, TextFont font, bool smooth = false);
     ~Text();
 
@@ -201,7 +201,7 @@ public:
     /// If there is too much text, this can be larger the the text area.
     ///
     std::pair<float,float> get_text_size_ratio();
-    
+
     ///
     /// Gets the size of the text area.
     ///
@@ -227,7 +227,7 @@ public:
     /// This is the position set for the text area (by move method).
     ///
     std::pair<float,float> get_origin_ratio();
-    
+
     ///
     /// Gets the top-left corner of the text area.
     ///

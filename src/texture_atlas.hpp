@@ -138,7 +138,18 @@ private:
     /// Any reshaping due to GL texture sizes is undone.
     ///
     void reset_layout();
-    
+
+    ///
+    /// Map of all known tile names to their tileset's name,
+    /// pre-generated from the job files.
+    ///
+    static std::map<std::string, std::string> global_name_to_tileset;
+
+    ///
+    /// When false, we still need to read values from the FML file.
+    ///
+    static bool global_name_to_tileset_initialized;
+
 public:
     ///
     /// Represents a failure when loading the texture atlas.
@@ -162,6 +173,12 @@ public:
     ///                and share a common texture.
     ///
     static void merge(const std::vector<std::shared_ptr<TextureAtlas>> &atlases);
+
+    ///
+    /// Map of all known tile names to their tileset's name,
+    /// pre-generated from the job files.   
+    ///
+    static std::map<std::string, std::string> const &names_to_tilesets();
 
     ///
     /// Load a texture from a given file path.

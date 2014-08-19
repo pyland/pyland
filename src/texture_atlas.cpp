@@ -30,6 +30,20 @@ extern "C" {
 
 
 
+bool TextureAtlas::global_name_to_tileset_initialized = false;
+std::map<std::string, std::string> TextureAtlas::global_name_to_tileset;
+
+std::map<std::string, std::string> const &TextureAtlas::names_to_tilesets() {
+    if (!global_name_to_tileset_initialized) {
+        std::ifstream input("../resources/tiles/associated_texture_atlas.fml");
+        fml::from_stream(input, global_name_to_tileset);
+
+        global_name_to_tileset_initialized = true;
+    }
+
+    return global_name_to_tileset;
+}
+
 // std::map<GraphicsContext*, std::shared_ptr<ResourceCache<TextureAtlas>>> TextureAtlas::atlas_caches;
 
 
