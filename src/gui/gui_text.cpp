@@ -12,7 +12,6 @@ GUIText::~GUIText() {
 
 std::vector<std::pair<GLfloat*, int>> GUIText::generate_vertex_data() {
     std::vector<std::pair<GLfloat*, int>> empty_data;
-    std::cout << " TET " << get_x_offset_pixels() << " " << get_y_offset_pixels();
     return empty_data;
 }
 

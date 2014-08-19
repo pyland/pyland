@@ -88,13 +88,8 @@ int main(int argc, const char *argv[]) {
     //    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
 
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont buttonfont(buttontype, 10);
-
-    std::shared_ptr<Text> test = std::make_shared<Text>(&window, buttonfont, true);
-    test->move(30, 30);
-    test->resize(300,300);
-    test->set_text("Stop");
+    Typeface buttontype = Engine::get_game_typeface();
+    TextFont buttonfont = Engine::get_game_font();
     
     std::shared_ptr<Text> stoptext = std::make_shared<Text>(&window, buttonfont, true);
     std::shared_ptr<Text> runtext = std::make_shared<Text>(&window, buttonfont, true);
@@ -105,8 +100,6 @@ int main(int argc, const char *argv[]) {
     stoptext->move(0,30);
 
 
-    stoptext->resize(300, 300);
-    runtext->resize(300, 300);
     stoptext->set_text("Stop");
     runtext->set_text("Run");
 
@@ -117,8 +110,6 @@ int main(int argc, const char *argv[]) {
     EventManager &em = EventManager::get_instance();
 
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
-    sprite_window->set_width_pixels(300);
-    sprite_window->set_height_pixels(300);
     sprite_window->set_visible(false);
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
     run_button->set_text(runtext);
@@ -152,7 +143,7 @@ int main(int argc, const char *argv[]) {
     auto original_window_size = window.get_size();
     sprite_window->set_width_pixels(original_window_size.first);
     sprite_window->set_height_pixels(original_window_size.second);
-
+    std::cout <<" spri" << sprite_window->get_width_pixels() << std::endl;
     gui_manager.parse_components();
 
     //The GUI resize function
@@ -322,7 +313,6 @@ int main(int argc, const char *argv[]) {
 
             VLOG(3) << "} EM | RM {";
             Engine::get_map_viewer()->render();
-
             VLOG(3) << "} RM | TD {";
             Engine::text_displayer();
             challenge_data->notification_bar->text_displayer();
