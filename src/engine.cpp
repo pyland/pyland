@@ -232,9 +232,9 @@ void Engine::update_status(int id, std::string status) {
 }
 
 TextFont Engine::get_game_font() {
-    return TextFont(get_game_typeface(), 20);
+    return TextFont(get_game_typeface(), 19);
 }
 
 Typeface Engine::get_game_typeface() {
-    return Typeface("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    return Typeface("../fonts/Ubuntu-R.ttf");
 }

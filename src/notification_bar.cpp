@@ -21,7 +21,6 @@ std::pair<float,float> backward_loco(0.85f,0.05f);
 std::pair<float,float> forward_loco(0.95f,0.05f);
 
 int text_border_width = 20;
-int text_height = 80;
 
 NotificationBar::NotificationBar() {
 
@@ -64,24 +63,24 @@ NotificationBar::NotificationBar() {
     // button text as Button::set_text() don't currently work
     backward_text.reset(new Text(window, notification_buttonfont, true));
     backward_text->set_text("<-");
-    backward_text->set_bloom_radius(2);
+    backward_text->set_bloom_radius(6);
     backward_text->move_ratio(backward_loco.first, backward_loco.second);
     backward_text->resize_ratio(button_size,button_size);
 
     forward_text.reset(new Text(window, notification_buttonfont, true));
-    forward_text->set_bloom_radius(2);
+    forward_text->set_bloom_radius(6);
     forward_text->set_text("->");
     forward_text->move_ratio(forward_loco.first,forward_loco.second);
     forward_text->resize_ratio(button_size,button_size);
 
     // text object for notifications
     notification_text = new Text(window, Engine::get_game_font(), true);
-    notification_text->set_bloom_radius(2);
+    notification_text->set_bloom_radius(6);
     notification_text->set_text("Welcome to Project Zygote");
     // referring to top left corner of text window
     notification_text->move(text_border_width, text_border_width);
     auto window_size = window->get_size();
-    notification_text->resize(window_size.first-text_border_width, text_height + text_border_width);
+    notification_text->resize(window_size.first-text_border_width, 0);
     notification_text->align_at_origin(true);
     notification_text->align_left();
     notification_text->vertical_align_bottom();
@@ -90,7 +89,7 @@ NotificationBar::NotificationBar() {
     std::function<void (GameWindow *)> func = [&] (GameWindow *game_window) {
         LOG(INFO) << "text window resizing";
         auto window_size = (*game_window).get_size();
-        notification_text->resize(window_size.first-text_border_width, text_height + text_border_width);
+        notification_text->resize(window_size.first-text_border_width, 0);
     };
 
     text_box = (window->register_resize_handler(func));

@@ -52,7 +52,7 @@ MapViewer::MapViewer(GameWindow *window, GUIManager *gui_manager):
         // Disable writing to the alpha channel.
         // Fixes a bug where EGL layer becomes transparent.
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
-        // L./eave this here!!!
+        // Leave this here!!!
         //Disable back face culling.
         glDisable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);

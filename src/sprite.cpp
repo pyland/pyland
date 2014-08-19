@@ -28,7 +28,7 @@
 
 
 glm::vec2 pos_to_status (glm::vec2 position) {
-    return glm::vec2(position.x, position.y + 1.0);
+    return glm::vec2(position.x + 0.05, position.y + 0.75);
 }
 
 Sprite::Sprite(glm::ivec2 position,
