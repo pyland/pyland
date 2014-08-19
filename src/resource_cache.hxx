@@ -5,15 +5,14 @@
 //      When inserting into the map (pair?). This doesn't do any harm,
 //      it's just weird.
 
-#include <map>
+#include <exception>
+#include <glog/logging.h>
 #include <memory>
+#include <ostream>
 #include <utility>
 #include <string>
 
-#include "resource_cache.hpp"
-#include "cacheable_resource.hpp"
-#include "graphics_context.hpp"
-
+class GraphicsContext;
 
 
 template<typename Res>
@@ -43,7 +42,7 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
             resource->resource_cache = weak_this;
             return resource;
         }
-        catch (std::exception e) {
+        catch (std::exception &e) {
             LOG(ERROR) << "Error creating shared resource \"" << resource_name << "\": " << e.what();
             throw e;
         }
@@ -52,7 +51,7 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
         // Get from cache.
         std::shared_ptr<Res> resource = resources.find(resource_name)->second.lock();
         // resource->resource_cache = weak_this;
-        
+
         // Some say we should check the pointer, but we don't keep dead
         // weak pointers lying around for us to care about.
         return resource;

@@ -1,12 +1,14 @@
 #include "python_embed_headers.hpp"
 
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/python.hpp>
+#include <boost/ref.hpp>
 #include <future>
 #include <glog/logging.h>
 #include <glm/vec2.hpp>
 #include <thread>
 
+#include "api.hpp"
 #include "entitythread.hpp"
 #include "event_manager.hpp"
 #include "interpreter_context.hpp"
@@ -120,7 +122,7 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
             }
             else if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::KILL], type)) {
                 // We are done.
-                LOG(ERROR) << "DIEDIEDIE";
+                LOG(INFO) << "Thread is killed";
                 return;
             }
             else {

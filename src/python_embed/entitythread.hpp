@@ -6,12 +6,12 @@
 #include <future>
 #include <map>
 #include <thread>
-#include "api.hpp"
 #include "dispatcher.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
 
 class Interpreter;
+class Entity;
 class EntityThread;
 
 using EntityThreads = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
@@ -63,11 +63,11 @@ class EntityThread {
         ///
         PyObject *make_base_async_exception(PyObject *base, const char *name);
 
-        /// 
+        ///
         /// Reference to API's wrapped Entity.
         ///
         /// API calls are passed through to this object.
-        /// 
+        ///
         Entity &entity;
 
         ///
@@ -92,13 +92,13 @@ class EntityThread {
         ///
         InterpreterContext interpreter_context;
 
-        /// 
+        ///
         /// Python's nonstandard interpretation of the thread's ID.
         /// Might not be set at any point, so usage of get_thread_id
         /// is recommended even for internal usage.
         ///
-        /// Used to send asynchronous exceptions to threads. 
-        /// 
+        /// Used to send asynchronous exceptions to threads.
+        ///
         long thread_id;
 
         ///

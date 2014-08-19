@@ -1,19 +1,12 @@
-#include <new>
-#include <glog/logging.h>
-#include <iostream>
+#include <algorithm>
 #include <fstream>
-#include <memory>
-
-//Include GLM
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
+#include <glog/logging.h>
 #include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#include <iterator>
+#include <memory>
+#include <new>
+#include <tuple>
+#include <utility>
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -24,18 +17,15 @@
 #include <GL/gl.h>
 #endif
 
-#include "interpreter.hpp"
-#include "image.hpp"
 #include "engine.hpp"
-#include "entitythread.hpp"
 #include "map_viewer.hpp"
-#include "make_unique.hpp"
-#include "renderable_component.hpp"
-#include "sprite.hpp"
-#include "object.hpp"
 #include "object_manager.hpp"
+#include "sprite.hpp"
+#include "text.hpp"
+#include "text_font.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
+
 
 Sprite::Sprite(glm::ivec2 position,
                std::string name,
@@ -43,32 +33,32 @@ Sprite::Sprite(glm::ivec2 position,
                int sheet_id,
                std::string sheet_name):
 
-    MapObject(position, name, walkability, sheet_id, sheet_name) {
+    MapObject(position, name, walkability, sheet_id, sheet_name),
+    is_focus(false) {
+
         auto map_viewer(Engine::get_map_viewer());
 
         // Setting up sprite text
         TextFont myfont = Engine::get_game_font();
 
-        // TODO: Smart pointer
         object_text = new Text(Engine::get_map_viewer()->get_window(), myfont, true);
+        object_text->set_bloom_radius(6);
         object_text->set_text(name);
-        glm::ivec2 pixel_position(map_viewer->tile_to_pixel(position));
-        object_text->move(pixel_position.x, pixel_position.y);
-
         object_text->resize(100,100);
+
         object_text->align_centre();
         object_text->align_at_origin(true);
-        LOG(INFO) << "Setting up text at " << pixel_position.x << ", " << pixel_position.y;
+        object_text->vertical_align_top();
 
-        // setting up status text
+
         status_text = new Text(map_viewer->get_window(), myfont, true);
+        status_text->set_bloom_radius(5);
         status_text->set_text("awaiting...");
-        glm::ivec2 pixel_text(map_viewer->tile_to_pixel(position));
-        status_text->move(pixel_text.x, pixel_text.y + 100);
-
         status_text->resize(100,100);
+
         status_text->align_centre();
         status_text->align_at_origin(true);
+        status_text->vertical_align_bottom();
 
         // TODO: Starting positions should be integral as of currently. Check or fix.
         //
@@ -113,12 +103,10 @@ void Sprite::set_state_on_moving_finish() {
 }
 
 void Sprite::generate_tex_data() {
-  
     //holds the texture data
     //need 12 float for the 2D texture coordinates
     int num_dimensions = 2;
     int num_floats = num_dimensions*6;
-
 
     GLfloat* sprite_tex_data = nullptr;
     try {
@@ -128,7 +116,6 @@ void Sprite::generate_tex_data() {
         LOG(ERROR) << "ERROR in Sprite::generate_tex_data(), cannot allocate memory";
         return;
     }
-
 
     std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(sheet_id);
 
@@ -158,7 +145,7 @@ void Sprite::generate_tex_data() {
     sprite_tex_data[11] = std::get<2>(bounds);
 
     renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
-} 
+}
 
 void Sprite::generate_vertex_data() {
     //holds the sprite vertex data
@@ -178,30 +165,28 @@ void Sprite::generate_vertex_data() {
         return;
     }
 
-    float scale =  float(Engine::get_tile_size()) * Engine::get_global_scale();
-
-    //bottom left 
-    sprite_data[0] = 0;
-    sprite_data[1] = 0;
+    //bottom left
+    sprite_data[0]  = 0;
+    sprite_data[1]  = 0;
 
     //top left
-    sprite_data[2] = 0;
-    sprite_data[3] = scale;
+    sprite_data[2]  = 0;
+    sprite_data[3]  = 1;
 
     //bottom right
-    sprite_data[4] = scale;
-    sprite_data[5] = 0;
+    sprite_data[4]  = 1;
+    sprite_data[5]  = 0;
 
     //top left
-    sprite_data[6] = 0;
-    sprite_data[7] = scale;
+    sprite_data[6]  = 0;
+    sprite_data[7]  = 1;
 
     //top right
-    sprite_data[8] = scale;
-    sprite_data[9] = scale;
+    sprite_data[8]  = 1;
+    sprite_data[9]  = 1;
 
     //bottom right
-    sprite_data[10] = scale;
+    sprite_data[10] = 1;
     sprite_data[11] = 0;
 
     renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
@@ -210,7 +195,7 @@ void Sprite::generate_vertex_data() {
 
 void Sprite::add_to_inventory(int new_object_id) {
     LOG(INFO) << "adding item to sprites inventory";
-        
+
     auto new_object = ObjectManager::get_instance().get_object<MapObject>(new_object_id);
     if (!new_object) {
         LOG(ERROR) << "Object manager no longer has focus_icon";

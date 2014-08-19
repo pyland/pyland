@@ -63,5 +63,5 @@ void Notification::update_flags() {
 
 void Notification::clear() {
     message_stack.clear();
-    stack_iterator == std::end(message_stack);
+    stack_iterator = std::end(message_stack);
 }

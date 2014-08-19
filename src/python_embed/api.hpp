@@ -1,11 +1,11 @@
 #ifndef API_H
 #define API_H
 
-#include "python_embed_headers.hpp"
+#include <boost/python/base_type_traits.hpp>
+#include <boost/python/object_core.hpp>
+#include <stdint.h>
 
-#include <boost/python.hpp>
 #include <glm/vec2.hpp>
-#include <ostream>
 #include <string>
 
 namespace py = boost::python;

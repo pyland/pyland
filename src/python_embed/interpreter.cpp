@@ -8,7 +8,7 @@
 #include <glm/vec2.hpp>
 #include <mutex>
 #include <string>
-#include "api.hpp"
+
 #include "entitythread.hpp"
 #include "interpreter.hpp"
 #include "interpreter_context.hpp"
@@ -16,6 +16,7 @@
 #include "make_unique.hpp"
 #include "thread_killer.hpp"
 
+namespace py = boost::python;
 
 // Initialize unset.
 // WARNING: This is the only valid way to initialize this type.

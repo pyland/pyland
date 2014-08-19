@@ -35,6 +35,7 @@ class ObjectManager {
 
     ObjectManager() {};
     ~ObjectManager() {};
+
 public:
     ///
     /// Function to check if a given object id is valid

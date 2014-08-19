@@ -1,5 +1,7 @@
 #include <glog/logging.h>
+#include <map>
 #include <memory>
+#include <ostream>
 
 template <typename R>
 std::shared_ptr<R> ObjectManager::get_object(int object_id) {

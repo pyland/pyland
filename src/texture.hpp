@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 
 extern "C" {

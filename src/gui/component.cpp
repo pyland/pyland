@@ -1,6 +1,6 @@
-#include "component.hpp"
 #include <mutex>
-#include <vector>
+
+#include "component.hpp"
 
 int Component::get_new_id() {
     static int next_component_id = 0;
@@ -23,14 +23,14 @@ Component::Component(std::function<void (void)> on_click, float _width,
     clickable(false), on_click_func(on_click)
 {
     id =  get_new_id();
-]
+}
 
 Component::Component():
     parent(nullptr),
     vertex_data(nullptr),
     size_vertex_data(0),
-    size_texture_data(0),
     texture_data(nullptr),
+    size_texture_data(0),
     id(get_new_id()),
     width(0.0f),
     height(0.0f),
@@ -51,7 +51,9 @@ Component::~Component() {
     delete[] vertex_data;
     delete[] texture_data;
 }
-
+void Component::set_texture_atlas(std::shared_ptr<TextureAtlas> _texture_atlas) {
+    texture_atlas = _texture_atlas;
+}
 void Component::set_on_click(std::function<void (void)> func) {
     clickable = true;
     on_click_func= func;

@@ -1,32 +1,26 @@
 #ifndef CHALLENGE_H
 #define CHALLENGE_H
 
+#include <glm/vec2.hpp>
 #include <string>
+#include <vector>
 
-#include "challenge_data.hpp"
-#include "game_window.hpp"
-#include "gui_manager.hpp"
-#include "input_manager.hpp"
-#include "interpreter.hpp"
+#include "dispatcher.hpp"
 #include "lifeline.hpp"
-#include "map.hpp"
-#include "map_viewer.hpp"
-#include "notification_bar.hpp"
-#include "object_manager.hpp"
-#include "sprite.hpp"
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
+#include "walkability.hpp"
 
-class InputManager;
 class ChallengeData;
+class Map;
+
 
 class Challenge {
 protected:
     ChallengeData* challenge_data;
     Map* map;
     Lifeline esc_callback;
-    bool run_challenge;
+
+    Dispatcher<> event_finish;
+
     std::vector<int> sprite_ids;
     std::vector<int> map_object_ids;
 public:
@@ -58,7 +52,7 @@ public:
     ///
     /// Makes a map object and adds it to the object manager and the current map
     /// @return the sprite's id
-    ///    
+    ///
     int make_map_object(glm::vec2 position, std::string name, Walkability walkability, int sheet_id, std::string sheet_name);
 };
 

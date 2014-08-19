@@ -1,6 +1,7 @@
 #include <functional>
 #include <glm/vec2.hpp>
 #include <map>
+#include <utility>
 
 template <typename... Arguments>
 typename Dispatcher<Arguments...>::CallbackID
@@ -49,7 +50,7 @@ PositionDispatcher<Arguments...>::register_callback(glm::ivec2 tile, std::functi
 
 template <typename... Arguments>
 bool PositionDispatcher<Arguments...>::unregister(PositionDispatcher<Arguments...>::CallbackID callback) {
-    return callback_map[callback.first.x][callback.first.y].erase(callback.second);
+    return callback_map.at(callback.first.x).at(callback.first.y).erase(callback.second);
 }
 
 template <typename... Arguments>

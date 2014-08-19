@@ -1,12 +1,16 @@
 #include <glog/logging.h>
+#include <memory>
+#include <ostream>
 
+#include "button.hpp"
+#include "component_group.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
-#include "sprite_switcher.hpp"
+#include "gui_manager.hpp"
 #include "map.hpp"
 #include "map_viewer.hpp"
-#include "gui_window.hpp"
-#include "component_group.hpp"
+#include "sprite_switcher.hpp"
+
 
 float sprite_button_size = 0.05f;
 float button_space = 0.02f;

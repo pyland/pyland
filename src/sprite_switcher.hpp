@@ -1,7 +1,7 @@
 #ifndef SPRITE_SWITCHER_H
 #define SPRITE_SWITCHER_H
 
-#include "button.hpp"
+#include <vector>
 
 class SpriteSwitcher {
 private:

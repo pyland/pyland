@@ -1,23 +1,46 @@
+// Needed to prevent warnings despite not being used AFAIK
+#define GLM_FORCE_RADIANS
+
 #include <algorithm>
+#include <cmath>
 #include <glog/logging.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
-#include <map>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <memory>
+#include <ostream>
+#include <utility>
 #include <vector>
 
 #include "engine.hpp"
 #include "game_window.hpp"
-#include "gui/gui_manager.hpp"
+#include "gui_manager.hpp"
 #include "layer.hpp"
 #include "map.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "object.hpp"
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
+#include "shader.hpp"
 #include "sprite.hpp"
 
+extern "C" {
+#ifdef USE_GL
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#endif
 
-MapViewer::MapViewer(GameWindow *window, GUIManager* gui_manager):
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+}
+
+
+MapViewer::MapViewer(GameWindow *window, GUIManager *gui_manager):
     gui_manager(CHECK_NOTNULL(gui_manager)),
     window(CHECK_NOTNULL(window)) {
 
@@ -48,10 +71,6 @@ void MapViewer::resize() {
     LOG(INFO) << "Map resizing";
     std::pair<int, int> size(window->get_size());
 
-    // Adjust the view to show only tiles the user can see
-    set_display_width (float(size.first)  / Engine::get_actual_tile_size());
-    set_display_height(float(size.second) / Engine::get_actual_tile_size());
-
     // Set the viewable fragments
     glScissor(0, 0, size.first, size.second);
     glViewport(0, 0, size.first, size.second);
@@ -74,52 +93,55 @@ void MapViewer::render() {
 }
 
 void MapViewer::render_map() {
-    //Focus onto the player
+    // Focus onto the player
     refocus_map();
-    //Calculate the projection and modelview matrix for the map
-    std::pair<int, int> size = window->get_size();
-    glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 translate = glm::vec3(-get_display_x()*32.0f, -get_display_y()*32.0f, 0.0f);
-    glm::mat4 translated = glm::translate(model, translate);
+    // Calculate the projection and modelview matrix for the map
+    std::pair<int, int> size(window->get_size());
+    glm::mat4 projection_matrix(glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f));
 
-    //Draw all the layers, from base to top to get the correct draw order
+    glm::mat4 model(glm::mat4(1.0f));
+    model = glm::scale    (model, glm::vec3(Engine::get_actual_tile_size()));
+    model = glm::translate(model, glm::vec3(-get_display_x(), -get_display_y(), 0.0f));
+
+    // Draw all the layers, from base to top to get the correct draw order
     int layer_num = 0;
-    for(int layer_id: map->get_layers()) {
-        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
-        if(!layer) 
+    for (int layer_id: map->get_layers()) {
+        auto layer(ObjectManager::get_instance().get_object<Layer>(layer_id));
+        if (!layer) {
             continue;
+        }
 
-        if(!layer->is_renderable())
+        if (!layer->is_renderable()) {
             continue;
+        }
 
-        RenderableComponent* layer_render_component = layer->get_renderable_component();
-        Shader* layer_shader = layer_render_component->get_shader().get();
+        RenderableComponent *layer_render_component(layer->get_renderable_component());
+        Shader *layer_shader(layer_render_component->get_shader().get());
 
         //Set the matrices
         layer_render_component->set_projection_matrix(projection_matrix);
-        layer_render_component->set_modelview_matrix(translated);
+        layer_render_component->set_modelview_matrix(model);
 
         layer_render_component->bind_shader();
 
         //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
-        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(layer_render_component->get_projection_matrix()));
-        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(layer_render_component->get_modelview_matrix()));
+        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_projection"),
+                           1,
+                           GL_FALSE,
+                           glm::value_ptr(layer_render_component->get_projection_matrix()));
+
+        glUniformMatrix4fv(glGetUniformLocation(layer_shader->get_program(), "mat_modelview"),
+                           1,
+                           GL_FALSE,
+                           glm::value_ptr(layer_render_component->get_modelview_matrix()));
 
 
         layer_render_component->bind_vbos();
 
         layer_render_component->bind_textures();
 
-        //Calculate the offsets for drawing
-        //maps are built left to right, bottom to top
-        //        int offset = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x(), 0);
-
-         //      int length = map->get_tile_texture_vbo_offset(layer_num, map->get_display_x()+map->get_display_width() -1, 0);
-         //    glDrawArrays(GL_TRIANGLES, offset, (length -offset) / 2); // no of vetices, divide by 2 dimenions
-
         glDrawArrays(GL_TRIANGLES, 0, layer_render_component->get_num_vertices_render());
-        //        std::cout <<" OOF " << offset << " " << length << std::endl;
+
         //Release the vertex buffers and texppptures
         layer_render_component->release_textures();
         layer_render_component->release_vbos();
@@ -138,27 +160,32 @@ void MapViewer::render_sprites() {
     //Draw the sprites
     const std::vector<int>& sprites = map->get_sprites();
     ObjectManager& object_manager = ObjectManager::get_instance();
-    for(auto it = sprites.begin(); it != sprites.end(); ++it) {
-        if(*it != 0) {
+    for (auto it = sprites.begin(); it != sprites.end(); ++it) {
+        if (*it != 0) {
             std::shared_ptr<Sprite> sprite = object_manager.get_object<Sprite>(*it);
 
-            if(!sprite) 
+            if (!sprite) {
                 continue;
+            }
 
-            if(!sprite->is_renderable())
+            if (!sprite->is_renderable()) {
                 continue;
+            }
 
             RenderableComponent* sprite_render_component = sprite->get_renderable_component();
 
             //Move sprite to the required position
-            glm::mat4 model1 = glm::mat4(1.0f);
-            glm::vec3 translate1(
-                32.0f * (sprite->get_position().x - get_display_x()),
-                32.0f * (sprite->get_position().y - get_display_y()),
-                 0.0f
+            glm::vec3 translator(
+                sprite->get_position().x - get_display_x(),
+                sprite->get_position().y - get_display_y(),
+                0.0f
             );
-            glm::mat4 translated1 = glm::translate(model1, translate1);
-            sprite_render_component->set_modelview_matrix(translated1);
+
+            glm::mat4 model(glm::mat4(1.0f));
+            model = glm::scale    (model, glm::vec3(Engine::get_actual_tile_size()));
+            model = glm::translate(model, translator);
+
+            sprite_render_component->set_modelview_matrix(model);
             sprite_render_component->set_projection_matrix(projection_matrix);
 
             sprite_render_component->bind_shader();
@@ -200,7 +227,7 @@ void MapViewer::render_objects(bool above_sprite) {
             if(!object)
                 continue;
 
-            //If we can't render the object 
+            //If we can't render the object
             if(!object->is_renderable())
                 continue;
 
@@ -210,14 +237,17 @@ void MapViewer::render_objects(bool above_sprite) {
             RenderableComponent* object_render_component = object->get_renderable_component();
 
             //Move object to the required position
-            glm::mat4 model1 = glm::mat4(1.0f);
-            glm::vec3 translate1(
-                32.0f * (object->get_position().x - get_display_x()),
-                32.0f * (object->get_position().y - get_display_y()),
-                 0.0f
+            glm::vec3 translator(
+                object->get_position().x - get_display_x(),
+                object->get_position().y - get_display_y(),
+                0.0f
             );
-            glm::mat4 translated1 = glm::translate(model1, translate1);
-            object_render_component->set_modelview_matrix(translated1);
+
+            glm::mat4 model(glm::mat4(1.0f));
+            model = glm::scale    (model, glm::vec3(Engine::get_actual_tile_size()));
+            model = glm::translate(model, translator);
+
+            object_render_component->set_modelview_matrix(model);
             object_render_component->set_projection_matrix(projection_matrix);
 
             object_render_component->bind_shader();
@@ -403,7 +433,7 @@ void MapViewer::set_map(Map* new_map) {
     map_focus_object = 0;
     map_display_x = 0.0f;
     map_display_y = 0.0f;
-    
+
     //Resize the map display
     resize();
 }
@@ -457,4 +487,24 @@ glm::ivec2 MapViewer::tile_to_pixel(glm::vec2 tile_location) {
 
     // Screen offset is reduced by the offset of the display
     return (tile_location - display_position) * scale;
+}
+
+float MapViewer::get_display_width() {
+    return float(window->get_size().first) / Engine::get_actual_tile_size();
+}
+
+float MapViewer::get_display_height() {
+    return float(window->get_size().second) / Engine::get_actual_tile_size();
+}
+
+float MapViewer::get_display_x() {
+    // Must be to nearest pixel for render accuracy
+    return std::trunc(map_display_x * Engine::get_actual_tile_size()) /
+           Engine::get_actual_tile_size();
+}
+
+float MapViewer::get_display_y() {
+    // Must be to nearest pixel for render accuracy
+    return std::trunc(map_display_y * Engine::get_actual_tile_size()) /
+           Engine::get_actual_tile_size();
 }

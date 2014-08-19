@@ -2,8 +2,6 @@
 #define COMPONENT_H
 
 
-#include "gui_text.hpp"
-#include <cstddef>
 #include <exception>
 #include <functional>
 #include <map>
@@ -21,6 +19,8 @@
 #include <GL/gl.h>
 #endif
 
+class GUIText;
+class TextureAtlas;
 
 ///
 /// A GUI component that is the base class which all renderable
@@ -67,7 +67,7 @@ protected:
     /// Width of the component relative to the parent
     ///
     float width;
-    
+
     ///
     /// Height of the component relative to the parent
     ///
@@ -113,12 +113,17 @@ protected:
     /// The lambda function that is called when the button is clicked
     ///
     std::function<void (void)> on_click_func;
-    
+
     ///
     /// Get the next unique identifier for the component - starting at 1.
     ///
     int get_new_id();
 
+
+    ///
+    /// The texture atlas being used for this GUI - 
+    /// 
+    std::shared_ptr<TextureAtlas> texture_atlas;
 public:
     Component();
     Component(std::function<void (void)> on_click, float _width, float _height, float _xo_offset, float _y_offset);
@@ -149,7 +154,7 @@ public:
     /// Get the map listing all the components of the group.
     /// This returns an empty map for Component.
     /// @return a reference to a constant map object
-    /// 
+    ///
     virtual const std::map<int, std::shared_ptr<Component>>& get_components();
 
 
@@ -159,12 +164,12 @@ public:
     /// @return if the function registered correctly
     ///
     void set_on_click(std::function<void (void)> func);
-    
+
     ///
     /// Call the component's on click function
     ///
     void call_on_click() { on_click_func(); }
-    
+
     ///
     /// Clear the handler - replaces with a void lambda that does nothing
     ///
@@ -218,7 +223,7 @@ public:
 
     ///
     /// Set the width of the component in pixels
-    /// @param pixels the width of the component 
+    /// @param pixels the width of the component
     ///
     void set_width_pixels(int pixels) { width_pixels = pixels; }
 
@@ -228,7 +233,7 @@ public:
     ///
     int get_width_pixels() { return width_pixels; }
 
-    /// 
+    ///
     /// Set the height of the component in pixels
     /// @pixels the height
     ///
@@ -282,7 +287,7 @@ public:
     /// @param pixels the offset
     ///
     int get_x_offset_pixels() { return x_offset_pixels; }
-    
+
     ///
     /// Set the y offset of the component in pixels, relative to its parent
     /// @param pixels set the offset of this component in pixels
@@ -294,7 +299,7 @@ public:
     /// @param pixels the offset
     ///
     int get_y_offset_pixels() { return y_offset_pixels; }
-    
+
 
     ///
     /// Set the x offset of the component relative to its parent
@@ -302,6 +307,11 @@ public:
     ///
     void set_x_offset(float _x_offset) { x_offset = _x_offset; }
 
+    ///
+    /// Set the texture atlas being used
+    /// @param _texture_atlas  the texture atlas
+    ///
+    void set_texture_atlas(std::shared_ptr<TextureAtlas> _texture_atlas);
 };
 
 class component_no_children_exception : public std::exception {

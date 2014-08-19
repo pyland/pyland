@@ -1,27 +1,16 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include <algorithm>
+#include <glm/vec2.hpp>
+#include <map>
+#include <string>
 #include <vector>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#include "image.hpp"
 #include "map.hpp"
 #include "map_object.hpp"
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
-#include "engine.hpp"
 #include "walkability.hpp"
 
+class Text;
 
 enum class Sprite_Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 
@@ -84,7 +73,7 @@ public:
            std::string name,
            Walkability walkability,
            int sheet_id,
-           std::string sheet_name="../resources/characters_1.png");
+           std::string sheet_name="../resources/characters_1_64.png");
 
     virtual ~Sprite();
 

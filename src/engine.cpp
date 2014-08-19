@@ -1,29 +1,34 @@
+#include <glog/logging.h>
 #include <algorithm>
 #include <cstdlib>
-#include <future>
-#include <glog/logging.h>
 #include <glm/vec2.hpp>
-#include <memory>
-#include <utility>
-#include <vector>
 #include <iostream>
+#include <iterator>
+#include <memory>
+#include <stdexcept>
+#include <thread>
+#include <vector>
 
+#include "dispatcher.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
 #include "gil_safe_future.hpp"
+#include "map.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "object.hpp"
+#include "notification_bar.hpp"
 #include "object_manager.hpp"
-#include "dispatcher.hpp"
+#include "gil_safe_future.hpp"
 #include "sprite.hpp"
+#include "text.hpp"
+
 
 ///Static variables
-Challenge* Engine::challenge(nullptr);
-MapViewer* Engine::map_viewer(nullptr);
-NotificationBar* Engine::notification_bar(nullptr);
-int Engine::tile_size(16);
-float Engine::global_scale(2.0f);
+MapViewer *Engine::map_viewer(nullptr);
+NotificationBar *Engine::notification_bar(nullptr);
+int Engine::tile_size(64);
+float Engine::global_scale(1.0f);
 
 
 
@@ -56,7 +61,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
     // Motion
     EventManager::get_instance().add_timed_event(
-        GameTime::duration(0.07),
+        GameTime::duration(0.14),
         [walk_succeeded_return, location, target, id] (float completion) mutable {
             auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             if (!sprite) { return false; }
@@ -217,13 +222,13 @@ void Engine::text_updater() {
         glm::ivec2 pixel_position(Engine::get_map_viewer()->tile_to_pixel(sprite->get_position()));
 
         sprite->get_object_text()->move(
-            pixel_position.x + int(Engine::get_actual_tile_size() * 0.5),
+            pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
             pixel_position.y
         );
 
         sprite->get_status_text()->move(
-            pixel_position.x + int(Engine::get_actual_tile_size() * 0.5),
-            pixel_position.y + int(Engine::get_actual_tile_size() * 1.5)
+            pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
+            pixel_position.y + int(Engine::get_actual_tile_size() / 1.0f)
         );
     }
 
@@ -235,7 +240,7 @@ void Engine::update_status(int id, std::string status) {
 }
 
 TextFont Engine::get_game_font() {
-    return TextFont(get_game_typeface(), 18);
+    return TextFont(get_game_typeface(), 20);
 }
 
 Typeface Engine::get_game_typeface() {

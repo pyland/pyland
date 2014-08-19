@@ -1,12 +1,13 @@
 #ifndef FML_H
 #define FML_H
 
-#include <boost/algorithm/string/predicate.hpp>
+// Fixes bug with lambdas for transform_iterator on older compilers
+#define BOOST_RESULT_OF_USE_DECLTYPE
+
 #include <boost/lexical_cast.hpp>
 #include <boost/iterator/transform_iterator.hpp>
+#include <functional>
 #include <istream>
-#include <iostream>
-#include <iterator>
 #include <map>
 #include <memory>
 #include <string>
@@ -34,7 +35,9 @@ class FML {
             StringMap::const_iterator
         >;
 
+        FML() = default;
         explicit FML(std::istream &input);
+        static FML unsafe_from_map(std::map<std::string, std::string> &input);
 
         bool valid();
 
@@ -51,6 +54,8 @@ class FML {
         const_iterator end  (std::string directory) const;
 
     private:
+        explicit FML(std::map<std::string, std::string> &input);
+
         const_iterator make_iter(StringMap::const_iterator mapiter, size_t chop=0) const;
 
         std::shared_ptr<StringMap> values;

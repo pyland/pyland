@@ -10,15 +10,14 @@
 #endif
 
 
-#include <iostream>
 std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     delete []vertex_data;
     int num_floats = 12;
-    
+
     vertex_data = new GLfloat[sizeof(GLfloat)*num_floats];
-    
+
     //Generate coordinates in our local object space
-    //bottom left 
+    //bottom left
     vertex_data[0] = 0;
     vertex_data[1] = 0;
 
@@ -48,6 +47,7 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     vertices.push_back(std::make_pair(vertex_data, num_floats));
     return vertices;
 }
+
 std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
     delete []texture_data;
     int num_floats = 12;
@@ -63,7 +63,7 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
 
     //top left
     texture_data[2]  = offset_x;// * GLfloat(4.0);
-    texture_data[3]  = 0.0f; 
+    texture_data[3]  = 0.0f;
 
     //bottom right
     texture_data[4]  = offset_x;// * GLfloat(5.0);

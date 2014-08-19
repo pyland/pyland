@@ -6,10 +6,9 @@
 #include "gui_text_data.hpp"
 #include "text.hpp"
 
-
-
 #include <functional>
 #include <memory>
+
 #include <string>
 #include <utility>
 #include <vector>
@@ -33,7 +32,16 @@ public:
 
     std::shared_ptr<Text> get_text();
 
-    std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data();
+    void set_text(std::shared_ptr<Text> );
+    void set_text(std::string);
+
+    int generate_vertex_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds);
+    int generate_texture_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds);
+
+    int generate_tile_element_vertex_coords(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds, float element_width, float element_height);
+    int generate_tile_element_texture_coords(GLfloat* data, int offset, std::tuple<float,float,float,float>vertex_bounds, float element_width, float element_height, std::tuple<float,float,float,float> texture_bounds);
+
+  std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data();
 
     std::vector<std::pair<GLfloat*, int>> generate_this_texture_data();
 

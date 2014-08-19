@@ -1,0 +1,14 @@
+interactable/crate/bananas: 0
+interactable/crate/empty: 1
+interactable/crate/oranges: 2
+interactable/crate/pineapples: 3
+interactable/treasure/closed: 4
+interactable/treasure/open: 5
+interactable/vines/cut/1: 6
+interactable/vines/cut/2: 7
+interactable/vines/cut/3: 8
+interactable/vines/cut/4: 9
+interactable/vines/grown/1: 10
+interactable/vines/grown/2: 11
+interactable/vines/grown/3: 12
+interactable/vines/grown/4: 13

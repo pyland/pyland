@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 
-#include "map.hpp"
 #include "renderable_component.hpp"
 
 

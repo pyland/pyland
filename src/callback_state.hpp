@@ -1,16 +1,18 @@
 #ifndef CALLBACKSTATE_H
 #define CALLBACKSTATE_H
 
+#include <glog/logging.h>
+#include <glm/vec2.hpp>
 #include <iostream>
+#include <memory>
 #include <vector>
-#include <string>
 
 #include "engine.hpp"
 #include "entitythread.hpp"
-#include "map.hpp"
 #include "map_viewer.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
+
 
 ///
 /// This class holds all the callback functions for user input
@@ -81,7 +83,6 @@ public:
     }
 
 private:
-
     std::vector<int> key_to_id;
 };
 

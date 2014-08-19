@@ -1,15 +1,13 @@
 #include <algorithm>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/iterator/transform_iterator.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
-#include <istream>
+#include <iostream>
 #include <iterator>
+#include <list>
 #include <map>
 #include <memory>
-#include <sstream>
 #include <string>
-#include <type_traits>
+#include <sys/types.h>
 #include <utility>
 #include <vector>
 
@@ -89,6 +87,12 @@ FML::FML(std::istream &input):
             }
         }
 }
+
+FML FML::unsafe_from_map(std::map<std::string, std::string> &mapping) { return FML(mapping); }
+FML::FML(std::map<std::string, std::string> &mapping):
+    values(std::make_shared<StringMap>(mapping)),
+    error(false)
+    {}
 
 bool FML::valid() {
     return !error;

@@ -6,8 +6,9 @@
 //      disabling this also works perfectly though, giving a
 //      performance boost by directly reading off the text.
 
-#include <cstring>
+#include <cmath>
 #include <cstdio>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -18,21 +19,22 @@
 extern "C" {
 #include <SDL2/SDL_ttf.h>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
 }
 
-#include "text_font.hpp"
+#include "callback.hpp"
+#include "game_window.hpp"
 #include "image.hpp"
 #include "shader.hpp"
 #include "text.hpp"
-#include "game_window.hpp"
-#include "callback.hpp"
+#include "text_font.hpp"
 
 
 
@@ -67,7 +69,7 @@ static void load_program(GameWindow* window) {
     std::shared_ptr<Shader> shader = shaders.find(window)->second;
     shader->bind_location_to_attribute(SHADER_LOCATION_POSITION, SHADER_VARIABLE_POSITION);
     shader->bind_location_to_attribute(SHADER_LOCATION_TEXTURE, SHADER_VARIABLE_TEXTURE);
-    shader->bind_location_to_attribute(SHADER_LOCATION_COLOUR, SHADER_VARIABLE_COLOUR);
+    // shader->bind_location_to_attribute(SHADER_LOCATION_COLOUR, SHADER_VARIABLE_COLOUR);
     shader->link();
 }
 
@@ -87,6 +89,7 @@ Text::Text(GameWindow* window, TextFont font, bool smooth):
     alignment_h(Text::Alignment::LEFT),
     alignment_v(Text::Alignment::TOP),
     smooth(smooth),
+    glow_radius(0),
     width(0),
     height(0),
     x(0),
@@ -96,7 +99,9 @@ Text::Text(GameWindow* window, TextFont font, bool smooth):
     font(font),
     window(window),
     resize_callback([this] (GameWindow*) {this->dirty_vbo = true;}) {
-        rgba[0] = rgba[1] = rgba[2] = rgba[3] = 1.0f;
+        rgba[0] = rgba[1] = rgba[2] = rgba[3] = 255;
+        glow_rgba[0] = glow_rgba[1] = glow_rgba[2] = 0;
+        glow_rgba[3] = 255;
         window->register_resize_handler(resize_callback);
 }
 
@@ -112,6 +117,47 @@ Text::~Text() {
 //      the most C-like function you can get without being C++.
 //      Sorry Joshua.
 void Text::render() {
+    int width = this->width;
+    int height = this->height;
+    std::pair<int,int> window_size = window->get_size();
+    // Automatic sizing if dimension is 0.
+    if (width == 0) {
+        switch (alignment_h) {
+        default:
+        case Alignment::LEFT:
+            width = window_size.first - this->x;
+            break;
+        case Alignment::CENTRE:
+            width = ((window_size.first / 2) < this->x) ? this->x
+                                                        : window_size.first - this->x;
+            break;
+        case Alignment::RIGHT:
+            width = this->x;
+            break;
+        }
+    }
+    if (height == 0) {
+        switch (alignment_v) {
+        default:
+        case Alignment::TOP:
+            height = window_size.second - this->y;
+            break;
+        case Alignment::CENTRE:
+            height = ((window_size.second / 2) < this->y) ? this->y
+                                                          : window_size.second - this->y;
+            break;
+        case Alignment::BOTTOM:
+            height = this->y;
+            break;
+        }
+    }
+
+    // If they are still zero, don't continue.
+    if (width == 0 || height == 0) {
+        throw Text::RenderException("Invalid dimensions after auto-sizing.");
+    }
+
+    int available_width = width - glow_radius * 2;
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
     int lost_lines = 0;
@@ -172,9 +218,9 @@ void Text::render() {
             line[l - t] = '\0';
             // Test line length.
             TTF_SizeUTF8(font.font, line, &line_width, NULL);
-            if (line_width < width) {
+            if (line_width < available_width) {
                 if (line_width > used_width) {
-                    used_width = line_width;
+                    used_width = line_width + glow_radius * 2;
                 }
                 // Mark current position as valid.
                 ll = l - t;
@@ -212,7 +258,7 @@ void Text::render() {
                         c = line[ls];
                         line[ls] = 0;
                         TTF_SizeUTF8(font.font, line, &line_width, NULL);
-                        if (line_width <= width) {
+                        if (line_width <= available_width) {
                             left = ls;
                         }
                         else {
@@ -253,16 +299,22 @@ void Text::render() {
     }
     int line_count = line_number;
 
-    int used_height = line_count * line_height;
+    int used_height = line_count * line_height + 2 * glow_radius;
 
     image = Image(used_width, (used_height < height) ? used_height : height, true);
-    image.clear(0x00000000, 0xffffffff);
+    uint8_t clear_colour[4] = {rgba[0], rgba[1], rgba[2], 0x00};
+    uint8_t clear_mask[4] = {0xff, 0xff, 0xff, 0xff};
+    image.clear(clear_colour, clear_mask);
+    // image.clear(0xffffff00, 0xffffffff);
 
     // Render all lines of text.
-    SDL_Color black;
-    black.r = black.g = black.b = black.a = 0;
-    SDL_Color white;
-    white.r = white.g = white.b = white.a = 255;
+    SDL_Color blank;
+    blank.r = blank.g = blank.b = blank.a = 0;
+    SDL_Color colour;
+    colour.r = rgba[0];
+    colour.g = rgba[1];
+    colour.b = rgba[2];
+    colour.a = rgba[3];
     lines_scan = lines;
     for (int line_number = 0; line_number < line_count; ++line_number) {
         // Render line
@@ -275,17 +327,25 @@ void Text::render() {
 
         SDL_Surface* rendered_line;
         if (smooth) {
-            rendered_line = TTF_RenderUTF8_Shaded(font.font, lines_scan, white, black);
+            rendered_line = TTF_RenderUTF8_Shaded(font.font, lines_scan, colour, blank);
         }
         else {
-            rendered_line = TTF_RenderUTF8_Solid(font.font, lines_scan, white);
+            rendered_line = TTF_RenderUTF8_Solid(font.font, lines_scan, colour);
         }
+
+        if (rendered_line == nullptr) {
+            LOG(INFO) << "Cannot render line of text: \"" << lines_scan << "\".";
+            delete[] line;
+            delete[] lines;
+            throw Text::RenderException("Cannot render line of text");
+        }
+
 #ifdef TEXT_SAFE_SURFACE
         // This surface has a known format.
         SDL_Surface* compatible = SDL_CreateRGBSurface(0, // Unsed
                                                        rendered_line->w,
                                                        rendered_line->h,
-                                                       32, // 32 bit works well, others... don't.
+                                                       32,
                                                        0x00,
                                                        0x00,
                                                        0x00,
@@ -312,13 +372,13 @@ void Text::render() {
         switch (alignment_h) {
         default:
         case Alignment::LEFT:
-            x_offset = 0;
+            x_offset = glow_radius;
             break;
         case Alignment::CENTRE:
             x_offset = (used_width - rendered_line->w) / 2;
             break;
         case Alignment::RIGHT:
-            x_offset = used_width - rendered_line->w;
+            x_offset = used_width - glow_radius - rendered_line->w;
             break;
         }
         switch (alignment_v) {
@@ -333,6 +393,7 @@ void Text::render() {
             y_offset = line_number * line_height - (used_height - image.height);
             break;
         }
+        y_offset += glow_radius;
         // x surface
         int xs;
         // y surface
@@ -381,9 +442,146 @@ void Text::render() {
     this->used_height = used_height;
     delete[] line;
     delete[] lines;
+    if (glow_radius > 0) {
+        apply_newson_bloom();
+    }
     generate_texture();
     dirty_texture = false;
     dirty_vbo = true;
+}
+
+
+// My own spicy algorithm for creating a cheap bloom effect.
+//
+// Perform a vertical scan, to create a list of vertical distances from
+// seed points.
+// Perform a horizontal scan and calculate a winning radiance from the
+// distances in the vertical scan.
+//
+// We perform vertical scan and then horizontal to enable better
+// optimisation.
+void Text::apply_newson_bloom() {
+    // Stores distance information from the first pass.
+    int* vertical_scan(new int[image.width*image.height]);
+    int width = image.width;
+    int height = image.height;
+    int grpo = glow_radius + 1;
+
+    // Vertical Scan.
+    int i = 0;
+    for (int x = 0; x < width; ++x) {
+        int seed_y = 0;
+        for (; seed_y < height && image[seed_y][x].a == 0; ++seed_y);
+        if (seed_y == height) {
+            // It's a blank line, so move on.
+            for (int y = 0; y < height; ++y) {
+                vertical_scan[i] = 0;
+                i += width;
+            }
+        } else {
+            int seed_y_prev = -1;
+            for (int y = 0; y < height; ++y) {
+                if (y == seed_y) {
+                    // Find the next seed (or go outside of image).
+                    for (++seed_y; seed_y < height && image[seed_y][x].a == 0; ++seed_y);
+                    seed_y_prev = y;
+                }
+            
+                int r(0);
+                if (seed_y_prev != -1) {
+                    // Calculate radius from distance from last seed.
+                    r = glow_radius - (y - seed_y_prev);
+                }
+                if (seed_y != height) {
+                    // Calculate radius from distance from next seed.
+                    int r2(glow_radius - (seed_y - y));
+                    if (r2 > r) {
+                        r = r2;
+                    }
+                }
+                if (r > 0) {
+                    vertical_scan[i] = r;
+                }
+                else {
+                    // If it's too far away, set radiance to 0.
+                    vertical_scan[i] = 0;
+                }
+                i += width;
+            }
+        }
+        i += 1 - (width * height);
+    }
+
+    // Pre-compute pythagoras's theorem and 0-255 scale strength.
+    int* pythag(new int[(grpo)*(grpo)]);
+    for (int y = 0; y <= glow_radius; ++y) {
+        int ry = glow_radius - y;
+        for (int x = 0; x <= glow_radius; ++x) {
+            int rx = x;
+            int score(int((float(glow_radius) - sqrt(float(rx*rx + ry*ry))) * 255.0f / float(glow_radius)));
+            pythag[x+y*grpo] = (score > 0) ? score*score/255 : 0;
+        }
+    }
+
+    // Pre-compute merge colours.
+    uint8_t merge_rgba[4][256];
+    for (int a = 0; a < 256; ++a) {
+        merge_rgba[0][a] = uint8_t(((255-a) * glow_rgba[0] + a * rgba[0]) / 255);
+        merge_rgba[1][a] = uint8_t(((255-a) * glow_rgba[1] + a * rgba[1]) / 255);
+        merge_rgba[2][a] = uint8_t(((255-a) * glow_rgba[2] + a * rgba[2]) / 255);
+        merge_rgba[3][a] = uint8_t(((255-a) * glow_rgba[3] + a * rgba[3]) / 255);
+    }
+
+    // Pre-compute radiance alpha.
+    uint8_t radiance[256];
+    for (int r = 0; r < 256; ++r) {
+        radiance[r] = uint8_t(int(glow_rgba[3]) * r / 255);
+    }
+    // uint8_t* radiance(new uint8_t[glow_radius+1]);
+    // for (int r = 0; r <= glow_radius; ++r) {
+    //     radiance[r] = uint8_t(int(glow_rgba[3]) * r / glow_radius);
+    // }
+
+    // Horizontal Scan.
+    i = 0;
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            int winner = pythag[vertical_scan[i]*grpo];
+
+            // Don't go over solid text.
+            if (image[y][x].a == 0) {
+                for (int dx = 1; dx < glow_radius; ++dx) {
+                    int candidate(0);
+                    if (x - dx >= 0) {
+                        candidate = pythag[dx+vertical_scan[i - dx]*grpo];
+                    }
+                    if (x + dx < width) {
+                        int candidate2(pythag[dx+vertical_scan[i + dx]*grpo]);
+                        if (candidate2 > candidate) {
+                            candidate = candidate2;
+                        }
+                    }
+                    if (candidate > winner) {
+                        winner = candidate;
+                    }
+                }
+                image[y][x].r = glow_rgba[0];
+                image[y][x].g = glow_rgba[1];
+                image[y][x].b = glow_rgba[2];
+                image[y][x].a = radiance[winner];
+            }
+            else {
+                    image[y][x].r = merge_rgba[0][image[y][x].a];
+                    image[y][x].g = merge_rgba[1][image[y][x].a];
+                    image[y][x].b = merge_rgba[2][image[y][x].a];
+                    image[y][x].a = merge_rgba[3][image[y][x].a];
+            }
+            ++i;
+        }
+    }
+
+    delete[] vertical_scan;
+    delete[] pythag;
 }
 
 
@@ -401,17 +599,12 @@ void Text::generate_texture() {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-#ifdef USE_GL
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
-#endif
-#ifdef USE_GLES
     // For some STUPID reason, GL ES seems to be forcing me to waster
     // RGB channels for padding, on a system with little memory.
     // Look into this later.
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
-#endif
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -628,7 +821,37 @@ void Text::align_at_origin(bool aao) {
 }
 
 
+void Text::set_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    rgba[0] = r;
+    rgba[1] = g;
+    rgba[2] = b;
+    rgba[3] = a;
+    dirty_texture = true;
+}
+
+
+void Text::set_bloom_radius(int radius) {
+    glow_radius = (radius >= 0) ? radius : 0;
+    dirty_texture = true;
+}
+
+
+void Text::set_bloom_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    glow_rgba[0] = r;
+    glow_rgba[1] = g;
+    glow_rgba[2] = b;
+    glow_rgba[3] = a;
+    dirty_texture = true;
+}
+
+
 void Text::resize(int w, int h) {
+    if (w < 0 || h < 0) {
+        std::stringstream e;
+        e << "Invalid dimensions to resize (" << w << ", " << h << ")";
+        throw Text::RenderException(e.str());
+    }
+    
     if (width != w || height != h) {
         width = w;
         height = h;
@@ -638,6 +861,12 @@ void Text::resize(int w, int h) {
 }
 
 void Text::resize_ratio(float w, float h) {
+    if (w < 0 || h < 0) {
+        std::stringstream e;
+        e << "Invalid dimensions to resize ratio (" << w << ", " << h << ")";
+        throw Text::RenderException(e.str());
+    }
+    
     int iw, ih;
     std::pair<int,int> window_size = window->get_size();
     iw = (int)(w * (float)window_size.first);
@@ -711,10 +940,6 @@ void Text::display() {
     glVertexAttribPointer(SHADER_LOCATION_POSITION, 2, GL_FLOAT, GL_FALSE, 4 * (GLsizei)sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
     // Texture data.
     glVertexAttribPointer(SHADER_LOCATION_TEXTURE, 2, GL_FLOAT, GL_FALSE, 4 * (GLsizei)sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
-    // glBindAttriLocation(program, PROGRAM_LOCATION_POSITION, SHADER_VARIABLE_POSITION);
-    // glBindAttriLocation(program, PROGRAM_LOCATION_TEXTURE , SHADER_VARIABLE_TEXTURE);
-    glUniform4fv(glGetUniformLocation(shader->get_program(), "colour"), 1, rgba);
-    // glUniform4fv(SHADER_LOCATION_COLOUR, 1, rgba);
     glEnableVertexAttribArray(SHADER_LOCATION_POSITION);
     glEnableVertexAttribArray(SHADER_LOCATION_TEXTURE);
     glDisableVertexAttribArray(SHADER_LOCATION_COLOUR);

@@ -1,11 +1,7 @@
 #ifndef KEYBOARD_INPUT_EVENT_H
 #define KEYBOARD_INPUT_EVENT_H
 
-#include <functional>
-#include <map>
 #include <ostream>
-#include <SDL2/SDL.h>
-#include <set>
 
 #include "input_event.hpp"
 

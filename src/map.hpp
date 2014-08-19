@@ -1,7 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <array>
 #include <map>
 #include <memory>
 #include <string>
@@ -9,13 +8,7 @@
 
 //Include GLM
 #define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
 #include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -26,13 +19,12 @@
 #include <GL/gl.h>
 #endif
 
-
 #include "dispatcher.hpp"
-#include "renderable_component.hpp"
+#include "fml.hpp"
+#include "map_loader.hpp"
 
-class Sprite;
 class Layer;
-class MapObject;
+class TextureAtlas;
 class TileSet;
 
 class Map {
@@ -51,7 +43,7 @@ class Map {
     /// onto the offset in the buffer. The offsets are based off of
     /// the number of vertices and the number of dimensions. It gives
     /// the GLfloat offset.
-    ///.This allows us to update the buffers to change the map. 
+    ///.This allows us to update the buffers to change the map.
     /// First param: layer number, starts at 0
     /// Second param: Map of (x, y) positions, flattened to a single
     ///               number, this is x+ y*map_width, which maps these
@@ -75,21 +67,14 @@ class Map {
     GLfloat* tileset_tex_coords = nullptr;
 
     ///
-    /// The texture data for the tileset. This is the cached entries
-    /// which allow generation of the map texture coordinates for a
-    /// particular tile.
-    ///
-    GLfloat* tileset_tex_data = nullptr;
-
-    ///
     /// This is the height of the map in tiles
     ///
-    int map_height = 16;
+    int map_height;
 
     ///
     /// The width of the map in tiles
     ///
-    int map_width = 16;
+    int map_width;
 
     ///
     /// The texture atlases which store the map tile textures
@@ -125,7 +110,7 @@ class Map {
     /// @data_size the size of he array in bytes
     /// @num_tiles the number of tiles to generate data for
     /// @layer the layer to generate the texture coordinates for
-    /// @dense if the layer is dense or sparse 
+    /// @dense if the layer is dense or sparse
     ///
     void generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer, bool dense=true);
 
@@ -138,7 +123,7 @@ class Map {
     /// @data_size the size of he array in bytes
     /// @num_tiles the number of tiles to generate data for
     /// @layer the layer to generate the texture coordinates for
-    /// @dense if the layer is dense or sparse 
+    /// @dense if the layer is dense or sparse
     ///
     void generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer, bool dense=true);
 
@@ -149,7 +134,7 @@ class Map {
     /// @data_size the size of he array in bytes
     /// @num_tiles the number of tiles to generate data for
     /// @layer the layer to generate the texture coordinates for
-    /// @dense if the layer is dense or sparse 
+    /// @dense if the layer is dense or sparse
     ///
     void generate_dense_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
@@ -160,7 +145,7 @@ class Map {
     /// @data_size the size of he array in bytes
     /// @num_tiles the number of tiles to generate data for
     /// @layer the layer to generate the texture coordinates for
-    /// @dense if the layer is dense or sparse 
+    /// @dense if the layer is dense or sparse
     ///
     void generate_dense_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
@@ -171,7 +156,7 @@ class Map {
     /// @data_size the size of he array in bytes
     /// @num_tiles the number of tiles to generate data for
     /// @layer the layer to generate the texture coordinates for
-    /// @dense if the layer is dense or sparse 
+    /// @dense if the layer is dense or sparse
     ///
     void generate_sparse_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
@@ -182,7 +167,7 @@ class Map {
     /// @data_size the size of he array in bytes
     /// @num_tiles the number of tiles to generate data for
     /// @layer the layer to generate the texture coordinates for
-    /// @dense if the layer is dense or sparse 
+    /// @dense if the layer is dense or sparse
     ///
     void generate_sparse_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer);
 
@@ -206,6 +191,8 @@ class Map {
     /// Initialises this Map's shaders
     ///
     bool init_shaders();
+
+    std::vector<ObjectProperties> objprop_ids_to_instances;
 
 public:
 
@@ -241,11 +228,14 @@ public:
     ///
     void remove_map_object(int map_object_id);
 
+    FML locations;
+
+    ObjectProperties obj_from_id(int id);
 
     ///
     /// Get the sprites that are on this map
     /// @return a vector of sprite ids
-    /// - we don't want class users to add sprites to the map 
+    /// - we don't want class users to add sprites to the map
     /// using this vector
     ///
     const std::vector<int>& get_sprites() { return sprite_ids; }

@@ -1,38 +1,45 @@
 
-#include "component.hpp"
-#include "gui_manager.hpp"
-#include "gui_text.hpp"
-#include <new>
+#include <exception>
 #include <fstream>
 #include <glog/logging.h>
-#include <iostream>
-#include <map>
 #include <memory>
-#include <string>
-#include "texture.hpp"
+#include <new>
 #include <utility>
 #include <vector>
-
-#ifdef USE_GLES
-
-#include <GLES2/gl2.h>
-
-#endif
+#include <iostream>
+#include "cacheable_resource.hpp"
+#include "component.hpp"
+#include "component_group.hpp"
+#include "gui_manager.hpp"
+#include "mouse_input_event.hpp"
+#include "mouse_state.hpp"
+#include "shader.hpp"
+#include "texture_atlas.hpp"
 
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
 
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+
+
 void GUIManager::parse_components() {
+    std::cout <<"DONING " << std::endl;
+    //IMPORTANT
+    //The order of these calls must be preserved.
+    load_textures();
+
+
     //Generate  the needed offsets
     regenerate_offsets(root);
-
+    
     //Now generate the needed rendering data
     generate_texture_data();
     generate_vertex_data();
     generate_text_data();
-    load_textures();
     init_shaders();
 }
 
@@ -50,19 +57,14 @@ void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
             int height_pixels = parent->get_height_pixels();
 
             //calculate the pixel locations for this component, using the parent's dimensions
-<<<<<<< HEAD
-            component->set_width_pixels((int)((float)width_pixels*component->get_width()));
-            component->set_height_pixels((int)((float)height_pixels*component->get_height()));
-            component->set_x_offset_pixels((int)((float)width_pixels*component->get_x_offset()));
-            component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));              
-            
-=======
             component->set_width_pixels   (int(float( width_pixels) * component->get_width()));
             component->set_height_pixels  (int(float(height_pixels) * component->get_height()));
             component->set_x_offset_pixels(int(float( width_pixels) * component->get_x_offset()));
             component->set_y_offset_pixels(int(float(height_pixels) * component->get_y_offset()));
 
->>>>>>> master
+            
+            //Give it a pointer to its texture coordinates
+            component->set_texture_atlas(renderable_component.get_texture());
             regenerate_offsets(component);
         }
     }
@@ -148,13 +150,9 @@ GUIManager::~GUIManager() {
 }
 
 
-<<<<<<< HEAD
+
 void GUIManager::generate_texture_data() {
     
-=======
-void GUIManager::generate_tex_data() {
-
->>>>>>> master
     //generate the texture data data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
 
@@ -230,23 +228,23 @@ void GUIManager::generate_vertex_data() {
 }
 
 void GUIManager::generate_text_data() {
-    components_text = root->generate_text_data();
+    //    components_text = root->generate_text_data();
 }
 
 void GUIManager::render_text() {
-    for(auto text_data : components_text) {
+    /*    for(auto text_data : components_text) {
 
         int x_pos = text_data->get_x_offset_pixels();
         int y_pos = text_data->get_y_offset_pixels();
         std::cout << " X PO " << x_pos << " Y PO " << y_pos << std::endl;
         text_data->get_text()->move(x_pos, y_pos);
         text_data->get_text()->display();
-    }
+        }*/
 }
 
 void GUIManager::load_textures() {
     //Set the texture data in the rederable component
-    renderable_component.set_texture(TextureAtlas::get_shared("../resources/characters_1.png"));
+    renderable_component.set_texture(TextureAtlas::get_shared("../resources/tiles/gui_components.png"));
 }
 
 bool GUIManager::init_shaders() {

@@ -24,8 +24,8 @@ if mkdir "$WORK_DIR"
 then
     find "$1" -iname '*.png' > "$LIST_FILE"
 
-    FIRST_DIR=${2%%/}
-    if [ -n "$FIRST_DIR" ]
+    FIRST_DIR=${1%%/}
+    if [ -z "$FIRST_DIR" ]
     then
         FIRST_DIR="."
     fi

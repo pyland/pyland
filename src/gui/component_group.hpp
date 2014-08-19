@@ -1,12 +1,22 @@
 #ifndef COMPONENTGROUP_H
 #define COMPONENTGROUP_H
 
-#include "component.hpp"
-#include "gui_text.hpp"
-#include "python_embed_headers.hpp"
-
 #include <map>
 #include <memory>
+#include <utility>
+#include <vector>
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
+
+#ifdef USE_GL
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#endif
+
+#include "component.hpp"
+
 
 ///
 /// A component group holds components and is itself a sub class of
@@ -49,7 +59,7 @@ public:
     ///
     /// Get the map listing all the components of the group
     /// @return a reference to a constant map object
-    /// 
+    ///
     const std::map<int, std::shared_ptr<Component>>& get_components();
 
     ///

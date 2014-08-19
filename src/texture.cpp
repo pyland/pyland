@@ -1,16 +1,21 @@
+#include <glog/logging.h>
 #include <memory>
+#include <ostream>
 #include <tuple>
+#include <vector>
 
 extern "C" {
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+#ifdef USE_GLES
+#include <GLES2/gl2.h>
+#endif
 }
 
+#include "cacheable_resource.hpp"
 #include "texture.hpp"
 #include "texture_atlas.hpp"
 

@@ -96,8 +96,6 @@ $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS): | dependencies/test
 $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS) $(EXECUTABLE_OBJ) $(BASE_OBJS): %.o : %.cpp | dependencies
 	@echo "${bold}[ Compiling base object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
-	@# Need $(PYTHON_CPPFLAGS) due to internal layout of Interpreter object.
-	@# This should not cause a large slowdown unless actually included in many files.
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS)  \
@@ -163,7 +161,7 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies
 #
 
 $(PYTHON_HEADER).unknown:
-	@echo "${bold}[ $(COMPILER): ${GREEN}Don't know how to precompiling Python header; ignoring.${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): ${GREEN}Don't know how to precompile Python header; ignoring.${normal}${bold} ]${normal}"
 	@touch $(PYTHON_HEADER).unknown
 
 $(PYTHON_HEADER).gch: $(PYTHON_HEADER)

@@ -1,100 +1,69 @@
+#define GLM_FORCE_RADIANS
 
-#include <boost/filesystem.hpp>
-#include <cassert>
-#include <cmath>
-#include <chrono>
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <fstream>
 #include <glog/logging.h>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <chrono>
+#include <functional>
+#include <glm/vec2.hpp>
 #include <iostream>
-#include <map>
 #include <memory>
 #include <random>
+#include <ratio>
 #include <string>
-#include <sys/time.h>
-#include <thread>
-#include <unistd.h>
+#include <utility>
+#include <vector>
 
-//Include GLM
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "api.hpp"
-#include "button.hpp"
 #include "callback_state.hpp"
-#include "component.hpp"
+#include "challenge_data.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
-#include "filters.hpp"
 #include "game_window.hpp"
+#include "button.hpp"
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
+#include "filters.hpp"
 #include "input_manager.hpp"
-#include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
+#include "mouse_input_event.hpp"
+#include "mouse_state.hpp"
 #include "lifeline.hpp"
-#include "locks.hpp"
-#include "main.hpp"
-#include "map.hpp"
+#include "long_walk_challenge.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
-#include "object_manager.hpp"
-#include "player.hpp"
-#include "sprite.hpp"
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
-#include "walkability.hpp"
+#include "python_embed/interpreter.hpp"
 
-// Include challenges
-// TODO: Rearchitechture
-#include "challenge.hpp"
-#include "long_walk_challenge.hpp"
-
-// Choose between GLES and GL
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
 
 using namespace std;
 
 static std::mt19937 random_generator;
 
 int main(int argc, const char *argv[]) {
+    std::string map_path("../maps/map0.tmx");
+
     // allows you to pass an alternative text editor to app, otherwise
-    // defaults to gedit
-    if (argc >= 2) {
-        Engine::set_editor(argv[1]);
-    };
-    // TODO: Support no window
-    // Can't do this cleanly at the moment as the MapViewer needs the window instance....
+    // defaults to gedit. Also allows specification of a map file.
+    switch (argc) {
+        default:
+            std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;
+            return 1;
+
+        // The lack of break statements is not an error!!!
+        case 3:
+            map_path = std::string(argv[2]);
+        case 2:
+            Engine::set_editor(argv[1]);
+        case 1:
+            break;
+    }
 
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
-    int map_width(32);
-    int map_height(32);
-
-/// CREATE GLOBAL OBJECTS
+    /// CREATE GLOBAL OBJECTS
 
     //Create the game window to present to the users
-    GameWindow window(int(float(map_width)  * Engine::get_actual_tile_size()),
-                      int(float(map_height) * Engine::get_actual_tile_size()),
-                      false);
+    GameWindow window(800, 600, false);
     window.use_context();
 
     //Create the interpreter
@@ -104,12 +73,12 @@ int main(int argc, const char *argv[]) {
 
     //Create the GUI manager
     GUIManager gui_manager;
-    
+
     //Create the map viewer
     MapViewer map_viewer(&window, &gui_manager);
     Engine::set_map_viewer(&map_viewer);
 
-    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
+    //    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
 
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
     Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
@@ -238,6 +207,17 @@ int main(int argc, const char *argv[]) {
     );
 
 
+    Lifeline zoom_in_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_HELD}), KEY("=")},
+        [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() * 1.01f); }
+    ));
+
+    Lifeline zoom_out_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_HELD}), KEY("-")},
+        [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() / 1.01f); }
+    ));
+
+
     std::vector<Lifeline> digit_callbacks;
     for (unsigned int i=0; i<10; ++i) {
         digit_callbacks.push_back(
@@ -277,32 +257,74 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-    //Create a player to maintain their state between challenges
-    std::shared_ptr<Player> player = std::make_shared<Player>();
-
     //Run the map
     bool run_game = true;
 
-
-    while(!window.check_close() && run_game) {   
-
+    while(!window.check_close() && run_game) {
         //Setup challenge
-        ChallengeData* challenge_data = new ChallengeData(
-                                                          std::string("../resources/map0.tmx"),
-                                                          &interpreter,
-                                                          &gui_manager,
-                                                          &window,
-                                                          player,
-                                                          input_manager,
-                                                          &notification_bar);
+        ChallengeData *challenge_data(new ChallengeData(
+            map_path,
+            &interpreter,
+            &gui_manager,
+            &window,
+            input_manager,
+            &notification_bar
+        ));
 
         LongWalkChallenge long_walk_challenge(challenge_data);
-        Engine::set_challenge(&long_walk_challenge);
         long_walk_challenge.start();
 
 
         //Run the challenge - returns after challenge completes
-        long_walk_challenge.run();
+        #ifdef USE_GLES
+            TextFont big_font(Engine::get_game_typeface(), 50);
+            Text cursor(challenge_data->game_window, big_font, true);
+            cursor.set_bloom_radius(5);
+            cursor.move(0, 0);
+            cursor.resize(50, 50);
+            cursor.set_text("<");
+
+            Lifeline cursor_lifeline(challenge_data->input_manager->register_mouse_handler(
+                filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
+                    cursor.move(event.to.x, event.to.y+25);
+                })
+            ));
+        #endif
+
+        auto last_clock(std::chrono::steady_clock::now());
+
+        VLOG(3) << "{";
+        while (!challenge_data->game_window->check_close()) {
+            last_clock = std::chrono::steady_clock::now();
+
+            VLOG(3) << "} SB | IM {";
+            GameWindow::update();
+
+            VLOG(3) << "} IM | EM {";
+
+            do {
+                EventManager::get_instance().process_events();
+            } while (
+                  std::chrono::steady_clock::now() - last_clock
+                < std::chrono::nanoseconds(1000000000 / 60)
+            );
+
+            VLOG(3) << "} EM | RM {";
+            Engine::get_map_viewer()->render();
+
+            VLOG(3) << "} RM | TD {";
+            Engine::text_displayer();
+            challenge_data->notification_bar->text_displayer();
+
+            #ifdef USE_GLES
+                cursor.display();
+            #endif
+
+            VLOG(3) << "} TD | SB {";
+            challenge_data->game_window->swap_buffers();
+        }
+
+        VLOG(3) << "}";
 
         //Clean up after the challenge - additional, non-challenge clean-up
         em.flush();
