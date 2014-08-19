@@ -30,8 +30,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
         properties.location,
         name,
         walkability,
-        properties.tileset_id,
-        properties.atlas_name
+        properties.tile
     );
 }
 
@@ -39,7 +38,13 @@ int ChallengeHelper::make_sprite(Challenge *challenge, std::string marker_name, 
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Objects/" + marker_name));
 
-    auto new_sprite(std::make_shared<Sprite>(properties.location, sprite_name, walkability, properties.tileset_id, properties.atlas_name));
+    auto new_sprite(std::make_shared<Sprite>(
+        properties.location,
+        sprite_name,
+        walkability,
+        properties.tile
+    ));
+
     ObjectManager::get_instance().add_object(new_sprite);
 
     auto sprite_id(new_sprite->get_id());

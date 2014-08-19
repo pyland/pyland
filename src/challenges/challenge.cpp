@@ -64,10 +64,9 @@ Challenge::~Challenge() {
 int Challenge::make_map_object(glm::vec2 position,
                                std::string name,
                                Walkability walkability,
-                               int sheet_id,
-                               std::string sheet_name) {
+                               std::pair<int, std::string> tile) {
 
-    auto new_object(std::make_shared<MapObject>(position, name, walkability, sheet_id, sheet_name));
+    auto new_object(std::make_shared<MapObject>(position, name, walkability, tile));
     ObjectManager::get_instance().add_object(new_object);
 
     auto new_object_id(new_object->get_id());

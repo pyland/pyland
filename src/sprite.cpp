@@ -34,10 +34,9 @@ glm::vec2 pos_to_status (glm::vec2 position) {
 Sprite::Sprite(glm::ivec2 position,
                std::string name,
                Walkability walkability,
-               int sheet_id,
-               std::string sheet_name):
+               std::pair<int, std::string> tile):
 
-    MapObject(position, name, walkability, sheet_id, sheet_name),
+    MapObject(position, name, walkability, tile),
     is_focus(false) {
 
         // Setting up sprite text
@@ -52,7 +51,13 @@ Sprite::Sprite(glm::ivec2 position,
         object_text->align_at_origin(true);
         object_text->vertical_align_top();
 
-        std::shared_ptr<MapObject> status_icon = std::make_shared<MapObject>(pos_to_status(position), "status icon", Walkability::WALKABLE, 14, "../resources/tiles/gui.png");
+        auto status_icon(std::make_shared<MapObject>(
+            pos_to_status(position),
+            "status icon",
+            Walkability::WALKABLE,
+            TextureAtlas::from_name("gui/status/stationary")
+        ));
+
         status_icon->set_render_above_sprites(true);
         ObjectManager::get_instance().add_object(status_icon);
         status_icon_id = status_icon->get_id();
@@ -70,8 +75,14 @@ Sprite::Sprite(glm::ivec2 position,
 
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
-        // this is hack and wants to use string to pair instead
-        std::shared_ptr<MapObject> focus_icon = std::make_shared<MapObject>(position, "focus icon", Walkability::WALKABLE, 11, "../resources/tiles/gui.png");
+
+        auto focus_icon(std::make_shared<MapObject>(
+            position,
+            "focus icon",
+            Walkability::WALKABLE,
+            TextureAtlas::from_name("gui/highlight/selected_object")
+        ));
+
         focus_icon->set_render_above_sprites(false);
         ObjectManager::get_instance().add_object(focus_icon);
         focus_icon_id = focus_icon->get_id();
@@ -101,97 +112,6 @@ void Sprite::set_state_on_moving_finish() {
     blocked_tiles.erase("stood on");
     blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
     blocked_tiles.erase("walking to");
-}
-
-void Sprite::generate_tex_data() {
-    //holds the texture data
-    //need 12 float for the 2D texture coordinates
-    int num_dimensions = 2;
-    int num_floats = num_dimensions*6;
-
-    GLfloat* sprite_tex_data = nullptr;
-    try {
-        sprite_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
-    }
-    catch(std::bad_alloc& ba) {
-        LOG(ERROR) << "ERROR in Sprite::generate_tex_data(), cannot allocate memory";
-        return;
-    }
-
-    std::tuple<float,float,float,float> bounds = renderable_component.get_texture()->index_to_coords(sheet_id);
-
-    //bottom left
-    sprite_tex_data[0]  = std::get<0>(bounds);
-    sprite_tex_data[1]  = std::get<2>(bounds);
-
-    //top left
-    sprite_tex_data[2]  = std::get<0>(bounds);
-    sprite_tex_data[3]  = std::get<3>(bounds);
-
-    //bottom right
-    sprite_tex_data[4]  = std::get<1>(bounds);
-    sprite_tex_data[5]  = std::get<2>(bounds);
-
-    //top left
-    sprite_tex_data[6]  = std::get<0>(bounds);
-    sprite_tex_data[7]  = std::get<3>(bounds);
-
-    //top right
-    sprite_tex_data[8]  = std::get<1>(bounds);
-    sprite_tex_data[9]  = std::get<3>(bounds);
-
-    //bottom right
-
-    sprite_tex_data[10] = std::get<1>(bounds);
-    sprite_tex_data[11] = std::get<2>(bounds);
-
-    renderable_component.set_texture_coords_data(sprite_tex_data, sizeof(GLfloat)*num_floats, false);
-}
-
-void Sprite::generate_vertex_data() {
-    //holds the sprite vertex data
-    int num_dimensions = 3;
-    int num_floats_per_tile = num_dimensions*6; //GLTRIANGLES so need 6 vertices
-
-    int num_floats = num_floats_per_tile;
-
-
-    GLfloat* sprite_data = nullptr;
-    try {
-
-        sprite_data = new GLfloat[sizeof(GLfloat)*num_floats];
-    }
-    catch(std::bad_alloc& ba) {
-        LOG(ERROR) << "ERROR in Sprite::generate_vertex_data(), cannot allocate memory";
-        return;
-    }
-
-    //bottom left
-    sprite_data[0]  = 0;
-    sprite_data[1]  = 0;
-
-    //top left
-    sprite_data[2]  = 0;
-    sprite_data[3]  = 1;
-
-    //bottom right
-    sprite_data[4]  = 1;
-    sprite_data[5]  = 0;
-
-    //top left
-    sprite_data[6]  = 0;
-    sprite_data[7]  = 1;
-
-    //top right
-    sprite_data[8]  = 1;
-    sprite_data[9]  = 1;
-
-    //bottom right
-    sprite_data[10] = 1;
-    sprite_data[11] = 0;
-
-    renderable_component.set_vertex_data(sprite_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(num_floats/num_dimensions);//GL_TRIANGLES being used
 }
 
 void Sprite::add_to_inventory(int new_object_id) {
@@ -270,23 +190,26 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
 
     switch (sprite_status) {
 
-        case (Sprite_Status::NOTHING): 
+        case (Sprite_Status::NOTHING):
+        status_icon->set_tile(TextureAtlas::from_name("gui/status/stationary"));
+        break;
+
         case (Sprite_Status::KILLED):
-        case (Sprite_Status::STOPPED): 
-        status_icon->set_sheet_id(14);
+        case (Sprite_Status::STOPPED):
+        status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
         break;
 
         case (Sprite_Status::RUNNING):
-        status_icon->set_sheet_id(13);
+        status_icon->set_tile(TextureAtlas::from_name("gui/status/running"));
         break;
 
         case (Sprite_Status::FAILED):
         // TODO: stopping should also be here
-        status_icon->set_sheet_id(12);
+        status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
         break;
     }
 
-    
+
 }
 
 void Sprite::set_focus(bool _is_focus) {

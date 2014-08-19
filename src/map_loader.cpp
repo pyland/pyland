@@ -107,9 +107,7 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
                                  object->GetX() / Engine::get_tile_size(),
                     map_height - object->GetY() / Engine::get_tile_size()
                 ),
-                object->GetGid() - tileset->GetFirstGid(),
-                tileset->GetName(),
-                "../resources/" + tileset->GetImage()->GetSource()
+                { object->GetGid() - tileset->GetFirstGid(), tileset->GetImage()->GetSource() }
             });
 
             named_tiles_mapping.insert(std::make_pair(fullname, properties));
