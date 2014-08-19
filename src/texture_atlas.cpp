@@ -139,12 +139,12 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
         unit_rows    = (texture_count + max_columns - 1) / max_columns;
     }
     gl_image = image = Image(unit_w * unit_columns, unit_h * unit_rows, true);
-    
+
     LOG(INFO) << "Generating super atlas: textures: " << texture_count << " = (" << unit_columns << ", " << unit_rows << ") => pixels: (" << gl_image.width << ", " << gl_image.height << ")";
 
     textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
 
-    
+
     int super_i = 0;
     for (auto atlas : atlases) {
         LOG(INFO) << "Merging: " << this << " << " << atlas;
@@ -165,7 +165,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
             }
         }
     }
-    
+
     init_texture();
 }
 
@@ -219,11 +219,12 @@ void TextureAtlas::init_texture() {
         LOG(INFO) << "Reshaping: " << this << ": (" << image.width << ", " << image.height << ") -> (" << gl_image.width << ", " << gl_image.height << ")";;
         LOG(INFO) << "  (Units): " << this << ": (" << old_unit_columns << ", " << old_unit_rows << ") -> (" << unit_columns << ", " << unit_rows << ")";;
         for (int i = 0, end = old_unit_columns * old_unit_rows; i < end; ++i) {
-            std::pair<int,int> units(index_to_units(i));
             int dst_x_offset = (i % unit_columns) * unit_w;
             int dst_y_offset = (i / unit_columns) * unit_h;
+
             int src_x_offset = (i % old_unit_columns) * unit_w;
             int src_y_offset = (i / old_unit_columns) * unit_h;
+
             LOG(INFO) << "Moving: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> (" << dst_x_offset << ", " << dst_y_offset << ")";
             for (int y = 0; y < unit_h; ++y) {
                 for (int x = 0; x < unit_w; ++x) {
@@ -233,7 +234,7 @@ void TextureAtlas::init_texture() {
         }
         textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
     }
-    
+
     deinit_texture();
     glGenTextures(1, &gl_texture);
 
