@@ -15,28 +15,28 @@
 #include "map_object.hpp"
 #include "object_manager.hpp"
 #include "sprite.hpp"
+#include "texture_atlas.hpp"
 #include "walkability.hpp"
 
 
 #include <iostream>
 LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
-    ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(this, "sprite/1", "Ben", Walkability::BLOCKED);
     ChallengeHelper::make_sprite(this, "sprite/2", "Ashley", Walkability::BLOCKED);
-    ChallengeHelper::make_sprite(this, "sprite/3","Joshua", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(this, "sprite/3", "Joshua", Walkability::BLOCKED);
 
     //Test chest
-    int chest_id(make_map_object(
+    int lawnmower_mat_id(make_map_object(
         glm::ivec2(10, 15),
-        "test chest",
+        "lawnmower",
         Walkability::BLOCKED,
-        52,
-        "../resources/basictiles_2_64.png"
+        TextureAtlas::from_name("mat")
     ));
 
     ChallengeHelper::create_pickupable(
         glm::ivec2(10, 15),
         glm::ivec2(10, 14),
-        chest_id
+        lawnmower_mat_id
     );
 
     // Ignore references due to non-interaction
@@ -46,11 +46,11 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
     // Testing lawn
     ChallengeHelper::make_interactions("grass/path/short",
                                        std::back_inserter(grass_path_short_callbacks),
-                                       [chest_id] (int who) {
+                                       [lawnmower_mat_id] (int who) {
         auto sprite(ObjectManager::get_instance().get_object<Sprite>(who));
         if (!sprite) { return true; }
 
-        if (sprite->is_in_inventory(chest_id)) {
+        if (sprite->is_in_inventory(lawnmower_mat_id)) {
             Engine::print_dialogue("Grass", "You're mowing, keep on going");
             Engine::change_tile(sprite->get_position(), 4, "lawn_mown");
             return false;
@@ -102,7 +102,7 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
                 for (auto wall_object_id : wall_path_medium_objects) {
                     auto wall_object(ObjectManager::get_instance().get_object<MapObject>(wall_object_id));
 
-                    wall_object->set_sheet_id(119);
+                    wall_object->set_tile(TextureAtlas::from_name("test/blank"));
                     wall_object->set_walkability(Walkability::WALKABLE);
                 }
             }
@@ -121,7 +121,7 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
         for (auto wall_object_id : wall_path_long_objects) {
             auto wall_object(ObjectManager::get_instance().get_object<MapObject>(wall_object_id));
 
-            wall_object->set_sheet_id(119);
+            wall_object->set_tile(TextureAtlas::from_name("test/blank"));
             wall_object->set_walkability(Walkability::WALKABLE);
         }
         return false;

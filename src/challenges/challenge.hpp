@@ -49,15 +49,13 @@ public:
     /// @param sheet_name the name of the sprite sheet
     /// @return the sprite's id
     ///
-    int make_sprite(glm::vec2 position, std::string name, Walkability walkability, int sheet_id, std::string sheet_name);
+    int make_sprite(glm::vec2 position, std::string name, Walkability walkability, std::pair<int, std::string> tile);
 
     ///
     /// Makes a map object and adds it to the object manager and the current map
     /// @return the sprite's id
     ///
-    int make_map_object(glm::vec2 position, std::string name, Walkability walkability, int sheet_id, std::string sheet_name);
-
-
+    int make_map_object(glm::vec2 position, std::string name, Walkability walkability, std::pair<int, std::string> tile);
 };
 
 #endif

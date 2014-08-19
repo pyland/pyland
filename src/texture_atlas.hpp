@@ -180,6 +180,8 @@ public:
     ///
     static std::map<std::string, std::string> const &names_to_tilesets();
 
+    static std::pair<int, std::string> from_name(const std::string tile_name);
+
     ///
     /// Load a texture from a given file path.
     ///
@@ -252,7 +254,7 @@ public:
     /// @param index The index of the texture for this atlas.
     /// @return The left, right, bottom, and top boundaries.
     ///
-    std::tuple<float,float,float,float> index_to_coords(int index);
+    std::tuple<float, float, float, float> index_to_coords(int index);
 
     ///
     /// Attempt to load the name-index mappings from a file.

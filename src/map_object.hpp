@@ -36,16 +36,6 @@ protected:
     std::vector<Map::Blocker> body_blockers;
 
     ///
-    /// The name of the tilesheet to use for the map object
-    ///
-    std::string sheet_name;
-
-    ///
-    /// The id of the tile in the sheet
-    ///
-    int sheet_id;
-
-    ///
     /// The position of the object
     ///
     glm::vec2 position;
@@ -67,14 +57,12 @@ public:
     /// @param position the (x, y) position of the map object on the map
     /// @param name the name of the map object
     /// @param walkability the walkability properties of the map object
-    /// @param sheet_id the id of the image of the map object in its map object sheet
-    /// @param sheet_name the name of the map object sheet
+    /// @param tile_name the name of the tile to render
     ///
     MapObject(glm::vec2 position,
               std::string name,
               Walkability walkability,
-              int sheet_id,
-              std::string sheet_name="../resources/basictiles_2_64.png");
+              std::pair<int, std::string> tile);
 
     virtual ~MapObject();
 
@@ -94,33 +82,14 @@ public:
     void set_render_above_sprites(bool _render_above_sprites) { render_above_sprite = _render_above_sprites; }
 
     ///
-    /// Set the tile sheet to use for this character
-    /// @param _tile_sheet the tile sheet
-    ///
-    void set_sheet_name(std::string sheed_name);
-
-    ///
-    /// Get the tile sheet
-    /// @return the tile sheet
-    ///
-    std::string get_sheet_name() { return sheet_name; }
-
-    ///
-    /// Set the id of the tile in the tile sheet
-    /// @param _tile_sheet_id the id of the tile in the tile sheet
-    ///
-    void set_sheet_id(int sheet_id);
-
-    ///
-    /// Get the id of the tile in the tile sheet
-    /// @return the tile sheet id
-    ///
-    int get_sheet_id() { return sheet_id; }
-
-    ///
     /// Generate the texture coordinate data for the object
     ///
-    void generate_tex_data();
+    void generate_tex_data(std::pair<int, std::string> tile);
+
+    ///
+    /// Change the tile of the sprite to that of the given name
+    ///
+    void set_tile(std::pair<int, std::string> tile);
 
     ///
     /// Generate the vertex data for the object
@@ -130,7 +99,7 @@ public:
     ///
     /// Load the textures that are being used by the object
     ///
-    void load_textures();
+    void load_textures(std::pair<int, std::string> tile);
 
     ///
     /// Initialise the shaders that are being used by the object

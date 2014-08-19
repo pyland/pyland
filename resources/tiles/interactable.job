@@ -1,6 +1,10 @@
 interactable/boat/center
 interactable/boat/left
 interactable/boat/right
+interactable/bridge/1
+interactable/bridge/2
+interactable/bridge/3
+interactable/bridge/4
 interactable/crate/bananas
 interactable/crate/empty
 interactable/crate/oranges

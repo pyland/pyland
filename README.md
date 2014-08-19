@@ -1,7 +1,7 @@
-Project Zygote (working title)
-==============================
 
-This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectZygote](http://twitter.com/ProjectZygote).
+![alt tag](https://raw.githubusercontent.com/pyland/pyland/master/resources/logo.png)
+
+This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectPyland](http://twitter.com/ProjectPyland).
 
 ## Install 
 These install instructions may be incomplete and you may require additional packages to the ones listed here
@@ -9,7 +9,7 @@ These install instructions may be incomplete and you may require additional pack
 #### Getting Dependancies (Raspberry Pi)
 
 ```bash
-git clone https://github.com/heidi-ann/zygote
+git clone https://github.com/pyland/pyland
 sudo apt-get install libx11-dev gdebi libtinyxml-dev zlib1g-dev mesa-common-dev mesa-utils mesa-utils-extra build-essential gedit
 g++-4.7 libsdl2-image-dev  
 wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2_2.0.3-1_armhf.deb
@@ -56,10 +56,10 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 ##Usage
 
 Keybindings
-* n - spawn new spirte
 * r - run script for sprite
 * k - kill sprite
 * h - halt current script
 * m - print the focus sprites location
 * arrow keys / wasd - move sprite
-* numbers - move focus to sprite with associated number, numbers are allocated sequentially from 1
+* numbers - move focus to sprite with associated number, numbers are allocated sequentially from 0
+* = and - - zooming in and out

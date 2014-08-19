@@ -16,7 +16,7 @@ static const boost::regex valid_line(
     "(("              //
         "[^\\s/:]+/"  // a directory
     "|"               // or
-        "[^\\s/:]+:"  // a file...
+        "[^\\s:]+:"  // a file...
         "\\s*[^\\s]+" // ...and its contents,
     ")\\s*)*"         // optionally space-delimited tokens
     "(?:#.*)?"        // and a comment if you want
@@ -25,7 +25,7 @@ static const boost::regex valid_line(
 static const boost::regex tokens(
         "([^\\s/:]+/)"     // a directory
     "|"                    // or
-        "([^\\s/:]+):\\s*" // a file...
+        "([^\\s:]+):\\s*" // a file...
         "([^\\s]+)"        // ...and its contents
 );
 

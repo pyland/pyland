@@ -31,6 +31,7 @@
 #include "long_walk_challenge.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
+#include "start_screen.hpp"
 #include "interpreter.hpp"
 
 #ifdef USE_GLES
@@ -46,7 +47,7 @@ using namespace std;
 static std::mt19937 random_generator;
 
 int main(int argc, const char *argv[]) {
-    std::string map_path("../maps/map0.tmx");
+    std::string map_path("../maps/start_screen.tmx");
 
     // allows you to pass an alternative text editor to app, otherwise
     // defaults to gedit. Also allows specification of a map file.
@@ -270,8 +271,8 @@ int main(int argc, const char *argv[]) {
             &notification_bar
         ));
 
-        LongWalkChallenge long_walk_challenge(challenge_data);
-        long_walk_challenge.start();
+        StartScreen start_screen(challenge_data);
+        start_screen.start();
 
 
         //Run the challenge - returns after challenge completes

@@ -42,6 +42,7 @@ BASE_OBJS = \
 
 CHALLENGE_OBJS = \
 	challenges/challenge.o           \
+	challenges/start_screen.o        \
 	challenges/long_walk_challenge.o \
 
 

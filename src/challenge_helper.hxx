@@ -1,3 +1,6 @@
+// Fixes bug with lambdas for transform_iterator on older compilers
+#define BOOST_RESULT_OF_USE_DECLTYPE
+
 #include <algorithm>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/iterator/transform_iterator.hpp>
@@ -53,8 +56,7 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                 name_properties.second.location,
                 name_properties.first,
                 walkability,
-                name_properties.second.tileset_id,
-                name_properties.second.atlas_name
+                name_properties.second.tile
             );
         }
     );
