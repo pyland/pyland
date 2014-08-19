@@ -229,18 +229,24 @@ void GUIManager::generate_vertex_data() {
 }
 
 void GUIManager::generate_text_data() {
-    //    components_text = root->generate_text_data();
+        components_text = root->generate_text_data();
 }
 
 void GUIManager::render_text() {
-    /*    for(auto text_data : components_text) {
-
-        int x_pos = text_data->get_x_offset_pixels();
-        int y_pos = text_data->get_y_offset_pixels();
-        std::cout << " X PO " << x_pos << " Y PO " << y_pos << std::endl;
-        text_data->get_text()->move(x_pos, y_pos);
+   for(auto text_data : components_text) {
+        if(!text_data->get_text()) 
+            continue;
+        std::shared_ptr<GUITextData> gui_text_data = text_data->get_gui_text();
+        
+        //        int x_pos = gui_text_data->get_transformed_x_offset();
+        //        int y_pos = gui_text_data->get_transformed_y_offset();
+        //        std::cout << " X PO " << x_pos << " Y PO " << y_pos << std::endl;
+        std::cout << "H" << std::endl;
+        text_data->get_text()->move(100 ,100 );//x_pos, y_pos);
+        text_data->get_text()->set_text("Test");
+        text_data->get_text()->resize(200, 200);
         text_data->get_text()->display();
-        }*/
+   }
 }
 
 void GUIManager::load_textures() {

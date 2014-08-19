@@ -313,7 +313,7 @@ void MapViewer::render_gui() {
     gui_render_component->release_vbos();
     gui_render_component->release_shader();
      
-     gui_manager->render_text();
+    gui_manager->render_text();
 }
 
 ///

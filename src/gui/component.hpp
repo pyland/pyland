@@ -115,6 +115,11 @@ protected:
     std::function<void (void)> on_click_func;
 
     ///
+    /// If the component is visible
+    ///
+    bool visible;
+
+    ///
     /// Get the next unique identifier for the component - starting at 1.
     ///
     int get_new_id();
@@ -157,6 +162,17 @@ public:
     ///
     virtual const std::map<int, std::shared_ptr<Component>>& get_components();
 
+    ///
+    /// Set the visibility
+    /// @parma _visible
+    ///
+    void set_visible(bool _visible) { visible = _visible; }
+
+    ///
+    /// Get the visibility
+    /// @return visibility
+    ///
+    bool is_visible() { return visible; }
 
     ///
     /// Set the on click lambda function for this button

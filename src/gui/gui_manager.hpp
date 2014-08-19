@@ -4,7 +4,7 @@
 #include <memory>
 #include <iostream>
 #include "object.hpp"
-#include "gui_text_data.hpp"
+#include "gui_text.hpp"
 class Component;
 class ComponentGroup;
 struct MouseInputEvent;
@@ -29,7 +29,7 @@ class GUIManager : public Object {
     ///
     /// The text objects for all the component
     ///
-    std::vector<std::shared_ptr<GUITextData>> components_text;
+    std::vector<std::shared_ptr<GUIText>> components_text;
 
     ///
     /// Generate the texture data for this component and its sub components

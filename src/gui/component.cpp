@@ -20,7 +20,8 @@ Component::Component(std::function<void (void)> on_click, float _width,
     width_pixels(0),height_pixels(0),
     x_offset(_x_offset), y_offset(_y_offset),
     x_offset_pixels(0), y_offset_pixels(0),
-    clickable(false), on_click_func(on_click)
+    clickable(false), on_click_func(on_click),
+    visible(true)
 {
     id =  get_new_id();
 }
@@ -41,7 +42,8 @@ Component::Component():
     x_offset_pixels(0),
     y_offset_pixels(0),
     clickable(false),
-    on_click_func([] (){ return; }) 
+    on_click_func([] (){ return; }),
+    visible(true)
 {
     id =  get_new_id();
 }

@@ -23,7 +23,7 @@ class GUIText : public Component {
 public:
     GUIText();
     ~GUIText();
-
+    
     ///
     /// Get the text 
     /// @return the text
