@@ -1,5 +1,5 @@
-Project Pyland
-==============
+
+![alt tag](https://raw.githubusercontent.com/pyland/pyland/master/resources/logo.png)
 
 This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectPyland](http://twitter.com/ProjectPyland).
 
@@ -56,10 +56,10 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 ##Usage
 
 Keybindings
-* n - spawn new spirte
 * r - run script for sprite
 * k - kill sprite
 * h - halt current script
 * m - print the focus sprites location
 * arrow keys / wasd - move sprite
-* numbers - move focus to sprite with associated number, numbers are allocated sequentially from 1
+* numbers - move focus to sprite with associated number, numbers are allocated sequentially from 0
+* = and - - zooming in and out
