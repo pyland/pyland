@@ -5,9 +5,9 @@ interactable/crate/bananas
 interactable/crate/empty
 interactable/crate/oranges
 interactable/crate/pineapples
-interactable/plants/bananas_tree
-interactable/plants/orange_tree
-interactable/plants/pineapples
+interactable/plants/crops/bananas_tree
+interactable/plants/crops/orange_tree
+interactable/plants/crops/pineapples
 interactable/treasure/closed
 interactable/treasure/open
 interactable/vines/cut/1

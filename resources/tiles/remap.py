@@ -100,6 +100,9 @@ if __name__ == "__main__":
     # Calculate gid changes
     gid_to_gid = {}
     for relpath in changed_fmls:
+        if relpath.stem not in new_tilesets:
+            continue
+
         offset_new = new_tilesets[relpath.stem]["firstgid"]
         offset_old = old_tilesets[relpath.stem]["firstgid"]
 
