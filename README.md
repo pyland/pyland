@@ -9,7 +9,7 @@ These install instructions may be incomplete and you may require additional pack
 #### Getting Dependancies (Raspberry Pi)
 
 ```bash
-git clone https://github.com/heidi-ann/zygote
+git clone https://github.com/pyland/pyland
 sudo apt-get install libx11-dev gdebi libtinyxml-dev zlib1g-dev mesa-common-dev mesa-utils mesa-utils-extra build-essential gedit
 g++-4.7 libsdl2-image-dev  
 wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2_2.0.3-1_armhf.deb
