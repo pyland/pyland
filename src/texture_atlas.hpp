@@ -46,6 +46,12 @@ private:
     ///
     Image image;
     ///
+    /// Image used to store the GL ready pixel data in main memory.
+    ///
+    /// This may have a different tile arrangement to image.
+    ///
+    Image gl_image;
+    ///
     /// The GL texture id
     ///
     GLuint gl_texture;
@@ -125,6 +131,14 @@ private:
     /// Deallocates the gl texture from the image member (if needed).
     ///
     void deinit_texture();
+
+    ///
+    /// Resets the layout to follow the guide of the original image.
+    ///
+    /// Any reshaping due to GL texture sizes is undone.
+    ///
+    void reset_layout();
+    
 public:
     ///
     /// Represents a failure when loading the texture atlas.
@@ -155,6 +169,11 @@ public:
     TextureAtlas(const std::string filename);
 
     ~TextureAtlas();
+
+    ///
+    /// Sets a non-standard tile size.
+    ///
+    void set_tile_size(int unit_w, int unit_h);
 
     ///
     /// Gets the underlying GL texture.
