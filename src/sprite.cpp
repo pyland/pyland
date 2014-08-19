@@ -52,7 +52,7 @@ Sprite::Sprite(glm::ivec2 position,
         object_text->align_at_origin(true);
         object_text->vertical_align_top();
 
-        std::shared_ptr<MapObject> status_icon = std::make_shared<MapObject>(pos_to_status(position), "status icon", Walkability::WALKABLE, 14, "../resources/tiles/gui.png");
+        std::shared_ptr<MapObject> status_icon = std::make_shared<MapObject>(pos_to_status(position), "status icon", Walkability::WALKABLE, 23, "../resources/tiles/gui.png");
         status_icon->set_render_above_sprites(true);
         ObjectManager::get_instance().add_object(status_icon);
         status_icon_id = status_icon->get_id();
@@ -273,16 +273,16 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
         case (Sprite_Status::NOTHING): 
         case (Sprite_Status::KILLED):
         case (Sprite_Status::STOPPED): 
-        status_icon->set_sheet_id(14);
+        status_icon->set_sheet_id(23);
         break;
 
         case (Sprite_Status::RUNNING):
-        status_icon->set_sheet_id(13);
+        status_icon->set_sheet_id(22);
         break;
 
         case (Sprite_Status::FAILED):
         // TODO: stopping should also be here
-        status_icon->set_sheet_id(12);
+        status_icon->set_sheet_id(21);
         break;
     }
 
