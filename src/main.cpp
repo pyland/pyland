@@ -31,7 +31,14 @@
 #include "long_walk_challenge.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
-#include "python_embed/interpreter.hpp"
+#include "interpreter.hpp"
+
+#ifdef USE_GLES
+#include "typeface.hpp"
+#include "text_font.hpp"
+#include "text.hpp"
+#endif
+
 
 
 using namespace std;
@@ -279,14 +286,17 @@ int main(int argc, const char *argv[]) {
         #ifdef USE_GLES
             TextFont big_font(Engine::get_game_typeface(), 50);
             Text cursor(challenge_data->game_window, big_font, true);
-            cursor.set_bloom_radius(5);
+            cursor.set_bloom_radius(10);
+            cursor.align_left();
+            cursor.vertical_align_centre();
+            cursor.align_at_origin(true);
             cursor.move(0, 0);
-            cursor.resize(50, 50);
+            cursor.resize(100, 100);
             cursor.set_text("<");
 
             Lifeline cursor_lifeline(challenge_data->input_manager->register_mouse_handler(
                 filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
-                    cursor.move(event.to.x, event.to.y+25);
+                    cursor.move(event.to.x-10, event.to.y);
                 })
             ));
         #endif

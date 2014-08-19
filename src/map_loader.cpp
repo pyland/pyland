@@ -78,19 +78,15 @@ void MapLoader::load_layers() {
     }
 }
 
-// TODO (Joshua): Make code not terrible
-std::pair<FML, std::vector<ObjectProperties>> MapLoader::get_object_mapping() {
-    std::vector<ObjectProperties> object_properties_mapping;
-    std::map<std::string, std::string> named_tiles_mapping;
+std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
+    std::map<std::string, ObjectProperties> named_tiles_mapping;
 
+    // For each object later
     for (int i = 0; i < map.GetNumObjectGroups(); ++i) {
-        // Get an object group: effecitively a map layer but just for objects
         const Tmx::ObjectGroup *object_group(map.GetObjectGroup(i));
 
-        // Get all the objects in this object group
+        // For each object in the group
         for (int j = 0; j < object_group->GetNumObjects(); ++j) {
-
-            // Get an object
             const Tmx::Object *object(object_group->GetObject(j));
 
             // For all the tilesets, with guaranteed increasing FirstGid values
@@ -105,20 +101,22 @@ std::pair<FML, std::vector<ObjectProperties>> MapLoader::get_object_mapping() {
 
             CHECK_NOTNULL(tileset);
 
-            object_properties_mapping.push_back({
-                glm::ivec2(             object->GetX() / Engine::get_tile_size(),
-                           map_height - object->GetY() / Engine::get_tile_size()),
+            auto fullname(object_group->GetName() + "/" + object->GetName());
+            ObjectProperties properties({
+                glm::ivec2(
+                                 object->GetX() / Engine::get_tile_size(),
+                    map_height - object->GetY() / Engine::get_tile_size()
+                ),
                 object->GetGid() - tileset->GetFirstGid(),
                 tileset->GetName(),
                 "../resources/" + tileset->GetImage()->GetSource()
             });
 
-            auto fullname(object_group->GetName() + "/" + object->GetName());
-            named_tiles_mapping[fullname] = std::to_string(object_properties_mapping.size()-1);
+            named_tiles_mapping.insert(std::make_pair(fullname, properties));
         }
     }
 
-    return std::make_pair(FML::unsafe_from_map(named_tiles_mapping), object_properties_mapping);
+    return named_tiles_mapping;
 }
 
 void MapLoader::load_tileset() {

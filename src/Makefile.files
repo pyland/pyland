@@ -13,7 +13,6 @@ BASE_OBJS = \
 	challenge_helper.o     \
 	engine.o               \
 	event_manager.o        \
-	fml.o                  \
 	game_time.o            \
 	game_window.o          \
 	graphics_context.o     \

@@ -13,6 +13,7 @@
 #include "event_manager.hpp"
 #include "fml.hpp"
 #include "map.hpp"
+#include "maptools.hpp"
 #include "map_loader.hpp"
 #include "map_viewer.hpp"
 #include "walkability.hpp"
@@ -39,23 +40,21 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                                    OutputIt output) {
 
     auto *map(Engine::get_map_viewer()->get_map());
-    auto begin(map->locations.begin("Objects/" + name));
-    auto end  (map->locations.end  ("Objects/" + name));
+    auto begin(maptools::start_of(map->locations, "Objects/" + name));
+    auto end  (maptools::end_of  (map->locations, "Objects/" + name));
 
     if (begin == end) {
         throw std::runtime_error("No such object: " + name);
     }
 
     std::transform(begin, end, output,
-        [&] (std::pair<std::string, int> name_id) {
-            auto properties(map->obj_from_id(name_id.second));
-
+        [&] (std::pair<std::string, ObjectProperties> name_properties) {
             return challenge->make_map_object(
-                properties.location,
-                name,
+                name_properties.second.location,
+                name_properties.first,
                 walkability,
-                properties.tileset_id,
-                properties.atlas_name
+                name_properties.second.tileset_id,
+                name_properties.second.atlas_name
             );
         }
     );
@@ -67,17 +66,18 @@ void ChallengeHelper::make_interactions(std::string name,
                                         std::function<bool (int)> callback) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-    auto begin(map->locations.begin("Interactions/" + name));
-    auto end  (map->locations.end  ("Interactions/" + name));
+    auto begin(maptools::start_of(map->locations, "Interactions/" + name));
+    auto end  (maptools::end_of  (map->locations, "Interactions/" + name));
+
 
     if (begin == end) {
         throw std::runtime_error("No such interaction: " + name);
     }
 
     std::transform(begin, end, output,
-        [&] (std::pair<std::string, int> name_id) {
+        [&] (std::pair<std::string, ObjectProperties> name_properties) {
             return map->event_step_on.register_callback(
-                map->obj_from_id(name_id.second).location,
+                name_properties.second.location,
                 callback
             );
         }

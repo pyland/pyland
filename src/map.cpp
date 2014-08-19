@@ -47,7 +47,7 @@ Map::Map(const std::string map_src):
             return;
         }
 
-        std::tie(locations, objprop_ids_to_instances) = map_loader.get_object_mapping();
+        locations = map_loader.get_object_mapping();
 
         //Get the loaded map data
         map_width = map_loader.get_map_width();
@@ -82,10 +82,6 @@ Map::Map(const std::string map_src):
         // init_textures();
         // generate_tileset_coords(texture_atlases[0]);
         generate_data();
-}
-
-ObjectProperties Map::obj_from_id(int id) {
-    return objprop_ids_to_instances.at(id);
 }
 
 Map::~Map() {
@@ -419,7 +415,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
                 // The tile is not blank, so set its x, y.
                 vx1 = float(x);
                 vy1 = float(y);
-                vx2 = float(x + 1);
+                vx2 = float(x + 1.001);
                 vy2 = float(y + 1.001);
             }
 

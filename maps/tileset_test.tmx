@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="48" height="32" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/ground.png" width="1408" height="64"/>
+  <image source="../resources/tiles/ground.png" width="3648" height="64"/>
  </tileset>
- <tileset firstgid="23" name="walls" tilewidth="64" tileheight="64">
+ <tileset firstgid="58" name="walls" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/walls.png" width="128" height="64"/>
  </tileset>
- <tileset firstgid="25" name="interactable" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/interactable.png" width="896" height="64"/>
+ <tileset firstgid="60" name="interactable" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/interactable.png" width="1280" height="64"/>
  </tileset>
- <tileset firstgid="39" name="test" tilewidth="64" tileheight="64">
+ <tileset firstgid="80" name="test" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/test.png" width="128" height="64"/>
  </tileset>
  <layer name="Ground" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJztw8EJAAAMA6H7ZP+Vu0dRcNVUVVVVVdVXD2kYHgE=
+   eJztw8EJAAAMA6F7Zv+Ju0dRcNVUVVVVVdVXD5nAMAE=
   </data>
  </layer>
  <layer name="Scenery" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzNmFFPwzAMhJ29TIixARJsjKchxv//ibQiVk/Xc1NISmfJappl6Rfn4jRNZpY6PwpP2TeBH/L12vnnCn4NuE/Er8Zhmd9yP2uY85/AVfzVGHpj/rvOdzN8K1iiOVaO/K4dHkOysa5wDL3tbdDPmvwRZ6SniL/Gavmdl+95XLemnyjvYNxV7Hvb3wh/Sftq7Sr+GquNv4p1lHfcIv3ck+/oukT+mbN38fNw/0J+5uW6JflVrlHsir/GWuT/KNc82lgLvb9AP2w4F1uqWyr+UewPQT9R/tnmMnMvvX8h/yaXkT/lNgnqkT/iwN8ia7l+ub3zO7vze/y/gCHBVZWjMfyV3+PssVdtkd8d4/9BHImuG7iPrIZf/YYW6d/5L8DALIqtJX+/np7sJ6aeZzh/v9o4j3s971e+PtU88PtHC/7+/iE/99kGPan+8TloF9HuN9qv4Z/7roMa5r5Y//y/OVbDr94fjtSe+8BxeP7xHHASZfZW/Lh3qXMk8/LcJBvyv2Lnvf2/+dX3B87tuH+dO3/L7lxn4lRWy8+xK/Gjrq5QnmKcsiX0j/zqGczP8xethyi/tcg/U2cANRfej/NHvKzR1vzReb2kH+SfspKmWvDPPTdG8T/D7+82rF2sX4p/ztmX1wH2Y6a/BUTroSX/lPZL33CRf4qby634S7lnzjjW/n5b8tIaWfP7+Tcv5zIK
+   eJzNmFFOwzAQRNc9RIUoLSDBJdoPym8R5f63IRFeZTSZjQN2SFdaxXFd53k9XsdJZpY6PwpP2TeBH/L12vnnCn4NuE/Er8Zhmd9yP2uY85/AVfzVGHpj/rvOdzN8K1iiOVaO/K4dHkOysa5wDL3tbdDPmvwRZ6SniL/Gavmdl+95XLemnyjvYNxV7Hvb3wh/Sftq7Sr+GquNv4p1lHfcIv3ck+/oukT+mbN38fNw/0J+5uW6JflVrlHsir/GWuT/KNc82lgLvb9AP2w4F1uqWyr+UewPQT9R/tnmMnMvvX8h/yaXkT/lNgnqkT/iwN8ia7l+ub3zO7vze/y/gCHBVZWjMfyV3+PssVdtkd8d4/9BHImuG7iPrIZf/YYW6d/5L8DALIqtJX+/np7sJ6aeZzh/v9o4j3s971e+PtU88PtHC/7+/iE/99kGPan+8TloF9HuN9qv4Z/7roMa5r5Y//y/OVbDr94fjtSe+8BxeP7xHHASZfZW/Lh3qXMk8/LcJBvyv2Lnvf2/+dX3B87tuH+dO3/L7lxn4lRWy8+xK/Gjrq5QnmKcsiX0j/zqGczP8xethyi/tcg/U2cANRfej/NHvKzR1vzReb2kH+SfspKmWvDPPTdG8T/D7+82rF2sX4p/ztmX1wH2Y6a/BUTroSX/lPZL33CRf4qby634S7lnzjjW/n5b8tIaWfP7+Tdxrm6C
   </data>
  </layer>
  <layer name="Scenery2" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt2EEKgDAMBMDoL1p79P9vVMFAWMipSrtlB4KpiG4lXjTrd35wD6bnzqrdtSW1v+X9jDxfhR730kYFXNzzznGG4pplfjx3XGMv//Bv12fJy4znvcfsMXM1nj2ICL8aihF7fhmnQF+yC0USOEMiMrcDjnheZCUj/59fkYQDuA==
+   eJzt2FEKgCAQBNCpi7n53/2vU0HSMuBXxboyD5bWCBtF+gh4b/9gjkzvHVU9a+nUelfrR9TyGfW8lhoTb3rXnvMZ8uMs56fl9mPu5R+G51tTXQF59t1n95kNedYgIvmZq4wMufNLnEJ96T0o0sFnSETGttGV74vMJPL/+QEx+giE
   </data>
  </layer>
  <layer name="Interaction" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt0LEJADAMA0Etki77z5gNDGnyMf4D9Y8SKdkX+5H9LPtZ9rPsZ9nPsp9lP8t+lv0s+1n2s+xnTe1fDxsr3f+f6gAQYitu
+   eJzt0LEJADAMA0FNly77r5MNDGnyMf4D9Y8SKdkX+5H9LPtZ9rPsZ9nPsp9lP8t+lv0s+1n2s+xnTe1fDxsr3f+f6gDu7lzr
   </data>
  </layer>
  <layer name="Collisions" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzdVlsKwCAM8zi7/wn3MQZS7MumrVtA0DnTWONjjAfXolixGntC8ejvAFp/9TzmuJx2y3xoHx2v/b8LTad1PTr9o7W9+jVOJCTfe/ZCpke0uBbvW3g6ED13Zh6uvsvpiRudA+ef7L2Qqb8Cf9W/y1MNy/0ljZG+VcCbf67vJP3a/95zJfMMzXhHrfoq9Hd5IAKUn7v9/9Z3dVjykOEh6f7yxNJ4EG8sLi4izl/0U86xqCORob8SlnVH8WT5Z65/cf/SdkR/NdB5kNYBGY/GnWNGeLr8E+U/9fz38HQAlStP3tHlBmKDPRk=
+   eJztwQENAAAAwqD3T20PBxQAAAAAAPBmGAAAAQ==
   </data>
  </layer>
 </map>

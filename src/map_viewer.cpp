@@ -52,7 +52,7 @@ MapViewer::MapViewer(GameWindow *window, GUIManager *gui_manager):
         // Disable writing to the alpha channel.
         // Fixes a bug where EGL layer becomes transparent.
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
-        // L./eave this here!!!
+        // Leave this here!!!
         //Disable back face culling.
         glDisable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
@@ -231,7 +231,7 @@ void MapViewer::render_objects(bool above_sprite) {
             if(!object->is_renderable())
                 continue;
 
-            if(!above_sprite && object->render_above_sprites())
+            if(above_sprite ^ object->render_above_sprites())
                 continue;
 
             RenderableComponent* object_render_component = object->get_renderable_component();
@@ -499,12 +499,10 @@ float MapViewer::get_display_height() {
 
 float MapViewer::get_display_x() {
     // Must be to nearest pixel for render accuracy
-    return std::trunc(map_display_x * Engine::get_actual_tile_size()) /
-           Engine::get_actual_tile_size();
+    return map_display_x;
 }
 
 float MapViewer::get_display_y() {
     // Must be to nearest pixel for render accuracy
-    return std::trunc(map_display_y * Engine::get_actual_tile_size()) /
-           Engine::get_actual_tile_size();
+    return map_display_y;
 }

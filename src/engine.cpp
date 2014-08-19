@@ -205,9 +205,6 @@ void Engine::text_displayer() {
         if (sprite->get_object_text()) {
             sprite->get_object_text()->display();
         }
-        if (sprite->get_status_text()) {
-            sprite->get_status_text()->display();
-        }
     }
 }
 
@@ -225,11 +222,6 @@ void Engine::text_updater() {
             pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
             pixel_position.y
         );
-
-        sprite->get_status_text()->move(
-            pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
-            pixel_position.y + int(Engine::get_actual_tile_size() / 1.0f)
-        );
     }
 
 }
@@ -240,9 +232,9 @@ void Engine::update_status(int id, std::string status) {
 }
 
 TextFont Engine::get_game_font() {
-    return TextFont(get_game_typeface(), 20);
+    return TextFont(get_game_typeface(), 19);
 }
 
 Typeface Engine::get_game_typeface() {
-    return Typeface("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
+    return Typeface("../fonts/Ubuntu-R.ttf");
 }

@@ -7,6 +7,7 @@
 
 #include "dispatcher.hpp"
 #include "lifeline.hpp"
+#include "sprite_switcher.hpp"
 #include "walkability.hpp"
 
 class ChallengeData;
@@ -15,13 +16,10 @@ class Map;
 
 class Challenge {
 protected:
-    ChallengeData* challenge_data;
     Map* map;
     Lifeline esc_callback;
+    SpriteSwitcher* sprite_switcher; 
 
-    Dispatcher<> event_finish;
-
-    std::vector<int> sprite_ids;
     std::vector<int> map_object_ids;
 public:
     // TODO: Make the editor part of the core
@@ -29,6 +27,10 @@ public:
     Challenge(ChallengeData* _challenge_data);
 
     virtual ~Challenge();
+
+    ChallengeData* challenge_data;
+    Dispatcher<> event_finish;
+    std::vector<int> sprite_ids;
 
     virtual void start() = 0;
     virtual void finish() = 0;
@@ -54,6 +56,8 @@ public:
     /// @return the sprite's id
     ///
     int make_map_object(glm::vec2 position, std::string name, Walkability walkability, int sheet_id, std::string sheet_name);
+
+
 };
 
 #endif
