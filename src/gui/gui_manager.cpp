@@ -63,7 +63,6 @@ void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
             component->set_height_pixels  (int(float(height_pixels) * component->get_height()));
             component->set_x_offset_pixels(int(float( width_pixels) * component->get_x_offset()));
             component->set_y_offset_pixels(int(float(height_pixels) * component->get_y_offset()));
-            std::cout << component->get_x_offset_pixels() << std::endl;
 
             //Give it a pointer to its texture coordinates
             component->set_texture_atlas(renderable_component.get_texture());
@@ -242,7 +241,6 @@ void GUIManager::render_text() {
         
         int x_pos = gui_text_data->get_transformed_x_offset();
         int y_pos = gui_text_data->get_transformed_y_offset();
-        std::cout <<" X " << x_pos << " Y  " << y_pos << std::endl;;
         text_data->get_text()->move(x_pos, y_pos);
         text_data->get_text()->display();
    }

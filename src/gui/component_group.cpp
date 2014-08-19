@@ -123,7 +123,7 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
 }
 
 std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
-    std::cout <<" IN A GROUP " << std::endl;
+
    //Call the implementation of this class  to generate it's data
     std::vector<std::shared_ptr<GUIText>> group_data = generate_this_text_data();
     for(std::shared_ptr<GUIText> this_data : group_data) {
@@ -138,8 +138,6 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
             int transformed_y = this_data->get_gui_text()->get_transformed_y_offset();
             this_data->get_gui_text()->set_transformed_x_offset(transformed_x + int(pixel_offset_x) + get_x_offset_pixels());
             this_data->get_gui_text()->set_transformed_y_offset(transformed_y + int(pixel_offset_y) + get_y_offset_pixels());
-            std::cout << " OFF " << get_x_offset_pixels()  << std::endl;
-
     }
 
 
@@ -163,7 +161,6 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
             int transformed_y = text_data->get_gui_text()->get_transformed_y_offset();
             text_data->get_gui_text()->set_transformed_x_offset(transformed_x + int(pixel_offset_x));
             text_data->get_gui_text()->set_transformed_y_offset(transformed_y + int(pixel_offset_y));
-            std::cout << " OFF " <<text_data->get_gui_text()->get_transformed_y_offset()  << std::endl;
 
             //add to this group
             group_data.push_back(text_data);

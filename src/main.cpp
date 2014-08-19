@@ -144,7 +144,7 @@ int main(int argc, const char *argv[]) {
     auto original_window_size = window.get_size();
     sprite_window->set_width_pixels(original_window_size.first);
     sprite_window->set_height_pixels(original_window_size.second);
-    std::cout <<" spri" << sprite_window->get_width_pixels() << std::endl;
+
     gui_manager.parse_components();
 
     //The GUI resize function

@@ -398,6 +398,5 @@ std::vector<std::shared_ptr<GUIText>> Button::generate_this_text_data() {
     text_data.push_back(button_text);
     button_text->get_gui_text()->set_transformed_x_offset(0);
     button_text->get_gui_text()->set_transformed_y_offset(0);
-    std::cout <<" BUTTON " << button_text->get_x_offset() << std::endl;
     return text_data;
 }
