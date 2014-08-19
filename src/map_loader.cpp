@@ -109,7 +109,7 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
                 ),
                 object->GetGid() - tileset->GetFirstGid(),
                 tileset->GetName(),
-                "../resources/" + tileset->GetImage()->GetSource()
+                tileset->GetImage()->GetSource()
             });
 
             named_tiles_mapping.insert(std::make_pair(fullname, properties));
@@ -130,7 +130,7 @@ void MapLoader::load_tileset() {
         const std::string tileset_name(tileset->GetName());
         int tileset_width = tileset->GetImage()->GetWidth();
         int tileset_height = tileset->GetImage()->GetHeight();
-        const std::string tileset_atlas("../resources/" + tileset->GetImage()->GetSource());
+        const std::string tileset_atlas(tileset->GetImage()->GetSource());
 
         //Create a new tileset and add it to the map
         std::shared_ptr<TileSet> map_tileset = std::make_shared<TileSet>(tileset_name, tileset_width, tileset_height, tileset_atlas);

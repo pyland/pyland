@@ -79,7 +79,7 @@ Map::Map(const std::string map_src):
 
         //Generate the geometry needed for this map
         init_shaders();
-        // init_textures();
+        init_textures();
         // generate_tileset_coords(texture_atlases[0]);
         generate_data();
 }
