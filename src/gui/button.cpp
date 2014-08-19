@@ -45,7 +45,7 @@ std::shared_ptr<Text> Button::get_text() {
 void Button::set_text(std::shared_ptr<Text> _text) {
     button_text->set_text(_text);
 }
-#include <iostream>
+
 std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
     delete []vertex_data;
 
@@ -85,9 +85,6 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
     std::tuple<float,float,float,float> edge_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
 
     //Generate the vertex coordinates for each element
-    std::cout <<" BACK "<< std::endl;
-std::cout << " TET " <<( float(height_pixels) - element_height_pixels)  << " " << std::endl;
-std::cout << "WDH " << width_pixels << " " << height_pixels << std::endl;
     int offset = generate_tile_element_vertex_coords(vertex_data, 0, background_bounds, element_width_pixels, element_height_pixels);
     offset = generate_vertex_coords_element(vertex_data, offset, corner_top_left_bounds);
     offset = generate_vertex_coords_element(vertex_data, offset, corner_top_right_bounds);
@@ -135,7 +132,7 @@ int Button::generate_tile_element_vertex_coords(GLfloat* data, int offset, std::
         num_y++;
         need_subtile_y = true;
     }
-    //    std::cout << "NUM " << num_x << " " << num_y << std::endl;
+
     std::tuple<float,float,float,float> tile_bounds;
     for(int y = 0; y < num_y; y++) {
         for(int x = 0; x < num_x; x++) {
@@ -147,7 +144,6 @@ int Button::generate_tile_element_vertex_coords(GLfloat* data, int offset, std::
 
             //If we're on a sub tile
             if(y+1 == num_y && need_subtile_y) {
-                std::cout << "YES " << std::endl;
                 tile_top = top;
             }
 
@@ -250,7 +246,6 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
 
 
     //Load data for texture coordinate bouds
-
     std::tuple<float,float,float,float> background_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/background/1"));
     std::tuple<float,float,float,float> corner_top_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/topleft"));
     std::tuple<float,float,float,float> corner_top_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/topright"));

@@ -27,7 +27,6 @@
 
 
 void GUIManager::parse_components() {
-    std::cout <<"DONING " << std::endl;
     //IMPORTANT
     //The order of these calls must be preserved.
     load_textures();
@@ -46,6 +45,8 @@ void GUIManager::parse_components() {
 void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
     if(!parent)
         return;
+
+    parent->set_texture_atlas(renderable_component.get_texture());
 
     try{
         //Go through all the children of this component
