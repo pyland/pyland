@@ -40,6 +40,7 @@ public:
 
     int generate_tile_element_vertex_coords(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds, float element_width, float element_height);
     int generate_tile_element_texture_coords(GLfloat* data, int offset, std::tuple<float,float,float,float>vertex_bounds, float element_width, float element_height, std::tuple<float,float,float,float> texture_bounds);
+    int calculate_num_tile_elements(std::tuple<float,float,float,float> bounds, float element_width, float element_height);
 
   std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data();
 
