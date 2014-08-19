@@ -190,26 +190,24 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
 
     switch (sprite_status) {
 
-        case (Sprite_Status::NOTHING):
-        status_icon->set_tile(TextureAtlas::from_name("gui/status/stationary"));
-        break;
+        case Sprite_Status::NOTHING:
+            status_icon->set_tile(TextureAtlas::from_name("gui/status/stationary"));
+            break;
 
-        case (Sprite_Status::KILLED):
-        case (Sprite_Status::STOPPED):
-        status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
-        break;
+        case Sprite_Status::KILLED:
+        case Sprite_Status::STOPPED:
+            status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
+            break;
 
-        case (Sprite_Status::RUNNING):
-        status_icon->set_tile(TextureAtlas::from_name("gui/status/running"));
-        break;
+        case Sprite_Status::RUNNING:
+            status_icon->set_tile(TextureAtlas::from_name("gui/status/running"));
+            break;
 
-        case (Sprite_Status::FAILED):
-        // TODO: stopping should also be here
-        status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
-        break;
+        case Sprite_Status::FAILED:
+            // TODO: stopping should also be here
+            status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
+            break;
     }
-
-
 }
 
 void Sprite::set_focus(bool _is_focus) {
