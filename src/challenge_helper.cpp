@@ -23,6 +23,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string name,
                                  Walkability walkability) {
 
+    LOG(INFO) << "creating object at " << name;
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Objects/" + name));
 
@@ -35,6 +36,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
 }
 
 int ChallengeHelper::make_sprite(Challenge *challenge, std::string marker_name, std::string sprite_name, Walkability walkability) {
+
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Objects/" + marker_name));
 
