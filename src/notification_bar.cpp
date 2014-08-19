@@ -3,12 +3,12 @@
 #include <ostream>
 #include <utility>
 
-#include "button.hpp"
 #include "component_group.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_window.hpp"
 #include "gui_manager.hpp"
+#include "object_manager.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
 #include "text.hpp"
@@ -16,9 +16,9 @@
 
 
 // configuration of notification bar
-float button_size = 0.05f;
-std::pair<float,float> backward_loco(0.85f,0.05f);
-std::pair<float,float> forward_loco(0.95f,0.05f);
+float button_size = 0.2f;
+std::pair<float,float> backward_loco(0.8f,0.03f);
+std::pair<float,float> forward_loco(0.8f,0.2f);
 
 int text_border_width = 20;
 
@@ -29,7 +29,7 @@ NotificationBar::NotificationBar() {
     TextFont notification_buttonfont = Engine::get_game_font();
 
     /// build back button
-    std::shared_ptr<Button> backward_button = std::make_shared<Button>();
+    backward_button = std::make_shared<Button>();
     backward_button->set_text("backward");
     backward_button->set_on_click([&] () {
         LOG(INFO) << "backward button pressed";
@@ -39,10 +39,9 @@ NotificationBar::NotificationBar() {
     backward_button->set_height(button_size);
     backward_button->set_y_offset(backward_loco.second);
     backward_button->set_x_offset(backward_loco.first);
-    backward_button_id = backward_button->get_id();
 
     //build forwards button
-    std::shared_ptr<Button> forward_button = std::make_shared<Button>();
+    forward_button = std::make_shared<Button>();
     forward_button->set_text("forward");
     forward_button->set_on_click([&] () {
         LOG(INFO) << "forward button pressed";
@@ -52,7 +51,7 @@ NotificationBar::NotificationBar() {
     forward_button->set_height(button_size);
     forward_button->set_y_offset(forward_loco.second);
     forward_button->set_x_offset(forward_loco.first);
-    forward_button_id = forward_button->get_id();
+
 
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
     CHECK_NOTNULL(gui_manager);
@@ -62,15 +61,16 @@ NotificationBar::NotificationBar() {
 
     // button text as Button::set_text() don't currently work
     backward_text.reset(new Text(window, notification_buttonfont, true));
-    backward_text->set_text("<-");
+    backward_text->set_text("<- Previous");
     backward_text->set_bloom_radius(6);
+
     backward_text->move_ratio(backward_loco.first, backward_loco.second);
     backward_text->resize_ratio(button_size,button_size);
 
     forward_text.reset(new Text(window, notification_buttonfont, true));
     forward_text->set_bloom_radius(6);
-    forward_text->set_text("->");
-    forward_text->move_ratio(forward_loco.first,forward_loco.second);
+    forward_text->set_text("Next ->");
+    forward_text->move_ratio(forward_loco.first,forward_loco.second+1.0f);
     forward_text->resize_ratio(button_size,button_size);
 
     // text object for notifications
@@ -124,28 +124,18 @@ void NotificationBar::add_notification(std::string text_to_display) {
     hide_buttons();
  }
 
- void NotificationBar::hide_buttons(){
-    // TODO: this is a hack until I can hide buttons
-
-    if (notification_stack.can_forward) {
-        forward_text->set_text("->");
-    } else {
-        forward_text->set_text("");
-    }
-
-    if (notification_stack.can_backward) {
-        backward_text->set_text("<-");
-    } else {
-        backward_text->set_text("");
-    }
+ void NotificationBar::hide_buttons() {
+    forward_button->set_visible(notification_stack.can_forward);
+    backward_button->set_visible(notification_stack.can_backward);
+    Engine::get_map_viewer()->get_gui_manager()->parse_components();
 
  }
 
  NotificationBar::~NotificationBar() {
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
     CHECK_NOTNULL(gui_manager);
-    gui_manager->get_root()->remove(backward_button_id);
-    gui_manager->get_root()->remove(forward_button_id);
+    gui_manager->get_root()->remove(backward_button->get_id());
+    gui_manager->get_root()->remove(forward_button->get_id());
 }
 
 void NotificationBar::clear_text() {

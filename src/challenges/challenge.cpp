@@ -31,7 +31,7 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         map_viewer->set_map(map);
 
         //build sprite switcher 
-        sprite_switcher = new SpriteSwitcher();
+        //sprite_switcher = new SpriteSwitcher();
 
         // WTF
 
