@@ -1,7 +1,7 @@
-Project Zygote (working title)
-==============================
+Project Pyland
+==============
 
-This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectZygote](http://twitter.com/ProjectZygote).
+This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectPyland](http://twitter.com/ProjectPyland).
 
 ## Install 
 These install instructions may be incomplete and you may require additional packages to the ones listed here
