@@ -2,9 +2,9 @@
 #define GUI_MANAGER_H
 
 #include <memory>
-
+#include <iostream>
 #include "object.hpp"
-
+#include "gui_text.hpp"
 class Component;
 class ComponentGroup;
 struct MouseInputEvent;
@@ -26,16 +26,25 @@ class GUIManager : public Object {
     ///
     std::shared_ptr<ComponentGroup> root;
 
+    ///
+    /// The text objects for all the component
+    ///
+    std::vector<std::shared_ptr<GUIText>> components_text;
 
     ///
     /// Generate the texture data for this component and its sub components
     ///
-    void generate_tex_data();
+    void generate_texture_data();
 
     ///
     /// Generate the vertex data for this component and its sub components
     ///
     void generate_vertex_data();
+
+    ///
+    /// Generate the text data for this component and its sub componets
+    ///
+    void generate_text_data();
 
     ///
     /// Load the texture for this component
@@ -100,7 +109,10 @@ public:
     ///
     std::shared_ptr<ComponentGroup> get_root() { return root; }
 
-
+    ///
+    /// Render the text
+    ///
+    void render_text();
 };
 
 #endif

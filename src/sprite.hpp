@@ -63,17 +63,19 @@ public:
     Sprite();
     ///
     /// Constructs a sprite
-    /// @param position the (x, y) position of the sprite on the map
-    /// @param name the name of the sprite
-    /// @param walkability the walkability properties of the sprite
-    /// @param sheet_id the id of the image of the sprite in its sprite sheet
-    /// @param sheet_name the name of the sprite sheet
+    /// @param position
+    ///     the (x, y) position of the sprite on the map
+    /// @param name
+    ///     the name of the sprite
+    /// @param walkability
+    ///     the walkability properties of the sprite
+    /// @param tile
+    ///     the sprite's imaage, referenced by an id:sheet_name pair
     ///
     Sprite(glm::ivec2 position,
            std::string name,
            Walkability walkability,
-           int sheet_id,
-           std::string sheet_name="../resources/characters_1_64.png");
+           std::pair<int, std::string> tile);
 
     virtual ~Sprite();
 
@@ -109,17 +111,6 @@ public:
     std::vector<int> get_inventory() { return inventory; }
 
     void set_position(glm::vec2 position);
-
-
-    ///
-    /// Generate the texture coordinate data for the object
-    ///
-    void generate_tex_data();
-
-    ///
-    /// Generate the vertex data for the object
-    ///
-    void generate_vertex_data();
 
 
     ///

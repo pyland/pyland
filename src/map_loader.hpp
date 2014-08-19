@@ -15,9 +15,7 @@ class TileSet;
 
 struct ObjectProperties {
     const glm::ivec2 location;
-    const int tileset_id;
-    const std::string tileset_name;
-    const std::string atlas_name;
+    const std::pair<int, std::string> tile;
 };
 
 ///

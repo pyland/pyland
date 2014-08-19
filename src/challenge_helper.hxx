@@ -53,8 +53,7 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                 name_properties.second.location,
                 name_properties.first,
                 walkability,
-                name_properties.second.tileset_id,
-                name_properties.second.atlas_name
+                name_properties.second.tile
             );
         }
     );

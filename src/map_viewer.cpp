@@ -85,7 +85,6 @@ void MapViewer::render() {
     CHECK_NOTNULL(map);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     render_map();
     render_objects(false);
     render_sprites();
@@ -96,7 +95,6 @@ void MapViewer::render() {
 void MapViewer::render_map() {
     // Focus onto the player
     refocus_map();
-
     // Calculate the projection and modelview matrix for the map
     std::pair<int, int> size(window->get_size());
     glm::mat4 projection_matrix(glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f));
@@ -314,7 +312,8 @@ void MapViewer::render_gui() {
     gui_render_component->release_textures();
     gui_render_component->release_vbos();
     gui_render_component->release_shader();
-
+     
+    gui_manager->render_text();
 }
 
 ///
