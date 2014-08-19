@@ -24,7 +24,7 @@
 /// groups, allowing us to build up a component tree of components to render.
 ///
 class ComponentGroup : public Component {
-
+protected:
     ///
     /// The number of components in the group
     ///
@@ -32,6 +32,9 @@ class ComponentGroup : public Component {
 public:
 
     ComponentGroup();
+    ComponentGroup(std::function<void (void)> on_click, float _width, float _height, float _xo_offset, float _y_offset);
+
+
     ~ComponentGroup();
 
     ///
@@ -69,17 +72,20 @@ public:
 
     ///
     /// Same as the vertex function but generates texture data
-    /// @param component the component to generate the data for
     /// The pair holds the pointer and then the size of the data in bytes
     ///
     std::vector<std::pair<GLfloat*, int>> generate_texture_data();
+
+    ///
+    /// Gets a vector of all the GUIText elements for this component
+    ///
+    std::vector<std::shared_ptr<GUIText>> generate_text_data();
 
     ///
     /// This function is called by generate vertex data (See Call Super on wikipedia)
     /// to generate the vertex data for this actual component. We need to also
     /// enumerate all the components in this group and so this behaviour is common to
     /// all subclasses.
-    /// @param component the component to generate the data for
     /// The pair holds the pointer and then the size of the data in bytes
     ///
     virtual std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data() = 0;
@@ -87,9 +93,15 @@ public:
     ///
     /// This function is called by generate texture data (See Call Super on wikipedia)
     /// to generate the texture data for this actual component
-    /// @param component the component to generate the data for
     /// The pair holds the pointer and then the size of the data in bytes
     ///
     virtual std::vector<std::pair<GLfloat*, int>> generate_this_texture_data() = 0;
+
+    ///
+    /// This function is called by generate text data (See Call Super on wikipedia)
+    /// to generate the text data for this actual component
+    ///
+    virtual std::vector<std::shared_ptr<GUIText>> generate_this_text_data() = 0;
+
 };
 #endif

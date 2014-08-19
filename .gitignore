@@ -35,3 +35,4 @@ src/python_embed/python_embed_headers.hpp.unknown
 test/text/main
 *callgrind.out*
 src/test/test.bin
+*.DS_Store
