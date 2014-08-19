@@ -404,3 +404,9 @@ int TextureAtlas::get_name_index(const std::string name) {
         return -1;
     }
 }
+
+std::pair<int, std::string> TextureAtlas::from_name(const std::string tile_name) {
+    auto texture_name = TextureAtlas::names_to_tilesets().at(tile_name);
+    auto index = TextureAtlas::get_shared(texture_name)->get_name_index(tile_name);
+    return std::make_pair(index, texture_name);
+}
