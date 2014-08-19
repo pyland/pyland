@@ -74,7 +74,7 @@ public:
     /// Load objects from the TMX map to create a mapping
     /// from names to places and tile ids
     ///
-    std::pair<FML, std::vector<ObjectProperties>> get_object_mapping();
+    std::map<std::string, ObjectProperties> get_object_mapping();
 
     ///
     /// Load the TMX map from the source file

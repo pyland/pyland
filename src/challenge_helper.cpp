@@ -24,8 +24,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
                                  Walkability walkability) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-    auto id(map->locations.get<int>("Objects/" + name));
-    auto properties(map->obj_from_id(id));
+    auto properties(map->locations.at("Objects/" + name));
 
     return challenge->make_map_object(
         properties.location,
@@ -38,8 +37,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
 
 int ChallengeHelper::make_sprite(Challenge *challenge, std::string marker_name, std::string sprite_name, Walkability walkability) {
     auto *map = Engine::get_map_viewer()->get_map();
-    auto id(map->locations.get<int>("Objects/" + marker_name));
-    auto properties(map->obj_from_id(id));
+    auto properties(map->locations.at("Objects/" + marker_name));
 
     auto new_sprite(std::make_shared<Sprite>(properties.location, sprite_name, walkability, properties.tileset_id, properties.atlas_name));
     ObjectManager::get_instance().add_object(new_sprite);
@@ -75,12 +73,9 @@ ChallengeHelper::make_interaction(std::string name,
                                   std::function<bool (int)> callback) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-    auto id(map->locations.get<int>("Interactions/" + name));
+    auto properties(map->locations.at("Interactions/" + name));
 
-    return map->event_step_on.register_callback(
-        map->obj_from_id(id).location,
-        callback
-    );
+    return map->event_step_on.register_callback(properties.location, callback);
 }
 
 void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,

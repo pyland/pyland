@@ -192,10 +192,7 @@ class Map {
     ///
     bool init_shaders();
 
-    std::vector<ObjectProperties> objprop_ids_to_instances;
-
 public:
-
     Dispatcher<int> event_sprite_add;
     PositionDispatcher<int> event_step_on;
     PositionDispatcher<int> event_step_off;
@@ -228,9 +225,11 @@ public:
     ///
     void remove_map_object(int map_object_id);
 
-    FML locations;
-
-    ObjectProperties obj_from_id(int id);
+    ///
+    /// FML-valid mapping from strings to object properties,
+    /// for hierachically accessing locations on the map by name.
+    ///
+    std::map<std::string, ObjectProperties> locations;
 
     ///
     /// Get the sprites that are on this map

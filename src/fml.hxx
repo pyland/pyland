@@ -1,17 +1,12 @@
-#include <algorithm>
-#include <boost/algorithm/string/predicate.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
-#include <iostream>
-#include <iterator>
+#include <istream>
 #include <list>
 #include <map>
-#include <memory>
 #include <string>
 #include <sys/types.h>
 #include <utility>
 #include <vector>
-
-#include "fml.hpp"
 
 static const boost::regex ignored_line(" *(?:#.*)?");
 static const boost::regex start_indentation("( *).*");
@@ -34,13 +29,14 @@ static const boost::regex tokens(
         "([^\\s]+)"        // ...and its contents
 );
 
-FML::FML(std::istream &input):
-    values(std::make_shared<std::map<std::string, std::string>>()),
-    error(false) {
-
+namespace fml {
+    template <typename T>
+    bool from_stream(std::istream &input, std::map<std::string, T> output) {
         // For keeping track of the current "path"
         std::list<std::pair<ssize_t, std::vector<std::string>>> stack;
         stack.push_back(std::make_pair(-1, std::vector<std::string>({""})));
+
+        bool error(false);
 
         // For each line
         std::string line;
@@ -82,49 +78,11 @@ FML::FML(std::istream &input):
                     path << (*match)[2].str();
 
                     // And push the file
-                    (*values)[path.str()] = (*match)[3].str();
+                    output[path.str()] = boost::lexical_cast<T>((*match)[3].str());
                 }
             }
         }
-}
 
-FML FML::unsafe_from_map(std::shared_ptr<std::map<std::string, std::string>> mapping) { return FML(mapping); }
-FML::FML(std::shared_ptr<std::map<std::string, std::string>> mapping): values(mapping), error(false) {}
-
-bool FML::valid() {
-    return !error;
-}
-
-// Iterator is always const
-FML::const_iterator FML::begin () const { return make_iter(values->cbegin()); }
-FML::const_iterator FML::cbegin() const { return make_iter(values->cbegin()); }
-FML::const_iterator FML::end   () const { return make_iter(values->cend  ()); }
-FML::const_iterator FML::cend  () const { return make_iter(values->cend  ()); }
-
-FML::const_iterator FML::begin(std::string directory) const {
-    return make_iter(
-        values->lower_bound(directory + "/"),
-        directory.size() + 1
-    );
-}
-
-FML::const_iterator FML::end(std::string directory) const {
-    return make_iter(
-        std::find_if(values->lower_bound(directory + "/"), std::end(*values),
-            [&] (StringMap::value_type pair) {
-                // The end is the first item that fails the test
-                return !boost::starts_with(pair.first, directory + "/");
-            }
-        ),
-        directory.size() + 1
-    );
-}
-
-FML::const_iterator FML::make_iter(StringMap::const_iterator mapiter, size_t chop) const {
-    return boost::make_transform_iterator(
-        mapiter,
-        [chop] (StringMap::value_type pair) {
-            return CastablePair(std::make_pair(pair.first.substr(chop), pair.second));
-        }
-    );
+        return error;
+    }
 }

@@ -379,19 +379,8 @@ void TextureAtlas::load_names(const std::string filename) {
         throw TextureAtlas::LoadException("File \"" + filename + ".fml\" could not be opened.");
     }
 
-    FML names_fml(file);
-
-    for (std::pair<std::string, int> kv : names_fml) {
-         set_name_index(kv.first, kv.second);
-    }
+    fml::from_stream(file, names_to_indexes);
 }
-
-
-void TextureAtlas::set_name_index(const std::string name, int index) {
-    names_to_indexes.insert(std::make_pair(name, index));
-    LOG(INFO) << "Added name index mapping: " << name << ": " << index;
-}
-
 
 int TextureAtlas::get_name_index(const std::string name) {
     if (names_to_indexes.count(name+" ") == 0) {

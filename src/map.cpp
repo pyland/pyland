@@ -47,7 +47,7 @@ Map::Map(const std::string map_src):
             return;
         }
 
-        std::tie(locations, objprop_ids_to_instances) = map_loader.get_object_mapping();
+        locations = map_loader.get_object_mapping();
 
         //Get the loaded map data
         map_width = map_loader.get_map_width();
@@ -82,10 +82,6 @@ Map::Map(const std::string map_src):
         // init_textures();
         // generate_tileset_coords(texture_atlases[0]);
         generate_data();
-}
-
-ObjectProperties Map::obj_from_id(int id) {
-    return objprop_ids_to_instances.at(id);
 }
 
 Map::~Map() {
