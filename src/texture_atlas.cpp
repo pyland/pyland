@@ -93,6 +93,7 @@ void TextureAtlas::merge(const std::vector<std::shared_ptr<TextureAtlas>> &atlas
         atlas->deinit_texture();
         // Remove old super atlas(es).
         atlas->super_atlas.reset();
+        atlas->reset_layout();
     }
     // Create images with allocation.
     std::shared_ptr<TextureAtlas> super_atlas = std::shared_ptr<TextureAtlas>(new TextureAtlas(atlases));
@@ -137,11 +138,12 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
         // Round up divide.
         unit_rows    = (texture_count + max_columns - 1) / max_columns;
     }
-    image = Image(unit_w * unit_columns, unit_h * unit_rows, true);
+    gl_image = image = Image(unit_w * unit_columns, unit_h * unit_rows, true);
     
-    LOG(INFO) << "Generating super atlas: textures: " << texture_count << " = (" << unit_columns << ", " << unit_rows << ") => pixels: (" << image.width << ", " << image.height << ")";
+    LOG(INFO) << "Generating super atlas: textures: " << texture_count << " = (" << unit_columns << ", " << unit_rows << ") => pixels: (" << gl_image.width << ", " << gl_image.height << ")";
 
     textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
+
     
     int super_i = 0;
     for (auto atlas : atlases) {
@@ -158,7 +160,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
             LOG(INFO) << "Sub-super mapping: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> " << super_i << ": (" << dst_x_offset << ", " << dst_y_offset << ")";
             for (int y = 0; y < unit_h; ++y) {
                 for (int x = 0; x < unit_w; ++x) {
-                    image.flipped_pixels[dst_y_offset + y][dst_x_offset + x] = (*src).flipped_pixels[src_y_offset + y][src_x_offset + x];
+                    gl_image.flipped_pixels[dst_y_offset + y][dst_x_offset + x] = (*src).flipped_pixels[src_y_offset + y][src_x_offset + x];
                 }
             }
         }
@@ -169,6 +171,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
 
 TextureAtlas::TextureAtlas(const std::string image_path):
     image(image_path, true),
+    gl_image(image),
     gl_texture(0),
     unit_w(Engine::get_tile_size()),
     unit_h(Engine::get_tile_size()),
@@ -190,6 +193,47 @@ TextureAtlas::~TextureAtlas() {
 
 
 void TextureAtlas::init_texture() {
+    int max_texture_size;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+    if (image.store_width > max_texture_size || image.store_height > max_texture_size) {
+        // Turns out that the atlas is too wide or tall. Reshape it.
+
+        int texture_count = get_texture_count();
+        int max_columns = max_texture_size / unit_w;
+
+        int old_unit_columns = unit_columns;
+        int old_unit_rows = unit_rows;
+
+        // Naive method for getting a fitting atlas size.
+        if (max_columns >= texture_count) {
+            unit_columns = texture_count;
+            unit_rows    = 1;
+        }
+        else {
+            unit_columns = max_columns;
+            // Round up divide.
+            unit_rows    = (texture_count + max_columns - 1) / max_columns;
+        }
+        gl_image = Image(unit_w * unit_columns, unit_h * unit_rows, true);
+
+        LOG(INFO) << "Reshaping: " << this << ": (" << image.width << ", " << image.height << ") -> (" << gl_image.width << ", " << gl_image.height << ")";;
+        LOG(INFO) << "  (Units): " << this << ": (" << old_unit_columns << ", " << old_unit_rows << ") -> (" << unit_columns << ", " << unit_rows << ")";;
+        for (int i = 0, end = old_unit_columns * old_unit_rows; i < end; ++i) {
+            std::pair<int,int> units(index_to_units(i));
+            int dst_x_offset = (i % unit_columns) * unit_w;
+            int dst_y_offset = (i / unit_columns) * unit_h;
+            int src_x_offset = (i % old_unit_columns) * unit_w;
+            int src_y_offset = (i / old_unit_columns) * unit_h;
+            LOG(INFO) << "Moving: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> (" << dst_x_offset << ", " << dst_y_offset << ")";
+            for (int y = 0; y < unit_h; ++y) {
+                for (int x = 0; x < unit_w; ++x) {
+                    gl_image.flipped_pixels[dst_y_offset + y][dst_x_offset + x] = image.flipped_pixels[src_y_offset + y][src_x_offset + x];
+                }
+            }
+        }
+        textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
+    }
+    
     deinit_texture();
     glGenTextures(1, &gl_texture);
 
@@ -201,7 +245,7 @@ void TextureAtlas::init_texture() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gl_texture);
     glGetError();
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.store_width, image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, gl_image.store_width, gl_image.store_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, gl_image.pixels);
     if (int e = glGetError()) {
         std::stringstream hex_error_code;
         hex_error_code << std::hex << e;
@@ -218,6 +262,21 @@ void TextureAtlas::deinit_texture() {
         glDeleteTextures(1, &gl_texture);
         gl_texture = 0;
     }
+}
+
+
+
+void TextureAtlas::set_tile_size(int unit_w, int unit_h) {
+    this->unit_w = unit_w;
+    this->unit_h = unit_h;
+    reset_layout();
+    init_texture();
+}
+
+void TextureAtlas::reset_layout() {
+    unit_columns = image.width / unit_w;
+    unit_rows    = image.height / unit_h;
+    textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
 }
 
 
@@ -250,7 +309,7 @@ GLuint TextureAtlas::deoffset_index(int index) {
 
 
 std::pair<int,int> TextureAtlas::get_atlas_size() {
-    return std::make_pair(image.width, image.height);
+    return std::make_pair(gl_image.width, gl_image.height);
 }
 
 
@@ -265,12 +324,6 @@ std::pair<int,int> TextureAtlas::get_unit_size() {
 
 
 std::pair<float,float> TextureAtlas::get_unit_size_ratio() {
-    // if (super_atlas) {
-    //     return super_atlas->get_unit_size_ratio();
-    // } else {
-    //     return std::make_pair(float(unit_w) / float(image.store_width),
-    //                           float(unit_h) / float(image.store_height));
-    // }
     return units_to_floats(std::make_pair(1, 1));
 }
 
@@ -296,8 +349,8 @@ std::pair<float,float> TextureAtlas::units_to_floats(std::pair<int,int> units) {
     if (super_atlas) {
         return super_atlas->units_to_floats(units);
     } else {
-        return std::make_pair(float(units.first  * unit_w) / float(image.store_width),
-                              float(image.height - units.second * unit_h) / float(image.store_height));
+        return std::make_pair(float(units.first  * unit_w) / float(gl_image.store_width),
+                              float(gl_image.height - units.second * unit_h) / float(gl_image.store_height));
     }
 }
 
@@ -309,10 +362,10 @@ std::tuple<float,float,float,float> TextureAtlas::index_to_coords(int index) {
         std::pair<int,int> units = index_to_units(index);
         return std::make_tuple<float,float,float,float>
             (
-             float((units.first    ) * unit_w) / float(image.store_width),
-             float((units.first + 1) * unit_w) / float(image.store_width),
-             float(image.height - (units.second + 1) * unit_h) / float(image.store_height),
-             float(image.height - (units.second    ) * unit_h) / float(image.store_height)
+             float((units.first    ) * unit_w) / float(gl_image.store_width),
+             float((units.first + 1) * unit_w) / float(gl_image.store_width),
+             float(gl_image.height - (units.second + 1) * unit_h) / float(gl_image.store_height),
+             float(gl_image.height - (units.second    ) * unit_h) / float(gl_image.store_height)
              );
     }
 }
