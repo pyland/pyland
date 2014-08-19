@@ -9,7 +9,7 @@
 
 #include "catch.hpp"
 #include "fml.hpp"
-
+#include <iostream>
 SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
 
     GIVEN("a basic configuration") {
@@ -27,19 +27,16 @@ SCENARIO("FML can parse basic linear structure", "[fml][parse]" ) {
         std::istringstream fake_file(fake_file_contents);
 
         WHEN("parsed") {
-            FML my_data(fake_file);
+            std::map<std::string, std::string> my_data;
+            bool error(fml::from_stream(fake_file, my_data));
 
-            THEN("the output is valid") {
-                REQUIRE(my_data.valid());
+            THEN("the output is error") {
+                REQUIRE(!error);
             }
 
             THEN("strings can be accessed") {
-                REQUIRE(my_data.get<std::string>("this/m/g/kz") == "lol");
-                REQUIRE(my_data.get<std::string>("this/is/quite/simple/for/most") == "true");
-            }
-
-            THEN("integers can be accessed") {
-                REQUIRE(my_data.get<int>("this/is/quite/simple/for/but/not/all") == 12);
+                REQUIRE(my_data.at("this/m/g/kz") == "lol");
+                REQUIRE(my_data.at("this/is/quite/simple/for/most") == "true");
             }
         }
     }
@@ -54,24 +51,25 @@ SCENARIO("FML can parse duplicated structure", "[fml][parse]" ) {
             "path/2/y:0\n"
             "    z:0\n"
             "path/\n"
-            "    1/y:0\n"
+            "    1/y:1\n"
             "        z:0\n"
         );
         std::istringstream fake_file(fake_file_contents);
 
         WHEN("parsed") {
-            FML my_data(fake_file);
+            std::map<std::string, int> my_data;
+            bool error(fml::from_stream(fake_file, my_data));
 
-            THEN("the output is valid") {
-                REQUIRE(my_data.valid());
+            THEN("the output is error") {
+                REQUIRE(!error);
             }
 
             THEN("everything exists") {
-                REQUIRE(my_data.get<int>("path/1/x") == 0);
-                REQUIRE(my_data.get<int>("path/1/y") == 0);
-                REQUIRE(my_data.get<int>("path/1/z") == 0);
-                REQUIRE(my_data.get<int>("path/2/y") == 0);
-                REQUIRE(my_data.get<int>("path/2/z") == 0);
+                REQUIRE(my_data.at("path/1/x") == 0);
+                REQUIRE(my_data.at("path/1/y") == 1);
+                REQUIRE(my_data.at("path/1/z") == 0);
+                REQUIRE(my_data.at("path/2/y") == 0);
+                REQUIRE(my_data.at("path/2/z") == 0);
             }
         }
     }
@@ -89,77 +87,16 @@ SCENARIO("FML can handle somewhat broken configuration", "[fml][error]" ) {
         std::istringstream fake_file(fake_file_contents);
 
         WHEN("parsed") {
-            FML my_data(fake_file);
+            std::map<std::string, int> my_data;
+            bool error(fml::from_stream(fake_file, my_data));
 
-            THEN("the output is not valid") {
-                REQUIRE(!my_data.valid());
+            THEN("the output is not error") {
+                REQUIRE(error);
             }
 
             THEN("some things exists") {
-                REQUIRE(my_data.get<int>("x") == 0);
-                REQUIRE(my_data.get<int>("m") == 0);
-            }
-        }
-    }
-}
-
-SCENARIO("FML can be iterated", "[fml][iterate]" ) {
-
-    std::map<std::string, int> map_equivalent({
-        { "path/1/x", 0 },
-        { "path/1/y", 0 },
-        { "path/1/z", 0 },
-        { "path/2/y", 0 },
-        { "path/2/z", 0 }
-    });
-
-    GIVEN("a basic configuration") {
-
-        std::string fake_file_contents(
-            "path/1/x:0\n"
-            "path/2/y:0\n"
-            "    z:0\n"
-            "path/\n"
-            "    1/y:0\n"
-            "        z:0\n"
-        );
-        std::istringstream fake_file(fake_file_contents);
-
-        WHEN("parsed") {
-            FML my_data(fake_file);
-
-            THEN("the output is iterable") {
-                for (auto pair : my_data) {
-                    REQUIRE(pair.second == "0");
-                }
-
-                for (std::pair<std::string, int> pair : my_data) {
-                    REQUIRE(map_equivalent.at(pair.first) == pair.second);
-                }
-            }
-
-            THEN("the output is can be accessed") {
-                for (auto pair : map_equivalent) {
-                    REQUIRE(my_data.get<int>(pair.first) == pair.second);
-                }
-            }
-
-            THEN("the output is convertable to a map") {
-                std::map<std::string, int> new_map;
-                for (auto pair : my_data) { new_map.insert(pair); }
-                REQUIRE(map_equivalent == new_map);
-            }
-
-            THEN("a subsection is iterable") {
-                REQUIRE(std::distance(my_data.begin("path/1"),
-                                      my_data.end  ("path/1")) == 3);
-
-                for_each(my_data.begin("path/2"), my_data.end("path/2"),
-                    [] (std::pair<std::string, int> pair) {
-                        // Need brackets to prevent "too complex error"
-                        REQUIRE((pair.first == "y" || pair.first == "z"));
-                    }
-                );
+                REQUIRE(my_data.at("x") == 0);
+                REQUIRE(my_data.at("m") == 0);
             }
         }
     }

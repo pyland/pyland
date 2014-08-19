@@ -7,7 +7,7 @@
 
 namespace fml {
     template <typename T>
-    bool from_stream(std::istream &input, std::map<std::string, T> output);
+    bool from_stream(std::istream &input, std::map<std::string, T> &output);
 }
 
 #include "fml.hxx"

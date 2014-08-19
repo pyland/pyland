@@ -31,7 +31,7 @@ static const boost::regex tokens(
 
 namespace fml {
     template <typename T>
-    bool from_stream(std::istream &input, std::map<std::string, T> output) {
+    bool from_stream(std::istream &input, std::map<std::string, T> &output) {
         // For keeping track of the current "path"
         std::list<std::pair<ssize_t, std::vector<std::string>>> stack;
         stack.push_back(std::make_pair(-1, std::vector<std::string>({""})));
