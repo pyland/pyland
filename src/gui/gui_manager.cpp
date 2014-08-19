@@ -1,3 +1,4 @@
+
 #include <exception>
 #include <fstream>
 #include <glog/logging.h>
@@ -5,7 +6,7 @@
 #include <new>
 #include <utility>
 #include <vector>
-
+#include <iostream>
 #include "cacheable_resource.hpp"
 #include "component.hpp"
 #include "component_group.hpp"
@@ -26,19 +27,26 @@
 
 
 void GUIManager::parse_components() {
+    //IMPORTANT
+    //The order of these calls must be preserved.
+    load_textures();
+
+
     //Generate  the needed offsets
     regenerate_offsets(root);
-
+    
     //Now generate the needed rendering data
-    generate_tex_data();
+    generate_texture_data();
     generate_vertex_data();
-    load_textures();
+    generate_text_data();
     init_shaders();
 }
 
 void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
     if(!parent)
         return;
+
+    parent->set_texture_atlas(renderable_component.get_texture());
 
     try{
         //Go through all the children of this component
@@ -55,6 +63,9 @@ void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
             component->set_x_offset_pixels(int(float( width_pixels) * component->get_x_offset()));
             component->set_y_offset_pixels(int(float(height_pixels) * component->get_y_offset()));
 
+            
+            //Give it a pointer to its texture coordinates
+            component->set_texture_atlas(renderable_component.get_texture());
             regenerate_offsets(component);
         }
     }
@@ -68,8 +79,7 @@ void GUIManager::update_components() {
 
 void GUIManager::mouse_callback_function(MouseInputEvent event) {
 
-    //Just get the end state for the moment
-    //Work out which component was clicked
+    //Get the data
     int mouse_x = event.to.x;
     int mouse_y = event.to.y;
 
@@ -137,11 +147,13 @@ GUIManager::GUIManager() {
 }
 
 GUIManager::~GUIManager() {
+
 }
 
 
-void GUIManager::generate_tex_data() {
 
+void GUIManager::generate_texture_data() {
+    
     //generate the texture data data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
 
@@ -216,10 +228,32 @@ void GUIManager::generate_vertex_data() {
     renderable_component.set_num_vertices_render(GLsizei(num_floats/num_dimensions));//GL_TRIANGLES being used
 }
 
+void GUIManager::generate_text_data() {
+        components_text = root->generate_text_data();
+}
+
+void GUIManager::render_text() {
+   for(auto text_data : components_text) {
+        if(!text_data->get_text()) 
+            continue;
+        std::shared_ptr<GUITextData> gui_text_data = text_data->get_gui_text();
+        
+        //        int x_pos = gui_text_data->get_transformed_x_offset();
+        //        int y_pos = gui_text_data->get_transformed_y_offset();
+        //        std::cout << " X PO " << x_pos << " Y PO " << y_pos << std::endl;
+
+        text_data->get_text()->move(100 ,100 );//x_pos, y_pos);
+        text_data->get_text()->set_text("Test");
+        text_data->get_text()->resize(200, 200);
+        text_data->get_text()->display();
+   }
+}
+
 void GUIManager::load_textures() {
     //Set the texture data in the rederable component
-    renderable_component.set_texture(TextureAtlas::get_shared("../resources/characters_1_64.png"));
+    renderable_component.set_texture(TextureAtlas::get_shared("../resources/tiles/gui.png"));
 }
+
 bool GUIManager::init_shaders() {
     std::shared_ptr<Shader> shader;
     try {
