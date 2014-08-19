@@ -134,20 +134,20 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
         //get all the text data in the component - deals with ComponentGroup children
         for(auto text_data : component_data) {
             //comvert this into this component's local spacd
-            std::cout << " MOVING" << std::endl;
+
             //Calcuate how far to translate this component
             int pixel_offset_x = 0; 
             float component_x_offset = (float)text_data->get_x_offset_pixels();
             int pixel_offset_y = 0 ;
             float component_y_offset = (float)text_data->get_y_offset_pixels();
-            std::cout << " X " << component_x_offset << " Y " << component_y_offset << std::endl;
+
             pixel_offset_x =(int)((float)width_pixels * component_x_offset);
             pixel_offset_y = (int)((float)height_pixels * component_y_offset);
 
             //Translate it
             text_data->get_gui_text()->set_transformed_x_offset(int(component_x_offset + (float)pixel_offset_x));
             text_data->get_gui_text()->set_transformed_y_offset(int(component_y_offset + (float)pixel_offset_y));
-            std::cout << "OOFSET " << pixel_offset_x << std::endl;
+
 
             //add to this group
             group_data.push_back(text_data);

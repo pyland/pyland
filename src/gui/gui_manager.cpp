@@ -241,7 +241,7 @@ void GUIManager::render_text() {
         //        int x_pos = gui_text_data->get_transformed_x_offset();
         //        int y_pos = gui_text_data->get_transformed_y_offset();
         //        std::cout << " X PO " << x_pos << " Y PO " << y_pos << std::endl;
-        std::cout << "H" << std::endl;
+
         text_data->get_text()->move(100 ,100 );//x_pos, y_pos);
         text_data->get_text()->set_text("Test");
         text_data->get_text()->resize(200, 200);

@@ -119,6 +119,7 @@ int main(int argc, const char *argv[]) {
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
     sprite_window->set_width_pixels(300);
     sprite_window->set_height_pixels(300);
+    sprite_window->set_visible(false);
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
     run_button->set_text(runtext);
     run_button->set_on_click([&] () { LOG(ERROR) << "RUN"; callbackstate.restart(); });
@@ -129,7 +130,6 @@ int main(int argc, const char *argv[]) {
 
     std::shared_ptr<Button> stop_button = std::make_shared<Button>();
     stop_button->set_text(stoptext);
-    stop_button->set_visible(false);
     stop_button->set_on_click([&] () {LOG(ERROR) << "STOP";  callbackstate.stop(); });
     stop_button->set_width(0.2f);
     stop_button->set_height(0.2f);
