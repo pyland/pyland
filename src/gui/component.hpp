@@ -1,6 +1,7 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+
 #include <exception>
 #include <functional>
 #include <map>
@@ -18,6 +19,8 @@
 #include <GL/gl.h>
 #endif
 
+class GUIText;
+class TextureAtlas;
 
 ///
 /// A GUI component that is the base class which all renderable
@@ -46,19 +49,14 @@ protected:
     int size_vertex_data;
 
     ///
-    /// The size of the texture data in bytes
-    ///
-    int size_texture_data;
-
-    ///
     /// The Opengl texture data for this component
     ///
     GLfloat* texture_data;
 
     ///
-    /// A pointer to the parent
+    /// The size of the texture data in bytes
     ///
-    //    std::weak_pr<Component> parent;
+    int size_texture_data;
 
     ///
     /// The GUID of the component
@@ -117,13 +115,26 @@ protected:
     std::function<void (void)> on_click_func;
 
     ///
+    /// If the component is visible
+    ///
+    bool visible;
+
+    ///
     /// Get the next unique identifier for the component - starting at 1.
     ///
     int get_new_id();
 
+
+    ///
+    /// The texture atlas being used for this GUI - 
+    /// 
+    std::shared_ptr<TextureAtlas> texture_atlas;
 public:
     Component();
-    ~Component();
+    Component(std::function<void (void)> on_click, float _width, float _height, float _xo_offset, float _y_offset);
+ 
+    ~Component(); 
+   
     ///
     /// Generates the vertex data for this particular component. This
     /// data is in the local 'object' space and will need to be
@@ -139,11 +150,10 @@ public:
     virtual std::vector<std::pair<GLfloat*, int>> generate_texture_data() = 0;
 
     ///
-    /// Generates the font data for this component
-    ///
-    ///
-    //TODO: finish fonts
-    //    virtual std::vector<std::shared_ptr<GUIText>> generate_font_data() = 0;
+    /// Generates the text data for this component
+    /// 
+    /// 
+    virtual std::vector<std::shared_ptr<GUIText>> generate_text_data() = 0;
 
     ///
     /// Get the map listing all the components of the group.
@@ -152,6 +162,17 @@ public:
     ///
     virtual const std::map<int, std::shared_ptr<Component>>& get_components();
 
+    ///
+    /// Set the visibility
+    /// @parma _visible
+    ///
+    void set_visible(bool _visible) { visible = _visible; }
+
+    ///
+    /// Get the visibility
+    /// @return visibility
+    ///
+    bool is_visible() { return visible; }
 
     ///
     /// Set the on click lambda function for this button
@@ -302,6 +323,11 @@ public:
     ///
     void set_x_offset(float _x_offset) { x_offset = _x_offset; }
 
+    ///
+    /// Set the texture atlas being used
+    /// @param _texture_atlas  the texture atlas
+    ///
+    void set_texture_atlas(std::shared_ptr<TextureAtlas> _texture_atlas);
 };
 
 class component_no_children_exception : public std::exception {
@@ -309,6 +335,5 @@ class component_no_children_exception : public std::exception {
         return "Component has no children";
     }
 };
-
 
 #endif
