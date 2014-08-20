@@ -46,11 +46,10 @@
  <objectgroup name="Objects" width="30" height="30">
   <object name="sprite/1" gid="205" x="704" y="1152"/>
   <object name="level/1" gid="68" x="1024" y="960"/>
- </objectgroup>
- <objectgroup name="Interaction" width="30" height="30">
   <object name="level/2" gid="68" x="1152" y="1344"/>
   <object name="level/3" gid="68" x="1216" y="960"/>
   <object name="level/4" gid="68" x="1600" y="960"/>
   <object name="level/5" gid="68" x="1792" y="1152"/>
  </objectgroup>
+ <objectgroup name="Interaction" width="30" height="30"/>
 </map>
