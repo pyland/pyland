@@ -23,14 +23,14 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
         ChallengeHelper::make_interaction(name,
             [i,this] (int) {
                 int current_level = ChallengeHelper::get_current_level();
-                if (i==current_level) {
+                if (i<=current_level) {
                     Engine::print_dialogue(
                         "Game","loading challenge "+std::to_string(i));
                     event_finish.trigger(i);
 
-                } else if (i<current_level) {
-                    Engine::print_dialogue(
-                        "Game","You've finish this level. but feel free to have another go");
+                // } else if (i<current_level) {
+                //     Engine::print_dialogue(
+                //         "Game","You've finish this level. but feel free to have another go");
 
                 } else if (i<=encoded_levels) {
                     Engine::print_dialogue(
