@@ -161,6 +161,6 @@ void LongWalkChallenge::start() {
 }
 
 void LongWalkChallenge::finish() {
-    //ChallengeHelper::set_completed_level(1);
+    ChallengeHelper::set_completed_level(1);
     event_finish.trigger(0);
 }

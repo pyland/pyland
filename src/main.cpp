@@ -20,6 +20,7 @@
 #include "event_manager.hpp"
 #include "game_window.hpp"
 #include "button.hpp"
+#include "final_challenge.hpp"
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
 #include "filters.hpp"
@@ -349,6 +350,11 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
         map_name = "../maps/map0.tmx";
         challenge_data->map_name = map_name;
         challenge = new LongWalkChallenge(challenge_data);
+        break;
+    case 2:
+        map_name = "../maps/final_challenge.tmx";
+        challenge_data->map_name = map_name;
+        challenge = new FinalChallenge(challenge_data);
         break;
     default:
         break;
