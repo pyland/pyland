@@ -24,6 +24,10 @@ Button::Button() {
     button_text->set_height(0.8f);
     button_text->set_x_offset(0.1f);
     button_text->set_y_offset(0.1f);
+    set_text("");
+    button_text->get_text()->align_at_origin(true);
+    button_text->get_text()->vertical_align_centre();
+    button_text->get_text()->align_centre();
     add(button_text);
 }
 
@@ -36,13 +40,20 @@ Button::Button(std::shared_ptr<Text>  _text, std::function<void (void)> on_click
     button_text->set_height(0.8f);
     button_text->set_x_offset(0.1f);
     button_text->set_y_offset(0.1f);
+    button_text->get_text()->align_at_origin(true);
+    button_text->get_text()->vertical_align_centre();
+    button_text->get_text()->align_centre();
 
     add(button_text);
 }
 void Button::set_text(std::string text) {
     //TODO DEBUG
-
-    text= "";
+    Typeface buttontype = Engine::get_game_typeface();
+    TextFont buttonfont = Engine::get_game_font();
+    
+    std::shared_ptr<Text> new_text = std::make_shared<Text>(Engine::get_game_window(), buttonfont, true);
+    new_text->set_text(text);
+    button_text->set_text(new_text);
 }
 std::shared_ptr<Text> Button::get_text() {
     return button_text->get_text();

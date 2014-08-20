@@ -73,6 +73,7 @@ int main(int argc, const char *argv[]) {
     //Create the game window to present to the users
     GameWindow window(800, 600, false);
     window.use_context();
+    Engine::set_game_window(&window);
 
     //Create the interpreter
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
@@ -97,10 +98,6 @@ int main(int argc, const char *argv[]) {
     // referring to top left corner of text window
     //    stoptext.move(105, 240 + 20);
     //    runtext.move(5, 240 + 20);
-    runtext->move(0,30);
-    stoptext->move(0,30);
-
-
     stoptext->set_text("Stop");
     runtext->set_text("Run");
 
