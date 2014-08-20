@@ -22,8 +22,8 @@ Button::Button() {
     button_text = std::make_shared<GUIText>();
     button_text->set_width(0.7f);
     button_text->set_height(0.8f);
-    button_text->set_x_offset(0.1f);
-    button_text->set_y_offset(0.1f);
+    button_text->set_x_offset(0.2f);
+    button_text->set_y_offset(0.5f);
     set_text("");
     button_text->get_text()->align_at_origin(true);
     button_text->get_text()->vertical_align_centre();
@@ -38,8 +38,8 @@ Button::Button(std::shared_ptr<Text>  _text, std::function<void (void)> on_click
     button_text->set_text(_text);
     button_text->set_width(0.7f);
     button_text->set_height(0.8f);
-    button_text->set_x_offset(0.1f);
-    button_text->set_y_offset(0.1f);
+    button_text->set_x_offset(0.2f);
+    button_text->set_y_offset(0.5f);
     button_text->get_text()->align_at_origin(true);
     button_text->get_text()->vertical_align_centre();
     button_text->get_text()->align_centre();
@@ -406,6 +406,10 @@ int Button::generate_texture_coords_element(GLfloat* data, int offset, std::tupl
 
 std::vector<std::shared_ptr<GUIText>> Button::generate_this_text_data() {
     std::vector<std::shared_ptr<GUIText>> text_data;
+    if(!is_visible())
+        return text_data;
+
+
     text_data.push_back(button_text);
     button_text->get_gui_text()->set_transformed_x_offset(0);
     button_text->get_gui_text()->set_transformed_y_offset(0);

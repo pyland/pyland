@@ -352,13 +352,14 @@ int GUIWindow::generate_texture_coords_element(GLfloat* data, int offset, std::t
     data[offset + 10] = std::get<1>(bounds);
     data[offset + 11] = std::get<3>(bounds);
 
-
     return offset + 12;
 }
 
 
 std::vector<std::shared_ptr<GUIText>> GUIWindow::generate_this_text_data() {
     std::vector<std::shared_ptr<GUIText>> text_data;
+    if(!is_visible())
+        return text_data;
 
     return text_data;
 }
