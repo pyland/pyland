@@ -35,7 +35,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     // LOG(INFO) << "Done!";
 
     // croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-    ChallengeHelper::make_sprite(this, "sprite/crocodile","Croc", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(this, "sprite/final_challenge_crocodile","croc", Walkability::BLOCKED);
 }
 
 void FinalChallenge::start() {
