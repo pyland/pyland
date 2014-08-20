@@ -174,7 +174,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
     );
 }
 
-void ChallengeHelper::get_completed_level(int challenge_id) {
+void ChallengeHelper::set_completed_level(int challenge_id) {
   std::ofstream myfile;
   myfile.open ("game_progress.txt");
   myfile << (challenge_id+1);

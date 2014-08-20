@@ -22,19 +22,20 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
 
         ChallengeHelper::make_interaction(name,
             [i,this] (int) {
-                if (i==ChallengeHelper::get_current_level()) {
+                int current_level = ChallengeHelper::get_current_level();
+                if (i==current_level) {
                     Engine::print_dialogue(
                         "Game","loading challenge "+std::to_string(i));
                     event_finish.trigger(i);
 
-                } else if (i<ChallengeHelper::get_current_level()) {
+                } else if (i<current_level) {
                     Engine::print_dialogue(
                         "Game","You've finish this level. but feel free to have another go");
 
                 } else if (i<=encoded_levels) {
                     Engine::print_dialogue(
                         "Game","Sorry this level is not avaliable to you yet. \n"
-                        "Please finish level "+std::to_string(i)+ " first.");
+                        "Please finish level "+std::to_string(current_level)+ " first.");
 
                 } else {
                     Engine::print_dialogue(

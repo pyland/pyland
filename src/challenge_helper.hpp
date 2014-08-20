@@ -71,7 +71,7 @@ namespace ChallengeHelper {
     ///
     /// saves the fact that this challenge has been completed
     ///
-    void get_completed_level(int challenge_id);
+    void set_completed_level(int challenge_id);
 
     int get_current_level ();
 }
