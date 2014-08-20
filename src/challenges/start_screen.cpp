@@ -13,11 +13,9 @@
 #include <iostream>
 StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_data) {
     ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED);
-
-    // for (int i=1; i<=5; i++)
-    // if (i!=2) {
-    // 	ChallengeHelper::make_object(this, "level/"+std::to_string(i), Walkability::WALKABLE);
-    // }
+    for (int i=1; i<=5; i++) {
+        ChallengeHelper::make_object(this, "level/"+std::to_string(i), Walkability::WALKABLE);
+    }
 }
 
 void StartScreen::start() {
