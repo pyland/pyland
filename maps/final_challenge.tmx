@@ -30,7 +30,7 @@
  </layer>
  <layer name="Overlay" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2W2wqDMAyG42QXm+74QGMM9Hov7Z5rKzQYQg8qs63wfxBiA+ofk9QSEe0oztETH6x9rA3C6+sSkHlIvT7tcl1RujxenjjXivOQWqvA8yrhOacSkHkYXbVdu3pSx0wu3Uq6fLAG/f0a62N1cFFaPbgWkv2Ee0ubc57fufS0fh5TvqfB9FWoP2pPnChNPU4/Owt7qtjN+pbcfTWFEvqqUev3gmcszf+fPNRa64nlxbORoh6hd+h6zN1D5b8+NVca5+NuPc/MYYam3GcrXQMJ77/yHGWsF9cdjfpzzrfvbGvg/Zd1u86LMp+cxOqxFS40zoT+v7QZdQEAAAAAAAAAAAAAAAAAAIDt8QW0spHqECcAAA==
+   H4sIAAAAAAAAA+2Z227DIAyGzapdbO2OD1RNk5Ld7qXT59qQsOL+M4dklIPEJyECJdQ/tglNiYjuKM6jp39x5eLKImq8bgGpQ9rrs122DZXT8enpZ1+xDmmrCcxnRM2aWkDqsHYdXFuLSeyzWqYb2eWDbcD1O7o65geN1vzBvpDcJ9zbWp5z/m5lptvrSFlPi42rUHwcPP1EZfzx9FueRfmAvjdXn0iPqxRaiKsjtL93zLFXf07O0EZ7Yro4N0r4I/Qd6I+te6h81pfmldb8eHc158zDBptqn63QBxLef+U5ypZZXE+02l8zv31nWwvvv2y3dl6Uemrmd8wfKVyg1OCF1pzA58spcY7auZGTkI4vV3ogFk+t65B53yv4G7fUmUR7H6C1U3NW7r88fwlwf9SeBQv9tS9EjXMhnn/k+qEebXwrxOLFt64t6ogxQ22p/XsCSbFnhnZrGiytxYfGln0yB1v2NHlP7L1wylkT79uLtl/7MMq41DX3zWvE52iHoet3zAbGS/0GxmMxMD53jkmbDF3b5NOHGkPjsL3nvep/dEktXPcGxlaPGgaDXin931RuJupfw2AwGAwGg0GMH16vVvoQJwAA
   </data>
  </layer>
  <layer name="Collisions" width="50" height="50">
@@ -45,6 +45,11 @@
  </layer>
  <objectgroup name="Objects" width="50" height="50">
   <object name="sprite/1" gid="173" x="128" y="320"/>
+  <object name="sprite/monkey" gid="159" x="1344" y="384"/>
+  <object name="sprite/crocadile" gid="110" x="512" y="640"/>
+  <object name="orange/1" gid="83" x="640" y="1664"/>
+  <object name="pineapple/1" gid="84" x="1920" y="1216"/>
+  <object name="bannana/1" gid="82" x="1792" y="2432"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
   <object name="crate/1" gid="66" x="128" y="192"/>
