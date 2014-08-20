@@ -254,6 +254,8 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
+
+    
     //Run the map
     bool run_game = true;
 
@@ -267,10 +269,6 @@ int main(int argc, const char *argv[]) {
             &notification_bar,
             1
         ));
-
-    while(!window.check_close() && run_game) {
-        Challenge* challenge = pick_challenge(challenge_data);
-        challenge->start();
 
         //Run the challenge - returns after challenge completes
         #ifdef USE_GLES
@@ -290,6 +288,11 @@ int main(int argc, const char *argv[]) {
                 })
             ));
         #endif
+
+    while(!window.check_close() && run_game) {
+        challenge_data->run_challenge = true;
+        Challenge* challenge = pick_challenge(challenge_data);
+        challenge->start();
 
         auto last_clock(std::chrono::steady_clock::now());
 
@@ -335,11 +338,18 @@ int main(int argc, const char *argv[]) {
 Challenge* pick_challenge(ChallengeData* challenge_data) {
     int next_challenge = challenge_data->next_challenge;
     Challenge* challenge = nullptr;
+    std::string map_name = "";
     switch(next_challenge) {
     case 1:
+        map_name ="../maps/start_screen.tmx";
+        challenge_data->map_name = map_name;
         challenge = new StartScreen(challenge_data);
         break;
-        
+    case 2:
+        map_name = "../maps/map0.tmx";
+        challenge_data->map_name = map_name;
+        challenge = new LongWalkChallenge(challenge_data);
+        break;
     default:
         break;
     }

@@ -38,6 +38,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
 int ChallengeHelper::make_sprite(Challenge *challenge, std::string marker_name, std::string sprite_name, Walkability walkability) {
 
     auto *map = Engine::get_map_viewer()->get_map();
+    LOG(INFO) << marker_name;
     auto properties(map->locations.at("Objects/" + marker_name));
 
     auto new_sprite(std::make_shared<Sprite>(

@@ -37,7 +37,7 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
                 if (i==get_current_level()) {
                     Engine::print_dialogue(
                         "Game","loading challenge "+std::to_string(i));
-                    event_finish.trigger(i);
+                    event_finish.trigger(2);
 
                 } else if (i<get_current_level()) {
                     Engine::print_dialogue(
