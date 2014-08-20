@@ -20,17 +20,17 @@
  </tileset>
  <layer name="Ground" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3DwQkAAAwDoXtl/5E7R0HBVVNVVVVVVVVVVdXnD7pjhiIQJwAA
+   H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
   </data>
  </layer>
  <layer name="Effects" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
+   H4sIAAAAAAAAA+3OIQ0AAAgAMDSC/nFpgGED8yd4BADs1XeAUX4HAAAAAAAAAOBAA0BQ/EoQJwAA
   </data>
  </layer>
  <layer name="Overlay" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
+   H4sIAAAAAAAAA+2W2wqDMAyG42QXm+74QGMM9Hov7Z5rKzQYQg8qs63wfxBiA+ofk9QSEe0oztETH6x9rA3C6+sSkHlIvT7tcl1RujxenjjXivOQWqvA8yrhOacSkHkYXbVdu3pSx0wu3Uq6fLAG/f0a62N1cFFaPbgWkv2Ee0ubc57fufS0fh5TvqfB9FWoP2pPnChNPU4/Owt7qtjN+pbcfTWFEvqqUev3gmcszf+fPNRa64nlxbORoh6hd+h6zN1D5b8+NVca5+NuPc/MYYam3GcrXQMJ77/yHGWsF9cdjfpzzrfvbGvg/Zd1u86LMp+cxOqxFS40zoT+v7QZdQEAAAAAAAAAAAAAAAAAAIDt8QW0spHqECcAAA==
   </data>
  </layer>
  <layer name="Collisions" width="50" height="50">
@@ -43,6 +43,12 @@
    H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
   </data>
  </layer>
- <objectgroup name="Objects" width="50" height="50"/>
- <objectgroup name="Interactions" width="50" height="50"/>
+ <objectgroup name="Objects" width="50" height="50">
+  <object name="sprite/1" gid="173" x="128" y="320"/>
+ </objectgroup>
+ <objectgroup name="Interactions" width="50" height="50">
+  <object name="crate/1" gid="66" x="128" y="192"/>
+  <object name="bridge/1" gid="64" x="256" y="576"/>
+  <object name="vines/1" gid="80" x="768" y="640"/>
+ </objectgroup>
 </map>
