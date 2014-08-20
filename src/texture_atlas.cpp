@@ -102,8 +102,20 @@ void TextureAtlas::merge(const std::vector<std::shared_ptr<TextureAtlas>> &atlas
         }
     }
 
+    // Ensure all atlases are compatible.
+    int unit_w(-1);
+    int unit_h(-1);
     for (auto atlas : atlases) {
-        // Free up the old textures.
+        if (unit_w == -1 || unit_h == -1) {
+            unit_w = atlas->unit_w;
+            unit_h = atlas->unit_h;
+        } else if (unit_w != atlas->unit_w || unit_h != atlas->unit_h) {
+            throw TextureAtlas::LoadException("Inconsistent tile sizes in merging atlases.");
+        }
+    }
+    
+    for (auto atlas : atlases) {
+        // Free up the old textures, reset layout.
         atlas->deinit_texture();
         // Remove old super atlas(es).
         atlas->super_atlas.reset();
@@ -175,7 +187,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
             LOG(INFO) << "Sub-super mapping: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> " << super_i << ": (" << dst_x_offset << ", " << dst_y_offset << ")";
             for (int y = 0; y < unit_h; ++y) {
                 for (int x = 0; x < unit_w; ++x) {
-                    gl_image.flipped_pixels[dst_y_offset + y][dst_x_offset + x] = (*src).flipped_pixels[src_y_offset + y][src_x_offset + x];
+                    gl_image.flipped_pixels[dst_y_offset + y][dst_x_offset + x] = src->flipped_pixels[src_y_offset + y][src_x_offset + x];
                 }
             }
         }
@@ -289,6 +301,7 @@ void TextureAtlas::deinit_texture() {
 void TextureAtlas::set_tile_size(int unit_w, int unit_h) {
     this->unit_w = unit_w;
     this->unit_h = unit_h;
+    reset_layout();
     init_texture();
 }
 
@@ -297,7 +310,7 @@ void TextureAtlas::reset_layout() {
     unit_rows    = image.height / unit_h;
     if (reshaped) {
         reshaped = false;
-        init_texture();
+        gl_image = image;
     }
     textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
 }
