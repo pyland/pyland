@@ -289,7 +289,6 @@ void TextureAtlas::deinit_texture() {
 void TextureAtlas::set_tile_size(int unit_w, int unit_h) {
     this->unit_w = unit_w;
     this->unit_h = unit_h;
-    reset_layout();
     init_texture();
 }
 
