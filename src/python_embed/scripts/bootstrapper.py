@@ -84,7 +84,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
                 # for proper interrupts.
                 time.sleep(0.05)
 
-            script_filename = "python_embed/scripts/John_{}.py".format(entity.id)
+            script_filename = "python_embed/scripts/{}.py".format(entity.name);
             entity.print_debug("Reading from file: {}".format(script_filename))
 
             with open(script_filename, encoding="utf-8") as script_file:
