@@ -46,7 +46,7 @@
  <objectgroup name="Objects" width="50" height="50">
   <object name="sprite/1" gid="173" x="128" y="320"/>
   <object name="sprite/monkey" gid="159" x="1344" y="384"/>
-  <object name="sprite/crocadile" gid="110" x="512" y="640"/>
+  <object name="sprite/crocodile" gid="110" x="512" y="640"/>
   <object name="orange/1" gid="83" x="640" y="1664"/>
   <object name="pineapple/1" gid="84" x="1920" y="1216"/>
   <object name="bannana/1" gid="82" x="1792" y="2432"/>
