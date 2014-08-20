@@ -242,6 +242,10 @@ void GUIManager::render_text() {
         int x_pos = gui_text_data->get_transformed_x_offset();
         int y_pos = gui_text_data->get_transformed_y_offset();
         text_data->get_text()->move(x_pos, y_pos);
+        text_data->get_text()->align_at_origin(false);
+        text_data->get_text()->vertical_align_centre();
+        text_data->get_text()->align_centre();
+
         text_data->get_text()->display();
    }
 }

@@ -138,6 +138,9 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
             pixel_offset_x =(int)((float)width_pixels * component_x_offset);
             pixel_offset_y = (int)((float)height_pixels * component_y_offset);
 
+            float component_width = this_data->get_width();
+            float component_height = this_data->get_height();
+            this_data->get_text()->resize(int(float(width_pixels) * component_width), int(float(height_pixels) * component_height));
             this_data->get_gui_text()->set_transformed_x_offset(pixel_offset_x + get_x_offset_pixels());
     this_data->get_gui_text()->set_transformed_y_offset(pixel_offset_y + get_y_offset_pixels());
     }
