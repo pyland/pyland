@@ -37,6 +37,7 @@ Sprite::Sprite(glm::ivec2 position,
                std::pair<int, std::string> tile):
 
     MapObject(position, name, walkability, tile),
+    sprite_name(name),
     is_focus(false) {
 
         // Setting up sprite text
