@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/ground.png" width="3648" height="64"/>
+ </tileset>
+ <tileset firstgid="58" name="interactable" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/interactable.png" width="1536" height="64"/>
+ </tileset>
+ <tileset firstgid="82" name="items" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/items.png" width="192" height="64"/>
+ </tileset>
+ <tileset firstgid="85" name="people" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/people.png" width="7168" height="64"/>
+ </tileset>
+ <tileset firstgid="197" name="walls" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/walls.png" width="128" height="64"/>
+ </tileset>
+ <tileset firstgid="199" name="test" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/test.png" width="128" height="64"/>
+ </tileset>
+ <layer name="Ground" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3DwQkAAAwDoXtl/5E7R0HBVVNVVVVVVVVVVdXnD7pjhiIQJwAA
+  </data>
+ </layer>
+ <layer name="Effects" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
+  </data>
+ </layer>
+ <layer name="Overlay" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
+  </data>
+ </layer>
+ <layer name="Collisions" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
+  </data>
+ </layer>
+ <layer name="Objects" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="50" height="50"/>
+ <objectgroup name="Interactions" width="50" height="50"/>
+</map>
