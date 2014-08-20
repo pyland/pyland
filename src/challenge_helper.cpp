@@ -2,6 +2,7 @@
 #include <memory>
 #include <sstream>
 #include <vector>
+#include <fstream>
 
 #include "api.hpp"
 #include "challenge.hpp"
@@ -173,6 +174,23 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
     );
 }
 
-// void ChallengeHelper::challenge_completed(int challenge_id) {
-    
-// }
+void ChallengeHelper::get_completed_level(int challenge_id) {
+  std::ofstream myfile;
+  myfile.open ("game_progress.txt");
+  myfile << (challenge_id+1);
+  myfile.close();
+}
+
+// return the level the player such play next
+int ChallengeHelper::get_current_level () {
+  std::string line;
+  std::ifstream myfile ("game_progress.txt");
+  if (myfile.is_open()) {
+    getline (myfile,line);
+    myfile.close();
+    return std::stoi(line);
+  } else {
+    LOG(ERROR) << "Unable to open game progress file";
+    return 1;
+  }
+}
