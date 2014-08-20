@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <tuple>
 
+#include "animation_frames.hpp"
 #include "cacheable_resource.hpp"
 #include "engine.hpp"
 #include "map_object.hpp"
@@ -27,19 +28,22 @@
 MapObject::MapObject(glm::vec2 position,
                      std::string name,
                      Walkability walkability,
-                     std::pair<int, std::string> tile):
+                     AnimationFrames frames,
+                     std::string start_frame):
     Object(name),
     render_above_sprite(false),
     walkability(walkability),
-    position(position) {
+    position(position),
+    frames(frames) {
 
         VLOG(2) << "New map object: " << name;
 
         regenerate_blockers();
 
         init_shaders();
-        load_textures(tile);
-        generate_tex_data(tile);
+        // Hack hack hack
+        load_textures(frames.get_frame(start_frame));
+        generate_tex_data(frames.get_frame(start_frame));
         generate_vertex_data();
 
         LOG(INFO) << "MapObject initialized";
@@ -180,6 +184,20 @@ void MapObject::generate_vertex_data() {
 
     renderable_component.set_vertex_data(map_object_vert_data, sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
+}
+
+void MapObject::set_state_on_moving_start(glm::ivec2 target) {
+    moving = true;
+    // adding blocker to new tile
+    blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
+}
+
+void MapObject::set_state_on_moving_finish() {
+    moving = false;
+    // removing old blocker and changing key for new one
+    blocked_tiles.erase("stood on");
+    blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
+    blocked_tiles.erase("walking to");
 }
 
 // TODO: rewrite

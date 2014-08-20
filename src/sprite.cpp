@@ -34,9 +34,10 @@ glm::vec2 pos_to_status (glm::vec2 position) {
 Sprite::Sprite(glm::ivec2 position,
                std::string name,
                Walkability walkability,
-               std::pair<int, std::string> tile):
+               AnimationFrames frames,
+               std::string start_frame):
 
-    MapObject(position, name, walkability, tile),
+    MapObject(position, name, walkability, frames, start_frame),
     is_focus(false) {
 
         // Setting up sprite text
@@ -55,7 +56,8 @@ Sprite::Sprite(glm::ivec2 position,
             pos_to_status(position),
             "status icon",
             Walkability::WALKABLE,
-            TextureAtlas::from_name("gui/status/stationary")
+            AnimationFrames("gui/status"),
+            "stationary"
         ));
 
         status_icon->set_render_above_sprites(true);
@@ -80,7 +82,8 @@ Sprite::Sprite(glm::ivec2 position,
             position,
             "focus icon",
             Walkability::WALKABLE,
-            TextureAtlas::from_name("gui/highlight/selected_object")
+            AnimationFrames("gui/highlight"),
+            "selected_object"
         ));
 
         focus_icon->set_render_above_sprites(false);
@@ -98,20 +101,6 @@ Sprite::~Sprite() {
     delete object_text;
     ObjectManager::get_instance().remove_object(status_icon_id);
     LOG(INFO) << "Sprite destructed";
-}
-
-void Sprite::set_state_on_moving_start(glm::ivec2 target) {
-    moving = true;
-    // adding blocker to new tile
-    blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
-}
-
-void Sprite::set_state_on_moving_finish() {
-    moving = false;
-    // removing old blocker and changing key for new one
-    blocked_tiles.erase("stood on");
-    blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
-    blocked_tiles.erase("walking to");
 }
 
 void Sprite::add_to_inventory(int new_object_id) {

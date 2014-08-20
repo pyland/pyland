@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Usage:
   remap <map_file> <out_file> <old_directory> <new_directory>
@@ -52,7 +54,7 @@ def shitty_diff_fml(old_path, new_path):
         new = shitty_parse_fml(new_fml)
 
     # Old must be subset of new
-    return {old[key]: new[key] for key in old.keys()}
+    return {old[key]: new[key] for key in old.keys() & new.keys()}
 
 
 def all_relative_to(paths, dir):
@@ -76,15 +78,13 @@ if __name__ == "__main__":
         mapdata = json.load(mapfile)
 
     # new_tilesets should mutate the JSON but the old stuff should not
-    new_tilesets = {Path(tileset["image"]).stem: tileset for tileset in mapdata["tilesets"]}
+    new_tilesets = mapdata["tilesets"]
     old_tilesets = deepcopy(new_tilesets)
 
     min_gid_so_far = 1
-    for image_path in new_dir.glob("*.png"):
-        if image_path.stem not in new_tilesets:
-            continue
+    for tileset in new_tilesets:
+        image_path = map_file.resolve().parent / tileset["image"]
 
-        tileset = new_tilesets[image_path.stem]
         tile_width  = int(tileset["tilewidth"])
         tile_height = int(tileset["tileheight"])
 

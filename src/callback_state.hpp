@@ -73,7 +73,7 @@ public:
 
     void man_move(glm::vec2 direction) {
         auto id = Engine::get_map_viewer()->get_map_focus_object();
-        Engine::move_sprite(id, direction);
+        Engine::move_object(id, direction);
     }
 
     void monologue () {

@@ -30,11 +30,8 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         }
         map_viewer->set_map(map);
 
-        //build sprite switcher 
+        //build sprite switcher
         sprite_switcher = new SpriteSwitcher();
-
-        // WTF
-
 }
 
 Challenge::~Challenge() {
@@ -64,9 +61,10 @@ Challenge::~Challenge() {
 int Challenge::make_map_object(glm::vec2 position,
                                std::string name,
                                Walkability walkability,
-                               std::pair<int, std::string> tile) {
+                               AnimationFrames frames,
+                               std::string start_frame) {
 
-    auto new_object(std::make_shared<MapObject>(position, name, walkability, tile));
+    auto new_object(std::make_shared<MapObject>(position, name, walkability, frames, start_frame));
     ObjectManager::get_instance().add_object(new_object);
 
     auto new_object_id(new_object->get_id());

@@ -97,7 +97,7 @@ private:
     ///
     /// A map of texture names to texture indexes.
     ///
-    std::map<std::string,int> names_to_indexes;
+    std::map<std::string, int> names_to_indexes;
 
     ///
     /// Get a commonly used texture.
@@ -271,6 +271,11 @@ public:
     /// @return Non-negative value of an index, or -1 if not found.
     ///
     int get_name_index(const std::string name);
+
+    ///
+    /// Get the map of texture names to texture indexes.
+    ///
+    std::map<std::string, int> const &get_names_to_indexes();
 };
 
 

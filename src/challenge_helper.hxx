@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 
+#include "animation_frames.hpp"
 #include "challenge.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
@@ -37,7 +38,8 @@ template <class OutputIt>
 void ChallengeHelper::make_objects(Challenge *challenge,
                                    std::string name,
                                    Walkability walkability,
-                                   OutputIt output) {
+                                   OutputIt output,
+                                   std::string start_frame) {
 
     auto *map(Engine::get_map_viewer()->get_map());
     auto begin(maptools::start_of(map->locations, "Objects/" + name));
@@ -53,7 +55,10 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                 name_properties.second.location,
                 name_properties.first,
                 walkability,
-                name_properties.second.tile
+                AnimationFrames(name_properties.second.tileset.substr(
+                    0, name_properties.second.tileset.length() - start_frame.length()
+                )),
+                start_frame
             );
         }
     );

@@ -4,18 +4,18 @@
   <image source="../resources/tiles/ground.png" width="3648" height="64"/>
  </tileset>
  <tileset firstgid="58" name="gui" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/gui.png" width="960" height="64"/>
+  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
  </tileset>
- <tileset firstgid="73" name="interactable" tilewidth="64" tileheight="64">
+ <tileset firstgid="91" name="interactable" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/interactable.png" width="1536" height="64"/>
  </tileset>
- <tileset firstgid="97" name="walls" tilewidth="64" tileheight="64">
+ <tileset firstgid="115" name="walls" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/walls.png" width="128" height="64"/>
  </tileset>
- <tileset firstgid="99" name="people" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/people.png" width="7168" height="64"/>
+ <tileset firstgid="117" name="people" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/people.png" width="8448" height="64"/>
  </tileset>
- <tileset firstgid="211" name="basictiles_2_64" tilewidth="64" tileheight="64">
+ <tileset firstgid="249" name="basictiles_2_64" tilewidth="64" tileheight="64">
   <image source="../resources/basictiles_2_64.png" width="512" height="960"/>
  </tileset>
  <layer name="Ground" width="30" height="30">
@@ -30,27 +30,27 @@
  </layer>
  <layer name="Overlay" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMAroA5KAOHGgHTGMACuV1BADfKlkznADjEiYEpDIQFreoIad5AJ62I0tXOnl34EK11EwCgYKAAByRQHp
+   eJxjYBgFo2AUjIJRMAroA0qAuHigHTGMACuV1BAD4qlkznADjEiYElDMQFreoIad5AJ62I0tXOnl34EK11EwCgYKAACPgwJD
   </data>
  </layer>
  <layer name="Collisions" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYKAOMGakkkGj9o7aO2rvqL3DxF6QPdgwPewlRowW9hLyLy3CYLinI3z2EuOGgXIntcBgCGdC6qiRrkk1h9p5iRSzqGk3LnOwhQe9/EvLNDfY0/OovSPTXgDyqgvJ
+   eJxjYKAOiGSkkkGj9o7aO2rvqL3DxF6QPdgwPewlRowW9hLyLy3CYLinI3z2EuOGgXIntcBgCGdC6qiRrkk1h9p5iRSzqGk3LnOwhQe9/EvLNDfY0/OovSPTXgAj0RRl
   </data>
  </layer>
  <layer name="Objects" width="30" height="30" visible="0">
   <data encoding="base64" compression="zlib">
-   eJztzjENAAAIwDD0gX8/4ICHhKdN9i8CAG7lVN8TAMCqAYjkAJY=
+   eJztzjENAAAIwDCEgn8b4ICHhKdN9i8CAG7lVN8TAMCqAZ37ALo=
   </data>
  </layer>
- <objectgroup name="Objects" width="30" height="30" visible="0">
-  <object name="sprite/1" gid="187" x="704" y="1152"/>
+ <objectgroup name="Objects" width="30" height="30">
+  <object name="sprite/1" gid="219" x="704" y="1152"/>
  </objectgroup>
  <objectgroup name="Interaction" width="30" height="30" visible="0">
-  <object name="level/1" gid="68" x="1024" y="960"/>
-  <object name="level/2" gid="68" x="1152" y="1344"/>
-  <object name="level/3" gid="68" x="1216" y="960"/>
-  <object name="level/4" gid="68" x="1600" y="960"/>
-  <object name="level/5" gid="68" x="1792" y="1152"/>
+  <object name="level/1" gid="125" x="1024" y="960"/>
+  <object name="level/2" gid="125" x="1152" y="1344"/>
+  <object name="level/3" gid="125" x="1216" y="960"/>
+  <object name="level/4" gid="125" x="1600" y="960"/>
+  <object name="level/5" gid="125" x="1792" y="1152"/>
  </objectgroup>
 </map>

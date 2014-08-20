@@ -91,8 +91,8 @@ public:
     /// @param dx move in x by dx tiles
     /// @param dy move in x by dy tiles
     ///
-    static void move_sprite(int id, glm::ivec2 move_by);
-    static void move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return);
+    static void move_object(int id, glm::ivec2 move_by);
+    static void move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return);
 
     ///
     /// Determine if a location can be walked on

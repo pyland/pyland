@@ -7,9 +7,9 @@
   <image source="../resources/tiles/walls.png" width="128" height="64"/>
  </tileset>
  <tileset firstgid="60" name="interactable" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/interactable.png" width="1280" height="64"/>
+  <image source="../resources/tiles/interactable.png" width="1536" height="64"/>
  </tileset>
- <tileset firstgid="80" name="test" tilewidth="64" tileheight="64">
+ <tileset firstgid="84" name="test" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/test.png" width="128" height="64"/>
  </tileset>
  <layer name="Ground" width="48" height="32">
