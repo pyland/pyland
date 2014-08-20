@@ -20,6 +20,14 @@
 
 Button::Button() {
     button_text = std::make_shared<GUIText>();
+    button_text->set_width(1.0f);
+    button_text->set_height(1.0f);
+    button_text->set_x_offset(0.3f);
+    button_text->set_y_offset(0.5f);
+    set_text("");
+    button_text->get_text()->align_at_origin(false);
+    button_text->get_text()->vertical_align_centre();
+    button_text->get_text()->align_centre();
     add(button_text);
 }
 
@@ -28,16 +36,24 @@ Button::Button(std::shared_ptr<Text>  _text, std::function<void (void)> on_click
     ComponentGroup(on_click, _width, _height, _x_offset, _y_offset) {
     button_text = std::make_shared<GUIText>();
     button_text->set_text(_text);
-    button_text->set_width(0.7f);
-    button_text->set_height(0.8f);
-    button_text->set_x_offset(0.1f);
-    button_text->set_y_offset(0.1f);
+    button_text->set_width(1.0f);
+    button_text->set_height(1.0f);
+    button_text->set_x_offset(0.3f);
+    button_text->set_y_offset(0.5f);
+    button_text->get_text()->align_at_origin(false);
+    button_text->get_text()->vertical_align_centre();
+    button_text->get_text()->align_centre();
+
     add(button_text);
 }
 void Button::set_text(std::string text) {
     //TODO DEBUG
-
-    text= "";
+    Typeface buttontype = Engine::get_game_typeface();
+    TextFont buttonfont = Engine::get_game_font();
+    
+    std::shared_ptr<Text> new_text = std::make_shared<Text>(Engine::get_game_window(), buttonfont, true);
+    new_text->set_text(text);
+    button_text->set_text(new_text);
 }
 std::shared_ptr<Text> Button::get_text() {
     return button_text->get_text();
@@ -390,6 +406,12 @@ int Button::generate_texture_coords_element(GLfloat* data, int offset, std::tupl
 
 std::vector<std::shared_ptr<GUIText>> Button::generate_this_text_data() {
     std::vector<std::shared_ptr<GUIText>> text_data;
+    if(!is_visible())
+        return text_data;
+
+
     text_data.push_back(button_text);
+    button_text->get_gui_text()->set_transformed_x_offset(0);
+    button_text->get_gui_text()->set_transformed_y_offset(0);
     return text_data;
 }

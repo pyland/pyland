@@ -30,7 +30,7 @@ public:
     virtual ~Challenge();
 
     ChallengeData* challenge_data;
-    Dispatcher<> event_finish;
+    Dispatcher<int> event_finish;
     std::vector<int> sprite_ids;
 
     virtual void start() = 0;

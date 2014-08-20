@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 
+#include "button.hpp"
 #include "lifeline.hpp"
 #include "notification_stack.hpp"
 
@@ -16,11 +17,9 @@ private:
     Notification notification_stack;
     Text* notification_text;
 
-    int forward_button_id;
-    int backward_button_id;
+    std::shared_ptr<Button> forward_button;
+    std::shared_ptr<Button> backward_button;
 
-    std::unique_ptr<Text> backward_text;
-    std::unique_ptr<Text> forward_text;
     Lifeline text_box;
 
     void move_notification(Direction direction);

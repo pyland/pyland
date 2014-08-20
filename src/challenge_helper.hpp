@@ -78,6 +78,13 @@ namespace ChallengeHelper {
     void create_pickupable(glm::ivec2 start_tile,
                            glm::ivec2 pickup_tile,
                            int object_id);
+
+    ///
+    /// saves the fact that this challenge has been completed
+    ///
+    void set_completed_level(int challenge_id);
+
+    int get_current_level ();
 }
 
 #include "challenge_helper.hxx"

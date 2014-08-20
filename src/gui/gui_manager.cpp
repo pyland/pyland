@@ -34,10 +34,11 @@ void GUIManager::parse_components() {
 
     //Generate  the needed offsets
     regenerate_offsets(root);
-    
+
     //Now generate the needed rendering data
     generate_texture_data();
     generate_vertex_data();
+
     generate_text_data();
     init_shaders();
 }
@@ -63,7 +64,6 @@ void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
             component->set_x_offset_pixels(int(float( width_pixels) * component->get_x_offset()));
             component->set_y_offset_pixels(int(float(height_pixels) * component->get_y_offset()));
 
-            
             //Give it a pointer to its texture coordinates
             component->set_texture_atlas(renderable_component.get_texture());
             regenerate_offsets(component);
@@ -236,15 +236,16 @@ void GUIManager::render_text() {
    for(auto text_data : components_text) {
         if(!text_data->get_text()) 
             continue;
+
         std::shared_ptr<GUITextData> gui_text_data = text_data->get_gui_text();
         
-        //        int x_pos = gui_text_data->get_transformed_x_offset();
-        //        int y_pos = gui_text_data->get_transformed_y_offset();
-        //        std::cout << " X PO " << x_pos << " Y PO " << y_pos << std::endl;
+        int x_pos = gui_text_data->get_transformed_x_offset();
+        int y_pos = gui_text_data->get_transformed_y_offset();
+        text_data->get_text()->move(x_pos, y_pos);
+        text_data->get_text()->align_at_origin(false);
+        text_data->get_text()->vertical_align_centre();
+        text_data->get_text()->align_centre();
 
-        text_data->get_text()->move(100 ,100 );//x_pos, y_pos);
-        text_data->get_text()->set_text("Test");
-        text_data->get_text()->resize(200, 200);
         text_data->get_text()->display();
    }
 }

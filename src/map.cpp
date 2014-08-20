@@ -79,7 +79,7 @@ Map::Map(const std::string map_src):
 
         //Generate the geometry needed for this map
         init_shaders();
-        // init_textures();
+        init_textures();
         // generate_tileset_coords(texture_atlases[0]);
         generate_data();
 }
@@ -221,8 +221,8 @@ void Map::generate_data() {
 
         // Get all the tiles in the layer, moving from left to right and down
         for (auto &tile_data : *layer_data) {
-            int tile_id = tile_data.second;
-            if (!tile_id) { num_blank_tiles++; }
+            std::shared_ptr<TileSet> tileset = tile_data.first;
+            if (!tileset) { num_blank_tiles++; }
 
             total_tiles++;
         }
@@ -238,7 +238,8 @@ void Map::generate_data() {
         layer->set_packing(layer_packing);
 
         // Create the buffer for the layer
-        int num_tiles(total_tiles - num_blank_tiles);
+        int num_tiles(layer_packing == Layer::Packing::DENSE ? total_tiles
+                                                             : total_tiles - num_blank_tiles);
 
         // The number of bytes needed - *6 for the GLTRIANGLES
         // WTF: num_tile_vertices??
@@ -272,14 +273,14 @@ void Map::generate_data() {
             int idx(0);
 
             for(auto tile_data = layer_data->begin(); tile_data != layer_data->end(); ++tile_data) {
-                int tile_id = tile_data->second;
+                std::shared_ptr<TileSet> tileset = tile_data->first;
 
                 //Set the index into the buffer
-                (*buffer_map)[y*map_width+ x] = idx;
+                buffer_map->insert(std::make_pair(y*map_width + x, idx));
 
                 //Calculate the next index
                 //If we're not looking at a blank tile
-                if(tile_id != 0) {
+                if(tileset) {
                     //Calculate the new offset
                     idx += num_tile_dimensions*num_tile_vertices;
 
@@ -321,8 +322,9 @@ void Map::generate_layer_tex_coords(GLfloat* data, std::shared_ptr<Layer> layer,
         //IF WE ARE GENERATING A SPARSE LAYER
         //Skip out blank tiles:
         //This get's us our sparse data structure
-        if (!(dense || tile_id))
+        if (!dense && !tileset) {
             continue;
+        }
 
         // If this is a dense layer and the tile is blank, then we don't
         // actually care about the texture coordinates. Only create data
@@ -398,11 +400,11 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
             }
 
             std::shared_ptr<TileSet> tileset(tile_data->first);
-            int tile_id(tile_data->second);
+            // int tile_id(tile_data->second);
 
             // IF GENERATING A SPARSE LAYER
             // Skip empty tiles
-            if (dense == false && tile_id == 0) {
+            if (!dense && !tileset) {
                 ++tile_data;
                 continue;
             }
@@ -417,6 +419,8 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
                 vy1 = float(y);
                 vx2 = float(x + 1.001);
                 vy2 = float(y + 1.001);
+            } else if (dense) {
+                LOG(INFO) << x << ", " << y;
             }
 
             //bottom left

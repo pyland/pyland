@@ -43,6 +43,7 @@ public:
 
     ///
     /// Get the transformed pixel y position of the text
+
     /// @return the y position
     ///
     int get_transformed_y_offset() { return transformed_y_pixel_offset; }

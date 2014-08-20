@@ -23,19 +23,19 @@
    eJztw0ENAAAMA6F71r/iCRkkrJqqqqrvHhLqHCE=
   </data>
  </layer>
- <layer name="Effects" width="30" height="30" visible="0">
+ <layer name="Effects" width="30" height="30">
   <data encoding="base64" compression="zlib">
    eJxjYKAO4KaSOUPFXq4RZu9oONMHjOaj4WWvABDzQTEvEAsBMScd7MXmP3r4WZgB4V+Yn3noYC/Mb5JIYhJALAXFSkAsDWWL0cBeWSxy8kCsSEW7kAEsv8phkcPmFhAAuQfkfwUS7UIORy4orcoACVMpJKyKxodhFTxuJRYgp11c/kMHMlD7KYkD5HKREveTCpD9C/IHNdMssfbSE4zWP/QBo+E8ai8+AABU3AZB
   </data>
  </layer>
  <layer name="Overlay" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMAroA0qAuHigHTGMACuV1BAD4qlkznADjEiYElDMQFreoIad5AJ62I0tXOnl34EK11EwCgYKAACPgwJD
+   eJxjYBgFo2AUjIJRMAroA0qAuJhGZrvgYONSMxwAK5XUEAPiydQ33MIcHTAiYUpAMQP2vIEr/KhhJ7mAHnZjC1d6+XegwnUUjIKBAgD2ewOX
   </data>
  </layer>
  <layer name="Collisions" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYKAOiGSkkkGj9o7aO2rvqL3DxF6QPdgwPewlRowW9hLyLy3CYLinI3z2EuOGgXIntcBgCGdC6qiRrkk1h9p5iRSzqGk3LnOwhQe9/EvLNDfY0/OovSPTXgAj0RRl
+   eJxjYKAOcGWkkkGj9o7aO2rvqL3DxF6QPdgwPewlRowW9hLyLy3CYLinI3z2EuOGgXIntcBgCGdC6qiRrkk1h9p5iRSzqGk3LnOwhQe9/EvLNDfY0/OovSPTXgCQrw/d
   </data>
  </layer>
  <layer name="Objects" width="30" height="30" visible="0">
@@ -43,10 +43,10 @@
    eJztzjENAAAIwDCEgn8b4ICHhKdN9i8CAG7lVN8TAMCqAZ37ALo=
   </data>
  </layer>
- <objectgroup name="Objects" width="30" height="30">
-  <object name="sprite/1" gid="219" x="704" y="1152"/>
+ <objectgroup name="Objects" width="30" height="30" visible="0">
+  <object name="sprite/1" gid="205" x="704" y="1152"/>
  </objectgroup>
- <objectgroup name="Interaction" width="30" height="30" visible="0">
+ <objectgroup name="Interactions" width="30" height="30">
   <object name="level/1" gid="125" x="1024" y="960"/>
   <object name="level/2" gid="125" x="1152" y="1344"/>
   <object name="level/3" gid="125" x="1216" y="960"/>

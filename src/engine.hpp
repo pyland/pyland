@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "game_window.hpp"
 #include "gil_safe_future.hpp"
 #include "text_font.hpp"
 #include "typeface.hpp"
@@ -33,6 +34,7 @@ private:
 
     static NotificationBar* notification_bar;
 
+    static GameWindow* game_window;
     ///
     /// The size of a tile
     ///
@@ -70,6 +72,18 @@ public:
     static int get_tile_size() { return tile_size; }
 
     static float get_actual_tile_size() { return float(tile_size) * global_scale; }
+
+    ///
+    /// Set the game window
+    /// @param _game_window the game window
+    ///
+    static void set_game_window(GameWindow* _game_window) { game_window = _game_window; }
+    
+    ///
+    /// Get the game window
+    /// @return the game window
+    ///
+    static GameWindow* get_game_window() { return game_window; }
 
     ///
     /// Set the map viewer attached to the engine

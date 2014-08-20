@@ -71,7 +71,7 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
                                        std::back_inserter(blocked_alert_path_medium_callbacks),
                                        [this] (int) {
         Engine::print_dialogue("Tom", "Get the treasure and press \"e\" to view it!\n");
-
+        finish();
         ChallengeHelper::unregister_all(&blocked_alert_path_medium_callbacks);
         return false;
     });
@@ -147,6 +147,7 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
                                        [this] (int) {
         // TODO: FINISH SOMEHOW!!
         Engine::print_dialogue("Game", "You Win, Well Done !");
+        finish();
         return true;
     });
 }
@@ -160,5 +161,6 @@ void LongWalkChallenge::start() {
 }
 
 void LongWalkChallenge::finish() {
-    // TODO: Somehow finish challenge...
+    ChallengeHelper::set_completed_level(1);
+    event_finish.trigger(0);
 }

@@ -2,6 +2,7 @@
 #include <memory>
 #include <sstream>
 #include <vector>
+#include <fstream>
 
 #include "api.hpp"
 #include "challenge.hpp"
@@ -24,6 +25,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
                                  Walkability walkability,
                                  std::string start_frame) {
 
+    LOG(INFO) << "creating object at " << marker_name;
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Objects/" + marker_name));
 
@@ -36,8 +38,6 @@ int ChallengeHelper::make_object(Challenge *challenge,
     );
 }
 
-#include <iostream>
-
 int ChallengeHelper::make_sprite(Challenge *challenge,
                                  std::string marker_name,
                                  std::string sprite_name,
@@ -45,6 +45,7 @@ int ChallengeHelper::make_sprite(Challenge *challenge,
                                  std::string start_frame) {
 
     auto *map = Engine::get_map_viewer()->get_map();
+    LOG(INFO) << marker_name;
     auto properties(map->locations.at("Objects/" + marker_name));
 
     auto new_sprite(std::make_shared<Sprite>(
@@ -82,6 +83,7 @@ PositionDispatcher<int>::CallbackID
 ChallengeHelper::make_interaction(std::string name,
                                   std::function<bool (int)> callback) {
 
+    LOG(INFO) << "creating interaction at " << name;
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Interactions/" + name));
 
@@ -172,4 +174,25 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
             return true;
         }
     );
+}
+
+void ChallengeHelper::set_completed_level(int challenge_id) {
+  std::ofstream myfile;
+  myfile.open ("game_progress.txt");
+  myfile << (challenge_id+1);
+  myfile.close();
+}
+
+// return the level the player such play next
+int ChallengeHelper::get_current_level () {
+  std::string line;
+  std::ifstream myfile ("game_progress.txt");
+  if (myfile.is_open()) {
+    getline (myfile,line);
+    myfile.close();
+    return std::stoi(line);
+  } else {
+    LOG(ERROR) << "Unable to open game progress file";
+    return 1;
+  }
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/ground.png" width="3648" height="64"/>
+ </tileset>
+ <tileset firstgid="58" name="interactable" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/interactable.png" width="1536" height="64"/>
+ </tileset>
+ <tileset firstgid="82" name="items" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/items.png" width="192" height="64"/>
+ </tileset>
+ <tileset firstgid="85" name="people" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/people.png" width="7168" height="64"/>
+ </tileset>
+ <tileset firstgid="197" name="walls" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/walls.png" width="128" height="64"/>
+ </tileset>
+ <tileset firstgid="199" name="test" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/test.png" width="128" height="64"/>
+ </tileset>
+ <tileset firstgid="201" name="basictiles_2_64" tilewidth="64" tileheight="64">
+  <image source="../resources/basictiles_2_64.png" width="512" height="960"/>
+ </tileset>
+ <tileset firstgid="321" name="gui" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
+ </tileset>
+ <layer name="Ground" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
+  </data>
+ </layer>
+ <layer name="Effects" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3OIQ0AAAgAMDSC/nFpgGED8yd4BADs1XeAUX4HAAAAAAAAAOBAA0BQ/EoQJwAA
+  </data>
+ </layer>
+ <layer name="Overlay" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2Z227DIAyGzapdbO2OD1RNk5Ld7qXT59qQsOL+M4dklIPEJyECJdQ/tglNiYjuKM6jp39x5eLKImq8bgGpQ9rrs122DZXT8enpZ1+xDmmrCcxnRM2aWkDqsHYdXFuLSeyzWqYb2eWDbcD1O7o65geN1vzBvpDcJ9zbWp5z/m5lptvrSFlPi42rUHwcPP1EZfzx9FueRfmAvjdXn0iPqxRaiKsjtL93zLFXf07O0EZ7Yro4N0r4I/Qd6I+te6h81pfmldb8eHc158zDBptqn63QBxLef+U5ypZZXE+02l8zv31nWwvvv2y3dl6Uemrmd8wfKVyg1OCF1pzA58spcY7auZGTkI4vV3ogFk+t65B53yv4G7fUmUR7H6C1U3NW7r88fwlwf9SeBQv9tS9EjXMhnn/k+qEebXwrxOLFt64t6ogxQ22p/XsCSbFnhnZrGiytxYfGln0yB1v2NHlP7L1wylkT79uLtl/7MMq41DX3zWvE52iHoet3zAbGS/0GxmMxMD53jkmbDF3b5NOHGkPjsL3nvep/dEktXPcGxlaPGgaDXin931RuJupfw2AwGAwGg0GMH16vVvoQJwAA
+  </data>
+ </layer>
+ <layer name="Collisions" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2XQQ6AMAgE9Tn+/4PGQy+NtYCFLmQn8aQNO1pBj+Mf1yk/0NBkj/aQ1pFma+dQn4cl106PUV1LJrTn8ZZHki+Dh+c6L77yzN75LB4e69BA9LD2qggPz1mAOgcfLLMfEcTvKgtVPCRUcang0KjkkZkKe2pXz1rdQ/trI//LvVwi+bp/b/lR9/4sk+W/aQfSfdJfm9lDsyYaxEw90b3F0gNW9clV80pTd9QHpTWk9UeZLLPmzxzSsDrbDgetVzYqOBBCCCGEEEKIFzcJ3g5XECcAAA==
+  </data>
+ </layer>
+ <layer name="Objects" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="50" height="50">
+  <object name="sprite/1" gid="173" x="128" y="320"/>
+  <object name="sprite/monkey" gid="159" x="1344" y="384"/>
+  <object name="sprite/crocodile" gid="110" x="640" y="64"/>
+  <object name="orange/1" gid="83" x="640" y="1664"/>
+  <object name="pineapple/1" gid="84" x="1920" y="1216"/>
+  <object name="bannana/1" gid="82" x="1792" y="2432"/>
+ </objectgroup>
+ <objectgroup name="Interactions" width="50" height="50">
+  <object name="crate/1" gid="66" x="128" y="192"/>
+  <object name="bridge/1" gid="64" x="256" y="576"/>
+  <object name="vines/1" gid="80" x="768" y="640"/>
+ </objectgroup>
+</map>
