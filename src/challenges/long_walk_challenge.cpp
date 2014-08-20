@@ -147,6 +147,7 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
                                        [this] (int) {
         // TODO: FINISH SOMEHOW!!
         Engine::print_dialogue("Game", "You Win, Well Done !");
+        event_finish.trigger(1);
         return true;
     });
 }
