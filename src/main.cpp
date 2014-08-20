@@ -267,7 +267,7 @@ int main(int argc, const char *argv[]) {
             &window,
             input_manager,
             &notification_bar,
-            1
+            0
         ));
 
         //Run the challenge - returns after challenge completes
@@ -340,12 +340,12 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
     Challenge* challenge = nullptr;
     std::string map_name = "";
     switch(next_challenge) {
-    case 1:
+    case 0:
         map_name ="../maps/start_screen.tmx";
         challenge_data->map_name = map_name;
         challenge = new StartScreen(challenge_data);
         break;
-    case 2:
+    case 1:
         map_name = "../maps/map0.tmx";
         challenge_data->map_name = map_name;
         challenge = new LongWalkChallenge(challenge_data);
