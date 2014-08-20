@@ -79,6 +79,7 @@ PositionDispatcher<int>::CallbackID
 ChallengeHelper::make_interaction(std::string name,
                                   std::function<bool (int)> callback) {
 
+    LOG(INFO) << "creating interaction at " << name;
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Interactions/" + name));
 
