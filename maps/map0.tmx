@@ -34,7 +34,7 @@
    H4sIAAAAAAAAA+3cSW6EMBBAUa7K/S+RVUsIeWpTpEzzvvQ2bsvxsMuCfdu2HQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgQUbL3icAAAAAAKzoWORcAAAAAAB4g1K18dZv2ecAAAAAAHiiXhHrZJ/xLWp3/c271MYBAAAAAKgbLWKd7LP+uuM9z3ZeBwAAAACAMZ+uzIlYg9h3nM17AQAAAAB871NpbKuMtTrO3wtjur+Iu/ZekiRJkiRJkjRW6f/tembeTpIkSZIkSZJy8/92SZIkSZIkSZKud/f3ZGbX0LV8T0aSJEmSJEmS/q/eN9xHvvMevQbXnO93Nu8FAAAAADBntIh1ss/66473PNt5HQAAAAAAxvWKWCf7jG9Ru+tv3qU2DgAAAAAAb1GqNt76LfscAAAAAAAwo1TUepFzAQAAAABgVa3uXDvy7wAAAAAAQLZetbnZ+wYAAAAAgJX0as3L3jsAAAAAAKyiV2tu9t4BAAAAAGAlrWpzs/cMAAAAAAArOpe9HwAAAAAAAAAAAAAAAAAAAADgGf4AUQrcGSC/AgA=
   </data>
  </layer>
- <layer name="Objects" width="1500" height="30" visible="0">
+ <layer name="Objects" width="1500" height="30">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3ZMQrAIAwF0NygEOj9rypOdepiwFrfA6dAkD/+RAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMB69/BmXQU7eMgTAAAAAOC/8mWmH64lTwAAAACAM+mH6/S7hjwBAAAAAM6kH64lTwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4Oty9QcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAzDUURMUkgvwIA
   </data>
@@ -54,7 +54,7 @@
   <object name="sprite/2" gid="220" x="448" y="896"/>
   <object name="sprite/3" gid="266" x="512" y="896"/>
  </objectgroup>
- <objectgroup name="Interactions" width="1500" height="30" visible="0">
+ <objectgroup name="Interactions" width="1500" height="30">
   <object name="start" gid="98" x="256" y="960"/>
   <object name="room/first/exit/0" gid="98" x="704" y="960"/>
   <object name="room/first/exit/1" gid="98" x="704" y="1024"/>
