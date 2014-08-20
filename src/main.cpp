@@ -25,6 +25,7 @@
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "keyboard_input_event.hpp"
+#include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
 #include "lifeline.hpp"
@@ -284,27 +285,11 @@ int main(int argc, const char *argv[]) {
         start_screen.start();
 
 
-        //Run the challenge - returns after challenge completes
-        #ifdef USE_GLES
-            TextFont big_font(Engine::get_game_typeface(), 50);
-            Text cursor(challenge_data->game_window, big_font, true);
-            cursor.set_bloom_radius(10);
-            cursor.align_left();
-            cursor.vertical_align_centre();
-            cursor.align_at_origin(true);
-            cursor.move(0, 0);
-            cursor.resize(100, 100);
-            cursor.set_text("<");
-
-            Lifeline cursor_lifeline(challenge_data->input_manager->register_mouse_handler(
-                filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
-                    cursor.move(event.to.x-10, event.to.y);
-                })
-            ));
-        #endif
+        MouseCursor cursor(&window);
 
         auto last_clock(std::chrono::steady_clock::now());
 
+        //Run the challenge - returns after challenge completes
         VLOG(3) << "{";
         while (!challenge_data->game_window->check_close()) {
             last_clock = std::chrono::steady_clock::now();
@@ -328,9 +313,7 @@ int main(int argc, const char *argv[]) {
             Engine::text_displayer();
             challenge_data->notification_bar->text_displayer();
 
-            #ifdef USE_GLES
-                cursor.display();
-            #endif
+            cursor.display();
 
             VLOG(3) << "} TD | SB {";
             challenge_data->game_window->swap_buffers();

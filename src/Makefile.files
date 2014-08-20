@@ -24,6 +24,7 @@ BASE_OBJS = \
 	map_loader.o           \
 	map_object.o           \
 	map_viewer.o           \
+	mouse_cursor.o         \
 	notification_bar.o     \
 	notification_stack.o   \
 	object.o               \
