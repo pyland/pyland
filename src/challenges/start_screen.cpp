@@ -1,4 +1,6 @@
 #include <string>
+#include <fstream>
+#include <iostream>
 
 #include "challenge.hpp"
 #include "challenge_data.hpp"
@@ -10,16 +12,47 @@
 #include "sprite.hpp"
 #include "walkability.hpp"
 
+int encoded_levels = 2;
 
-#include <iostream>
+// return the level the player such play next
+int get_current_level () {
+  std::string line;
+  std::ifstream myfile ("game_progress.txt");
+  if (myfile.is_open()) {
+    getline (myfile,line);
+    myfile.close();
+    return std::stoi(line);
+  } else {
+    LOG(ERROR) << "Unable to open game progress file";
+    return 1;
+  }
+}
 StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_data) {
     ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED);
     for (int i=1; i<=5; i++) {
         std::string name = "level/"+std::to_string(i);
-        
+
         ChallengeHelper::make_interaction(name,
-            [i] (int) {
-                Engine::print_dialogue("Game","loading challenge "+std::to_string(i));
+            [i,this] (int) {
+                if (i==get_current_level()) {
+                    Engine::print_dialogue(
+                        "Game","loading challenge "+std::to_string(i));
+                    event_finish.trigger(i);
+
+                } else if (i<get_current_level()) {
+                    Engine::print_dialogue(
+                        "Game","You've finish this level. but feel free to have another go");
+
+                } else if (i<=encoded_levels) {
+                    Engine::print_dialogue(
+                        "Game","Sorry this level is not avaliable to you yet. \n"
+                        "Please finish level "+std::to_string(i)+ " first.");
+
+                } else {
+                    Engine::print_dialogue(
+                        "Game","Help us build a new game level to go here,"
+                        "See github.com/pyland/pyland for more information.");
+                }
                 return true;
             }
         );

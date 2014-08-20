@@ -171,3 +171,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
         }
     );
 }
+
+// void ChallengeHelper::challenge_completed(int challenge_id) {
+    
+// }

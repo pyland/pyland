@@ -265,7 +265,7 @@ int main(int argc, const char *argv[]) {
             &window,
             input_manager,
             &notification_bar,
-            0
+            1
         ));
 
     while(!window.check_close() && run_game) {
@@ -336,7 +336,7 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
     int next_challenge = challenge_data->next_challenge;
     Challenge* challenge = nullptr;
     switch(next_challenge) {
-    case 0:
+    case 1:
         challenge = new StartScreen(challenge_data);
         break;
         
