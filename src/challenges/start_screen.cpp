@@ -14,19 +14,7 @@
 
 int encoded_levels = 2;
 
-// return the level the player such play next
-int get_current_level () {
-  std::string line;
-  std::ifstream myfile ("game_progress.txt");
-  if (myfile.is_open()) {
-    getline (myfile,line);
-    myfile.close();
-    return std::stoi(line);
-  } else {
-    LOG(ERROR) << "Unable to open game progress file";
-    return 1;
-  }
-}
+
 StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_data) {
     ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED);
     for (int i=1; i<=5; i++) {
@@ -34,12 +22,12 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
 
         ChallengeHelper::make_interaction(name,
             [i,this] (int) {
-                if (i==get_current_level()) {
+                if (i==ChallengeHelper::get_current_level()) {
                     Engine::print_dialogue(
                         "Game","loading challenge "+std::to_string(i));
                     event_finish.trigger(i);
 
-                } else if (i<get_current_level()) {
+                } else if (i<ChallengeHelper::get_current_level()) {
                     Engine::print_dialogue(
                         "Game","You've finish this level. but feel free to have another go");
 
