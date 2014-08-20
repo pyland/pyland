@@ -124,8 +124,8 @@ int main(int argc, const char *argv[]) {
     stop_button->set_on_click([&] () {LOG(ERROR) << "STOP";  callbackstate.stop(); });
     stop_button->set_width(0.2f);
     stop_button->set_height(0.2f);
-    stop_button->set_y_offset(0.8f);
-    stop_button->set_x_offset(0.8f);
+    stop_button->set_y_offset(0.67f);
+    stop_button->set_x_offset(0.0f);
 
 
     gui_manager.set_root(sprite_window);

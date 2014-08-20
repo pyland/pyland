@@ -21,6 +21,8 @@ class Sprite : public MapObject {
 private:
     Sprite_Status string_to_status (std::string status);
 
+    std::string sprite_name;
+
 protected:
     ///
     /// The text to display above the object
@@ -126,6 +128,8 @@ public:
     void set_sprite_status(std::string _sprite_status);
 
     void set_focus(bool _is_focus);
+
+    std::string get_sprite_name() {return sprite_name; }
 };
 
 
