@@ -30,7 +30,7 @@ NotificationBar::NotificationBar() {
 
     /// build back button
     backward_button = std::make_shared<Button>();
-    backward_button->set_text("backward");
+    backward_button->set_text("<- Previous");
     backward_button->set_on_click([&] () {
         LOG(INFO) << "backward button pressed";
         move_notification(Direction::PREVIOUS);
@@ -42,7 +42,7 @@ NotificationBar::NotificationBar() {
 
     //build forwards button
     forward_button = std::make_shared<Button>();
-    forward_button->set_text("forward");
+    forward_button->set_text("Next ->");
     forward_button->set_on_click([&] () {
         LOG(INFO) << "forward button pressed";
         move_notification(Direction::NEXT);
@@ -58,20 +58,6 @@ NotificationBar::NotificationBar() {
     gui_manager->get_root()->add(backward_button);
     gui_manager->get_root()->add(forward_button);
     gui_manager->parse_components();
-
-    // button text as Button::set_text() don't currently work
-    backward_text.reset(new Text(window, notification_buttonfont, true));
-    backward_text->set_text("<- Previous");
-    backward_text->set_bloom_radius(6);
-
-    backward_text->move_ratio(backward_loco.first, backward_loco.second);
-    backward_text->resize_ratio(button_size,button_size);
-
-    forward_text.reset(new Text(window, notification_buttonfont, true));
-    forward_text->set_bloom_radius(6);
-    forward_text->set_text("Next ->");
-    forward_text->move_ratio(forward_loco.first,forward_loco.second+1.0f);
-    forward_text->resize_ratio(button_size,button_size);
 
     // text object for notifications
     notification_text = new Text(window, Engine::get_game_font(), true);
@@ -100,8 +86,6 @@ NotificationBar::NotificationBar() {
 
 void NotificationBar::text_displayer() {
     notification_text->display();
-    backward_text->display();
-    forward_text->display();
 
 }
 

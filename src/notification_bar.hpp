@@ -20,8 +20,6 @@ private:
     std::shared_ptr<Button> forward_button;
     std::shared_ptr<Button> backward_button;
 
-    std::unique_ptr<Text> backward_text;
-    std::unique_ptr<Text> forward_text;
     Lifeline text_box;
 
     void move_notification(Direction direction);

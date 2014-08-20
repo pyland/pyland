@@ -126,6 +126,25 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
 
    //Call the implementation of this class  to generate it's data
     std::vector<std::shared_ptr<GUIText>> group_data = generate_this_text_data();
+   
+    //Calculate the final positions on screen for the text.
+    //We use the text offset and the width of the component then add this to the x and y offsets of the component. We thus only need to do this once.
+    //
+    for(std::shared_ptr<GUIText> this_data : group_data) {
+            int pixel_offset_x = 0; 
+            float component_x_offset = (float)this_data->get_x_offset();
+            int pixel_offset_y = 0 ;
+            float component_y_offset = (float)this_data->get_y_offset();
+            pixel_offset_x =(int)((float)width_pixels * component_x_offset);
+            pixel_offset_y = (int)((float)height_pixels * component_y_offset);
+
+            float component_width = this_data->get_width();
+            float component_height = this_data->get_height();
+            this_data->get_text()->resize(int(float(width_pixels) * component_width), int(float(height_pixels) * component_height));
+            this_data->get_gui_text()->set_transformed_x_offset(pixel_offset_x + get_x_offset_pixels());
+    this_data->get_gui_text()->set_transformed_y_offset(pixel_offset_y + get_y_offset_pixels());
+    }
+
 
    //Go through all the components in this group
     for(auto component_pair : components) {
@@ -133,24 +152,9 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
         
         //get all the text data in the component - deals with ComponentGroup children
         for(auto text_data : component_data) {
-            //comvert this into this component's local spacd
-
-            //Calcuate how far to translate this component
-            int pixel_offset_x = 0; 
-            float component_x_offset = (float)text_data->get_x_offset_pixels();
-            int pixel_offset_y = 0 ;
-            float component_y_offset = (float)text_data->get_y_offset_pixels();
-
-            pixel_offset_x =(int)((float)width_pixels * component_x_offset);
-            pixel_offset_y = (int)((float)height_pixels * component_y_offset);
-
-            //Translate it
-            text_data->get_gui_text()->set_transformed_x_offset(int(component_x_offset + (float)pixel_offset_x));
-            text_data->get_gui_text()->set_transformed_y_offset(int(component_y_offset + (float)pixel_offset_y));
-
-
             //add to this group
             group_data.push_back(text_data);
+
         }
     }
     return group_data;

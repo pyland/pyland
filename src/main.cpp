@@ -20,6 +20,7 @@
 #include "event_manager.hpp"
 #include "game_window.hpp"
 #include "button.hpp"
+#include "final_challenge.hpp"
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
 #include "filters.hpp"
@@ -46,7 +47,7 @@
 using namespace std;
 
 static std::mt19937 random_generator;
-
+Challenge* pick_challenge(ChallengeData* challenge_data);
 int main(int argc, const char *argv[]) {
     std::string map_path("../maps/start_screen.tmx");
 
@@ -74,6 +75,7 @@ int main(int argc, const char *argv[]) {
     //Create the game window to present to the users
     GameWindow window(800, 600, false);
     window.use_context();
+    Engine::set_game_window(&window);
 
     //Create the interpreter
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
@@ -90,25 +92,14 @@ int main(int argc, const char *argv[]) {
     //    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
 
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    Typeface buttontype("../fonts/hans-kendrick/HansKendrick-Regular.ttf");
-    TextFont buttonfont(buttontype, 10);
-
-    std::shared_ptr<Text> test = std::make_shared<Text>(&window, buttonfont, true);
-    test->move(30, 30);
-    test->resize(300,300);
-    test->set_text("Stop");
+    Typeface buttontype = Engine::get_game_typeface();
+    TextFont buttonfont = Engine::get_game_font();
     
     std::shared_ptr<Text> stoptext = std::make_shared<Text>(&window, buttonfont, true);
     std::shared_ptr<Text> runtext = std::make_shared<Text>(&window, buttonfont, true);
     // referring to top left corner of text window
     //    stoptext.move(105, 240 + 20);
     //    runtext.move(5, 240 + 20);
-    runtext->move(0,30);
-    stoptext->move(0,30);
-
-
-    stoptext->resize(300, 300);
-    runtext->resize(300, 300);
     stoptext->set_text("Stop");
     runtext->set_text("Run");
 
@@ -119,8 +110,6 @@ int main(int argc, const char *argv[]) {
     EventManager &em = EventManager::get_instance();
 
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
-    sprite_window->set_width_pixels(300);
-    sprite_window->set_height_pixels(300);
     sprite_window->set_visible(false);
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
     run_button->set_text(runtext);
@@ -267,31 +256,36 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
+
+    
     //Run the map
     bool run_game = true;
 
+    //Setup challenge
+    ChallengeData *challenge_data(new ChallengeData(
+        map_path,
+        &interpreter,
+        &gui_manager,
+        &window,
+        input_manager,
+        &notification_bar,
+        0
+    ));
+
+    MouseCursor cursor(&window);
+    
+    //Run the challenge - returns after challenge completes
+    
     while(!window.check_close() && run_game) {
-        //Setup challenge
-        ChallengeData *challenge_data(new ChallengeData(
-            map_path,
-            &interpreter,
-            &gui_manager,
-            &window,
-            input_manager,
-            &notification_bar
-        ));
-
-        StartScreen start_screen(challenge_data);
-        start_screen.start();
-
-
-        MouseCursor cursor(&window);
+        challenge_data->run_challenge = true;
+        Challenge* challenge = pick_challenge(challenge_data);
+        challenge->start();
 
         auto last_clock(std::chrono::steady_clock::now());
 
         //Run the challenge - returns after challenge completes
         VLOG(3) << "{";
-        while (!challenge_data->game_window->check_close()) {
+        while (!challenge_data->game_window->check_close() && challenge_data->run_challenge) {
             last_clock = std::chrono::steady_clock::now();
 
             VLOG(3) << "} SB | IM {";
@@ -308,7 +302,6 @@ int main(int argc, const char *argv[]) {
 
             VLOG(3) << "} EM | RM {";
             Engine::get_map_viewer()->render();
-
             VLOG(3) << "} RM | TD {";
             Engine::text_displayer();
             challenge_data->notification_bar->text_displayer();
@@ -320,11 +313,36 @@ int main(int argc, const char *argv[]) {
         }
 
         VLOG(3) << "}";
-
+        delete challenge;
         //Clean up after the challenge - additional, non-challenge clean-up
         em.flush();
 
     }
 
     return 0;
+}
+Challenge* pick_challenge(ChallengeData* challenge_data) {
+    int next_challenge = challenge_data->next_challenge;
+    Challenge* challenge = nullptr;
+    std::string map_name = "";
+    switch(next_challenge) {
+    case 0:
+        map_name ="../maps/start_screen.tmx";
+        challenge_data->map_name = map_name;
+        challenge = new StartScreen(challenge_data);
+        break;
+    case 1:
+        map_name = "../maps/map0.tmx";
+        challenge_data->map_name = map_name;
+        challenge = new LongWalkChallenge(challenge_data);
+        break;
+    case 2:
+        map_name = "../maps/final_challenge.tmx";
+        challenge_data->map_name = map_name;
+        challenge = new FinalChallenge(challenge_data);
+        break;
+    default:
+        break;
+    }
+    return challenge;
 }
