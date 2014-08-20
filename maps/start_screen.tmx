@@ -30,7 +30,7 @@
  </layer>
  <layer name="Overlay" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMAroA0qAuHigHTGMACuV1BAD4qlkznADjEiYElDMQFreoIad5AJ62I0tXOnl34EK11EwCgYKAACPgwJD
+   eJxjYBgFo2AUjIJRMAroA0qAuJhGZrvgYONSMxwAK5XUEAPiydQ33MIcHTAiYUpAMQP2vIEr/KhhJ7mAHnZjC1d6+XegwnUUjIKBAgD2ewOX
   </data>
  </layer>
  <layer name="Collisions" width="30" height="30">
@@ -38,18 +38,19 @@
    eJxjYKAOcGWkkkGj9o7aO2rvqL3DxF6QPdgwPewlRowW9hLyLy3CYLinI3z2EuOGgXIntcBgCGdC6qiRrkk1h9p5iRSzqGk3LnOwhQe9/EvLNDfY0/OovSPTXgCQrw/d
   </data>
  </layer>
- <layer name="Objects" width="30" height="30">
+ <layer name="Objects" width="30" height="30" visible="0">
   <data encoding="base64" compression="zlib">
    eJztzjENAAAIwDCEgn8b4ICHhKdN9i8CAG7lVN8TAMCqAZ37ALo=
   </data>
  </layer>
- <objectgroup name="Objects" width="30" height="30">
+ <objectgroup name="Objects" width="30" height="30" visible="0">
   <object name="sprite/1" gid="205" x="704" y="1152"/>
+ </objectgroup>
+ <objectgroup name="Interactions" width="30" height="30">
   <object name="level/1" gid="68" x="1024" y="960"/>
   <object name="level/2" gid="68" x="1152" y="1344"/>
   <object name="level/3" gid="68" x="1216" y="960"/>
   <object name="level/4" gid="68" x="1600" y="960"/>
   <object name="level/5" gid="68" x="1792" y="1152"/>
  </objectgroup>
- <objectgroup name="Interaction" width="30" height="30"/>
 </map>
