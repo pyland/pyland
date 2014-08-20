@@ -21,6 +21,9 @@
  <tileset firstgid="201" name="basictiles_2_64" tilewidth="64" tileheight="64">
   <image source="../resources/basictiles_2_64.png" width="512" height="960"/>
  </tileset>
+ <tileset firstgid="321" name="gui" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
+ </tileset>
  <layer name="Ground" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
@@ -46,7 +49,7 @@
    H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
   </data>
  </layer>
- <objectgroup name="Objects" width="50" height="50">
+ <objectgroup name="Objects" width="50" height="50" visible="0">
   <object name="sprite/1" gid="173" x="128" y="320"/>
   <object name="sprite/monkey" gid="159" x="1344" y="384"/>
   <object name="sprite/crocodile" gid="110" x="640" y="64"/>
@@ -58,5 +61,11 @@
   <object name="crate/1" gid="66" x="128" y="192"/>
   <object name="bridge/1" gid="64" x="256" y="576"/>
   <object name="vines/1" gid="80" x="768" y="640"/>
+  <object name="river/1" gid="321" x="640" y="64"/>
+  <object name="river/1" gid="321" x="640" y="64"/>
+  <object name="river/2" gid="321" x="640" y="128"/>
+  <object name="river/2" gid="321" x="640" y="128"/>
+  <object name="river/3" gid="321" x="640" y="192"/>
+  <object name="river/4" gid="321" x="639" y="251"/>
  </objectgroup>
 </map>
