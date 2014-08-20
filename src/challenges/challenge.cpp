@@ -29,12 +29,13 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
             throw std::logic_error("MapViewer is not intialised in Engine. In Challenge()");
         }
         map_viewer->set_map(map);
-
-        //build sprite switcher 
-        //sprite_switcher = new SpriteSwitcher();
-
-        // WTF
-
+        
+        //Register a dispatcher to shut the challenge down
+        event_finish.register_callback([&] (int next_challenge) {
+                challenge_data->run_challenge = false;
+                challenge_data->next_challenge = next_challenge;
+                return false;
+        });
 }
 
 Challenge::~Challenge() {

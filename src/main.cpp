@@ -45,7 +45,7 @@
 using namespace std;
 
 static std::mt19937 random_generator;
-
+Challenge* pick_challenge(ChallengeData* challenge_data);
 int main(int argc, const char *argv[]) {
     std::string map_path("../maps/start_screen.tmx");
 
@@ -257,7 +257,6 @@ int main(int argc, const char *argv[]) {
     //Run the map
     bool run_game = true;
 
-    while(!window.check_close() && run_game) {
         //Setup challenge
         ChallengeData *challenge_data(new ChallengeData(
             map_path,
@@ -265,12 +264,13 @@ int main(int argc, const char *argv[]) {
             &gui_manager,
             &window,
             input_manager,
-            &notification_bar
+            &notification_bar,
+            0
         ));
 
-        StartScreen start_screen(challenge_data);
-        start_screen.start();
-
+    while(!window.check_close() && run_game) {
+        Challenge* challenge = pick_challenge(challenge_data);
+        challenge->start();
 
         //Run the challenge - returns after challenge completes
         #ifdef USE_GLES
@@ -294,7 +294,7 @@ int main(int argc, const char *argv[]) {
         auto last_clock(std::chrono::steady_clock::now());
 
         VLOG(3) << "{";
-        while (!challenge_data->game_window->check_close()) {
+        while (!challenge_data->game_window->check_close() && challenge_data->run_challenge) {
             last_clock = std::chrono::steady_clock::now();
 
             VLOG(3) << "} SB | IM {";
@@ -324,11 +324,24 @@ int main(int argc, const char *argv[]) {
         }
 
         VLOG(3) << "}";
-
+        delete challenge;
         //Clean up after the challenge - additional, non-challenge clean-up
         em.flush();
 
     }
 
     return 0;
+}
+Challenge* pick_challenge(ChallengeData* challenge_data) {
+    int next_challenge = challenge_data->next_challenge;
+    Challenge* challenge = nullptr;
+    switch(next_challenge) {
+    case 0:
+        challenge = new StartScreen(challenge_data);
+        break;
+        
+    default:
+        break;
+    }
+    return challenge;
 }
