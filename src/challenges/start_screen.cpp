@@ -10,7 +10,7 @@
 
 #include <iostream>
 StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_data) {
-    ChallengeHelper::make_sprite(this, "sprite/1", "Ben", Walkability::BLOCKED, "still/1");
+    ChallengeHelper::make_sprite(this, "sprite/1", "Ben", Walkability::BLOCKED, "south/still/1");
 }
 
 void StartScreen::start() {

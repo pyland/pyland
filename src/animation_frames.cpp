@@ -29,6 +29,7 @@ std::pair<int, std::string> AnimationFrames::get_frame(std::string section, floa
 
     std::string tile_name, tileset_name;
     std::tie   (tile_name, tileset_name) = *begin;
+    tile_name = animation_frames_root +"/"+ section +"/"+ tile_name;
 
     auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name));
     return std::make_pair(index, tileset_name);

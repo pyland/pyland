@@ -45,9 +45,7 @@ int ChallengeHelper::make_sprite(Challenge *challenge,
                                  std::string start_frame) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-    std::cout << marker_name << std::endl;
     auto properties(map->locations.at("Objects/" + marker_name));
-    std::cout << marker_name << "!!!" << std::endl;
 
     auto new_sprite(std::make_shared<Sprite>(
         properties.location,

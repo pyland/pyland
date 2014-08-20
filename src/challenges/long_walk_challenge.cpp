@@ -20,9 +20,9 @@
 
 
 LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
-    ChallengeHelper::make_sprite(this, "sprite/1", "Ben",    Walkability::BLOCKED, "still/1");
-    ChallengeHelper::make_sprite(this, "sprite/2", "Ashley", Walkability::BLOCKED, "still/1");
-    ChallengeHelper::make_sprite(this, "sprite/3", "Joshua", Walkability::BLOCKED, "still/1");
+    ChallengeHelper::make_sprite(this, "sprite/1", "Ben",    Walkability::BLOCKED, "south/still/1");
+    ChallengeHelper::make_sprite(this, "sprite/2", "Ashley", Walkability::BLOCKED, "south/still/1");
+    ChallengeHelper::make_sprite(this, "sprite/3", "Joshua", Walkability::BLOCKED, "south/still/1");
 
     // //Test chest
     // int lawnmower_mat_id(make_map_object(

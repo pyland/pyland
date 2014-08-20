@@ -52,11 +52,6 @@ protected:
     ///
     bool moving = false;
 
-    ///
-    /// Walking frames to animate movement.
-    ///
-    AnimationFrames frames;
-
 public:
     ///
     /// Constructs a map object
@@ -153,6 +148,11 @@ public:
     /// @return the object's moving status
     ///
     virtual bool is_moving() { return moving; }
+
+    ///
+    /// Walking frames to animate movement.
+    ///
+    AnimationFrames frames;
 };
 
 #endif
