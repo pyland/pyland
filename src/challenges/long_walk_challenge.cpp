@@ -20,47 +20,47 @@
 #include "walkability.hpp"
 
 
-#include <iostream>
 LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
-    ChallengeHelper::make_sprite(this, "sprite/1", "Ben", Walkability::BLOCKED);
-    ChallengeHelper::make_sprite(this, "sprite/2", "Ashley", Walkability::BLOCKED);
-    ChallengeHelper::make_sprite(this, "sprite/3", "Joshua", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(this, "sprite/1", "Ben",    Walkability::BLOCKED, "south/still/1");
+    ChallengeHelper::make_sprite(this, "sprite/2", "Ashley", Walkability::BLOCKED, "south/still/1");
+    ChallengeHelper::make_sprite(this, "sprite/3", "Joshua", Walkability::BLOCKED, "south/still/1");
 
-    //Test chest
-    int lawnmower_mat_id(make_map_object(
-        glm::ivec2(10, 15),
-        "lawnmower",
-        Walkability::BLOCKED,
-        TextureAtlas::from_name("mat")
-    ));
+    // //Test chest
+    // int lawnmower_mat_id(make_map_object(
+    //     glm::ivec2(10, 15),
+    //     "lawnmower",
+    //     Walkability::BLOCKED,
+    //     TextureAtlas::from_name("mat"),
+    //     ""
+    // ));
 
-    ChallengeHelper::create_pickupable(
-        glm::ivec2(10, 15),
-        glm::ivec2(10, 14),
-        lawnmower_mat_id
-    );
+    // ChallengeHelper::create_pickupable(
+    //     glm::ivec2(10, 15),
+    //     glm::ivec2(10, 14),
+    //     lawnmower_mat_id
+    // );
 
     // Ignore references due to non-interaction
-    ChallengeHelper::make_object(this, "treasure/path/medium/chest", Walkability::BLOCKED);
-    ChallengeHelper::make_object(this, "treasure/path/long/chest",   Walkability::BLOCKED);
+    ChallengeHelper::make_object(this, "treasure/path/medium/chest", Walkability::BLOCKED, "closed");
+    ChallengeHelper::make_object(this, "treasure/path/long/chest",   Walkability::BLOCKED, "closed");
 
-    // Testing lawn
-    ChallengeHelper::make_interactions("grass/path/short",
-                                       std::back_inserter(grass_path_short_callbacks),
-                                       [lawnmower_mat_id] (int who) {
-        auto sprite(ObjectManager::get_instance().get_object<Sprite>(who));
-        if (!sprite) { return true; }
+    // // Testing lawn
+    // ChallengeHelper::make_interactions("grass/path/short",
+    //                                    std::back_inserter(grass_path_short_callbacks),
+    //                                    [lawnmower_mat_id] (int who) {
+    //     auto sprite(ObjectManager::get_instance().get_object<Sprite>(who));
+    //     if (!sprite) { return true; }
 
-        if (sprite->is_in_inventory(lawnmower_mat_id)) {
-            Engine::print_dialogue("Grass", "You're mowing, keep on going");
-            Engine::change_tile(sprite->get_position(), 4, "lawn_mown");
-            return false;
-        }
-        else {
-            Engine::print_dialogue("Grass", "Don't forget the lawn mower");
-            return true;
-        }
-    });
+    //     if (sprite->is_in_inventory(lawnmower_mat_id)) {
+    //         Engine::print_dialogue("Grass", "You're mowing, keep on going");
+    //         Engine::change_tile(sprite->get_position(), 4, "lawn_mown");
+    //         return false;
+    //     }
+    //     else {
+    //         Engine::print_dialogue("Grass", "Don't forget the lawn mower");
+    //         return true;
+    //     }
+    // });
 
     // Set up blocking walls
     ChallengeHelper::make_objects(this, "wall/path/medium", Walkability::BLOCKED, std::back_inserter(wall_path_medium_objects));

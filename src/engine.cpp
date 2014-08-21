@@ -33,39 +33,82 @@ float Engine::global_scale(1.0f);
 
 
 
-void Engine::move_sprite(int id, glm::ivec2 move_by) {
+void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
-    Engine::move_sprite(id, move_by, GilSafeFuture<bool>());
+    Engine::move_object(id, move_by, GilSafeFuture<bool>());
+}
+
+// Undefined for diagonals, but will return within correct half
+std::string to_direction(glm::ivec2 direction) {
+    // ╲•╱
+    // •╳•
+    // ╱•╲
+    if (direction.x > direction.y) {
+        // ╲ ╱
+        //  ╳•
+        // ╱•╲
+        if (direction.x > -direction.y) {
+            // ╲ ╱
+            //  ╳•
+            // ╱ ╲
+            return "east";
+        }
+        else {
+            // ╲ ╱
+            //  ╳
+            // ╱•╲
+            return "south";
+        }
+    }
+    else {
+        // ╲•╱
+        // •╳
+        // ╱ ╲
+        if (direction.x > -direction.y) {
+            // ╲•╱
+            //  ╳
+            // ╱ ╲
+            return "north";
+        }
+        else {
+            // ╲ ╱
+            // •╳
+            // ╱ ╲
+            return "west";
+        }
+    }
 }
 
 //TODO: This needs to work with renderable objects
-void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return) {
+void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return) {
 
-    auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
+    auto object(ObjectManager::get_instance().get_object<MapObject>(id));
 
-    if (!sprite || sprite->is_moving()) { return; }
+    if (!object || object->is_moving()) { return; }
 
     // Position should be integral at this point
-    glm::vec2 target(sprite->get_position());
+    glm::vec2 target(object->get_position());
     auto location(target);
     target += move_by;
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
-    // TODO: animate walking in-place
-    if (!walkable(target)) { return; }
+    // animate walking in-place
+    if (!walkable(target)) { target = location; }
 
-    sprite->set_state_on_moving_start(target);
+    object->set_state_on_moving_start(target);
 
     // Step-off events
     get_map_viewer()->get_map()->event_step_off.trigger(location, id);
 
+    std::string direction(to_direction(move_by));
+
     // Motion
     EventManager::get_instance().add_timed_event(
-        GameTime::duration(0.14),
-        [walk_succeeded_return, location, target, id] (float completion) mutable {
-            auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-            if (!sprite) { return false; }
+        GameTime::duration(0.30),
+        [direction, move_by, walk_succeeded_return, location, target, id] (float completion) mutable {
+            auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+            if (!object) { return false; }
 
             // Long rambly justification about how Ax + B(1-x) can be outside
             // the range [A, B] (consider when A=B).
@@ -73,13 +116,15 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             // The given formula cannot have this problem when A and B are exactly 
             glm::vec2 tweened_position(location + completion * (target-location));
 
-            sprite->set_position(tweened_position);
+            object->set_position(tweened_position);
+
+            object->set_tile(object->frames.get_frame(direction + "/walking", completion));
 
             if (completion == 1.0) {
-                sprite->set_state_on_moving_finish();
+                object->set_state_on_moving_finish();
 
-                // TODO: Make this only focus if the sprite
-                // is the main sprite.
+                // TODO: Make this only focus if the object
+                // is the main object.
                 if (Engine::map_viewer) {
                     Engine::map_viewer->refocus_map();
                 }
@@ -87,7 +132,9 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
                 // Step-on events
                 get_map_viewer()->get_map()->event_step_on.trigger(target, id);
 
-                walk_succeeded_return.set(true);
+                // False when moving in place
+                // TODO: More properz
+                walk_succeeded_return.set(target == location + glm::vec2(move_by));
             }
 
             // Run to completion

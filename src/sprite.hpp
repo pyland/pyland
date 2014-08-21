@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "animation_frames.hpp"
 #include "map.hpp"
 #include "map_object.hpp"
 #include "walkability.hpp"
@@ -19,7 +20,7 @@ enum class Sprite_Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 ///
 class Sprite : public MapObject {
 private:
-    Sprite_Status string_to_status (std::string status);
+    Sprite_Status string_to_status(std::string status);
 
     std::string sprite_name;
 
@@ -55,13 +56,11 @@ protected:
     ///
     int focus_icon_id;
 
-    ///
+public:
     /// Tiles that the object is blocking, probably
     /// by standing on.
     ///
     std::map<std::string, Map::Blocker> blocked_tiles;
-
-public:
     Sprite();
     ///
     /// Constructs a sprite
@@ -72,26 +71,17 @@ public:
     /// @param walkability
     ///     the walkability properties of the sprite
     /// @param tile
-    ///     the sprite's imaage, referenced by an id:sheet_name pair
+    ///     the sprite's image, referenced by an id:sheet_name pair
+    /// @param walk_frames
+    ///     walking frames to animate movement.
     ///
     Sprite(glm::ivec2 position,
            std::string name,
            Walkability walkability,
-           std::pair<int, std::string> tile);
+           AnimationFrames frames,
+           std::string start_frame);
 
     virtual ~Sprite();
-
-    ///
-    /// manage collisions for spirtes as they move
-    /// @param target
-    ///     tile the sprite it moving to
-    ///
-    void set_state_on_moving_start(glm::ivec2 target);
-
-    ///
-    /// manage collisions for sprites as they move
-    ///
-    void set_state_on_moving_finish();
 
     ///
     /// Get the object's text to display

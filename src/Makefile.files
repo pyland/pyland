@@ -10,6 +10,7 @@ TEST_EXECUTABLE_OBJ = test/test.o
 #
 
 BASE_OBJS = \
+	animation_frames.o     \
 	challenge_helper.o     \
 	engine.o               \
 	event_manager.o        \

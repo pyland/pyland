@@ -29,14 +29,14 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
             throw std::logic_error("MapViewer is not intialised in Engine. In Challenge()");
         }
         map_viewer->set_map(map);
-        
+
         sprite_switcher = new SpriteSwitcher();
 
         //Register a dispatcher to shut the challenge down
         event_finish.register_callback([&] (int next_challenge) {
-                challenge_data->run_challenge = false;
-                challenge_data->next_challenge = next_challenge;
-                return false;
+            challenge_data->run_challenge = false;
+            challenge_data->next_challenge = next_challenge;
+            return false;
         });
 }
 
@@ -67,9 +67,10 @@ Challenge::~Challenge() {
 int Challenge::make_map_object(glm::vec2 position,
                                std::string name,
                                Walkability walkability,
-                               std::pair<int, std::string> tile) {
+                               AnimationFrames frames,
+                               std::string start_frame) {
 
-    auto new_object(std::make_shared<MapObject>(position, name, walkability, tile));
+    auto new_object(std::shared_ptr<MapObject>(new MapObject(position, name, walkability, frames, start_frame)));
     ObjectManager::get_instance().add_object(new_object);
 
     auto new_object_id(new_object->get_id());

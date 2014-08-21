@@ -14,7 +14,13 @@
 
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
-    ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(
+        this,
+        "sprite/1",
+        "Ben",
+        Walkability::BLOCKED,
+        "south/still/1"
+    );
 
     // set of orange collection part
     glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/1");
@@ -28,7 +34,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         auto name = "orange/"+std::to_string(i);
         glm::ivec2 orange_location = ChallengeHelper::get_location_object(name);
 
-        int orange_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE);
+        int orange_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, "orange");
         ChallengeHelper::create_pickupable(orange_location, orange_location, crate_location, dropoff_location , orange_id);
         orange_ids.push_back(orange_id);
     }
@@ -63,7 +69,13 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     // LOG(INFO) << "Done!";
 
     // croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-    ChallengeHelper::make_sprite(this, "sprite/crocodile","final_challenge_croc", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(
+        this,
+        "sprite/crocodile",
+        "final_challenge_croc",
+        Walkability::BLOCKED,
+        "south/still/1"
+    );
 }
 
 void FinalChallenge::start() {

@@ -418,16 +418,16 @@ void TextureAtlas::load_names(const std::string filename) {
 }
 
 int TextureAtlas::get_name_index(const std::string name) {
-    if (names_to_indexes.count(name+" ") == 0) {
-        VLOG(2) << "Name to index: " << name << ": " << names_to_indexes.find(name)->second;
-        return names_to_indexes.find(name)->second;
-    } else {
-        return -1;
-    }
+    VLOG(2) << "Name to index: " << name << ": " << names_to_indexes.at(name);
+    return names_to_indexes.at(name);
 }
 
 std::pair<int, std::string> TextureAtlas::from_name(const std::string tile_name) {
-    auto texture_name = TextureAtlas::names_to_tilesets().at(tile_name);
-    auto index = TextureAtlas::get_shared(texture_name)->get_name_index(tile_name);
-    return std::make_pair(index, texture_name);
+    auto tileset_name(TextureAtlas::names_to_tilesets().at(tile_name));
+    auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name));
+    return std::make_pair(index, tileset_name);
+}
+
+std::map<std::string, int> const &TextureAtlas::get_names_to_indexes() {
+    return names_to_indexes;
 }

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <glog/logging.h>
 #include <map>
 #include <memory>
@@ -102,16 +103,35 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
 
             CHECK_NOTNULL(tileset);
 
+            auto id(object->GetGid() - tileset->GetFirstGid());
+
+            auto atlas(TextureAtlas::get_shared(tileset->GetImage()->GetSource()));
+            auto names_to_indexes(atlas->get_names_to_indexes());
+
+            auto tile(
+                std::find_if(std::begin(names_to_indexes), std::end(names_to_indexes),
+                    [&] (std::pair<std::string, int> p) { return p.second == id; }
+                )
+            );
+
+            if (tile == std::end(names_to_indexes)) {
+                throw std::runtime_error("no name for object tile id " + std::to_string(id));
+            }
+
+            auto tile_name(tile->first);
+
             auto fullname(object_group->GetName() + "/" + object->GetName());
+
+            LOG(INFO) << "Adding object to mapping " << fullname
+                      << " with name " << tile_name;
+
             ObjectProperties properties({
                 glm::ivec2(
                                  object->GetX() / Engine::get_tile_size(),
                     map_height - object->GetY() / Engine::get_tile_size()
                 ),
-                { object->GetGid() - tileset->GetFirstGid(), tileset->GetImage()->GetSource() }
+                tile_name
             });
-    std::cout << fullname << std::endl;
-    std::cout << properties.tile.first << " " << properties.tile.second << std::endl;
 
             named_tiles_mapping.insert(std::make_pair(fullname, properties));
         }

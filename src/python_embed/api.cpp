@@ -21,7 +21,7 @@ bool Entity::move(int x, int y) {
     auto id = this->id;
     return GilSafeFuture<bool>::execute(
         [id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
-            Engine::move_sprite(id, glm::ivec2(x, y), walk_succeeded_return);
+            Engine::move_object(id, glm::ivec2(x, y), walk_succeeded_return);
         },
         false
     );
