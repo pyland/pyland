@@ -54,7 +54,6 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
 
 
     ChallengeHelper::make_interaction("exit", [this] (int) {
-        kill_scripts();
         event_finish.trigger(0);
         LOG(INFO) << "exiting";
         return false;
