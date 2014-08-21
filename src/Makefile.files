@@ -43,9 +43,9 @@ BASE_OBJS = \
 
 CHALLENGE_OBJS = \
 	challenges/challenge.o           \
+	challenges/cutting_challenge.o   \
 	challenges/final_challenge.o     \
 	challenges/start_screen.o        \
-	challenges/long_walk_challenge.o \
 
 
 HEADER_DEPENDS_ROOT = \
