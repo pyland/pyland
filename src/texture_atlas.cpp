@@ -419,7 +419,7 @@ void TextureAtlas::load_names(const std::string filename) {
 
 int TextureAtlas::get_name_index(const std::string name) {
     if (names_to_indexes.count(name+" ") == 0) {
-        LOG(INFO) << "Name to index: " << name << ": " << names_to_indexes.find(name)->second;
+        VLOG(2) << "Name to index: " << name << ": " << names_to_indexes.find(name)->second;
         return names_to_indexes.find(name)->second;
     } else {
         return -1;

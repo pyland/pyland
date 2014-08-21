@@ -365,7 +365,7 @@ void Text::render() {
     lines_scan = lines;
     for (int line_number = 0; line_number < line_count; ++line_number) {
         // Render line
-        LOG(INFO) << "Rendering line of text: \"" << lines_scan << "\".";
+        VLOG(2) << "Rendering line of text: \"" << lines_scan << "\".";
         if (lines_scan[0] == '\0') {
             // Skip it - it's a new line.
             lines_scan = &lines_scan[1];
