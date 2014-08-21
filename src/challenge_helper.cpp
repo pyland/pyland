@@ -19,6 +19,17 @@
 #include "object_manager.hpp"
 #include "sprite.hpp"
 
+glm::vec2 ChallengeHelper::get_location_interaction(std::string name) {
+    LOG(INFO) << "getting location of " << name;
+    auto properties(Engine::get_map_viewer()->get_map()->locations.at("Interactions/" + name));
+    return properties.location;
+}
+
+glm::vec2 ChallengeHelper::get_location_object(std::string name) {
+    LOG(INFO) << "getting location of " << name;
+    auto properties(Engine::get_map_viewer()->get_map()->locations.at("Objects/" + name));
+    return properties.location;
+}
 
 int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string name,
@@ -99,7 +110,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
     object->set_position(start_tile);
 
     // Pick-up marker
-    Engine::change_tile(pickup_tile, 4, "circle_yellow");
+   // Engine::change_tile(pickup_tile, 4, "circle_yellow");
 
     map->event_step_on.register_callback(
         pickup_tile,
@@ -108,8 +119,8 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
             auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
 
             sprite->add_to_inventory(object_id);
-            Engine::change_tile(pickup_tile,  5, "blank");
-            Engine::change_tile(dropoff_tile, 5, "circle_yellow");
+            //Engine::change_tile(pickup_tile,  5, "blank");
+            //Engine::change_tile(dropoff_tile, 5, "circle_yellow");
 
             // We only give out our item once
             return false;
