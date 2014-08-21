@@ -6,6 +6,7 @@
 #include "final_challenge.hpp"
 #include "challenge_helper.hpp"
 #include "challenge_data.hpp"
+#include "challenge.hpp"
 #include "engine.hpp"
 #include "object_manager.hpp"
 #include "entitythread.hpp"
@@ -42,14 +43,21 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     }
 
     ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids] (int) {
-        LOG(INFO) << "checking if challenge has been one";
-        LOG(INFO) << Engine::get_objects_at(crate_location).size();
-        if (Engine::is_objects_at(dropoff_location, orange_ids)) {
+
+        if (Engine::is_objects_at(crate_location, orange_ids)) {
             Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
         } else {
             Engine::print_dialogue ("Game","Keep going");
         }
         return true;
+    });
+
+
+    ChallengeHelper::make_interaction("exit", [this] (int) {
+        kill_scripts();
+        event_finish.trigger(0);
+        LOG(INFO) << "exiting";
+        return false;
     });
 
     LOG(INFO) << "creating croc";

@@ -42,6 +42,8 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
 
 Challenge::~Challenge() {
 
+    kill_scripts(); 
+
     // destruct sprite switch
     delete sprite_switcher;
 
@@ -83,9 +85,19 @@ int Challenge::make_map_object(glm::vec2 position,
 }
 
 void Challenge::kill_scripts() {
+    // killing sprite's scripts
     for (auto id: sprite_ids) {
         auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
         sprite->daemon->value->halt_soft(EntityThread::Signal::KILL);
+    }
+
+    //killing python
+    for (auto id: map_object_ids) {
+        auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+        if (object->daemon != nullptr) {
+            LOG(INFO) << "killing object with python script";
+            object->daemon->value->halt_soft(EntityThread::Signal::KILL);
+        } 
     }
 }
 
