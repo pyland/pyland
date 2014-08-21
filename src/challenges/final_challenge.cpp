@@ -73,15 +73,9 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     LOG(INFO) << "Registering sprite";
     croc->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
     LOG(INFO) << "Done!";
-    //std::this_thread::sleep_for(std::chrono::seconds(4));
+
     croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-    // ChallengeHelper::make_sprite(
-    //     this,
-    //     "sprite/crocodile",
-    //     "final_challenge_croc",
-    //     Walkability::BLOCKED,
-    //     "south/still/1"
-    // );
+
 }
 
 void FinalChallenge::start() {
