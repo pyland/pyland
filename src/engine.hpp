@@ -117,6 +117,22 @@ public:
     static bool walkable(glm::ivec2 location);
 
     ///
+    /// Get all the objects that are within the search range
+    /// @param id the id of the object
+    /// @param search range the radius of the circle to search
+    /// @return a vector of (name, x, y) tuples
+    ///
+    static std::vector<std::tuple<std::string, int, int>> look(int id, int search_range);
+
+    ///
+    /// Cuts down a vine or cuttable object
+    /// @param id the id of the object
+    /// @param location the (x,y_ position to cut
+    /// @return if the operation succeeded
+    ///
+    static bool cut(int id, glm::ivec2 location);
+
+    ///
     /// Change the tile in the map in the given layer at the provided position
     /// @param tile the x,y position of the tile to change
     /// @param layer the layer of the tile to change

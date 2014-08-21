@@ -35,7 +35,6 @@ def create_execution_scope(entity):
         x, y = position
         x = cast("int", x)
         y = cast("int", y)
-
         entity.move(x, y)
 
     def monologue(*args):
@@ -50,6 +49,19 @@ def create_execution_scope(entity):
         y = cast("int", y)
 
         return entity.walkable(x, y)
+
+    def cut(position):
+        entity.print_debug("Python: cut({})".format(position))
+
+        x, y = position
+        x = cast("int", x)
+        y = cast("int", y)
+
+        entity.cut(position)
+
+    def look(search_range):
+        entity.print_debug("Python: lok({})".format(position))
+        return entity.look(search_range)
 
 
     # Finally, export the desired behaviour
