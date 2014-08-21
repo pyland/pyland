@@ -94,7 +94,12 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
     // animate walking in-place
-    if (!walkable(target)) { target = location; }
+    auto sprite_test(ObjectManager::get_instance().get_object<Sprite>(id));
+    if (!sprite_test) {
+        VLOG(2) << "ignore if walkable or not";
+    } else {
+        if (!walkable(target)) { target = location; }
+    }
 
     object->set_state_on_moving_start(target);
 
@@ -230,10 +235,12 @@ std::vector<int> Engine::get_objects_at(glm::vec2 location) {
 std::vector<int> Engine::get_sprites_at(glm::vec2 location) {
     return location_filter_objects(location, map_viewer->get_map()->get_sprites());
 }
+#include "prettyprint.hpp"
 
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     auto objects(get_objects_at(location));
+    LOG(ERROR) << objects;
 
     return std::any_of(std::begin(objects), std::end(objects), [&] (int id) {
         return id == object_id;
@@ -241,8 +248,13 @@ bool Engine::is_object_at(glm::ivec2 location, int object_id) {
 }
 
 bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
+    LOG(ERROR) << object_ids;
+    LOG(ERROR) << location.x << " " << location.y;
+
     return std::all_of(std::begin(object_ids), std::end(object_ids), [&] (int object_id) {
-        return is_object_at(location,object_id);
+        auto x(is_object_at(location, object_id));
+        LOG(ERROR) << "@@@" << x;
+        return x;
     });
 }
 
