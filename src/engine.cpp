@@ -71,7 +71,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             // Long rambly justification about how Ax + B(1-x) can be outside
             // the range [A, B] (consider when A=B).
             //
-            // The given formula cannot have this problem when A and B are exactly representable.
+            // The given formula cannot have this problem when A and B are exactly 
             glm::vec2 tweened_position(location + completion * (target-location));
 
             sprite->set_position(tweened_position);

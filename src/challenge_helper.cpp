@@ -132,7 +132,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
     );
 
     // Put-down marker
-    Engine::change_tile(dropoff_tile, 4, "circle_yellow");
+    //    Engine::change_tile(dropoff_tile, 4, "circle_yellow");
 
     map->event_step_on.register_callback(
         dropoff_tile,
@@ -144,7 +144,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
                 std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
 
                 object->set_position(finish_tile);
-                Engine::change_tile(dropoff_tile, 4, "blank");
+                //                Engine::change_tile(dropoff_tile, 4, "blank");
 
                 // We're done waiting, so remove callback
                 return false;
@@ -165,7 +165,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
     object->set_position(object_tile);
 
     // Pick-up marker
-    Engine::change_tile(pickup_tile, 4, "circle_yellow");
+    //    Engine::change_tile(pickup_tile, 4, "circle_yellow");
 
     map->event_step_on.register_callback(
         pickup_tile,
