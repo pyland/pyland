@@ -39,8 +39,9 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         orange_ids.push_back(orange_id);
     }
 
-    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, orange_ids] (int) {
+    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids] (int) {
         LOG(INFO) << "checking if challenge has been one";
+        LOG(INFO) << Engine::get_objects_at(crate_location).size();
         if (Engine::is_objects_at(dropoff_location, orange_ids)) {
             Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
         } else {
