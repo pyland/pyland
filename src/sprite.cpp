@@ -110,6 +110,7 @@ void Sprite::add_to_inventory(int new_object_id) {
     }
 
     new_object->set_position(position);
+    new_object->set_render_above_sprites(true);
     inventory.push_back(new_object_id);
 }
 
@@ -141,6 +142,15 @@ bool Sprite::remove_from_inventory(int old_object) {
     // there must be a better way to do this
     auto it = std::find(std::begin(inventory), std::end(inventory), old_object);
     if (it != std::end(inventory)) {
+
+        LOG(INFO) << "item is in inventory, tring to remove";
+        auto object = ObjectManager::get_instance().get_object<MapObject>(*it);
+        if (!object) {
+            LOG(ERROR) << "Object manager no longer has focus_icon";
+        } else {
+            object->set_render_above_sprites(false);
+        }
+
         inventory.erase(it);
         LOG(INFO) << "removing item to sprites inventory";
         return true;
