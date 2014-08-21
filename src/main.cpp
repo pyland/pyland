@@ -94,7 +94,7 @@ int main(int argc, const char *argv[]) {
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
     Typeface buttontype = Engine::get_game_typeface();
     TextFont buttonfont = Engine::get_game_font();
-    
+
     std::shared_ptr<Text> stoptext = std::make_shared<Text>(&window, buttonfont, true);
     std::shared_ptr<Text> runtext = std::make_shared<Text>(&window, buttonfont, true);
     // referring to top left corner of text window
@@ -177,16 +177,16 @@ int main(int argc, const char *argv[]) {
 
     Lifeline fast_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_PRESS}), KEY({"Left Shift"})},
-        [&] (KeyboardInputEvent) {                 
+        [&] (KeyboardInputEvent) {
             EventManager::get_instance().time.game_seconds_per_real_second = 64.0;
-        }        
+        }
     ));
 
     Lifeline slow_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_RELEASE}), KEY({"Left Shift"})},
-        [&] (KeyboardInputEvent) {                 
+        [&] (KeyboardInputEvent) {
             EventManager::get_instance().time.game_seconds_per_real_second = 1.0;
-        }        
+        }
     ));
 
 
@@ -345,7 +345,7 @@ int main(int argc, const char *argv[]) {
                 }
             }
             tile_identifier_text.display();
-            
+
             cursor.display();
 
             VLOG(3) << "} TD | SB {";
@@ -353,9 +353,11 @@ int main(int argc, const char *argv[]) {
         }
 
         VLOG(3) << "}";
+
+        // Clean up after the challenge - additional, non-challenge clean-up
+        em.flush_and_disable();
         delete challenge;
-        //Clean up after the challenge - additional, non-challenge clean-up
-        em.flush();
+        em.reenable();
 
     }
 

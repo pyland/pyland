@@ -11,64 +11,67 @@
 #include "game_time.hpp"
 
 
-EventManager::EventManager() {
-    //Allocate on the heap so that we can swap the curr_frame and next_frame
+EventManager::EventManager(): enabled(true) {
+    // Allocate on the heap so that we can swap the curr_frame and next_frame
     curr_frame_queue = new std::list<std::function<void ()>>();
     next_frame_queue = new std::list<std::function<void ()>>();
 }
 
 EventManager::~EventManager() {
-    //Free these
+    // Free these
     delete curr_frame_queue;
     delete next_frame_queue;
 }
 
-EventManager& EventManager::get_instance() {
-    //:Lazy instantiation of the global instance
+EventManager &EventManager::get_instance() {
+    // Lazy instantiation of the global instance
     static EventManager global_instance;
 
     return global_instance;
 }
 
-void EventManager::flush() {
-    ///
-    /// This will clear both lists out. Now, if another thread tries
-    /// to add something but blocks before getting a lock (but is stil
-    /// in an add_event function), then, once this method completes,
-    /// that event would still be added to the queue.
-    ///
-    /// The intention of this function is to be used once all the
-    /// threads that are putting data onto the event queues are finished.
-    /// Essentially, it is run after maps are unloaded and we are
-    /// preparing for a new map.
-    ///
+void EventManager::flush_and_disable() {
+    //
+    // This will clear both lists out. Now, if another thread tries
+    // to add something but blocks before getting a lock (but is stil
+    // in an add_event function), then, once this method completes,
+    // that event would still be added to the queue.
+    //
+    // The intention of this function is to be used once all the
+    // threads that are putting data onto the event queues are finished.
+    // Essentially, it is run after maps are unloaded and we are
+    // preparing for a new map.
+    //
 
-    //The lock_guard is exception safe and releases the mutex when
-    //it goes out of scope. So we introduce scope here to release
-    //the mutex
+    // The lock_guard is exception safe and releases the mutex when
+    // it goes out of scope. So we introduce scope here to release
+    // the mutex
     {
         //Lock the lists
         std::lock_guard<std::mutex> lock(queue_mutex);
+
+        enabled = false;
 
         //Clear both lists
         curr_frame_queue->clear();
         next_frame_queue->clear();
 
-    } // Lock released
+    }
+    // Lock released
 }
 
 void EventManager::process_events() {
-    //We need to process all the events in the queue
-    //Problem is that, when events are being processed, they can add
-    //further events. If we have the lock on the lock_guard in the
-    //process loop when this happens, then we cannot add the new event
-    //and so the thread blocks and the lock is never released
+    // We need to process all the events in the queue
+    // Problem is that, when events are being processed, they can add
+    // further events. If we have the lock on the lock_guard in the
+    // process loop when this happens, then we cannot add the new event
+    // and so the thread blocks and the lock is never released
     //
-    //So, we need to extract an event from the queue, lock the queue
-    //to do this. We then release the lock and process the event.
-    //We then repeat the process until the entire queue is finished
+    // So, we need to extract an event from the queue, lock the queue
+    // to do this. We then release the lock and process the event.
+    // We then repeat the process until the entire queue is finished
     //
-    while(true) {
+    while (true) {
         //The callback function we need to process
         std::function<void ()> func;
 
@@ -106,6 +109,8 @@ void EventManager::add_event(std::function<void ()> func) {
     // Lock released when this lock_guard goes out of scope
     std::lock_guard<std::mutex> lock(queue_mutex);
 
+    if (!enabled) { return; }
+
     //Add it to the queue
     curr_frame_queue->push_back(func);
 }
@@ -115,17 +120,18 @@ void EventManager::add_event_next_frame(std::function<void ()> func) {
     // Lock released when this lock_guard goes out of scope
     std::lock_guard<std::mutex> lock(queue_mutex);
 
+    if (!enabled) { return; }
+
     //Add it to the queue
     next_frame_queue->push_back(func);
 }
+
+void EventManager::reenable() { enabled = true; }
 
 void EventManager::add_timed_event(GameTime::duration duration, std::function<bool (float)> func) {
     // This needs to be thread-safe, so wrap it in an event.
     // Also, this holds the initialisation, so as to keep it static
     // between all of the events.
-    //
-    // The use of a y-combinator and unholy magic keeps some things, like lifetimes,
-    // safe and prevents the need to have a lambda made every frame.
     add_event([this, duration, func] () {
         auto start_time = time.time();
 

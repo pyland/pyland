@@ -12,11 +12,14 @@
 /// implementation.which uses the singleton pattern.
 ///
 class EventManager {
+
+    EventManager();
+    ~EventManager();
+
     ///
     /// The mutex to control access to the queues
     ///
     std::mutex queue_mutex;
-
 
     ///
     ///The queue for lambdas to be dealt with in this frame
@@ -38,8 +41,12 @@ class EventManager {
     ///
     std::list<std::function<void()>>* next_frame_queue;
 
-    EventManager();
-    ~EventManager();
+    ///
+    /// Whether events added to the queue are listened to.
+    /// When false, they are silently ignored.
+    ///
+    bool enabled;
+
 public:
     ///
     /// This deals with keeping track of the game's time,
@@ -53,19 +60,60 @@ public:
     void flush();
 
     ///
+    /// Cleans out the current and next frame event queues.
+    /// Disables the queue, so registered events are silently ignored.
+    ///
+    /// @see reenable
+    ///
+    void flush_and_disable();
+
+    ///
+    /// Reenable the queue after a call to flush_and_disable.
+    ///
+    /// @see flush_and_disable
+    ///
+    void reenable();
+
+    ///
     /// Getter for the main global event manager.
     /// @return a reference to the global event manager
     ///
     static EventManager& get_instance();
+
     ///
-    /// Add an event to the event manager
+    /// Add an event to the event manager. If the event loop is running,
+    /// is will be added to the end of the current queue and also run
+    /// in this event frame. Otherwise it will be delayed until the
+    /// circumstance occurs.
     ///
-    /// @param func This is a void argument, void return lambda
-    /// function which will be called by the event manger when the event is
-    /// processed in the queue.
+    /// The callback will be silently ignored if the event manager is disabled.
     ///
-    void add_event(std::function<void ()>  func);
-    void add_event_next_frame(std::function<void ()>  func);
+    /// @param func
+    ///     A callback with no arguments and no return, to be
+    ///     run on the current or upcomming frame.
+    ///
+    /// @see add_event_next_frame
+    ///
+    void add_event(std::function<void ()> func);
+
+    ///
+    /// Add an event to the event manager to be called after this event
+    /// frame is finished. This is typically not what is wanted, and exists
+    /// only to allow animations and other self-repeating callbacks.
+    ///
+    /// The callback will be silently ignored if the event manager is disabled.
+    ///
+    /// @param func
+    ///     A callback with no arguments and no return, to be
+    ///     run on the frame after this one.
+    ///
+    /// @note
+    ///     Many event frames can occur between each rendered frame,
+    ///     so don't expect a consistent or slow FPS.
+    ///
+    /// @see add_event
+    ///
+    void add_event_next_frame(std::function<void ()> func);
 
     ///
     /// Add an event with a time duration to run for. e.g. a timer

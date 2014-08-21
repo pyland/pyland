@@ -3,6 +3,7 @@
 
 #include "python_embed_headers.hpp"
 
+#include <atomic>
 #include <future>
 #include <map>
 #include <thread>
@@ -100,6 +101,14 @@ class EntityThread {
         /// Used to send asynchronous exceptions to threads.
         ///
         long thread_id;
+
+        ///
+        /// A private future used to get the thread's state asynchronously.
+        ///
+        /// The spawned thread will set this value when exiting (even by exception).
+        /// This is used to ensure destruction.
+        ///
+        std::atomic<bool> thread_finished;
 
         ///
         /// A private future used to get the thread's ID asynchronously.
