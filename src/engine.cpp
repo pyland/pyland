@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <cstdlib>
 #include <glm/vec2.hpp>
-#include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -51,7 +50,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     auto location(target);
     target += move_by;
 
-    VLOG(2) << std::setprecision(15) << "Trying to walk to " << target.x << " " << target.y;
+    VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
     // TODO: animate walking in-place
     if (!walkable(target)) { return; }
@@ -75,7 +74,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             glm::vec2 tweened_position(location + completion * (target-location));
 
             sprite->set_position(tweened_position);
-   
+
             if (completion == 1.0) {
                 sprite->set_state_on_moving_finish();
 
@@ -194,6 +193,15 @@ bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     });
 }
 
+bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
+    auto objects(get_objects_at(location));
+    return std::all_of(std::begin(object_ids), std::end(object_ids), [&] (int object_id) {
+        return std::any_of(std::begin(objects), std::end(objects), [&] (int id) {
+            return id == object_id;
+        });
+    });
+}
+
 std::string Engine::editor = DEFAULT_PY_EDITOR;
 
 void Engine::print_dialogue(std::string name, std::string text) {
@@ -235,7 +243,11 @@ void Engine::text_updater() {
 
 void Engine::update_status(int id, std::string status) {
     auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-    sprite->set_sprite_status(status);
+    if (!sprite) {
+        LOG(INFO) << "not a sprite";
+    } else {
+        sprite->set_sprite_status(status);
+    }
 }
 
 TextFont Engine::get_game_font() {

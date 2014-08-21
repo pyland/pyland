@@ -157,6 +157,11 @@ public:
     static bool is_object_at(glm::ivec2 location, int object_id);
 
     ///
+    /// Get whether a vector of objects is at this tile
+    ///
+    static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
+
+    ///
     /// set the text editor, opened by the challenges
     ///
     static void set_editor(std::string editor) { Engine::editor = editor; }
