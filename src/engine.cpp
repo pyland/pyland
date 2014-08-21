@@ -113,7 +113,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             // Long rambly justification about how Ax + B(1-x) can be outside
             // the range [A, B] (consider when A=B).
             //
-            // The given formula cannot have this problem when A and B are exactly 
+            // The given formula cannot have this problem when A and B are exactly representable
             glm::vec2 tweened_position(location + completion * (target-location));
 
             object->set_position(tweened_position);
