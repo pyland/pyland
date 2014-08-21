@@ -41,7 +41,7 @@
  </layer>
  <layer name="Collisions" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XQQ6AMAgE9eT/f2w89NJYC1joQnYST9qwoxX0OP5xnfIDDU32aA9pHWm2dg71eVhy7fQY1bVkQnseb3kk+TJ4eK7z4ivP7J3P4uGxDg1ED2uvivDwnAWoc/DBMvsRQfyuslDFQ0IVlwoOjUoemamwp3b1rNU9tL828r/cyyWSr/v3lh91788yWf6bdiDdJ/21mT00a6JBzNQT3VssPWBVn1w1rzR1R31QWkNaf5TJMmv+zCENq7PtcNB6ZaOCAyGEEEIIIYR4cQNRGvJJECcAAA==
+   H4sIAAAAAAAAA+2WwQ6EMAhE3dP+/x/vaRNDioUWYUrmJR60VWasDr0uG9+Pft16IHDX4dGe7WNW5z9u1Taaj8COrkofsq704X0W0nqM9Fj0neDDcy8CMx+zfz4zr7RM2s1PhPWIqI/gQ7KaVRk+LP3sfr7SOyrWI2qPUd3LLdmDtq/StD6NdfFhfUa1lw7/RiSdfJxMh2+qKrOiM1TOzd7nvuElk6f3N9KP+u3PNGljiD6sc+RaIeHx4bknG0RNkuxsWcmAqJyM6leeuloOWmtY62uaVnrNTh/yEK2twoPX12l08EAIIYQQQgghb/EDQ134mxAnAAA=
   </data>
  </layer>
  <layer name="Objects" width="50" height="50">

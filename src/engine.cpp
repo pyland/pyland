@@ -94,7 +94,12 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
     // animate walking in-place
-    if (!walkable(target)) { target = location; }
+    auto sprite_test(ObjectManager::get_instance().get_object<Sprite>(id));
+    if (!sprite_test) {
+        VLOG(2) << "ignore if walkable or not";
+    } else {
+        if (!walkable(target)) { target = location; }
+    }
 
     object->set_state_on_moving_start(target);
 
