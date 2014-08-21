@@ -66,12 +66,6 @@ Map::Map(const std::string map_src):
 
         tilesets = map_loader.get_tilesets();
 
-        for (auto map_object : map_loader.get_objects()) {
-            //Add the object to the object manager and the map
-            ObjectManager::get_instance().add_object(map_object);
-            map_object_ids.push_back(map_object->get_id());
-        }
-
         //Get the tilesets
         //TODO: We'll only support one tileset at the moment
         //Get an object list

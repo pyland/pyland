@@ -67,7 +67,12 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             if (!sprite) { return false; }
 
-            glm::vec2 tweened_position = location * (1-completion) + target * completion;
+            // Long rambly justification about how Ax + B(1-x) can be outside
+            // the range [A, B] (consider when A=B).
+            //
+            // The given formula cannot have this problem when A and B are exactly 
+            glm::vec2 tweened_position(location + completion * (target-location));
+
             sprite->set_position(tweened_position);
 
             if (completion == 1.0) {
@@ -189,11 +194,8 @@ bool Engine::is_object_at(glm::ivec2 location, int object_id) {
 }
 
 bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
-    auto objects(get_objects_at(location));
     return std::all_of(std::begin(object_ids), std::end(object_ids), [&] (int object_id) {
-        return std::any_of(std::begin(objects), std::end(objects), [&] (int id) {
-            return id == object_id;
-        });
+        return is_object_at(location,object_id);
     });
 }
 
