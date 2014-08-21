@@ -1,6 +1,7 @@
 #include <glog/logging.h>
 #include <map>
 #include <memory>
+#include <iostream>
 #include <ostream>
 #include <string>
 #include <Tmx.h>
@@ -109,6 +110,8 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
                 ),
                 { object->GetGid() - tileset->GetFirstGid(), tileset->GetImage()->GetSource() }
             });
+    std::cout << fullname << std::endl;
+    std::cout << properties.tile.first << " " << properties.tile.second << std::endl;
 
             named_tiles_mapping.insert(std::make_pair(fullname, properties));
         }

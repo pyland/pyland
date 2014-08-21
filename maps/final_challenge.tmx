@@ -21,6 +21,9 @@
  <tileset firstgid="201" name="basictiles_2_64" tilewidth="64" tileheight="64">
   <image source="../resources/basictiles_2_64.png" width="512" height="960"/>
  </tileset>
+ <tileset firstgid="321" name="gui" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
+ </tileset>
  <layer name="Ground" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
@@ -38,7 +41,7 @@
  </layer>
  <layer name="Collisions" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XQQ6FMAhE9Tje/4LmL9wQ2w9Y6EDmJe7aME8bsMfxjevUP2hYsmd7aOvMsp1inVyPhCfXTo9RXU8mtO/xlkeTr4JH5L4oZnlmOSt5ROxDA9HD26syPCJnAeoc/OGZ/Ygg/ld56OKhoYtLB4eHTh6V6XCmdvWs1T1Urs28l0e5ZDJ7f2/5Uc/+v0yee9MOtOdErq3sYdmTDWImSXZv8fSAVX1y1byy1B31QW0Nbf1RJs+s+TKHLKzOtsPB6lWNDg6EEEIIIYQQEsUNFZYrZRAnAAA=
+   H4sIAAAAAAAAA+2XQQ6AMAgE9Tn+/4PGQy+NtYCFLmQn8aQNO1pBj+Mf1yk/0NBkj/aQ1pFma+dQn4cl106PUV1LJrTn8ZZHki+Dh+c6L77yzN75LB4e69BA9LD2qggPz1mAOgcfLLMfEcTvKgtVPCRUcang0KjkkZkKe2pXz1rdQ/trI//LvVwi+bp/b/lR9/4sk+W/aQfSfdJfm9lDsyYaxEw90b3F0gNW9clV80pTd9QHpTWk9UeZLLPmzxzSsDrbDgetVzYqOBBCCCGEEEKIFzcJ3g5XECcAAA==
   </data>
  </layer>
  <layer name="Objects" width="50" height="50">
@@ -53,10 +56,15 @@
   <object name="orange/1" gid="83" x="640" y="1664"/>
   <object name="pineapple/1" gid="84" x="1920" y="1216"/>
   <object name="bannana/1" gid="82" x="1792" y="2432"/>
+  <object name="orange/3" gid="83" x="448" y="1728"/>
+  <object name="orange/4" gid="83" x="768" y="1600"/>
+  <object name="orange/5" gid="83" x="768" y="1728"/>
+  <object name="orange/2" gid="83" x="512" y="1664"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
   <object name="crate/1" gid="66" x="128" y="192"/>
   <object name="bridge/1" gid="64" x="256" y="576"/>
   <object name="vines/1" gid="80" x="768" y="640"/>
+  <object name="dropoff/1" gid="331" x="192" y="256"/>
  </objectgroup>
 </map>

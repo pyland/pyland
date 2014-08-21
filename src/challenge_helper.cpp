@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+#include <iostream>
 
 #include "api.hpp"
 #include "challenge.hpp"
@@ -38,6 +39,10 @@ int ChallengeHelper::make_object(Challenge *challenge,
     LOG(INFO) << "creating object at " << name;
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Objects/" + name));
+    std::cout << "HERE" << std::endl;
+    std::cout << name << std::endl;
+    std::cout << properties.tile.first << " " << properties.tile.second << std::endl;
+
 
     return challenge->make_map_object(
         properties.location,
@@ -59,7 +64,6 @@ int ChallengeHelper::make_sprite(Challenge *challenge, std::string marker_name, 
         walkability,
         properties.tile
     ));
-
     ObjectManager::get_instance().add_object(new_sprite);
 
     auto sprite_id(new_sprite->get_id());
