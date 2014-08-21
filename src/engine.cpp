@@ -68,20 +68,14 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             if (!sprite) { return false; }
 
-            glm::vec2 tweened_position(location);
-            if (location.x != target.x) {
-                tweened_position.x = location.x * (1-completion) + target.x * completion;
-            }
-            if (location.y != target.y) {
-                tweened_position.y = location.y * (1-completion) + target.y * completion;
-            }
-
-
-
+            // Long rambly justification about how Ax + B(1-x) can be outside
+            // the range [A, B] (consider when A=B).
+            //
+            // The given formula cannot have this problem when A and B are exactly representable.
+            glm::vec2 tweened_position(location + completion * (target-location));
 
             sprite->set_position(tweened_position);
    
-
             if (completion == 1.0) {
                 sprite->set_state_on_moving_finish();
 
