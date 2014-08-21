@@ -135,6 +135,11 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
     renderable_component.set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
 }
 
+void MapObject::set_position(glm::vec2 position) {
+    this->position = position; 
+    regenerate_blockers();
+}
+
 void MapObject::set_tile(std::pair<int, std::string> tile) {
     load_textures(tile);
     generate_tex_data(tile);

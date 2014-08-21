@@ -174,6 +174,22 @@ int main(int argc, const char *argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.restart(); }
     ));
 
+
+    Lifeline fast_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_PRESS}), KEY({"Left Shift"})},
+        [&] (KeyboardInputEvent) {                 
+            EventManager::get_instance().time.game_seconds_per_real_second = 64.0;
+        }        
+    ));
+
+    Lifeline slow_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_RELEASE}), KEY({"Left Shift"})},
+        [&] (KeyboardInputEvent) {                 
+            EventManager::get_instance().time.game_seconds_per_real_second = 1.0;
+        }        
+    ));
+
+
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
         {ANY_OF({KEY_HELD}), KEY({"Up", "W"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, 1)); }
