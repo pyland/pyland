@@ -405,7 +405,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
 
         static EGL_DISPMANX_WINDOW_T nativeWindow;
 
-        LOG(INFO) << "Initializing window surface.";
+        VLOG(2) << "Initializing window surface.";
 
         // Create EGL window surface.
 
@@ -414,7 +414,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
         destination.width = w;
         destination.height = h;
 
-        LOG(INFO) << "New surface: " << w << "x" << h << " at (" << x << "," << y << ").";
+        VLOG(2) << "New surface: " << w << "x" << h << " at (" << x << "," << y << ").";
 
         source.x = 0;
         source.y = 0;
@@ -448,7 +448,7 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
             EGL_NONE
         };
 
-        LOG(INFO) << "New surface: " << w << "x" << h << " (Pixel Buffer).";
+        VLOG(2) << "New surface: " << w << "x" << h << " (Pixel Buffer).";
 
         new_surface = eglCreatePbufferSurface(display, config, attribute_list);
         if (new_surface == EGL_NO_SURFACE) {
@@ -561,18 +561,18 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_MAXIMIZED:
             case SDL_WINDOWEVENT_RESTORED:
                 window->resizing = true;
-                LOG(INFO) << "Need surface reinit (resize)";
+                VLOG(2) << "Need surface reinit (resize)";
                 window->change_surface = InitAction::DO_INIT;
                 focused_window = window;
                 break;
             case SDL_WINDOWEVENT_MOVED:
-                LOG(INFO) << "Need surface reinit (moved)";
+                VLOG(2) << "Need surface reinit (moved)";
                 window->change_surface = InitAction::DO_INIT;
                 focused_window = window;
                 break;
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
-                LOG(INFO) << "Need surface reinit (gained focus)";
+                VLOG(2) << "Need surface reinit (gained focus)";
 #ifndef GAME_WINDOW_DISABLE_DIRECT_RENDER
                 window->foreground = true;
 #endif
@@ -582,7 +582,7 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_FOCUS_LOST:
             case SDL_WINDOWEVENT_MINIMIZED:
             case SDL_WINDOWEVENT_HIDDEN:
-                LOG(INFO) << "Need surface reinit (lost focus)";
+                VLOG(2) << "Need surface reinit (lost focus)";
                 window->foreground = false;
                 // This used to deinit, but that is actually bad.
                 window->change_surface = InitAction::DO_INIT;
@@ -618,7 +618,7 @@ void GameWindow::update() {
                               &y,
                               &child);
         if ((window->window_x != x || window->window_y != y) && window->visible) {
-            LOG(INFO) << "Need surface reinit (moved).";
+            VLOG(2) << "Need surface reinit (moved).";
             window->change_surface = InitAction::DO_INIT;
         }
 #endif

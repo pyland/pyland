@@ -10,20 +10,23 @@
   <image source="../resources/tiles/items.png" width="192" height="64"/>
  </tileset>
  <tileset firstgid="85" name="people" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/people.png" width="7168" height="64"/>
+  <image source="../resources/tiles/people.png" width="8960" height="64"/>
  </tileset>
- <tileset firstgid="197" name="walls" tilewidth="64" tileheight="64">
+ <tileset firstgid="225" name="walls" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/walls.png" width="128" height="64"/>
  </tileset>
- <tileset firstgid="199" name="test" tilewidth="64" tileheight="64">
+ <tileset firstgid="227" name="test" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/test.png" width="128" height="64"/>
  </tileset>
- <tileset firstgid="201" name="basictiles_2_64" tilewidth="64" tileheight="64">
-  <image source="../resources/basictiles_2_64.png" width="512" height="960"/>
+ <tileset firstgid="229" name="gui" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
  </tileset>
- <layer name="Ground" width="50" height="50">
+ <tileset firstgid="262" name="test" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/test.png" width="128" height="64"/>
+ </tileset>
+ <layer name="Ground" width="50" height="50" opacity="0.99">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
+   H4sIAAAAAAAAA+3MIQEAAAgDsMv3r0QxCmBxE7Nrkj6YpxcAAAAAAAAAAAAuC9U8WwIQJwAA
   </data>
  </layer>
  <layer name="Effects" width="50" height="50">
@@ -33,12 +36,12 @@
  </layer>
  <layer name="Overlay" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2Z227DIAyGzapdbO2OD1RNk5Ld7qXT59qQsOL+M4dklIPEJyECJdQ/tglNiYjuKM6jp39x5eLKImq8bgGpQ9rrs122DZXT8enpZ1+xDmmrCcxnRM2aWkDqsHYdXFuLSeyzWqYb2eWDbcD1O7o65geN1vzBvpDcJ9zbWp5z/m5lptvrSFlPi42rUHwcPP1EZfzx9FueRfmAvjdXn0iPqxRaiKsjtL93zLFXf07O0EZ7Yro4N0r4I/Qd6I+te6h81pfmldb8eHc158zDBptqn63QBxLef+U5ypZZXE+02l8zv31nWwvvv2y3dl6Uemrmd8wfKVyg1OCF1pzA58spcY7auZGTkI4vV3ogFk+t65B53yv4G7fUmUR7H6C1U3NW7r88fwlwf9SeBQv9tS9EjXMhnn/k+qEebXwrxOLFt64t6ogxQ22p/XsCSbFnhnZrGiytxYfGln0yB1v2NHlP7L1wylkT79uLtl/7MMq41DX3zWvE52iHoet3zAbGS/0GxmMxMD53jkmbDF3b5NOHGkPjsL3nvep/dEktXPcGxlaPGgaDXin931RuJupfw2AwGAwGg0GMH16vVvoQJwAA
+   H4sIAAAAAAAAA+2Z227DIAyGzapdbO2OD1RNk5Ld7v3v0ifZkLDi/jOHZJSDxCchAiXUP7YJTYmI7ijOo6d/ceXiyiJqvG4BqUPa67Ndtg2V0/Hp6WdfsQ5pqwnMZ0TNmlpA6rB2HVxbi0nss1qmG9nlg23A9Tu6OuYHjdb8wb6Q3Cfc21qec/5uZabb60hZT4uNq1B8HDz9RGX88fRbnkX5gL43V59Ij6sUWoirI7S/d8yxV39OztBGe2K6ODdK+CP0HeiPrXuofNaX5pXW/Hh3NefMwwabap+t0AcS3n/lOcqWWVxPtNpfM799Z1sL779st3ZelHpq5nfMHylcoNTghdacwOfLKXGO2rmRk5COL1d6IBZPreuQed8r+Bu31JlEex+gtVNzVu6/PH8JcH/UngUL/bUvRI1zIZ5/5PqhHm18K8TixbeuLeqIMUNtqf17AkmxZ4Z2axosrcWHxpZ9Mgdb9jR5T+y9cMpZE+/bi7Zf+zDKuNQ1981rxOdoh6Hrd8wGxkv9BsZjMTA+d45Jmwxd2+TThxpD47C9573qf3RJLVz3BsZWjxoGg14p/d9UbibqX8NgMBgMBoNBjB/6vLXUECcAAA==
   </data>
  </layer>
  <layer name="Collisions" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XQQ6FMAhE9Tje/4LmL9wQ2w9Y6EDmJe7aME8bsMfxjevUP2hYsmd7aOvMsp1inVyPhCfXTo9RXU8mtO/xlkeTr4JH5L4oZnlmOSt5ROxDA9HD26syPCJnAeoc/OGZ/Ygg/ld56OKhoYtLB4eHTh6V6XCmdvWs1T1Urs28l0e5ZDJ7f2/5Uc/+v0yee9MOtOdErq3sYdmTDWImSXZv8fSAVX1y1byy1B31QW0Nbf1RJs+s+TKHLKzOtsPB6lWNDg6EEEIIIYQQEsUNFZYrZRAnAAA=
+   H4sIAAAAAAAAA+2XQQ6AMAgE9eT/f2w89NJYC1joQnYST9qwoxX0OP5xnfIDDU32aA9pHWm2dg71eVhy7fQY1bVkQnseb3kk+TJ4eK7z4ivP7J3P4uGxDg1ED2uvivDwnAWoc/DBMvsRQfyuslDFQ0IVlwoOjUoemamwp3b1rNU9tL828r/cyyWSr/v3lh91788yWf6bdiDdJ/21mT00a6JBzNQT3VssPWBVn1w1rzR1R31QWkNaf5TJMmv+zCENq7PtcNB6ZaOCAyGEEEIIIYR4cQNRGvJJECcAAA==
   </data>
  </layer>
  <layer name="Objects" width="50" height="50">
@@ -47,18 +50,24 @@
   </data>
  </layer>
  <objectgroup name="Objects" width="50" height="50">
-  <object name="sprite/1" gid="173" x="128" y="320"/>
-  <object name="sprite/monkey" gid="159" x="1344" y="384"/>
+  <object name="orange/1" gid="83" x="640" y="1664"/>
+  <object name="pineapple/1" gid="84" x="1920" y="1216"/>
+  <object name="bannana/1" gid="82" x="1792" y="2432"/>
   <object name="sprite/crocodile" gid="110" x="640" y="64"/>
   <object name="orange/1" gid="83" x="640" y="1664"/>
   <object name="pineapple/1" gid="84" x="1920" y="1216"/>
   <object name="bannana/1" gid="82" x="1792" y="2432"/>
+  <object name="orange/3" gid="83" x="448" y="1728"/>
+  <object name="orange/4" gid="83" x="768" y="1600"/>
+  <object name="orange/5" gid="83" x="768" y="1728"/>
+  <object name="orange/2" gid="83" x="512" y="1664"/>
+  <object name="sprite/1" gid="195" x="128" y="320"/>
+  <object name="sprite/monkey" gid="175" x="1344" y="384"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
   <object name="crate/1" gid="66" x="128" y="192"/>
   <object name="bridge/1" gid="64" x="256" y="576"/>
   <object name="vines/1" gid="80" x="768" y="640"/>
-  <object name="dropoff/1" gid="331" x="192" y="256"/>
-  <object name="pickup/1" gid="331" x="640" y="1728"/>
+  <object name="dropoff/1" gid="239" x="192" y="256"/>
  </objectgroup>
 </map>

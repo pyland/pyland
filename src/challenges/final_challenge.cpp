@@ -1,5 +1,7 @@
 #include <glog/logging.h>
 #include <memory>
+#include <thread>
+#include <chrono>
 
 #include "final_challenge.hpp"
 #include "challenge_helper.hpp"
@@ -14,32 +16,66 @@
 
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
-    ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED);
+    ChallengeHelper::make_sprite(
+        this,
+        "sprite/1",
+        "Ben",
+        Walkability::BLOCKED,
+        "south/still/1"
+    );
 
-    int test_orange_id = ChallengeHelper::make_object(this, "orange/1", Walkability::WALKABLE);
-    ChallengeHelper::create_pickupable(ChallengeHelper::get_location_object("orange/1"), ChallengeHelper::get_location_interaction("pickup/1"), 
-                      ChallengeHelper::get_location_interaction("crate/1"), ChallengeHelper::get_location_interaction("dropoff/1"), test_orange_id);
+    // set of orange collection part
+    glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/1");
+    glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/1");
 
-    // TODO: fix then when joshua pushs fixes
-    // creating the crocodile
-    // LOG(INFO) << "creating croc";
-    // int croc_id = ChallengeHelper::make_object(this, "sprite/crocodile", Walkability::BLOCKED);
-    // auto croc = ObjectManager::get_instance().get_object<Object>(croc_id);
-    // if (!croc) { return; }
+    int num_of_oranges = 5;
+    std::vector<int> orange_ids;
 
-    // // setting up python for croc
+    // adding oranges as pickupable objects
+    for (int i = 1; i <= num_of_oranges; i++) {
+        auto name = "orange/"+std::to_string(i);
+        glm::ivec2 orange_location = ChallengeHelper::get_location_object(name);
 
-    // // Register user controled sprite
-    // // Yes, this is a memory leak. Deal with it.
-    // auto properties(map->locations.at("Objects/sprite/crocodile"));
-    // auto *a_thing(new Entity(properties.location, "croc", croc_id));
+        int orange_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, "orange");
+        ChallengeHelper::create_pickupable(orange_location, orange_location, crate_location, dropoff_location , orange_id);
+        orange_ids.push_back(orange_id);
+    }
 
-    // LOG(INFO) << "Registering sprite";
-    // croc->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
-    // LOG(INFO) << "Done!";
+    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids] (int) {
+        LOG(INFO) << "checking if challenge has been one";
+        LOG(INFO) << Engine::get_objects_at(crate_location).size();
+        if (Engine::is_objects_at(dropoff_location, orange_ids)) {
+            Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
+        } else {
+            Engine::print_dialogue ("Game","Keep going");
+        }
+        return true;
+    });
 
-    // croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-    ChallengeHelper::make_sprite(this, "sprite/crocodile","final_challenge_croc", Walkability::BLOCKED);
+    LOG(INFO) << "creating croc";
+    int croc_id = ChallengeHelper::make_object(
+        this,
+        "sprite/crocodile",
+        Walkability::BLOCKED,
+        "south/still/1"
+    );
+
+    auto croc = ObjectManager::get_instance().get_object<Object>(croc_id);
+    if (!croc) { return; }
+
+    // setting up python for croc
+
+    // Register user controled sprite
+    // Yes, this is a memory leak. Deal with it.
+    auto properties(map->locations.at("Objects/sprite/crocodile"));
+    auto *a_thing(new Entity(properties.location, "final_challenge_croc", croc_id));
+
+    LOG(INFO) << "Registering sprite";
+    croc->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
+    LOG(INFO) << "Done!";
+
+    croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
+
 }
 
 void FinalChallenge::start() {

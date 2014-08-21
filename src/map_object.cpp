@@ -1,11 +1,13 @@
 #include <exception>
 #include <fstream>
 #include <glog/logging.h>
+#include <ios>
 #include <memory>
 #include <new>
 #include <stdexcept>
 #include <tuple>
 
+#include "animation_frames.hpp"
 #include "cacheable_resource.hpp"
 #include "engine.hpp"
 #include "map_object.hpp"
@@ -27,19 +29,22 @@
 MapObject::MapObject(glm::vec2 position,
                      std::string name,
                      Walkability walkability,
-                     std::pair<int, std::string> tile):
+                     AnimationFrames frames,
+                     std::string start_frame):
     Object(name),
     render_above_sprite(false),
     walkability(walkability),
-    position(position) {
+    position(position),
+    frames(frames) {
 
         VLOG(2) << "New map object: " << name;
 
         regenerate_blockers();
 
         init_shaders();
-        load_textures(tile);
-        generate_tex_data(tile);
+        // Hack hack hack
+        load_textures(frames.get_frame(start_frame));
+        generate_tex_data(frames.get_frame(start_frame));
         generate_vertex_data();
 
         LOG(INFO) << "MapObject initialized";
@@ -64,7 +69,7 @@ void MapObject::regenerate_blockers() {
         case Walkability::BLOCKED: {
             int x_left(int(position.x));
             int y_bottom(int(position.y));
-
+            VLOG(2) << std::fixed << position.y << " " << position.x;
             // If non-integral, the left or top have a higher
             // tile number. If integral, they do not.
             //
@@ -137,6 +142,7 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
 
 void MapObject::set_position(glm::vec2 position) {
     this->position = position; 
+    VLOG(2) << std::fixed << position.x << " " << position.y;
     regenerate_blockers();
 }
 
@@ -185,6 +191,14 @@ void MapObject::generate_vertex_data() {
 
     renderable_component.set_vertex_data(map_object_vert_data, sizeof(GLfloat)*num_floats, false);
     renderable_component.set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
+}
+
+void MapObject::set_state_on_moving_start(glm::ivec2) {
+    moving = true;
+}
+
+void MapObject::set_state_on_moving_finish() {
+    moving = false;
 }
 
 // TODO: rewrite

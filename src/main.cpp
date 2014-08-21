@@ -265,6 +265,18 @@ int main(int argc, const char *argv[]) {
         }
     ));
 
+    Text tile_identifier_text(&window, Engine::get_game_font(), false);
+    tile_identifier_text.move_ratio(1.0f, 0.0f);
+    tile_identifier_text.resize(256, 64);
+    tile_identifier_text.align_right();
+    tile_identifier_text.vertical_align_bottom();
+    tile_identifier_text.align_at_origin(true);
+    tile_identifier_text.set_bloom_radius(5);
+    tile_identifier_text.set_bloom_colour(0x00, 0x0, 0x00, 0xa0);
+    tile_identifier_text.set_colour(0xff, 0xff, 0xff, 0xa8);
+    tile_identifier_text.set_text("(?, ?)");
+    glm::ivec2 tile_identifier_old_tile;
+
     std::function<void (GameWindow *)> func_char = [&] (GameWindow *) {
         LOG(INFO) << "text window resizing";
         Engine::text_updater();
@@ -272,8 +284,6 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-
-    
     //Run the map
     bool run_game = true;
 
@@ -289,9 +299,8 @@ int main(int argc, const char *argv[]) {
     ));
 
     MouseCursor cursor(&window);
-    
     //Run the challenge - returns after challenge completes
-    
+
     while(!window.check_close() && run_game) {
         challenge_data->run_challenge = true;
         Challenge* challenge = pick_challenge(challenge_data);
@@ -322,6 +331,21 @@ int main(int argc, const char *argv[]) {
             Engine::text_displayer();
             challenge_data->notification_bar->text_displayer();
 
+            // This is not an input event, because the map can move with
+            // the mouse staying still.
+            {
+                std::pair<int,int> pixels = input_manager->get_mouse_pixels();
+                glm::ivec2 tile(Engine::get_map_viewer()->pixel_to_tile({pixels.first, pixels.second}));
+                if (tile != tile_identifier_old_tile) {
+                    tile_identifier_old_tile = tile;
+                    std::stringstream position;
+                    position << "(" << tile.x << ", " << tile.y << ")";
+
+                    tile_identifier_text.set_text(position.str());
+                }
+            }
+            tile_identifier_text.display();
+            
             cursor.display();
 
             VLOG(3) << "} TD | SB {";
@@ -338,8 +362,8 @@ int main(int argc, const char *argv[]) {
     return 0;
 }
 Challenge* pick_challenge(ChallengeData* challenge_data) {
-    int next_challenge = challenge_data->next_challenge;
-    Challenge* challenge = nullptr;
+    int next_challenge(challenge_data->next_challenge);
+    Challenge *challenge(nullptr);
     std::string map_name = "";
     switch(next_challenge) {
     case 0:
@@ -348,11 +372,6 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
         challenge = new StartScreen(challenge_data);
         break;
     case 1:
-        map_name = "../maps/map0.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new LongWalkChallenge(challenge_data);
-        break;
-    case 2:
         map_name = "../maps/final_challenge.tmx";
         challenge_data->map_name = map_name;
         challenge = new FinalChallenge(challenge_data);

@@ -86,9 +86,17 @@ private:
     ///
     int width;
     ///
+    /// The width as a ratio if set using ratios.
+    ///
+    float width_ratio;
+    ///
     /// The height of the textbox.
     ///
     int height;
+    ///
+    /// The height as a ratio if set using ratios.
+    ///
+    float height_ratio;
     ///
     /// Horizontal position of text.
     ///
@@ -98,11 +106,27 @@ private:
     ///
     int x;
     ///
+    /// The horizontal position as a ratio if set using ratios.
+    ///
+    float x_ratio;
+    ///
     /// Vertical position of text.
     ///
     /// Displacement of bottom edge of text from bottom edge of window.
     ///
     int y;
+    ///
+    /// The vertical position as a ratio if set using ratios.
+    ///
+    float y_ratio;
+    ///
+    /// Whether the user used relative sizing (ratio across screen)
+    ///
+    bool ratio_size;
+    ///
+    /// Whether the user used relative positioning (ratio across screen)
+    ///
+    bool ratio_position;
     ///
     /// Image used to store the rendered text
     ///

@@ -34,9 +34,10 @@ glm::vec2 pos_to_status (glm::vec2 position) {
 Sprite::Sprite(glm::ivec2 position,
                std::string name,
                Walkability walkability,
-               std::pair<int, std::string> tile):
+               AnimationFrames frames,
+               std::string start_frame):
 
-    MapObject(position, name, walkability, tile),
+    MapObject(position, name, walkability, frames, start_frame),
     sprite_name(name),
     is_focus(false) {
 
@@ -56,7 +57,8 @@ Sprite::Sprite(glm::ivec2 position,
             pos_to_status(position),
             "status icon",
             Walkability::WALKABLE,
-            TextureAtlas::from_name("gui/status/stationary")
+            AnimationFrames("gui/status"),
+            "stationary"
         ));
 
         status_icon->set_render_above_sprites(true);
@@ -72,7 +74,8 @@ Sprite::Sprite(glm::ivec2 position,
             position,
             "focus icon",
             Walkability::WALKABLE,
-            TextureAtlas::from_name("gui/highlight/selected_object")
+            AnimationFrames("gui/highlight"),
+            "selected_object"
         ));
 
         focus_icon->set_render_above_sprites(false);
@@ -90,14 +93,6 @@ Sprite::~Sprite() {
     delete object_text;
     ObjectManager::get_instance().remove_object(status_icon_id);
     LOG(INFO) << "Sprite destructed";
-}
-
-void Sprite::set_state_on_moving_start(glm::ivec2) {
-    moving = true;
-}
-
-void Sprite::set_state_on_moving_finish() {
-    moving = false;
 }
 
 void Sprite::add_to_inventory(int new_object_id) {
@@ -134,8 +129,6 @@ void Sprite::set_position(glm::vec2 position) {
         return;
     }
     status_icon->set_position(pos_to_status(position));
-
-
 }
 
 bool Sprite::remove_from_inventory(int old_object) {
@@ -188,26 +181,24 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
 
     switch (sprite_status) {
 
-        case (Sprite_Status::NOTHING):
-        status_icon->set_tile(TextureAtlas::from_name("gui/status/stationary"));
-        break;
+        case Sprite_Status::NOTHING:
+            status_icon->set_tile(TextureAtlas::from_name("gui/status/stationary"));
+            break;
 
-        case (Sprite_Status::KILLED):
-        case (Sprite_Status::STOPPED):
-        status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
-        break;
+        case Sprite_Status::KILLED:
+        case Sprite_Status::STOPPED:
+            status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
+            break;
 
-        case (Sprite_Status::RUNNING):
-        status_icon->set_tile(TextureAtlas::from_name("gui/status/running"));
-        break;
+        case Sprite_Status::RUNNING:
+            status_icon->set_tile(TextureAtlas::from_name("gui/status/running"));
+            break;
 
-        case (Sprite_Status::FAILED):
-        // TODO: stopping should also be here
-        status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
-        break;
+        case Sprite_Status::FAILED:
+            // TODO: stopping should also be here
+            status_icon->set_tile(TextureAtlas::from_name("gui/status/failed"));
+            break;
     }
-
-
 }
 
 void Sprite::set_focus(bool _is_focus) {

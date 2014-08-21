@@ -15,7 +15,7 @@ class TileSet;
 
 struct ObjectProperties {
     const glm::ivec2 location;
-    const std::pair<int, std::string> tile;
+    const std::string tileset;
 };
 
 ///
@@ -62,11 +62,6 @@ class MapLoader {
     ///
     std::vector<std::shared_ptr<Layer>> layers;
 
-    ///
-    /// Array of objects
-    ///
-    std::vector<std::shared_ptr<MapObject>> objects;
-
 public:
     ///
     /// Load objects from the TMX map to create a mapping
@@ -104,12 +99,6 @@ public:
     /// @return a vector of the layers, referenced by shared_ptrs
     ///
     std::vector<std::shared_ptr<Layer>> get_layers() { return layers; }
-
-    ///
-    /// Get the objects in the map
-    /// @return a vector of the objects in the map, referenced by shared_ptrs
-    ///
-    std::vector<std::shared_ptr<MapObject>> get_objects() { return objects; }
 };
 
 

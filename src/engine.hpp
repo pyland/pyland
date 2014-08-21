@@ -105,8 +105,8 @@ public:
     /// @param dx move in x by dx tiles
     /// @param dy move in x by dy tiles
     ///
-    static void move_sprite(int id, glm::ivec2 move_by);
-    static void move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return);
+    static void move_object(int id, glm::ivec2 move_by);
+    static void move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return);
 
     ///
     /// Determine if a location can be walked on
@@ -155,6 +155,11 @@ public:
     /// Get whether a sprite with a certain id is at this tile
     ///
     static bool is_object_at(glm::ivec2 location, int object_id);
+
+    ///
+    /// Get whether a vector of objects is at this tile
+    ///
+    static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
 
     ///
     /// set the text editor, opened by the challenges
