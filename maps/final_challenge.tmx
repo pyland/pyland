@@ -21,9 +21,6 @@
  <tileset firstgid="201" name="basictiles_2_64" tilewidth="64" tileheight="64">
   <image source="../resources/basictiles_2_64.png" width="512" height="960"/>
  </tileset>
- <tileset firstgid="321" name="gui" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
- </tileset>
  <layer name="Ground" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
@@ -41,7 +38,7 @@
  </layer>
  <layer name="Collisions" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XQQ6AMAgE9Tn+/4PGQy+NtYCFLmQn8aQNO1pBj+Mf1yk/0NBkj/aQ1pFma+dQn4cl106PUV1LJrTn8ZZHki+Dh+c6L77yzN75LB4e69BA9LD2qggPz1mAOgcfLLMfEcTvKgtVPCRUcang0KjkkZkKe2pXz1rdQ/trI//LvVwi+bp/b/lR9/4sk+W/aQfSfdJfm9lDsyYaxEw90b3F0gNW9clV80pTd9QHpTWk9UeZLLPmzxzSsDrbDgetVzYqOBBCCCGEEEKIFzcJ3g5XECcAAA==
+   H4sIAAAAAAAAA+2XQQ6FMAhE9Tje/4LmL9wQ2w9Y6EDmJe7aME8bsMfxjevUP2hYsmd7aOvMsp1inVyPhCfXTo9RXU8mtO/xlkeTr4JH5L4oZnlmOSt5ROxDA9HD26syPCJnAeoc/OGZ/Ygg/ld56OKhoYtLB4eHTh6V6XCmdvWs1T1Urs28l0e5ZDJ7f2/5Uc/+v0yee9MOtOdErq3sYdmTDWImSXZv8fSAVX1y1byy1B31QW0Nbf1RJs+s+TKHLKzOtsPB6lWNDg6EEEIIIYQQEsUNFZYrZRAnAAA=
   </data>
  </layer>
  <layer name="Objects" width="50" height="50">

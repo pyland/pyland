@@ -98,9 +98,6 @@ void run_entity(std::shared_ptr<py::api::object> entity_object,
             );
         }
         catch (py::error_already_set &) {
-            EventManager::get_instance().add_event([&] () {
-                EventManager::get_instance().time.game_seconds_per_real_second = 1.0;
-            });
 
             lock::ThreadGIL lock_thread(threadstate);
 

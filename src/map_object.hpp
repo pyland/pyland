@@ -67,7 +67,7 @@ public:
     virtual ~MapObject();
 
     glm::vec2 get_position() { return position; }
-    void set_position(glm::vec2 position) { this->position = position; }
+    void set_position(glm::vec2 position);
 
     ///
     /// Determine if the object should be rendered above sprites

@@ -65,15 +65,6 @@ Sprite::Sprite(glm::ivec2 position,
         LOG(INFO) << "created focus icon with id: " << status_icon_id;
         Engine::get_map_viewer()->get_map()->add_map_object(status_icon_id);
 
-        // TODO: Starting positions should be integral as of currently. Check or fix.
-        //
-        // Make a map object blocked
-        // In future this might not be needed
-        blocked_tiles.insert(std::make_pair(
-            "stood on",
-            Engine::get_map_viewer()->get_map()->block_tile(position)
-        ));
-
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
 
@@ -101,18 +92,12 @@ Sprite::~Sprite() {
     LOG(INFO) << "Sprite destructed";
 }
 
-void Sprite::set_state_on_moving_start(glm::ivec2 target) {
+void Sprite::set_state_on_moving_start(glm::ivec2) {
     moving = true;
-    // adding blocker to new tile
-    blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
 }
 
 void Sprite::set_state_on_moving_finish() {
     moving = false;
-    // removing old blocker and changing key for new one
-    blocked_tiles.erase("stood on");
-    blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
-    blocked_tiles.erase("walking to");
 }
 
 void Sprite::add_to_inventory(int new_object_id) {
@@ -148,6 +133,8 @@ void Sprite::set_position(glm::vec2 position) {
         return;
     }
     status_icon->set_position(pos_to_status(position));
+
+
 }
 
 bool Sprite::remove_from_inventory(int old_object) {
