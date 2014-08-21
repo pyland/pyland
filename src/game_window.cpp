@@ -189,6 +189,8 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
         throw GameWindow::InitException("Failed to create SDL window");
     }
 
+    SDL_ShowCursor(0);
+    
     // Temporary fix (which just seems to work) for a bug where focus
     // events are not generated for the first time focus is changed.
     // SEE ALSO BELOW IN THIS FUNCTION

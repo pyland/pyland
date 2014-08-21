@@ -26,6 +26,7 @@
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "keyboard_input_event.hpp"
+#include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
 #include "lifeline.hpp"
@@ -123,8 +124,8 @@ int main(int argc, const char *argv[]) {
     stop_button->set_on_click([&] () {LOG(ERROR) << "STOP";  callbackstate.stop(); });
     stop_button->set_width(0.2f);
     stop_button->set_height(0.2f);
-    stop_button->set_y_offset(0.8f);
-    stop_button->set_x_offset(0.8f);
+    stop_button->set_y_offset(0.67f);
+    stop_button->set_x_offset(0.0f);
 
 
     gui_manager.set_root(sprite_window);
@@ -260,36 +261,21 @@ int main(int argc, const char *argv[]) {
     //Run the map
     bool run_game = true;
 
-        //Setup challenge
-        ChallengeData *challenge_data(new ChallengeData(
-            map_path,
-            &interpreter,
-            &gui_manager,
-            &window,
-            input_manager,
-            &notification_bar,
-            0
-        ));
+    //Setup challenge
+    ChallengeData *challenge_data(new ChallengeData(
+        map_path,
+        &interpreter,
+        &gui_manager,
+        &window,
+        input_manager,
+        &notification_bar,
+        0
+    ));
 
-        //Run the challenge - returns after challenge completes
-        #ifdef USE_GLES
-            TextFont big_font(Engine::get_game_typeface(), 50);
-            Text cursor(challenge_data->game_window, big_font, true);
-            cursor.set_bloom_radius(10);
-            cursor.align_left();
-            cursor.vertical_align_centre();
-            cursor.align_at_origin(true);
-            cursor.move(0, 0);
-            cursor.resize(100, 100);
-            cursor.set_text("<");
-
-            Lifeline cursor_lifeline(challenge_data->input_manager->register_mouse_handler(
-                filter({MOUSE_MOVE}, [&] (MouseInputEvent event) {
-                    cursor.move(event.to.x-10, event.to.y);
-                })
-            ));
-        #endif
-
+    MouseCursor cursor(&window);
+    
+    //Run the challenge - returns after challenge completes
+    
     while(!window.check_close() && run_game) {
         challenge_data->run_challenge = true;
         Challenge* challenge = pick_challenge(challenge_data);
@@ -297,6 +283,7 @@ int main(int argc, const char *argv[]) {
 
         auto last_clock(std::chrono::steady_clock::now());
 
+        //Run the challenge - returns after challenge completes
         VLOG(3) << "{";
         while (!challenge_data->game_window->check_close() && challenge_data->run_challenge) {
             last_clock = std::chrono::steady_clock::now();
@@ -319,9 +306,7 @@ int main(int argc, const char *argv[]) {
             Engine::text_displayer();
             challenge_data->notification_bar->text_displayer();
 
-            #ifdef USE_GLES
-                cursor.display();
-            #endif
+            cursor.display();
 
             VLOG(3) << "} TD | SB {";
             challenge_data->game_window->swap_buffers();

@@ -48,10 +48,8 @@ extern "C" {
 
 #define SHADER_VARIABLE_POSITION "position"
 #define SHADER_VARIABLE_TEXTURE  "texture_coord"
-#define SHADER_VARIABLE_COLOUR   "colour"
 #define SHADER_LOCATION_POSITION 0
 #define SHADER_LOCATION_TEXTURE  1
-#define SHADER_LOCATION_COLOUR   2
 
 
 
@@ -988,7 +986,6 @@ void Text::display() {
     glVertexAttribPointer(SHADER_LOCATION_TEXTURE, 2, GL_FLOAT, GL_FALSE, 4 * (GLsizei)sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
     glEnableVertexAttribArray(SHADER_LOCATION_POSITION);
     glEnableVertexAttribArray(SHADER_LOCATION_TEXTURE);
-    glDisableVertexAttribArray(SHADER_LOCATION_COLOUR);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

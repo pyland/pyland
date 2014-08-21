@@ -56,6 +56,13 @@ private:
     ///
     GLuint gl_texture;
     ///
+    /// Whether the tiles have been rearranged when creating gl_image.
+    ///
+    /// If this is true, an update to layout information will require
+    /// the regeneration of the gl_image, unit_columns, and unit_rows.
+    ///
+    bool reshaped;
+    ///
     /// The width of a single indexable texture.
     ///
     int unit_w;
