@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <glm/vec2.hpp>
+#include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -50,7 +51,7 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     auto location(target);
     target += move_by;
 
-    VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
+    VLOG(2) << std::setprecision(15) << "Trying to walk to " << target.x << " " << target.y;
 
     // TODO: animate walking in-place
     if (!walkable(target)) { return; }
@@ -67,8 +68,19 @@ void Engine::move_sprite(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             if (!sprite) { return false; }
 
-            glm::vec2 tweened_position = location * (1-completion) + target * completion;
+            glm::vec2 tweened_position(location);
+            if (location.x != target.x) {
+                tweened_position.x = location.x * (1-completion) + target.x * completion;
+            }
+            if (location.y != target.y) {
+                tweened_position.y = location.y * (1-completion) + target.y * completion;
+            }
+
+
+
+
             sprite->set_position(tweened_position);
+   
 
             if (completion == 1.0) {
                 sprite->set_state_on_moving_finish();

@@ -1,6 +1,7 @@
 #include <exception>
 #include <fstream>
 #include <glog/logging.h>
+#include <ios>
 #include <memory>
 #include <new>
 #include <stdexcept>
@@ -64,7 +65,7 @@ void MapObject::regenerate_blockers() {
         case Walkability::BLOCKED: {
             int x_left(int(position.x));
             int y_bottom(int(position.y));
-
+            VLOG(2) << std::fixed << position.y << " " << position.x;
             // If non-integral, the left or top have a higher
             // tile number. If integral, they do not.
             //
@@ -137,6 +138,7 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
 
 void MapObject::set_position(glm::vec2 position) {
     this->position = position; 
+    VLOG(2) << std::fixed << position.x << " " << position.y;
     regenerate_blockers();
 }
 

@@ -133,8 +133,6 @@ void Sprite::set_position(glm::vec2 position) {
         return;
     }
     status_icon->set_position(pos_to_status(position));
-
-
 }
 
 bool Sprite::remove_from_inventory(int old_object) {
