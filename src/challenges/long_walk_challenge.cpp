@@ -8,6 +8,7 @@
 #include "challenge_data.hpp"
 #include "challenge_helper.hpp"
 #include "engine.hpp"
+#include "entitythread.hpp"
 #include "filters.hpp"
 #include "input_manager.hpp"
 #include "keyboard_input_event.hpp"
@@ -69,8 +70,11 @@ LongWalkChallenge::LongWalkChallenge(ChallengeData *challenge_data): Challenge(c
     // Set up notifications about walls
     ChallengeHelper::make_interactions("blocked_alert/path/medium",
                                        std::back_inserter(blocked_alert_path_medium_callbacks),
-                                       [this] (int) {
+                                       [this] (int id) {
         Engine::print_dialogue("Tom", "Get the treasure and press \"e\" to view it!\n");
+
+        auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
+        sprite->daemon->value->halt_soft(EntityThread::Signal::KILL);
         finish();
         ChallengeHelper::unregister_all(&blocked_alert_path_medium_callbacks);
         return false;
@@ -161,6 +165,7 @@ void LongWalkChallenge::start() {
 }
 
 void LongWalkChallenge::finish() {
+
     ChallengeHelper::set_completed_level(1);
     event_finish.trigger(0);
 }

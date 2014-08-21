@@ -58,5 +58,7 @@
   <object name="crate/1" gid="66" x="128" y="192"/>
   <object name="bridge/1" gid="64" x="256" y="576"/>
   <object name="vines/1" gid="80" x="768" y="640"/>
+  <object name="dropoff/1" gid="331" x="192" y="256"/>
+  <object name="pickup/1" gid="331" x="640" y="1728"/>
  </objectgroup>
 </map>

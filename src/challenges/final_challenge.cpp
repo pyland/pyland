@@ -16,6 +16,10 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
     ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED);
 
+    int test_orange_id = ChallengeHelper::make_object(this, "orange/1", Walkability::WALKABLE);
+    ChallengeHelper::create_pickupable(ChallengeHelper::get_location_object("orange/1"), ChallengeHelper::get_location_interaction("pickup/1"), 
+                      ChallengeHelper::get_location_interaction("crate/1"), ChallengeHelper::get_location_interaction("dropoff/1"), test_orange_id);
+
     // TODO: fix then when joshua pushs fixes
     // creating the crocodile
     // LOG(INFO) << "creating croc";
