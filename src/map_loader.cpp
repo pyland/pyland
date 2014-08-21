@@ -120,6 +120,10 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
             auto tile_name(tile->first);
 
             auto fullname(object_group->GetName() + "/" + object->GetName());
+
+            LOG(INFO) << "Adding object to mapping " << fullname
+                      << " with name " << tile_name;
+
             ObjectProperties properties({
                 glm::ivec2(
                                  object->GetX() / Engine::get_tile_size(),

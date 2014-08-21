@@ -59,7 +59,7 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                 name_properties.first,
                 walkability,
                 AnimationFrames(name_properties.second.tileset.substr(
-                    0, name_properties.second.tileset.length() - start_frame.length()
+                    0, name_properties.second.tileset.length() - start_frame.length() - 1
                 )),
                 start_frame
             );

@@ -11,7 +11,9 @@
 #include "texture_atlas.hpp"
 
 AnimationFrames::AnimationFrames(std::string animation_frames_root):
-    animation_frames_root(animation_frames_root) {}
+    animation_frames_root(animation_frames_root) {
+        VLOG(1) << "Frames rooted at " << animation_frames_root;
+}
 
 std::pair<int, std::string> AnimationFrames::get_frame(std::string section, float completion) {
     std::map<std::string, std::string> names_to_tilesets(TextureAtlas::names_to_tilesets());

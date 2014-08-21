@@ -25,9 +25,9 @@ int ChallengeHelper::make_object(Challenge *challenge,
                                  Walkability walkability,
                                  std::string start_frame) {
 
-    LOG(INFO) << "creating object at " << marker_name;
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Objects/" + marker_name));
+    LOG(INFO) << "creating object at " << marker_name << " (" << properties.tileset << ")";
 
     return challenge->make_map_object(
         properties.location,
@@ -47,6 +47,8 @@ int ChallengeHelper::make_sprite(Challenge *challenge,
     auto *map = Engine::get_map_viewer()->get_map();
     LOG(INFO) << marker_name;
     auto properties(map->locations.at("Objects/" + marker_name));
+
+    LOG(INFO) << properties.tileset;
 
     auto new_sprite(std::make_shared<Sprite>(
         properties.location,

@@ -70,7 +70,7 @@ int Challenge::make_map_object(glm::vec2 position,
                                AnimationFrames frames,
                                std::string start_frame) {
 
-    auto new_object(std::make_shared<MapObject>(position, name, walkability, frames, start_frame));
+    auto new_object(std::shared_ptr<MapObject>(new MapObject(position, name, walkability, frames, start_frame)));
     ObjectManager::get_instance().add_object(new_object);
 
     auto new_object_id(new_object->get_id());
