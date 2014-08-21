@@ -33,7 +33,8 @@ ResourceCache<Res>::~ResourceCache() {
 
 template<typename Res>
 std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource_name) {
-    VLOG(1) << "Getting resource \"" << resource_name << "\" from cache " << this;
+    VLOG(3) << "Getting resource \"" << resource_name << "\" from cache " << this;
+
     if (resources.count(resource_name) == 0) {
         // First-time load.
         try {
