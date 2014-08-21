@@ -2,6 +2,7 @@
 #include <glog/logging.h>
 #include <map>
 #include <memory>
+#include <iostream>
 #include <ostream>
 #include <string>
 #include <Tmx.h>

@@ -76,7 +76,8 @@ public:
     virtual ~MapObject();
 
     glm::vec2 get_position() { return position; }
-    virtual void set_position(glm::vec2 position) { this->position = position; }
+
+    virtual void set_position(glm::vec2 position);
 
     ///
     /// manage collisions for spirtes as they move

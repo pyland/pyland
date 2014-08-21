@@ -80,11 +80,23 @@ namespace ChallengeHelper {
                            int object_id);
 
     ///
-    /// saves the fact that this challenge has been completed
+    /// saves the fact that this challenge has been completed, call at end of challenge
     ///
     void set_completed_level(int challenge_id);
 
+    ///
+    /// returns the next challenge that is to be completed
     int get_current_level ();
+
+    ///
+    /// returns the tile location of a named object in the interaction layer
+    ///
+    glm::vec2 get_location_interaction (std::string name);
+
+    ///
+    /// returns the tile location of a named object in the object layer
+    ///
+    glm::vec2 get_location_object (std::string name);
 }
 
 #include "challenge_helper.hxx"

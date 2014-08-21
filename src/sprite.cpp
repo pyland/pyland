@@ -67,15 +67,6 @@ Sprite::Sprite(glm::ivec2 position,
         LOG(INFO) << "created focus icon with id: " << status_icon_id;
         Engine::get_map_viewer()->get_map()->add_map_object(status_icon_id);
 
-        // TODO: Starting positions should be integral as of currently. Check or fix.
-        //
-        // Make a map object blocked
-        // In future this might not be needed
-        blocked_tiles.insert(std::make_pair(
-            "stood on",
-            Engine::get_map_viewer()->get_map()->block_tile(position)
-        ));
-
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
 
@@ -114,6 +105,7 @@ void Sprite::add_to_inventory(int new_object_id) {
     }
 
     new_object->set_position(position);
+    new_object->set_render_above_sprites(true);
     inventory.push_back(new_object_id);
 }
 
@@ -143,6 +135,15 @@ bool Sprite::remove_from_inventory(int old_object) {
     // there must be a better way to do this
     auto it = std::find(std::begin(inventory), std::end(inventory), old_object);
     if (it != std::end(inventory)) {
+
+        LOG(INFO) << "item is in inventory, tring to remove";
+        auto object = ObjectManager::get_instance().get_object<MapObject>(*it);
+        if (!object) {
+            LOG(ERROR) << "Object manager no longer has focus_icon";
+        } else {
+            object->set_render_above_sprites(false);
+        }
+
         inventory.erase(it);
         LOG(INFO) << "removing item to sprites inventory";
         return true;

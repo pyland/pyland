@@ -93,13 +93,10 @@ def start(entity, RESTART, STOP, KILL, waiting):
 
             execution_scope = create_execution_scope(entity)
 
-            entity.__set_game_speed(64);
-            try:
-                entity.update_status("running")
-                exec(script, execution_scope)
-                entity.update_status("finished")
-            finally:
-                entity.__set_game_speed(1);
+            entity.update_status("running")
+            exec(script, execution_scope)
+            entity.update_status("finished")
+
 
         except RESTART:
             entity.print_debug("restarting")

@@ -110,8 +110,14 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             if (!object) { return false; }
 
-            glm::vec2 tweened_position(location * (1-completion) + target * completion);
+            // Long rambly justification about how Ax + B(1-x) can be outside
+            // the range [A, B] (consider when A=B).
+            //
+            // The given formula cannot have this problem when A and B are exactly 
+            glm::vec2 tweened_position(location + completion * (target-location));
+
             object->set_position(tweened_position);
+
             object->set_tile(object->frames.get_frame(direction + "/walking", completion));
 
             if (completion == 1.0) {
@@ -234,6 +240,12 @@ bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     });
 }
 
+bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
+    return std::all_of(std::begin(object_ids), std::end(object_ids), [&] (int object_id) {
+        return is_object_at(location,object_id);
+    });
+}
+
 std::string Engine::editor = DEFAULT_PY_EDITOR;
 
 void Engine::print_dialogue(std::string name, std::string text) {
@@ -275,7 +287,11 @@ void Engine::text_updater() {
 
 void Engine::update_status(int id, std::string status) {
     auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-    sprite->set_sprite_status(status);
+    if (!sprite) {
+        LOG(INFO) << "not a sprite";
+    } else {
+        sprite->set_sprite_status(status);
+    }
 }
 
 TextFont Engine::get_game_font() {

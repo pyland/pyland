@@ -1,6 +1,7 @@
 #include <exception>
 #include <fstream>
 #include <glog/logging.h>
+#include <ios>
 #include <memory>
 #include <new>
 #include <stdexcept>
@@ -68,7 +69,7 @@ void MapObject::regenerate_blockers() {
         case Walkability::BLOCKED: {
             int x_left(int(position.x));
             int y_bottom(int(position.y));
-
+            VLOG(2) << std::fixed << position.y << " " << position.x;
             // If non-integral, the left or top have a higher
             // tile number. If integral, they do not.
             //
@@ -139,6 +140,12 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
     renderable_component.set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
 }
 
+void MapObject::set_position(glm::vec2 position) {
+    this->position = position; 
+    VLOG(2) << std::fixed << position.x << " " << position.y;
+    regenerate_blockers();
+}
+
 void MapObject::set_tile(std::pair<int, std::string> tile) {
     load_textures(tile);
     generate_tex_data(tile);
@@ -186,18 +193,12 @@ void MapObject::generate_vertex_data() {
     renderable_component.set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
 }
 
-void MapObject::set_state_on_moving_start(glm::ivec2 target) {
+void MapObject::set_state_on_moving_start(glm::ivec2) {
     moving = true;
-    // adding blocker to new tile
-    blocked_tiles.insert(std::make_pair("walking to", Engine::get_map_viewer()->get_map()->block_tile(target)));
 }
 
 void MapObject::set_state_on_moving_finish() {
     moving = false;
-    // removing old blocker and changing key for new one
-    blocked_tiles.erase("stood on");
-    blocked_tiles.insert(std::make_pair("stood on", blocked_tiles.at("walking to")));
-    blocked_tiles.erase("walking to");
 }
 
 // TODO: rewrite

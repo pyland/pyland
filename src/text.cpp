@@ -97,18 +97,33 @@ Text::Text(GameWindow* window, TextFont font, bool smooth):
     smooth(smooth),
     glow_radius(0),
     width(0),
+    width_ratio(0),
     height(0),
+    height_ratio(0),
     x(0),
+    x_ratio(0),
     y(0),
+    y_ratio(0),
+    ratio_size(false),
+    ratio_position(true),
     texture(0),
     vbo(0),
     font(font),
     window(window),
-    resize_callback([this] (GameWindow*) {this->dirty_vbo = true;}) {
-        rgba[0] = rgba[1] = rgba[2] = rgba[3] = 255;
-        glow_rgba[0] = glow_rgba[1] = glow_rgba[2] = 0;
-        glow_rgba[3] = 255;
-        window->register_resize_handler(resize_callback);
+    resize_callback([this] (GameWindow*) {
+            dirty_vbo = true;
+            if (ratio_position) {
+                move_ratio(x_ratio, y_ratio);
+            }
+            if (ratio_size) {
+                resize_ratio(width_ratio, height_ratio);
+            }
+        })
+{
+    rgba[0] = rgba[1] = rgba[2] = rgba[3] = 255;
+    glow_rgba[0] = glow_rgba[1] = glow_rgba[2] = 0;
+    glow_rgba[3] = 255;
+    window->register_resize_handler(resize_callback);
 }
 
 Text::~Text() {
@@ -896,6 +911,8 @@ void Text::resize(int w, int h) {
         throw Text::RenderException(e.str());
     }
     
+    ratio_size = false;
+    
     if (width != w || height != h) {
         width = w;
         height = h;
@@ -910,7 +927,11 @@ void Text::resize_ratio(float w, float h) {
         e << "Invalid dimensions to resize ratio (" << w << ", " << h << ")";
         throw Text::RenderException(e.str());
     }
-    
+
+    ratio_size = true;
+    width_ratio  = w;
+    height_ratio = h;
+
     int iw, ih;
     std::pair<int,int> window_size = window->get_size();
     iw = (int)(w * (float)window_size.first);
@@ -925,6 +946,8 @@ void Text::resize_ratio(float w, float h) {
 
 
 void Text::move(int x, int y) {
+    ratio_position = false;
+
     if (this->x != x || this->y != y) {
         dirty_vbo = true;
     }
@@ -933,6 +956,10 @@ void Text::move(int x, int y) {
 }
 
 void Text::move_ratio(float x, float y) {
+    ratio_position = true;
+    x_ratio = x;
+    y_ratio = y;
+
     int ix, iy;
     std::pair<int,int> window_size = window->get_size();
     ix = (int)(x * (float)window_size.first);
