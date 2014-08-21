@@ -33,14 +33,13 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         orange_ids.push_back(orange_id);
     }
 
-    ChallengeHelper::make_interaction(dropoff_location, [dropoff_location, orange_ids] (int) {
-        if (Engine::is_objects_at(dropoff_location, object_ids)) {
-            Engine::print_dialogue ("Well Done, all the oranges are in the crate");
+    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, orange_ids] (int) {
+        if (Engine::is_objects_at(dropoff_location, orange_ids)) {
+            Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
         } else {
-            Engine::print_dialogue ("Keep going");
+            Engine::print_dialogue ("Game","Keep going");
         }
         return true;
-        }
     });
 
     // TODO: fix then when joshua pushs fixes
