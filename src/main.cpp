@@ -284,8 +284,6 @@ int main(int argc, const char *argv[]) {
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
 
-
-    
     //Run the map
     bool run_game = true;
 
@@ -301,9 +299,8 @@ int main(int argc, const char *argv[]) {
     ));
 
     MouseCursor cursor(&window);
-    
     //Run the challenge - returns after challenge completes
-    
+
     while(!window.check_close() && run_game) {
         challenge_data->run_challenge = true;
         Challenge* challenge = pick_challenge(challenge_data);
@@ -365,8 +362,8 @@ int main(int argc, const char *argv[]) {
     return 0;
 }
 Challenge* pick_challenge(ChallengeData* challenge_data) {
-    int next_challenge = challenge_data->next_challenge;
-    Challenge* challenge = nullptr;
+    int next_challenge(challenge_data->next_challenge);
+    Challenge *challenge(nullptr);
     std::string map_name = "";
     switch(next_challenge) {
     case 0:
@@ -375,11 +372,6 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
         challenge = new StartScreen(challenge_data);
         break;
     case 1:
-        map_name = "../maps/map0.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new LongWalkChallenge(challenge_data);
-        break;
-    case 2:
         map_name = "../maps/final_challenge.tmx";
         challenge_data->map_name = map_name;
         challenge = new FinalChallenge(challenge_data);

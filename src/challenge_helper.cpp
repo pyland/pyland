@@ -33,36 +33,42 @@ glm::vec2 ChallengeHelper::get_location_object(std::string name) {
 }
 
 int ChallengeHelper::make_object(Challenge *challenge,
-                                 std::string name,
-                                 Walkability walkability) {
+                                 std::string marker_name,
+                                 Walkability walkability,
+                                 std::string start_frame) {
 
-    LOG(INFO) << "creating object at " << name;
     auto *map = Engine::get_map_viewer()->get_map();
-    auto properties(map->locations.at("Objects/" + name));
-    std::cout << "HERE" << std::endl;
-    std::cout << name << std::endl;
-    std::cout << properties.tile.first << " " << properties.tile.second << std::endl;
 
+    auto properties(map->locations.at("Objects/" + marker_name));
+    LOG(INFO) << "creating object at " << marker_name << " (" << properties.tileset << ")";
 
     return challenge->make_map_object(
         properties.location,
-        name,
+        marker_name,
         walkability,
-        properties.tile
+        AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
+        start_frame
     );
 }
 
-int ChallengeHelper::make_sprite(Challenge *challenge, std::string marker_name, std::string sprite_name, Walkability walkability) {
+int ChallengeHelper::make_sprite(Challenge *challenge,
+                                 std::string marker_name,
+                                 std::string sprite_name,
+                                 Walkability walkability,
+                                 std::string start_frame) {
 
     auto *map = Engine::get_map_viewer()->get_map();
     LOG(INFO) << marker_name;
     auto properties(map->locations.at("Objects/" + marker_name));
 
+    LOG(INFO) << properties.tileset;
+
     auto new_sprite(std::make_shared<Sprite>(
         properties.location,
         sprite_name,
         walkability,
-        properties.tile
+        AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
+        start_frame
     ));
     ObjectManager::get_instance().add_object(new_sprite);
 
@@ -84,11 +90,6 @@ int ChallengeHelper::make_sprite(Challenge *challenge, std::string marker_name, 
     new_sprite->daemon = std::make_unique<LockableEntityThread>(challenge->challenge_data->interpreter->register_entity(*a_thing));
     LOG(INFO) << "Done!";
 
-    // std::string bash_command =
-    //     std::string("cp python_embed/scripts/long_walk_challenge.py python_embed/scripts/John_")
-    //     + std::to_string(sprite_id) + std::string(".py");
-    //     system(bash_command.c_str());
-
     return sprite_id;
 }
 
@@ -109,8 +110,8 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
                                         glm::ivec2 dropoff_tile,
                                         int object_id) {
 
-    auto *map = Engine::get_map_viewer()->get_map();
-    std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+    auto *map(Engine::get_map_viewer()->get_map());
+    auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
     object->set_position(start_tile);
 
     // Pick-up marker
@@ -141,7 +142,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
             auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
 
             if (sprite->remove_from_inventory(object_id) ) {
-                std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+                auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
 
                 object->set_position(finish_tile);
                 //                Engine::change_tile(dropoff_tile, 4, "blank");
@@ -161,7 +162,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
                                         int object_id) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-    std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+    auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
     object->set_position(object_tile);
 
     // Pick-up marker
@@ -176,7 +177,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
                 sprite->add_to_inventory(object_id);
             }
             else if (sprite->remove_from_inventory(object_id)) {
-                std::shared_ptr<MapObject> object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+                auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
 
                 object->set_position(object_tile);
             }

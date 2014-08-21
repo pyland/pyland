@@ -174,7 +174,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
 
     int super_i = 0;
     for (auto atlas : atlases) {
-        LOG(INFO) << "Merging: " << this << " << " << atlas;
+        VLOG(1) << "Merging: " << this << " << " << atlas;
         // Cached dereference.
         Image* src = &atlas->image;
         for (int i = 0, end = atlas->get_texture_count(); i < end; ++i, ++super_i) {
@@ -184,7 +184,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
             std::pair<int,int> units(atlas->index_to_units(i));
             int src_x_offset = units.first  * unit_w;
             int src_y_offset = units.second * unit_h;
-            LOG(INFO) << "Sub-super mapping: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> " << super_i << ": (" << dst_x_offset << ", " << dst_y_offset << ")";
+            VLOG(2) << "Sub-super mapping: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> " << super_i << ": (" << dst_x_offset << ", " << dst_y_offset << ")";
             for (int y = 0; y < unit_h; ++y) {
                 for (int x = 0; x < unit_w; ++x) {
                     gl_image.flipped_pixels[dst_y_offset + y][dst_x_offset + x] = src->flipped_pixels[src_y_offset + y][src_x_offset + x];
@@ -256,7 +256,7 @@ void TextureAtlas::init_texture() {
             int src_x_offset = (i % old_unit_columns) * unit_w;
             int src_y_offset = (i / old_unit_columns) * unit_h;
 
-            LOG(INFO) << "Moving: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> (" << dst_x_offset << ", " << dst_y_offset << ")";
+            VLOG(2) << "Moving: " << i << ": (" << src_x_offset << ", " << src_y_offset << ") -> (" << dst_x_offset << ", " << dst_y_offset << ")";
             for (int y = 0; y < unit_h; ++y) {
                 for (int x = 0; x < unit_w; ++x) {
                     gl_image.flipped_pixels[dst_y_offset + y][dst_x_offset + x] = image.flipped_pixels[src_y_offset + y][src_x_offset + x];
@@ -418,16 +418,16 @@ void TextureAtlas::load_names(const std::string filename) {
 }
 
 int TextureAtlas::get_name_index(const std::string name) {
-    if (names_to_indexes.count(name+" ") == 0) {
-        LOG(INFO) << "Name to index: " << name << ": " << names_to_indexes.find(name)->second;
-        return names_to_indexes.find(name)->second;
-    } else {
-        return -1;
-    }
+    VLOG(2) << "Name to index: " << name << ": " << names_to_indexes.at(name);
+    return names_to_indexes.at(name);
 }
 
 std::pair<int, std::string> TextureAtlas::from_name(const std::string tile_name) {
-    auto texture_name = TextureAtlas::names_to_tilesets().at(tile_name);
-    auto index = TextureAtlas::get_shared(texture_name)->get_name_index(tile_name);
-    return std::make_pair(index, texture_name);
+    auto tileset_name(TextureAtlas::names_to_tilesets().at(tile_name));
+    auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name));
+    return std::make_pair(index, tileset_name);
+}
+
+std::map<std::string, int> const &TextureAtlas::get_names_to_indexes() {
+    return names_to_indexes;
 }
