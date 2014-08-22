@@ -58,7 +58,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
             glm::ivec2 fruit_location = ChallengeHelper::get_location_object(name);
 
             int fruit_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, fruit_type);
-            ChallengeHelper::create_pickupable(fruit_location, fruit_location, crate_location, dropoff_location , fruit_id, false);
+            ChallengeHelper::create_pickupable(fruit_location, fruit_location, crate_location, dropoff_location , fruit_id, true);
             ChallengeHelper::create_pickupable(hangover_location,hangover_pickup,hangover_location,hangover_dropoff,fruit_id, true);
             fruit_ids.push_back(fruit_id);
         }

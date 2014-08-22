@@ -98,7 +98,7 @@ public:
     ///
     /// add map_object to sprites inventory
     ///
-    void add_to_inventory(int new_object);
+    bool add_to_inventory(int new_object);
 
     std::vector<int> get_inventory() { return inventory; }
 
