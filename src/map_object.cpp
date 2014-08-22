@@ -51,7 +51,6 @@ MapObject::MapObject(glm::vec2 position,
 
         LOG(INFO) << "MapObject initialized";
 }
-
 MapObject::~MapObject() {
     LOG(INFO) << "MapObject destructed";
 }

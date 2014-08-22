@@ -14,7 +14,6 @@ AnimationFrames::AnimationFrames(std::string animation_frames_root):
     animation_frames_root(animation_frames_root) {
         VLOG(1) << "Frames rooted at " << animation_frames_root;
 }
-
 std::pair<int, std::string> AnimationFrames::get_frame(std::string section, float completion) {
     std::map<std::string, std::string> names_to_tilesets(TextureAtlas::names_to_tilesets());
     auto begin(maptools::start_of(names_to_tilesets, animation_frames_root +"/"+ section));
@@ -42,7 +41,6 @@ std::pair<int, std::string> AnimationFrames::get_frame(std::string section) {
 
     std::string tile_name(animation_frames_root + "/" + section);
     std::string tileset_name(names_to_tilesets.at(tile_name));
-
     auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name));
     return std::make_pair(index, tileset_name);
 }

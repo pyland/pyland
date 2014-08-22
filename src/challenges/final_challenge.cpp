@@ -39,14 +39,14 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     );
 
     // ,"banana","pineapple"
-    std::vector<std::string> fruit_types = {"orange"};
+    std::vector<std::string> fruit_types = {"orange","pineapple"};
     for (std::string fruit_type : fruit_types) {
 
         // set of fruit collection part
         glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/"+fruit_type);
         glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/"+fruit_type);
 
-        int num_of_fruit = 5;
+        int num_of_fruit = 7;
         std::vector<int> fruit_ids;
 
         // adding fruits as pickupable objects
@@ -81,33 +81,36 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     });
 
     // creating croc
-    LOG(INFO) << "creating croc";
-    int croc_id = ChallengeHelper::make_object(
-        this,
-        "sprite/crocodile/1",
-        Walkability::BLOCKED,
-        "south/still/1"
-    );
+    for (int i = 1; i<=3; i++) {
+        std::string croc_num = std::to_string(i);
 
-    auto croc = ObjectManager::get_instance().get_object<Object>(croc_id);
-    if (!croc) { return; }
 
-    // setting up python for croc
+        LOG(INFO) << "creating croc";
+        int croc_id = ChallengeHelper::make_object(
+            this,
+            "sprite/crocodile/"+croc_num,
+            Walkability::BLOCKED,
+            "north/still/1"
+        );
 
-    // Register user controled sprite
-    // Yes, this is a memory leak. Deal with it.
-    auto properties(map->locations.at("Objects/sprite/crocodile/1"));
-    auto *a_thing(new Entity(properties.location, "final_challenge_croc", croc_id));
+        auto croc = ObjectManager::get_instance().get_object<Object>(croc_id);
+        if (!croc) { return; }
 
-    LOG(INFO) << "Registering sprite";
-    croc->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
-    LOG(INFO) << "Done!";
+        // Register user controled sprite
+        // Yes, this is a memory leak. Deal with it.
+        auto properties(map->locations.at("Objects/sprite/crocodile/"+croc_num));
+        auto *a_thing(new Entity(properties.location, "final_challenge_croc_"+croc_num, croc_id));
 
-    croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-
+        LOG(INFO) << "Registering sprite";
+        croc->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
+        LOG(INFO) << "Done!";
+        croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
+    }
+    
     //Adding cuttable object
-    auto name = "vines/1";
-    ChallengeHelper::make_object(this, name, Walkability::BLOCKED, name, true);
+    //    auto name = "vines/cut/1";
+    //    ChallengeHelper::make_object(this, name, Walkability::BLOCKED, name, true);
+
 }
 
 void FinalChallenge::start() {

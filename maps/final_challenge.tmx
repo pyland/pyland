@@ -68,8 +68,6 @@
   <object name="orange/2" gid="83" x="512" y="1664"/>
   <object name="sprite/1" gid="195" x="128" y="320"/>
   <object name="sprite/monkey" gid="175" x="1344" y="384"/>
-  <object name="sprite/crocodile/2" gid="107" x="0" y="576"/>
-  <object name="sprite/crocodile/3" gid="111" x="768" y="1088"/>
   <object name="orange/6" gid="83" x="128" y="1856"/>
   <object name="orange/7" gid="83" x="192" y="1728"/>
   <object name="pineapple/5" gid="84" x="2112" y="1088"/>
@@ -84,10 +82,12 @@
   <object name="banana/5" gid="82" x="1792" y="2560"/>
   <object name="banana/2" gid="82" x="2496" y="2624"/>
   <object name="pineapple/7" gid="84" x="2560" y="576"/>
+  <object name="sprite/crocodile/2" gid="110" x="0" y="576"/>
+  <object name="sprite/crocodile/3" gid="110" x="768" y="1088"/>
+  <object name="vines/cut/1" gid="83" x="768" y="640"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
   <object name="bridge/1" gid="64" x="256" y="576"/>
-  <object name="vines/1" gid="80" x="768" y="640"/>
   <object name="exit" gid="239" x="448" y="192"/>
   <object name="crate/banana" gid="65" x="192" y="192"/>
   <object name="crate/orange" gid="67" x="256" y="192"/>
