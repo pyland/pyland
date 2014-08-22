@@ -65,3 +65,7 @@ Keybindings
 * = and - - zooming in and out
 * e - open editor for current sprite
 * ESC - go back to level selection map
+* 
+##API
+* move
+** param: north, south, east or west
