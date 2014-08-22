@@ -174,6 +174,16 @@ int main(int argc, const char *argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.restart(); }
     ));
 
+    Lifeline editor_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("E")},
+        [&] (KeyboardInputEvent) { 
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
+            if (!active_player) { return; }
+            Engine::open_editor(active_player->get_name());
+        }
+    ));
+
 
     std::chrono::steady_clock::time_point start_time;
 

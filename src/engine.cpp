@@ -208,7 +208,7 @@ void Engine::open_editor(std::string filename) {
     LOG(INFO) << "Opening editor";
 
     //TODO remove this function in the final version
-    std::string command(editor + std::string(" python_embed/scripts/") + filename);
+    std::string command(editor + std::string(" python_embed/scripts/") + filename +  ".py");
 
     // TODO: Make this close safely.
     std::thread([command] () { system(command.c_str()); }).detach();
