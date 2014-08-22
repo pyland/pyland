@@ -2,7 +2,7 @@
 #include <memory>
 #include <thread>
 #include <chrono>
-
+#include <iostream>
 #include "final_challenge.hpp"
 #include "challenge_helper.hpp"
 #include "challenge_data.hpp"
@@ -41,12 +41,13 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/1");
     glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/1");
 
-    int num_of_oranges = 5;
+    int num_of_oranges = 8;
     std::vector<int> orange_ids;
 
     // adding oranges as pickupable objects
     for (int i = 1; i <= num_of_oranges; i++) {
         auto name = "orange/"+std::to_string(i);
+        std::cout << "H " <<  name << std::endl;
         glm::ivec2 orange_location = ChallengeHelper::get_location_object(name);
 
         int orange_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, "orange");
