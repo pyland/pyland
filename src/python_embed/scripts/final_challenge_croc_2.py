@@ -20,6 +20,8 @@ def move_croc(dx, dy):
 
 
 while True:
+    move_croc(10, 0)
+    move_croc(0, 8)
     move_croc(0, -8)
     move_croc(-2,0)
     move_croc(0, -4)
@@ -30,7 +32,5 @@ while True:
     move_croc(3, 0)
     move_croc(0, 4)
     move_croc(-8, 0)
-    move_croc(10, 0)
-    move_croc(0, 8)
 
 
