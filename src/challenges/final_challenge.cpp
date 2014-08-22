@@ -18,6 +18,16 @@
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
 
+    //creating monkey helper
+    ChallengeHelper::make_sprite(
+        this,
+        "sprite/monkey",
+        "Milo",
+        Walkability::BLOCKED,
+        "south/still/1"
+    );
+
+
     //create the main game character
     ChallengeHelper::make_sprite(
         this,
