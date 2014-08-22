@@ -36,16 +36,15 @@ void ChallengeHelper::unregister_all(Container *callbacks) {
         callbacks->clear();
     });
 }
-
 template <class OutputIt>
 void ChallengeHelper::make_objects(Challenge *challenge,
-                                   std::string name,
+                                   std::string marker_name,
                                    Walkability walkability,
                                    OutputIt output,
                                    std::string start_frame,
+                                   std::string name,
                                    bool cuttable,
                                    bool findable) {
-
     auto *map(Engine::get_map_viewer()->get_map());
     auto begin(maptools::start_of(map->locations, "Objects/" + name));
     auto end  (maptools::end_of  (map->locations, "Objects/" + name));
@@ -69,6 +68,17 @@ void ChallengeHelper::make_objects(Challenge *challenge,
             );
         }
     );
+
+}
+template <class OutputIt>
+void ChallengeHelper::make_objects(Challenge *challenge,
+                                   std::string marker_name,
+                                   Walkability walkability,
+                                   OutputIt output,
+                                   std::string start_frame,
+                                   bool cuttable,
+                                   bool findable) {
+    make_object(challenge, marker_name, walkability, output, start_frame, marker_name, cuttable, findable);
 }
 
 template <class OutputIt>

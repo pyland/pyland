@@ -302,6 +302,7 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
             if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
                 continue;
 
+
             objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
         }
     }

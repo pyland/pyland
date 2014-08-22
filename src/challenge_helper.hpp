@@ -29,6 +29,16 @@ namespace ChallengeHelper {
                     std::string start_frame,
                     bool cuttable=false,
                     bool findable=true);
+    ///
+    /// Create MapObject from named location
+    ///
+    int make_object(Challenge *challenge,
+                    std::string markername,
+                    Walkability walkability,
+                    std::string start_frame,
+                    std::string name,
+                    bool cuttable=false,
+                    bool findable=true);
 
     ///
     /// Create Sprite from named location
@@ -44,9 +54,21 @@ namespace ChallengeHelper {
     ///
     template <class OutputIt>
     void make_objects(Challenge *challenge,
-                      std::string name,
+                      std::string marker_name,
                       Walkability walkability,
                       OutputIt output,
+                      std::string start_frame="",
+                      bool cuttable=false,
+                      bool findable=true);
+    ///
+    /// Create MapObjects from named locations
+    ///
+    template <class OutputIt>
+    void make_objects(Challenge *challenge,
+                      std::string marker_name,
+                      Walkability walkability,
+                      OutputIt output,
+                      std::string name,
                       std::string start_frame="",
                       bool cuttable=false,
                       bool findable=true);
