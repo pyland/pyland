@@ -67,5 +67,7 @@ Keybindings
 * ESC - go back to level selection map
 
 ##API
-* move. Parameter: north, south, east or west
-* cut
+* move(direction). Move the character in the given direction. Parameter direction: north, east, south or west
+* cut(direction). Cuts down vines or logs. Parameter direction: north, east, south or west
+* walkable(direction). Determines if the character can move in that direction. Parameter direction: north, east, south or west
+* look(radius). Find all objects in a given radius from the character. Paramter: radius of area to search for objects in.
