@@ -40,7 +40,7 @@
  </layer>
  <layer name="Interaction" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt0LEJADAMA0HNlyL7j5MNDGnyMf4D9Y8SKdkX+5H9LPtZ9rPsZ9nPsp9lP8t+lv0s+1n2s+xnTe1fDxsr3f+f6gAgn14j
+   eJzt2LEJQCEMAFHns/j7D+EQVrYfFfQSvAfpj1Qhpbyr0QGBfAsTkf0s+1n2s+xn2c+yn5W1f9zgWfsH+1n2s+w/Y/ZHEbV/lv0s+1m7/fVi45/s+39VB9T6YOc=
   </data>
  </layer>
  <layer name="Collisions" width="48" height="32">
@@ -55,6 +55,8 @@
   <object name="sprite/monkey" gid="136" x="960" y="64"/>
  </objectgroup>
  <objectgroup name="Interactions" width="48" height="32">
-  <object name="trigger/objective/start" gid="235" x="2048" y="1088"/>
+  <object name="trigger/objective/gardener" gid="235" x="2048" y="1088"/>
+  <object name="trigger/objective/farmer" gid="235" x="1536" y="1536"/>
+  <object name="trigger/objective/monkey" gid="235" x="960" y="128"/>
  </objectgroup>
 </map>

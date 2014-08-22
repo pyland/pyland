@@ -21,6 +21,7 @@ private:
     std::function<void()> regrow;
 
     void grow_out(int x, int y);
+    std::string monkey_say();
 
 public:
     CuttingChallenge(ChallengeData* _challenge_data);
