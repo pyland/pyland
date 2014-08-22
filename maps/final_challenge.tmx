@@ -36,7 +36,7 @@
  </layer>
  <layer name="Overlay" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   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
+   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
   </data>
  </layer>
  <layer name="Overlay2" width="50" height="50">
@@ -59,7 +59,9 @@
   <object name="pineapple/1" gid="84" x="1920" y="1216"/>
   <object name="bannana/1" gid="82" x="1792" y="2432"/>
   <object name="sprite/crocodile/1" gid="110" x="640" y="64"/>
+  <object name="orange/1" gid="83" x="640" y="1664"/>
   <object name="pineapple/1" gid="84" x="1920" y="1216"/>
+  <object name="banana/1" gid="82" x="1792" y="2432"/>
   <object name="orange/3" gid="83" x="448" y="1728"/>
   <object name="orange/4" gid="83" x="768" y="1600"/>
   <object name="orange/5" gid="83" x="768" y="1728"/>

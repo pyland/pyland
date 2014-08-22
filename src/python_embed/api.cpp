@@ -109,7 +109,6 @@ py::api::object(std::get<2>(object))
 // Not thread safe for efficiency reasons...
 void Entity::py_print_debug(std::string text) {
     LOG(INFO) << text;
-    std::cout << text << std::endl;
 }
 
 void Entity::py_print_dialogue(std::string text) {

@@ -33,20 +33,15 @@ def create_execution_scope(entity):
         entity.print_debug(text)
 
     def move(position):
-        entity.print_debug("Python: move({})".format(position))
-
         x, y = position
         x = cast("int", x)
         y = cast("int", y)
         return entity.move(x, y)
 
     def monologue(*args):
-        entity.print_debug("Python: monologue({})".format(args))
         entity.monologue("\n".join(args))
 
     def walkable(position):
-        entity.print_debug("Python: walkable({})".format(position))
-
         x, y = position
         x = cast("int", x)
         y = cast("int", y)
@@ -55,7 +50,6 @@ def create_execution_scope(entity):
 
     def cut(position):
         entity.print_debug("Python: cut({})".format(position))
-
         x, y = position
         x = cast("int", x)
         y = cast("int", y)

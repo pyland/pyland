@@ -47,7 +47,6 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     // adding oranges as pickupable objects
     for (int i = 1; i <= num_of_oranges; i++) {
         auto name = "orange/"+std::to_string(i);
-        std::cout << "H " <<  name << std::endl;
         glm::ivec2 orange_location = ChallengeHelper::get_location_object(name);
 
         int orange_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, "orange");
@@ -78,7 +77,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     LOG(INFO) << "creating croc";
     int croc_id = ChallengeHelper::make_object(
         this,
-        "sprite/crocodile",
+        "sprite/crocodile/1",
         Walkability::BLOCKED,
         "south/still/1"
     );
@@ -90,7 +89,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
 
     // Register user controled sprite
     // Yes, this is a memory leak. Deal with it.
-    auto properties(map->locations.at("Objects/sprite/crocodile"));
+    auto properties(map->locations.at("Objects/sprite/crocodile/1"));
     auto *a_thing(new Entity(properties.location, "final_challenge_croc", croc_id));
 
     LOG(INFO) << "Registering sprite";
