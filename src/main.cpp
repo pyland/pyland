@@ -372,14 +372,14 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
         challenge = new StartScreen(challenge_data);
         break;
     case 1:
-        map_name = "../maps/cutting_challenge.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new CuttingChallenge(challenge_data);
-        break;
-    case 2:
         map_name = "../maps/final_challenge.tmx";
         challenge_data->map_name = map_name;
         challenge = new FinalChallenge(challenge_data);
+        break;
+    case 2:
+        map_name = "../maps/cutting_challenge.tmx";
+        challenge_data->map_name = map_name;
+        challenge = new CuttingChallenge(challenge_data);
         break;
     default:
         break;

@@ -143,7 +143,8 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
     unit_h(Engine::get_tile_size()),
     sub_atlases(atlases.size()),
     super_atlas(),
-    names_to_indexes()
+    names_to_indexes(),
+    indexes_to_names(unit_columns * unit_rows)
 {
     int texture_count = 0;
     // Assume all tiles are the same size. They should be...
@@ -208,7 +209,8 @@ TextureAtlas::TextureAtlas(const std::string image_path):
     textures(unit_columns * unit_rows),
     sub_atlases(),
     super_atlas(),
-    names_to_indexes()
+    names_to_indexes(),
+    indexes_to_names(unit_columns * unit_rows)
 {
     init_texture();
 }
@@ -415,6 +417,21 @@ void TextureAtlas::load_names(const std::string filename) {
     }
 
     fml::from_stream(file, names_to_indexes);
+
+    for (const std::pair<std::string,int> &mapping : names_to_indexes) {
+        indexes_to_names[mapping.second] = mapping.first;
+    }
+}
+
+std::string TextureAtlas::get_index_name(int index) {
+    if (index >= 0 && index < get_texture_count()) {
+        VLOG(2) << "Atlas " << this << " index to name: " << index << ": " << indexes_to_names[index];
+        return indexes_to_names[index];
+    }
+    else {
+        VLOG(2) << "Atlas " << this << " index out of bounds: " << index << " / " << get_texture_count();
+        throw std::runtime_error("Out of bounds index when getting name from index.");
+    }
 }
 
 int TextureAtlas::get_name_index(const std::string name) {
