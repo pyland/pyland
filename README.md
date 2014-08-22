@@ -31,7 +31,7 @@ cd zygote/src
 For compiling on the Raspberry Pi, use:
 ```bash
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
-COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+COMPILERP=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
 
 #### Compiling on Desktop - Unix
@@ -65,3 +65,9 @@ Keybindings
 * = and - - zooming in and out
 * e - open editor for current sprite
 * ESC - go back to level selection map
+
+##API
+* move(direction). Move the character in the given direction. Parameter direction: north, east, south or west
+* cut(direction). Cuts down vines or logs. Parameter direction: north, east, south or west
+* walkable(direction). Determines if the character can move in that direction. Parameter direction: north, east, south or west
+* look(radius). Find all objects in a given radius from the character. Paramter: radius of area to search for objects in.
