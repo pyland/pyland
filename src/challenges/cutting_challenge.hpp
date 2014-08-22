@@ -17,6 +17,10 @@ private:
     int vine_count;
     std::vector<glm::ivec2> vine_spots;
     std::uniform_int_distribution<uint32_t> uniform_spot_gen;
+    std::uniform_int_distribution<uint32_t> uniform_direction_gen;
+    std::function<void()> regrow;
+
+    void grow_out(int x, int y);
 
 public:
     CuttingChallenge(ChallengeData* _challenge_data);
