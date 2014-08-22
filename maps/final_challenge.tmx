@@ -72,7 +72,6 @@
   <object name="sprite/crocodile/3" gid="111" x="768" y="1088"/>
   <object name="orange/6" gid="83" x="128" y="1856"/>
   <object name="orange/7" gid="83" x="192" y="1728"/>
-  <object name="orange/8" gid="83" x="256" y="1792"/>
   <object name="pineapple/5" gid="84" x="2112" y="1088"/>
   <object name="pineapple/3" gid="84" x="1920" y="960"/>
   <object name="pineapple/6" gid="84" x="2112" y="896"/>
@@ -85,8 +84,6 @@
   <object name="banana/5" gid="82" x="1792" y="2560"/>
   <object name="banana/2" gid="82" x="2496" y="2624"/>
   <object name="pineapple/7" gid="84" x="2560" y="576"/>
-  <object name="pineapple/9" gid="84" x="2688" y="256"/>
-  <object name="pineapple/8" gid="84" x="2688" y="768"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
   <object name="bridge/1" gid="64" x="256" y="576"/>

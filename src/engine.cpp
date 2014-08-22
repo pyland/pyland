@@ -320,11 +320,6 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
             objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
         }
     }
-    std::cout <<" T " << std::endl;
-    for(auto object : objects) {
-        std::cout << "OUT " << std::get<0>(object) << std::endl;
-    }
-    
     return objects;
 }
 
