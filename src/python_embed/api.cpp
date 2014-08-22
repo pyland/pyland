@@ -80,7 +80,7 @@ bool Entity::cut(int x, int y) {
         true
     );
 }
-
+#include <iostream>
 py::list Entity::look(int search_range) {
     ++call_number;
 
@@ -89,15 +89,16 @@ py::list Entity::look(int search_range) {
                 [id, search_range] (GilSafeFuture<py::list> found_objects_return) {
                 py::list objects;
 
-                std::vector<std::tuple<std::string, int, int>> objects_found = Engine::look(id, search_range);
+                std::vector<std::tuple<std::string, int, int>> objects_found(Engine::look(id, search_range));
                 
                 for (auto object : objects_found) {
-                    py::list py_object;
-                    py_object.append(std::get<0>(object));
-                    py_object.append(std::get<1>(object));
-                    py_object.append(std::get<2>(object));
-                
-                    objects.append(py::tuple(py_object));
+                    objects.append(
+                        py::make_tuple(
+                            py::api::object(std::get<0>(object)),
+py::api::object(std::get<1>(object)),
+py::api::object(std::get<2>(object))
+                        )
+                    );
                 }
                 found_objects_return.set(objects);
         }
@@ -108,6 +109,7 @@ py::list Entity::look(int search_range) {
 // Not thread safe for efficiency reasons...
 void Entity::py_print_debug(std::string text) {
     LOG(INFO) << text;
+    std::cout << text << std::endl;
 }
 
 void Entity::py_print_dialogue(std::string text) {

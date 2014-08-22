@@ -29,6 +29,9 @@ def create_execution_scope(entity):
     east  = +1,  0
     west  = -1,  0
 
+    def print_debug(text):
+        entity.print_debug(text)
+
     def move(position):
         entity.print_debug("Python: move({})".format(position))
 
@@ -60,7 +63,7 @@ def create_execution_scope(entity):
         entity.cut(position)
 
     def look(search_range):
-        entity.print_debug("Python: lok({})".format(position))
+        entity.print_debug("Python: look({})".format(search_range))
         return entity.look(search_range)
 
 
@@ -73,7 +76,10 @@ def create_execution_scope(entity):
 
         "move": move,
         "monologue": monologue,
-        "walkable": walkable
+        "walkable": walkable,
+        "cut": cut,
+        "look": look,
+        "print_debug": print_debug
     }
 
 
