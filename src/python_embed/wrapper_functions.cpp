@@ -14,6 +14,8 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("move",             &Entity::move)
         .def("walkable",         &Entity::walkable)
         .def("monologue",        &Entity::monologue)
+        .def("cut",              &Entity::cut)
+        .def("look",             &Entity::look)
         .def("__set_game_speed", &Entity::__set_game_speed)
         .def("print_debug",      &Entity::py_print_debug)
         .def("print_dialogue",   &Entity::py_print_dialogue)

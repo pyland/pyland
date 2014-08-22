@@ -1,5 +1,6 @@
 #include <glog/logging.h>
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <glm/vec2.hpp>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include <memory>
 #include <stdexcept>
 #include <thread>
+#include <tuple>
 #include <vector>
 
 #include "dispatcher.hpp"
@@ -270,6 +272,66 @@ void Engine::text_displayer() {
             sprite->get_object_text()->display();
         }
     }
+}
+
+std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_range) {
+    std::vector<std::tuple<std::string, int, int>> objects;
+
+    Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
+    //Check the object is on the map
+    auto map_objects = map->get_map_objects();
+    auto sprites = map->get_sprites();
+    for(auto object_id : map_objects) {
+        if(object_id != 0) {
+            //Object is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+            std::string name = object->get_name();
+            //TODO, maybe we should give python the floats - what if the object is moving?
+            //in this case, the position is truncated
+            glm::ivec2 object_pos = object->get_position();
+            
+            //Check if in range
+            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+            std::cout << object->get_name() << std::endl;
+            //Circle bounds
+            if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
+                continue;
+
+            objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
+        }
+    }
+
+    for(auto object_id : sprites) {
+        if(object_id != 0) {
+            //Object is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+            std::string name = object->get_name();
+            //TODO, maybe we should give python the floats - what if the object is moving?
+            //in this case, the position is truncated
+            glm::ivec2 object_pos = object->get_position();
+                        std::cout << object->get_name() << std::endl;
+            //Check if in range
+            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+
+            //Circle bounds
+            if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
+                continue;
+
+            objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
+        }
+    }
+    std::cout <<" T " << std::endl;
+    for(auto object : objects) {
+        std::cout << "OUT " << std::get<0>(object) << std::endl;
+    }
+    
+    return objects;
+}
+
+bool Engine::cut(int id, glm::ivec2 location) {
+    std::cout << id << std::endl;
+    std::cout << location.x <<std::endl;
+    return true;
 }
 
 void Engine::text_updater() {

@@ -2,6 +2,9 @@
 #include <glog/logging.h>
 #include <ostream>
 #include <string>
+#include <tuple>
+#include <vector>
+#include <boost/python/list.hpp>
 
 #include "accessor.hpp"
 #include "api.hpp"
@@ -9,6 +12,7 @@
 #include "event_manager.hpp"
 #include "game_time.hpp"
 #include "gil_safe_future.hpp"
+
 
 Entity::Entity(glm::vec2 start, std::string name, int id):
     start(start), id(id), call_number(0) {
@@ -63,10 +67,49 @@ void Entity::monologue() {
     });
 }
 
+bool Entity::cut(int x, int y) {
+    ++call_number;
+
+    auto id = this->id;
+    return GilSafeFuture<bool>::execute(
+        [id, x, y] (GilSafeFuture<bool> cut_succeeded_return) {
+            //we are in an even
+            bool result = Engine::cut(id, glm::ivec2(x, y));
+            cut_succeeded_return.set(result);
+        },
+        true
+    );
+}
+#include <iostream>
+py::list Entity::look(int search_range) {
+    ++call_number;
+
+    auto id = this->id;
+    return GilSafeFuture<py::list>::execute(
+                [id, search_range] (GilSafeFuture<py::list> found_objects_return) {
+                py::list objects;
+
+                std::vector<std::tuple<std::string, int, int>> objects_found(Engine::look(id, search_range));
+                
+                for (auto object : objects_found) {
+                    objects.append(
+                        py::make_tuple(
+                            py::api::object(std::get<0>(object)),
+py::api::object(std::get<1>(object)),
+py::api::object(std::get<2>(object))
+                        )
+                    );
+                }
+                found_objects_return.set(objects);
+        }
+    );
+}
+
 
 // Not thread safe for efficiency reasons...
 void Entity::py_print_debug(std::string text) {
     LOG(INFO) << text;
+    std::cout << text << std::endl;
 }
 
 void Entity::py_print_dialogue(std::string text) {

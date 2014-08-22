@@ -1,3 +1,11 @@
+move(east)
+print_debug("SEE")
+list = look(10);
+for element in list:
+        print_debug("{} {} {}".format(*list))
+
+print_debug("DONE")
+
 """
 This is a wall-following script written in mostly idiomatic Python.
 
@@ -38,3 +46,4 @@ while True:
 
 	# Walk forward
 	move(direction)
+

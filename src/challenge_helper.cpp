@@ -167,7 +167,6 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
 
     // Pick-up marker
     //    Engine::change_tile(pickup_tile, 4, "circle_yellow");
-
     map->event_step_on.register_callback(
         pickup_tile,
         [object_id, pickup_tile, object_tile] (int) {
