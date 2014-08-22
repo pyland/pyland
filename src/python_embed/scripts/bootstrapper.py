@@ -54,8 +54,7 @@ def create_execution_scope(entity):
         x = cast("int", x)
         y = cast("int", y)
 
-        entity.cut(position)
-
+        entity.cut(x, y)
     def look(search_range):
         entity.print_debug("Python: look({})".format(search_range))
         return entity.look(search_range)

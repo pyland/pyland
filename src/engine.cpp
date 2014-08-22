@@ -332,7 +332,11 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
 bool Engine::cut(int id, glm::ivec2 location) {
     std::cout << id << std::endl;
     std::cout << location.x <<std::endl;
+    
     Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
+    std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+    glm::ivec2 sprite_pos = sprite->get_position();
+    location = sprite_pos + location;
 
     //Check bounds
     if(location.x < 0 || location.x >= map->get_width() ||
