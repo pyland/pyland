@@ -39,7 +39,7 @@
    H4sIAAAAAAAAA+1ZyZITMQyVmeGQMBO2r2AZCgIFN4pLkiv/f0t+gF/ALloVtUZrtzvkMK9KlY7blvW02MoMAMAz8LGuchLkOAj9zsfxOYMXyflRcB6e7fR7gTyPdRer/+EPnGOFPKitxVhbyCeuy2DpeCCHm2Fcykk+1rjsEnu9qnKXNVCxgfuv+QfzxYqDBCkeJ2P+2yobIqsqh+SeGtZwjgXF88BaXufoDwlSLF5WuYcxLzp/E7ABQes8iz2ceXg6eH3TOKDPGi/kdMfeecC80ur1RhmXzjELzcaVM0cCjVeTX2zsNZx5S3llQbpjKLR7a8pZRe+EiM7fE/RKsbDyAOv8nsgGZP/ie4/HT8G+qP1ePDRE4sHrKBsPzb9cl8QlUh/e3YF1L9nFdeNZ1uQNjGO6YjZ5otW4dAdl7r8IDyuu/F5H2ZPnHchx8GIh7Xtgz41r8ynnK+m2ejQ8f9FuqV+U+ES4RM5czTZJbyQemn23xvtITLw+N8MD70t65tH7U7KN3gVafKbcg7yOLB7ZXuNEPqW1kdo4gN77UT9u4LEfNZum9EwaMr7v1cPyfTPQegp+5k6BptvClFq0wH/jZnuyOftqex8F8UDrAvVPRbQXx329PuIIj+2zcKkYSHseyffb4Vnqi/j8DKy8z/5W5vDyRfPrnHxZAhF79uyz4dJ54wHt2Rtz+Ltr49BA42Fx+Z/InJNRWPWYOdPoGn4man9ntcDXTYV0XmsowryozzW9hbzndhQY/425sPmUf2HzuRQ2v3eNUZsKjG3S+HGO1jypd597V1g8pL0Keb7GM4rC60muiYN3xvTueecA8yCLqP09cnqJukBoHJbcsze+Qj6PevDz/jel7SGNNw4foX89WDbunPdT8G34zPJo/L9U+dzZHg0Wb4xFQ5YDrnuAMZe5+ZZdT20BiPuVr2toXFpstoNcKk6aLZ5fpXUaUN9S+WfZQrm0eVsmUQ5Un5Z/yG87jEfrHtd5tjwE5yHeVfle5UeV9449qJvrb+PIRwLlnPVlFJ/I84eZunjMGjK5PHfvnr7C2OB5cQkOT3iCh7/G+LjnECcAAA==
   </data>
  </layer>
- <layer name="Overlay2" width="50" height="50">
+ <layer name="Overlay2" width="50" height="50" visible="0">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+2YYQ7CIAxGezLvfw12EsNPydaW8rUdlZeQGMX2e0MmShTHNTEs86OwZtrNY6VGFOj+b/FA144i67PsgZdDlWtzPA5oqqxHBY8q9/IKHpnnRA0fxZzs8y6K4/EuKnhk/45CcTzeSRWPzvGI7y/Ni/RA/f/G1fdEm1/jJ/l6YlkDTa275z2Z+fxw87msWfv8Gh6vrlf2fRfxvYx4H3JYWamRnf0pC6KGd15NBmSt6D2X0dODKh6df/LYYd2qeHSkjDs4dBrZzl/NJ46JRrLHDkgeO9Do12PGZZybdR0a3Xto82j2hvf+GR0sHtq63LD24HpxZzyu92x2yefpdW2t0QORL2N8Aei9THcQJwAA
   </data>
@@ -49,7 +49,7 @@
    H4sIAAAAAAAAA9VWSQ7CMAyEE///MeKAVEWNPYudpJYiCvUyM3ZdXi/MPu+zT4Z9Bw9Fw5k/mivTQMU/y630I4t3YqMc6KwwerJxDI9KfwULm8PtRRTrzAZrjrYj5lk+FBeio8vh6o9axInZK2wNNC76rtRQ5miW/25GGGyZvo5WKP7KGlcftR9RTIVe6B6Y8VDwKMfhgGC848zEV/GIfmNzd/IYcd3lRrh28kC5Osb2w5kXhceos8KD1SiryXBVsHb1OsKQ+VbU6ODSpc8sfxen1f3umr/R19WkiwfDpdMyfNf6s/srcCLGaBztxt2mzMn1c7x26qO+aC6mJywH9bljZqZKYwe/u2eqn9loJ3TxUHcqwqH7OHVXY0V13YGpAvfJHFRzau3GrvDoztHNw821ynbpV227OVTW6nz2spqVhvA4Yd7YfZP5nGwZxidw+BnSi9m9UwyZqVU43PhVe6rLnJ07+u6aMfddjvg96X8Vk7eizj9OqYG+I9WT5auq86TzBTls/akQJwAA
   </data>
  </layer>
- <layer name="Objects" width="50" height="50">
+ <layer name="Objects" width="50" height="50" visible="0">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3OsQnAMAwEQO2VEBPi/QfINFad1gY75g6+UPHoI/b3Tvx9dXTvzJOpg7YA8F/lcx+Zc8YQAAAAAAAAAFhYA/kKK48QJwAA
   </data>
@@ -94,5 +94,6 @@
   <object name="crate/pineapple" gid="68" x="320" y="192"/>
   <object name="dropoff/orange" gid="239" x="256" y="256"/>
   <object name="dropoff/pineapple" gid="239" x="320" y="256"/>
+  <object name="dropoff/orange" gid="239" x="192" y="256"/>
  </objectgroup>
 </map>
