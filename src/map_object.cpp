@@ -35,7 +35,9 @@ MapObject::MapObject(glm::vec2 position,
     render_above_sprite(false),
     walkability(walkability),
     position(position),
-    frames(frames) {
+    cuttable(false),
+    frames(frames)
+    { 
 
         VLOG(2) << "New map object: " << name;
 

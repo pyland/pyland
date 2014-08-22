@@ -326,7 +326,30 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
 bool Engine::cut(int id, glm::ivec2 location) {
     std::cout << id << std::endl;
     std::cout << location.x <<std::endl;
-    return true;
+    Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
+
+    //Check bounds
+    if(location.x < 0 || location.x >= map->get_width() ||
+       location.y < 0 || location.y >= map->get_height()) {
+        return false;
+    }
+    auto map_objects = map->get_map_objects();
+    for(auto object_id : map_objects) {
+        if(object_id != 0) {
+            //Object is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+            glm::ivec2 object_pos = object->get_position();
+            if(object_pos == location) {
+                // Remove the object
+                map->remove_map_object(object_id);
+                ObjectManager::get_instance().remove_object(object_id);
+                return true;
+            }
+        }
+    }
+
+
+    return false;
 }
 
 void Engine::text_updater() {

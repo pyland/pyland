@@ -8,6 +8,7 @@
 #include "challenge_data.hpp"
 #include "challenge.hpp"
 #include "engine.hpp"
+#include "map_object.hpp"
 #include "object_manager.hpp"
 #include "entitythread.hpp"
 #include "api.hpp"
@@ -104,6 +105,9 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
 
     croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
 
+    //Adding cuttable object
+    auto name = "vines/1";
+    ChallengeHelper::make_object(this, name, Walkability::BLOCKED, name, true);
 }
 
 void FinalChallenge::start() {

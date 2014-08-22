@@ -26,7 +26,8 @@ namespace ChallengeHelper {
     int make_object(Challenge *challenge,
                     std::string markername,
                     Walkability walkability,
-                    std::string start_frame);
+                    std::string start_frame,
+                    bool cuttable=false);
 
     ///
     /// Create Sprite from named location
@@ -45,7 +46,8 @@ namespace ChallengeHelper {
                       std::string name,
                       Walkability walkability,
                       OutputIt output,
-                      std::string start_frame="");
+                      std::string start_frame="",
+                      bool cuttable=false);
 
     ///
     /// Attach callback to a position

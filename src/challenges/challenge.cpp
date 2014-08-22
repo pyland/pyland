@@ -67,11 +67,13 @@ int Challenge::make_map_object(glm::vec2 position,
                                std::string name,
                                Walkability walkability,
                                AnimationFrames frames,
-                               std::string start_frame) {
+                               std::string start_frame,
+                               bool cuttable) {
 
     auto new_object(std::shared_ptr<MapObject>(new MapObject(position, name, walkability, frames, start_frame)));
+    new_object->set_cuttable(cuttable);
     ObjectManager::get_instance().add_object(new_object);
-
+    
     auto new_object_id(new_object->get_id());
 
     LOG(INFO) << "created new_object with id: " << new_object_id;

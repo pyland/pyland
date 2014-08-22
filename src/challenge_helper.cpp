@@ -35,7 +35,8 @@ glm::vec2 ChallengeHelper::get_location_object(std::string name) {
 int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string marker_name,
                                  Walkability walkability,
-                                 std::string start_frame) {
+                                 std::string start_frame,
+                                 bool cuttable) {
 
     auto *map = Engine::get_map_viewer()->get_map();
 
@@ -47,7 +48,8 @@ int ChallengeHelper::make_object(Challenge *challenge,
         marker_name,
         walkability,
         AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
-        start_frame
+        start_frame,
+        cuttable
     );
 }
 

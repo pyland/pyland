@@ -63,7 +63,8 @@ public:
                         std::string name,
                         Walkability walkability,
                         AnimationFrames frames,
-                        std::string start_frame);
+                        std::string start_frame,
+                        bool cuttable=false);
 };
 
 #endif

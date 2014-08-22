@@ -52,6 +52,11 @@ protected:
     ///
     bool moving = false;
 
+    ///
+    /// Whether the object can be cut down
+    ///
+    bool cuttable;
+    
 public:
     ///
     /// Constructs a map object
@@ -78,6 +83,16 @@ public:
     glm::vec2 get_position() { return position; }
 
     virtual void set_position(glm::vec2 position);
+
+    ///
+    /// Set the object's cuttable state
+    ///
+    void set_cuttable(bool _cuttable) { cuttable = _cuttable; }
+
+    ///
+    /// Get the object's cuttable state
+    ///
+    bool is_cuttable() { return cuttable; }
 
     ///
     /// manage collisions for spirtes as they move

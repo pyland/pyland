@@ -42,7 +42,8 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                                    std::string name,
                                    Walkability walkability,
                                    OutputIt output,
-                                   std::string start_frame) {
+                                   std::string start_frame,
+                                   bool cuttable) {
 
     auto *map(Engine::get_map_viewer()->get_map());
     auto begin(maptools::start_of(map->locations, "Objects/" + name));
@@ -61,7 +62,8 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                 AnimationFrames(name_properties.second.tileset.substr(
                     0, name_properties.second.tileset.length() - start_frame.length() - 1
                 )),
-                start_frame
+                start_frame,
+                cuttable
             );
         }
     );
