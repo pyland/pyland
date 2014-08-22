@@ -285,6 +285,11 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
         if(object_id != 0) {
             //Object is on the map so now get its location
             auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+            if(!object)
+                continue;
+
+            if(!object->is_findable())
+                continue;
             std::string name = object->get_name();
             //TODO, maybe we should give python the floats - what if the object is moving?
             //in this case, the position is truncated

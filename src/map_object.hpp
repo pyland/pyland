@@ -57,6 +57,10 @@ protected:
     ///
     bool cuttable;
     
+    ///
+    /// Whether the object can be found on the map
+    ///
+    bool findable;   
 public:
     ///
     /// Constructs a map object
@@ -93,6 +97,16 @@ public:
     /// Get the object's cuttable state
     ///
     bool is_cuttable() { return cuttable; }
+
+    ///
+    /// Set the object's findable state
+    ///
+    void set_findable(bool _findable) { findable = _findable; }
+
+    ///
+    /// Get the object's findable state
+    ///
+    bool is_findable() { return findable; }
 
     ///
     /// manage collisions for spirtes as they move

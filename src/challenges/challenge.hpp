@@ -64,7 +64,8 @@ public:
                         Walkability walkability,
                         AnimationFrames frames,
                         std::string start_frame,
-                        bool cuttable=false);
+                        bool cuttable=false,
+                        bool findable=true);
 };
 
 #endif

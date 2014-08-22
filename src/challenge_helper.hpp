@@ -27,7 +27,8 @@ namespace ChallengeHelper {
                     std::string markername,
                     Walkability walkability,
                     std::string start_frame,
-                    bool cuttable=false);
+                    bool cuttable=false,
+                    bool findable=true);
 
     ///
     /// Create Sprite from named location
@@ -47,7 +48,8 @@ namespace ChallengeHelper {
                       Walkability walkability,
                       OutputIt output,
                       std::string start_frame="",
-                      bool cuttable=false);
+                      bool cuttable=false,
+                      bool findable=true);
 
     ///
     /// Attach callback to a position

@@ -36,6 +36,7 @@ MapObject::MapObject(glm::vec2 position,
     walkability(walkability),
     position(position),
     cuttable(false),
+    findable(true),
     frames(frames)
     { 
 

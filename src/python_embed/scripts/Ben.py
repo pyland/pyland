@@ -11,7 +11,7 @@ This is a wall-following script written in mostly idiomatic Python.
 
 This could be used to solve mazes - potentially even very large ones,
 but may fail if starting in the wrong place on a maze with loops.
-"""
+
 
 # A mapping that translates a direction 90° clockwise
 rotate_cw = {
@@ -46,4 +46,4 @@ while True:
 
 	# Walk forward
 	move(direction)
-
+"""

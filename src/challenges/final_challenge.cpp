@@ -113,8 +113,10 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     }
     
     //Adding cuttable object
-    //    auto name = "vines/cut/1";
-    //    ChallengeHelper::make_object(this, name, Walkability::BLOCKED, name, true);
+    auto name = "vines/cut/1";
+    int vine_id = ChallengeHelper::make_object(this, name, Walkability::BLOCKED, "orange", true);
+    std::shared_ptr<MapObject> vines_object = ObjectManager::get_instance().get_object<MapObject>(vine_id);
+    vines_object->set_renderable(false);
 
 }
 

@@ -36,7 +36,8 @@ int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string marker_name,
                                  Walkability walkability,
                                  std::string start_frame,
-                                 bool cuttable) {
+                                 bool cuttable,
+                                 bool findable) {
 
     auto *map = Engine::get_map_viewer()->get_map();
     LOG(INFO) << "checking map for object called " << marker_name;
@@ -49,7 +50,8 @@ int ChallengeHelper::make_object(Challenge *challenge,
         walkability,
         AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
         start_frame,
-        cuttable
+        cuttable,
+        findable
     );
 }
 

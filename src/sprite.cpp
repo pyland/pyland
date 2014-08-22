@@ -61,6 +61,8 @@ Sprite::Sprite(glm::ivec2 position,
             "stationary"
         ));
 
+        status_icon->set_findable(false);
+
         status_icon->set_render_above_sprites(true);
         ObjectManager::get_instance().add_object(status_icon);
         status_icon_id = status_icon->get_id();
@@ -77,8 +79,9 @@ Sprite::Sprite(glm::ivec2 position,
             AnimationFrames("gui/highlight"),
             "selected_object"
         ));
-
+        focus_icon->set_findable(false);
         focus_icon->set_render_above_sprites(false);
+
         ObjectManager::get_instance().add_object(focus_icon);
         focus_icon_id = focus_icon->get_id();
         LOG(INFO) << "created focus icon with id: " << focus_icon_id;
