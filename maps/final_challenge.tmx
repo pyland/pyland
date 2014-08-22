@@ -31,7 +31,7 @@
  </layer>
  <layer name="Effects" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3OIQ0AAAgAMDSC/nFpgGED8yd4BADs1XeAUX4HAAAAAAAAAOBAA0BQ/EoQJwAA
+   H4sIAAAAAAAAA+3OoREAIAwAsWoE+0/ZGfAITEXLXWLefgQA1O3uAZ5W9wAADJVXAQAAAACAvx1F6BZ9ECcAAA==
   </data>
  </layer>
  <layer name="Overlay" width="50" height="50">
@@ -44,17 +44,17 @@
    H4sIAAAAAAAAA+2YYQ7CIAxGezLvfw12EsNPydaW8rUdlZeQGMX2e0MmShTHNTEs86OwZtrNY6VGFOj+b/FA144i67PsgZdDlWtzPA5oqqxHBY8q9/IKHpnnRA0fxZzs8y6K4/EuKnhk/45CcTzeSRWPzvGI7y/Ni/RA/f/G1fdEm1/jJ/l6YlkDTa275z2Z+fxw87msWfv8Gh6vrlf2fRfxvYx4H3JYWamRnf0pC6KGd15NBmSt6D2X0dODKh6df/LYYd2qeHSkjDs4dBrZzl/NJ46JRrLHDkgeO9Do12PGZZybdR0a3Xto82j2hvf+GR0sHtq63LD24HpxZzyu92x2yefpdW2t0QORL2N8Aei9THcQJwAA
   </data>
  </layer>
- <layer name="Collisions" width="50" height="50">
+ <layer name="Collisions" width="50" height="50" visible="0">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA9VWSQ7CMAyEE///MeKAVEWNPYudpJYiCvUyM3ZdXi/MPu+zT4Z9Bw9Fw5k/mivTQMU/y630I4t3YqMc6KwwerJxDI9KfwULm8PtRRTrzAZrjrYj5lk+FBeio8vh6o9axInZK2wNNC76rtRQ5miW/25GGGyZvo5WKP7KGlcftR9RTIVe6B6Y8VDwKMfhgGC848zEV/GIfmNzd/IYcd3lRrh28kC5Osb2w5kXhceos8KD1SiryXBVsHb1OsKQ+VbU6ODSpc8sfxen1f3umr/R19WkiwfDpdMyfNf6s/srcCLGaBztxt2mzMn1c7x26qO+aC6mJywH9bljZqZKYwe/u2eqn9loJ3TxUHcqwqH7OHVXY0V13YGpAvfJHFRzau3GrvDoztHNw821ynbpV227OVTW6nz2spqVhvA4Yd7YfZP5nGwZxidw+BnSi9m9UwyZqVU43PhVe6rLnJ07+u6aMfddjvg96X8Vk7eizj9OqYG+I9WT5auq86TzBTls/akQJwAA
   </data>
  </layer>
- <layer name="Objects" width="50" height="50" visible="0">
+ <layer name="Objects" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3OsQnAMAwEQO2VEBPi/QfINFad1gY75g6+UPHoI/b3Tvx9dXTvzJOpg7YA8F/lcx+Zc8YQAAAAAAAAAFhYA/kKK48QJwAA
+   H4sIAAAAAAAAA+3OsQnAMAwEQO/lYJPY+w+QaaI6bQwi5g6+UPHoS9nfnfi7feiekRGZi7YA8F/9ddfIkTEEADZ0ZQ8AAAAAAACWeQDf6UBiECcAAA==
   </data>
  </layer>
- <objectgroup name="Objects" width="50" height="50">
+ <objectgroup name="Objects" width="50" height="50" visible="0">
   <object name="orange/1" gid="83" x="640" y="1664"/>
   <object name="pineapple/1" gid="84" x="1920" y="1216"/>
   <object name="banana/1" gid="82" x="1792" y="2432"/>
@@ -95,5 +95,9 @@
   <object name="dropoff/orange" gid="239" x="256" y="256"/>
   <object name="dropoff/pineapple" gid="239" x="320" y="256"/>
   <object name="dropoff/orange" gid="239" x="192" y="256"/>
+  <object name="dropoff/1" gid="238" x="1088" y="1280"/>
+  <object name="pickup/1" gid="238" x="960" y="1280"/>
+  <object gid="66" x="1024" y="1280"/>
+  <object name="handover/1" gid="66" x="1024" y="1280"/>
  </objectgroup>
 </map>
