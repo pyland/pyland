@@ -63,3 +63,4 @@ Keybindings
 * arrow keys / wasd - move sprite
 * numbers - move focus to sprite with associated number, numbers are allocated sequentially from 0
 * = and - - zooming in and out
+* e - open editor for current sprite
