@@ -72,7 +72,8 @@ namespace ChallengeHelper {
                            glm::ivec2 pickup_tile,
                            glm::ivec2 finish_tile,
                            glm::ivec2 dropoff_tile,
-                           int object_id);
+                           int object_id,
+                           bool repeat);
 
     ///
     /// Allow an object to picked up / dropped off at the same location
