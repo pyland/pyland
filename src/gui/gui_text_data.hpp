@@ -34,6 +34,7 @@ class GUITextData {
     /// The text to render
     ///
     std::shared_ptr<Text> text;
+
 public:
     ///
     /// Get the transformed x pixel  position of the text
@@ -61,7 +62,7 @@ public:
     void set_transformed_y_offset(int pixels) { transformed_y_pixel_offset = pixels; }
 
     ///
-    /// Get the text 
+    /// Get the text
     /// @return the text
     ///
     std::shared_ptr<Text> get_text() { return text; }
@@ -71,7 +72,6 @@ public:
     /// @_text the new text
     ///
     void set_text(std::shared_ptr<Text> _text) { text = _text; }
-
 };
 
 #endif
