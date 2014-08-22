@@ -37,34 +37,40 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         "south/still/1"
     );
 
-    // set of orange collection part
-    glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/1");
-    glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/1");
+    // ,"banana","pineapple"
+    std::vector<std::string> fruit_types = {"orange"};
+    for (std::string fruit_type : fruit_types) {
 
-    int num_of_oranges = 8;
-    std::vector<int> orange_ids;
+        // set of fruit collection part
+        glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/"+fruit_type);
+        glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/"+fruit_type);
 
-    // adding oranges as pickupable objects
-    for (int i = 1; i <= num_of_oranges; i++) {
-        auto name = "orange/"+std::to_string(i);
-        glm::ivec2 orange_location = ChallengeHelper::get_location_object(name);
+        int num_of_fruit = 5;
+        std::vector<int> fruit_ids;
 
-        int orange_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, "orange");
-        ChallengeHelper::create_pickupable(orange_location, orange_location, crate_location, dropoff_location , orange_id);
-        orange_ids.push_back(orange_id);
-    }
+        // adding fruits as pickupable objects
+        for (int i = 1; i <= num_of_fruit; i++) {
+            auto name = fruit_type+"/"+std::to_string(i);
+            glm::ivec2 fruit_location = ChallengeHelper::get_location_object(name);
 
-    // checking if all oranges are in crate
-    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids,this] (int) {
-
-        if (Engine::is_objects_at(crate_location, orange_ids)) {
-            Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
-            finish();
-        } else {
-            Engine::print_dialogue ("Game","Keep going");
+            int fruit_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, fruit_type);
+            ChallengeHelper::create_pickupable(fruit_location, fruit_location, crate_location, dropoff_location , fruit_id);
+            fruit_ids.push_back(fruit_id);
         }
-        return true;
-    });
+
+        // checking if all fruits are in crate
+        ChallengeHelper::make_interaction("dropoff/"+fruit_type, [dropoff_location, crate_location, fruit_ids,this] (int) {
+
+            if (Engine::is_objects_at(crate_location, fruit_ids)) {
+                Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
+                finish();
+            } else {
+                Engine::print_dialogue ("Game","Keep going");
+            }
+            return true;
+        });
+
+    }
 
     // challenge exit
     ChallengeHelper::make_interaction("exit", [this] (int) {
