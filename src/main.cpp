@@ -184,6 +184,13 @@ int main(int argc, const char *argv[]) {
         }
     ));
 
+    Lifeline back_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("ESCAPE")},
+        [&] (KeyboardInputEvent) { 
+            Engine::get_challenge()->event_finish.trigger(0);;
+        }
+    ));
+
 
     std::chrono::steady_clock::time_point start_time;
 
@@ -339,6 +346,7 @@ int main(int argc, const char *argv[]) {
     while(!window.check_close() && run_game) {
         challenge_data->run_challenge = true;
         Challenge* challenge = pick_challenge(challenge_data);
+        Engine::set_challenge(challenge);
         challenge->start();
 
         auto last_clock(std::chrono::steady_clock::now());
