@@ -36,12 +36,12 @@
  </layer>
  <layer name="Overlay" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2Z227DIAyGzapdbO2ODzRNk5Ld7v3v0hfYK2xIWHH/mUMyykHikxCBEuof24SmREQ3FOfe07+4cnZlETVet4DUIe312S7bhsrp+FD6vmn1FeuQtprAfEbUrKkFpA5r18G1tZjEPqtlupJdPtgGXL+jq2N+0GjNH+wLyW3Cva3lOefvVma6vo6U9bTYuArFx8HTT1TGHw+/5VGUd+h7cfWJ9LhKoYW4OkL7a8cce/Xn5A3aaE9MF+dGCX+EvgP9sXUPlc/60jzTmh+vruacudtgU+2zFfpAwvuvPEfZMovriVb7a+a372xr4f2X7dbOi1JPzfyO+SOFM5QaPNGaE/h8OSXOUTs3chLS8elKD8TiqXUdMu97BX/jljqTaO8DtHZqzsr9l+cvAe6P2rNgob/2hahxLsTzj1w/1KONb4VYvPjWtUUdMWaoLbV/TyAp9szQbk2DpbX40NiyT+Zgy54m74m9F045a+J9e9H2ax9GGZe65r55jfgc7TB0+Y7ZwHip38B4LAbG584xaZOhS5t8+lBjaBy297xX/Y8uqYXr3sDY6lHDYNArpf+bys1E/WsYDAaDwWAwiPEDtCF1GhAnAAA=
+   H4sIAAAAAAAAA+2Z207DMAyGHSYuYOP4QBMIWm55/7vuBXgFFilWvR/n0NLlIOWTrCwlDf5jO806IqIbinPvuT45OzmbRIufa0DqkP76fJd9Q3l1vJ/t42yfrv9Dc6xYh/TVBOYyomVNNSB1WL92rq/lJF6zWoYr+eWDfcD127s2FgeN2uLBsZDcJtxbW51z/S5lpOvrSFlPi82rUH7sPNeJ8sTj4WyPwt7g2otrD6TnVQo15NUe+t8r5lirf0uO0Ed/Yrq4NnLEI/Q/MB5L91D5rM/NM8318eparpm7BT6VPlthDCS8/8pzlLVRfB5o9r9kffvOthbef9lv7bwo9ZSs71g8UjiBleCJ5prA58shcY7StbElIR1fzloglk+165B13yr4HTfXmUR7H6D1U2tW7r88fw5wf9SeBRP99S9EiXMhnn/k+qEebXwtxPLFt6416ogxQmsp/X0CSfFnhH5tGiy15YfGkn1yC5bsafKe2HvhlLMm3rcWbb/2YZRxqWvum9eIv6Mfhi7fMRsYL/UbGI9mYPzWNSZ9MnTpk08fagyNw/6a96r/0SW1cNsamFstauh0WiX3b1NbM1D7GjqdTqfT6XRi/AIRtfXMECcAAA==
   </data>
  </layer>
  <layer name="Collisions" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2WwQ6EMAhE3dP+/x/vaRPTgIVKYUrmJR60KjO2Dr0uG9+Pft16IHDX4dGe7WNW5z9u1Sbdj8AbXZU+xrqjD++7kOZD0mPRd4IPz7MIzHzM/vndPqT8ic5PhPmIqI/gY2Q1qzJ8WPrZ/Xyld1TMR9Qeo7qXW7IHbV+laX0a6+LD+o5qLx3+jUg6+TiZDmuqKrOiM1Tac2awox9UrKmn7yfpR137M03aGKIP6z3jXCHh8eF5JhtETSPZ2bKSAVE5GdWvPHW1HLTWsNbXNK30mjd9yEO0tgoPXl+n0cEDIYQQQgghhOziB4Z6VM4QJwAA
+   H4sIAAAAAAAAA+2WSw7EIAxD21Xvf+NZjVRFARIaiIn8pC76I3ahDtdl47nb160HAm8dHu0ZPno1/9es2rTnEfiiK9OHrCt9eMdCmg9Nj0XfCT487yIw8jH651f70PInOj8R5iOiPoIPyWxW7fBh6Wfv85nekTEfUXuM7F5uyR7EfZWmtXevig/rGNleKvwbkVTycTIV1lRWZkVnqLbn3MGKfpCxpnrfT9OPuvZHmlr3EH1Yn5FzhYTHh+ed3SBqkuzOlpkMiMrJqH7lqdvKQWsNa/2Wpple86UPeYjWluHB6+s0KngghBBCCCGEkFX8ALPn33EQJwAA
   </data>
  </layer>
  <layer name="Objects" width="50" height="50">
@@ -65,10 +65,14 @@
   <object name="sprite/monkey" gid="175" x="1344" y="384"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
-  <object name="crate/1" gid="66" x="128" y="192"/>
   <object name="bridge/1" gid="64" x="256" y="576"/>
   <object name="vines/1" gid="80" x="768" y="640"/>
-  <object name="dropoff/1" gid="239" x="192" y="256"/>
+  <object name="dropoff/banana" gid="239" x="192" y="256"/>
   <object name="exit" gid="239" x="448" y="192"/>
+  <object name="crate/banana" gid="65" x="192" y="192"/>
+  <object name="crate/orange" gid="67" x="256" y="192"/>
+  <object name="crate/pineapple" gid="68" x="320" y="192"/>
+  <object name="dropoff/orange" gid="239" x="256" y="256"/>
+  <object name="dropoff/pineapple" gid="239" x="320" y="256"/>
  </objectgroup>
 </map>

@@ -38,8 +38,8 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     );
 
     // set of orange collection part
-    glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/1");
-    glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/1");
+    glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/orange");
+    glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/orange");
 
     int num_of_oranges = 5;
     std::vector<int> orange_ids;
@@ -55,7 +55,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     }
 
     // checking if all oranges are in crate
-    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids,this] (int) {
+    ChallengeHelper::make_interaction("dropoff/orange", [dropoff_location, crate_location, orange_ids,this] (int) {
 
         if (Engine::is_objects_at(crate_location, orange_ids)) {
             Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
