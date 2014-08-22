@@ -98,18 +98,21 @@ Sprite::~Sprite() {
     LOG(INFO) << "Sprite destructed";
 }
 
-void Sprite::add_to_inventory(int new_object_id) {
+bool Sprite::add_to_inventory(int new_object_id) {
     LOG(INFO) << "adding item to sprites inventory";
+
+    if (inventory.size() >= inventory_limit) {return false;}
 
     auto new_object = ObjectManager::get_instance().get_object<MapObject>(new_object_id);
     if (!new_object) {
         LOG(ERROR) << "Object manager no longer has focus_icon";
-        return;
+        return false;
     }
 
     new_object->set_position(position);
     new_object->set_render_above_sprites(true);
     inventory.push_back(new_object_id);
+    return true;
 }
 
 void Sprite::set_position(glm::vec2 position) {

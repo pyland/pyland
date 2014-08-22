@@ -24,6 +24,8 @@ private:
 
     std::string sprite_name;
 
+    unsigned int inventory_limit = 1;
+
 protected:
     ///
     /// The text to display above the object
@@ -98,7 +100,7 @@ public:
     ///
     /// add map_object to sprites inventory
     ///
-    void add_to_inventory(int new_object);
+    bool add_to_inventory(int new_object);
 
     std::vector<int> get_inventory() { return inventory; }
 
@@ -120,7 +122,9 @@ public:
     void set_focus(bool _is_focus);
 
     std::string get_sprite_name() {return sprite_name; }
-};
+
+    void get_inventory_limit (unsigned int _inventory_limit) {inventory_limit = _inventory_limit; };
+}; 
 
 
 #endif
