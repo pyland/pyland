@@ -20,9 +20,9 @@ void Layer::add_tile(std::shared_ptr<TileSet> tileset, int tile_id) {
     }
 }
 
-int Layer::get_tile(int x_pos, int y_pos) {
+std::pair<std::shared_ptr<TileSet>, int> Layer::get_tile(int x_pos, int y_pos) {
     //Fetch the tile at the required position
-    return layer->at(x_pos + y_pos * width_tiles).second;
+    return layer->at(x_pos + y_pos * width_tiles);
 }
 
 void Layer::update_tile(int x_pos, int y_pos, int tile_id, std::shared_ptr<TileSet> tileset) {

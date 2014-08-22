@@ -285,9 +285,18 @@ public:
     /// Update the tile at a given point in the map
     /// @param x_pos the x position of the tile
     /// @param y_pos the y position of the tile
+    /// @param the the y position of the tile
     /// @param tile_name the global name of the tile
     ///
-    void update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name);
+    void update_tile(int x_pos, int y_pos, const std::string layer_name, const std::string tile_name);
+
+    ///
+    /// Query the tile at a given point in the map.
+    /// @param x_pos the x position of the tile.
+    /// @param y_pos the y position of the tile.
+    /// @return The tile's global name or, if empty, "".
+    ///
+    std::string query_tile(int x_pos, int y_pos, const std::string layer_name);
 
 
     ///
