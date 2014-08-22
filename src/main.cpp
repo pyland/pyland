@@ -16,6 +16,7 @@
 
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
+#include "cutting_challenge.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_window.hpp"
@@ -30,7 +31,6 @@
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
 #include "lifeline.hpp"
-#include "long_walk_challenge.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
 #include "start_screen.hpp"
@@ -420,6 +420,11 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
         map_name = "../maps/final_challenge.tmx";
         challenge_data->map_name = map_name;
         challenge = new FinalChallenge(challenge_data);
+        break;
+    case 2:
+        map_name = "../maps/cutting_challenge.tmx";
+        challenge_data->map_name = map_name;
+        challenge = new CuttingChallenge(challenge_data);
         break;
     default:
         break;

@@ -86,11 +86,12 @@ public:
     void update_tile(int x_pos, int y_pos, int tile_id, std::shared_ptr<TileSet> tileset);
 
     ///
-    /// Get the id of the tile at the specified location
+    /// Get the tileset and id of the tile at the specified location
     /// @param x_pos the layer x offset
     /// @param y_pos the layer y offset
+    /// @return A pair of tileset and id.
     ///
-    int get_tile(int x_pos, int y_pos);
+    std::pair<std::shared_ptr<TileSet>, int> get_tile(int x_pos, int y_pos);
 
     ///
     /// Get a tile's texture offset in the VBO

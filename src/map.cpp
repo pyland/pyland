@@ -91,7 +91,7 @@ bool Map::is_walkable(int x_pos, int y_pos) {
     return std::all_of(std::begin(layer_ids), std::end(layer_ids), [&] (int layer_id) {
             std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
         // Block only in the case where we're on the collisions layer and the tile is set
-        return !(layer->get_name() == "Collisions" && layer->get_tile(x_pos, y_pos));
+            return !(layer->get_name() == "Collisions" && layer->get_tile(x_pos, y_pos).second);
     });
 }
 
@@ -558,20 +558,21 @@ bool Map::recalculate_layer_mappings(int x_pos, int y_pos, int layer_num) {
     }
 }
 
-void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name) {
+void Map::update_tile(int x_pos, int y_pos, const std::string layer_name, const std::string tile_name) {
     int tile_id = -1;
     std::shared_ptr<TileSet> tileset;
-    for (auto tileset_i : tilesets) {
-        tile_id = tileset_i->get_atlas()->get_name_index(tile_name);
-        if (tile_id != -1) {
+    for (std::shared_ptr<TileSet> tileset_i : tilesets) {
+        try {
+            tile_id = tileset_i->get_atlas()->get_name_index(tile_name);
             tileset = tileset_i;
             break;
+        } catch (std::exception) {
+            continue;
         }
     }
     if (tile_id == -1) {
         // Tile not found.
-        LOG(FATAL) << "BAAADDD!!!! BAD, BAD, BAD!! Bad tile name: \"" << tile_name << "\"... I should make this softer...";
-        return;
+        throw std::runtime_error("Tile not found: " + tile_name);
     }
 
     // Build the data for the update
@@ -616,8 +617,23 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name
     data[11] = std::get<2>(coords);
 
 
+    // Find the layer from the layer name name.
+    std::shared_ptr<Layer> layer;
+    int layer_num;
+    for (unsigned int i = 0; i < layer_ids.size(); i++) {
+        std::shared_ptr<Layer> layer_test(ObjectManager::get_instance().get_object<Layer>(layer_ids[i]));
+        if (layer_test->get_name() == layer_name) {
+            layer = layer_test;
+            layer_num = i;
+            break;
+        }
+    }
+
+    if (!layer) {
+        throw std::runtime_error("Layer not found: " + layer_name);
+    }
+
     // Put it into the buffers
-    auto layer(ObjectManager::get_instance().get_object<Layer>(layer_ids[layer_num]));
 
     Layer::Packing packing(layer->get_packing());
 
@@ -743,6 +759,24 @@ void Map::update_tile(int x_pos, int y_pos, int layer_num, std::string tile_name
         delete[] vertex_data;
     }
     delete[] data;
+}
+
+std::string Map::query_tile(int x_pos, int y_pos, const std::string layer_name) {
+    std::shared_ptr<Layer> layer;
+    for (unsigned int i = 0; i < layer_ids.size(); i++) {
+        std::shared_ptr<Layer> layer_test(ObjectManager::get_instance().get_object<Layer>(layer_ids[i]));
+        if (layer_test->get_name() == layer_name) {
+            layer = layer_test;
+        }
+    }
+
+    if (!layer) {
+        throw std::runtime_error("Layer not found: " + layer_name);
+    }
+
+    std::pair<std::shared_ptr<TileSet>, int> tile = layer->get_tile(x_pos, y_pos);
+
+    return tile.first ? tile.first->get_atlas()->get_index_name(tile.second) : "";
 }
 
 int Map::get_tile_texture_vbo_offset(int layer_num, int x_pos, int y_pos) {

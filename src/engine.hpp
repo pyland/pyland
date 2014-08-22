@@ -142,7 +142,7 @@ public:
     /// @param tile_name the global name of the new tile
     /// @return indicates if the operation completed successfully
     ///
-    static void change_tile(glm::ivec2 tile, int layer_num, std::string tile_name);
+    static void change_tile(glm::ivec2 tile, std::string layer_name, std::string tile_name);
 
     ///
     /// Get the location of the map object or sprite in the map, throws exception if

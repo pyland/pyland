@@ -102,9 +102,13 @@ private:
     int index_offset;
 
     ///
-    /// A map of texture names to texture indexes.
+    /// A mapping of texture names to texture indexes.
     ///
     std::map<std::string, int> names_to_indexes;
+    ///
+    /// A vector mapping texture indexes to texture names.
+    ///
+    std::vector<std::string> indexes_to_names;
 
     ///
     /// Get a commonly used texture.
@@ -267,15 +271,20 @@ public:
     /// Attempt to load the name-index mappings from a file.
     ///
     void load_names(const std::string filename);
+
     ///
-    /// Set the mapping of a name to an index.
+    /// Get the mapping of an index to a name.
     ///
-    void set_name_index(const std::string name, int index);
+    /// @param index of a texture.
+    /// @return global name of a texture, or "" if no name is set.
+    ///
+    std::string get_index_name(int index);
 
     ///
     /// Get the mapping of a name to an index.
     ///
-    /// @return Non-negative value of an index, or -1 if not found.
+    /// @param global name of a texture.
+    /// @return index of a texture.
     ///
     int get_name_index(const std::string name);
 
