@@ -29,22 +29,22 @@
    H4sIAAAAAAAAA+3DwQkAAAwDoXtm/4k7R0HBVVNVVVVVVVVVVdXnDyGqRm4QJwAA
   </data>
  </layer>
- <layer name="Effects" width="50" height="50" visible="0">
+ <layer name="Effects" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3OIQ0AAAgAMDSC/nFpgGED8yd4BADs1XeAUX4HAAAAAAAAAOBAA0BQ/EoQJwAA
   </data>
  </layer>
- <layer name="Overlay" width="50" height="50" visible="0">
+ <layer name="Overlay" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+2Z227DIAyGzapdbO2ODzRNk5Ld7v3v0hfYK2xIWHH/mUMyykHikxCBEuof24SmREQ3FOfe07+4cnZlETVet4DUIe312S7bhsrp+FD6vmn1FeuQtprAfEbUrKkFpA5r18G1tZjEPqtlupJdPtgGXL+jq2N+0GjNH+wLyW3Cva3lOefvVma6vo6U9bTYuArFx8HTT1TGHw+/5VGUd+h7cfWJ9LhKoYW4OkL7a8cce/Xn5A3aaE9MF+dGCX+EvgP9sXUPlc/60jzTmh+vruacudtgU+2zFfpAwvuvPEfZMovriVb7a+a372xr4f2X7dbOi1JPzfyO+SOFM5QaPNGaE/h8OSXOUTs3chLS8elKD8TiqXUdMu97BX/jljqTaO8DtHZqzsr9l+cvAe6P2rNgob/2hahxLsTzj1w/1KONb4VYvPjWtUUdMWaoLbV/TyAp9szQbk2DpbX40NiyT+Zgy54m74m9F045a+J9e9H2ax9GGZe65r55jfgc7TB0+Y7ZwHip38B4LAbG584xaZOhS5t8+lBjaBy297xX/Y8uqYXr3sDY6lHDYNArpf+bys1E/WsYDAaDwWAwiPEDtCF1GhAnAAA=
   </data>
  </layer>
- <layer name="Collisions" width="50" height="50" visible="0">
+ <layer name="Collisions" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+2WwQ6EMAhE3dP+/x/vaRPTgIVKYUrmJR60KjO2Dr0uG9+Pft16IHDX4dGe7WNW5z9u1Sbdj8AbXZU+xrqjD++7kOZD0mPRd4IPz7MIzHzM/vndPqT8ic5PhPmIqI/gY2Q1qzJ8WPrZ/Xyld1TMR9Qeo7qXW7IHbV+laX0a6+LD+o5qLx3+jUg6+TiZDmuqKrOiM1Tac2awox9UrKmn7yfpR137M03aGKIP6z3jXCHh8eF5JhtETSPZ2bKSAVE5GdWvPHW1HLTWsNbXNK30mjd9yEO0tgoPXl+n0cEDIYQQQgghhOziB4Z6VM4QJwAA
   </data>
  </layer>
- <layer name="Objects" width="50" height="50" visible="0">
+ <layer name="Objects" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
   </data>

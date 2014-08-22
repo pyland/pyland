@@ -23,8 +23,7 @@ protected:
 
     std::vector<int> map_object_ids;
 public:
-    // TODO: Make the editor part of the core
-    // engine, not the challenge class
+
     Challenge(ChallengeData* _challenge_data);
 
     virtual ~Challenge();

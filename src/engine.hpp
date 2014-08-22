@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "challenge.hpp"
 #include "game_window.hpp"
 #include "gil_safe_future.hpp"
 #include "text_font.hpp"
@@ -35,6 +36,8 @@ private:
     static NotificationBar* notification_bar;
 
     static GameWindow* game_window;
+
+    static Challenge* challenge;
     ///
     /// The size of a tile
     ///
@@ -195,6 +198,9 @@ public:
     /// global access to game font
     static TextFont get_game_font();
     static Typeface get_game_typeface();
+
+    static void set_challenge(Challenge* _challenge) {challenge = _challenge; }
+    static Challenge* get_challenge() {return challenge;}
 };
 
 #endif
