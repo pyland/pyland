@@ -17,6 +17,8 @@
 
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
+
+    //create the main game character
     ChallengeHelper::make_sprite(
         this,
         "sprite/1",
@@ -42,23 +44,26 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         orange_ids.push_back(orange_id);
     }
 
-    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids] (int) {
+    // checking if all oranges are in crate
+    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids,this] (int) {
 
         if (Engine::is_objects_at(crate_location, orange_ids)) {
             Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
+            finish();
         } else {
             Engine::print_dialogue ("Game","Keep going");
         }
         return true;
     });
 
-
+    // challenge exit
     ChallengeHelper::make_interaction("exit", [this] (int) {
-        event_finish.trigger(0);
+        finish();
         LOG(INFO) << "exiting";
         return false;
     });
 
+    // creating croc
     LOG(INFO) << "creating croc";
     int croc_id = ChallengeHelper::make_object(
         this,
@@ -89,5 +94,6 @@ void FinalChallenge::start() {
 }
 
 void FinalChallenge::finish() {
-    // TODO: Somehow finish challenge...
+    ChallengeHelper::set_completed_level(1);    
+    event_finish.trigger(0);
 }
