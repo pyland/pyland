@@ -26,8 +26,6 @@
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
 
-unsigned int inventory_limit = 1;
-
 
 glm::vec2 pos_to_status (glm::vec2 position) {
     return glm::vec2(position.x + 0.05, position.y + 0.75);

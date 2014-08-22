@@ -24,6 +24,8 @@ private:
 
     std::string sprite_name;
 
+    unsigned int inventory_limit = 1;
+
 protected:
     ///
     /// The text to display above the object
@@ -120,7 +122,9 @@ public:
     void set_focus(bool _is_focus);
 
     std::string get_sprite_name() {return sprite_name; }
-};
+
+    void get_inventory_limit (unsigned int _inventory_limit) {inventory_limit = _inventory_limit; };
+}; 
 
 
 #endif
