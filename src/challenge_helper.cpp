@@ -38,7 +38,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string start_frame) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-
+    LOG(INFO) << "checking map for object called " << marker_name;
     auto properties(map->locations.at("Objects/" + marker_name));
     LOG(INFO) << "creating object at " << marker_name << " (" << properties.tileset << ")";
 
