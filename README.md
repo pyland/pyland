@@ -31,7 +31,7 @@ cd zygote/src
 For compiling on the Raspberry Pi, use:
 ```bash
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
-COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+COMPILERP=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
 
 #### Compiling on Desktop - Unix
@@ -65,7 +65,7 @@ Keybindings
 * = and - - zooming in and out
 * e - open editor for current sprite
 * ESC - go back to level selection map
-* 
+
 ##API
-* move
-** param: north, south, east or west
+* move. Parameter: north, south, east or west
+* cut
