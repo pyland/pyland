@@ -3,6 +3,7 @@
 
 #include <boost/python/base_type_traits.hpp>
 #include <boost/python/object_core.hpp>
+#include <boost/python/list.hpp>
 #include <stdint.h>
 
 #include <glm/vec2.hpp>
@@ -88,6 +89,32 @@ class Entity {
         /// Prints to standard output the name and position of entity.
         ///
         void monologue();
+
+        ///
+        /// Cut down any objects around the player
+        ///
+        /// @param x
+        ///     x-displacement to shift right by, in tiles.
+        ///
+        /// @param y
+        ///     y-displacement to shift up by, in tiles.
+        ///
+        /// @return
+        ///     Whether cut was successful.
+        ///
+        bool cut(int x, int y);
+
+        ///
+        /// Look for any objects in a range. Returns an array of
+        /// (name, x, y) tuples
+        ///
+        /// @param search_range
+        ///     the search range out from the player, 1 is all tiles 1 away from the player
+        ///
+        /// @return
+        ///     Whether move was successful.
+        ///
+        py::list look(int search_range);
 
         void py_print_debug(std::string text);
         void py_print_dialogue(std::string text);

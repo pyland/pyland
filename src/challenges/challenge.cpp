@@ -41,7 +41,6 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
 }
 
 Challenge::~Challenge() {
-
     // destruct sprite switch
     delete sprite_switcher;
 
@@ -80,13 +79,6 @@ int Challenge::make_map_object(glm::vec2 position,
     map->add_map_object(new_object_id);
 
     return new_object_id;
-}
-
-void Challenge::kill_scripts() {
-    for (auto id: sprite_ids) {
-        auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
-        sprite->daemon->value->halt_soft(EntityThread::Signal::KILL);
-    }
 }
 
 /*

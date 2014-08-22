@@ -26,48 +26,78 @@
  </tileset>
  <layer name="Ground" width="50" height="50" opacity="0.99">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3MIQEAAAgDsMv3r0QxCmBxE7Nrkj6YpxcAAAAAAAAAAAAuC9U8WwIQJwAA
+   H4sIAAAAAAAAA+3QsRGAIBBFQUJauv4bM3fGEU5OCDbYTOE/emutAwAAAAAAAEBCHLBhZ8dJ/ZHcEx/+rWqY3RIDdjTM3D3ScD+vqmv0HTPvnvl25f6slXf8vb2q46mlugHeXH//U24QJwAA
   </data>
  </layer>
  <layer name="Effects" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3OIQ0AAAgAMDSC/nFpgGED8yd4BADs1XeAUX4HAAAAAAAAAOBAA0BQ/EoQJwAA
+   H4sIAAAAAAAAA+3OoREAIAwAsWoE+0/ZGfAITEXLXWLefgQA1O3uAZ5W9wAADJVXAQAAAACAvx1F6BZ9ECcAAA==
   </data>
  </layer>
  <layer name="Overlay" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2Z227DIAyGzapdbO2OD1RNk5Ld7v3v0ifZkLDi/jOHZJSDxCchAiXUP7YJTYmI7ijOo6d/ceXiyiJqvG4BqUPa67Ndtg2V0/Hp6WdfsQ5pqwnMZ0TNmlpA6rB2HVxbi0nss1qmG9nlg23A9Tu6OuYHjdb8wb6Q3Cfc21qec/5uZabb60hZT4uNq1B8HDz9RGX88fRbnkX5gL43V59Ij6sUWoirI7S/d8yxV39OztBGe2K6ODdK+CP0HeiPrXuofNaX5pXW/Hh3NefMwwabap+t0AcS3n/lOcqWWVxPtNpfM799Z1sL779st3ZelHpq5nfMHylcoNTghdacwOfLKXGO2rmRk5COL1d6IBZPreuQed8r+Bu31JlEex+gtVNzVu6/PH8JcH/UngUL/bUvRI1zIZ5/5PqhHm18K8TixbeuLeqIMUNtqf17AkmxZ4Z2axosrcWHxpZ9Mgdb9jR5T+y9cMpZE+/bi7Zf+zDKuNQ1981rxOdoh6Hrd8wGxkv9BsZjMTA+d45Jmwxd2+TThxpD47C9573qf3RJLVz3BsZWjxoGg14p/d9UbibqX8NgMBgMBoNBjB/6vLXUECcAAA==
+   H4sIAAAAAAAAA+1ZyZITMQyVmeGQMBO2r2AZCgIFN4pLkiv/f0t+gF/ALloVtUZrtzvkMK9KlY7blvW02MoMAMAz8LGuchLkOAj9zsfxOYMXyflRcB6e7fR7gTyPdRer/+EPnGOFPKitxVhbyCeuy2DpeCCHm2Fcykk+1rjsEnu9qnKXNVCxgfuv+QfzxYqDBCkeJ2P+2yobIqsqh+SeGtZwjgXF88BaXufoDwlSLF5WuYcxLzp/E7ABQes8iz2ceXg6eH3TOKDPGi/kdMfeecC80ur1RhmXzjELzcaVM0cCjVeTX2zsNZx5S3llQbpjKLR7a8pZRe+EiM7fE/RKsbDyAOv8nsgGZP/ie4/HT8G+qP1ePDRE4sHrKBsPzb9cl8QlUh/e3YF1L9nFdeNZ1uQNjGO6YjZ5otW4dAdl7r8IDyuu/F5H2ZPnHchx8GIh7Xtgz41r8ynnK+m2ejQ8f9FuqV+U+ES4RM5czTZJbyQemn23xvtITLw+N8MD70t65tH7U7KN3gVafKbcg7yOLB7ZXuNEPqW1kdo4gN77UT9u4LEfNZum9EwaMr7v1cPyfTPQegp+5k6BptvClFq0wH/jZnuyOftqex8F8UDrAvVPRbQXx329PuIIj+2zcKkYSHseyffb4Vnqi/j8DKy8z/5W5vDyRfPrnHxZAhF79uyz4dJ54wHt2Rtz+Ltr49BA42Fx+Z/InJNRWPWYOdPoGn4man9ntcDXTYV0XmsowryozzW9hbzndhQY/425sPmUf2HzuRQ2v3eNUZsKjG3S+HGO1jypd597V1g8pL0Keb7GM4rC60muiYN3xvTueecA8yCLqP09cnqJukBoHJbcsze+Qj6PevDz/jel7SGNNw4foX89WDbunPdT8G34zPJo/L9U+dzZHg0Wb4xFQ5YDrnuAMZe5+ZZdT20BiPuVr2toXFpstoNcKk6aLZ5fpXUaUN9S+WfZQrm0eVsmUQ5Un5Z/yG87jEfrHtd5tjwE5yHeVfle5UeV9449qJvrb+PIRwLlnPVlFJ/I84eZunjMGjK5PHfvnr7C2OB5cQkOT3iCh7/G+LjnECcAAA==
   </data>
  </layer>
- <layer name="Collisions" width="50" height="50">
+ <layer name="Overlay2" width="50" height="50" visible="0">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XQQ6AMAgE9eT/f2w89NJYC1joQnYST9qwoxX0OP5xnfIDDU32aA9pHWm2dg71eVhy7fQY1bVkQnseb3kk+TJ4eK7z4ivP7J3P4uGxDg1ED2uvivDwnAWoc/DBMvsRQfyuslDFQ0IVlwoOjUoemamwp3b1rNU9tL828r/cyyWSr/v3lh91788yWf6bdiDdJ/21mT00a6JBzNQT3VssPWBVn1w1rzR1R31QWkNaf5TJMmv+zCENq7PtcNB6ZaOCAyGEEEIIIYR4cQNRGvJJECcAAA==
+   H4sIAAAAAAAAA+2YYQ7CIAxGezLvfw12EsNPydaW8rUdlZeQGMX2e0MmShTHNTEs86OwZtrNY6VGFOj+b/FA144i67PsgZdDlWtzPA5oqqxHBY8q9/IKHpnnRA0fxZzs8y6K4/EuKnhk/45CcTzeSRWPzvGI7y/Ni/RA/f/G1fdEm1/jJ/l6YlkDTa275z2Z+fxw87msWfv8Gh6vrlf2fRfxvYx4H3JYWamRnf0pC6KGd15NBmSt6D2X0dODKh6df/LYYd2qeHSkjDs4dBrZzl/NJ46JRrLHDkgeO9Do12PGZZybdR0a3Xto82j2hvf+GR0sHtq63LD24HpxZzyu92x2yefpdW2t0QORL2N8Aei9THcQJwAA
+  </data>
+ </layer>
+ <layer name="Collisions" width="50" height="50" visible="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA9VWSQ7CMAyEE///MeKAVEWNPYudpJYiCvUyM3ZdXi/MPu+zT4Z9Bw9Fw5k/mivTQMU/y630I4t3YqMc6KwwerJxDI9KfwULm8PtRRTrzAZrjrYj5lk+FBeio8vh6o9axInZK2wNNC76rtRQ5miW/25GGGyZvo5WKP7KGlcftR9RTIVe6B6Y8VDwKMfhgGC848zEV/GIfmNzd/IYcd3lRrh28kC5Osb2w5kXhceos8KD1SiryXBVsHb1OsKQ+VbU6ODSpc8sfxen1f3umr/R19WkiwfDpdMyfNf6s/srcCLGaBztxt2mzMn1c7x26qO+aC6mJywH9bljZqZKYwe/u2eqn9loJ3TxUHcqwqH7OHVXY0V13YGpAvfJHFRzau3GrvDoztHNw821ynbpV227OVTW6nz2spqVhvA4Yd7YfZP5nGwZxidw+BnSi9m9UwyZqVU43PhVe6rLnJ07+u6aMfddjvg96X8Vk7eizj9OqYG+I9WT5auq86TzBTls/akQJwAA
   </data>
  </layer>
  <layer name="Objects" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
+   H4sIAAAAAAAAA+3OsQnAMAwEQO/lYJPY+w+QaaI6bQwi5g6+UPHoS9nfnfi7feiekRGZi7YA8F/9ddfIkTEEADZ0ZQ8AAAAAAACWeQDf6UBiECcAAA==
   </data>
  </layer>
- <objectgroup name="Objects" width="50" height="50">
+ <objectgroup name="Objects" width="50" height="50" visible="0">
   <object name="orange/1" gid="83" x="640" y="1664"/>
   <object name="pineapple/1" gid="84" x="1920" y="1216"/>
-  <object name="bannana/1" gid="82" x="1792" y="2432"/>
-  <object name="sprite/crocodile" gid="110" x="640" y="64"/>
+  <object name="banana/1" gid="82" x="1792" y="2432"/>
+  <object name="sprite/crocodile/1" gid="110" x="640" y="64"/>
   <object name="orange/1" gid="83" x="640" y="1664"/>
   <object name="pineapple/1" gid="84" x="1920" y="1216"/>
-  <object name="bannana/1" gid="82" x="1792" y="2432"/>
+  <object name="banana/1" gid="82" x="1792" y="2432"/>
   <object name="orange/3" gid="83" x="448" y="1728"/>
   <object name="orange/4" gid="83" x="768" y="1600"/>
   <object name="orange/5" gid="83" x="768" y="1728"/>
   <object name="orange/2" gid="83" x="512" y="1664"/>
   <object name="sprite/1" gid="195" x="128" y="320"/>
   <object name="sprite/monkey" gid="175" x="1344" y="384"/>
+  <object name="orange/6" gid="83" x="128" y="1856"/>
+  <object name="orange/7" gid="83" x="192" y="1728"/>
+  <object name="pineapple/5" gid="84" x="2112" y="1088"/>
+  <object name="pineapple/3" gid="84" x="1920" y="960"/>
+  <object name="pineapple/6" gid="84" x="2112" y="896"/>
+  <object name="pineapple/4" gid="84" x="1984" y="1088"/>
+  <object name="pineapple/2" gid="84" x="1856" y="1152"/>
+  <object name="banana/6" gid="82" x="1344" y="2560"/>
+  <object name="banana/7" gid="82" x="1152" y="2816"/>
+  <object name="banana/4" gid="82" x="1920" y="2752"/>
+  <object name="banana/3" gid="82" x="1920" y="2496"/>
+  <object name="banana/5" gid="82" x="1792" y="2560"/>
+  <object name="banana/2" gid="82" x="2496" y="2624"/>
+  <object name="pineapple/7" gid="84" x="2560" y="576"/>
+  <object name="sprite/crocodile/2" gid="110" x="0" y="576"/>
+  <object name="sprite/crocodile/3" gid="110" x="768" y="1088"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
-  <object name="crate/1" gid="66" x="128" y="192"/>
   <object name="bridge/1" gid="64" x="256" y="576"/>
   <object name="vines/1" gid="80" x="768" y="640"/>
-  <object name="dropoff/1" gid="239" x="192" y="256"/>
+  <object name="exit" gid="239" x="448" y="192"/>
+  <object name="crate/banana" gid="65" x="192" y="192"/>
+  <object name="crate/orange" gid="67" x="256" y="192"/>
+  <object name="crate/pineapple" gid="68" x="320" y="192"/>
+  <object name="dropoff/orange" gid="239" x="256" y="256"/>
+  <object name="dropoff/pineapple" gid="239" x="320" y="256"/>
+  <object name="dropoff/orange" gid="239" x="192" y="256"/>
+  <object name="dropoff/1" gid="238" x="1088" y="1280"/>
+  <object name="pickup/1" gid="238" x="960" y="1280"/>
+  <object gid="66" x="1024" y="1280"/>
+  <object name="handover/1" gid="66" x="1024" y="1280"/>
  </objectgroup>
 </map>

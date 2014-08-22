@@ -29,27 +29,36 @@ def create_execution_scope(entity):
     east  = +1,  0
     west  = -1,  0
 
-    def move(position):
-        entity.print_debug("Python: move({})".format(position))
+    def print_debug(text):
+        entity.print_debug(text)
 
+    def move(position):
         x, y = position
         x = cast("int", x)
         y = cast("int", y)
-
-        entity.move(x, y)
+        return entity.move(x, y)
 
     def monologue(*args):
-        entity.print_debug("Python: monologue({})".format(args))
         entity.monologue("\n".join(args))
 
     def walkable(position):
-        entity.print_debug("Python: walkable({})".format(position))
-
         x, y = position
         x = cast("int", x)
         y = cast("int", y)
 
         return entity.walkable(x, y)
+
+    def cut(position):
+        entity.print_debug("Python: cut({})".format(position))
+        x, y = position
+        x = cast("int", x)
+        y = cast("int", y)
+
+        entity.cut(position)
+
+    def look(search_range):
+        entity.print_debug("Python: look({})".format(search_range))
+        return entity.look(search_range)
 
 
     # Finally, export the desired behaviour
@@ -61,7 +70,10 @@ def create_execution_scope(entity):
 
         "move": move,
         "monologue": monologue,
-        "walkable": walkable
+        "walkable": walkable,
+        "cut": cut,
+        "look": look,
+        "print_debug": print_debug
     }
 
 

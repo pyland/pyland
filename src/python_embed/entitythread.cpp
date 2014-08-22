@@ -1,5 +1,6 @@
 #include "python_embed_headers.hpp"
 
+#include <atomic>
 #include <boost/filesystem/path.hpp>
 #include <boost/python.hpp>
 #include <boost/ref.hpp>
@@ -12,6 +13,7 @@
 #include "entitythread.hpp"
 #include "event_manager.hpp"
 #include "interpreter_context.hpp"
+#include "lifeline.hpp"
 #include "locks.hpp"
 #include "make_unique.hpp"
 
@@ -32,6 +34,9 @@ LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, 
 ///
 /// A thread function running a player's daemon.
 ///
+/// @param on_finish
+///     Atomic flag to signal the thread's finishing
+///
 /// @param entity_object
 ///     Python object to pass to the bootstrapper, which has API calls passed to it.
 ///
@@ -49,13 +54,15 @@ LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, 
 ///
 ///     Also allows importing files.
 ///
-void run_entity(std::shared_ptr<py::api::object> entity_object,
+void run_entity(std::atomic<bool> &on_finish,
+                std::shared_ptr<py::api::object> entity_object,
                 std::promise<long> thread_id_promise,
                 boost::filesystem::path bootstrapper_file,
                 InterpreterContext interpreter_context,
                 std::map<EntityThread::Signal, PyObject *> signal_to_exception) {
 
     LOG(INFO) << "run_entity: Starting";
+    Lifeline alert_on_finish([&] () { on_finish = true; });
 
     bool waiting = true;
 
@@ -137,6 +144,8 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
     previous_call_number(entity.call_number),
     interpreter_context(interpreter_context),
 
+    thread_finished(false),
+
     Py_BaseAsyncException(make_base_async_exception(PyExc_BaseException, "__main__.BaseAsyncException")),
 
     signal_to_exception({
@@ -153,7 +162,6 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
     })
 
     {
-
         // To get thread_id
         std::promise<long> thread_id_promise;
         thread_id_future = thread_id_promise.get_future();
@@ -169,6 +177,7 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
 
         thread = std::make_unique<std::thread>(
             run_entity,
+            std::ref(thread_finished),
             entity_object,
             std::move(thread_id_promise),
             // TODO: Extract path into a more logical place
@@ -218,7 +227,14 @@ void EntityThread::clean() {
 
 void EntityThread::finish() {
     // TODO: implement nagging
-    halt_soft(Signal::KILL);
+    while (true) {
+        halt_soft(Signal::KILL);
+
+        if (thread_finished) { break; }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
     thread->join();
 }
 

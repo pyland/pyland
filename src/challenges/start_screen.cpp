@@ -25,7 +25,6 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
                 int current_level = ChallengeHelper::get_current_level();
                 if (i<=current_level) {
                     Engine::print_dialogue("Game", "loading challenge " + std::to_string(i));
-                    kill_scripts();
                     event_finish.trigger(i);
                 }
                 else if (i<=encoded_levels) {

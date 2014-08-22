@@ -83,7 +83,7 @@ LockableEntityThread Interpreter::register_entity(Entity &entity) {
 Interpreter::~Interpreter() {
     // Join killer
     thread_killer->finish();
-    LOG(INFO) << "Interpreter: Finished kill thread";
+    LOG(INFO) << "Finished kill thread";
 
     // Exorcise daemons
     {
@@ -92,10 +92,12 @@ Interpreter::~Interpreter() {
         // so is good practice
         std::lock_guard<std::mutex> lock(*entitythreads.lock);
         entitythreads.value.clear();
+        LOG(INFO) << "Deinitialized an entitythread";
     }
 
     // Finished Python
     deinitialize_python();
+    LOG(INFO) << "Deinitialized Python";
 }
 
 void Interpreter::deinitialize_python() {

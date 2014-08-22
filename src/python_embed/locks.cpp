@@ -14,42 +14,42 @@ namespace lock {
         inst = i;
         ++i;
 
-        LOG(INFO) << inst << " Aquiring GIL lock  " << name;
+        VLOG(1) << inst << " Aquiring GIL lock  " << name;
         PyEval_RestoreThread(interpreter_context.get_threadstate());
-        LOG(INFO) << inst << " GIL lock aquired   " << name;
+        VLOG(1) << inst << " GIL lock aquired   " << name;
     }
 
     GIL::GIL(InterpreterContext interpreter_context): GIL(interpreter_context, "") {}
 
     GIL::~GIL() {
-        LOG(INFO) << inst << " Releasing GIL lock " << name;
+        VLOG(1) << inst << " Releasing GIL lock " << name;
         PyEval_SaveThread();
-        LOG(INFO) << inst << " GIL lock released  " << name;
+        VLOG(1) << inst << " GIL lock released  " << name;
     }
 
 
     ThreadGIL::ThreadGIL(ThreadState &threadstate) {
-        LOG(INFO) << " Aquiring Thread GIL lock";
+        VLOG(1) << " Aquiring Thread GIL lock";
         PyEval_RestoreThread(threadstate.get_threadstate());
-        LOG(INFO) << " Thread GIL lock aquired";
+        VLOG(1) << " Thread GIL lock aquired";
     }
 
     ThreadGIL::~ThreadGIL() {
-        LOG(INFO) << " Releasing Thread GIL lock";
+        VLOG(1) << " Releasing Thread GIL lock";
         PyEval_SaveThread();
-        LOG(INFO) << " Thread GIL lock released";
+        VLOG(1) << " Thread GIL lock released";
     }
 
     ThreadGILRelease::ThreadGILRelease() {
-        LOG(INFO) << " Releasing Thread GIL lock";
+        VLOG(1) << " Releasing Thread GIL lock";
         threadstate = PyEval_SaveThread();
-        LOG(INFO) << " Thread GIL lock Released";
+        VLOG(1) << " Thread GIL lock Released";
     }
 
     ThreadGILRelease::~ThreadGILRelease() {
-        LOG(INFO) << " Reaquiring Thread GIL lock";
+        VLOG(1) << " Reaquiring Thread GIL lock";
         PyEval_RestoreThread(threadstate);
-        LOG(INFO) << " Thread GIL lock reaquired";
+        VLOG(1) << " Thread GIL lock reaquired";
     }
 
 
@@ -59,7 +59,7 @@ namespace lock {
 
     ThreadState::~ThreadState() {
         {
-            LOG(INFO) << "ThreadState: Getting GIL and clearing ThreadState";
+            VLOG(1) << "ThreadState: Getting GIL and clearing ThreadState";
 
             PyGILState_STATE state = PyGILState_Ensure();
             PyThreadState_Clear(threadstate);

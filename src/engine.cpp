@@ -1,5 +1,6 @@
 #include <glog/logging.h>
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <glm/vec2.hpp>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include <memory>
 #include <stdexcept>
 #include <thread>
+#include <tuple>
 #include <vector>
 
 #include "dispatcher.hpp"
@@ -28,6 +30,7 @@
 MapViewer *Engine::map_viewer(nullptr);
 NotificationBar *Engine::notification_bar(nullptr);
 GameWindow* Engine::game_window(nullptr);
+Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
 
@@ -94,7 +97,12 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
     // animate walking in-place
-    if (!walkable(target)) { target = location; }
+    auto sprite_test(ObjectManager::get_instance().get_object<Sprite>(id));
+    if (!sprite_test) {
+        VLOG(2) << "ignore if walkable or not";
+    } else {
+        if (!walkable(target)) { target = location; }
+    }
 
     object->set_state_on_moving_start(target);
 
@@ -113,7 +121,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             // Long rambly justification about how Ax + B(1-x) can be outside
             // the range [A, B] (consider when A=B).
             //
-            // The given formula cannot have this problem when A and B are exactly 
+            // The given formula cannot have this problem when A and B are exactly representable
             glm::vec2 tweened_position(location + completion * (target-location));
 
             object->set_position(tweened_position);
@@ -203,7 +211,7 @@ void Engine::open_editor(std::string filename) {
     LOG(INFO) << "Opening editor";
 
     //TODO remove this function in the final version
-    std::string command(editor + std::string(" python_embed/scripts/") + filename);
+    std::string command(editor + std::string(" python_embed/scripts/") + filename +  ".py");
 
     // TODO: Make this close safely.
     std::thread([command] () { system(command.c_str()); }).detach();
@@ -230,7 +238,6 @@ std::vector<int> Engine::get_objects_at(glm::vec2 location) {
 std::vector<int> Engine::get_sprites_at(glm::vec2 location) {
     return location_filter_objects(location, map_viewer->get_map()->get_sprites());
 }
-
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     auto objects(get_objects_at(location));
@@ -242,7 +249,7 @@ bool Engine::is_object_at(glm::ivec2 location, int object_id) {
 
 bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     return std::all_of(std::begin(object_ids), std::end(object_ids), [&] (int object_id) {
-        return is_object_at(location,object_id);
+        return is_object_at(location, object_id);
     });
 }
 
@@ -265,6 +272,61 @@ void Engine::text_displayer() {
             sprite->get_object_text()->display();
         }
     }
+}
+
+std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_range) {
+    std::vector<std::tuple<std::string, int, int>> objects;
+
+    Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
+    //Check the object is on the map
+    auto map_objects = map->get_map_objects();
+    auto sprites = map->get_sprites();
+    for(auto object_id : map_objects) {
+        if(object_id != 0) {
+            //Object is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+            std::string name = object->get_name();
+            //TODO, maybe we should give python the floats - what if the object is moving?
+            //in this case, the position is truncated
+            glm::ivec2 object_pos = object->get_position();
+            
+            //Check if in range
+            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+            std::cout << object->get_name() << std::endl;
+            //Circle bounds
+            if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
+                continue;
+
+            objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
+        }
+    }
+
+    for(auto object_id : sprites) {
+        if(object_id != 0) {
+            //Object is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+            std::string name = object->get_name();
+            //TODO, maybe we should give python the floats - what if the object is moving?
+            //in this case, the position is truncated
+            glm::ivec2 object_pos = object->get_position();
+                        std::cout << object->get_name() << std::endl;
+            //Check if in range
+            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+
+            //Circle bounds
+            if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
+                continue;
+
+            objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
+        }
+    }
+    return objects;
+}
+
+bool Engine::cut(int id, glm::ivec2 location) {
+    std::cout << id << std::endl;
+    std::cout << location.x <<std::endl;
+    return true;
 }
 
 void Engine::text_updater() {

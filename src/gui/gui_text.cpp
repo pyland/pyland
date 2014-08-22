@@ -17,11 +17,11 @@ std::vector<std::pair<GLfloat*, int>> GUIText::generate_vertex_data() {
 
 std::vector<std::pair<GLfloat*, int>> GUIText::generate_texture_data() {
     std::vector<std::pair<GLfloat*, int>> empty_data;
-    return empty_data;    
+    return empty_data;
 }
 
 std::vector<std::shared_ptr<GUIText>> GUIText::generate_text_data() {
-    //    std::vector<std::shared_ptr<GUITextDat>> text_data_vec;    
+    //    std::vector<std::shared_ptr<GUITextDat>> text_data_vec;
     //    text_data->get_text()->resize(width_pixels, height_pixels);
     //    text_data_vec.push_back(text_data);
     std::vector<std::shared_ptr<GUIText>> text_data_vec;
