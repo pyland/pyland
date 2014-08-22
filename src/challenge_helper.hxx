@@ -38,7 +38,7 @@ void ChallengeHelper::unregister_all(Container *callbacks) {
 }
 template <class OutputIt>
 void ChallengeHelper::make_objects(Challenge *challenge,
-                                   std::string marker_name,
+                                   std::string, //marker_name
                                    Walkability walkability,
                                    OutputIt output,
                                    std::string start_frame,

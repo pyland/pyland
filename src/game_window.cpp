@@ -171,7 +171,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
     // SDL already uses width,height = 0,0 for automatic
     // resolution. Sets maximized if not in fullscreen and given
     // width,height = 0,0.
-    window = SDL_CreateWindow ("Project Zygote",
+    window = SDL_CreateWindow ("Pyland",
                                SDL_WINDOWPOS_CENTERED,
                                SDL_WINDOWPOS_CENTERED,
                                width,

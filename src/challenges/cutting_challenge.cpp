@@ -1,5 +1,8 @@
 #include <glog/logging.h>
 #include <memory>
+#include <random>
+
+#include <glm/vec2.hpp>
 
 #include "api.hpp"
 #include "cutting_challenge.hpp"
@@ -10,6 +13,8 @@
 #include "map.hpp"
 #include "object.hpp"
 #include "object_manager.hpp"
+
+static std::mt19937 random_generator;
 
 CuttingChallenge::CuttingChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue("Ben", "I think I see a farm up ahead...");
@@ -28,18 +33,37 @@ CuttingChallenge::CuttingChallenge(ChallengeData *challenge_data): Challenge(cha
             return true;
         });
 
+    vine_count = 0;
     int w(map->get_width());
     int h(map->get_height());
     for (int y = 0; y < h; ++y) {
         for (int x = 0; x < w; ++x) {
             if (map->query_tile(x, y, "Interaction") == std::string("interactable/vines/cut/3")) {
+                ++vine_count;
+                vine_spots.push_back(glm::ivec2{x, y});
                 map->event_step_on.register_callback(glm::ivec2({x, y}), [this, x, y] (int) {
                         map->update_tile(x, y, "Interaction", "test/blank");
+                        --vine_count;
+                        Engine::print_dialogue ("Vines remaining", std::to_string(vine_count));
                         return true;
                     });
             }
         }
     }
+    uniform_spot_gen = std::uniform_int_distribution<uint32_t>(0, vine_count);
+
+    // std::function<void()> regrow([this, regrow] () {
+    //         int i;
+    //         i = uniform_spot_gen(random_generator);
+    //         glm::ivec2 spot(vine_spots[i]);
+    //         if (map->query_tile(spot.x, spot.y, "Interaction") == std::string("test/blank.png")) {
+    //             map->update_tile(spot.x, spot.y, "Interaction", "interactable/vines/cut/3");
+    //         }
+    //         if (vine_count > 0) {
+    //             EventManager::get_instance().add_event_next_frame(regrow);
+    //         }
+    //     });
+    // EventManager::get_instance().add_event_next_frame(regrow);
 }
 
 void CuttingChallenge::start() {

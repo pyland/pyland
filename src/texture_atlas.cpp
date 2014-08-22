@@ -143,8 +143,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
     unit_h(Engine::get_tile_size()),
     sub_atlases(atlases.size()),
     super_atlas(),
-    names_to_indexes(),
-    indexes_to_names(unit_columns * unit_rows)
+    names_to_indexes()
 {
     int texture_count = 0;
     // Assume all tiles are the same size. They should be...
@@ -167,6 +166,8 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
         unit_rows    = (texture_count + max_columns - 1) / max_columns;
     }
     gl_image = image = Image(unit_w * unit_columns, unit_h * unit_rows, true);
+
+    indexes_to_names = std::vector<std::string>(unit_columns * unit_rows);
 
     LOG(INFO) << "Generating super atlas: textures: " << texture_count << " = (" << unit_columns << ", " << unit_rows << ") => pixels: (" << gl_image.width << ", " << gl_image.height << ")";
 
