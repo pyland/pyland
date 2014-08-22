@@ -32,7 +32,7 @@ CuttingChallenge::CuttingChallenge(ChallengeData *challenge_data): Challenge(cha
     glm::ivec2 gardener_objective_location = ChallengeHelper::get_location_interaction("trigger/objective/gardener");
     glm::ivec2 monkey_objective_location = ChallengeHelper::get_location_interaction("trigger/objective/monkey");
     
-    ChallengeHelper::make_interaction("trigger/objective/start", [gardener_objective_location] (int) {
+    ChallengeHelper::make_interaction("trigger/objective/gardener", [gardener_objective_location] (int) {
             Engine::print_dialogue ("Gardener","We need more space for our farm, but these vines grow back faster than I can cut them down. Maybe you can do a better job? We will gladdly share some of our food with you if you cut down all of the vines.");
             return true;
         });
@@ -143,7 +143,8 @@ void CuttingChallenge::grow_out(int x, int y) {
 std::string CuttingChallenge::monkey_say() {
     std::uniform_int_distribution<uint32_t> uniform_monkey_sentence(1,4);
     std::uniform_int_distribution<uint32_t> uniform_monkey_phrases(1,6);
-    std::uniform_int_distribution<uint32_t> uniform_monkey_sounds(0,4);
+    std::uniform_int_distribution<uint32_t> uniform_monkey_sounds(1,4);
+    std::uniform_int_distribution<uint32_t> uniform_monkey_syllables(0,4);
     std::uniform_int_distribution<uint32_t> uniform_monkey_pauses(0,1);
     std::uniform_int_distribution<uint32_t> uniform_monkey_ends(0,2);
     std::stringstream message;
@@ -157,7 +158,7 @@ std::string CuttingChallenge::monkey_say() {
             int sounds = uniform_monkey_sounds(random_generator);
             for (int sound = 0; sound < sounds; ++sound) {
                 if (phrase == 0 && sound == 0) {
-                    switch (uniform_monkey_sounds(random_generator)) {
+                    switch (uniform_monkey_syllables(random_generator)) {
                     case 0:
                         message << "Oop";
                         break;
@@ -176,7 +177,7 @@ std::string CuttingChallenge::monkey_say() {
                     }
                 }
                 else {
-                    switch (uniform_monkey_sounds(random_generator)) {
+                    switch (uniform_monkey_syllables(random_generator)) {
                     case 0:
                         message << "oop";
                         break;
@@ -194,7 +195,7 @@ std::string CuttingChallenge::monkey_say() {
                         break;
                     }
                 }
-                if (sentence != sentences - 1) {
+                if (sound != sounds - 1) {
                     message << "-";
                 }
             }
