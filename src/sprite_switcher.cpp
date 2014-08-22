@@ -21,8 +21,7 @@ float x_offset = 0.8f;
 
 void SpriteSwitcher::add_sprite(int id) {
     // get sprite_name
-    std::string name = 
-        ObjectManager::get_instance().get_object<Sprite>(id)->get_sprite_name();
+    std::string name = ObjectManager::get_instance().get_object<Sprite>(id)->get_sprite_name();
 
     // build button
     std::shared_ptr<Button> new_button = std::make_shared<Button>();

@@ -38,7 +38,7 @@ def create_execution_scope(entity):
         x, y = position
         x = cast("int", x)
         y = cast("int", y)
-        entity.move(x, y)
+        return entity.move(x, y)
 
     def monologue(*args):
         entity.print_debug("Python: monologue({})".format(args))

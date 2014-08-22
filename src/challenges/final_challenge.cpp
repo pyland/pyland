@@ -6,6 +6,7 @@
 #include "final_challenge.hpp"
 #include "challenge_helper.hpp"
 #include "challenge_data.hpp"
+#include "challenge.hpp"
 #include "engine.hpp"
 #include "object_manager.hpp"
 #include "entitythread.hpp"
@@ -16,6 +17,18 @@
 
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
+
+    //creating monkey helper
+    ChallengeHelper::make_sprite(
+        this,
+        "sprite/monkey",
+        "Milo",
+        Walkability::BLOCKED,
+        "south/still/1"
+    );
+
+
+    //create the main game character
     ChallengeHelper::make_sprite(
         this,
         "sprite/1",
@@ -41,17 +54,26 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         orange_ids.push_back(orange_id);
     }
 
-    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids] (int) {
-        LOG(INFO) << "checking if challenge has been one";
-        LOG(INFO) << Engine::get_objects_at(crate_location).size();
-        if (Engine::is_objects_at(dropoff_location, orange_ids)) {
+    // checking if all oranges are in crate
+    ChallengeHelper::make_interaction("dropoff/1", [dropoff_location, crate_location, orange_ids,this] (int) {
+
+        if (Engine::is_objects_at(crate_location, orange_ids)) {
             Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
+            finish();
         } else {
             Engine::print_dialogue ("Game","Keep going");
         }
         return true;
     });
 
+    // challenge exit
+    ChallengeHelper::make_interaction("exit", [this] (int) {
+        finish();
+        LOG(INFO) << "exiting";
+        return false;
+    });
+
+    // creating croc
     LOG(INFO) << "creating croc";
     int croc_id = ChallengeHelper::make_object(
         this,
@@ -73,20 +95,15 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     LOG(INFO) << "Registering sprite";
     croc->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
     LOG(INFO) << "Done!";
-    //std::this_thread::sleep_for(std::chrono::seconds(4));
+
     croc->daemon->value->halt_soft(EntityThread::Signal::RESTART);
-    // ChallengeHelper::make_sprite(
-    //     this,
-    //     "sprite/crocodile",
-    //     "final_challenge_croc",
-    //     Walkability::BLOCKED,
-    //     "south/still/1"
-    // );
+
 }
 
 void FinalChallenge::start() {
 }
 
 void FinalChallenge::finish() {
-    // TODO: Somehow finish challenge...
+    ChallengeHelper::set_completed_level(1);    
+    event_finish.trigger(0);
 }

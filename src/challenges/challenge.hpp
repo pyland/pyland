@@ -65,11 +65,6 @@ public:
                         Walkability walkability,
                         AnimationFrames frames,
                         std::string start_frame);
-
-    ///
-    /// Call this on exit to finish the bug with running scripts on exit crashing app
-    ///
-    void kill_scripts();
 };
 
 #endif

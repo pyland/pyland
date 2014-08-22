@@ -94,7 +94,7 @@ int main(int argc, const char *argv[]) {
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
     Typeface buttontype = Engine::get_game_typeface();
     TextFont buttonfont = Engine::get_game_font();
-    
+
     std::shared_ptr<Text> stoptext = std::make_shared<Text>(&window, buttonfont, true);
     std::shared_ptr<Text> runtext = std::make_shared<Text>(&window, buttonfont, true);
     // referring to top left corner of text window
@@ -174,39 +174,74 @@ int main(int argc, const char *argv[]) {
         [&] (KeyboardInputEvent) { callbackstate.restart(); }
     ));
 
-
-    Lifeline fast_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_PRESS}), KEY({"Left Shift"})},
-        [&] (KeyboardInputEvent) {                 
-            EventManager::get_instance().time.game_seconds_per_real_second = 64.0;
-        }        
+    Lifeline editor_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("E")},
+        [&] (KeyboardInputEvent) { 
+            auto id = Engine::get_map_viewer()->get_map_focus_object();
+            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
+            if (!active_player) { return; }
+            Engine::open_editor(active_player->get_name());
+        }
     ));
 
-    Lifeline slow_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_RELEASE}), KEY({"Left Shift"})},
-        [&] (KeyboardInputEvent) {                 
+
+    std::chrono::steady_clock::time_point start_time;
+
+    Lifeline fast_start_ease_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_PRESS}), KEY({"Left Shift", "Right Shift"})},
+        [&] (KeyboardInputEvent) {
+            start_time = std::chrono::steady_clock::now();
+        }
+    ));
+
+    Lifeline fast_ease_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_HELD}), KEY({"Left Shift", "Right Shift"})},
+        [&] (KeyboardInputEvent) {
+            auto now(std::chrono::steady_clock::now());
+            auto time_passed = now - start_time;
+
+            float completion(time_passed / std::chrono::duration<float>(6.0f));
+            completion = std::min(completion, 1.0f);
+
+            // Using an easing function from the internetz:
+            //
+            //     start + (c⁵ - 5·c⁴ + 5·c³) change
+            //
+            float eased(1.0f + 511.0f * (
+                + 1.0f * completion * completion * completion * completion * completion
+                - 5.0f * completion * completion * completion * completion
+                + 5.0f * completion * completion * completion
+            ));
+
+            EventManager::get_instance().time.game_seconds_per_real_second = eased;
+        }
+    ));
+
+    Lifeline fast_finish_ease_callback = input_manager->register_keyboard_handler(filter(
+        {ANY_OF({KEY_RELEASE}), KEY({"Left Shift", "Right Shift"})},
+        [&] (KeyboardInputEvent) {
             EventManager::get_instance().time.game_seconds_per_real_second = 1.0;
-        }        
+        }
     ));
 
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Up", "W"})},
+        {ANY_OF({KEY_HELD}), REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, 1)); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Down", "S"})},
+        {ANY_OF({KEY_HELD}), REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Down", "S"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, -1)); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Right", "D"})},
+        {ANY_OF({KEY_HELD}), REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Right", "D"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 1,  0)); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Left", "A"})},
+        {ANY_OF({KEY_HELD}), REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Left", "A"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2(-1,  0)); }
     ));
 
@@ -345,7 +380,7 @@ int main(int argc, const char *argv[]) {
                 }
             }
             tile_identifier_text.display();
-            
+
             cursor.display();
 
             VLOG(3) << "} TD | SB {";
@@ -353,9 +388,11 @@ int main(int argc, const char *argv[]) {
         }
 
         VLOG(3) << "}";
+
+        // Clean up after the challenge - additional, non-challenge clean-up
+        em.flush_and_disable();
         delete challenge;
-        //Clean up after the challenge - additional, non-challenge clean-up
-        em.flush();
+        em.reenable();
 
     }
 

@@ -1,4 +1,5 @@
 #include <functional>
+#include <glog/logging.h>
 #include <initializer_list>
 #include <set>
 #include <stdexcept>
@@ -24,7 +25,7 @@ static std::function<void (Event)> filter_do(std::initializer_list<std::function
                                             std::function<void (Event)> wrapped) {
     // Initializer lists have stupid noncopy semantics on copy.
     // Move to a vector to prevent corruption.
-    std::vector<std::function<bool (Event)>> filters_vector(filters); 
+    std::vector<std::function<bool (Event)>> filters_vector(filters);
 
     return [filters_vector, wrapped] (Event event) {
         for (auto filter : filters_vector) {
@@ -49,7 +50,7 @@ MouseHandler filter(std::initializer_list<MouseFilter> filters, MouseHandler wra
 // KeyboardHandler filter(std::initializer_list<KeyboardFilter> filters, KeyboardHandler wrapped) {
 //     // Initializer lists have stupid noncopy semantics on copy.
 //     // Move to a vector to prevent corruption.
-//     std::vector<KeyboardFilter> filters_vector(filters); 
+//     std::vector<KeyboardFilter> filters_vector(filters);
 
 //     return [filters_vector, wrapped] (KeyboardInputEvent event) {
 //         for (auto filter : filters_vector) {
@@ -74,7 +75,7 @@ KeyboardFilter KEY(std::initializer_list<std::string> keys) {
 
         keyset.insert(keycode);
     }
-    
+
     return [keyset] (KeyboardInputEvent event) {
         return keyset.find(event.key_code) != keyset.end();
     };
@@ -96,7 +97,7 @@ KeyboardFilter MODIFIER(std::initializer_list<std::string> modifiers) {
 
         modifierset.insert(modifiercode);
     }
-    
+
     return [modifierset] (KeyboardInputEvent event) {
         for (auto modifiercode : modifierset) {
             if (event.manager->is_scan_down(modifiercode)) {
@@ -127,7 +128,7 @@ MouseFilter MOUSE_BUTTON(std::initializer_list<std::string> buttons) {
             button_bits |= MouseState::ButtonMask::RIGHT;
         }
     }
-    
+
     return [button_bits] (MouseInputEvent event) {
         return ((event.from.buttons | event.to.buttons) & button_bits) != 0;
     };
@@ -143,7 +144,7 @@ MouseFilter MOUSE_BUTTON(std::initializer_list<int> buttons) {
     for (int button : buttons) {
         button_bits |= (1 << button);
     }
-    
+
     return [button_bits] (MouseInputEvent event) {
         return ((event.from.buttons | event.to.buttons) & button_bits) != 0;
     };
@@ -174,7 +175,7 @@ template<class Event>
 static std::function<bool (Event)> ANY_OF_do(std::initializer_list<std::function<bool (Event)>> filters) {
     // Initializer lists have stupid noncopy semantics on copy.
     // Move to a vector to prevent corruption.
-    std::vector<std::function<bool (Event)>> filters_vector(filters); 
+    std::vector<std::function<bool (Event)>> filters_vector(filters);
 
     return [filters_vector] (Event event) {
         for (auto filter : filters_vector) {
@@ -195,12 +196,6 @@ MouseFilter ANY_OF(std::initializer_list<MouseFilter> filters) {
     return ANY_OF_do<MouseInputEvent>(filters);
 }
 
-
-// KeyboardFilter REJECT(KeyboardFilter filter) {
-//     return [filter] (KeyboardInputEvent event) {
-//         return !filter(event);
-//     };
-// }
 
 KeyboardFilter KEY_HELD = [] (KeyboardInputEvent event) {
     return event.down;

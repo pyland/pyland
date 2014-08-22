@@ -57,19 +57,20 @@ public:
     /// A dead lifeline
     ///
     Lifeline();
-    
+
     Lifeline(std::function<void()> func);
+
     ///
     /// Construct a lifeline which can be disabled using a controller.
     ///
     Lifeline(std::function<void()> func, LifelineController controller);
-    
+
     Lifeline(void (&func)());
     ///
     /// Construct a lifeline which can be disabled using a controller.
     ///
     Lifeline(void (&func)(), LifelineController controller);
-    
+
     ///
     /// Stops the function being called on total destruction.
     ///
@@ -79,5 +80,5 @@ public:
     ///
     void disable();
 };
-    
+
 #endif

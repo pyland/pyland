@@ -96,7 +96,12 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
     // animate walking in-place
-    if (!walkable(target)) { target = location; }
+    auto sprite_test(ObjectManager::get_instance().get_object<Sprite>(id));
+    if (!sprite_test) {
+        VLOG(2) << "ignore if walkable or not";
+    } else {
+        if (!walkable(target)) { target = location; }
+    }
 
     object->set_state_on_moving_start(target);
 
@@ -115,7 +120,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
             // Long rambly justification about how Ax + B(1-x) can be outside
             // the range [A, B] (consider when A=B).
             //
-            // The given formula cannot have this problem when A and B are exactly 
+            // The given formula cannot have this problem when A and B are exactly representable
             glm::vec2 tweened_position(location + completion * (target-location));
 
             object->set_position(tweened_position);
@@ -205,7 +210,7 @@ void Engine::open_editor(std::string filename) {
     LOG(INFO) << "Opening editor";
 
     //TODO remove this function in the final version
-    std::string command(editor + std::string(" python_embed/scripts/") + filename);
+    std::string command(editor + std::string(" python_embed/scripts/") + filename +  ".py");
 
     // TODO: Make this close safely.
     std::thread([command] () { system(command.c_str()); }).detach();
@@ -232,7 +237,6 @@ std::vector<int> Engine::get_objects_at(glm::vec2 location) {
 std::vector<int> Engine::get_sprites_at(glm::vec2 location) {
     return location_filter_objects(location, map_viewer->get_map()->get_sprites());
 }
-
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     auto objects(get_objects_at(location));
@@ -244,7 +248,7 @@ bool Engine::is_object_at(glm::ivec2 location, int object_id) {
 
 bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     return std::all_of(std::begin(object_ids), std::end(object_ids), [&] (int object_id) {
-        return is_object_at(location,object_id);
+        return is_object_at(location, object_id);
     });
 }
 
