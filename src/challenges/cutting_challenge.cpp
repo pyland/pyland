@@ -23,25 +23,64 @@ static std::mt19937 random_generator;
 CuttingChallenge::CuttingChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue("Ben", "I think I see a farm up ahead...");
     int player = ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED, "south/still/1");
+    ChallengeHelper::make_object(this, "sprite/advisor", Walkability::BLOCKED, "south/still/1");
     ChallengeHelper::make_object(this, "sprite/farmer", Walkability::BLOCKED, "south/still/1");
     ChallengeHelper::make_object(this, "sprite/gardener", Walkability::BLOCKED, "west/still/1");
-    ChallengeHelper::make_object(this, "sprite/monkey", Walkability::BLOCKED, "south/still/1");
+    int monkey = ChallengeHelper::make_object(this, "sprite/monkey", Walkability::BLOCKED, "south/still/1");
     Engine::get_map_viewer()->set_map_focus_object(player);
 
 
-    glm::ivec2 gardener_objective_location = ChallengeHelper::get_location_interaction("trigger/objective/gardener");
-    glm::ivec2 monkey_objective_location = ChallengeHelper::get_location_interaction("trigger/objective/monkey");
+    ChallengeHelper::make_interaction("trigger/objective/finish", [this] (int) {
+            ChallengeHelper::set_completed_level(2);
+            finish();
+            return false;
+        });
     
-    ChallengeHelper::make_interaction("trigger/objective/gardener", [gardener_objective_location] (int) {
-            Engine::print_dialogue ("Gardener","We need more space for our farm, but these vines grow back faster than I can cut them down. Maybe you can do a better job? We will gladdly share some of our food with you if you cut down all of the vines.");
+    ChallengeHelper::make_interaction("trigger/advice/monkey", [this] (int) {
+            if (has_bananas) {
+                Engine::print_dialogue ("Villager","Hey, you've got some bananas! Maybe you can get use them to persuade that monkey to move...");
+            }
+            else {
+                Engine::print_dialogue ("Villager","That monkey up north has been blocking that path for ages now. He usually goes away when we give him a banana or two, but we've been rather short on food recently. If you're lucky, someone around the farm might have some to spare.");
+                has_bananas = true;
+            }
             return true;
         });
 
-    ChallengeHelper::make_interaction("trigger/objective/monkey", [this, monkey_objective_location] (int) {
-            Engine::print_dialogue ("Monkey", monkey_say());
+    ChallengeHelper::make_interaction("trigger/objective/gardener", [this] (int) {
+            if (vine_count > 0) {
+                Engine::print_dialogue ("Gardener","We need more space for our farm, but these vines grow back faster than I can cut them down. Maybe you can do a better job? We will gladdly share some of our bananas with you if you cut down all of the vines.");
+            }
+            else {
+                Engine::print_dialogue ("Gardener","Thanks for cutting those vines! Now we have more farmland. Go see the banana farmer, I'm sure he can now spare you some of our produce.");
+            }
             return true;
         });
 
+    ChallengeHelper::make_interaction("trigger/objective/farmer", [this] (int) {
+            if (vine_count > 0) {
+                Engine::print_dialogue ("Farmer","Sorry, I can't spare any bananas. Unless we expand our farmland soon, we'll run out food supplies.");
+            }
+            else {
+                Engine::print_dialogue ("Farmer","Alright! With all those vines gone, we'll be able to grow more bananas! Mmmm... banaaanaaas... Do you like bananas? Here, take a bunch of them - we can grow more now.");
+                has_bananas = true;
+            }
+            return true;
+        });
+
+    ChallengeHelper::make_interaction("trigger/objective/monkey", [this, monkey] (int) {
+            if (has_bananas) {
+                Engine::print_dialogue ("Monkey","Oop-a-...... Bananas? Now you're speaking my language!");
+                Engine::move_object(monkey, glm::vec2({1, 0}));
+                return false;
+            }
+            else {
+                Engine::print_dialogue ("Monkey", monkey_say());
+                return true;
+            }
+        });
+
+    has_bananas = false;
     vine_count = 0;
     int w(map->get_width());
     int h(map->get_height());
@@ -99,6 +138,7 @@ void CuttingChallenge::start() {
 }
 
 void CuttingChallenge::finish() {
+    event_finish.trigger(0);
 }
 
 

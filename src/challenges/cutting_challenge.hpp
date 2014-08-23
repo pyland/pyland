@@ -19,6 +19,7 @@ private:
     std::uniform_int_distribution<uint32_t> uniform_spot_gen;
     std::uniform_int_distribution<uint32_t> uniform_direction_gen;
     std::function<void()> regrow;
+    bool has_bananas;
 
     void grow_out(int x, int y);
     std::string monkey_say();
