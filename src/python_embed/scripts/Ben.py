@@ -49,7 +49,6 @@ about what it does and how it works.
 help()
 
 
-
 #
 # This is some code to use for the first task.
 # It moves east 100 times.
