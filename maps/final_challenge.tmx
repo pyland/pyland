@@ -36,7 +36,7 @@
  </layer>
  <layer name="Overlay" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <layer name="Overlay2" width="50" height="50">
@@ -84,7 +84,8 @@
   <object name="pineapple/7" gid="127" x="2560" y="576"/>
   <object name="sprite/crocodile/2" gid="154" x="0" y="576"/>
   <object name="sprite/crocodile/3" gid="154" x="768" y="1088"/>
-  <object name="vines/cut/1" gid="126" x="768" y="640"/>
+  <object name="bridge/1" gid="101" x="256" y="576"/>
+  <object name="vines/cut/1" gid="120" x="768" y="640"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
   <object name="exit" gid="301" x="448" y="192"/>
@@ -100,7 +101,6 @@
   <object gid="300" x="256" y="640"/>
   <object gid="300" x="256" y="640"/>
   <object name="fixbridge/1" gid="300" x="256" y="640"/>
-  <object name="bridge/1" gid="101" x="256" y="576"/>
   <object name="dropoff/1" gid="300" x="1088" y="1280"/>
  </objectgroup>
 </map>
