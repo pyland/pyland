@@ -3,8 +3,6 @@
 
 #include <chrono>
 
-#include "accessor.hpp"
-
 class GameTime {
     public:
         // Basically makes this a clock class
@@ -21,7 +19,14 @@ class GameTime {
         GameTime();
         GameTime(const GameTime &other);
 
-        Accessor<double> game_seconds_per_real_second;
+        double get_game_seconds_per_real_second() {
+          return game_seconds_per_real_second;
+        }
+        void set_game_seconds_per_real_second(double secs) {
+          time();
+          game_seconds_per_real_second = secs;
+        }
+
         time_point time();
 
     private:
@@ -37,6 +42,7 @@ class GameTime {
         // Internally we're only keeping track of a delta, but
         // we'll return time_point instances as if we had
         // a real reference for time.
+        double game_seconds_per_real_second;
         duration passed_time;
         std::chrono::steady_clock::time_point time_at_last_tick;
 };

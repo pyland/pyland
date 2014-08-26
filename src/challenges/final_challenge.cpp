@@ -17,7 +17,7 @@
 #include "make_unique.hpp"
 
 // waiting to add "banana"
-std::vector<std::string> fruit_types = {"orange","pineapple"};
+std::vector<std::string> fruit_types = {"bananas","orange","pineapple"};
 unsigned int num_of_fruit = 7;
 
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
@@ -43,9 +43,9 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     );
 
  
-    //glm::ivec2 handover_location = ChallengeHelper::get_location_interaction("handover/1");
-    //glm::ivec2 handover_pickup = ChallengeHelper::get_location_interaction("pickup/1");
-    //glm::ivec2 handover_dropoff = ChallengeHelper::get_location_interaction("dropoff/1");
+    glm::ivec2 handover_location = ChallengeHelper::get_location_interaction("handover/1");
+    glm::ivec2 handover_pickup = ChallengeHelper::get_location_interaction("pickup/1");
+    glm::ivec2 handover_dropoff = ChallengeHelper::get_location_interaction("dropoff/1");
 
 
     for (std::string fruit_type : fruit_types) {
@@ -63,7 +63,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
 
             int fruit_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, fruit_type);
             ChallengeHelper::create_pickupable(fruit_location, fruit_location, crate_location, dropoff_location , fruit_id, true);
-            //ChallengeHelper::create_pickupable(handover_location,handover_pickup,handover_location,handover_dropoff,fruit_id, true);
+            ChallengeHelper::create_pickupable(handover_location,handover_pickup,handover_location,handover_dropoff,fruit_id, true);
             fruit_ids.push_back(fruit_id);
         }
 
@@ -89,6 +89,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         bool terminate =
             std::all_of(std::begin(fruit_types), std::end(fruit_types), [&] (std::string fruit_type) {
                 glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/"+fruit_type);
+               
                 return Engine::get_objects_at(crate_location).size()==num_of_fruit;
             });
 
@@ -131,10 +132,65 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     }
     
     //Adding cuttable object
-    auto name = "vines/cut/1";
-    int vine_id = ChallengeHelper::make_object(this, name, Walkability::BLOCKED, "orange", true);
+    auto vine_name = "vines/cut/1";
+    int vine_id = ChallengeHelper::make_object(this, vine_name, Walkability::BLOCKED, "3", true);
     std::shared_ptr<MapObject> vines_object = ObjectManager::get_instance().get_object<MapObject>(vine_id);
 
+    //Adding bridge object
+    auto bridge_name = "bridge/1";
+    int bridge_id = ChallengeHelper::make_object(this, bridge_name, Walkability::BLOCKED, "4", true);
+
+    Engine::print_dialogue("Villager",
+                           "Hello adventurer! I'm in need of some help.\n"
+                           "You see, I need to collect some fruit for the villagers.\n"
+                           "Unfortunately, the bridge is broken and I can't get out into "
+                           "the jungle to gather the fruit.\n" 
+    );
+
+    EventManager::get_instance().add_timed_event(GameTime::duration(5.0), [this] (float completion) {
+            if(completion == 1.0) {
+                Engine::print_dialogue("Villager",
+                                       "You can repair the bridge with vines. "
+                                       "Maybe you could use your friend Milo to help you? "
+                                       "Try using the cut(direction) API call."
+                                       );
+            }
+            return true;
+    });
+
+    ChallengeHelper::make_interaction("fixbridge/1", [bridge_id] (int){
+            auto object = ObjectManager::get_instance().get_object<MapObject>(bridge_id);
+            
+            if(!object)
+                return true;
+            object->set_tile(object->frames.get_frame("3"));
+            object->set_walkability(Walkability::WALKABLE);
+            
+            Engine::print_dialogue ("Villager",
+                                    "Excellent! Thanks for fixing that bridge for me.\n"
+                                    "I'll tell you what, if you gather the fruit for me, "
+                                    "I'll give you a reward for your help!\n"
+            );
+
+
+            EventManager::get_instance().add_timed_event(GameTime::duration(5.0), [] (float completion) {
+                    if(completion == 1.0) {
+                        Engine::print_dialogue("Villager",
+                                               "It can be quite a tedious process as the fruit is a "
+                                               "long way into the jungle.\n We normally work in pairs "
+                                               "when we gather the fruit.\n There's a drop off point "
+                                               "on the map where we exchange fruits with each other.\n"
+                                               "Why not get Milo to pick up items from that point "
+                                               "and run them back to the fruit crates by me?\n"
+                                               "That way, you're free to gather more fruit whilst "
+                                               "he does that!"
+                        );
+                    }
+                    return true;
+                });
+            
+            return false;
+    });
 }
 
 void FinalChallenge::start() {
@@ -142,5 +198,9 @@ void FinalChallenge::start() {
 
 void FinalChallenge::finish() {
     ChallengeHelper::set_completed_level(3);    
+    Engine::print_dialogue("Villager",
+                           "Fantastic! Thanks for helping me out there. As a token of my gratitude, "
+                           "please accept this treasure."
+    );
     event_finish.trigger(0);
 }
