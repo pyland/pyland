@@ -81,7 +81,7 @@ Keybindings
 * <kbd>escape</kbd> - go back to level selection map
 
 * <kbd>=</kbd><kbd>-</kbd> - zooming in and out
-* <kbd>Ctrl</kbd><kbd>0</kbd> - return to default zoom level
+* <kbd>Ctrl</kbd>-<kbd>0</kbd> - return to default zoom level
 
 ##API
 
