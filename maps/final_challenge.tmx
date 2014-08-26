@@ -102,5 +102,7 @@
   <object gid="300" x="256" y="640"/>
   <object name="fixbridge/1" gid="300" x="256" y="640"/>
   <object name="dropoff/1" gid="300" x="1088" y="1280"/>
+  <object name="killplayer/1" gid="300" x="256" y="576"/>
+  <object name="killplayer/2" gid="300" x="512" y="704"/>
  </objectgroup>
 </map>

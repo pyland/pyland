@@ -11,6 +11,7 @@
 #include "map_object.hpp"
 #include "object_manager.hpp"
 #include "entitythread.hpp"
+#include "sprite.hpp"
 #include "api.hpp"
 #include "object.hpp"
 #include "interpreter.hpp"
@@ -24,7 +25,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
 
     //creating monkey helper
-    ChallengeHelper::make_sprite(
+    int monkey_id = ChallengeHelper::make_sprite(
         this,
         "sprite/monkey",
         "Milo",
@@ -34,7 +35,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
 
 
     //create the main game character
-    ChallengeHelper::make_sprite(
+    int player_id = ChallengeHelper::make_sprite(
         this,
         "sprite/1",
         "Ben",
@@ -105,6 +106,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     });
 
     // creating croc
+    std::vector<int> croc_ids;
     for (int i = 1; i<=3; i++) {
         std::string croc_num = std::to_string(i);
 
@@ -116,6 +118,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
             Walkability::BLOCKED,
             "north/still/1"
         );
+        croc_ids.push_back(croc_id);
 
         auto croc = ObjectManager::get_instance().get_object<Object>(croc_id);
         if (!croc) { return; }
@@ -143,15 +146,15 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     Engine::print_dialogue("Villager",
                            "Hello adventurer! I'm in need of some help.\n"
                            "You see, I need to collect some fruit for the villagers.\n"
-                           "Unfortunately, the bridge is broken and I can't get out into "
+                           "Unfortunately, the bridge is broken and I can't get out into \n"
                            "the jungle to gather the fruit.\n" 
     );
 
     EventManager::get_instance().add_timed_event(GameTime::duration(5.0), [this] (float completion) {
             if(completion == 1.0) {
                 Engine::print_dialogue("Villager",
-                                       "You can repair the bridge with vines. "
-                                       "Maybe you could use your friend Milo to help you? "
+                                       "You can repair the bridge with vines. \n"
+                                       "Maybe you could use your friend Milo to help you? \n"
                                        "Try using the cut(direction) API call."
                                        );
             }
@@ -168,7 +171,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
             
             Engine::print_dialogue ("Villager",
                                     "Excellent! Thanks for fixing that bridge for me.\n"
-                                    "I'll tell you what, if you gather the fruit for me, "
+                                    "I'll tell you what, if you gather the fruit for me, \n"
                                     "I'll give you a reward for your help!\n"
             );
 
@@ -191,6 +194,74 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
             
             return false;
     });
+
+    //Check to see if the player/monkey and crocs meet at the bridge
+    ChallengeHelper::make_interaction("killplayer/1", [player_id, monkey_id, croc_ids, this] (int) {
+            auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+            if(!player)
+                return true;
+
+            auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+            if(!monkey)
+                return true;
+
+            for(int croc_id : croc_ids) {
+                auto object = ObjectManager::get_instance().get_object<MapObject>(croc_id);
+            
+                if(!object)
+                    return true;
+                
+                //If the player and the croc meets, restart the challenge for the player
+                if(object->get_position() == player->get_position() || object->get_position() == monkey->get_position()) {
+                    Engine::print_dialogue ("Villager",
+                                            "Nooooo! That crocodile got you!"
+                                            );
+
+                    EventManager::get_instance().add_timed_event(GameTime::duration(1.0), [this] (float completion) {
+                            if(completion == 1.0) {
+                                event_finish.trigger(0);
+                            }
+                            return true;
+                        });
+                }
+            }
+
+            return true;
+        });
+
+    ChallengeHelper::make_interaction("killplayer/2", [player_id, monkey_id, croc_ids, this] (int) {
+            auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+            if(!player)
+                return true;
+
+            auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+            if(!monkey)
+                return true;
+
+            for(int croc_id : croc_ids) {
+                auto object = ObjectManager::get_instance().get_object<MapObject>(croc_id);
+            
+                if(!object)
+                    return true;
+                
+                //If the player and the croc meets, restart the challenge for the player
+                if(object->get_position() == player->get_position() || object->get_position() == monkey->get_position()) {
+                    Engine::print_dialogue ("Villager",
+                                            "Nooooo! That crocodile got you!"
+                                            );
+
+                    EventManager::get_instance().add_timed_event(GameTime::duration(1.0), [this] (float completion) {
+                            if(completion == 1.0) {
+                                event_finish.trigger(0);
+                            }
+                            return true;
+                        });
+                }
+            }
+
+            return true;
+        });
+
 }
 
 void FinalChallenge::start() {
