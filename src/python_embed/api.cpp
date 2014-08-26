@@ -12,7 +12,6 @@
 #include <tuple>
 #include <vector>
 
-#include "accessor.hpp"
 #include "api.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
@@ -135,7 +134,7 @@ void Entity::py_print_dialogue(std::string text) {
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
     return GilSafeFuture<void>::execute([game_seconds_per_real_second] (GilSafeFuture<void>) {
-        EventManager::get_instance().time.game_seconds_per_real_second = game_seconds_per_real_second;
+        EventManager::get_instance().time.set_game_seconds_per_real_second(game_seconds_per_real_second);
     });
 }
 

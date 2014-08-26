@@ -2,7 +2,6 @@
 #include <functional>
 #include <ratio>
 
-#include "accessor.hpp"
 #include "game_time.hpp"
 
 GameTime::GameTime():
@@ -17,11 +16,7 @@ GameTime::GameTime(double game_seconds_per_real_second,
                    duration passed_time,
                    std::chrono::steady_clock::time_point time_at_last_tick):
 
-    game_seconds_per_real_second(
-        game_seconds_per_real_second,
-        Accessor<double>::default_getter,
-        [this] (double value) { time(); return value; }
-    ),
+    game_seconds_per_real_second(game_seconds_per_real_second),
     passed_time(passed_time),
     time_at_last_tick(time_at_last_tick)
     {}
@@ -34,7 +29,7 @@ GameTime::time_point GameTime::time() {
     // the point is that everything will be inaccurate the
     // same way so actual (microsecond) jitter isn't really important.
     passed_time += std::chrono::duration_cast<duration>(
-        real_time_difference * double(game_seconds_per_real_second)
+        real_time_difference * double(get_game_seconds_per_real_second())
     );
     time_at_last_tick = real_time;
 
