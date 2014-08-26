@@ -5,7 +5,7 @@
 
 class ChallengeData;
 
-
+/// ScreenScreen is the challenge class used on startup to select a challange to play
 class StartScreen : public Challenge {
     public:
         StartScreen(ChallengeData* _challenge_data);

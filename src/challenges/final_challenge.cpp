@@ -17,12 +17,11 @@
 #include "interpreter.hpp"
 #include "make_unique.hpp"
 
-// waiting to add "banana"
+// fruit avalible and the number of each in the map
 std::vector<std::string> fruit_types = {"bananas","orange","pineapple"};
 unsigned int num_of_fruit = 3;
 
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
-    Engine::print_dialogue( "Game", "Welcome to the final challenge");
 
     //creating monkey helper
     int monkey_id = ChallengeHelper::make_sprite(
@@ -43,7 +42,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         "south/still/1"
     );
 
- 
+    // get the locations of handover point in the map 
     glm::ivec2 handover_location = ChallengeHelper::get_location_interaction("handover/1");
     glm::ivec2 handover_pickup = ChallengeHelper::get_location_interaction("pickup/1");
     glm::ivec2 handover_dropoff = ChallengeHelper::get_location_interaction("dropoff/1");
@@ -51,11 +50,9 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
 
     for (std::string fruit_type : fruit_types) {
 
-        // set of fruit collection part
+        // setup fruit dropoff locations
         glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/"+fruit_type);
         glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/"+fruit_type);
-
-        std::vector<int> fruit_ids;
 
         // adding fruits as pickupable objects
         for (unsigned int i = 1; i <= num_of_fruit; i++) {
@@ -65,19 +62,18 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
             int fruit_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, fruit_type);
             ChallengeHelper::create_pickupable(fruit_location, fruit_location, crate_location, dropoff_location , fruit_id, true);
             ChallengeHelper::create_pickupable(handover_location,handover_pickup,handover_location,handover_dropoff,fruit_id, true);
-            fruit_ids.push_back(fruit_id);
         }
 
         // checking if all fruits are in crate
-        ChallengeHelper::make_interaction("dropoff/"+fruit_type, [dropoff_location, crate_location, fruit_ids,this] (int) {
+        ChallengeHelper::make_interaction("dropoff/"+fruit_type, [crate_location, fruit_type, this] (int) {
 
-            if (Engine::is_objects_at(crate_location, fruit_ids)) {
-                Engine::print_dialogue ("Game","Well Done, all the oranges are in the crate");
-                finish();
+            // notify the user when on crate is full 
+            if (Engine::get_objects_at(crate_location).size()==num_of_fruit) {
+                Engine::print_dialogue ("Game","Well Done, all the "+fruit_type+"s are in the crate");
+                return false;
             } else {
-                Engine::print_dialogue ("Game","Keep going");
+                return true;
             }
-            return true;
         });
 
     }
@@ -100,18 +96,20 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
             return false;
         } else {
             // ben put text here 
-            Engine::print_dialogue("Game","Try again");
+            Engine::print_dialogue("Villager","Hello again adventurer! \n"
+                "Try to complete this level and come back to when you think you've finished.\n");
             return true;
         }
     });
 
-    // creating croc
+    // vector to store object id's of crocodiles
     std::vector<int> croc_ids;
+
     for (int i = 1; i<=3; i++) {
         std::string croc_num = std::to_string(i);
 
 
-        LOG(INFO) << "creating croc";
+        LOG(INFO) << "creating croc " << croc_num;
         int croc_id = ChallengeHelper::make_object(
             this,
             "sprite/crocodile/"+croc_num,
@@ -142,6 +140,8 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     //Adding bridge object
     auto bridge_name = "bridge/1";
     int bridge_id = ChallengeHelper::make_object(this, bridge_name, Walkability::BLOCKED, "4", true);
+
+    // Game Dialogue
 
     Engine::print_dialogue("Villager",
                            "Hello adventurer! I'm in need of some help.\n"
@@ -196,71 +196,43 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     });
 
     //Check to see if the player/monkey and crocs meet at the bridge
-    ChallengeHelper::make_interaction("killplayer/1", [player_id, monkey_id, croc_ids, this] (int) {
-            auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
-            if(!player)
-                return true;
+    for (int i=1; i<=2; i++) {
 
-            auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
-            if(!monkey)
-                return true;
+        std::string bridge_name = "killplayer/"+std::to_string(i);
 
-            for(int croc_id : croc_ids) {
-                auto object = ObjectManager::get_instance().get_object<MapObject>(croc_id);
-            
-                if(!object)
+        ChallengeHelper::make_interaction(bridge_name, [player_id, monkey_id, croc_ids, this] (int) {
+                auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+                if(!player)
                     return true;
-                
-                //If the player and the croc meets, restart the challenge for the player
-                if(object->get_position() == player->get_position() || object->get_position() == monkey->get_position()) {
-                    Engine::print_dialogue ("Villager",
-                                            "Nooooo! That crocodile got you!"
-                                            );
 
-                    EventManager::get_instance().add_timed_event(GameTime::duration(1.0), [this] (float completion) {
-                            if(completion == 1.0) {
-                                event_finish.trigger(0);
-                            }
-                            return true;
-                        });
-                }
-            }
-
-            return true;
-        });
-
-    ChallengeHelper::make_interaction("killplayer/2", [player_id, monkey_id, croc_ids, this] (int) {
-            auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
-            if(!player)
-                return true;
-
-            auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
-            if(!monkey)
-                return true;
-
-            for(int croc_id : croc_ids) {
-                auto object = ObjectManager::get_instance().get_object<MapObject>(croc_id);
-            
-                if(!object)
+                auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+                if(!monkey)
                     return true;
+
+                for(int croc_id : croc_ids) {
+                    auto object = ObjectManager::get_instance().get_object<MapObject>(croc_id);
                 
-                //If the player and the croc meets, restart the challenge for the player
-                if(object->get_position() == player->get_position() || object->get_position() == monkey->get_position()) {
-                    Engine::print_dialogue ("Villager",
-                                            "Nooooo! That crocodile got you!"
-                                            );
+                    if(!object)
+                        return true;
+                    
+                    //If the player and the croc meets, restart the challenge for the player
+                    if(object->get_position() == player->get_position() || object->get_position() == monkey->get_position()) {
+                        Engine::print_dialogue ("Villager",
+                                                "Nooooo! That crocodile got you!"
+                                                );
 
-                    EventManager::get_instance().add_timed_event(GameTime::duration(1.0), [this] (float completion) {
-                            if(completion == 1.0) {
-                                event_finish.trigger(0);
-                            }
-                            return true;
-                        });
+                        EventManager::get_instance().add_timed_event(GameTime::duration(1.0), [this] (float completion) {
+                                if(completion == 1.0) {
+                                    event_finish.trigger(0);
+                                }
+                                return true;
+                            });
+                    }
                 }
-            }
 
-            return true;
-        });
+                return true;
+            });
+    }
 
 }
 
