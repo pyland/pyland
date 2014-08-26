@@ -130,7 +130,7 @@ namespace ChallengeHelper {
     /// Given an object, allow it to picked up and dropped off at specific locations
     /// Only one pick up and drop off is permitted
     /// @param start_tile the tile that the object starts on
-    /// @param pickup_tile the tile that the sprite steps onto to drop the tile off
+    /// @param pickup_tile the tile that the sprite steps onto to pick up the object
     /// @param finish_tile the tile that the object is dropped onto
     /// @param dropoff_tile the tile that the player steps onto to drop off the object
     /// @param object_id the id of the object to do this to
