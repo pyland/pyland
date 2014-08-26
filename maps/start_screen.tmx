@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="30" height="30" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/ground.png" width="3648" height="64"/>
+  <image source="../resources/tiles/ground.png" width="6080" height="64"/>
  </tileset>
- <tileset firstgid="58" name="gui" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
+ <tileset firstgid="96" name="gui" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/gui.png" width="2176" height="64"/>
  </tileset>
- <tileset firstgid="91" name="interactable" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/interactable.png" width="1536" height="64"/>
+ <tileset firstgid="130" name="interactable" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/interactable.png" width="1728" height="64"/>
  </tileset>
- <tileset firstgid="115" name="walls" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/walls.png" width="128" height="64"/>
+ <tileset firstgid="157" name="walls" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/walls.png" width="1216" height="64"/>
  </tileset>
- <tileset firstgid="117" name="people" tilewidth="64" tileheight="64">
+ <tileset firstgid="176" name="people" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/people.png" width="8960" height="64"/>
  </tileset>
- <tileset firstgid="257" name="test" tilewidth="64" tileheight="64">
+ <tileset firstgid="316" name="test" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/test.png" width="128" height="64"/>
  </tileset>
  <layer name="Ground" width="30" height="30">
@@ -25,32 +25,32 @@
  </layer>
  <layer name="Effects" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYKAO4KaSOUPFXq4RZu9oONMHjOaj4WWvABDzQTEvEAsBMScd7MXmP3r4WZgB4V+Yn3noYC/Mb5JIYhJALAXFSkAsDWWL0cBeWSxy8kCsSEW7kAEsv8phkcPmFhAAuQfkfwUS7UIORy4orcoACVMpJKyKxodhFTxuJRYgp11c/kMHMlD7KYkD5HKREveTCpD9C/IHNdMssfbSE4zWP/QBo+E8ai8+AABU3AZB
+   eJxjYKAOUKSSOUPFXoURZu9oONMHjOaj4WWvGhCrQLEyEGsAsTwd7FUgUozaQJMB4V+Yn5XoYK8ClDZGEjMCYhMotgFiUyjbgAb2mmORswRiayrahQxg+dUCixw2t4AAyD0g/1uRaBdyOCpAaXsGSJiaIGF7ND4M2+FxK7FAAYmNy3/owAxqPyVxgFwuUuJ+UoECEhvkD2qmWWLtpScYrX/oA0bDedRefAAAsKoN1w==
   </data>
  </layer>
  <layer name="Overlay" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMAroA0qAuJhGZrvgYONSMxwAK5XUEAPiydQ33MIcHTAiYUpAMQP2vIEr/KhhJ7mAHnZjC1d6+XegwnUUjIKBAgD2ewOX
+   eJxjYBgFo2AUjIJRMAroA+YB8VwamZ2Ng41LzXAArFRSQwxoI1PfcAtzdMCIhCkBcxmw5w1c4UcNO8kF9LAbW7jSy78DFa6jYBQMFAAApXEFKQ==
   </data>
  </layer>
  <layer name="Collisions" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJztk8EKACAIQ63//+jobqkwLWqCF4k9HUsEU72BhMgll1xyH+FOjtYVXM8sg2vdm+HB6znacT07nNoTVTf4bL1D5Dqqg/5LES0ke6Wj+VF1b2bmbs8zuX9yB316AK8=
+   eJxjYKAOsGWkkkGj9o7aO2rvqL3DxF6QPdgwPewlRowW9hLyLy3CYLinI3z2EuOGgXIntcBgCGdC6qiRrkk1h9p5iRSzqGk3LnOwhQe9/EvLNDfY0/OovSPTXgC8Ow4N
   </data>
  </layer>
  <layer name="Objects" width="30" height="30" visible="0" opacity="0.99">
   <data encoding="base64" compression="zlib">
-   eJztzjENAAAIwDCEgn8b4ICHhKdN9i8CAG7lVN8TAMCqAZ37ALo=
+   eJztzrEJAAAIwDB/18P1AxfBJYHujQCAWznV9wQAsGr2VQEI
   </data>
  </layer>
  <objectgroup name="Objects" width="30" height="30">
-  <object name="sprite/1" gid="217" x="704" y="1152"/>
+  <object name="sprite/1" gid="276" x="704" y="1152"/>
  </objectgroup>
  <objectgroup name="Interactions" width="30" height="30">
-  <object name="level/1" gid="68" x="1024" y="960"/>
-  <object name="level/2" gid="68" x="1152" y="1344"/>
-  <object name="level/3" gid="68" x="1216" y="960"/>
-  <object name="level/4" gid="68" x="1600" y="960"/>
-  <object name="level/5" gid="68" x="1792" y="1152"/>
+  <object name="level/1" gid="107" x="1024" y="960"/>
+  <object name="level/2" gid="107" x="1152" y="1344"/>
+  <object name="level/3" gid="107" x="1216" y="960"/>
+  <object name="level/4" gid="107" x="1600" y="960"/>
+  <object name="level/5" gid="107" x="1792" y="1152"/>
  </objectgroup>
 </map>

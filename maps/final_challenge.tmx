@@ -1,105 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/ground.png" width="3648" height="64"/>
+  <image source="../resources/tiles/ground.png" width="6080" height="64"/>
  </tileset>
- <tileset firstgid="58" name="interactable" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/interactable.png" width="1536" height="64"/>
+ <tileset firstgid="96" name="interactable" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/interactable.png" width="1728" height="64"/>
  </tileset>
- <tileset firstgid="82" name="items" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/items.png" width="192" height="64"/>
+ <tileset firstgid="123" name="items" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/items.png" width="384" height="64"/>
  </tileset>
- <tileset firstgid="85" name="people" tilewidth="64" tileheight="64">
+ <tileset firstgid="129" name="people" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/people.png" width="8960" height="64"/>
  </tileset>
- <tileset firstgid="225" name="walls" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/walls.png" width="128" height="64"/>
+ <tileset firstgid="269" name="walls" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/walls.png" width="1216" height="64"/>
  </tileset>
- <tileset firstgid="227" name="test" tilewidth="64" tileheight="64">
+ <tileset firstgid="288" name="test" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/test.png" width="128" height="64"/>
  </tileset>
- <tileset firstgid="229" name="gui" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
+ <tileset firstgid="290" name="gui" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/gui.png" width="2176" height="64"/>
  </tileset>
- <tileset firstgid="262" name="test" tilewidth="64" tileheight="64">
+ <tileset firstgid="324" name="test" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/test.png" width="128" height="64"/>
  </tileset>
  <layer name="Ground" width="50" height="50" opacity="0.99">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3QsRGAIBBFQUJauv4bM3fGEU5OCDbYTOE/emutAwAAAAAAAEBCHLBhZ8dJ/ZHcEx/+rWqY3RIDdjTM3D3ScD+vqmv0HTPvnvl25f6slXf8vb2q46mlugHeXH//U24QJwAA
+  <data encoding="base64" compression="zlib">
+   eJzt0LERgCAQRUFC+rv+ezF3xhFOTgg22EzhP3prrQMAAAAAAABAQhywYWfHSf2R3BMf/q1qmN0SA3Y0zNw90nA/r6pr9B0z7575duX+rJV3/L29quOppboB3lyXGqW6
   </data>
  </layer>
  <layer name="Effects" width="50" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3OoREAIAwAsWoE+0/ZGfAITEXLXWLefgQA1O3uAZ5W9wAADJVXAQAAAACAvx1F6BZ9ECcAAA==
+  <data encoding="base64" compression="zlib">
+   eJztzqERACAMALGyCaKS/edDYzCIlrvEvP0IAHiX1QNczeoBAGhqjbMAAAAAAMDfNhQ9AJ8=
   </data>
  </layer>
  <layer name="Overlay" width="50" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+1ZyZITMQyVmeGQMBO2r2AZCgIFN4pLkiv/f0t+gF/ALloVtUZrtzvkMK9KlY7blvW02MoMAMAz8LGuchLkOAj9zsfxOYMXyflRcB6e7fR7gTyPdRer/+EPnGOFPKitxVhbyCeuy2DpeCCHm2Fcykk+1rjsEnu9qnKXNVCxgfuv+QfzxYqDBCkeJ2P+2yobIqsqh+SeGtZwjgXF88BaXufoDwlSLF5WuYcxLzp/E7ABQes8iz2ceXg6eH3TOKDPGi/kdMfeecC80ur1RhmXzjELzcaVM0cCjVeTX2zsNZx5S3llQbpjKLR7a8pZRe+EiM7fE/RKsbDyAOv8nsgGZP/ie4/HT8G+qP1ePDRE4sHrKBsPzb9cl8QlUh/e3YF1L9nFdeNZ1uQNjGO6YjZ5otW4dAdl7r8IDyuu/F5H2ZPnHchx8GIh7Xtgz41r8ynnK+m2ejQ8f9FuqV+U+ES4RM5czTZJbyQemn23xvtITLw+N8MD70t65tH7U7KN3gVafKbcg7yOLB7ZXuNEPqW1kdo4gN77UT9u4LEfNZum9EwaMr7v1cPyfTPQegp+5k6BptvClFq0wH/jZnuyOftqex8F8UDrAvVPRbQXx329PuIIj+2zcKkYSHseyffb4Vnqi/j8DKy8z/5W5vDyRfPrnHxZAhF79uyz4dJ54wHt2Rtz+Ltr49BA42Fx+Z/InJNRWPWYOdPoGn4man9ntcDXTYV0XmsowryozzW9hbzndhQY/425sPmUf2HzuRQ2v3eNUZsKjG3S+HGO1jypd597V1g8pL0Keb7GM4rC60muiYN3xvTueecA8yCLqP09cnqJukBoHJbcsze+Qj6PevDz/jel7SGNNw4foX89WDbunPdT8G34zPJo/L9U+dzZHg0Wb4xFQ5YDrnuAMZe5+ZZdT20BiPuVr2toXFpstoNcKk6aLZ5fpXUaUN9S+WfZQrm0eVsmUQ5Un5Z/yG87jEfrHtd5tjwE5yHeVfle5UeV9449qJvrb+PIRwLlnPVlFJ/I84eZunjMGjK5PHfvnr7C2OB5cQkOT3iCh7/G+LjnECcAAA==
+  <data encoding="base64" compression="zlib">
+   eJztWclu20AMpZr0aP1C1MTdDv2KLilat0j/oejF9r2fXxEQYYriKsmuD3kAIXs0Q75HzuYEAOAFxOh6a5upbQbj32U7fa7gVa17Gh1M+Xvc+XeUUNXRrcj9Q3OqFengXD1qDXu2V1gP0nAztGtzUrahhH0h1pve7usUVQ4yf5ifNlEHDVo9WsfJ+962zO56OxZjWujgVAuOl4mxcp23ih+CVovXvT3AWBfvv01wIHRBfA8HOOmIfHTiO68D5Qx1kaZ78S4CzStrvd7ozeo+5gE53vldVPB6of0RbW/hpFubVx60M4bDOrfm7FVtkCfp8+8Mv1otvHlA6/yB2Rb0/NL7SMdvhV+Wf1QPC5l6dE7cjE8rv5YGryYaorOD1r3GS/qmvQztHYxrimtw4/CN7l8ETU7l/Mvo8OrawTS/aAfmaw96HaJaaHGP4jNqxZxKvZrvLojFeWv3RU1PRktmz7W4aX4z9bD43TrvMzWxeM7RQecl3/P4+alx42eBVZ8556Ds7umo3jWovzU2szaOYN/9eB63MM3jWjo8VHK/1h1Wxq3AulPIPXcOMr+zvbhzNXHI37jVO9mSuFbsjWIRWsF9bk0Q2bs4xY3uEZtmys/DpWqgxdyw/N0O77R7kexfgTfvl8qO5ouV1yXz5RzI8DmIJ+LS8yYC8Tk4feS7a9OA4PXwtPxPVPbJLLyulT2Nj5F7ovV3Vg9y3Fxo+7WFBvR9MBvD8mmdGw2M/8bciP5cfwPj/tI493OcL63gwjlZ+qRGr592dz/HNmGd51wLPa8Z0Z3kmjREe8zad94loHlQRZb/GrLOmRpLw5VMpRR+QH0eraEv+t+UFUNrRw1fYP314HHcB+/n4OfwrOpA/d97+7YyHwuebqoFoqqBxj3CWMvSclbHcy4A+bzKcQjUgrXZDXapOllcorxq4yyQv3PNP48L14L9dsKyGrg/a/6Rvt3Qnl33NC7i8pjsR/jY21Nvv3r7FPAh39I/tpMeDVxzNZdZfGWfPy/0JWuGqMzlpbHXzBXVhvaLS2h4xjMi/APRIEwA
   </data>
  </layer>
  <layer name="Overlay2" width="50" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2YYQ7CIAxGezLvfw12EsNPydaW8rUdlZeQGMX2e0MmShTHNTEs86OwZtrNY6VGFOj+b/FA144i67PsgZdDlWtzPA5oqqxHBY8q9/IKHpnnRA0fxZzs8y6K4/EuKnhk/45CcTzeSRWPzvGI7y/Ni/RA/f/G1fdEm1/jJ/l6YlkDTa275z2Z+fxw87msWfv8Gh6vrlf2fRfxvYx4H3JYWamRnf0pC6KGd15NBmSt6D2X0dODKh6df/LYYd2qeHSkjDs4dBrZzl/NJ46JRrLHDkgeO9Do12PGZZybdR0a3Xto82j2hvf+GR0sHtq63LD24HpxZzyu92x2yefpdW2t0QORL2N8Aei9THcQJwAA
+  <data encoding="base64" compression="zlib">
+   eJztmEsOgzAMBekB6Cl7/zNUWSBFUbEd8/yJm5GyAWN7CIG0x+HH+yUfmvhsHprrMnk8yeEFun4WD3RuL6KeZQusHKrcm+2xQVNlPip4VHmXV/CI3CdK+Ahiove7KLZHLip4RP+OQrE9clLFo7E9/OtzcZ4eqP/fqPyWSPuX+HG+0R6aXL+OWzLz/FDxVK9R67yviZiv6Pcu4ruMuA45tDzJEd07ymPWxxJkHe/e72qvTBWPxj95rDBvVTwaXI8rODRO5f7rTOTWeuE8VoDzWIHL4VSs4zE26j70Dr2HtB/J2rBeP6ODxkOalxraGlQtao9H1Z7tnfO5Oy/NNXog+osYX/5MG0o=
   </data>
  </layer>
  <layer name="Collisions" width="50" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA9VWWa7DMAhsv3r/O76DPPWjUmTFMAvYzkhW04ZlBgjp64Xh8z77ZNx36FBqOLNHY2U1UPnPYiv9yPwd3ygGOitMPVk/RkelvcKFjeH2IvJ1ZoOFU9uR8yweygupo6vhao8i0sTsFTYH6hd9V3IoczSLfzcjDLesvk6tUP6VOa42aj8in4p6oXtgpkPhoxxHA8LxTjPjX6Uj+o2N3alj5HUXG9HaqQPV6oDthzMvio6xzooOtkZZTkarwrWr1xGHzLYiR4WWvyRHNVb1Z3W/u+ZvtHVr0qWD0dKJjN81/+z+Cp4ImBpHu3E3lDm5fo7XTn7UFo3F9ITVoD53zMxU1djh7+6Z6mc22gldOtSdimjoPk7e1VzRuu7gVMH7ZA0qnFy7uSs6umN063BjrcKu+lVjt4bKXJ3PXpazEoiOE+aN3TeZzcnIOD5BwxdIL2b3TgEyU6t4uP6r9lQXnJ072u6aMfddjtg96X8VE7ciz89PyYG+I9WTxavK86TzDy+FF7sQJwAA
+  <data encoding="base64" compression="zlib">
+   eJzVVlmuwzAIbI/Sw7z7X+mpH5UiK4ZZwHZGspo2LDNASF8vDH/vs0/GfYcOpYYzezRWVgOV/yy20o/M3/GNYqCzwtST9WN0VNorXNgYbi8iX2c2WDi1HTnP4qG8kDq6Gq72KCJNzF5hc6B+0XclhzJHs/h3M8Jwy+rr1ArlX5njaqP2I/KpqBe6B2Y6FD7KcTQgHO80M/5VOqLf2NidOkZed7ERrZ06UK0O2H4486LoGOus6GBrlOVktCpcu3odcchsK3JUaPkkM1WNVf1Z3e+u+Rtt3Zp06WC0dCLjd80/u7+CJwKmxtFu3A1lTq6f47WTH7VFYzE9YTWozx0zM1U1dvi7e6b6mY12QpcOdaciGrqPk3c1V7SuOzhV8D5Zgwon127uio7uGN063FirsKt+1ditoTJX57OX5awEouOEeWP3TWZzMjKOT9DwBdKL2b1TgMzUKh6u/6o91QVn5462u2bMfZcjdk/6X8XErcjz81NyoO9I9WTxqvI86fwDMCsZSg==
   </data>
  </layer>
  <layer name="Objects" width="50" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3OsQnAMAwEQO/lYJPY+w+QaaI6bQwi5g6+UPHoS9nfnfi7feiekRGZi7YA8F/9ddfIkTEEADZ0ZQ8AAAAAAACWeQDf6UBiECcAAA==
+  <data encoding="base64" compression="zlib">
+   eJztzjsKwCAQRVG3alDy2f8CnDptRiRyDrxiioFbCjO1D79n7I49SS0A/Fd/3TV2rAgBgA1dqwMAAAAAAIA0A8diAy8=
   </data>
  </layer>
  <objectgroup name="Objects" width="50" height="50">
-  <object name="orange/1" gid="83" x="640" y="1664"/>
-  <object name="pineapple/1" gid="84" x="1920" y="1216"/>
-  <object name="banana/1" gid="82" x="1792" y="2432"/>
-  <object name="sprite/crocodile/1" gid="110" x="640" y="64"/>
-  <object name="orange/1" gid="83" x="640" y="1664"/>
-  <object name="pineapple/1" gid="84" x="1920" y="1216"/>
-  <object name="banana/1" gid="82" x="1792" y="2432"/>
-  <object name="orange/3" gid="83" x="448" y="1728"/>
-  <object name="orange/4" gid="83" x="768" y="1600"/>
-  <object name="orange/5" gid="83" x="768" y="1728"/>
-  <object name="orange/2" gid="83" x="512" y="1664"/>
-  <object name="sprite/1" gid="195" x="128" y="320"/>
-  <object name="sprite/monkey" gid="175" x="1344" y="384"/>
-  <object name="orange/6" gid="83" x="128" y="1856"/>
-  <object name="orange/7" gid="83" x="192" y="1728"/>
-  <object name="pineapple/5" gid="84" x="2112" y="1088"/>
-  <object name="pineapple/3" gid="84" x="1920" y="960"/>
-  <object name="pineapple/6" gid="84" x="2112" y="896"/>
-  <object name="pineapple/4" gid="84" x="1984" y="1088"/>
-  <object name="pineapple/2" gid="84" x="1856" y="1152"/>
-  <object name="banana/6" gid="82" x="1344" y="2560"/>
-  <object name="banana/7" gid="82" x="1152" y="2816"/>
-  <object name="banana/4" gid="82" x="1920" y="2752"/>
-  <object name="banana/3" gid="82" x="1920" y="2496"/>
-  <object name="banana/5" gid="82" x="1792" y="2560"/>
-  <object name="banana/2" gid="82" x="2496" y="2624"/>
-  <object name="pineapple/7" gid="84" x="2560" y="576"/>
-  <object name="sprite/crocodile/2" gid="110" x="0" y="576"/>
-  <object name="sprite/crocodile/3" gid="110" x="768" y="1088"/>
-  <object name="vines/cut/1" gid="83" x="768" y="640"/>
+  <object name="orange/1" gid="126" x="640" y="1664"/>
+  <object name="pineapple/1" gid="127" x="1920" y="1216"/>
+  <object name="banana/1" gid="125" x="1792" y="2432"/>
+  <object name="sprite/crocodile/1" gid="154" x="640" y="64"/>
+  <object name="orange/1" gid="126" x="640" y="1664"/>
+  <object name="pineapple/1" gid="127" x="1920" y="1216"/>
+  <object name="banana/1" gid="125" x="1792" y="2432"/>
+  <object name="orange/3" gid="126" x="448" y="1728"/>
+  <object name="orange/4" gid="126" x="768" y="1600"/>
+  <object name="orange/5" gid="126" x="768" y="1728"/>
+  <object name="orange/2" gid="126" x="512" y="1664"/>
+  <object name="sprite/1" gid="239" x="128" y="320"/>
+  <object name="sprite/monkey" gid="219" x="1344" y="384"/>
+  <object name="orange/6" gid="126" x="128" y="1856"/>
+  <object name="orange/7" gid="126" x="192" y="1728"/>
+  <object name="pineapple/5" gid="127" x="2112" y="1088"/>
+  <object name="pineapple/3" gid="127" x="1920" y="960"/>
+  <object name="pineapple/6" gid="127" x="2112" y="896"/>
+  <object name="pineapple/4" gid="127" x="1984" y="1088"/>
+  <object name="pineapple/2" gid="127" x="1856" y="1152"/>
+  <object name="banana/6" gid="125" x="1344" y="2560"/>
+  <object name="banana/7" gid="125" x="1152" y="2816"/>
+  <object name="banana/4" gid="125" x="1920" y="2752"/>
+  <object name="banana/3" gid="125" x="1920" y="2496"/>
+  <object name="banana/5" gid="125" x="1792" y="2560"/>
+  <object name="banana/2" gid="125" x="2496" y="2624"/>
+  <object name="pineapple/7" gid="127" x="2560" y="576"/>
+  <object name="sprite/crocodile/2" gid="154" x="0" y="576"/>
+  <object name="sprite/crocodile/3" gid="154" x="768" y="1088"/>
+  <object name="vines/cut/1" gid="126" x="768" y="640"/>
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
-  <object name="exit" gid="239" x="448" y="192"/>
-  <object name="crate/banana" gid="65" x="192" y="192"/>
-  <object name="crate/orange" gid="67" x="256" y="192"/>
-  <object name="crate/pineapple" gid="68" x="320" y="192"/>
-  <object name="dropoff/orange" gid="239" x="256" y="256"/>
-  <object name="dropoff/pineapple" gid="239" x="320" y="256"/>
-  <object name="dropoff/orange" gid="239" x="192" y="256"/>
-  <object name="pickup/1" gid="238" x="960" y="1280"/>
-  <object gid="66" x="1024" y="1280"/>
-  <object name="handover/1" gid="66" x="1024" y="1280"/>
-  <object gid="238" x="256" y="640"/>
-  <object gid="238" x="256" y="640"/>
-  <object name="fixbridge/1" gid="238" x="256" y="640"/>
-  <object name="bridge/1" gid="63" x="256" y="576"/>
+  <object name="exit" gid="301" x="448" y="192"/>
+  <object name="crate/banana" gid="103" x="192" y="192"/>
+  <object name="crate/orange" gid="105" x="256" y="192"/>
+  <object name="crate/pineapple" gid="106" x="320" y="192"/>
+  <object name="dropoff/orange" gid="301" x="256" y="256"/>
+  <object name="dropoff/pineapple" gid="301" x="320" y="256"/>
+  <object name="dropoff/orange" gid="301" x="192" y="256"/>
+  <object name="pickup/1" gid="300" x="960" y="1280"/>
+  <object gid="104" x="1024" y="1280"/>
+  <object name="handover/1" gid="104" x="1024" y="1280"/>
+  <object gid="300" x="256" y="640"/>
+  <object gid="300" x="256" y="640"/>
+  <object name="fixbridge/1" gid="300" x="256" y="640"/>
+  <object name="bridge/1" gid="101" x="256" y="576"/>
  </objectgroup>
 </map>

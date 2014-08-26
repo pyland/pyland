@@ -7,6 +7,7 @@ gui/clouds/6
 gui/clouds/7
 gui/clouds/8
 gui/clouds/9
+gui/coin/coin-tile
 gui/highlight/goal
 gui/highlight/goal_selected
 gui/highlight/selected_object

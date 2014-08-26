@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/ground.png" width="3648" height="64"/>
+  <image source="../resources/tiles/ground.png" width="6080" height="64"/>
  </tileset>
- <tileset firstgid="58" name="items" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/items.png" width="192" height="64"/>
+ <tileset firstgid="96" name="items" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/items.png" width="384" height="64"/>
  </tileset>
- <tileset firstgid="61" name="walls" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/walls.png" width="128" height="64"/>
+ <tileset firstgid="102" name="walls" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/walls.png" width="1216" height="64"/>
  </tileset>
- <tileset firstgid="63" name="interactable" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/interactable.png" width="1536" height="64"/>
+ <tileset firstgid="121" name="interactable" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/interactable.png" width="1728" height="64"/>
  </tileset>
- <tileset firstgid="87" name="people" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/people.png" width="7168" height="64"/>
+ <tileset firstgid="148" name="people" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/people.png" width="8960" height="64"/>
  </tileset>
  <layer name="Tile Layer 1" width="100" height="100">
   <data encoding="base64" compression="zlib">
@@ -22,12 +22,12 @@
  </layer>
  <layer name="Tile Layer 2" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2e1OgzAUBuDup98a78Z4/9elS0aCTelpEdykz5MQxugYOe9aoEsJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgbK/fy9Nsubvu6QzvIdu+v8pZcHZK8rgFp9lreWwrGv9L++XRrvf6GtUz387by6Muqtdcy/gf5RG1H1mpvqU8esYbefSr1fcl/W78z7en4z1f1o9B+xHMrxFRfXO9439vfd/Tz/xLy9GeGec16rlelPZH9e/No6V9dI7/TS2PqB5rx6fW37c8lveVTPV9S+vH/1o9R88jur62HKPl/bmpnvmzztL3fy58/ii2uIdZqklPHmvP42h5lMb03vuXLfpHS9vWPnRkUV61mmydx9H6wl/ryTLKozRfwH6W8uh5PmU757403detnS9gX73zBexrqv/HZT3i/OIt8f/UbVk7XwAAAAAAADVfFV8KEw==
+   eJzt2QlugzAQAEDykrq3+q2q/39DryC5lsFekpQEZiSEDcZYu8EcGQYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIB9e/laHrPlbt3h7N59UU9rDIIfh0E+rsEhK8vHebXm/9p++egXvb+24lnWy/byMa8Vr1zP/F/Wo+33rBbfWj4i801Zl4+2ufg+D6fN/2V97O/puH5otN+D/B7Rim8pOv+X9Za34W/+a8vW3hlTVo7cL2r7U7De0tO+NcZbk7Jy9Plm6fzU+/tunb82hluXsnI0H2N8X4fl8/9cPE89/halrNy6v/b00bM9N8azfNeZOv/HxPFbkc7Qx1RMevoej106jq3lozanR59fUnB7LpKP3mtoy1r5motJ6ug/ko+tXQv/LZLL1Oir9r2Ay0kT2yPvp5zP97U0Ptct/V7AZUW/F3BZY/zfj+u00jj45f+p67L0ewEAAAAAAMz5BNIeHBc=
   </data>
  </layer>
  <layer name="Tile Layer 3" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2tlNw1AQBdCwtYAQi4A2gD+QqIAK+KAESqJNjEQU8/DyvCkZv3Ok+Yi83fEoieN4swEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYG5HK6zIoudPRe8nev5U9H668p90LDvr2e/piCypp8z16lnWPI+IovcTPX8qej9R87d9lkbtZ2vJ/A8L7ruNeRyW6P1Ez5+K3k/0/Kno/eTmP140xXxKmUeT19lS7Eyde4nz2HfP7x3L9p1tqrHzOJS+0/fToeQaa0j+nPtJQ39zPA5cv09J89j6quqiqsuknpPXdw3bLn1dUOI8ct1MOPZtVVe1Os88Zqnz+MhYp28eS2xb6jxyDD2nbxO23TKPdt4fw7Xl7/v/L0fTOc39Pn8Zecy1zmOqz6quN/+vwXLr/nc/Q6+HzWNe7pf81fUMw485nlOYWz3T2uYRXfR+oudPRe9n3892el4UAAAAAJb1DVrnCUU=
+   eJzt2tlNw1AQBdCw9YMQi4BugDZAogQ64IMSKIlCMBJRzMPL86Zk/M6R5iPydsejJI7jzQYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgLkdrbAii54/Fb2f6PlT0fvpyn/SseysZ7+nI7KknjLXq2dZ8zwiit5P9Pyp6P1Ezd/2WRq1n60l8z8suO825nFYovcTPX8qej/R86ei95Ob/3jRFPMpZR5NXmdLsTN17iXOY989v3cs23e2qcbO41D6Tt9Ph5JrrCH5c+4nDf3N8Thw/T4lzWPrq6qLqi6Tek5e3zVsu/R1QYnzyHUz4di3VV3V6jzzmKXO4yNjnb55LLFtqfPIMfScvk3Ydss82nl/DNeWv+//vxxN5zT3+/xl5DHXOo+pPqu63vy/Bsut+9/9DL0eNo95uV/yV9czDD/meE5hbvVMa5tHdNH7iZ4/Fb2ffT/b6XlRAAAAAFjWN/bdD+8=
   </data>
  </layer>
 </map>

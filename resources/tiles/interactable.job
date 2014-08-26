@@ -12,6 +12,8 @@ interactable/crate/pineapples
 interactable/plants/crops/bananas_tree
 interactable/plants/crops/orange_tree
 interactable/plants/crops/pineapples
+interactable/signs/scroll
+interactable/signs/sign
 interactable/treasure/closed
 interactable/treasure/open
 interactable/vines/cut/1
@@ -22,3 +24,4 @@ interactable/vines/grown/1
 interactable/vines/grown/2
 interactable/vines/grown/3
 interactable/vines/grown/4
+interactable/vines/water/1

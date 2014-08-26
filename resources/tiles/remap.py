@@ -72,17 +72,18 @@ if __name__ == "__main__":
     new_dir  = Path(arguments["<new_directory>"])
 
     # All FML files must be in new directory too
-    changed_fmls = all_relative_to(old_dir.glob("*.fml"), old_dir)
+    changed_fmls = list(all_relative_to(old_dir.glob("*.fml"), old_dir))
+    pprint(changed_fmls)
 
     with map_file.open() as mapfile:
         mapdata = json.load(mapfile)
 
     # new_tilesets should mutate the JSON but the old stuff should not
-    new_tilesets = mapdata["tilesets"]
+    new_tilesets = {Path(tileset["image"]).stem: tileset for tileset in mapdata["tilesets"]}
     old_tilesets = deepcopy(new_tilesets)
 
     min_gid_so_far = 1
-    for tileset in new_tilesets:
+    for tileset in new_tilesets.values():
         image_path = map_file.resolve().parent / tileset["image"]
 
         tile_width  = int(tileset["tilewidth"])
@@ -101,6 +102,7 @@ if __name__ == "__main__":
     gid_to_gid = {}
     for relpath in changed_fmls:
         if relpath.stem not in new_tilesets:
+            print(relpath)
             continue
 
         offset_new = new_tilesets[relpath.stem]["firstgid"]
@@ -108,12 +110,16 @@ if __name__ == "__main__":
 
         id_to_id = shitty_diff_fml(old_dir / relpath, new_dir / relpath)
         gid_to_gid.update({k+offset_old: v+offset_new for k, v in id_to_id.items()})
+    pprint(gid_to_gid)
 
     # Mutate
     for layer in mapdata["layers"]:
-      if layer["type"] == "tilelayer":
-          layer["data"] = [gid_to_gid.get(x, x) for x in layer["data"]]
+        if layer["type"] == "tilelayer":
+            layer["data"] = [gid_to_gid.get(x, x) for x in layer["data"]]
+        elif layer["type"] == "objectgroup":
+            for object in layer["objects"]:
+                object["gid"] = gid_to_gid.get(object["gid"], object["gid"])
 
     # Export
     with out_file.open("w") as mapfile:
-      json.dump(mapdata, mapfile)
+      json.dump(mapdata, mapfile, sort_keys=True, indent=4, separators=(',', ': '))

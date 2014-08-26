@@ -1,3 +1,6 @@
-items/fruit/bananas: 0
-items/fruit/orange: 1
-items/fruit/pineapple: 2
+items/fishing/fish: 0
+items/fishing/fishing-rode: 1
+items/fruit/bananas: 2
+items/fruit/orange: 3
+items/fruit/pineapple: 4
+items/knife: 5

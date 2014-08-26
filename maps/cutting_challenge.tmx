@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="48" height="32" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/ground.png" width="3648" height="64"/>
+  <image source="../resources/tiles/ground.png" width="6080" height="64"/>
  </tileset>
- <tileset firstgid="58" name="walls" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/walls.png" width="128" height="64"/>
+ <tileset firstgid="96" name="walls" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/walls.png" width="1216" height="64"/>
  </tileset>
- <tileset firstgid="60" name="interactable" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/interactable.png" width="1536" height="64"/>
+ <tileset firstgid="115" name="interactable" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/interactable.png" width="1728" height="64"/>
  </tileset>
- <tileset firstgid="84" name="test" tilewidth="64" tileheight="64">
+ <tileset firstgid="142" name="test" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/test.png" width="128" height="64"/>
  </tileset>
- <tileset firstgid="86" name="people" tilewidth="64" tileheight="64">
+ <tileset firstgid="144" name="people" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/people.png" width="8960" height="64"/>
  </tileset>
- <tileset firstgid="226" name="gui" tilewidth="64" tileheight="64">
-  <image source="../resources/tiles/gui.png" width="2112" height="64"/>
+ <tileset firstgid="284" name="gui" tilewidth="64" tileheight="64">
+  <image source="../resources/tiles/gui.png" width="2176" height="64"/>
  </tileset>
  <layer name="Ground" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt2KEBADAIxEBkV2L/xboBoojvQ0T8IUCQEZFF5/Oc7ZVf7er41aaOX+3Z7FdbNvvVjo5fbcDvG3782/3OM+DHj1/v6PjVBiJ6y31/J9xP5xkm/a8c/Rf4lD6N
+   eJzt2KEBADAIxEBk92P/XboBoojvQ0T8IUCQEZFF5/Oc7ZVf7er41aaOX+3Z7FdbNvvVjo5fbcDvG3782/3OM+DHj1/v6PjVBiJ6y31/J9xP5xkm/a8c/RcGZEZF
   </data>
  </layer>
  <layer name="Transition" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt1rsJACEABFHbuUAxvP4r021A4S5YR/aBkcn4A0tZa5v5kz1zvO6Ij9LuQW6XvFef7L0HuV3I90bS75V+rzpHd0f8RD+D9Hul34vcT/6/kduFfG+E3n/D3yFrOMMNa6C/Z1r/ABoFCHc=
+   eJzt1rsJACEABFF7u0AxvP6L0W1A4S5YR/aBkcn4A0tZa5v5kz1zvO6Ij9LuQW6XvFef7L0HuV3I90bS75V+rzpHd0f8RD+D9Hul34vcT/6/kduFfG+E3n/D3yFrOMMNa6C/Z1r/AMu7DSM=
   </data>
  </layer>
  <layer name="Scenery" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzNmMtOw0AMRZ0seS5AFeKNBJRvaJcIlVUL//8z1MIWt7f2JGmGgiUrk8HMHDt3nKgi3/ay9pmNZ+Sfa/+wq4/Vby1+afMHENPHh8azr4BR7dnyEJhTa8HdVsa/Mlc7lGE2NJ7N+Z1ralfMSf/WmHMeXn/n13perP2qh08s3q0d4MjPNpfN2qOOMA+1Gxv7OmdrPzE/hrHfH9P8eQV+1Iu7x7R27zl18f9F/adwz+yNbNe/Sz9DDPVfQz+oe7W55NpRu6F1lGff9XfeOfCyfvj8Zvyqf9Q3653PRg39e32x1hjjOuL/Vftv/Sc7wxF7a/x4fsf0/zH8yIu9psSe8Xv9L8mv6DqpzC8wZv67gEP9kdY5lbz3R/NHlfjdoj6PdWbn86uG+ue643hCe4/l5/eU9x7kbyymgfmoDpHmumysfvjsoju/szt/VH/sV/gsvN4XUr/+WPsoFvndS/Vn6/MsduXHuWyfTP/4/c+s/hyaYBztsyu/Pst7+a6p9xk+e0+yfQZ93u9FNnvUBLhxb/4GGcuv99e254P8nNtofdwHbdkRyznU5HeLvtMwNmPhdaIcf1P/yJ71oWh9zAP5vQ/MgzF7DX78fkPnHBrZ5ha7j94jyM7fh/vkj7TLfYX18wrubK/w95r6R70we4kfdcXvr4yxZL+hf+SP9oj4Nf8FXBe2js/NYK4Wf1tgx/pnfRD5F+DMi3ksKvJnOUS/+7B+eJ2SlTS1K/90c5m0R2YxzP8GMW9wxfma/G59+iWfg2id9wFei7/07so0lNV/3/yl3oP8pTz66r+2dfHzOc5c1xnzO/iY38+/AG6fcAE=
+   eJzNmFFu2zAQRFc6iZu0H+2XYTRN2gJtnZPQ1wgC59NuTx0R2YFHo6VkWYzRBQaiaIZ6uxpuDJu9xWOn5OMk+tfpr18xznrw9QefX9GaczR3vepIjDn+eB5GczlaEuLo/EdXjg82L+au1wA/uLZ+TXbiz581Ls0D9Qf/qtOm090ZWvt6RDtDzK+xs37tE4nzyHHvY+zzudNH1y2NcX8r818q8LNfIKxp/R45TfGv7Pr139K9sjc2rP+Uf+YE+7+Gf8CJ2FnZOznuZZ/Mc+36g3dHvOofPb8l/ux/9rf6Xc9GDf8n63s8yRr4SP82x//Wf5LFZzhib52fz++S/r+En3m514yxl/hR/6+iO7muK/MbjZX/e8CR9Uv2+WTl3h/N31TiR0R9nuus0vObg/2vdefxWp69lD/Z0DtJ+Btf09B8VIfIc1Ox1D8sXQ9+sIM/qj/3K34XqPfG6tc/Wb/361rmh8bqr3HOu7iUn+dKzyn5n7//KyveQxOMo+dcyp/f5Q97qyn6jJ693zY8g5jHvVm/R62Jm5+t30GW8uf7b/7Mn3Y6t9H+/ByOw8RazaEmPyLZ+HedEovuE+X4nv5ndpWejcgHrfCjD+yCsaoGP1h1b82hsSG3+X30f4TZ+cqfX4M/8q72FfXPEwlsT/R5Tf8nG+bAcyV+9pX+/yoxjsV7+J/5o2dE/Dn/PV33vg/mEs3V4m9H2Ln+pT7I/HuS8nIe+4r8pRyi333UP7rPWIx56lL+bX+bYo8srVH+Z1rzTFeer8mPSDbdL/UcRPu8zFAt/hSI84g8VKr/tfkjds6hEUX7nev/2jHFD2kOqrzPkt/Bl/x+/grCNcE5
   </data>
  </layer>
  <layer name="Scenery2" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJztmGEKgzAMhcO0l9hdNgtuBX/I7n+btWAghHWztTWd5oNHU636eKZ/CpDHi9Rz5ju2Uvq7tvL6PXBeU0SXRVgr5cF8Hav5v3BSBr9gE9cPNUxsJGTO86bzf+n/m9dd2kQGmC/fA9OHujVS+9nWMFEAzB33AgqgzdyPBM2cZs3ninImHkQtcv1xv3X/R2Vk9RhbqCgReA8p6XTSBk6O8eqlTWQSvHfLaFY+82Qjv74nIXcDaf4VZS2S5+dvW7YSlw==
+   eJztmN0KgzAMhcNc32iPth9wK3gle+y1YCAcKNqqbab54NBEqx4O0QuJyviKeiy8x1q2fu5r5/018EFDQpdJXBvbw/l6qAeQr29tltx5fu7iYh0xc8xb9v8y//egR2sTBXC+UR56rLWRO88av/8Rzp3fBRaRztyPhMxcZo29YZyJt5BGbjPntfs/Kj3UfWqjYSTAGTLy6VobODku6NraRCHRezetbuE1H1jxeE1i7o7y/BvGUlr+P/8BEnUg6Q==
   </data>
  </layer>
  <layer name="Interaction" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt2LsJwDAMAFHPl8L7D+EhUrk1/iQ5idwDlYZDlXAp+9rB2wiy9z+pLkxE9rPsZ9nPsp9lP8t+Vtb+foNn7e/sZ9nPsv8ds38UUftn2c+yn7Xbf33YOJJ9/391A770YdM=
+   eJzt2LsNwCAMAFGYJoNSsnQq2gjI52zlnuQS6eTKopR9R73xOIDs/U/qCxOR/Sz7Wfaz7GfZz7KflbV/3OBZ+wf7Wfaz7H/H7B9F1P5Z9rPsZ+32tw8br2Tf/1+dauGoYA==
   </data>
  </layer>
  <layer name="Collisions" width="48" height="32">
   <data encoding="base64" compression="zlib">
-   eJzNVUsORCEI85Jz/6vMYmZhSIEiH21ioj5seVh1rR8+/7b3vbaC8Z0N/YMFtGYaqI5onuHJrDsFWm95w+M53fdTaJ5HMWz+ck72kfYpNP+gGCb/aWi1luPIWdZ4Gf0oWP8wPJJj0v9Zzmjd2e+s7j4++Yfb/keez/CwZ6iq/pX5T/tfjjP+t3g6PObtM7vnL/g/8069lL8XP+UNBlW67BtXcWY13e4adufPzEd5upG99xFPl4bFnX1btHu48+1itVieCOfL+UveBfpV6Mp/Cp7/2fv1pn8s3SqeifyRthXLfusEWwevbshnWr077v9dz4pl85/2T5b71fs/wnMDVXWK1Ly6fQEWPJEa
+   eJzNVUsORCEI8/6bufIsZhaGFCjy0SYm6sOWh1XX+uHzb3vfaysY39nQP1hAa6aB6ojmGZ7MulOg9ZY3PJ7TfT+F5nkUw+Yv52QfaZ9C8w+KYfKfhlZrOY6cZY2X0Y+C9Q/DIzkm/Z/ljNad/c7q7uOTf7jtf+T5DA97hqrqX5n/tP/lOON/i6fDY94+s3v+gv8z79RL+XvxU95gUKXLvnEVZ1bT7a5hd/7MfJSnG9l7H/F0aVjc2bdFu4c73y5Wi+WJcL6cv+RdoF+Frvyn4PmfvV9v+sfSreKZyB9pW7Hst06wdfDqhnym1bvj/t/1rFg2/2n/ZLlfvf8jPDdQVadIzavbF5+K9Bw=
   </data>
  </layer>
  <objectgroup name="Objects" width="48" height="32">
-  <object name="sprite/1" gid="196" x="0" y="1152"/>
-  <object name="sprite/gardener" gid="221" x="2112" y="1088"/>
-  <object name="sprite/farmer" gid="216" x="1536" y="1472"/>
-  <object name="sprite/monkey" gid="136" x="960" y="64"/>
-  <object name="sprite/advisor" gid="216" x="1152" y="1088"/>
+  <object name="sprite/1" gid="254" x="0" y="1152"/>
+  <object name="sprite/gardener" gid="279" x="2112" y="1088"/>
+  <object name="sprite/farmer" gid="274" x="1536" y="1472"/>
+  <object name="sprite/monkey" gid="194" x="960" y="64"/>
+  <object name="sprite/advisor" gid="274" x="1152" y="1088"/>
  </objectgroup>
  <objectgroup name="Interactions" width="48" height="32">
-  <object name="trigger/objective/gardener" gid="235" x="2048" y="1088"/>
-  <object name="trigger/objective/farmer" gid="235" x="1536" y="1536"/>
-  <object name="trigger/objective/monkey" gid="235" x="960" y="128"/>
-  <object name="trigger/objective/finish" gid="235" x="960" y="64"/>
-  <object name="trigger/advice/monkey" gid="235" x="1152" y="1152"/>
+  <object name="trigger/objective/gardener" gid="294" x="2048" y="1088"/>
+  <object name="trigger/objective/farmer" gid="294" x="1536" y="1536"/>
+  <object name="trigger/objective/monkey" gid="294" x="960" y="128"/>
+  <object name="trigger/objective/finish" gid="294" x="960" y="64"/>
+  <object name="trigger/advice/monkey" gid="294" x="1152" y="1152"/>
  </objectgroup>
 </map>
