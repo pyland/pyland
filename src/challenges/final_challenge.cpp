@@ -143,15 +143,15 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     Engine::print_dialogue("Villager",
                            "Hello adventurer! I'm in need of some help.\n"
                            "You see, I need to collect some fruit for the villagers.\n"
-                           "Unfortunately, the bridge is broken and I can't get out into "
+                           "Unfortunately, the bridge is broken and I can't get out into \n"
                            "the jungle to gather the fruit.\n" 
     );
 
     EventManager::get_instance().add_timed_event(GameTime::duration(5.0), [this] (float completion) {
             if(completion == 1.0) {
                 Engine::print_dialogue("Villager",
-                                       "You can repair the bridge with vines. "
-                                       "Maybe you could use your friend Milo to help you? "
+                                       "You can repair the bridge with vines. \n"
+                                       "Maybe you could use your friend Milo to help you? \n"
                                        "Try using the cut(direction) API call."
                                        );
             }
@@ -168,7 +168,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
             
             Engine::print_dialogue ("Villager",
                                     "Excellent! Thanks for fixing that bridge for me.\n"
-                                    "I'll tell you what, if you gather the fruit for me, "
+                                    "I'll tell you what, if you gather the fruit for me, \n"
                                     "I'll give you a reward for your help!\n"
             );
 
