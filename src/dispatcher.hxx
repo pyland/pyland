@@ -31,11 +31,11 @@ void Dispatcher<Arguments...>::trigger(Arguments... arguments) {
 }
 
 template <typename... Arguments>
-PositionDispatcher<Arguments...>::PositionDispatcher (glm::ivec2 location):
+PositionDispatcher<Arguments...>::PositionDispatcher (glm::ivec2 size):
     callback_map(
-        location.x,
+        size.x,
         std::vector<std::map<CallbackTileID, std::function<bool (Arguments...)>>>(
-            location.y,
+            size.y,
             std::map<CallbackTileID, std::function<bool (Arguments...)>>()
         )
     )
