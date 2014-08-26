@@ -131,10 +131,88 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     }
     
     //Adding cuttable object
-    auto name = "vines/cut/1";
-    int vine_id = ChallengeHelper::make_object(this, name, Walkability::BLOCKED, "orange", true);
+    auto vine_name = "vines/cut/1";
+    int vine_id = ChallengeHelper::make_object(this, vine_name, Walkability::BLOCKED, "orange", true);
     std::shared_ptr<MapObject> vines_object = ObjectManager::get_instance().get_object<MapObject>(vine_id);
 
+    //Adding bridge object
+    auto bridge_name = "bridge/1";
+    int bridge_id = ChallengeHelper::make_object(this, bridge_name, Walkability::BLOCKED, "interactable/bridge/4", true);
+
+    Engine::print_dialogue("Villager",
+                           "Hello adventurer! I'm in need of some help."
+                           " You see, I need to collect some fruit for the villagers."
+                           "Unfortunately, the bridge is broken and I can't get out into"
+                           "the jungle to gather the fruit." 
+    );
+
+    EventManager::add_timed_event(GameTime::duration(5.0), [this] (float completion) {
+            if(completion == 1.0) {
+                Engine::print_dialogue("Villager",
+                                       "You can repair the bridge with vines."
+                                       "Maybe you could use your friend Milo to help you?"
+                                       "Try using the cut(direction) API call."
+                                       );
+                return false;
+            }
+            return true;
+    });
+
+    ChallengeHelper::make_interaction("fixbridge/1", [bridge_id] (int id) {
+            Engine::change_tile(glm::ivec2(4, 41), "Overlay", "interactable/bridge/3");
+            auto object = ObjectManager::get_instance().get_object<MapObject>(bridge_id);
+
+            if(!object)
+                return;
+            
+            object->set_walkability(Walkability::WALKABLE);
+            
+            Engine::print_dialogue ("Villager",
+                                    "Excellent! Thanks for fixing that bridge for me."
+                                    "I'll tell you what, if you gather the fruit for me,"
+                                    "I'll give you a reward for your help!"
+            );
+            
+            return true;
+    });
+
+
+    ChallengeHelper::make_interaction("bridge/1", [this] (int id) {
+            Engine::change_tile(glm::ivec2(4, 41), "Overlay", "interactable/bridge/3");
+            
+            Engine::print_dialogue ("Villager",
+                                    "Excellent! Thanks for fixing that bridge for me."
+                                    "I'll tell you what, if you gather the fruit for me,"
+                                    "I'll give you a reward for your help!"
+                                    );
+
+            EventManager::add_timed_event(GameTime::duration(5.0), [this] (float completion) {
+                    if(completion == 1.0) {
+                        Engine::print_dialogue("Villager",
+                                               "It can be quite a tedious process as the fruit is a"
+                                               "long way into the jungle. We normally work in pairs"
+                                               "when we gather the fruit. There's a drop off point"
+                                               "on the map where we exchange fruits with each other."
+                                               "Why not get Milo to pick up items from that point"
+                                               "and run them back to the fruit crates by me?"
+                                               "That way, you're free to gather more fruit whilst"
+                                               "he does that!"
+                                               );
+                        return false;
+                    }
+                    return true;
+                });
+
+
+
+            return true;
+    });
+    //TODO: Termination text:
+    /*
+
+Villager: Fantastic! Thanks for helping me out there. As a token of my gratitude, please accept this treasure.
+
+     */
 }
 
 void FinalChallenge::start() {
