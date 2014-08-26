@@ -102,7 +102,7 @@ int main(int argc, const char *argv[]) {
     // referring to top left corner of text window
     //    stoptext.move(105, 240 + 20);
     //    runtext.move(5, 240 + 20);
-    stoptext->set_text("Stop");
+    stoptext->set_text("Halt");
     runtext->set_text("Run");
 
     //Create the callbackstate
