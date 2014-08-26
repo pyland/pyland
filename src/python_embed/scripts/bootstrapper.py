@@ -1,8 +1,13 @@
+import code
 import os
 import pydoc
+import sys
 import time
 import threading
 import traceback
+
+from contextlib import closing
+from io import BytesIO, TextIOWrapper
 
 def cast(cast_type, value):
     """
@@ -127,8 +132,7 @@ def create_execution_scope(entity):
 
         entity._print_debug(text)
 
-    # Finally, export the desired behaviour
-    return {
+    imbued_locals = {
         "north": north,
         "south": south,
         "east": east,
@@ -146,6 +150,32 @@ def create_execution_scope(entity):
         "_print_debug": _print_debug
     }
 
+    class ScopedInterpreter(code.InteractiveInterpreter):
+        def __init__(self):
+            super().__init__(imbued_locals)
+
+        def write(self, data):
+            entity.print_dialogue(data)
+
+        def runcode(self, code):
+            old_stdout = sys.stdout
+            sys.stdout = TextIOWrapper(BytesIO(), sys.stdout.encoding)
+
+            try:
+                with closing(sys.stdout):
+                    super().runcode(code)
+
+                    # Read
+                    sys.stdout.seek(0)
+                    output = sys.stdout.read()
+
+            finally:
+                sys.stdout = old_stdout
+
+            if output:
+                entity.print_dialogue(output)
+
+    return ScopedInterpreter
 
 def start(entity, RESTART, STOP, KILL, waiting):
     """
@@ -155,6 +185,9 @@ def start(entity, RESTART, STOP, KILL, waiting):
     entity.print_debug("Started bootstrapper")
     entity.print_debug("Started with entity {}".format(entity))
     entity.print_debug("whose name is {}".format(entity.name))
+
+    ScopedInterpreter = create_execution_scope(entity)
+    scoped_interpreter = ScopedInterpreter()
 
     while True:
         try:
@@ -173,12 +206,12 @@ def start(entity, RESTART, STOP, KILL, waiting):
                 script = script_file.read()
                 entity.print_debug(script)
 
-            execution_scope = create_execution_scope(entity)
 
             entity.update_status("running")
-            exec(script, execution_scope)
-            entity.update_status("finished")
 
+            scoped_interpreter.runcode(script)
+
+            entity.update_status("finished")
 
         except RESTART:
             entity.print_debug("restarting")
