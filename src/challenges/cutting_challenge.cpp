@@ -141,6 +141,7 @@ void CuttingChallenge::start() {
 }
 
 void CuttingChallenge::finish() {
+    ChallengeHelper::set_completed_level(2); 
     event_finish.trigger(0);
 }
 

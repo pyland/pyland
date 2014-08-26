@@ -16,6 +16,10 @@
 #include "interpreter.hpp"
 #include "make_unique.hpp"
 
+// waiting to add "banana"
+std::vector<std::string> fruit_types = {"orange","pineapple"};
+unsigned int num_of_fruit = 7;
+
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
 
@@ -38,11 +42,11 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         "south/still/1"
     );
 
-    // waiting to add "banana"
-    std::vector<std::string> fruit_types = {"orange","pineapple"};
-    glm::ivec2 hangover_location = ChallengeHelper::get_location_interaction("handover/1");
-    glm::ivec2 hangover_pickup = ChallengeHelper::get_location_interaction("pickup/1");
-    glm::ivec2 hangover_dropoff = ChallengeHelper::get_location_interaction("dropoff/1");
+ 
+    //glm::ivec2 handover_location = ChallengeHelper::get_location_interaction("handover/1");
+    //glm::ivec2 handover_pickup = ChallengeHelper::get_location_interaction("pickup/1");
+    //glm::ivec2 handover_dropoff = ChallengeHelper::get_location_interaction("dropoff/1");
+
 
     for (std::string fruit_type : fruit_types) {
 
@@ -50,17 +54,16 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/"+fruit_type);
         glm::ivec2 dropoff_location = ChallengeHelper::get_location_interaction("dropoff/"+fruit_type);
 
-        int num_of_fruit = 7;
         std::vector<int> fruit_ids;
 
         // adding fruits as pickupable objects
-        for (int i = 1; i <= num_of_fruit; i++) {
+        for (unsigned int i = 1; i <= num_of_fruit; i++) {
             auto name = fruit_type+"/"+std::to_string(i);
             glm::ivec2 fruit_location = ChallengeHelper::get_location_object(name);
 
             int fruit_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, fruit_type);
             ChallengeHelper::create_pickupable(fruit_location, fruit_location, crate_location, dropoff_location , fruit_id, true);
-            ChallengeHelper::create_pickupable(hangover_location,hangover_pickup,hangover_location,hangover_dropoff,fruit_id, true);
+            //ChallengeHelper::create_pickupable(handover_location,handover_pickup,handover_location,handover_dropoff,fruit_id, true);
             fruit_ids.push_back(fruit_id);
         }
 
@@ -77,12 +80,27 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         });
 
     }
+    
 
     // challenge exit
     ChallengeHelper::make_interaction("exit", [this] (int) {
-        finish();
-        LOG(INFO) << "exiting";
-        return false;
+
+        // function to test of termination critera of challenge has been meet
+        bool terminate =
+            std::all_of(std::begin(fruit_types), std::end(fruit_types), [&] (std::string fruit_type) {
+                glm::ivec2 crate_location = ChallengeHelper::get_location_interaction("crate/"+fruit_type);
+                return Engine::get_objects_at(crate_location).size()==num_of_fruit;
+            });
+
+        if (terminate) {
+            finish();
+            LOG(INFO) << "exiting final challenge";
+            return false;
+        } else {
+            // ben put text here 
+            Engine::print_dialogue("Game","Try again");
+            return true;
+        }
     });
 
     // creating croc
@@ -123,6 +141,6 @@ void FinalChallenge::start() {
 }
 
 void FinalChallenge::finish() {
-    ChallengeHelper::set_completed_level(1);    
+    ChallengeHelper::set_completed_level(3);    
     event_finish.trigger(0);
 }
