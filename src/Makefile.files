@@ -47,6 +47,7 @@ CHALLENGE_OBJS = \
 	challenges/cutting_challenge.o      \
 	challenges/final_challenge.o        \
 	challenges/introduction_challenge.o \
+        challenges/base_challenge.o         \
 	challenges/start_screen.o           \
 
 

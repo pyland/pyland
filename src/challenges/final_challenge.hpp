@@ -6,7 +6,7 @@
 
 class ChallengeData;
 
-
+/// FinalChallenge implements the challenge associated with final_challenge.tmx.
 class FinalChallenge : public Challenge {
     public:
         FinalChallenge(ChallengeData* _challenge_data);

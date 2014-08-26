@@ -85,10 +85,10 @@ Keybindings
 
 ##API
 
-* `help()` and `help(command` - Get help on the current task and any in-game (or other) commands.
+* `help()` and `help(command)` - Get help on the current task and any in-game (or other) commands.
 
 * `move(direction)` - Move the character in the given direction. Parameter direction: north, east, south or west
 * `walkable(direction)` - Determines if the character can move in that direction. Parameter direction: north, east, south or west
 
 * `cut(direction)` - Cuts down vines or logs. Parameter direction: north, east, south or west
-* `look(radius)` - Find all objects in a given radius from the character. Paramter: radius of area to search for objects in.
+* `look(radius)` - Find all objects in a given radius from the character. Parameter: radius of the area to search for objects in.

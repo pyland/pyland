@@ -24,7 +24,8 @@ class TextureAtlas;
 ///
 /// This class holds all the referrences to the data needed to render
 /// the geometry. The idea is that this data is generated and then put
-/// into this object. Then, when an object is rendered, this object's
+/// into this object so that it then owns this data and is responsible for
+/// cleaning it up. Then, when an object is rendered, this object's
 /// information is queried and used in the rendering loops.
 ///
 /// For example, each object has a RenderableComponent and then in the
