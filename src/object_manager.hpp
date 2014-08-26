@@ -24,7 +24,7 @@ class Object;
 /// manipulated, such as changing it's properties. To get the pointer,
 /// use ObjectManager::get_instance().get_object<Type>(object_id);
 /// Here the Type of the object can be any subclass of Object. This
-/// uses a dynamic pointer cast to 
+/// uses a dynamic pointer cast to return the required type of object. 
 ///
 class ObjectManager {
 
