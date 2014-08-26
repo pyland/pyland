@@ -122,6 +122,11 @@ class Entity {
         void __set_game_speed(float game_seconds_per_real_second);
 
         void py_update_status(std::string status);
+
+        std::string get_instructions();
+
+        py::list get_retrace_steps();
+        py::object read_message();
 };
 
 

@@ -223,3 +223,11 @@ void Sprite::set_focus(bool _is_focus) {
     }
 }
 
+void Sprite::set_instructions(std::string instructions) {
+    this->instructions = instructions;
+}
+
+std::string Sprite::get_instructions() {
+    return instructions;
+}
+

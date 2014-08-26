@@ -14,27 +14,29 @@
 #include <utility>
 #include <vector>
 
+#include "button.hpp"
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
 #include "cutting_challenge.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
-#include "game_window.hpp"
-#include "button.hpp"
+#include "filters.hpp"
 #include "final_challenge.hpp"
+#include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
-#include "filters.hpp"
 #include "input_manager.hpp"
+#include "interpreter.hpp"
+#include "introduction_challenge.hpp"
 #include "keyboard_input_event.hpp"
+#include "lifeline.hpp"
+#include "map_viewer.hpp"
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
-#include "lifeline.hpp"
-#include "map_viewer.hpp"
 #include "notification_bar.hpp"
+#include "sprite.hpp"
 #include "start_screen.hpp"
-#include "interpreter.hpp"
 
 #ifdef USE_GLES
 #include "typeface.hpp"
@@ -176,7 +178,7 @@ int main(int argc, const char *argv[]) {
 
     Lifeline editor_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("E")},
-        [&] (KeyboardInputEvent) { 
+        [&] (KeyboardInputEvent) {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
             auto active_player = ObjectManager::get_instance().get_object<Object>(id);
             if (!active_player) { return; }
@@ -186,7 +188,7 @@ int main(int argc, const char *argv[]) {
 
     Lifeline back_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("ESCAPE")},
-        [&] (KeyboardInputEvent) { 
+        [&] (KeyboardInputEvent) {
             Engine::get_challenge()->event_finish.trigger(0);;
         }
     ));
@@ -195,14 +197,14 @@ int main(int argc, const char *argv[]) {
     std::chrono::steady_clock::time_point start_time;
 
     Lifeline fast_start_ease_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_PRESS}), KEY({"Left Shift", "Right Shift"})},
+        {KEY_PRESS, KEY({"Left Shift", "Right Shift"})},
         [&] (KeyboardInputEvent) {
             start_time = std::chrono::steady_clock::now();
         }
     ));
 
     Lifeline fast_ease_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY({"Left Shift", "Right Shift"})},
+        {KEY_HELD, KEY({"Left Shift", "Right Shift"})},
         [&] (KeyboardInputEvent) {
             auto now(std::chrono::steady_clock::now());
             auto time_passed = now - start_time;
@@ -225,7 +227,7 @@ int main(int argc, const char *argv[]) {
     ));
 
     Lifeline fast_finish_ease_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_RELEASE}), KEY({"Left Shift", "Right Shift"})},
+        {KEY_RELEASE, KEY({"Left Shift", "Right Shift"})},
         [&] (KeyboardInputEvent) {
             EventManager::get_instance().time.game_seconds_per_real_second = 1.0;
         }
@@ -233,45 +235,65 @@ int main(int argc, const char *argv[]) {
 
 
     Lifeline up_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
+        {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, 1)); }
     ));
 
     Lifeline down_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Down", "S"})},
+        {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Down", "S"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 0, -1)); }
     ));
 
     Lifeline right_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Right", "D"})},
+        {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Right", "D"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2( 1,  0)); }
     ));
 
     Lifeline left_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Left", "A"})},
+        {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Left", "A"})},
         [&] (KeyboardInputEvent) { callbackstate.man_move(glm::ivec2(-1,  0)); }
     ));
 
     Lifeline monologue_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_PRESS}), KEY("M")},
+        {KEY_PRESS, KEY("M")},
         [&] (KeyboardInputEvent) { callbackstate.monologue(); }
     ));
 
-    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(
-        filter({ANY_OF({ MOUSE_RELEASE})}, [&] (MouseInputEvent event) {
+    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter(
+        {MOUSE_RELEASE},
+        [&] (MouseInputEvent event) {
             gui_manager.mouse_callback_function(event);
         })
     );
 
 
     Lifeline zoom_in_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY("=")},
+        {KEY_HELD, KEY("=")},
         [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() * 1.01f); }
     ));
 
     Lifeline zoom_out_callback = input_manager->register_keyboard_handler(filter(
-        {ANY_OF({KEY_HELD}), KEY("-")},
+        {KEY_HELD, KEY("-")},
         [&] (KeyboardInputEvent) { Engine::set_global_scale(Engine::get_global_scale() / 1.01f); }
+    ));
+
+    Lifeline zoom_zero_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, MODIFIER({"Left Ctrl", "Right Ctrl"}), KEY("0")},
+        [&] (KeyboardInputEvent) { Engine::set_global_scale(1.0f); }
+    ));
+
+
+    Lifeline help_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
+        [&] (KeyboardInputEvent) {
+            auto id(Engine::get_map_viewer()->get_map_focus_object());
+            auto active_player(ObjectManager::get_instance().get_object<Sprite>(id));
+
+            Engine::print_dialogue(
+                active_player->get_name(),
+                active_player->get_instructions()
+            );
+        }
     ));
 
 
@@ -285,7 +307,8 @@ int main(int argc, const char *argv[]) {
         );
     }
 
-    Lifeline switch_char = input_manager->register_mouse_handler(filter({ANY_OF({ MOUSE_RELEASE})},
+    Lifeline switch_char = input_manager->register_mouse_handler(filter(
+        {MOUSE_RELEASE},
         [&] (MouseInputEvent event) {
             LOG(INFO) << "mouse clicked on map at " << event.to.x << " " << event.to.y << " pixel";
 
@@ -406,28 +429,34 @@ int main(int argc, const char *argv[]) {
 
     return 0;
 }
+
 Challenge* pick_challenge(ChallengeData* challenge_data) {
     int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
     std::string map_name = "";
     switch(next_challenge) {
-    case 0:
-        map_name ="../maps/start_screen.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new StartScreen(challenge_data);
-        break;
-    case 1:
-        map_name = "../maps/final_challenge.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new FinalChallenge(challenge_data);
-        break;
-    case 2:
-        map_name = "../maps/cutting_challenge.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new CuttingChallenge(challenge_data);
-        break;
-    default:
-        break;
+        case 0:
+            map_name ="../maps/start_screen.tmx";
+            challenge_data->map_name = map_name;
+            challenge = new StartScreen(challenge_data);
+            break;
+        case 1:
+            map_name = "../maps/introduction.tmx";
+            challenge_data->map_name = map_name;
+            challenge = new IntroductionChallenge(challenge_data);
+            break;
+        case 2:
+            map_name = "../maps/cutting_challenge.tmx";
+            challenge_data->map_name = map_name;
+            challenge = new CuttingChallenge(challenge_data);
+            break;
+        case 3:
+            map_name = "../maps/final_challenge.tmx";
+            challenge_data->map_name = map_name;
+            challenge = new FinalChallenge(challenge_data);
+            break;
+        default:
+            break;
     }
     return challenge;
 }

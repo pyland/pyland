@@ -199,8 +199,8 @@ public:
     static TextFont get_game_font();
     static Typeface get_game_typeface();
 
-    static void set_challenge(Challenge* _challenge) {challenge = _challenge; }
-    static Challenge* get_challenge() {return challenge;}
+    static void set_challenge(Challenge* _challenge) { challenge = _challenge; }
+    static Challenge* get_challenge() { return challenge; }
 };
 
 #endif

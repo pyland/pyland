@@ -255,3 +255,5 @@ people/villager/west/walking/1: ../resources/tiles/people.png
 people/villager/west/walking/2: ../resources/tiles/people.png
 people/villager/west/walking/3: ../resources/tiles/people.png
 people/villager/west/walking/4: ../resources/tiles/people.png
+test/blank: ../resources/tiles/test.png
+test/solid: ../resources/tiles/test.png
