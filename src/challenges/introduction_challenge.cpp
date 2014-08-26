@@ -441,6 +441,7 @@ void IntroductionChallenge::start() {
 }
 
 void IntroductionChallenge::finish() {
+    ChallengeHelper::set_completed_level(1); 
     event_finish.trigger(0);
 }
 

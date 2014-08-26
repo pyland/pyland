@@ -123,6 +123,6 @@ void FinalChallenge::start() {
 }
 
 void FinalChallenge::finish() {
-    ChallengeHelper::set_completed_level(1);    
+    ChallengeHelper::set_completed_level(3);    
     event_finish.trigger(0);
 }
