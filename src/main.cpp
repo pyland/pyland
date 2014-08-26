@@ -222,14 +222,14 @@ int main(int argc, const char *argv[]) {
                 + 5.0f * completion * completion * completion
             ));
 
-            EventManager::get_instance().time.game_seconds_per_real_second = eased;
+            EventManager::get_instance().time.set_game_seconds_per_real_second(eased);
         }
     ));
 
     Lifeline fast_finish_ease_callback = input_manager->register_keyboard_handler(filter(
         {KEY_RELEASE, KEY({"Left Shift", "Right Shift"})},
         [&] (KeyboardInputEvent) {
-            EventManager::get_instance().time.game_seconds_per_real_second = 1.0;
+            EventManager::get_instance().time.set_game_seconds_per_real_second(1.0);
         }
     ));
 
