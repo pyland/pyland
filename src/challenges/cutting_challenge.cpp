@@ -35,7 +35,7 @@ CuttingChallenge::CuttingChallenge(ChallengeData *challenge_data): Challenge(cha
             finish();
             return false;
         });
-    
+
     ChallengeHelper::make_interaction("trigger/advice/monkey", [this] (int) {
             if (has_bananas) {
                 Engine::print_dialogue ("Villager","Hey, you've got some bananas! Maybe you can get use them to persuade that monkey to move...");
@@ -250,7 +250,7 @@ std::string CuttingChallenge::monkey_say() {
                 }
             }
         }
-        
+
         switch (uniform_monkey_ends(random_generator)) {
         case 0:
             message << ".";
