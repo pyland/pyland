@@ -19,7 +19,7 @@
 
 // waiting to add "banana"
 std::vector<std::string> fruit_types = {"bananas","orange","pineapple"};
-unsigned int num_of_fruit = 7;
+unsigned int num_of_fruit = 3;
 
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
     Engine::print_dialogue( "Game", "Welcome to the final challenge");
