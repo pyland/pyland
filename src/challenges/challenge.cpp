@@ -1,3 +1,6 @@
+#include "python_embed_headers.hpp"
+
+#include <boost/python.hpp>
 #include <glog/logging.h>
 #include <glm/vec2.hpp>
 #include <iostream>
@@ -20,6 +23,7 @@
 #include "object_manager.hpp"
 #include "sprite.hpp"
 
+namespace py = boost::python;
 
 Challenge::Challenge(ChallengeData* _challenge_data) :
     map(nullptr), sprite_switcher(nullptr), challenge_data(_challenge_data) {
@@ -83,6 +87,10 @@ int Challenge::make_map_object(glm::vec2 position,
     map->add_map_object(new_object_id);
 
     return new_object_id;
+}
+
+py::object Challenge::read_message(int) const {
+    return py::object();
 }
 
 /*

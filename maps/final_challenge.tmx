@@ -46,7 +46,7 @@
  </layer>
  <layer name="Collisions" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA9VWWw4CMQjUL+9/Rw9i/DDZNBbmAW13kkbj8pgByvp4YHg9zz4Z9x06lBrO7NFYWQ1U/rPYSj8yf8c3ioHOClNP1o/RUWmvcGFjuL2IfJ3ZYOHUduQ8i4fyQuroarjao2D2yOrdwMwuM68Kshoo3CrrzO7DjhxXG7UfkU9FvdA9MNOh8Km+W+reiXSw/lU6ot/Y2J06Rl7/YiNaO3WgWh2w/XDmRdEx1lnRwdYoy8loVbh29TrikNlW5KjQ8k5yVGNVf1b3u2v+Rlu3Jl06GC2dyPhd88+er+CJgKlxtBt3Q5mT6+f43cmP2qKxmJ6wGtR7x8xMVY0d/u6eqb6z0U7o0qHuVERD93HyruaK1nUHpwreJ2tQ4eTazV3R0R2jW4cbaxV21a8auzVU5uq8e1nOSiA6Tpg3dt9kNicj43gHDV8gvZg9OwXITK3i4fqv2lNdcHbuaLtrxtx3OWJ3p/9VTNyKPD8/JQf6jlRPFq8qz53OB0JpTJEQJwAA
+   H4sIAAAAAAAAA9VWWa7DMAhsv3r/O76DPPWjUmTFMAvYzkhW04ZlBgjp64Xh8z77ZNx36FBqOLNHY2U1UPnPYiv9yPwd3ygGOitMPVk/RkelvcKFjeH2IvJ1ZoOFU9uR8yweygupo6vhao8i0sTsFTYH6hd9V3IoczSLfzcjDLesvk6tUP6VOa42aj8in4p6oXtgpkPhoxxHA8LxTjPjX6Uj+o2N3alj5HUXG9HaqQPV6oDthzMvio6xzooOtkZZTkarwrWr1xGHzLYiR4WWvyRHNVb1Z3W/u+ZvtHVr0qWD0dKJjN81/+z+Cp4ImBpHu3E3lDm5fo7XTn7UFo3F9ITVoD53zMxU1djh7+6Z6mc22gldOtSdimjoPk7e1VzRuu7gVMH7ZA0qnFy7uSs6umN063BjrcKu+lVjt4bKXJ3PXpazEoiOE+aN3TeZzcnIOD5BwxdIL2b3TgEyU6t4uP6r9lQXnJ072u6aMfddjtg96X8VE7ciz89PyYG+I9WTxavK86TzDy+FF7sQJwAA
   </data>
  </layer>
  <layer name="Objects" width="50" height="50">
@@ -100,5 +100,6 @@
   <object gid="238" x="256" y="640"/>
   <object gid="238" x="256" y="640"/>
   <object name="fixbridge/1" gid="238" x="256" y="640"/>
+  <object name="bridge/1" gid="63" x="256" y="576"/>
  </objectgroup>
 </map>

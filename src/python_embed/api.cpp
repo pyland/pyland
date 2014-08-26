@@ -1,10 +1,16 @@
+#include "python_embed_headers.hpp"
+
+#include <boost/iterator/zip_iterator.hpp>
+#include <boost/multi_index/detail/bidir_node_iterator.hpp>
+#include <boost/multi_index/detail/ord_index_node.hpp>
+#include <boost/python/list.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 #include <glm/vec2.hpp>
 #include <glog/logging.h>
 #include <ostream>
 #include <string>
 #include <tuple>
 #include <vector>
-#include <boost/python/list.hpp>
 
 #include "accessor.hpp"
 #include "api.hpp"
@@ -12,6 +18,8 @@
 #include "event_manager.hpp"
 #include "game_time.hpp"
 #include "gil_safe_future.hpp"
+#include "object_manager.hpp"
+#include "sprite.hpp"
 
 
 Entity::Entity(glm::vec2 start, std::string name, int id):
@@ -80,31 +88,38 @@ bool Entity::cut(int x, int y) {
         true
     );
 }
-#include <iostream>
+
 py::list Entity::look(int search_range) {
     ++call_number;
 
     auto id = this->id;
     return GilSafeFuture<py::list>::execute(
-                [id, search_range] (GilSafeFuture<py::list> found_objects_return) {
-                py::list objects;
+        [id, search_range] (GilSafeFuture<py::list> found_objects_return) {
+            py::list objects;
 
-                std::vector<std::tuple<std::string, int, int>> objects_found(Engine::look(id, search_range));
-                
-                for (auto object : objects_found) {
-                    objects.append(
-                        py::make_tuple(
-                            py::api::object(std::get<0>(object)),
-py::api::object(std::get<1>(object)),
-py::api::object(std::get<2>(object))
-                        )
-                    );
-                }
-                found_objects_return.set(objects);
+            std::vector<std::tuple<std::string, int, int>> objects_found(Engine::look(id, search_range));
+
+            for (auto object : objects_found) {
+                objects.append(
+                    py::make_tuple(
+                        py::api::object(std::get<0>(object)),
+                        py::api::object(std::get<1>(object)),
+                        py::api::object(std::get<2>(object))
+                    )
+                );
+            }
+            found_objects_return.set(objects);
         }
     );
 }
 
+std::string Entity::get_instructions() {
+    auto id(this->id);
+    return GilSafeFuture<std::string>::execute([id] (GilSafeFuture<std::string> instructions_return) {
+        auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
+        instructions_return.set(sprite->get_instructions());
+    });
+}
 
 // Not thread safe for efficiency reasons...
 void Entity::py_print_debug(std::string text) {
@@ -128,5 +143,53 @@ void Entity::py_update_status(std::string status){
     auto id(this->id);
     return GilSafeFuture<void>::execute([id, status] (GilSafeFuture<void>) {
         Engine::update_status(id, status);
+    });
+}
+
+// This is way too complecated...
+//
+// but I blame C++
+py::list Entity::get_retrace_steps() {
+    auto id(this->id);
+    return GilSafeFuture<py::list>::execute([id] (GilSafeFuture<py::list> retrace_steps_return) {
+        py::list retrace_steps;
+
+        auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+        auto &positions(object->get_positions());
+
+        auto zipped_locations_begin(boost::make_zip_iterator(boost::make_tuple(
+            std::next(positions.get<insertion_order>().rbegin()), positions.get<insertion_order>().rbegin()
+        )));
+        auto zipped_locations_end(boost::make_zip_iterator(boost::make_tuple(
+            positions.get<insertion_order>().rend(), std::prev(positions.get<insertion_order>().rend())
+        )));
+
+        for (auto pair=zipped_locations_begin; pair != zipped_locations_end; ++pair) {
+            glm::vec2 start(pair->get<0>());
+            glm::vec2 end  (pair->get<1>());
+            auto reverse_change(start - end);
+
+            retrace_steps.append(py::make_tuple(
+                py::api::object(float(reverse_change.x)),
+                py::api::object(float(reverse_change.y))
+            ));
+        }
+
+        retrace_steps_return.set(retrace_steps);
+    });
+}
+
+py::object Entity::read_message() {
+    auto id(this->id);
+    return GilSafeFuture<py::object>::execute([id] (GilSafeFuture<py::object> read_message_return) {
+        auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+        auto *challenge(object->get_challenge());
+
+        if (challenge) {
+            read_message_return.set(challenge->read_message(id));
+        }
+        else {
+            read_message_return.set(py::object());
+        }
     });
 }

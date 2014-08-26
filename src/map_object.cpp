@@ -38,7 +38,7 @@ MapObject::MapObject(glm::vec2 position,
     cuttable(false),
     findable(true),
     frames(frames)
-    { 
+    {
 
         VLOG(2) << "New map object: " << name;
 
@@ -143,7 +143,7 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
 }
 
 void MapObject::set_position(glm::vec2 position) {
-    this->position = position; 
+    this->position = position;
     VLOG(2) << std::fixed << position.x << " " << position.y;
     regenerate_blockers();
 }
@@ -201,6 +201,15 @@ void MapObject::set_state_on_moving_start(glm::ivec2) {
 
 void MapObject::set_state_on_moving_finish() {
     moving = false;
+
+    // Remove all elements from container including and following
+    // any prior occurence of this position, to remove redundant loops.
+    while (positions.find(position) != std::end(positions)) {
+        positions.get<insertion_order>().pop_back();
+    }
+
+    // Insert the position as most recent position
+    positions.insert(position);
 }
 
 // TODO: rewrite
@@ -221,4 +230,16 @@ bool MapObject::init_shaders() {
     //Set the shader
     renderable_component.set_shader(shader);
     return true;
+}
+
+OrderedHashSet<glm::vec2> const &MapObject::get_positions() {
+    return positions;
+}
+
+void MapObject::set_challenge(Challenge *challenge) {
+    this->challenge = challenge;
+}
+
+Challenge const *MapObject::get_challenge() {
+    return challenge;
 }

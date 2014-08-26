@@ -17,15 +17,15 @@ class LongWalkChallenge : public Challenge {
         virtual void start();
         virtual void finish();
 
-        private:
-            std::vector<int> wall_path_medium_objects;
-            std::vector<int> wall_path_long_objects;
+    private:
+        std::vector<int> wall_path_medium_objects;
+        std::vector<int> wall_path_long_objects;
 
-            std::vector<PositionDispatcher<int>::CallbackID> blocked_alert_path_long_callbacks;
-            std::vector<PositionDispatcher<int>::CallbackID> blocked_alert_path_medium_callbacks;
-            std::vector<PositionDispatcher<int>::CallbackID> end_callbacks;
-            std::vector<PositionDispatcher<int>::CallbackID> grass_path_short_callbacks;
-            std::vector<PositionDispatcher<int>::CallbackID> room_first_exit_callbacks;
+        std::vector<PositionDispatcher<int>::CallbackID> blocked_alert_path_long_callbacks;
+        std::vector<PositionDispatcher<int>::CallbackID> blocked_alert_path_medium_callbacks;
+        std::vector<PositionDispatcher<int>::CallbackID> end_callbacks;
+        std::vector<PositionDispatcher<int>::CallbackID> grass_path_short_callbacks;
+        std::vector<PositionDispatcher<int>::CallbackID> room_first_exit_callbacks;
 
 
         Lifeline editor_lifeline;

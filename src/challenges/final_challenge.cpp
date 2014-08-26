@@ -38,7 +38,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
         "south/still/1"
     );
 
-    // ,"banana","pineapple"
+    // waiting to add "banana"
     std::vector<std::string> fruit_types = {"orange","pineapple"};
     glm::ivec2 hangover_location = ChallengeHelper::get_location_interaction("handover/1");
     glm::ivec2 hangover_pickup = ChallengeHelper::get_location_interaction("pickup/1");
