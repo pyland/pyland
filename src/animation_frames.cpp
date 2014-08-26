@@ -22,8 +22,9 @@ std::pair<int, std::string> AnimationFrames::get_frame(std::string section, floa
     auto length(std::distance(begin, end));
     CHECK_NE(length, 0) << ": there are no DIRECTORIES matching the input " << "(" << animation_frames_root +"/"+ section << ").";
 
-    auto animation_number(int(completion * float(length)));
-    animation_number -= length == animation_number;
+    auto animation_number(int(completion * float(length) * 2));
+    animation_number -= 2 * length == animation_number;
+    animation_number %= int(length);
 
     // Advance the iterator to the wanted texture
     for (int i=0; i < animation_number; ++i) { ++begin; }

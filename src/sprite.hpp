@@ -58,6 +58,14 @@ protected:
     ///
     int focus_icon_id;
 
+    ///
+    /// Instructions for how to complete the current task, as part of the challenge.
+    ///
+    /// This can vary by character, but the main reason this is a sprite attribute
+    /// (rather than a challenge attribute) is because the code-base is a mess.
+    ///
+    std::string instructions;
+
 public:
     /// Tiles that the object is blocking, probably
     /// by standing on.
@@ -124,7 +132,10 @@ public:
     std::string get_sprite_name() {return sprite_name; }
 
     void get_inventory_limit (unsigned int _inventory_limit) {inventory_limit = _inventory_limit; };
-}; 
+
+    void set_instructions(std::string instructions);
+    std::string get_instructions();
+};
 
 
 #endif

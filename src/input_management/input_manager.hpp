@@ -26,7 +26,11 @@ struct KeyboardInputEvent;
 struct MouseInputEvent;
 
 
+#ifndef INSERTION_ORDER
+#define INSERTION_ORDER
 struct insertion_order {};
+#endif
+
 template <typename T>
 using OrderedSet = boost::multi_index_container<
     T,

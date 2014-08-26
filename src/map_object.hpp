@@ -1,6 +1,12 @@
 #ifndef MAP_OBJECT_H
 #define MAP_OBJECT_H
 
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/indexed_by.hpp>
+#include <boost/multi_index/sequenced_index.hpp>
+#include <boost/multi_index/tag.hpp>
+#include <boost/multi_index_container.hpp>
 #include <glm/vec2.hpp>
 #include <map>
 #include <string>
@@ -10,6 +16,31 @@
 #include "map.hpp"
 #include "object.hpp"
 #include "walkability.hpp"
+
+#ifndef KEYHASH
+#define KEYHASH
+struct KeyHash {
+    std::size_t operator()(const glm::vec2 &key) const {
+        return boost::hash<float>()(key.x * 2048.0f + key.y);
+    }
+};
+#endif
+
+#ifndef INSERTION_ORDER
+#define INSERTION_ORDER
+struct insertion_order {};
+#endif
+
+template <typename T>
+using OrderedHashSet = boost::multi_index_container<
+    T,
+    boost::multi_index::indexed_by<
+        // hashed (like std::unordered_map)
+        boost::multi_index::hashed_unique<boost::multi_index::identity<T>, KeyHash>,
+        // ordered by insertion (like std::list)
+        boost::multi_index::sequenced<boost::multi_index::tag<insertion_order>>
+    >
+>;
 
 ///
 /// Represents an object which can be rendered on the map
@@ -42,6 +73,12 @@ protected:
     glm::vec2 position;
 
     ///
+    /// An ordered container of positions that the map object has been on,
+    /// as recorded by set_state_on_moving_finish().
+    ///
+    OrderedHashSet<glm::vec2> positions;
+
+    ///
     /// Tiles that the object is blocking, probably
     /// by standing on.
     ///
@@ -56,11 +93,20 @@ protected:
     /// Whether the object can be cut down
     ///
     bool cuttable;
-    
+
     ///
     /// Whether the object can be found on the map
     ///
-    bool findable;   
+    bool findable;
+
+    ///
+    /// The challenge that created or now owns the object.
+    ///
+    /// This must be set manually by the challenge,
+    /// and may be null at any time.
+    ///
+    Challenge *challenge = nullptr;
+
 public:
     ///
     /// Constructs a map object
@@ -181,8 +227,32 @@ public:
 
     ///
     /// Walking frames to animate movement.
-    ///
+    ///created
     AnimationFrames frames;
+
+    ///
+    /// An ordered container of positions that the map object has been on,
+    /// as recorded by set_state_on_moving_finish().
+    ///
+    OrderedHashSet<glm::vec2> const &get_positions();
+
+    ///
+    /// Set the challenge that created or now owns the object.
+    ///
+    /// It is permitted to call this with nullptr at any time.
+    ///
+    /// @warning
+    ///     An object should not outlive its challenge pointer.
+    ///
+    void set_challenge(Challenge *challenge);
+
+    ///
+    /// The challenge that created or now owns the object.
+    ///
+    /// This is set manually by the challenge,
+    /// and may be null at any time.
+    ///
+    Challenge const *get_challenge();
 };
 
 #endif

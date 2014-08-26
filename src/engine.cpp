@@ -113,7 +113,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
     // Motion
     EventManager::get_instance().add_timed_event(
-        GameTime::duration(0.30),
+        GameTime::duration(0.60),
         [direction, move_by, walk_succeeded_return, location, target, id] (float completion) mutable {
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             if (!object) { return false; }
@@ -294,7 +294,7 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
             //TODO, maybe we should give python the floats - what if the object is moving?
             //in this case, the position is truncated
             glm::ivec2 object_pos = object->get_position();
-            
+
             //Check if in range
             std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
             std::cout << object->get_name() << std::endl;
@@ -332,7 +332,7 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
 bool Engine::cut(int id, glm::ivec2 location) {
     std::cout << id << std::endl;
     std::cout << location.x <<std::endl;
-    
+
     Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
     std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
     glm::ivec2 sprite_pos = sprite->get_position();

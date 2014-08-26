@@ -1,6 +1,9 @@
 #ifndef CHALLENGE_H
 #define CHALLENGE_H
 
+#include "python_embed_headers.hpp"
+
+#include <boost/python.hpp>
 #include <glm/vec2.hpp>
 #include <string>
 #include <vector>
@@ -13,7 +16,6 @@
 
 class ChallengeData;
 class Map;
-
 
 class Challenge {
 protected:
@@ -66,6 +68,8 @@ public:
                         std::string start_frame,
                         bool cuttable=false,
                         bool findable=true);
+
+    virtual boost::python::object read_message(int id) const;
 };
 
 #endif

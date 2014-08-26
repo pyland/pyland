@@ -1,4 +1,5 @@
 import os
+import pydoc
 import time
 import threading
 import traceback
@@ -29,50 +30,120 @@ def create_execution_scope(entity):
     east  = +1,  0
     west  = -1,  0
 
-    def print_debug(text):
-        entity.print_debug(text)
-
-    def move(position):
-        x, y = position
-        x = cast("int", x)
-        y = cast("int", y)
-        return entity.move(x, y)
-
-    def monologue(*args):
-        entity.monologue("\n".join(args))
-
-    def walkable(position):
-        x, y = position
-        x = cast("int", x)
-        y = cast("int", y)
-
-        return entity.walkable(x, y)
-
     def cut(position):
+        """
+        Take a relative position (north, south, east or west)
+        and attemt to cut any vines or other cuttable object at that position.
+        """
+
         entity.print_debug("Python: cut({})".format(position))
         x, y = position
         x = cast("int", x)
         y = cast("int", y)
 
         entity.cut(x, y)
-    def look(search_range):
+
+    # Typically one would use a no-argument sentinel, but I
+    # don't want to confuse new users when introspecting, and
+    # variadic arguments look less obviously confusing
+    # (even if they're actually more complicated)
+    def help(*arguments):
+        """
+        Get the help for any object.
+
+        If called with no arguments, output help
+        about the current task.
+        """
+
+        if arguments:
+            try:
+                [argument] = arguments
+            except ValueError:
+                raise TypeError("help takes at most one argument, {} given".format(len(arguments)))
+
+            entity.print_dialogue(pydoc.render_doc(argument, "Help on %s", renderer=pydoc.plaintext))
+        else:
+            entity.print_dialogue(entity.get_instructions())
+
+    def get_retrace_steps():
+        """
+        Get a list of directions to move in that will undo all
+        of the steps taken from the last checkpoint.
+        """
+
+        return entity.get_retrace_steps()
+
+    def look(search_range: [(str, int, int)]):
+        """
+        Return a list of (name, x, y) tuples, representing the
+        name and position of all of the objects within 10 squares
+        of the calling character.
+        """
+
         entity.print_debug("Python: look({})".format(search_range))
         return entity.look(search_range)
 
+    def monologue(*args):
+        """
+        Output information about the character to the text box.
+        """
+
+        entity.monologue("\n".join(args))
+
+    def move(position):
+        """
+        Take a relative position (north, south, east or west)
+        and attemt to cut any vines or other cuttable object at that position.
+        """
+
+        x, y = position
+        x = cast("int", x)
+        y = cast("int", y)
+        return entity.move(x, y)
+
+    def walkable(position) -> bool:
+        """
+        Take a relative position (north, south, east or west)
+        and return whether that position is walkable.
+        """
+
+        x, y = position
+        x = cast("int", x)
+        y = cast("int", y)
+
+        return entity.walkable(x, y)
+
+    def read_message():
+        """
+        Read a secret note and return any information it contains.
+        """
+
+        return entity.read_message()
+
+    def _print_debug(text: str):
+        """
+        Output debugging information to the program's logging facilities.
+        """
+
+        entity._print_debug(text)
 
     # Finally, export the desired behaviour
     return {
         "north": north,
         "south": south,
-        "east":  east,
-        "west":  west,
+        "east": east,
+        "west": west,
 
+        "cut": cut,
+        "help": help,
+        "get_retrace_steps": get_retrace_steps,
+        "look": look,
         "move": move,
         "monologue": monologue,
+        "read_message": read_message,
         "walkable": walkable,
-        "cut": cut,
-        "look": look,
-        "print_debug": print_debug
+
+        "_print_debug": _print_debug
     }
 
 
@@ -98,7 +169,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
             script_filename = "python_embed/scripts/{}.py".format(entity.name);
             entity.print_debug("Reading from file: {}".format(script_filename))
 
-            with open(script_filename, encoding="utf-8") as script_file:
+            with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()
                 entity.print_debug(script)
 

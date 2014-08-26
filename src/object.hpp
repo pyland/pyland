@@ -86,7 +86,9 @@ public:
     ///
     void set_renderable(bool can_render) { renderable = can_render; }
 
-    ///TODO: Joshua comment
+    ///
+    /// The Python thread for running scripts in.
+    ///
     std::unique_ptr<LockableEntityThread> daemon;
 };
 
