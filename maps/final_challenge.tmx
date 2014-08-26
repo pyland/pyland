@@ -61,7 +61,7 @@
   <object name="sprite/crocodile/1" gid="154" x="640" y="64"/>
   <object name="orange/1" gid="126" x="640" y="1664"/>
   <object name="pineapple/1" gid="127" x="1920" y="1216"/>
-  <object name="banana/1" gid="125" x="1792" y="2432"/>
+  <object name="bananas/1" gid="125" x="1792" y="2432"/>
   <object name="orange/3" gid="126" x="448" y="1728"/>
   <object name="orange/4" gid="126" x="768" y="1600"/>
   <object name="orange/5" gid="126" x="768" y="1728"/>
@@ -75,12 +75,12 @@
   <object name="pineapple/6" gid="127" x="2112" y="896"/>
   <object name="pineapple/4" gid="127" x="1984" y="1088"/>
   <object name="pineapple/2" gid="127" x="1856" y="1152"/>
-  <object name="banana/6" gid="125" x="1344" y="2560"/>
-  <object name="banana/7" gid="125" x="1152" y="2816"/>
-  <object name="banana/4" gid="125" x="1920" y="2752"/>
-  <object name="banana/3" gid="125" x="1920" y="2496"/>
-  <object name="banana/5" gid="125" x="1792" y="2560"/>
-  <object name="banana/2" gid="125" x="2496" y="2624"/>
+  <object name="bananas/6" gid="125" x="1344" y="2560"/>
+  <object name="bananas/7" gid="125" x="1152" y="2816"/>
+  <object name="bananas/4" gid="125" x="1920" y="2752"/>
+  <object name="bananas/3" gid="125" x="1920" y="2496"/>
+  <object name="bananas/5" gid="125" x="1792" y="2560"/>
+  <object name="bananas/2" gid="125" x="2496" y="2624"/>
   <object name="pineapple/7" gid="127" x="2560" y="576"/>
   <object name="sprite/crocodile/2" gid="154" x="0" y="576"/>
   <object name="sprite/crocodile/3" gid="154" x="768" y="1088"/>
@@ -88,12 +88,12 @@
  </objectgroup>
  <objectgroup name="Interactions" width="50" height="50">
   <object name="exit" gid="301" x="448" y="192"/>
-  <object name="crate/banana" gid="103" x="192" y="192"/>
+  <object name="crate/bananas" gid="103" x="192" y="192"/>
   <object name="crate/orange" gid="105" x="256" y="192"/>
   <object name="crate/pineapple" gid="106" x="320" y="192"/>
   <object name="dropoff/orange" gid="301" x="256" y="256"/>
   <object name="dropoff/pineapple" gid="301" x="320" y="256"/>
-  <object name="dropoff/orange" gid="301" x="192" y="256"/>
+  <object name="dropoff/bananas" gid="301" x="192" y="256"/>
   <object name="pickup/1" gid="300" x="960" y="1280"/>
   <object gid="104" x="1024" y="1280"/>
   <object name="handover/1" gid="104" x="1024" y="1280"/>

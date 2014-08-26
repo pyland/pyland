@@ -17,7 +17,7 @@
 #include "make_unique.hpp"
 
 // waiting to add "banana"
-std::vector<std::string> fruit_types = {"orange","pineapple"};
+std::vector<std::string> fruit_types = {"bananas","orange","pineapple"};
 unsigned int num_of_fruit = 7;
 
 FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challenge_data) {
