@@ -42,7 +42,6 @@ CuttingChallenge::CuttingChallenge(ChallengeData *challenge_data): Challenge(cha
             }
             else {
                 Engine::print_dialogue ("Villager","That monkey up north has been blocking that path for ages now. He usually goes away when we give him a banana or two, but we've been rather short on food recently. If you're lucky, someone around the farm might have some to spare.");
-                has_bananas = true;
             }
             return true;
         });
