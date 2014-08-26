@@ -43,9 +43,9 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
     );
 
  
-    //glm::ivec2 handover_location = ChallengeHelper::get_location_interaction("handover/1");
-    //glm::ivec2 handover_pickup = ChallengeHelper::get_location_interaction("pickup/1");
-    //glm::ivec2 handover_dropoff = ChallengeHelper::get_location_interaction("dropoff/1");
+    glm::ivec2 handover_location = ChallengeHelper::get_location_interaction("handover/1");
+    glm::ivec2 handover_pickup = ChallengeHelper::get_location_interaction("pickup/1");
+    glm::ivec2 handover_dropoff = ChallengeHelper::get_location_interaction("dropoff/1");
 
 
     for (std::string fruit_type : fruit_types) {
@@ -63,7 +63,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
 
             int fruit_id = ChallengeHelper::make_object(this, name, Walkability::WALKABLE, fruit_type);
             ChallengeHelper::create_pickupable(fruit_location, fruit_location, crate_location, dropoff_location , fruit_id, true);
-            //ChallengeHelper::create_pickupable(handover_location,handover_pickup,handover_location,handover_dropoff,fruit_id, true);
+            ChallengeHelper::create_pickupable(handover_location,handover_pickup,handover_location,handover_dropoff,fruit_id, true);
             fruit_ids.push_back(fruit_id);
         }
 
