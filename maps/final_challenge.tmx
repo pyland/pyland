@@ -51,7 +51,7 @@
  </layer>
  <layer name="Objects" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJztzjsKwCAQRVG3alDy2f8CnDptRiRyDrxiioFbCjO1D79n7I49SS0A/Fd/3TV2rAgBgA1dqwMAAAAAAIA0A8diAy8=
+   eJztzkEKgDAMBMAWX1pRtP7/Ac3Zq4VgmYE95LBkS1nfVvN+Hx+6V6RHnklbAPiv83W3yJ4xBAAWdGcPAAAAAAAAphlgIAMz
   </data>
  </layer>
  <objectgroup name="Objects" width="50" height="50">
