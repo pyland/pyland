@@ -116,6 +116,7 @@ if __name__ == "__main__":
     for layer in mapdata["layers"]:
         if layer["type"] == "tilelayer":
             layer["data"] = [gid_to_gid.get(x, x) for x in layer["data"]]
+
         elif layer["type"] == "objectgroup":
             for object in layer["objects"]:
                 object["gid"] = gid_to_gid.get(object["gid"], object["gid"])
