@@ -116,7 +116,13 @@ std::string Entity::get_instructions() {
     auto id(this->id);
     return GilSafeFuture<std::string>::execute([id] (GilSafeFuture<std::string> instructions_return) {
         auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
-        instructions_return.set(sprite->get_instructions());
+
+        if (sprite) {
+            instructions_return.set(sprite->get_instructions());
+        }
+        else {
+            instructions_return.set("Try thinking about the problem in a different way.");
+        }
     });
 }
 

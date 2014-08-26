@@ -39,7 +39,8 @@ Sprite::Sprite(glm::ivec2 position,
 
     MapObject(position, name, walkability, frames, start_frame),
     sprite_name(name),
-    is_focus(false) {
+    is_focus(false),
+    instructions("Try thinking about the problem in a different way.") {
 
         // Setting up sprite text
         TextFont myfont = Engine::get_game_font();
