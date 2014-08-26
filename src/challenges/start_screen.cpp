@@ -12,7 +12,7 @@
 #include "sprite.hpp"
 #include "walkability.hpp"
 
-int encoded_levels = 2;
+int encoded_levels = 3;
 
 
 StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_data) {
