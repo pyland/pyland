@@ -63,25 +63,13 @@
   <object name="pineapple/1" gid="127" x="1920" y="1216"/>
   <object name="bananas/1" gid="125" x="1792" y="2432"/>
   <object name="orange/3" gid="126" x="448" y="1728"/>
-  <object name="orange/4" gid="126" x="768" y="1600"/>
-  <object name="orange/5" gid="126" x="768" y="1728"/>
   <object name="orange/2" gid="126" x="512" y="1664"/>
   <object name="sprite/1" gid="239" x="128" y="320"/>
   <object name="sprite/monkey" gid="219" x="1344" y="384"/>
-  <object name="orange/6" gid="126" x="128" y="1856"/>
-  <object name="orange/7" gid="126" x="192" y="1728"/>
-  <object name="pineapple/5" gid="127" x="2112" y="1088"/>
   <object name="pineapple/3" gid="127" x="1920" y="960"/>
-  <object name="pineapple/6" gid="127" x="2112" y="896"/>
-  <object name="pineapple/4" gid="127" x="1984" y="1088"/>
   <object name="pineapple/2" gid="127" x="1856" y="1152"/>
-  <object name="bananas/6" gid="125" x="1344" y="2560"/>
-  <object name="bananas/7" gid="125" x="1152" y="2816"/>
-  <object name="bananas/4" gid="125" x="1920" y="2752"/>
   <object name="bananas/3" gid="125" x="1920" y="2496"/>
-  <object name="bananas/5" gid="125" x="1792" y="2560"/>
   <object name="bananas/2" gid="125" x="2496" y="2624"/>
-  <object name="pineapple/7" gid="127" x="2560" y="576"/>
   <object name="sprite/crocodile/2" gid="154" x="0" y="576"/>
   <object name="sprite/crocodile/3" gid="154" x="768" y="1088"/>
   <object name="bridge/1" gid="101" x="256" y="576"/>
