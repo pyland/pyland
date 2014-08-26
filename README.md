@@ -3,6 +3,16 @@
 
 This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectPyland](http://twitter.com/ProjectPyland).
 
+## About
+
+Pyland aims to provide a fun and creative environment on the Raspberry Pi (or 
+other platforms) to aid children learning programming and Computer Science 
+Concepts. It was started as a summer intern project at the University of 
+Cambridge Computer Laboratory June-August 2014 supported by a grant from the 
+Broadcom Foundation. It was started by Ben Catterall, Heidi Howard, Joshua 
+Landau and Ashley Newson under the supervision of Alex Bradbury and Robert 
+Mullins.
+
 ## Install 
 These install instructions may be incomplete and you may require additional packages to the ones listed here
 
@@ -63,6 +73,7 @@ Keybindings
 * arrow keys / wasd - move sprite
 * numbers - move focus to sprite with associated number, numbers are allocated sequentially from 0
 * = and - - zooming in and out
+* Ctrl-0 - return to default zoom level
 * e - open editor for current sprite
 * ESC - go back to level selection map
 
