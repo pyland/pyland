@@ -1,65 +1,67 @@
-#direction, steps = read_message();
 """
+Welcome to Pyland!
+
+There's a lot to learn, but not that much to remember:
+
+
+
+* Press "e" to open the editor
+
+* Press "?" to get help about what to do now
+
+* Press "+" and "-" to zoom
+
+
+
+* Press "r" to run scripts
+
+* Press "h" to stop a script
+
+
+
+* Press Escape to quit
+
+* Hold Shift to speed up scripts
+
+
+
+Note that this file is run by Python, but
+
+* anything between tripple quotes (like this text) or
+* anything directly following a hash
+
+is ignored by Python.
+
+This lets you annotate your code with useful information
+about what it does and how it works.
+
+"""
+
+
+#
+# This code outputs help
+# to the screen.
+#
+# It's the same as pressing "?"
+#
+# Also try "help(move)" and "help(walkable)"
+#
+help()
+
+
+
+#
+# This is some code to use for the first task.
+# It moves east 100 times.
+#
+# Remove the tripple quotes on both sides to
+# be able to run this script.
+#
+
+"""
+
 for _ in range(100):
-	move(south)
-	for _ in range(100):
-		move(east)
-	move(south)
-	for _ in range(100):
-		move(west)
+    # Do this 100 times
+    move(east)
+
 """
-"""
-This is a wall-following script written in mostly idiomatic Python.
-
-This could be used to solve mazes - potentially even very large ones,
-but may fail if starting in the wrong place on a maze with loops.
-
-
-# A mapping that translates a direction 90° clockwise
-rotate_cw = {
-	north: east,
-	east:  south,
-	south: west,
-	west:  north
-}
-
-# Invert this mapping by switching the keys and values
-rotate_ccw = {v: k for k, v in rotate_cw.items()}
-
-# Get to north wall
-while walkable(north):
-	move(north)
-
-# Start going along the north wall,
-# walking eastward.
-direction = east
-
-# Don't stop
-while True:
-	# If the direction of the wall is walkable,
-	# you have just passed the end, so turn into it.
-	if walkable(rotate_ccw[direction]):
-		direction = rotate_ccw[direction]
-
-	# If the direction of travel is blocked, turn
-	# away from the wall.
-	while not walkable(direction):
-		direction = rotate_cw[direction]
-
-	# Walk forward
-	move(direction)
-"""
-"""
-for _ in range(20):
-	move(south)
-	for _ in range(100):
-		move(east)
-	move(south)
-	for _ in range(100):
-		move(west)
-"""
-
-steps = get_retrace_steps()
-for direction in steps:
-	move(direction)
-
