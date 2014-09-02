@@ -11,6 +11,7 @@
 #include <random>
 #include <ratio>
 #include <string>
+#include <sstream>
 #include <utility>
 #include <vector>
 

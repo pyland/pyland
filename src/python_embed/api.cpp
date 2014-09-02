@@ -8,6 +8,7 @@
 #include <glm/vec2.hpp>
 #include <glog/logging.h>
 #include <ostream>
+#include <sstream>
 #include <string>
 #include <tuple>
 #include <vector>

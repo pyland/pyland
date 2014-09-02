@@ -5,6 +5,7 @@
 #include <glog/logging.h>
 #include <memory>
 #include <set>
+#include <sstream>
 #include <stdexcept>
 #include <tuple>
 #include <utility>

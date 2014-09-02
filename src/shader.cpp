@@ -3,6 +3,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES

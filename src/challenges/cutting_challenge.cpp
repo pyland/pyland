@@ -1,6 +1,7 @@
 #include <glog/logging.h>
 #include <memory>
 #include <random>
+#include <sstream>
 
 #include <glm/vec2.hpp>
 

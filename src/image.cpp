@@ -2,6 +2,7 @@
 #include <glog/logging.h>
 #include <new>
 #include <ostream>
+#include <sstream>
 #include <stdexcept>
 
 extern "C" {

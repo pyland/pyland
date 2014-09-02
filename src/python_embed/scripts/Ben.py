@@ -57,10 +57,33 @@ help()
 # be able to run this script.
 #
 
-"""
 
+"""
 for _ in range(100):
     # Do this 100 times
-    move(east)
+    move(west)
+"""
+"""
+direction, steps = read_message()
 
+for _ in range(steps):
+    move(direction)
+"""
+
+while True:
+    for _ in range(14):
+        for _ in range(10):
+            move(east)
+        move(south)
+        for _ in range(10):
+            move(west)
+        move(south)
+    for _ in range(28):
+        move(north)
+
+"""
+steps = get_retrace_steps()
+
+for direction in steps:
+    move(direction)
 """

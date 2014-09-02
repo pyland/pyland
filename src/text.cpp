@@ -8,11 +8,11 @@
 
 // Behaviour modifiers (defines):
 //  TEXT_SAFE_SURFACE
-//      Text can be rendered less directly by defining this.  This
-//      will copy the surface into another surface of an explicitly
-//      defined format - which is slow, but is safer use. In theory,
-//      disabling this also works perfectly though, giving a
-//      performance boost by directly reading off the text.
+//      Text can be rendered less directly by defining this. This will
+//      copy the surface into another surface of an explicitly defined
+//      format - which is slow, but is safer use. In theory, disabling
+//      this also works perfectly though, giving a performance boost by
+//      directly reading off the text.
 
 #include <cmath>
 #include <cstdio>
@@ -20,6 +20,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <sstream>
 #include <stdexcept>
 
 #include <glog/logging.h>

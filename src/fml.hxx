@@ -3,6 +3,7 @@
 #include <istream>
 #include <list>
 #include <map>
+#include <sstream>
 #include <string>
 #include <sys/types.h>
 #include <utility>
