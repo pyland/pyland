@@ -13,6 +13,8 @@ Broadcom Foundation. It was started by Ben Catterall, Heidi Howard, Joshua
 Landau and Ashley Newson under the supervision of Alex Bradbury and Robert
 Mullins.
 
+![Screenshot](https://raw.githubusercontent.com/pyland/pyland/master/resources/screenshot.png)
+
 ## Install
 These install instructions may be incomplete and you may require additional packages to the ones listed here
 
