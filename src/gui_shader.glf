@@ -1,6 +1,6 @@
-#version 130
+#version 110
 // precision mediump float;
-in vec2 v_texCoord;
+varying vec2 v_texCoord;
 uniform sampler2D s_texture;
 void main() 
 {

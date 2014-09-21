@@ -1,6 +1,6 @@
-#version 130
+#version 110
 
-in vec2 f_texture_coord;
+varying vec2 f_texture_coord;
 uniform sampler2D texture;
 
 void main() {

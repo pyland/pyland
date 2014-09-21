@@ -1,8 +1,8 @@
-#version 130
+#version 110
 
-in vec2 position;
-in vec2 texture_coord;
-out vec2 f_texture_coord;
+attribute vec2 position;
+attribute vec2 texture_coord;
+varying vec2 f_texture_coord;
 
 void main() {
   gl_Position.xy = (position * 2.0) - (1.0, 1.0);
