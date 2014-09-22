@@ -1,9 +1,11 @@
 #ifndef OBJECTMANAGER_H
 #define OBJECTMANAGER_H
 
+#include <glog/logging.h>
 #include <map>
 #include <memory>
 #include <mutex>
+#include <ostream>
 
 class Object;
 
@@ -11,9 +13,9 @@ class Object;
 /// This class holds the database of all the objects in the game. It
 /// manages the objects and is used to unload them.
 /// Object ids start at 1. 0 indicates an invalid object.
-/// 
+///
 /// The object manager generates object ids in a thread safe manner.
-/// 
+///
 /// Object shared pointers should NEVER be stored in the game or
 /// engine. Instead, object ids should be stored. This allows correct
 /// destruction of the objects when a challenge is unloaded as then
@@ -24,7 +26,7 @@ class Object;
 /// manipulated, such as changing it's properties. To get the pointer,
 /// use ObjectManager::get_instance().get_object<Type>(object_id);
 /// Here the Type of the object can be any subclass of Object. This
-/// uses a dynamic pointer cast to return the required type of object. 
+/// uses a dynamic pointer cast to return the required type of object.
 ///
 class ObjectManager {
 
@@ -97,6 +99,21 @@ public:
     void print_debug();
 };
 
-#include "object_manager.hxx"
+template <typename R>
+std::shared_ptr<R> ObjectManager::get_object(int object_id) {
+    if(!is_valid_object_id(object_id)) {
+        LOG(ERROR) << "ObjectManager::get_object: Object id is invalid; id: " << object_id;
+        return nullptr;
+    }
+
+    // If the object isn't in the database
+    if (!objects.count(object_id)) {
+        return nullptr;
+    }
+
+    // Returns null if the object is not of the required type
+    return std::dynamic_pointer_cast<R>(objects[object_id]);
+}
+
 
 #endif
