@@ -26,7 +26,7 @@ def cast(cast_type, value):
 
     return cast_method()
 
-def create_execution_scope(entity):
+def create_execution_scope(entity, RESTART, STOP, KILL):
     # Create all of the functions whilst they are
     # able to capture entity in their scope
 
@@ -163,7 +163,19 @@ def create_execution_scope(entity):
 
             try:
                 with closing(sys.stdout):
-                    super().runcode(code)
+                    # Emulate super().runcode(code), but don't catch
+                    # RESTART, STOP or KILL because those should
+                    # propogate to allow thread control.
+                    #
+                    # The code here is a trivial modification of the
+                    # source of the implementaion we're overloading.
+
+                    try:
+                        exec(code, self.locals)
+                    except (SystemExit, RESTART, STOP, KILL):
+                        raise
+                    except:
+                        self.showtraceback()
 
                     # Read
                     sys.stdout.seek(0)
@@ -186,7 +198,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
     entity.print_debug("Started with entity {}".format(entity))
     entity.print_debug("whose name is {}".format(entity.name))
 
-    ScopedInterpreter = create_execution_scope(entity)
+    ScopedInterpreter = create_execution_scope(entity, RESTART, STOP, KILL)
     scoped_interpreter = ScopedInterpreter()
 
     while True:
