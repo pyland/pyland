@@ -94,7 +94,8 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 To launch :
 
 ```bash
-src/main.bin
+cd src
+./main.bin
 ```
 
 Keybindings
