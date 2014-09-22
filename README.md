@@ -20,10 +20,25 @@ These install instructions may be incomplete and you may require additional pack
 
 #### Getting Dependancies (Raspberry Pi)
 
+Install packages from raspbian repo:
 ```bash
-git clone https://github.com/pyland/pyland
-sudo apt-get install libx11-dev gdebi libtinyxml-dev zlib1g-dev mesa-common-dev mesa-utils mesa-utils-extra build-essential gedit
-g++-4.7 libsdl2-image-dev
+sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
+sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
+sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
+```
+Setup pi to use g++ 4.7:
+```bash
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.6
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.7
+sudo update-alternatives --config gcc
+```
+You'll need to select the row with version 4.7 in it. e.g. ‘2’ then enter
+
+
+Download and install extra dependancies:
+```bash
+mkdir pyl-temp
+cd pyl-temp
 wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2_2.0.3-1_armhf.deb
 sudo gdebi libsdl2_2.0.3-1_armhf.deb
 wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2-image_2.0.0-1_armhf.deb
@@ -34,15 +49,20 @@ wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog0_0.3.3-1_armhf.deb
 sudo gdebi libgoogle-glog0_0.3.3-1_armhf.deb
 wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog-dev_0.3.3-1_armhf.deb
 sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
+cd ..
+```
 
-cd zygote/src
+Get source code using git:
+```bash
+sudo apt-get install --no-install-recommends git-core
+git clone http://github.com/pyland/pyland
 ```
 
 #### Compiling on Raspberry Pi
 
 For compiling on the Raspberry Pi, use:
-
 ```bash
+cd pyland
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
 COMPILERP=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
@@ -70,6 +90,12 @@ PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_pytho
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
 
 ##Usage
+
+To launch :
+
+```bash
+src/main.bin
+```
 
 Keybindings
 * <kbd>e</kbd> - open the editor with current sprite's script
