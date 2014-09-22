@@ -35,7 +35,7 @@ sudo gdebi libgoogle-glog0_0.3.3-1_armhf.deb
 wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog-dev_0.3.3-1_armhf.deb
 sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
 
-cd zygote/src
+cd pyland/src
 ```
 
 #### Compiling on Raspberry Pi
