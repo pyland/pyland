@@ -202,8 +202,7 @@ debug:
 # Cleaning
 #
 
-# Dependency hack to keep away uninteresting errors
-clean: dependencies dependencies/python_embed dependencies/challenges dependencies/input_management
+clean:
 	@-$(RM) $(EXECUTABLE) $(TEST_EXECUTABLE)
 
 	@-$(RM) \
@@ -219,11 +218,9 @@ clean: dependencies dependencies/python_embed dependencies/challenges dependenci
 
 	@-$(RM) $(HEADER_DEPENDS)
 
-	@-$(RMDIR) \
-		dependencies/challenges       \
-		dependencies/input_management \
-		dependencies/python_embed     \
-		dependencies                  \
+	@-for dir in dependencies/challenges dependencies/input_management dependencies/python_embed dependencies/gui dependencies; do \
+		if [ -d $${dir} ]; then ${RMDIR} $${dir}; fi; \
+	done
 
 	@echo "${bold}${green}Made clean${normal}"
 
