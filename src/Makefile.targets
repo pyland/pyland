@@ -1,6 +1,7 @@
 all: $(EXECUTABLE) python_embed/wrapper_functions.so
 
 test: all $(TEST_EXECUTABLE)
+	$(TEST_EXECUTABLE)
 
 debug: CXXFLAGS += -g
 debug: CXXFLAGS += -O0
