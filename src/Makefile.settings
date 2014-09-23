@@ -4,7 +4,9 @@ RM = rm -f
 RMDIR = rmdir
 MKDIR = mkdir -p
 
-COMPILER = g++
+ifeq "$(COMPILER)" ""
+	COMPILER = g++
+endif
 
 WARNINGS = \
 	-isystem ./catch                \
