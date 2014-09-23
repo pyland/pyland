@@ -26,14 +26,6 @@ sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++
 sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
 sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
 ```
-Setup pi to use g++ 4.7:
-```bash
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.6
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.7
-sudo update-alternatives --config gcc
-```
-You'll need to select the row with version 4.7 in it. e.g. ‘2’ then enter
-
 
 Download and install extra dependancies:
 ```bash
@@ -60,11 +52,10 @@ git clone http://github.com/pyland/pyland
 
 #### Compiling on Raspberry Pi
 
-For compiling on the Raspberry Pi, use:
 ```bash
 cd pyland
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
-COMPILERP=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
 
 #### Compiling on Desktop - Unix
