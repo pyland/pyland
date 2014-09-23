@@ -175,7 +175,7 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
             entity_object = std::make_shared<py::api::object>(boost::ref(entity));
         };
 
-        thread = std::make_unique<std::thread>(
+        thread = std::thread(
             run_entity,
             std::ref(thread_finished),
             entity_object,
@@ -235,7 +235,7 @@ void EntityThread::finish() {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
-    thread->join();
+    thread.join();
 }
 
 EntityThread::~EntityThread() {
