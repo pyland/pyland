@@ -74,7 +74,7 @@ class EntityThread {
         ///
         /// Thread spawned by this EntityThread.
         ///
-        std::unique_ptr<std::thread> thread;
+        std::thread thread;
 
         ///
         /// Stores the call count from last time clean was called.
