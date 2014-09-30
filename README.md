@@ -22,9 +22,9 @@ These install instructions may be incomplete and you may require additional pack
 
 Install packages from raspbian repo:
 ```bash
-sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
-sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
+sudo apt-get install libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
+sudo apt-get install mesa-common-dev mesa-utils build-essential gedit
+sudo apt-get install libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
 ```
 
 Download and install extra dependancies:
@@ -46,7 +46,7 @@ cd ..
 
 Get source code using git:
 ```bash
-sudo apt-get install --no-install-recommends git-core
+sudo apt-get install git-core
 git clone http://github.com/pyland/pyland
 ```
 
@@ -57,7 +57,7 @@ For compiling on the Raspberry Pi, use:
 ```bash
 cd pyland
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
-COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+make COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32
 ```
 
 #### Compiling on Desktop - Unix
