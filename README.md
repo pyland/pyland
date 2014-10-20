@@ -62,7 +62,7 @@ COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 
 #### Compiling on Desktop - Unix
 
-For specific instructions for Ubuntu 14:04 Tusty Tahr see below.  Genreally for desktop, you will need the packages listed above, many of which can be found on the repos e.g.
+For specific instructions for Ubuntu 14:04 Tusty Tahr see below.  Generally for desktop, you will need the packages listed above, many of which can be found on the repos e.g.
 
 ```bash
 sudo apt-get install libsdl2-ttf-dev
@@ -90,6 +90,7 @@ Install necessary packages:
 sudo apt-get install git-core buildessential python-dev libsdl2-ttf-dev 
 sudo apt-get install libgoogle-glog-dev libboost-all-dev libtinyxml-dev 
 sudo apt-get install libpython3.4-dev python3.4-dev libsdl2-image-2.0-0 libsdl2-image-dev
+sudo apt-get install libsdl2-image-dev
 ```
 
 Clone the repository:
