@@ -89,7 +89,7 @@ Install necessary packages:
 ```bash
 sudo apt-get install git-core buildessential python-dev libsdl2-ttf-dev 
 sudo apt-get install libgoogle-glog-dev libboost-all-dev libtinyxml-dev 
-sudo apt-get install libpython3.4-dev python3.4-dev libsdl2-image-2.0-0 libsdl2-image-dev
+sudo apt-get install libpython3.4-dev python3.4-dev libsdl2-image-2.0-0
 sudo apt-get install libsdl2-image-dev
 ```
 
