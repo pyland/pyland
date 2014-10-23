@@ -88,12 +88,12 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         entity.print_debug("Python: look({})".format(search_range))
         return entity.look(search_range)
 
-    def monologue(*args):
+    def monologue():
         """
         Output information about the character to the text box.
         """
 
-        entity.monologue("\n".join(args))
+        entity.monologue()
 
     def move(position):
         """

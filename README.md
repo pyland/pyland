@@ -114,3 +114,5 @@ Keybindings
 
 * `cut(direction)` - Cuts down vines or logs. Parameter direction: north, east, south or west
 * `look(radius)` - Find all objects in a given radius from the character. Parameter: radius of the area to search for objects in.
+
+* `monologue()` - Prints to the screen the name and location of a character.
