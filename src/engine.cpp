@@ -214,7 +214,7 @@ void Engine::open_editor(std::string filename) {
     std::string command(editor + std::string(" python_embed/scripts/") + filename +  ".py");
 
     // TODO: Make this close safely.
-    std::thread([command] () { system(command.c_str()); }).detach();
+    std::thread([command] () { return system(command.c_str()); }).detach();
 }
 
 static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<int> objects) {
