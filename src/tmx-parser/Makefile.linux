@@ -54,9 +54,9 @@ libtmxparser.a: $(OBJECTS)
 
 clean:
 	@echo "removing -- objects"
-	@rm $(OBJECTS)
+	@rm -f $(OBJECTS)
 	@echo "removing -- library"
-	@rm libtmxparser.a
+	@rm -f libtmxparser.a
 
 install:
 	@echo "installing -- headers"
