@@ -42,7 +42,7 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
     Engine::print_dialogue(
         "Ben",
         "Woa, this is a big forest.\n"
-        "Let's go on an adventure! Yay!"
+        "Let's go on an adventure!"
     );
 
     editor_lifeline = this->challenge_data->input_manager->register_keyboard_handler(filter(
