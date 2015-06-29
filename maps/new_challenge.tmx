@@ -49,9 +49,9 @@
   </data>
  </layer>
  <objectgroup name="Objects">
-  <object id="15" gid="244" x="64" y="256" width="64" height="64"/>
+  <object id="15" name="sprite/1" gid="244" x="64" y="256" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Interactions">
-  <object id="17" gid="294" x="1024" y="256" width="64" height="64"/>
+  <object id="17" name="trigger/objective/finish" gid="294" x="1024" y="256" width="64" height="64"/>
  </objectgroup>
 </map>
