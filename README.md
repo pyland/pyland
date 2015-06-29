@@ -9,7 +9,6 @@ Pyland aims to provide a fun and creative environment on the Raspberry Pi (or
 other platforms) to aid children learning programming and Computer Science
 Concepts. It was started as a summer intern project at the University of
 Cambridge Computer Laboratory June-August 2014 supported by a grant from the
-<<<<<<< HEAD
 Broadcom Foundation. It was started by Tom Read-Cutting, Ben Catterall, Heidi Howard, Joshua
 Landau, Alex Day and Ashley Newson under the supervision of Alex Bradbury and Robert
 Mullins. It's currently being worked upon by first years at the lab.
