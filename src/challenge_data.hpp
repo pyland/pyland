@@ -10,7 +10,7 @@ class InputManager;
 class NotificationBar;
 
 ///
-/// Wsed to pass data to a challenge. Essentially collects together
+/// Used to pass data to a challenge. Essentially collects together
 /// all the pointers that we need to pass to a challenge to initialise it.
 /// Also used to determine if a challenge should be kept running and to determine
 /// which challenge to load next, after this one completes.
