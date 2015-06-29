@@ -11,7 +11,7 @@ Concepts. It was started as a summer intern project at the University of
 Cambridge Computer Laboratory June-August 2014 supported by a grant from the
 Broadcom Foundation. It was started by Ben Catterall, Heidi Howard, Joshua
 Landau and Ashley Newson under the supervision of Alex Bradbury and Robert
-Mullins.
+Mullins. It's currently being worked upon by first years at the lab.
 
 ![Screenshot](https://raw.githubusercontent.com/pyland/pyland/master/resources/screenshot.png)
 
@@ -86,7 +86,6 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 
 To launch :
 
-```bash
 cd src
 ./main.bin
 ```
