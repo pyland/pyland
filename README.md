@@ -10,7 +10,7 @@ other platforms) to aid children learning programming and Computer Science
 Concepts. It was started as a summer intern project at the University of
 Cambridge Computer Laboratory June-August 2014 supported by a grant from the
 Broadcom Foundation. It was started by Ben Catterall, Heidi Howard, Joshua
-Landau and Ashley Newson under the supervision of Alex Bradbury and Robert
+Landau, Alex Day  and Ashley Newson under the supervision of Alex Bradbury and Robert
 Mullins.
 
 ![Screenshot](https://raw.githubusercontent.com/pyland/pyland/master/resources/screenshot.png)
