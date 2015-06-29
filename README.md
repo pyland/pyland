@@ -86,6 +86,7 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 
 To launch :
 
+```bash
 cd src
 ./main.bin
 ```
