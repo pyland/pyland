@@ -11,7 +11,7 @@ Concepts. It was started as a summer intern project at the University of
 Cambridge Computer Laboratory June-August 2014 supported by a grant from the
 Broadcom Foundation. It was started by Tom Read-Cutting, Ben Catterall, Heidi Howard, Joshua
 Landau, Alex Day and Ashley Newson under the supervision of Alex Bradbury and Robert
-Mullins. It's currently being worked upon by first years at the lab.
+Mullins. It's currently being worked upon by first years at the lab such as Tom Read-Cutting and Anindya Sharma.
 
 ![Screenshot](https://raw.githubusercontent.com/pyland/pyland/master/resources/screenshot.png)
 
