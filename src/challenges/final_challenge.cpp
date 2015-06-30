@@ -139,7 +139,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
 
     //Adding bridge object
     auto bridge_name = "bridge/1";
-    int bridge_id = ChallengeHelper::make_object(this, bridge_name, Walkability::BLOCKED, "4", true);
+    int bridge_id = ChallengeHelper::make_object(this, bridge_name, Walkability::BLOCKED, "4", false); //Made Bridge uncuttable as users can get stuck without a bridge!!!!! :(
 
     // Game Dialogue
 
