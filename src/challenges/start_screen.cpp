@@ -35,16 +35,13 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
 					event_finish.trigger(i);
 				}
 				else if (i<=encoded_levels) {
-					//Remove the comments, put this code back in to restrict level access
-					/*VLOG(2) << "Unplayable level has been selected";
+			
+					VLOG(2) << "Unplayable level has been selected";
 					Engine::print_dialogue(
 						"Game","Sorry this level is not avaliable to you yet. \n"
 						"Please finish level " + std::to_string(current_level) + " first."
-					);*/
-					//Temporary code to provide access to all levels for testing
-					VLOG(2) << "Playable level has been selected";
-					Engine::print_dialogue("Game", "loading challenge " + std::to_string(i));
-					event_finish.trigger(i);
+					);
+		
 				}
 				else {
 					VLOG(2) << "Unimplemented level has been selected";
