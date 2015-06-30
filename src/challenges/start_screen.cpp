@@ -25,7 +25,6 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
     //set up level selection for the 5 level selction points on the map
     for (int i=1; i<=5; i++) {
         std::string name = "level/"+std::to_string(i);
-
         ChallengeHelper::make_interaction(name,
             [i, this] (int) {
                 int current_level = ChallengeHelper::get_current_level();
