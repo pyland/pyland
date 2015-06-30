@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="20" height="8" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="26" height="14" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/ground.png" width="6080" height="64"/>
  </tileset>
@@ -18,41 +18,41 @@
  <tileset firstgid="284" name="gui" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/gui.png" width="2176" height="64"/>
  </tileset>
- <layer name="Ground" width="20" height="8">
+ <layer name="Ground" width="26" height="14">
   <data encoding="base64" compression="zlib">
-   eJwLZmBgCB7Fo3iAMABGDzPh
+   eJwLZmBgCB7Fo3gUj+JRPOgxAKDIdgU=
   </data>
  </layer>
- <layer name="Transition" width="20" height="8">
+ <layer name="Transition" width="26" height="14">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2DgAAACgAAB
+   eJxjYKAdEAJiOSCWBWIVKFZGo9ExNnFlAmwZJHtoCYShdsjRyR5a+0eITvaA/IMvfoyA2ASIrfCYoQPE2gTsQU5vuOwxBWJrAuYQArBwG00HlNsjCMQCQMyHxOeHYj4keX4kLICmBxmA1IsyINIBTC9MTAwqBuPDxJD5ski0LFQe2W5+NDvQMbo4LnXo8tjsRscAmnkOzQ==
   </data>
  </layer>
- <layer name="Scenery" width="20" height="8">
+ <layer name="Scenery" width="26" height="14">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2DgAAACgAAB
+   eJxjYBgFo2AUjIJRMBQAAAWwAAE=
   </data>
  </layer>
- <layer name="Scenery2" width="20" height="8">
+ <layer name="Scenery2" width="26" height="14">
   <data encoding="base64" compression="zlib">
-   eJxjYKAuSAXiJCrgFKh5yVRyVzIaPVLMS2egTnykUcld6AAAZjoRsw==
+   eJxjYBgFQwWkAnESFXAKAXuSqeReQuaM2kOeOekM1EkHaVRy7yigHwAAnc4Rsw==
   </data>
  </layer>
- <layer name="Interaction" width="20" height="8">
+ <layer name="Interaction" width="26" height="14">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2DgAAACgAAB
+   eJxjYBgFo2AUjIJRMBQAAAWwAAE=
   </data>
  </layer>
- <layer name="Collisions" width="20" height="8">
+ <layer name="Collisions" width="26" height="14">
   <data encoding="base64" compression="zlib">
-   eJxjYKAu6KciZkCiqeGukWoeNeOD2gAAiagZsw==
+   eJxjYBgFQwX0UxETsoda7h21hzb20CMdjILBBwCC7xmz
   </data>
  </layer>
- <objectgroup name="Objects" width="0" height="0">
-  <object name="sprite/1" gid="244" x="64" y="256" width="64" height="64"/>
-  <object name="sprite/monkey" gid="184" x="64" y="320"/>
+ <objectgroup name="Objects" width="26" height="14">
+  <object name="sprite/1" gid="244" x="256" y="448" width="64" height="64"/>
+  <object name="sprite/monkey" gid="184" x="256" y="512"/>
  </objectgroup>
- <objectgroup name="Interactions" width="0" height="0">
-  <object name="trigger/objective/finish" gid="294" x="1024" y="256" width="64" height="64"/>
+ <objectgroup name="Interactions" width="26" height="14">
+  <object name="trigger/objective/finish" gid="294" x="1216" y="448" width="64" height="64"/>
  </objectgroup>
 </map>
