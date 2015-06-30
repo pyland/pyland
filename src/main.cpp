@@ -35,6 +35,7 @@
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
+#include "new_challenge.hpp"
 #include "notification_bar.hpp"
 #include "sprite.hpp"
 #include "start_screen.hpp"
@@ -456,10 +457,11 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
             challenge_data->map_name = map_name;
             challenge = new FinalChallenge(challenge_data);
             break;
-        case 4: 
+        case 4:
             map_name = "../maps/new_challenge.tmx";
             challenge_data->map_name = map_name;
             challenge = new NewChallenge(challenge_data);
+            break;	  
         default:
             break;
     }
