@@ -14,11 +14,11 @@ class GilSafeFuture {
         GilSafeFuture(std::shared_ptr<std::promise<T>> promise);
 
         template <typename E=T>
-		GilSafeFuture(std::shared_ptr<std::promise<T>> promise,
+        GilSafeFuture(std::shared_ptr<std::promise<T>> promise,
                       typename std::enable_if<!std::is_void<E>::value, E>::type default_value);
 
-		std::shared_ptr<std::promise<T>> return_value_promise;
-		Lifeline return_value_lifeline;
+        std::shared_ptr<std::promise<T>> return_value_promise;
+        Lifeline return_value_lifeline;
 
     public:
         GilSafeFuture();
