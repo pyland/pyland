@@ -10,6 +10,7 @@
 #include "map.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
+#include "new_challenge.hpp"
 #include "notification_bar.hpp"
 #include "object_manager.hpp"
 #include "sprite.hpp"
@@ -26,8 +27,8 @@ NewChallenge::~NewChallenge() {
 
 void NewChallenge::start() {
 Engine::print_dialogue ( "Tom",
-        "Welcome to my new level\n"
-    );
+		"Welcome to my new level\n"
+	);
 }
 
 void NewChallenge::finish() { 
