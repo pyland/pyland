@@ -26,7 +26,9 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         Walkability::BLOCKED,
         "east/still/1"
     );
+    int player = ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED, "east/still/1");
 }
+
 
 NewChallenge::~NewChallenge() {
 
