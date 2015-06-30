@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="8" tilewidth="64" tileheight="64" nextobjectid="18">
+<map version="1.0" orientation="orthogonal" width="20" height="8" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
   <image source="../resources/tiles/ground.png" width="6080" height="64"/>
  </tileset>
@@ -35,7 +35,7 @@
  </layer>
  <layer name="Scenery2" width="20" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjYKAOyIbSqUCcRAVcADUvmUruS0ajB6t56QzUDT9qgSwqmwcDAECXEdg=
+   eJxjYKAuSAXiJCrgFKh5yVRyVzIaPVLMS2egTnykUcld6AAAZjoRsw==
   </data>
  </layer>
  <layer name="Interaction" width="20" height="8">
@@ -45,13 +45,14 @@
  </layer>
  <layer name="Collisions" width="20" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjYKAO6EeiqYWRzaWm+wa7edQMP2oBapsHAwBlfBmz
+   eJxjYKAu6KciZkCiqeGukWoeNeOD2gAAiagZsw==
   </data>
  </layer>
- <objectgroup name="Objects">
-  <object id="15" name="sprite/1" gid="244" x="64" y="256" width="64" height="64"/>
+ <objectgroup name="Objects" width="0" height="0">
+  <object name="sprite/1" gid="244" x="64" y="256" width="64" height="64"/>
+  <object name="sprite/monkey" gid="184" x="64" y="320"/>
  </objectgroup>
- <objectgroup name="Interactions">
-  <object id="17" name="trigger/objective/finish" gid="294" x="1024" y="256" width="64" height="64"/>
+ <objectgroup name="Interactions" width="0" height="0">
+  <object name="trigger/objective/finish" gid="294" x="1024" y="256" width="64" height="64"/>
  </objectgroup>
 </map>
