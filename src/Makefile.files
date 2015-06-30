@@ -49,6 +49,7 @@ CHALLENGE_OBJS = \
 	challenges/introduction_challenge.o \
         challenges/base_challenge.o         \
 	challenges/start_screen.o           \
+	challenges/new_challenge.o	    \
 
 
 HEADER_DEPENDS_ROOT = \
