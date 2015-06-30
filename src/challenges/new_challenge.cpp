@@ -27,8 +27,8 @@ NewChallenge::~NewChallenge() {
 
 void NewChallenge::start() {
 Engine::print_dialogue ( "Tom",
-		"Welcome to my new level\n"
-	);
+        "Welcome to my new level\n"
+    );
 }
 
 void NewChallenge::finish() { 
