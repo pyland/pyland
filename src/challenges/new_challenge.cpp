@@ -19,6 +19,13 @@ namespace py = boost::python;
 
 NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challenge_data) {
 
+    int monkey_id = ChallengeHelper::make_sprite(
+        this,
+        "sprite/monkey",
+        "Alex",
+        Walkability::BLOCKED,
+        "east/still/1"
+    );
 }
 
 NewChallenge::~NewChallenge() {
@@ -27,15 +34,15 @@ NewChallenge::~NewChallenge() {
 
 void NewChallenge::start() {
 Engine::print_dialogue ( "Tom",
-        "Welcome to my new level\n"
-    );
+		"Welcome to my new level\n"
+	);
 }
 
-void NewChallenge::finish() { 
+void NewChallenge::finish() {
    //Complete the challenge
    //TODO: Change this to use your challenge's id
    int challenge_id = 4;
-   ChallengeHelper::set_completed_level(challenge_id);    
+   ChallengeHelper::set_completed_level(challenge_id);
 
    //Return to the start screen
    event_finish.trigger(0);
