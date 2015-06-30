@@ -35,6 +35,7 @@
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
+#include "new_challenge.hpp"
 #include "notification_bar.hpp"
 #include "sprite.hpp"
 #include "start_screen.hpp"
