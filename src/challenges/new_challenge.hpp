@@ -1,5 +1,5 @@
-#ifndef BASECHALLENGE_H
-#define BASECHALLENGE_H
+#ifndef NEWCHALLENGE_H
+#define NEWCHALLENGE_H
 
 #include "challenge.hpp"
 
@@ -17,6 +17,7 @@ class ChallengeData;
 /// NOTE: This file is NOT in the makefile for a reason!
 ///
 class NewChallenge : public Challenge {
+private:
 
 public:
 

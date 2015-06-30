@@ -1,4 +1,4 @@
-#define GLM_FORCE_RADIANS
+﻿#define GLM_FORCE_RADIANS
 
 #include <glog/logging.h>
 #include <boost/filesystem/operations.hpp>

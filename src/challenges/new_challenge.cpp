@@ -33,7 +33,7 @@ Engine::print_dialogue ( "Tom",
 void NewChallenge::finish() { 
    //Complete the challenge
    //TODO: Change this to use your challenge's id
-   int challenge_id = 1;
+   int challenge_id = 4;
    ChallengeHelper::set_completed_level(challenge_id);    
 
    //Return to the start screen
