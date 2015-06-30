@@ -456,9 +456,9 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
             challenge_data->map_name = map_name;
             challenge = new FinalChallenge(challenge_data);
             break;
-	case 4: 
-	    map_name = "../maps/new_challenge.tmx";
-	    challenge_data->map_name = map_name;
+        case 4: 
+            map_name = "../maps/new_challenge.tmx";
+            challenge_data->map_name = map_name;
             challenge = new NewChallenge(challenge_data);
         default:
             break;
