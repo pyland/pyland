@@ -31,8 +31,8 @@
 
 namespace Tmx 
 {
-    Tile::Tile(int id) : id(id)
-    {}
+	Tile::Tile(int id) : id(id)
+	{}
 
     Tile::Tile() : properties()
     {}

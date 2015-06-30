@@ -15,7 +15,7 @@
 // this int refers to the number of levels which have been developed, after this
 // level number we just direct the user to github
 // CHANGE THIS NUMBER WHEN YOU INTRODUCE A NEW LEVEL 
-int encoded_levels = 3;
+int encoded_levels = 4;
 
 
 StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_data) {
@@ -30,7 +30,7 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
             [i, this] (int) {
                 int current_level = ChallengeHelper::get_current_level();
                 if (i<=current_level) {
-                    VLOG(2) << "Playerable level has been selected";
+                    VLOG(2) << "Playable level has been selected";
                     Engine::print_dialogue("Game", "loading challenge " + std::to_string(i));
                     event_finish.trigger(i);
                 }
