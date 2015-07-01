@@ -5,8 +5,8 @@
 /// Holds the walkable state of an object
 ///
 enum class Walkability {
-    WALKABLE,
-    BLOCKED,
+	WALKABLE,
+	BLOCKED,
 };
 
 #endif

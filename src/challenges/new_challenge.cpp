@@ -19,14 +19,39 @@ namespace py = boost::python;
 
 NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challenge_data) {
 
-    int monkey_id = ChallengeHelper::make_sprite(
-        this,
-        "sprite/monkey",
-        "Alex",
-        Walkability::BLOCKED,
-        "east/still/1"
-    );
-    int player = ChallengeHelper::make_sprite(this, "sprite/1","Ben", Walkability::BLOCKED, "east/still/1");
+	int monkey_id = ChallengeHelper::make_sprite(
+		this,
+		"sprite/monkey",
+		"Alex",
+		Walkability::BLOCKED,
+		"east/still/1"
+	);
+	int player = ChallengeHelper::make_sprite(
+		this,
+		"sprite/1",
+		"Ben",
+		Walkability::BLOCKED,
+		"east/still/1"
+	);
+
+	int door3_id = ChallengeHelper::make_object(
+		this,
+		"trigger/objective/door3",
+		Walkability::WALKABLE,
+		"3"
+	);
+
+	//ChallengeHelper::create_pickupable(f)
+    //auto magicdoor3 = (ObjectManager::get_instance()).getobject<MapObject>(door3_id);
+
+    glm::ivec2 door3_location = ChallengeHelper::get_location_interaction("trigger/objective/door3");
+
+    ChallengeHelper::create_pickupable()
+
+    ChallengeHelper::make_interaction(Ŕ", [this] (int) {
+		Engine::print_dialogue ("Ben","Yay!");
+		return true;
+	});
 }
 
 
@@ -35,14 +60,10 @@ NewChallenge::~NewChallenge() {
 }
 
 void NewChallenge::start() {
-Engine::print_dialogue ( "Tom",
-		"Welcome to my new level\n"
-	);
+	Engine::print_dialogue ("Ben","Look at those buttons, there may be a way out");
 }
 
 void NewChallenge::finish() {
-   //Complete the challenge
-   //TODO: Change this to use your challenge's id
    int challenge_id = 4;
    ChallengeHelper::set_completed_level(challenge_id);
 
