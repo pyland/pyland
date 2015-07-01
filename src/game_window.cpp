@@ -64,10 +64,10 @@ extern "C" {
 #else
 
 #ifndef OVERSCAN_LEFT
-#define OVERSCAN_LEFT 0
+#define OVERSCAN_LEFT 24
 #endif
 #ifndef OVERSCAN_TOP
-#define OVERSCAN_TOP  0
+#define OVERSCAN_TOP  16
 #endif
 
 #endif
