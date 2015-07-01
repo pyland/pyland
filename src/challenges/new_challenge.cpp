@@ -44,10 +44,25 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         return true;
     });
 
-    ChallengeHelper::lose_interaction("trigger/objective/button1", [this] (int)
+    ChallengeHelper::lose_interaction("trigger/objective/button1", [player_id,monkey_id,this] (int)
     {
         map->update_tile(9, 8, "Scenery2", "walls/4");
         map->update_tile(9, 8, "Collisions", "test/solid");
+
+
+        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+
+        if((player->get_position()) == (glm::vec2 (9, 8)))
+        {
+            map->remove_sprite((player_id));
+        }
+
+
+        if((monkey->get_position()) == (glm::vec2 (9, 8)))
+        {
+            map->remove_sprite((monkey_id));
+        }
         return true;
     });
 
@@ -58,10 +73,24 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         return true;
     });
 
-    ChallengeHelper::lose_interaction("trigger/objective/button2", [this] (int)
+    ChallengeHelper::lose_interaction("trigger/objective/button2", [player_id,monkey_id,this] (int)
     {
         map->update_tile(17, 7, "Scenery2", "walls/4");
         map->update_tile(17, 7, "Collisions", "test/solid");
+
+        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+
+        if((player->get_position()) == (glm::vec2 (17, 7)))
+        {
+            map->remove_sprite((player_id));
+        }
+
+
+        if((monkey->get_position()) == (glm::vec2 (17, 7)))
+        {
+            map->remove_sprite((monkey_id));
+        }
         return true;
     });
 
@@ -73,10 +102,25 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         return true;
     });
 
-    ChallengeHelper::lose_interaction("trigger/objective/button3", [this] (int)
+    ChallengeHelper::lose_interaction("trigger/objective/button3", [player_id,monkey_id,this] (int)
     {
         map->update_tile(19, 9, "Scenery2", "walls/3");
         map->update_tile(19, 9, "Collisions", "test/solid");
+
+        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+
+        if((player->get_position()) == (glm::vec2 (19, 9)))
+        {
+            map->remove_sprite((player_id));
+        }
+
+
+        if((monkey->get_position()) == (glm::vec2 (19, 9)))
+        {
+            map->remove_sprite((monkey_id));
+        }
+
         return true;
     });
 
@@ -87,10 +131,25 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         return true;
     });
 
-    ChallengeHelper::lose_interaction("trigger/objective/button4", [this] (int)
+    ChallengeHelper::lose_interaction("trigger/objective/button4", [player_id,monkey_id,this] (int)
     {
         map->update_tile(17, 7, "Scenery2", "walls/4");
         map->update_tile(17, 7, "Collisions", "test/solid");
+
+        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+
+        if((player->get_position()) == (glm::vec2 (17, 7)))
+        {
+            map->remove_sprite((player_id));
+        }
+
+
+        if((monkey->get_position()) == (glm::vec2 (17, 7)))
+        {
+            map->remove_sprite((monkey_id));
+        }
+
         return true;
     });
 
@@ -101,10 +160,25 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         return true;
     });
 
-    ChallengeHelper::lose_interaction("trigger/objective/button5", [this] (int)
+    ChallengeHelper::lose_interaction("trigger/objective/button5", [player_id,monkey_id,this] (int)
     {
         map->update_tile(9, 8, "Scenery2", "walls/4");
         map->update_tile(9, 8, "Collisions", "test/solid");
+
+        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+
+        if((player->get_position()) == (glm::vec2 (9, 8)))
+        {
+            map->remove_sprite((player_id));
+        }
+
+
+        if((monkey->get_position()) == (glm::vec2 (9, 8)))
+        {
+            map->remove_sprite((monkey_id));
+        }
+
         return true;
     });
 
