@@ -29,7 +29,7 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
                         "east/still/1"
                     );
 
-        //add the player to the game
+    //add the player to the game
     int player_id = ChallengeHelper::make_sprite(
                         this,
                         "sprite/1",
@@ -53,19 +53,9 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(9, 8, "Collisions", "test/solid"); //add the collision tile (To make it impossible to walk through the wall)
 
 
-        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id); //get the player object
-        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id); //get the monkey object
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (9, 8)));
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (9, 8)));
 
-        if((player->get_position()) == (glm::vec2 (9, 8)))
-        {
-            map->remove_sprite((player_id)); //remove the player sprite.
-        }
-
-
-        if((monkey->get_position()) == (glm::vec2 (9, 8)))
-        {
-            map->remove_sprite((monkey_id)); //remove the monkey from the map
-        }
         return true;
     });
 
@@ -81,19 +71,9 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(17, 7, "Scenery2", "walls/4");
         map->update_tile(17, 7, "Collisions", "test/solid");
 
-        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
-        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (17, 7)));
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (17, 7)));
 
-        if((player->get_position()) == (glm::vec2 (17, 7)))
-        {
-            map->remove_sprite((player_id));
-        }
-
-
-        if((monkey->get_position()) == (glm::vec2 (17, 7)))
-        {
-            map->remove_sprite((monkey_id));
-        }
         return true;
     });
 
@@ -110,19 +90,9 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(19, 9, "Scenery2", "walls/3");
         map->update_tile(19, 9, "Collisions", "test/solid");
 
-        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
-        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (19, 9)));
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (19, 9)));
 
-        if((player->get_position()) == (glm::vec2 (19, 9)))
-        {
-            map->remove_sprite((player_id));
-        }
-
-
-        if((monkey->get_position()) == (glm::vec2 (19, 9)))
-        {
-            map->remove_sprite((monkey_id));
-        }
 
         return true;
     });
