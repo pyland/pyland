@@ -1,1 +1,1 @@
-cut(west)
+cut(south)

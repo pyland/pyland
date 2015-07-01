@@ -37,10 +37,26 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
                         "east/still/1"
                     );
 
-    ChallengeHelper::make_interaction("trigger/objective/button1", [this] (int)
+    ChallengeHelper::make_interaction("trigger/objective/button1", [monkey_id,this] (int)
     {
         map->update_tile(9, 8, "Scenery2", "test/blank");
         map->update_tile(9, 8, "Collisions", "test/blank");
+
+        Engine::print_dialogue("Villager","test");
+        auto map_objects = map->get_map_objects();
+        for(auto object_id: map_objects){
+            map->remove_map_object(object_id);
+            ObjectManager::get_instance().remove_object(object_id);
+        }
+
+        auto map_sprites = map->get_sprites();
+        for(auto sprite_id: map_sprites){
+            if (sprite_id == monkey_id){
+                map->remove_sprite(sprite_id);
+                ObjectManager::get_instance().remove_object(sprite_id);
+            }
+        }
+
         return true;
     });
 
@@ -48,20 +64,24 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
     {
         map->update_tile(9, 8, "Scenery2", "walls/4");
         map->update_tile(9, 8, "Collisions", "test/solid");
-
+        map->remove_map_object(monkey_id);
 
         auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
         auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
 
         if((player->get_position()) == (glm::vec2 (9, 8)))
         {
-            map->remove_sprite((player_id));
+
+            //player->set_sprite_status("killed");
+            //map->remove_sprite((player_id));
+            //ObjectManager::get_instance().remove_object(player_id);
         }
 
 
         if((monkey->get_position()) == (glm::vec2 (9, 8)))
         {
-            map->remove_sprite((monkey_id));
+            //map->remove_sprite((monkey_id));
+            //ObjectManager::get_instance().remove_object(monkey_id);
         }
         return true;
     });
