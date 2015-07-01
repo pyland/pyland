@@ -14,23 +14,23 @@
 ///
 class Typeface {
 private:
-	friend class TextFont;
-	///
-	/// Path to the ttf file.
-	///
-	std::string filename;
+    friend class TextFont;
+    ///
+    /// Path to the ttf file.
+    ///
+    std::string filename;
 public:
-	///
-	/// Represents a failure in loading
-	///
-	class LoadException: public std::runtime_error {
-	public:
-		LoadException(const char  *message);
-		LoadException(const std::string &message);
-	};
-	
-	Typeface(std::string filename);
-	~Typeface();
+    ///
+    /// Represents a failure in loading
+    ///
+    class LoadException: public std::runtime_error {
+    public:
+        LoadException(const char  *message);
+        LoadException(const std::string &message);
+    };
+    
+    Typeface(std::string filename);
+    ~Typeface();
 };
 
 
