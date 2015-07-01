@@ -19,44 +19,70 @@ namespace py = boost::python;
 
 NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challenge_data) {
 
-    //add the monkey to the game
-    int monkey_id = ChallengeHelper::make_sprite(
-        this,
-        "sprite/monkey",
-        "Alex",
-        Walkability::BLOCKED,
-        "east/still/1"
-    );
+	//add the monkey to the game
+	int monkey_id = ChallengeHelper::make_sprite(
+		this,
+		"sprite/monkey",
+		"Alex",
+		Walkability::BLOCKED,
+		"east/still/1"
+	);
 
-    int player_id = ChallengeHelper::make_sprite(
-        this,
-        "sprite/1",
-        "Ben",
-        Walkability::BLOCKED,
-        "east/still/1"
-    );
+	int player_id = ChallengeHelper::make_sprite(
+		this,
+		"sprite/1",
+		"Ben",
+		Walkability::BLOCKED,
+		"east/still/1"
+	);
 
-    ChallengeHelper::make_interaction("trigger/objective/finish", [this] (int) {
-        ChallengeHelper::set_completed_level(4);
-        finish();
-        return false;
-    });
+	int door3_id = ChallengeHelper::make_object(
+		this,
+		"trigger/objective/door3",
+		Walkability::WALKABLE,
+		"3"
+	);
 
-    //trigger/objective/button1
-    //trigger/objective/button4
-    //trigger/objective/door1
-    //The following code is for door 1 and the buttons that activate it.
-    int door_1_id = ChallengeHelper::make_object(this, "trigger/objective/door1", Walkability::BLOCKED, "4");
+	//ChallengeHelper::create_pickupable(f)
+	//auto magicdoor3 = (ObjectManager::get_instance()).getobject<MapObject>(door3_id);
 
-    ChallengeHelper::make_interaction("trigger/objective/button1", [this] (int) {
+	//glm::ivec2 door3_location = ChallengeHelper::get_location_interaction("trigger/objective/door3");
 
-        return true;
-    });
+	//ChallengeHelper::create_pickupable()
 
-    ChallengeHelper::make_interaction("trigger/objective/button4", [this] (int) {
+	ChallengeHelper::make_interaction("trigger/objective/button3", [this] (int) {
+		Engine::print_dialogue ("Ben","Yay!");
+		return true;
+	});
 
-        return true;
-    });
+
+
+
+
+
+
+	ChallengeHelper::make_interaction("trigger/objective/finish", [this] (int) {
+		ChallengeHelper::set_completed_level(4);
+		finish();
+		return false;
+	});
+
+
+	//trigger/objective/button1
+	//trigger/objective/button4
+	//trigger/objective/door1
+	//The following code is for door 1 and the buttons that activate it.
+	int door1_id = ChallengeHelper::make_object(this, "trigger/objective/door1", Walkability::BLOCKED, "4");
+
+	ChallengeHelper::make_interaction("trigger/objective/button1", [this] (int) {
+
+		return true;
+	});
+
+	ChallengeHelper::make_interaction("trigger/objective/button4", [this] (int) {
+
+		return true;
+	});
 
 }
 
@@ -66,14 +92,10 @@ NewChallenge::~NewChallenge() {
 }
 
 void NewChallenge::start() {
-Engine::print_dialogue ( "Tom",
-        "Welcome to my new level\n"
-    );
+	Engine::print_dialogue ("Ben","Look at those buttons, there may be a way out");
 }
 
 void NewChallenge::finish() {
-   //Complete the challenge
-   //TODO: Change this to use your challenge's id
    int challenge_id = 4;
    ChallengeHelper::set_completed_level(challenge_id);
 
