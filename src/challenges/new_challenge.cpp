@@ -21,7 +21,7 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
 {
 
     //add the monkey to the game
-    int monkey_id = ChallengeHelper::make_sprite(
+    int monkey_id = ChallengeHelper::make_assistant()(
                         this,
                         "sprite/monkey",
                         "Alex",

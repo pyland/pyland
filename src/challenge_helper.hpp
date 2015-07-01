@@ -86,6 +86,20 @@ namespace ChallengeHelper {
 					Walkability walkability,
 					std::string start_frame);
 
+    ///
+	/// Create Assistant from named location
+	/// @param challenge a pointer to the challenge to make the object for
+	/// @param markername the name of the object used to identify it in the TMX map file
+	/// @param sprite_name the human readable name to give the character
+	/// @param walkability the walkability status of the object
+	/// @param start_frame which frame to start animating the object from
+	///
+	int make_assistant(Challenge *challenge,
+					std::string marker_name,
+					std::string sprite_name,
+					Walkability walkability,
+					std::string start_frame);
+
 	///
 	/// Create MapObjects from named locations
 	/// @param challenge a pointer to the challenge to make the object for
