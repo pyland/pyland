@@ -37,6 +37,9 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
                         "east/still/1"
                     );
 
+    auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
+    auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+
     ChallengeHelper::make_interaction("trigger/objective/button1", [this] (int)
     {
         map->update_tile(9, 8, "Scenery2", "test/blank");
@@ -48,6 +51,18 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
     {
         map->update_tile(9, 8, "Scenery2", "walls/4");
         map->update_tile(9, 8, "Collisions", "test/solid");
+
+
+        if(player->get_position() == (new glm::vec2(9, 8)))
+        {
+            map->remove_sprite((player_id));
+        }
+
+
+        if(monkey->get_position() == (new glm::vec2(9, 8)))
+        {
+            map->remove_sprite((monkey_id));
+        }
         return true;
     });
 
