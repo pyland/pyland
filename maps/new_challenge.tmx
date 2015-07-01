@@ -35,7 +35,7 @@
  </layer>
  <layer name="Scenery2" width="26" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlIJUIE4iA+ei8VMI2JNMpvvQ9REyB5c8zJ+43JnPgOqfAjLtISRPLf+kM0DcmUZAP6X2kGruSLMHFg+k4jw0PrHxOAoIAwDEOhpq
+   eJxjYBgFlIJUIE4iA+ei8VMI2JNMpvvQ9REyB5c8zJ+43JnPgOqfAjLtSSZSnpA5hOTTGSDuTKOxPYTASLcHFg+k4jw0Pq54HAWkAwBH5xsw
   </data>
  </layer>
  <layer name="Interaction" width="26" height="15">
@@ -45,14 +45,12 @@
  </layer>
  <layer name="Collisions" width="26" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlIJ+KmJC9pDrPlLMwSVPyJ3U9g8+e6hlDjHupNQeUs0difbQI/+MAuIBAP8SJf0=
+   eJxjYBgFlIJ+KmJC9pDrPlLMwSVPyJ3U8k8/kfKEzCHGHkL+oYY9hMCoPfTJP6OAeAAAoM4nGw==
   </data>
  </layer>
  <objectgroup name="Objects" width="0" height="0">
   <object name="sprite/1" gid="244" x="256" y="512" width="64" height="64"/>
   <object name="sprite/monkey" gid="184" x="256" y="576" width="64" height="64"/>
-  <object name="trigger/objective/door1" gid="99" x="576" y="448" width="64" height="64"/>
-  <object name="trigger/objective/door2" gid="99" x="1088" y="512" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Interactions" width="0" height="0">
   <object name="trigger/objective/finish" gid="294" x="1216" y="320" width="64" height="64"/>
