@@ -75,7 +75,6 @@ NewChallenge::~NewChallenge()
 
 void NewChallenge::start()
 {
-    Engine::print_dialogue ("Ben",map->query_tile(19, 9,"Collisions"));
 }
 
 void NewChallenge::finish()
