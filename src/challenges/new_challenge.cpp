@@ -80,6 +80,34 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         return true;
     });
 
+    ChallengeHelper::make_interaction("trigger/objective/button4", [this] (int)
+    {
+        map->update_tile(17, 7, "Scenery2", "test/blank");
+        map->update_tile(17, 7, "Collisions", "test/blank");
+        return true;
+    });
+
+    ChallengeHelper::lose_interaction("trigger/objective/button4", [this] (int)
+    {
+        map->update_tile(17, 7, "Scenery2", "walls/4");
+        map->update_tile(17, 7, "Collisions", "test/solid");
+        return true;
+    });
+
+    ChallengeHelper::make_interaction("trigger/objective/button5", [this] (int)
+    {
+        map->update_tile(9, 8, "Scenery2", "test/blank");
+        map->update_tile(9, 8, "Collisions", "test/blank");
+        return true;
+    });
+
+    ChallengeHelper::lose_interaction("trigger/objective/button5", [this] (int)
+    {
+        map->update_tile(9, 8, "Scenery2", "walls/4");
+        map->update_tile(9, 8, "Collisions", "test/solid");
+        return true;
+    });
+
 
     ChallengeHelper::make_interaction("trigger/objective/finish", [this] (int)
     {
