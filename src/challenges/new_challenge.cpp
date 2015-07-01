@@ -42,13 +42,13 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
 	);
 
 	//ChallengeHelper::create_pickupable(f)
-    //auto magicdoor3 = (ObjectManager::get_instance()).getobject<MapObject>(door3_id);
+	//auto magicdoor3 = (ObjectManager::get_instance()).getobject<MapObject>(door3_id);
 
-    glm::ivec2 door3_location = ChallengeHelper::get_location_interaction("trigger/objective/door3");
+	glm::ivec2 door3_location = ChallengeHelper::get_location_interaction("trigger/objective/door3");
 
-    ChallengeHelper::create_pickupable()
+	ChallengeHelper::create_pickupable()
 
-    ChallengeHelper::make_interaction(Ŕ", [this] (int) {
+	ChallengeHelper::make_interaction(Ŕ", [this] (int) {
 		Engine::print_dialogue ("Ben","Yay!");
 		return true;
 	});
