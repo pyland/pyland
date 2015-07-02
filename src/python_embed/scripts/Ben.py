@@ -1,1 +1,1 @@
-cut(west)
+move_east();

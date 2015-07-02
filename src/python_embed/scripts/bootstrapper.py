@@ -106,6 +106,19 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         y = cast("int", y)
         return entity.move(x, y)
 
+    def move_east():
+        entity.print_dialogue("AAAGHHH")
+        return entity.move_east
+
+    def move_west():
+        return entity.move_west
+
+    def move_south():
+        return entitiy.move_south
+
+    def move_north():
+        return entity.move_north
+
     def walkable(position) -> bool:
         """
         Take a relative position (north, south, east or west)
@@ -143,6 +156,10 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         "get_retrace_steps": get_retrace_steps,
         "look": look,
         "move": move,
+        "move_east": move_east,
+        "move_north": move_north,
+        "move_west": move_west,
+        "move_south": move_south,
         "monologue": monologue,
         "read_message": read_message,
         "walkable": walkable,
