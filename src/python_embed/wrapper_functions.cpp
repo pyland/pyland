@@ -17,7 +17,6 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("get_retrace_steps", &Entity::get_retrace_steps)
         .def("look",              &Entity::look)
         .def("monologue",         &Entity::monologue)
-        //.def("move",              &Entity::move)
         .def("move_east",         &Entity::move_east)
         .def("move_west",         &Entity::move_west)
         .def("move_north",        &Entity::move_north)

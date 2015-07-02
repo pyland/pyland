@@ -40,23 +40,19 @@ bool Entity::move(int x, int y) {
 }
 
 bool Entity::move_east(){
-    Engine::print_dialogue("Bob", "Hello");
     return(move(1, 0));
 }
 
 bool Entity::move_west(){
-    Engine::print_dialogue("Bob", "Hello");
-    return(move(1, 0));
+    return(move(-1, 0));
 }
 
 bool Entity::move_north(){
-    Engine::print_dialogue("Bob", "Hello");
-    return(move(1, 0));
+    return(move(0, 1));
 }
 
 bool Entity::move_south(){
-    Engine::print_dialogue("Bob", "Hello");
-    return(move(1, 0));
+    return(move(0, -1));
 }
 
 bool Entity::walkable(int x, int y) {

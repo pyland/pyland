@@ -1,1 +1,1 @@
-move_east();
+move_east()

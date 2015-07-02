@@ -30,11 +30,6 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
     # Create all of the functions whilst they are
     # able to capture entity in their scope
 
-    north =  0, +1
-    south =  0, -1
-    east  = +1,  0
-    west  = -1,  0
-
     def cut(position):
         """
         Take a relative position (north, south, east or west)
@@ -95,29 +90,28 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
 
         entity.monologue()
 
+    """
     def move(position):
-        """
-        Take a relative position (north, south, east or west)
-        and attemt to cut any vines or other cuttable object at that position.
-        """
+
 
         x, y = position
         x = cast("int", x)
         y = cast("int", y)
         return entity.move(x, y)
 
+    """
+
     def move_east():
-        entity.print_dialogue("AAAGHHH")
-        return entity.move_east
+        return entity.move_east()
 
     def move_west():
-        return entity.move_west
+        return entity.move_west()
 
     def move_south():
-        return entitiy.move_south
+        return entity.move_south()
 
     def move_north():
-        return entity.move_north
+        return entity.move_north()
 
     def walkable(position) -> bool:
         """
@@ -146,16 +140,10 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         entity._print_debug(text)
 
     imbued_locals = {
-        "north": north,
-        "south": south,
-        "east": east,
-        "west": west,
-
         "cut": cut,
         "help": help,
         "get_retrace_steps": get_retrace_steps,
         "look": look,
-        "move": move,
         "move_east": move_east,
         "move_north": move_north,
         "move_west": move_west,
