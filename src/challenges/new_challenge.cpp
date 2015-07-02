@@ -29,6 +29,7 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
                         "east/still/1"
                     );
 
+        //add the player to the game
     int player_id = ChallengeHelper::make_sprite(
                         this,
                         "sprite/1",
@@ -37,32 +38,34 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
                         "east/still/1"
                     );
 
-    auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
-    auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+    //define what happens when a character ("sprite") stands on button1
 
     ChallengeHelper::make_interaction("trigger/objective/button1", [this] (int)
     {
-        map->update_tile(9, 8, "Scenery2", "test/blank");
-        map->update_tile(9, 8, "Collisions", "test/blank");
+        map->update_tile(9, 8, "Scenery2", "test/blank"); //make the wall dissapear
+        map->update_tile(9, 8, "Collisions", "test/blank"); //remove the collision with the wall
         return true;
     });
 
+    //define what happens when a character moves off button1
     ChallengeHelper::lose_interaction("trigger/objective/button1", [player_id,monkey_id,this] (int)
     {
-        map->update_tile(9, 8, "Scenery2", "walls/4");
-        map->update_tile(9, 8, "Collisions", "test/solid");
+        map->update_tile(9, 8, "Scenery2", "walls/4"); //add the wall
+        map->update_tile(9, 8, "Collisions", "test/solid"); //add the collision tile (To make it impossible to walk through the wall)
 
-        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
-        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
+
+        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id); //get the player object
+        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id); //get the monkey object
+
 
         if((player->get_position()) == (glm::vec2 (9, 8)))
         {
-            map->remove_sprite((player_id));
+            map->remove_sprite((player_id)); //remove the player sprite.
         }
 
         if((monkey->get_position()) == (glm::vec2 (9, 8)))
         {
-            map->remove_sprite((monkey_id));
+            map->remove_sprite((monkey_id)); //remove the monkey from the map
         }
         return true;
     });
