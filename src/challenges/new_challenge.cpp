@@ -21,7 +21,7 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
 {
 
     //add the monkey to the game
-    int monkey_id = ChallengeHelper::make_assistant()(
+    int monkey_id = ChallengeHelper::make_assistant(
                         this,
                         "sprite/monkey",
                         "Alex",
@@ -41,21 +41,23 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
     {
         map->update_tile(9, 8, "Scenery2", "test/blank");
         map->update_tile(9, 8, "Collisions", "test/blank");
+        //End Level if one gets trapped in door
+        //Must remove object from id lists if remove
 
-        Engine::print_dialogue("Villager","test");
-        auto map_objects = map->get_map_objects();
-        for(auto object_id: map_objects){
-            map->remove_map_object(object_id);
-            ObjectManager::get_instance().remove_object(object_id);
-        }
-
-        auto map_sprites = map->get_sprites();
-        for(auto sprite_id: map_sprites){
-            if (sprite_id == monkey_id){
-                map->remove_sprite(sprite_id);
-                ObjectManager::get_instance().remove_object(sprite_id);
-            }
-        }
+//        Engine::print_dialogue("Villager","test");
+//        auto map_objects = map->get_map_objects();
+//        for(auto object_id: map_objects){
+//            map->remove_map_object(object_id);
+//            ObjectManager::get_instance().remove_object(object_id);
+//        }
+//
+//        auto map_sprites = map->get_sprites();
+//        for(auto sprite_id: map_sprites){
+//            if (sprite_id == monkey_id){
+//                map->remove_sprite(sprite_id);
+//                ObjectManager::get_instance().remove_object(sprite_id);
+//            }
+//        }
 
         return true;
     });
@@ -71,17 +73,13 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
 
         if((player->get_position()) == (glm::vec2 (9, 8)))
         {
-
-            //player->set_sprite_status("killed");
-            //map->remove_sprite((player_id));
-            //ObjectManager::get_instance().remove_object(player_id);
+            //End level if one gets trapped in door
         }
 
 
         if((monkey->get_position()) == (glm::vec2 (9, 8)))
         {
-            //map->remove_sprite((monkey_id));
-            //ObjectManager::get_instance().remove_object(monkey_id);
+            //End level if one gets trapped in door
         }
         return true;
     });

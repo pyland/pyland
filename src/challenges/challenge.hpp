@@ -14,6 +14,11 @@
 #include "sprite_switcher.hpp"
 #include "walkability.hpp"
 
+//Constants to define the different types, used in id_type function
+const int sprite_id_type = 1;
+const int assistant_id_type = 2;
+const int object_id_type = 3;
+
 class ChallengeData;
 class Map;
 
@@ -70,7 +75,7 @@ public:
 						bool cuttable=false,
 						bool findable=true);
 
-    static int id_type(int id);
+    int id_type(int id);
 	virtual boost::python::object read_message(int id) const;
 };
 

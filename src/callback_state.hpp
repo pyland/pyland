@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "challenge.hpp"        //Included for getting id_type
-#include "challenge.hpp"        //Included for getting id_type
 #include "engine.hpp"
 #include "entitythread.hpp"
 #include "map_viewer.hpp"
@@ -75,7 +74,8 @@ public:
 
 	void man_move(glm::vec2 direction) {
 		auto id = Engine::get_map_viewer()->get_map_focus_object();
-		if !(Challenge::id_type(id) == assistant_id_type){
+		Challenge* current_challenge = Engine::get_challenge();
+		if (!(current_challenge->id_type(id) == assistant_id_type)){
             Engine::move_object(id, direction);
 		}
 	}

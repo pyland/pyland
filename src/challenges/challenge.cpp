@@ -23,12 +23,6 @@
 #include "object_manager.hpp"
 #include "sprite.hpp"
 
-
-//Constants to define the different types, used in id_type function
-const int sprite_id_type = 1;
-const int assistant_id_type = 2;
-const int object_id_type = 3;
-
 namespace py = boost::python;
 
 Challenge::Challenge(ChallengeData* _challenge_data) :
@@ -100,7 +94,7 @@ int Challenge::make_map_object(glm::vec2 position,
 	return new_object_id;
 }
 
-static int Challenge::id_type(int id){
+int Challenge::id_type(int id){
     for(int sprite_id : sprite_ids) {
 		if (id == sprite_id){
             return sprite_id_type;
