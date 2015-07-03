@@ -9,6 +9,7 @@
 #include <glm/vec2.hpp>
 #include <string>
 
+#include<iostream>
 namespace py = boost::python;
 
 ///
@@ -72,6 +73,11 @@ class Entity {
         ///     Whether move was successful.
         ///
         bool move(int x, int y);
+
+        bool move_east();
+        bool move_south();
+        bool move_north();
+        bool move_west();
 
         ///
         /// Checks if player can move by the vector given.

@@ -39,6 +39,7 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
                     );
 
     //define what happens when a character ("sprite") stands on button1
+
     ChallengeHelper::make_interaction("trigger/objective/button1", [this] (int)
     {
         map->update_tile(9, 8, "Scenery2", "test/blank"); //make the wall dissapear
@@ -51,7 +52,6 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
     {
         map->update_tile(9, 8, "Scenery2", "walls/4"); //add the wall
         map->update_tile(9, 8, "Collisions", "test/solid"); //add the collision tile (To make it impossible to walk through the wall)
-
 
         ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (9, 8)));
         ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (9, 8)));
@@ -93,7 +93,6 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (19, 9)));
         ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (19, 9)));
 
-
         return true;
     });
 
@@ -109,19 +108,8 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(17, 7, "Scenery2", "walls/4");
         map->update_tile(17, 7, "Collisions", "test/solid");
 
-        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
-        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
-
-        if((player->get_position()) == (glm::vec2 (17, 7)))
-        {
-            map->remove_sprite((player_id));
-        }
-
-
-        if((monkey->get_position()) == (glm::vec2 (17, 7)))
-        {
-            map->remove_sprite((monkey_id));
-        }
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (17, 7)));
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (17, 7)));
 
         return true;
     });
@@ -138,19 +126,8 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(9, 8, "Scenery2", "walls/4");
         map->update_tile(9, 8, "Collisions", "test/solid");
 
-        auto player = ObjectManager::get_instance().get_object<Sprite>(player_id);
-        auto monkey = ObjectManager::get_instance().get_object<Sprite>(monkey_id);
-
-        if((player->get_position()) == (glm::vec2 (9, 8)))
-        {
-            map->remove_sprite((player_id));
-        }
-
-
-        if((monkey->get_position()) == (glm::vec2 (9, 8)))
-        {
-            map->remove_sprite((monkey_id));
-        }
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (9, 8)));
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (9, 8)));
 
         return true;
     });

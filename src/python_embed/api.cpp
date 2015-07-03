@@ -39,6 +39,22 @@ bool Entity::move(int x, int y) {
     );
 }
 
+bool Entity::move_east(){
+    return(move(1, 0));
+}
+
+bool Entity::move_west(){
+    return(move(-1, 0));
+}
+
+bool Entity::move_north(){
+    return(move(0, 1));
+}
+
+bool Entity::move_south(){
+    return(move(0, -1));
+}
+
 bool Entity::walkable(int x, int y) {
     ++call_number;
 
