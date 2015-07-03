@@ -32,22 +32,22 @@ def move_towards(object, x, y)
 	me = {"x": me.x, "y": me.y} # will always be fruit
 	if me.x - object.x < 0:
                 try:
-                        move(west)
+                        move_west()
                 except:
 			pass
 	if me.x - object.x > 0:
                 try:
-                        move(east)
+                        move_east()
                 except:
 			pass
 	if me.y - object.y < 0:
                 try:
-                        move(south)
+                        move_south()
                 except:
 			pass
         if me.y - object.y > 0:
 		try:	
-			move(north)
+			move_north()
 		except:
 			pass
 	else:
@@ -58,22 +58,22 @@ def move_away_from(object, x, y)
         me = {"x": me.x, "y": me.y} # will always be a player
         if me.x - object.x > 0:
                 try:
-                        move(west)
+                        move_west()
                 except:
                         pass
         if me.x - object.x < 0:
                 try:
-                        move(east)
+                        move_east()
                 except:
                         pass
         if me.y - object.y > 0:
                 try:
-                        move(south)
+                        move_south()
                 except:
                         pass
         if me.y - object.y < 0:
                 try:
-                        move(north)
+                        move_north()
                 except:
                         pass
         else:

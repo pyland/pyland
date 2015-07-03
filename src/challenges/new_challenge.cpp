@@ -54,8 +54,8 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(9, 8, "Scenery2", "walls/4"); //add the wall
         map->update_tile(9, 8, "Collisions", "test/solid"); //add the collision tile (To make it impossible to walk through the wall)
 
-        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (9, 8)));
-        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (9, 8)));
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (9, 8)), "Game", "Oh no! The Wall got you!");
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (9, 8)), "Game", "Oh no! The Wall got you!");
 
         return true;
     });
@@ -72,8 +72,8 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(17, 7, "Scenery2", "walls/4");
         map->update_tile(17, 7, "Collisions", "test/solid");
 
-        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (17, 7)));
-        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (17, 7)));
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (17, 7)), "Game", "Oh no! The Wall got you!");
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (17, 7)), "Game", "Oh no! The Wall got you!");
 
         return true;
     });
@@ -91,8 +91,8 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(19, 9, "Scenery2", "walls/3");
         map->update_tile(19, 9, "Collisions", "test/solid");
 
-        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (19, 9)));
-        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (19, 9)));
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (19, 9)), "Game", "Oh no! The Wall got you!");
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (19, 9)), "Game", "Oh no! The Wall got you!");
 
         return true;
     });
@@ -109,8 +109,8 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(17, 7, "Scenery2", "walls/4");
         map->update_tile(17, 7, "Collisions", "test/solid");
 
-        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (17, 7)));
-        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (17, 7)));
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (17, 7)), "Game", "Oh no! The Wall got you!");
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (17, 7)), "Game", "Oh no! The Wall got you!");
 
         return true;
     });
@@ -127,8 +127,8 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
         map->update_tile(9, 8, "Scenery2", "walls/4");
         map->update_tile(9, 8, "Collisions", "test/solid");
 
-        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (9, 8)));
-        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (9, 8)));
+        ChallengeHelper::kill_sprite(this, player_id, (glm::vec2 (9, 8)), "Game", "Oh no! The Wall got you!");
+        ChallengeHelper::kill_sprite(this, monkey_id, (glm::vec2 (9, 8)), "Game", "Oh no! The Wall got you!");
 
         return true;
     });

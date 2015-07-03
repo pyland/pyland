@@ -85,14 +85,35 @@ namespace ChallengeHelper {
                     std::string sprite_name,
                     Walkability walkability,
                     std::string start_frame);
+
+    ///
+    /// Create Assisstant from named location
+    /// @param challenge a pointer to the challenge to make the object for
+    /// @param markername the name of the object used to identify it in the TMX map file
+    /// @param assisstant_name the human readable name to give the character
+    /// @param walkability the walkability status of the object
+    /// @param start_frame which frame to start animating the object from
+    ///
+    int make_assistant(Challenge *challenge,
+                        std::string marker_name,
+                        std::string assisstant_name,
+                        Walkability walkability,
+                        std::string start_frame);
+
     ///
     /// Kill the sprite at the given location
     /// @param challenge a pointer to the challenge where you want to kill the sprite
     ///	@param sprite_id the id of the sprite you want to check for a kill
     /// @param location the location where, if the sprite is there, it dies
+    /// @param speaker the name of the entity that speaks when the sprite dies
+    /// @param eulogy what the speaker says when the sprite dies
+
+
     void kill_sprite(Challenge *challenge,
                      int sprite_id,
-                     glm::vec2 location);
+                     glm::vec2 location,
+                     std:: string speaker,
+                     std::string eulogy);
 
     ///
     /// Create MapObjects from named locations
