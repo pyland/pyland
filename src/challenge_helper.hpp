@@ -85,7 +85,11 @@ namespace ChallengeHelper {
                     std::string sprite_name,
                     Walkability walkability,
                     std::string start_frame);
-
+    ///
+    /// Kill the sprite at the given location
+    /// @param challenge a pointer to the challenge where you want to kill the sprite
+    ///	@param sprite_id the id of the sprite you want to check for a kill
+    /// @param location the location where, if the sprite is there, it dies
     void kill_sprite(Challenge *challenge,
                      int sprite_id,
                      glm::vec2 location);

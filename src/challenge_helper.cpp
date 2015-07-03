@@ -114,7 +114,7 @@ void ChallengeHelper::kill_sprite(Challenge *challenge,
     auto player = ObjectManager::get_instance().get_object<Sprite>(sprite_id);
     
     if((player->get_position()) == (location)) {
-        map->remove_sprite(sprite_id);
+        map->remove_sprite(sprite_id); //at the moment only the sprite is removed
     }
 
     return;
