@@ -21,7 +21,7 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
 {
 
     //add the monkey to the game
-    int monkey_id = ChallengeHelper::make_sprite(
+    int monkey_id = ChallengeHelper::make_assistant(
                         this,
                         "sprite/monkey",
                         "Alex",
@@ -44,6 +44,7 @@ NewChallenge::NewChallenge(ChallengeData* _challenge_data) : Challenge(_challeng
     {
         map->update_tile(9, 8, "Scenery2", "test/blank"); //make the wall dissapear
         map->update_tile(9, 8, "Collisions", "test/blank"); //remove the collision with the wall
+
         return true;
     });
 
