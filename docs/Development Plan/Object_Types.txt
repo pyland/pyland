@@ -1,0 +1,11 @@
+Object Types:
+
+Sprite - scriptable and arrow key moveable
+Assistant - scriptable
+Object
+
+Properties:
+
+Walkable - can step on
+Cuttable - can cut down and remove
+Pushable - can push arond (like boulders)
