@@ -1,21 +1,24 @@
 Pyland commands:
 
-move_east()
-move_west()
-move_north()
-move_south()
-cut_east()
-cut_west()
-cut_north()
-cut_south()
-can_move()		(return boolean if object infront is walkable)
+a) Movement related - 
+turn_east(), turn_west(), turn_south(), turn_north() - turns the character in that direction
+move() - moves the charcater by one space in the direction they're facing
+can_move() - return boolean if the character can walk in the direction they're currently facing
+get_position() - gets the current position of the character relative to some fixed point
 
+b) Perform an action -
+cut() - cuts the object in front the player 
+monologue() - prints the character's current location to screen
 
-Built in (plan order to introduce):
+c) Interact with objects - 
+pick_object() - pick up an object
+drop() - drop an object
+use() - use the object that is currently being held
 
+d) Built in commands to use - 
 print()
-if
+if / else
 for
 while
 def (have NPC require a function that you write on a scroll and give to them)
-input
+input()
