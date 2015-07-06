@@ -3,18 +3,18 @@ def move_croc(dx, dy):
 
     if dx >  0:
         for x in range(dx):
-            move(east)
+            move_east()
     elif dx < 0:
         for x in range(-dx):
-            move(west)
+            move_west()
     #don't move the player if dx = 0
 
     if dy > 0:
         for y in range(dy):
-            move(north)
+            move_north()
     elif dy < 0:
         for y in range(-dy):
-            move(south)
+            move_south()
     #don't move the player if dy = 0
 
 
