@@ -1,21 +1,20 @@
 Pyland commands:
 
-a) Movement related - 
-turn_east(), turn_west(), turn_south(), turn_north() - turns the character in that direction
+a) Movement related -
+face_north(), face_south(), face_east(), face_west() - turns the character to face the specified direction
 move() - moves the charcater by one space in the direction they're facing
 can_move() - return boolean if the character can walk in the direction they're currently facing
-get_position() - gets the current position of the character relative to some fixed point
+get_position() - gets the current position of the character relative to some fixed point (in terms of tiles)
 
 b) Perform an action -
-cut() - cuts the object in front the player 
-monologue() - prints the character's current location to screen
+cut() - cuts the object in front the player
 
-c) Interact with objects - 
+c) Interact with objects -
 pick_object() - pick up an object
 drop() - drop an object
 use() - use the object that is currently being held
 
-d) Built in commands to use - 
+d) Built in commands to use -
 print()
 if / else
 for
