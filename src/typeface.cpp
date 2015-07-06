@@ -18,11 +18,11 @@ Typeface::LoadException::LoadException(const std::string &message): std::runtime
 
 
 Typeface::Typeface(std::string filename):
-	filename(filename) {
-	if (!TTF_WasInit() && TTF_Init() == -1) {
-		LOG(ERROR) << "Failure initializing SDL_ttf: " << TTF_GetError();
-		throw Typeface::LoadException("Failure initializing SDL_ttf");
-	}
+    filename(filename) {
+    if (!TTF_WasInit() && TTF_Init() == -1) {
+        LOG(ERROR) << "Failure initializing SDL_ttf: " << TTF_GetError();
+        throw Typeface::LoadException("Failure initializing SDL_ttf");
+    }
 }
 
 

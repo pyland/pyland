@@ -40,7 +40,7 @@
  </layer>
  <layer name="Interaction" width="26" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFIwWoMg60C4gHGoPIrfRwC8wOSu0aTOE2CoYuAADbrAD0
+   eJxjYBgFIwWoMg60C4gH6oPIrfRwC8wOSu0aTOE2CoYuAADN2ADv
   </data>
  </layer>
  <layer name="Collisions" width="26" height="15">

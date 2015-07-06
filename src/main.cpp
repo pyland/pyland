@@ -48,6 +48,7 @@
 
 
 
+
 using namespace std;
 
 static std::mt19937 random_generator;
@@ -461,7 +462,7 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
             map_name = "../maps/new_challenge.tmx";
             challenge_data->map_name = map_name;
             challenge = new NewChallenge(challenge_data);
-            break;	  
+            break;
         default:
             break;
     }
