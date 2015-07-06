@@ -12,12 +12,26 @@ cut() - cuts the object in front the player
 c) Interact with objects -
 pick_object() - pick up an object
 drop() - drop an object
-use() - use the object that is currently being held
+//use() - use the object that is currently being held
+give() - give an object to the entity in front of the character (for instance, to give scripts to NPCs)
 
-d) Built in commands to use -
+d) I/O
+print() - output to the screen
+say() - output to an entity within the game
+input() - get input from the keyboard
+read() - get input from some entity from within the game
+
+e) Syntax
+if/else
+for
+while
+break/continue
+def/return
+
+*) Built in commands to use -
 print()
 if / else
 for
 while
-def (have NPC require a function that you write on a scroll and give to them)
+def/return (have NPC require a function that you write on a scroll and give to them)
 input()
