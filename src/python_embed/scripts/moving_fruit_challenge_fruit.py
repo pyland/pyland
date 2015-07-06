@@ -14,22 +14,22 @@ def move_fruit(object, x, y)
 	me = {"x": me.x, "y": me.y}
 	if me.x - basket.x < 0:
                 try:
-                        move(west)
+                        move_west()
                 except:
 			pass
 	if me.x - basket.x > 0:
                 try:
-                        move(east)
+                        move_east()
                 except:
 			pass
 	if me.y - basket.y < 0:
                 try:
-                        move(south)
+                        move_south()
                 except:
 			pass
         if me.y - basket.y > 0:
 		try:	
-			move(north)
+			move_north()
 		except:
 			pass
 	else:

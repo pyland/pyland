@@ -109,16 +109,72 @@ int ChallengeHelper::make_sprite(Challenge *challenge,
 
 void ChallengeHelper::kill_sprite(Challenge *challenge,
                                   int sprite_id,
-                                  glm::vec2 location) {
+                                  glm::vec2 location,
+                                  std::string speaker,
+                                  std::string eulogy) {
     auto *map = Engine::get_map_viewer()->get_map();
     auto player = ObjectManager::get_instance().get_object<Sprite>(sprite_id);
-    
+
     if((player->get_position()) == (location)) {
         map->remove_sprite(sprite_id); //at the moment only the sprite is removed
+
+        Engine::print_dialogue (speaker, eulogy);
+
+        EventManager::get_instance().add_timed_event(GameTime::duration(3.0), [challenge] (float completion) {
+            if(completion == 1.0) {
+                challenge->event_finish.trigger(0);
+            }
+            return true;
+        });
+
     }
+
 
     return;
 }
+
+int ChallengeHelper::make_assistant(Challenge *challenge,
+								 std::string marker_name,
+								 std::string assistant_name,
+								 Walkability walkability,
+								 std::string start_frame) {
+
+	auto *map = Engine::get_map_viewer()->get_map();
+	LOG(INFO) << marker_name;
+	auto properties(map->locations.at("Objects/" + marker_name));
+
+	LOG(INFO) << properties.tileset;
+
+	auto new_assistant(std::make_shared<Sprite>(
+		properties.location,
+		assistant_name,
+		walkability,
+		AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
+		start_frame
+	));
+	ObjectManager::get_instance().add_object(new_assistant);
+
+	auto assistant_id(new_assistant->get_id());
+
+	LOG(INFO) << "Adding sprite";
+
+	challenge->assistant_ids.push_back(assistant_id);
+	map->add_sprite(assistant_id);
+	Engine::get_map_viewer()->set_map_focus_object(assistant_id);
+	LOG(INFO) << "Creating assistant wrapper";
+	LOG(INFO) << "ID " << assistant_id;
+
+	// Register user controled sprite
+	// Yes, this is a memory leak. Deal with it.
+	auto *a_thing(new Entity(properties.location, assistant_name, assistant_id));
+
+	LOG(INFO) << "Registering assistant";
+	new_assistant->daemon = std::make_unique<LockableEntityThread>(challenge->challenge_data->interpreter->register_entity(*a_thing));
+	LOG(INFO) << "Done!";
+
+	return assistant_id;
+}
+
 
 PositionDispatcher<int>::CallbackID
 ChallengeHelper::make_interaction(std::string name,
