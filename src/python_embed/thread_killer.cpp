@@ -1,3 +1,8 @@
+///Quick and dirty hack to get pyland to compile on Ubuntu
+#ifndef _GLIBCXX_USE_NANOSLEEP
+#define _GLIBCXX_USE_NANOSLEEP
+#endif
+
 #include <chrono>
 #include <functional>
 #include <glog/logging.h>
