@@ -18,27 +18,23 @@
 #include "button.hpp"
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
-#include "cutting_challenge.hpp"
+#include "challenge.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
-#include "final_challenge.hpp"
 #include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
-#include "introduction_challenge.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
 #include "map_viewer.hpp"
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
-#include "new_challenge.hpp"
 #include "notification_bar.hpp"
 #include "sprite.hpp"
-#include "start_screen.hpp"
 
 #ifdef USE_GLES
 #include "typeface.hpp"
@@ -441,27 +437,7 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
         case 0:
             map_name ="../game/levels/test_world/test_level/playaround_area/layout.tmx";
             challenge_data->map_name = map_name;
-            challenge = new StartScreen(challenge_data);
-            break;
-        case 1:
-            map_name = "../maps/introduction.tmx";
-            challenge_data->map_name = map_name;
-            challenge = new IntroductionChallenge(challenge_data);
-            break;
-        case 2:
-            map_name = "../maps/cutting_challenge.tmx";
-            challenge_data->map_name = map_name;
-            challenge = new CuttingChallenge(challenge_data);
-            break;
-        case 3:
-            map_name = "../maps/final_challenge.tmx";
-            challenge_data->map_name = map_name;
-            challenge = new FinalChallenge(challenge_data);
-            break;
-        case 4:
-            map_name = "../maps/new_challenge.tmx";
-            challenge_data->map_name = map_name;
-            challenge = new NewChallenge(challenge_data);
+            challenge = new Challenge(challenge_data);
             break;
         default:
             break;

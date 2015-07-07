@@ -26,6 +26,7 @@ BASE_OBJS = \
 	map_object.o           \
 	map_viewer.o           \
 	mouse_cursor.o         \
+	challenge.o            \
 	notification_bar.o     \
 	notification_stack.o   \
 	object.o               \
@@ -40,16 +41,6 @@ BASE_OBJS = \
 	texture_atlas.o        \
 	tileset.o              \
 	typeface.o             \
-
-
-CHALLENGE_OBJS = \
-	challenges/challenge.o              \
-	challenges/cutting_challenge.o      \
-	challenges/final_challenge.o        \
-	challenges/introduction_challenge.o \
-        challenges/base_challenge.o         \
-	challenges/start_screen.o           \
-	challenges/new_challenge.o	    \
 
 
 HEADER_DEPENDS_ROOT = \

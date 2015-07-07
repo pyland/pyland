@@ -105,7 +105,7 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
 
             auto id(object->GetGid() - tileset->GetFirstGid());
 
-            auto atlas(TextureAtlas::get_shared(tileset->GetImage()->GetSource()));
+            auto atlas(TextureAtlas::get_shared(map.GetFilepath() + tileset->GetImage()->GetSource()));
             auto names_to_indexes(atlas->get_names_to_indexes());
 
             auto tile(
