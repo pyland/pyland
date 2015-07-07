@@ -1,3 +1,3 @@
 class Deadly:
-	property = "deadly"
+    property = "deadly"
 
