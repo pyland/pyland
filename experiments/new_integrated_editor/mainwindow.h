@@ -33,6 +33,7 @@ class QMenu;
 class QsciScintilla;
 class QProcess;
 class QTextEdit;
+class QSplitter;
 class SonicPiLexer;
 class QString;
 class QSlider;
@@ -68,10 +69,11 @@ private:
     QsciScintilla* filenameToWorkspace(std::string filename);
 
     QsciScintilla *textEdit;
-    static const int workspace_max = 8;
+    static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
     QTextEdit *outputPane;
     QTextEdit *errorPane;
+    QSplitter *splitter;
 
     QTabWidget *tabs;
 

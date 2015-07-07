@@ -47,6 +47,7 @@
 #include <QTabWidget>
 #include <QString>
 #include <QStringList>
+#include <QSplitter>
 #include <QTextStream>
 #include <QPixmap>
 #include <QLabel>
@@ -85,13 +86,11 @@ MainWindow::MainWindow(QApplication &app) {
   tabs = new QTabWidget();
   tabs->setTabsClosable(false);
   tabs->setMovable(false);
-  tabs->setTabPosition(QTabWidget::South);
+  tabs->setTabPosition(QTabWidget::East);
   // create workspaces and add them to the tabs
   for(int ws = 0; ws < workspace_max; ws++) {
-	  std::string s;
-
 	  workspaces[ws] = new QsciScintilla;
-	  QString w = QString("Workspace %1").arg(QString::number(ws + 1));
+	  QString w = QString("Script %1").arg(QString::number(ws + 1));
 	  tabs->addTab(workspaces[ws], w);
   }
 
@@ -134,27 +133,51 @@ MainWindow::MainWindow(QApplication &app) {
   errorPane->setMaximumHeight(100);
 
   QVBoxLayout *sideWidgetLayout = new QVBoxLayout;
-  sideWidgetLayout->addWidget(tabs);
-  sideWidgetLayout->addWidget(errorPane);
+  //tabs->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+  //sideWidgetLayout->addWidget(tabs,0,0,0);
+  //errorPane->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
-  QWidget *dummySideWidget = new QWidget;
-  dummySideWidget->setLayout(sideWidgetLayout);
-  QDockWidget *sideWidget = new QDockWidget(tr("Editor"), this);
-  sideWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
-  sideWidget->setAllowedAreas(Qt::RightDockWidgetArea);
-  sideWidget->setWidget(dummySideWidget);
-  addDockWidget(Qt::BottomDockWidgetArea, sideWidget);
+  QWidget *newmainWidget = new QWidget;
 
   QWidget *mainWidget = new QWidget;
   mainWidget->setAttribute(Qt::WA_NativeWindow);
-  setCentralWidget(mainWidget);
+  //sideWidgetLayout->addWidget(mainWidget);
+  //setCentralWidget(mainWidget);
+  sideWidgetLayout->addWidget(mainWidget);
   for(int ws = 0; ws < workspace_max; ws++) {
 	  initWorkspace(workspaces[ws]);
   }
 
+  splitter = new QSplitter(Qt::Horizontal);
+
+  splitter->addWidget(tabs);
+  splitter->addWidget(errorPane);
+
+  sideWidgetLayout->addWidget(splitter);
+
+
+  newmainWidget->setLayout(sideWidgetLayout);
+  newmainWidget->show();
+
+  //addDockWidget(Qt::RightDockWidgetArea, errorPane);
+
+  //////policy = widg.sizePolicy();
+  //////policy.setVerticalStretch(1);
+  //////widg.setSizePolicy(policy);
+
+
+//  QWidget *dummySideWidget = new QWidget;
+//  dummySideWidget->setLayout(sideWidgetLayout);
+//  QDockWidget *sideWidget = new QDockWidget(this);
+//  sideWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
+//  sideWidget->setFloating(false);
+//  sideWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
+//  sideWidget->setWidget(dummySideWidget);
+//  addDockWidget(Qt::BottomDockWidgetArea, sideWidget);
+
   createActions();
   createToolBar();
-  createStatusBar();
+  //createStatusBar();
 
   setWindowTitle(tr("Pyland"));
 
