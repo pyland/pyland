@@ -61,56 +61,56 @@ However, it doesn't check if the tiles that are being moved to are empty or not.
 """ 
 class Character(GameObject):
 
-	__state = "main"
-	__moving = False
-	__facing = "north"
+    __state = "main"
+    __moving = False
+    __facing = "north"
 
-	def __init(self):
-		super().__init__()
-		self.set_sprite("main/north/1.png")
+    def __init(self):
+        super().__init__()
+        self.set_sprite("main/north/1.png")
 
-	""" Returns True if the character is moving,
-	False otherwise.
-	"""
-	def moving(self):
-		return self.__moving
+    """ Returns True if the character is moving,
+    False otherwise.
+    """
+    def moving(self):
+        return self.__moving
 
-	""" Move character in facing direction one tile. """
-	def move(self):
-		""" Pseudo code.
-		moving = True
-		Start animation
-		Start moving in direction facing
-		Once finished, moving = false"""
-		return
+    """ Move character in facing direction one tile. """
+    def move(self):
+        """ Pseudo code.
+        moving = True
+        Start animation
+        Start moving in direction facing
+        Once finished, moving = false"""
+        return
 
-	def face_north(self):
-		return
-	
-	def face_east(self):
-		return
+    def face_north(self):
+        return
+    
+    def face_east(self):
+        return
 
-	def face_south(self):
-		return
+    def face_south(self):
+        return
 
-	def face_north(self):
-		return
+    def face_north(self):
+        return
 
-	def get_facing(self):
-		return __facing
+    def get_facing(self):
+        return __facing
 
-	def before_frame_update(self):
-		super().before_frame_update()
-		self.__handle_movement_input()
+    def before_frame_update(self):
+        super().before_frame_update()
+        self.__handle_movement_input()
 
-	def is_facing(self, direction):
-		""" Pseudo code should check which direction character is facing and 
-		see if it is the same. Furthermore it should check if a valid direction has been provided and provide a warning otherwise
-		"""
-		return True
+    def is_facing(self, direction):
+        """ Pseudo code should check which direction character is facing and 
+        see if it is the same. Furthermore it should check if a valid direction has been provided and provide a warning otherwise
+        """
+        return True
 
-	def change_state(self, state):
-		if(isinstance(state, str)):
-			self.__state = state
-		return
-	
+    def change_state(self, state):
+        if(isinstance(state, str)):
+            self.__state = state
+        return
+    
