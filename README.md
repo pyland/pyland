@@ -67,21 +67,13 @@ For desktop, you will need the packages listed above, which can be found here:
 
 ```bash
 sudo apt-get update
-
 sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
-
 sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-
 sudo apt-get install --no-install-recommends libboost1.55-all-dev python3-dev libgl1-mesa-dev
-
 sudo apt-get install libsdl2-dev
-
 sudo apt-get install libsdl2-image-dev
-
 sudo apt-get install libsdl2-ttf-dev
-
 sudo apt-get install libgoogle-glog0
-
 sudo apt-get install libgoogle-glog-dev
 ```
 
