@@ -124,6 +124,8 @@ sudo apt-get install python3-pyqt4.qsci
 sudo apt-get install libqscintilla2-dev
 ```
 
+This will create the executable "application" which can then be run.
+
 ##API
 
 * `help()` and `help(command)` - Get help on the current task and any in-game (or other) commands.
