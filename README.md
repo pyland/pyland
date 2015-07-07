@@ -120,7 +120,6 @@ Keybindings
 Install the following packages:
 
 ```bash
-sudo apt-get install python3-pyqt4.qsci
 sudo apt-get install libqscintilla2-dev
 ```
 
