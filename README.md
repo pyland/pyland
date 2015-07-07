@@ -115,6 +115,15 @@ Keybindings
 * <kbd>=</kbd><kbd>-</kbd> - zooming in and out
 * <kbd>Ctrl</kbd>-<kbd>0</kbd> - return to default zoom level
 
+##Installing qt for integrated editor test
+
+Install the following packages:
+
+```bash
+sudo apt-get install python3-pyqt4.qsci
+sudo apt-get install libqscintilla2-dev
+```
+
 ##API
 
 * `help()` and `help(command)` - Get help on the current task and any in-game (or other) commands.
