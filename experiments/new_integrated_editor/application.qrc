@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/app.icns</file>
+        <file>images/run.png</file>
+        <file>images/save.png</file>
+        <file>images/stop.png</file>
+        <file>images/text-dec.png</file>
+        <file>images/text-inc.png</file>
+        <file>images/size_down.png</file>
+        <file>images/size_up.png</file>
+    </qresource>
+</RCC>
