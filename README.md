@@ -63,22 +63,31 @@ COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 
 #### Compiling on Desktop - Unix
 
-For desktop, you will need the packages listed above, many of which can be found on the repos e.g.
+For desktop, you will need the packages listed above, which can be found here:
 
 ```bash
+sudo apt-get update
+sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
+sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
+sudo apt-get install --no-install-recommends libboost1.55-all-dev python3-dev libgl1-mesa-dev
+sudo apt-get install libsdl2-dev
+sudo apt-get install libsdl2-image-dev
 sudo apt-get install libsdl2-ttf-dev
+sudo apt-get install libgoogle-glog0
+sudo apt-get install libgoogle-glog-dev
 ```
 
+If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
 
 For compiling on desktop, use:
 
 ```bash
-# Set both PYTHON_VERSION and LIBBOOST_PYTHON.
-# LIBBOOST_PYTHON is typically boost_python-py32 or boost_python3.
+# Set both PYTHON_VERSION and LIBBOOST_PYTHON to the version you have installed.
+# LIBBOOST_PYTHON is typically boost_python-py34 or boost_python3.
 #
 # Set COMPILER to the most recent g++ or clang++ version available,
 # but at least g++-4.7 or a recent clang++. Plain "g++" is the default.
-PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.4 LIBBOOST_PYTHON=boost_python-py34 make
 ```
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
@@ -105,6 +114,16 @@ Keybindings
 
 * <kbd>=</kbd><kbd>-</kbd> - zooming in and out
 * <kbd>Ctrl</kbd>-<kbd>0</kbd> - return to default zoom level
+
+##Installing qt for integrated editor test
+
+Install the following packages:
+
+```bash
+sudo apt-get install libqscintilla2-dev
+```
+
+This will create the executable "application" which can then be run.
 
 ##API
 
