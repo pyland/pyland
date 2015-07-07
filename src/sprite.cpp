@@ -68,7 +68,9 @@ Sprite::Sprite(glm::ivec2 position,
         ObjectManager::get_instance().add_object(status_icon);
         status_icon_id = status_icon->get_id();
         LOG(INFO) << "created focus icon with id: " << status_icon_id;
-        Engine::get_map_viewer()->get_map()->add_map_object(status_icon_id);
+
+        //Removed status_icon_image (the stick man icon) to simplify interface
+//        Engine::get_map_viewer()->get_map()->add_map_object(status_icon_id);
 
         /// build focus icon
         LOG(INFO) << "setting up focus icon";
