@@ -13,10 +13,22 @@ class Layer;
 class MapObject;
 class TileSet;
 
+///
+/// This struct holds all the necessary details of an object
+///
+/*
+struct ObjectProperties {
+    const glm::ivec2 position;  //The coordinates of where the object is in-game
+    const std::string object_file_location;  //Where the object is located in the file system (relative to game/objects)
+    const std::string sprite_file_location;  //Where the sprite of the object is located (relative to object_file_location/sprites)
+};
+*/
+
 struct ObjectProperties {
     const glm::ivec2 location;
     const std::string tileset;
 };
+
 
 ///
 /// Class to load a map from a TMX file
