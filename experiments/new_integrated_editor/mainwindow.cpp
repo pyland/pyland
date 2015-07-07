@@ -1,5 +1,5 @@
 //--
-// Modified by Alex Bradbury (asb@asbradbury.org) to demonstrate embedding SDL2+OpenGL 
+// Modified by Alex Bradbury (asb@asbradbury.org) to demonstrate embedding SDL2+OpenGL
 // in a Qt application, originally part of Sonic Pi.
 //
 // This file is part of Sonic Pi: http://sonic-pi.net
@@ -143,7 +143,7 @@ MainWindow::MainWindow(QApplication &app) {
   sideWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
   sideWidget->setAllowedAreas(Qt::RightDockWidgetArea);
   sideWidget->setWidget(dummySideWidget);
-  addDockWidget(Qt::RightDockWidgetArea, sideWidget);
+  addDockWidget(Qt::BottomDockWidgetArea, sideWidget);
 
   QWidget *mainWidget = new QWidget;
   mainWidget->setAttribute(Qt::WA_NativeWindow);
