@@ -1,3 +1,3 @@
 
 class Mortal:
-	pass
+    pass

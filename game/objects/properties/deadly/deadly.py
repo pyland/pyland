@@ -1,3 +1,3 @@
 class Deadly:
-	pass
+    pass
 
