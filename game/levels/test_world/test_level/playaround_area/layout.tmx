@@ -38,16 +38,7 @@
    eJxjYBgFlAIAAUQAAQ==
   </data>
  </layer>
- <objectgroup name="OL1" width="0" height="0">
-  <object name="characters/player/player" gid="286" x="64" y="320" width="64" height="64"/>
-  <object name="characters/enemies/crocodile/croc1" gid="296" x="64" y="128" width="64" height="64"/>
-  <object name="characters/robot/rob1" gid="301" x="64" y="448" width="64" height="64"/>
-  <object name="collectables/coin/coin1" gid="287" x="448" y="512"/>
-  <object name="portal/portal1" gid="292" x="448" y="128"/>
-  <object name="layer_changer/lc1" gid="302" x="128" y="384"/>
-  <object name="layer_changer/lc2" gid="302" x="256" y="384"/>
-  <object name="characters/npcs/hatman/npc1" gid="291" x="384" y="256"/>
- </objectgroup>
+ <objectgroup name="OL1" width="0" height="0"/>
  <layer name="TL2" width="9" height="9">
   <data encoding="base64" compression="zlib">
    eJxjYBja4MpAOwAIAG6UANU=
