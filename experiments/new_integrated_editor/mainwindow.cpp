@@ -64,7 +64,9 @@
 
 #include "mainwindow.h"
 
+
 // Need to access the SDL_Window internals to set the opengl flag
+/*
 struct SDL_Window {
   const void *magic;
   Uint32 id;
@@ -76,22 +78,27 @@ struct SDL_Window {
   int max_w, max_h;
   Uint32 flags;
 };
-typedef struct SDL_Window SDL_Window;
 
-MainWindow::MainWindow(QApplication &app) {
+typedef struct SDL_Window SDL_Window;
+*/
+
+
+MainWindow::MainWindow() {
+
 
   this->setUnifiedTitleAndToolBarOnMac(true);
+
 
   tabs = new QTabWidget();
   tabs->setTabsClosable(false);
   tabs->setMovable(false);
   tabs->setTabPosition(QTabWidget::South);
+
   // create workspaces and add them to the tabs
   for(int ws = 0; ws < workspace_max; ws++) {
-	  std::string s;
 
 	  workspaces[ws] = new QsciScintilla;
-	  QString w = QString("Workspace %1").arg(QString::number(ws + 1));
+	  QString w = QString("Script %1").arg(QString::number(ws + 1));
 	  tabs->addTab(workspaces[ws], w);
   }
 
@@ -99,10 +106,11 @@ MainWindow::MainWindow(QApplication &app) {
   lexer->setAutoIndentStyle(QsciScintilla::AiMaintain);
 
   // Autocompletion stuff
-  QsciAPIs* api = new QsciAPIs(lexer);
+  api = new QsciAPIs(lexer);
   QStringList api_names;
   // yes, really
   #include "api_list.h"
+
   for (int api_iter = 0; api_iter < api_names.size(); ++api_iter) {
 	  api->add(api_names.at(api_iter));
   }
@@ -133,32 +141,38 @@ MainWindow::MainWindow(QApplication &app) {
   errorPane->zoomIn(1);
   errorPane->setMaximumHeight(100);
 
-  QVBoxLayout *sideWidgetLayout = new QVBoxLayout;
+/*
+  sideWidgetLayout = new QVBoxLayout;
   sideWidgetLayout->addWidget(tabs);
   sideWidgetLayout->addWidget(errorPane);
 
-  QWidget *dummySideWidget = new QWidget;
+  dummySideWidget = new QWidget;
   dummySideWidget->setLayout(sideWidgetLayout);
-  QDockWidget *sideWidget = new QDockWidget(tr("Editor"), this);
+
+  sideWidget = new QDockWidget(tr("Editor"), this);
   sideWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
   sideWidget->setAllowedAreas(Qt::RightDockWidgetArea);
   sideWidget->setWidget(dummySideWidget);
   addDockWidget(Qt::BottomDockWidgetArea, sideWidget);
 
-  QWidget *mainWidget = new QWidget;
+  mainWidget = new QWidget;
   mainWidget->setAttribute(Qt::WA_NativeWindow);
   setCentralWidget(mainWidget);
   for(int ws = 0; ws < workspace_max; ws++) {
 	  initWorkspace(workspaces[ws]);
   }
+*/
 
+/*
   createActions();
   createToolBar();
   createStatusBar();
-
+*/
   setWindowTitle(tr("Pyland"));
 
   this->showMaximized();
+
+/*
 
   std::cout << mainWidget->winId() << "\n";
 
@@ -182,9 +196,65 @@ MainWindow::MainWindow(QApplication &app) {
   eventTimer->setInterval(0);
   connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
   eventTimer->start();
+*/
+
 }
 
+MainWindow::~MainWindow(){
+
+
+    std::cout << "Destructing" << std::endl;
+
+
+    for(int ws = 0; ws < workspace_max; ws++) {
+        delete workspaces[ws];
+    }
+
+    delete tabs;
+
+    api->clear();
+    delete api;
+    delete lexer;
+
+
+    delete outputPane;
+    delete errorPane;
+
+/*
+    QLayoutItem *child;
+
+    delete dummySideWidget;
+    while((child = sideWidgetLayout->takeAt(0)) != 0)
+    {
+        delete child;
+    }
+    delete sideWidgetLayout;
+
+    delete sideWidget;
+    delete mainWidget;
+*/
+/*
+    delete eventTimer;
+
+    delete runAct;
+    delete stopAct;
+    delete saveAsAct;
+    delete textIncAct;
+    delete textDecAct;
+    delete reloadAct;
+
+    delete spacer;
+
+
+    delete child;
+
+*/
+}
+
+
+/*
 bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
+
   QKeyEvent *keyEvent = NULL;
   if (event->type() == QEvent::KeyPress) {
 	keyEvent = static_cast<QKeyEvent*>(event);
@@ -199,9 +269,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
 	return QObject::eventFilter(obj, event);
   }
   return true;
+
 }
 
 void MainWindow::timerHandler() {
+
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
 	switch(event.type) {
@@ -212,9 +284,12 @@ void MainWindow::timerHandler() {
   }
   glClear(GL_COLOR_BUFFER_BIT);
   SDL_GL_SwapWindow(embedWindow);
-}
 
+}
+*/
+/*
 void MainWindow::initWorkspace(QsciScintilla* ws) {
+
   ws->setAutoIndent(true);
   ws->setIndentationsUseTabs(false);
   ws->setBackspaceUnindents(true);
@@ -246,7 +321,8 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
   ws->setCaretForegroundColor("deep pink");
 
 }
-
+*/
+/*
 void MainWindow::closeEvent(QCloseEvent *event)
 {
   event->accept();
@@ -259,10 +335,12 @@ bool MainWindow::saveAs()
 
 void MainWindow::runCode()
 {
+
   errorPane->clear();
   errorPane->hide();
   statusBar()->showMessage(tr("Running...."), 2000);
   std::string code = ((QsciScintilla*)tabs->currentWidget())->text().toStdString();
+
 }
 
 void MainWindow::zoomFontIn()
@@ -317,15 +395,17 @@ void MainWindow::createActions()
   textDecAct->setToolTip(tr("Make text smaller"));
   connect(textDecAct, SIGNAL(triggered()), this, SLOT(zoomFontOut()));
 
-  QAction *reloadAct = new QAction(this);
+  reloadAct = new QAction(this);
   reloadAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
   addAction(reloadAct);
+
 }
 
 void MainWindow::createToolBar()
 {
 
-  QWidget *spacer = new QWidget();
+
+  spacer = new QWidget();
   spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   toolBar = addToolBar(tr("Tools"));
@@ -340,6 +420,7 @@ void MainWindow::createToolBar()
   toolBar->addAction(textDecAct);
   toolBar->addAction(textIncAct);
 
+
 }
 
 
@@ -347,3 +428,4 @@ void MainWindow::createStatusBar()
 {
 	statusBar()->showMessage(tr("Ready"));
 }
+*/

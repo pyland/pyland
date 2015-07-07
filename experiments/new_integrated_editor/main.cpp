@@ -16,17 +16,21 @@
 #include <QPixmap>
 #include <QBitmap>
 
+#include <iostream>
 #include "mainwindow.h"
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(application);
 
-	QApplication app(argc, argv);
-	app.setStyle("gtk");
+	QApplication *app = new QApplication(argc, argv);
+	app->setStyle("windows");
+	MainWindow * mainWin = new MainWindow();
 
-	//    QIcon icon(":images/app.icns");
-	MainWindow mainWin(app);
+    mainWin->show();
+	int ret = app->exec();
 
-	//    mainWin.setWindowIcon(icon);
-	return app.exec();
+
+    delete mainWin;
+    delete app;
+
+	return ret;
 }
