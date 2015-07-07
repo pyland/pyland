@@ -87,6 +87,9 @@ MainWindow::MainWindow(QApplication &app) {
   tabs->setTabsClosable(false);
   tabs->setMovable(false);
   tabs->setTabPosition(QTabWidget::East);
+
+  //tabs->setSizePolicy(2);
+
   // create workspaces and add them to the tabs
   for(int ws = 0; ws < workspace_max; ws++) {
 	  workspaces[ws] = new QsciScintilla;
@@ -143,7 +146,7 @@ MainWindow::MainWindow(QApplication &app) {
   mainWidget->setAttribute(Qt::WA_NativeWindow);
   //sideWidgetLayout->addWidget(mainWidget);
   //setCentralWidget(mainWidget);
-  sideWidgetLayout->addWidget(mainWidget);
+  ////sideWidgetLayout->addWidget(mainWidget);
   for(int ws = 0; ws < workspace_max; ws++) {
 	  initWorkspace(workspaces[ws]);
   }
@@ -153,11 +156,42 @@ MainWindow::MainWindow(QApplication &app) {
   splitter->addWidget(tabs);
   splitter->addWidget(errorPane);
 
+  //splitter->setSizes([2,1)];
+  splitter->setCollapsible(0,0);
+  splitter->setCollapsible(1,0);
+  splitter->setStretchFactor(0,5);
+  splitter->setStretchFactor(1,3);
+
+  ////sideWidgetLayout->addWidget(splitter);
+
+  //sideWidgetLayout->setStretchFactor(splitter,3);
+  //sideWidgetLayout->setStretchFactor(mainWidget,0);
+
+  sideWidgetLayout->addWidget(mainWidget);
   sideWidgetLayout->addWidget(splitter);
+
+  bool result1 = sideWidgetLayout->setStretchFactor(mainWidget,2);
+
+  std::cout << result1 << "test";
+
+  bool result2 = sideWidgetLayout->setStretchFactor(splitter,2);
+
+  std::cout << result2 << "testing";
+
+
+  sideWidgetLayout->setStretch(1,2);
+  //sideWidgetLayout->addStretch(1);
+
+
+
+  //sideWidgetLayout->setStrechFactor(splitter,2);
+
+  newmainWidget->setWindowTitle(tr("Pyland"));
+
 
 
   newmainWidget->setLayout(sideWidgetLayout);
-  newmainWidget->show();
+  newmainWidget->showMaximized();
 
   //addDockWidget(Qt::RightDockWidgetArea, errorPane);
 
@@ -175,13 +209,13 @@ MainWindow::MainWindow(QApplication &app) {
 //  sideWidget->setWidget(dummySideWidget);
 //  addDockWidget(Qt::BottomDockWidgetArea, sideWidget);
 
-  createActions();
-  createToolBar();
+  //createActions();
+  //createToolBar();
   //createStatusBar();
 
-  setWindowTitle(tr("Pyland"));
 
-  this->showMaximized();
+
+  //this->showMaximized();
 
   std::cout << mainWidget->winId() << "\n";
 
