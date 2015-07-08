@@ -43,10 +43,23 @@ using OrderedHashSet = boost::multi_index_container<
 >;
 
 ///
-/// Represents an object which can be rendered on the map
+/// Represents an object which can be rendered on the map.
+/// The only CPP class needed for this. All other functinality is written
+//  in python.
 ///
 class MapObject : public Object {
 protected:
+
+    ///
+    /// The focus icon, to move with sprite and hide, depending on if mapobject is in focus;
+    ///
+    bool is_focus;
+
+    ///
+    /// The focus icon, to move with sprite and hide, depending on if mapobject is in focus;
+    ///
+    int focus_icon_id;
+
     ///
     /// Render the object above sprites as an overlay
     ///
@@ -253,6 +266,8 @@ public:
     /// and may be null at any time.
     ///
     Challenge const *get_challenge();
+
+    void set_focus(bool _is_focus); //TODO BLEH COMMENT THIS AFTER WORKING OUT WHAT IT DOES 
 };
 
 #endif

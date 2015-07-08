@@ -12,6 +12,7 @@
 #include "engine.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
+#include "object_manager.hpp"
 #include "shader.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
@@ -242,4 +243,20 @@ void MapObject::set_challenge(Challenge *challenge) {
 
 Challenge const *MapObject::get_challenge() {
     return challenge;
+}
+
+void MapObject::set_focus(bool _is_focus) {
+    // check focus is actually being changed
+    if (_is_focus != is_focus) {
+        LOG(INFO) << "trying to set focus to "<< is_focus;
+        is_focus = _is_focus;
+
+        auto focus_icon = ObjectManager::get_instance().get_object<MapObject>(focus_icon_id);
+        if (!focus_icon) {
+            LOG(ERROR) << "Object manager no longer has focus_icon";
+            return;
+        }
+
+        focus_icon->set_renderable(is_focus);
+    }
 }

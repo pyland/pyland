@@ -26,7 +26,6 @@
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
 #include "shader.hpp"
-#include "sprite.hpp"
 
 extern "C" {
 #ifdef USE_GL
@@ -86,9 +85,9 @@ void MapViewer::render() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     render_map();
-    render_objects(false);
-    render_sprites();
-    render_objects(true);
+    //render_objects(false); TODO: BLEH render order!
+    render_objects();
+    //render_objects(true);
     render_gui();
 }
 
@@ -153,31 +152,31 @@ void MapViewer::render_map() {
     }
 }
 
-void MapViewer::render_sprites() {
+void MapViewer::render_objects() {
     //Calculate the projection matrix
     std::pair<int, int> size = window->get_size();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
-    //Draw the sprites
-    const std::vector<int>& sprites = map->get_sprites();
+    //Draw the objects
+    const std::vector<int>& objects = map->get_objects();
     ObjectManager& object_manager = ObjectManager::get_instance();
-    for (auto it = sprites.begin(); it != sprites.end(); ++it) {
+    for (auto it = objects.begin(); it != objects.end(); ++it) {
         if (*it != 0) {
-            std::shared_ptr<Sprite> sprite = object_manager.get_object<Sprite>(*it);
+            std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(*it);
 
-            if (!sprite) {
+            if (!object) {
                 continue;
             }
 
-            if (!sprite->is_renderable()) {
+            if (!object->is_renderable()) {
                 continue;
             }
 
-            RenderableComponent* sprite_render_component = sprite->get_renderable_component();
+            RenderableComponent* object_render_component = object->get_renderable_component();
 
-            //Move sprite to the required position
+            //Move object to the required position
             glm::vec3 translator(
-                sprite->get_position().x - get_display_x(),
-                sprite->get_position().y - get_display_y(),
+                object->get_position().x - get_display_x(),
+                object->get_position().y - get_display_y(),
                 0.0f
             );
 
@@ -185,35 +184,37 @@ void MapViewer::render_sprites() {
             model = glm::scale    (model, glm::vec3(Engine::get_actual_tile_size()));
             model = glm::translate(model, translator);
 
-            sprite_render_component->set_modelview_matrix(model);
-            sprite_render_component->set_projection_matrix(projection_matrix);
+            object_render_component->set_modelview_matrix(model);
+            object_render_component->set_projection_matrix(projection_matrix);
 
-            sprite_render_component->bind_shader();
+            object_render_component->bind_shader();
 
-            Shader* shader = sprite_render_component->get_shader().get();
+            Shader* shader = object_render_component->get_shader().get();
 
             if(shader == nullptr) {
-                LOG(ERROR) << "MapViewer::render_map: Shader (sprite_render_component->get_shader()) should not be null";
+                LOG(ERROR) << "MapViewer::render_map: Shader (object_render_component->get_shader()) should not be null";
                 return;
             }
 
             //TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
-            glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(sprite_render_component->get_projection_matrix()));
+            glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_projection"), 1, GL_FALSE,glm::value_ptr(object_render_component->get_projection_matrix()));
 
-            glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(sprite_render_component->get_modelview_matrix()));
+            glUniformMatrix4fv(glGetUniformLocation(shader->get_program(), "mat_modelview"), 1, GL_FALSE, glm::value_ptr(object_render_component->get_modelview_matrix()));
 
-            sprite_render_component->bind_vbos();
-            sprite_render_component->bind_textures();
+            object_render_component->bind_vbos();
+            object_render_component->bind_textures();
 
-            glDrawArrays(GL_TRIANGLES, 0, sprite_render_component->get_num_vertices_render());
+            glDrawArrays(GL_TRIANGLES, 0, object_render_component->get_num_vertices_render());
 
-            sprite_render_component->release_textures();
-            sprite_render_component->release_vbos();
-            sprite_render_component->release_shader();
+            object_render_component->release_textures();
+            object_render_component->release_vbos();
+            object_render_component->release_shader();
         }
     }
 }
-void MapViewer::render_objects(bool above_sprite) {
+
+/* Goint to handle render orde in a different way TODO BLEH
+void MapViewer::render_objects(bool above_object) {
     //Calculate the projection matrix
     std::pair<int, int> size = window->get_size();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
@@ -222,7 +223,7 @@ void MapViewer::render_objects(bool above_sprite) {
     ObjectManager& object_manager = ObjectManager::get_instance();
     for(auto it = objects.begin(); it != objects.end(); ++it) {
         if(*it != 0) {
-            std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(*it);
+            std::shared_ptr<MapMapObject> object = object_manager.get_object<MapMapObject>(*it);
 
             if(!object)
                 continue;
@@ -231,7 +232,7 @@ void MapViewer::render_objects(bool above_sprite) {
             if(!object->is_renderable())
                 continue;
 
-            if(above_sprite ^ object->render_above_sprites())
+            if(above_object ^ object->render_above_objects())
                 continue;
 
             RenderableComponent* object_render_component = object->get_renderable_component();
@@ -277,7 +278,9 @@ void MapViewer::render_objects(bool above_sprite) {
             object_render_component->release_shader();
         }
     }
-}
+} */
+    
+
 void MapViewer::render_gui() {
     //Calculate the projection matrix
     std::pair<int, int> size = window->get_size();
@@ -404,27 +407,27 @@ void MapViewer::refocus_map() {
         return;
     }
 
-    std::shared_ptr<Sprite> sprite = object_manager.get_object<Sprite>(map_focus_object);
+    std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(map_focus_object);
 
-    // If such an sprite exists, move the map to it
-    if (sprite) {
+    // If such an object exists, move the map to it
+    if (object) {
         set_display_x(centre_point_in_range(
-            // half-tile offset to take centre of sprite
-            /* point  */ float(sprite->get_position().x) + 0.5f,
+            // half-tile offset to take centre of object
+            /* point  */ float(object->get_position().x) + 0.5f,
             /* length */ float(map->get_width()),
             /* bound  */ get_display_width()
         ));
 
         set_display_y(centre_point_in_range(
-            // half-tile offset to take centre of sprite
-            /* point  */ float(sprite->get_position().y) + 0.5f,
+            // half-tile offset to take centre of object
+            /* point  */ float(object->get_position().y) + 0.5f,
             /* length */ float(map->get_height()),
             /* bound  */ get_display_height()
         ));
     } else {
-        LOG(INFO) << "MapViewer::refocus_map: No sprites have focus.";
+        LOG(INFO) << "MapViewer::refocus_map: No objects have focus.";
     }
-    Engine::text_updater();
+    //Engine::text_updater(); TODO: BLEH, remove pernmantley if needed or re-add if not
 }
 
 void MapViewer::set_map(Map* new_map) {
@@ -441,13 +444,13 @@ void MapViewer::set_map(Map* new_map) {
 void MapViewer::set_map_focus_object(int object_id) {
     //Set the focus to the object if this is a valid object and it is on the map
     if(ObjectManager::is_valid_object_id(object_id)) {
-        //        const std::vector<int>& sprites = map->get_sprites();
+        //        const std::vector<int>& objects = map->get_objects();
 
         //moving in-focus icon
         if(ObjectManager::is_valid_object_id(map_focus_object)) {
-            ObjectManager::get_instance().get_object<Sprite>(map_focus_object)->set_focus(false);
+            ObjectManager::get_instance().get_object<MapObject>(map_focus_object)->set_focus(false);
         }
-        ObjectManager::get_instance().get_object<Sprite>(object_id)->set_focus(true);
+        ObjectManager::get_instance().get_object<MapObject>(object_id)->set_focus(true);
 
 
         map_focus_object = object_id;
@@ -456,7 +459,7 @@ void MapViewer::set_map_focus_object(int object_id) {
 
         //TODO: add this in again
         //If the object is on the map
-        /*        if(std::find(sprites.begin(), sprites.end(),object_id) != sprites.end()) {
+        /*        if(std::find(objects.begin(), objects.end(),object_id) != objects.end()) {
             //focus on it
             map_focus_object = object_id;
             }*/

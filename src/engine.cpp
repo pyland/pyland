@@ -22,7 +22,6 @@
 #include "notification_bar.hpp"
 #include "object_manager.hpp"
 #include "gil_safe_future.hpp"
-#include "sprite.hpp"
 #include "text.hpp"
 
 
@@ -97,8 +96,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
     // animate walking in-place
-    auto sprite_test(ObjectManager::get_instance().get_object<Sprite>(id));
-    if (!sprite_test) {
+    auto MapObject_test(ObjectManager::get_instance().get_object<MapObject>(id));
+    if (!MapObject_test) {
         VLOG(2) << "ignore if walkable or not";
     } else {
         if (!walkable(target)) { target = location; }
@@ -185,26 +184,17 @@ glm::vec2 Engine::find_object(int id) {
     Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
 
     //Check the object is on the map
-    auto map_objects = map->get_map_objects();
-    auto sprites = map->get_sprites();
-    for(auto object_id : map_objects) {
+    auto objects = map->get_objects();
+    for(auto object_id : objects) {
         if(object_id == id) {
-            //Object is on the map so now get its location
+            //MapObject is on the map so now get its location
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             return object->get_position();
         }
     }
 
-    for(auto object_id : sprites) {
-        if(object_id == id) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<Sprite>(id);
-            return object->get_position();
-        }
-    }
-
     //Not on the map
-    throw std::runtime_error("Object is not in the map");
+    throw std::runtime_error("MapObject is not in the map");
 }
 
 void Engine::open_editor(std::string filename) {
@@ -231,13 +221,9 @@ static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<
 }
 
 std::vector<int> Engine::get_objects_at(glm::vec2 location) {
-    return location_filter_objects(location, map_viewer->get_map()->get_map_objects());
+    return location_filter_objects(location, map_viewer->get_map()->get_objects());
 }
 
-// TODO: Also return MapObjects
-std::vector<int> Engine::get_sprites_at(glm::vec2 location) {
-    return location_filter_objects(location, map_viewer->get_map()->get_sprites());
-}
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     auto objects(get_objects_at(location));
@@ -260,30 +246,30 @@ void Engine::print_dialogue(std::string name, std::string text) {
     notification_bar->add_notification(text_to_display);
 }
 
-
+/** TODO BLEH LEGACY CODE, TO BE REMOVED AND IMPLEMENTED IN PYTHON
 void Engine::text_displayer() {
     Map *map = CHECK_NOTNULL(map_viewer->get_map());
 
-    auto objects = map->get_sprites();
+    auto objects = map->get_objects();
     for (int object_id : objects) {
-        //Object is on the map so now get its locationg
-        auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
-        if (sprite->get_object_text()) {
-            sprite->get_object_text()->display();
+        //MapObject is on the map so now get its locationg
+        auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
+        if (object->get_object_text()) {
+            object->get_object_text()->display();
         }
     }
 }
 
+ TODO BLEH LEGACY CODE, TO BE REMOVED AND IMPLEMENTED IN PYTHON
 std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_range) {
     std::vector<std::tuple<std::string, int, int>> objects;
 
     Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
     //Check the object is on the map
-    auto map_objects = map->get_map_objects();
-    auto sprites = map->get_sprites();
+    auto map_objects = map->get_objects();
     for(auto object_id : map_objects) {
         if(object_id != 0) {
-            //Object is on the map so now get its location
+            //MapObject is on the map so now get its location
             auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
             if(!object)
                 continue;
@@ -296,32 +282,12 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
             glm::ivec2 object_pos = object->get_position();
 
             //Check if in range
-            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+            std::shared_ptr<MapObject> MapObject = ObjectManager::get_instance().get_object<MapObject>(id);
             std::cout << object->get_name() << std::endl;
             //Circle bounds
-            if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
+            if(glm::length(MapObject->get_position() - object->get_position()) > (double)search_range)
                 continue;
 
-
-            objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
-        }
-    }
-
-    for(auto object_id : sprites) {
-        if(object_id != 0) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
-            std::string name = object->get_name();
-            //TODO, maybe we should give python the floats - what if the object is moving?
-            //in this case, the position is truncated
-            glm::ivec2 object_pos = object->get_position();
-                        std::cout << object->get_name() << std::endl;
-            //Check if in range
-            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-
-            //Circle bounds
-            if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
-                continue;
 
             objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
         }
@@ -334,9 +300,9 @@ bool Engine::cut(int id, glm::ivec2 location) {
     std::cout << location.x <<std::endl;
 
     Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
-    std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-    glm::ivec2 sprite_pos = sprite->get_position();
-    location = sprite_pos + location;
+    std::shared_ptr<MapObject> MapObject = ObjectManager::get_instance().get_object<MapObject>(id);
+    glm::ivec2 MapObject_pos = MapObject->get_position();
+    location = MapObject_pos + location;
 
     //Check bounds
     if(location.x < 0 || location.x >= map->get_width() ||
@@ -346,7 +312,7 @@ bool Engine::cut(int id, glm::ivec2 location) {
     auto map_objects = map->get_map_objects();
     for(auto object_id : map_objects) {
         if(object_id != 0) {
-            //Object is on the map so now get its location
+            //MapObject is on the map so now get its location
             auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
             glm::ivec2 object_pos = object->get_position();
             if(object_pos == location) {
@@ -362,17 +328,18 @@ bool Engine::cut(int id, glm::ivec2 location) {
     return false;
 }
 
+
 void Engine::text_updater() {
     Map *map = CHECK_NOTNULL(map_viewer->get_map());
 
-    auto objects = map->get_sprites();
+    auto objects = map->get_objects();
     for (int object_id : objects) {
-        //Object is on the map so now get its location
-        auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
+        //MapObject is on the map so now get its location
+        auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
 
-        glm::ivec2 pixel_position(Engine::get_map_viewer()->tile_to_pixel(sprite->get_position()));
+        glm::ivec2 pixel_position(Engine::get_map_viewer()->tile_to_pixel(object->get_position()));
 
-        sprite->get_object_text()->move(
+        object->get_object_text()->move(
             pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
             pixel_position.y
         );
@@ -381,13 +348,15 @@ void Engine::text_updater() {
 }
 
 void Engine::update_status(int id, std::string status) {
-    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-    if (!sprite) {
-        LOG(INFO) << "not a sprite";
+    auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+    if (!object) {
+        LOG(INFO) << "not a MapObject";
     } else {
-        sprite->set_sprite_status(status);
+        object->set_object_status(status);
     }
 }
+
+*/
 
 TextFont Engine::get_game_font() {
     return TextFont(get_game_typeface(), 19);
