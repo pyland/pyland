@@ -19,14 +19,19 @@
 #include "mainwindow.h"
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(application);
+    //Q_INIT_RESOURCE(application);
 
-	QApplication app(argc, argv);
-	app.setStyle("gtk");
+	QApplication *app = new QApplication(argc, argv);
+	app->setStyle("gtk");
+	app->setAttribute(Qt::AA_NativeWindows, true);
 
-	//    QIcon icon(":images/app.icns");
-	MainWindow mainWin(app);
+	QIcon icon(":images/app.icns");
+	MainWindow *mainWin = new MainWindow(*app);
+    int ret = app->exec();
 
-	//    mainWin.setWindowIcon(icon);
-	return app.exec();
+    delete mainWin;
+    delete app;
+
+	mainWin.setWindowIcon(icon);
+	return ret;
 }

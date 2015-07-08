@@ -65,6 +65,8 @@
 
 #include "mainwindow.h"
 
+#include "h_tab_bar.hpp"
+
 // Need to access the SDL_Window internals to set the opengl flag
 struct SDL_Window {
   const void *magic;
@@ -83,17 +85,15 @@ MainWindow::MainWindow(QApplication &app) {
 
   this->setUnifiedTitleAndToolBarOnMac(true);
 
-  tabs = new QTabWidget();
+  tabs = new QHTabWidget();
   tabs->setTabsClosable(false);
   tabs->setMovable(false);
   tabs->setTabPosition(QTabWidget::East);
 
-  //tabs->setSizePolicy(2);
-
   // create workspaces and add them to the tabs
   for(int ws = 0; ws < workspace_max; ws++) {
 	  workspaces[ws] = new QsciScintilla;
-	  QString w = QString("Script %1").arg(QString::number(ws + 1));
+	  QString w = QString("%1").arg(QString::number(ws + 1));
 	  tabs->addTab(workspaces[ws], w);
   }
 
@@ -114,26 +114,27 @@ MainWindow::MainWindow(QApplication &app) {
   lexer->setDefaultFont(font);
 
   // Setup output and error panes
-  outputPane = new QTextEdit;
+  //outputPane = new QTextEdit;
   errorPane = new QTextEdit;
 
-  outputPane->setReadOnly(true);
+  //outputPane->setReadOnly(true);
   errorPane->setReadOnly(true);
-  outputPane->setLineWrapMode(QTextEdit::NoWrap);
-#if defined(Q_OS_WIN)
-  outputPane->setFontFamily("Courier New");
-#elif defined(Q_OS_MAC)
-  outputPane->setFontFamily("Menlo");
-#else
-  outputPane->setFontFamily("Bitstream Vera Sans Mono");
-#endif
+  errorPane->setLineWrapMode(QTextEdit::NoWrap);
+//  outputPane->setLineWrapMode(QTextEdit::NoWrap);
+//#if defined(Q_OS_WIN)
+//  outputPane->setFontFamily("Courier New");
+//#elif defined(Q_OS_MAC)
+//  outputPane->setFontFamily("Menlo");
+//#else
+//  outputPane->setFontFamily("Bitstream Vera Sans Mono");
+//#endif
 
-  outputPane->document()->setMaximumBlockCount(1000);
+//  outputPane->document()->setMaximumBlockCount(1000);
   errorPane->document()->setMaximumBlockCount(1000);
 
-  outputPane->zoomIn(1);
+//  outputPane->zoomIn(1);
   errorPane->zoomIn(1);
-  errorPane->setMaximumHeight(100);
+  //errorPane->setMaximumHeight(100);
 
   QVBoxLayout *sideWidgetLayout = new QVBoxLayout;
   //tabs->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -147,7 +148,7 @@ MainWindow::MainWindow(QApplication &app) {
   //sideWidgetLayout->addWidget(mainWidget);
   //setCentralWidget(mainWidget);
   ////sideWidgetLayout->addWidget(mainWidget);
-  for(int ws = 0; ws < workspace_max; ws++) {
+  for(int ws = 0; ws < workspace_mable to x; ws++) {
 	  initWorkspace(workspaces[ws]);
   }
 
@@ -170,7 +171,7 @@ MainWindow::MainWindow(QApplication &app) {
   sideWidgetLayout->addWidget(mainWidget);
   sideWidgetLayout->addWidget(splitter);
 
-  bool result1 = sideWidgetLayout->setStretchFactor(mainWidget,2);
+  bool result1 = sideWidgetLayout->setStretchFactor(mainWidget,3);
 
   std::cout << result1 << "test";
 
