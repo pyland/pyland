@@ -80,8 +80,8 @@ void MapLoader::load_layers() {
     }
 }
 
-std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
-    std::map<std::string, ObjectProperties> named_tiles_mapping;
+std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
+    std::map<std::string, MapObjectProperties> named_tiles_mapping;
 
     // For each object later
     for (int i = 0; i < map.GetNumObjectGroups(); ++i) {
@@ -134,7 +134,7 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
 
             tile_name = object->GetName().substr(0, object->GetName().rfind("/"));
             
-            ObjectProperties properties({
+            MapObjectProperties properties({
                 glm::ivec2(
                                  object->GetX() / Engine::get_tile_size(),
                     map_height - object->GetY() / Engine::get_tile_size()
@@ -151,7 +151,7 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
             std::string object_name(object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size())); //get everything after last "/"
             
             /**/
-            ObjectProperties properties({
+            MapObjectProperties properties({
                 glm::ivec2(
                                  object->GetX() / Engine::get_tile_size(),
                     map_height - object->GetY() / Engine::get_tile_size()

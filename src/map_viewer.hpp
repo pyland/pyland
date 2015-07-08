@@ -20,7 +20,7 @@ class MapViewer {
     GUIManager* gui_manager;
 
     ///
-    /// Object to focus the map on
+    /// MapObject to focus the map on
     ///
     int map_focus_object = 0;
 

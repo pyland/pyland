@@ -12,11 +12,11 @@ class Object;
 ///
 /// This class holds the database of all the objects in the game. It
 /// manages the objects and is used to unload them.
-/// Object ids start at 1. 0 indicates an invalid object.
+/// MapObject ids start at 1. 0 indicates an invalid object.
 ///
 /// The object manager generates object ids in a thread safe manner.
 ///
-/// Object shared pointers should NEVER be stored in the game or
+/// MapObject shared pointers should NEVER be stored in the game or
 /// engine. Instead, object ids should be stored. This allows correct
 /// destruction of the objects when a challenge is unloaded as then
 /// the reference count of the pointers will reach 0 and they will be
@@ -25,7 +25,7 @@ class Object;
 /// The shared pointers are to be used when an object needs to be
 /// manipulated, such as changing it's properties. To get the pointer,
 /// use ObjectManager::get_instance().get_object<Type>(object_id);
-/// Here the Type of the object can be any subclass of Object. This
+/// Here the Type of the object can be any subclass of MapObject. This
 /// uses a dynamic pointer cast to return the required type of object.
 ///
 class ObjectManager {

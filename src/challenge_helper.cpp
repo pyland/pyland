@@ -14,7 +14,7 @@
 #include "make_unique.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
-#include "object.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "interpreter.hpp"
 #include "object_manager.hpp"
@@ -27,7 +27,7 @@ glm::vec2 ChallengeHelper::get_location_interaction(std::string name) {
 
 glm::vec2 ChallengeHelper::get_location_object(std::string name) {
     LOG(INFO) << "getting position of " << name;
-    auto properties(Engine::get_map_viewer()->get_map()->locations.at("Objects/" + name));
+    auto properties(Engine::get_map_viewer()->get_map()->locations.at("MapObjects/" + name));
     return properties.position;
 }
 
@@ -46,7 +46,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
 
     auto *map = Engine::get_map_viewer()->get_map();
     LOG(INFO) << "checking map for object called " << marker_name;
-    auto properties(map->locations.at("Objects/" + marker_name));
+    auto properties(map->locations.at("MapObjects/" + marker_name));
     LOG(INFO) << "creating object at " << marker_name << " (" << properties.object_file_location << ")";
 
     return challenge->make_object(
@@ -88,7 +88,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
                                         int object_id, bool repeat) {
 
     auto *map(Engine::get_map_viewer()->get_map());
-    auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
+    auto object(ObjectManager::get_instance().get_object<MapMapObject>(object_id));
     //object->set_position(start_tile);
 
     // Pick-up marker
@@ -99,7 +99,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
         [object_id, pickup_tile, dropoff_tile, start_tile,repeat] (int) {
             if (Engine::is_object_at(start_tile, object_id)) {
                 int id(Engine::get_sprites_at(pickup_tile).front());
-                auto sprite(ObjectManager::get_instance().get_object<Object>(id));
+                auto sprite(ObjectManager::get_instance().get_object<MapObject>(id));
 
                 sprite->add_to_inventory(object_id);
                 //Engine::change_tile(pickup_tile,  5, "blank");
@@ -123,7 +123,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
             auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
 
             if (sprite->remove_from_inventory(object_id) ) {
-                auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
+                auto object(ObjectManager::get_instance().get_object<MapMapObject>(object_id));
 
                 object->set_position(finish_tile);
                 //                Engine::change_tile(dropoff_tile, 4, "blank");
@@ -143,7 +143,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
                                         int object_id) {
 
     auto *map = Engine::get_map_viewer()->get_map();
-    auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
+    auto object(ObjectManager::get_instance().get_object<MapMapObject>(object_id));
     //object->set_position(object_tile);
 
     // Pick-up marker
@@ -158,7 +158,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
                 sprite->add_to_inventory(object_id);
             }
             else if (sprite->remove_from_inventory(object_id)) {
-                auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
+                auto object(ObjectManager::get_instance().get_object<MapMapObject>(object_id));
 
                 object->set_position(object_tile);
             }

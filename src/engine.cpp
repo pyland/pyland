@@ -17,7 +17,7 @@
 #include "game_time.hpp"
 #include "gil_safe_future.hpp"
 #include "map.hpp"
-#include "object.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
 #include "object_manager.hpp"
@@ -84,7 +84,7 @@ std::string to_direction(glm::ivec2 direction) {
 //TODO: This needs to work with renderable objects
 void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return) {
 
-    auto object(ObjectManager::get_instance().get_object<Object>(id));
+    auto object(ObjectManager::get_instance().get_object<MapObject>(id));
 
     if (!object || object->is_moving()) { return; }
 
@@ -96,8 +96,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
     // animate walking in-place
-    auto Object_test(ObjectManager::get_instance().get_object<Object>(id));
-    if (!Object_test) {
+    auto MapObject_test(ObjectManager::get_instance().get_object<MapObject>(id));
+    if (!MapObject_test) {
         VLOG(2) << "ignore if walkable or not";
     } else {
         if (!walkable(target)) { target = location; }
@@ -114,7 +114,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     EventManager::get_instance().add_timed_event(
         GameTime::duration(0.3),
         [direction, move_by, walk_succeeded_return, location, target, id] (float completion) mutable {
-            auto object = ObjectManager::get_instance().get_object<Object>(id);
+            auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             if (!object) { return false; }
 
             // Long rambly justification about how Ax + B(1-x) can be outside
@@ -187,14 +187,14 @@ glm::vec2 Engine::find_object(int id) {
     auto objects = map->get_objects();
     for(auto object_id : objects) {
         if(object_id == id) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<Object>(id);
+            //MapObject is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             return object->get_position();
         }
     }
 
     //Not on the map
-    throw std::runtime_error("Object is not in the map");
+    throw std::runtime_error("MapObject is not in the map");
 }
 
 void Engine::open_editor(std::string filename) {
@@ -213,7 +213,7 @@ static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<
     std::vector<int> results;
     std::copy_if(std::begin(objects), std::end(objects), std::back_inserter(results),
         [&] (int object_id) {
-            auto object(object_manager.get_object<Object>(object_id));
+            auto object(object_manager.get_object<MapObject>(object_id));
             return object && object->get_position() == location;
         }
     );
@@ -252,8 +252,8 @@ void Engine::text_displayer() {
 
     auto objects = map->get_objects();
     for (int object_id : objects) {
-        //Object is on the map so now get its locationg
-        auto object = ObjectManager::get_instance().get_object<Object>(object_id);
+        //MapObject is on the map so now get its locationg
+        auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
         if (object->get_object_text()) {
             object->get_object_text()->display();
         }
@@ -269,8 +269,8 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
     auto map_objects = map->get_objects();
     for(auto object_id : map_objects) {
         if(object_id != 0) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<Object>(object_id);
+            //MapObject is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
             if(!object)
                 continue;
 
@@ -282,10 +282,10 @@ std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_r
             glm::ivec2 object_pos = object->get_position();
 
             //Check if in range
-            std::shared_ptr<Object> Object = ObjectManager::get_instance().get_object<Object>(id);
+            std::shared_ptr<MapObject> MapObject = ObjectManager::get_instance().get_object<MapObject>(id);
             std::cout << object->get_name() << std::endl;
             //Circle bounds
-            if(glm::length(Object->get_position() - object->get_position()) > (double)search_range)
+            if(glm::length(MapObject->get_position() - object->get_position()) > (double)search_range)
                 continue;
 
 
@@ -300,9 +300,9 @@ bool Engine::cut(int id, glm::ivec2 location) {
     std::cout << location.x <<std::endl;
 
     Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
-    std::shared_ptr<Object> Object = ObjectManager::get_instance().get_object<Object>(id);
-    glm::ivec2 Object_pos = Object->get_position();
-    location = Object_pos + location;
+    std::shared_ptr<MapObject> MapObject = ObjectManager::get_instance().get_object<MapObject>(id);
+    glm::ivec2 MapObject_pos = MapObject->get_position();
+    location = MapObject_pos + location;
 
     //Check bounds
     if(location.x < 0 || location.x >= map->get_width() ||
@@ -312,8 +312,8 @@ bool Engine::cut(int id, glm::ivec2 location) {
     auto map_objects = map->get_map_objects();
     for(auto object_id : map_objects) {
         if(object_id != 0) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<Object>(object_id);
+            //MapObject is on the map so now get its location
+            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
             glm::ivec2 object_pos = object->get_position();
             if(object_pos == location) {
                 // Remove the object
@@ -334,8 +334,8 @@ void Engine::text_updater() {
 
     auto objects = map->get_objects();
     for (int object_id : objects) {
-        //Object is on the map so now get its location
-        auto object = ObjectManager::get_instance().get_object<Object>(object_id);
+        //MapObject is on the map so now get its location
+        auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
 
         glm::ivec2 pixel_position(Engine::get_map_viewer()->tile_to_pixel(object->get_position()));
 
@@ -348,9 +348,9 @@ void Engine::text_updater() {
 }
 
 void Engine::update_status(int id, std::string status) {
-    auto object = ObjectManager::get_instance().get_object<Object>(id);
+    auto object = ObjectManager::get_instance().get_object<MapObject>(id);
     if (!object) {
-        LOG(INFO) << "not a Object";
+        LOG(INFO) << "not a MapObject";
     } else {
         object->set_object_status(status);
     }

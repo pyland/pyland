@@ -39,7 +39,7 @@ namespace ChallengeHelper {
     void unregister_all(Container *callbacks);
 
     ///
-    /// Create MapObject from named location
+    /// Create MapMapObject from named location
     /// @param challenge a pointer to the challenge to make the object for
     /// @param markername the name of the object used to identify it in the TMX map file
     /// @param walkability the walkability status of the object
@@ -52,7 +52,7 @@ namespace ChallengeHelper {
                     Walkability walkability,
                     std::string start_frame);
     ///
-    /// Create MapObject from named location
+    /// Create MapMapObject from named location
     /// @param challenge a pointer to the challenge to make the object for
     /// @param markername the name of the object used to identify it in the TMX map file
     /// @param walkability the walkability status of the object
@@ -69,7 +69,7 @@ namespace ChallengeHelper {
                     std::string name);
 
     ///
-    /// Create MapObjects from named locations
+    /// Create MapMapObjects from named locations
     /// @param challenge a pointer to the challenge to make the object for
     /// @param markername the name of the object used to identify it in the TMX map file
     /// @param walkability the walkability status of the object
@@ -88,7 +88,7 @@ namespace ChallengeHelper {
                       bool cuttable=false,
                       bool findable=true);
     ///
-    /// Create MapObjects from named locations
+    /// Create MapMapObjects from named locations
     /// @param challenge a pointer to the challenge to make the object for
     /// @param markername the name of the object used to identify it in the TMX map file
     /// @param walkability the walkability status of the object
@@ -197,15 +197,15 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                                    bool cuttable,
                                    bool findable) {
     auto *map(Engine::get_map_viewer()->get_map());
-    auto begin(maptools::start_of(map->locations, "Objects/" + name));
-    auto end  (maptools::end_of  (map->locations, "Objects/" + name));
+    auto begin(maptools::start_of(map->locations, "MapObjects/" + name));
+    auto end  (maptools::end_of  (map->locations, "MapObjects/" + name));
 
     if (begin == end) {
         throw std::runtime_error("No such object: " + name);
     }
 
     std::transform(begin, end, output,
-        [&] (std::pair<std::string, ObjectProperties> name_properties) {
+        [&] (std::pair<std::string, MapObjectProperties> name_properties) {
             return challenge->make_object(
                 name_properties.second.position, //set the position fo the object
                 name_properties.first, //set the name of the objext
@@ -244,7 +244,7 @@ void ChallengeHelper::make_interactions(std::string name,
     }
 
     std::transform(begin, end, output,
-        [&] (std::pair<std::string, ObjectProperties> name_properties) {
+        [&] (std::pair<std::string, MapObjectProperties> name_properties) {
             return map->event_step_on.register_callback(
                 name_properties.second.position,
                 callback

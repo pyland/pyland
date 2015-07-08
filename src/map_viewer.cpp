@@ -21,7 +21,7 @@
 #include "gui_manager.hpp"
 #include "layer.hpp"
 #include "map.hpp"
-#include "object.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
@@ -161,7 +161,7 @@ void MapViewer::render_objects() {
     ObjectManager& object_manager = ObjectManager::get_instance();
     for (auto it = objects.begin(); it != objects.end(); ++it) {
         if (*it != 0) {
-            std::shared_ptr<Object> object = object_manager.get_object<Object>(*it);
+            std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(*it);
 
             if (!object) {
                 continue;
@@ -223,7 +223,7 @@ void MapViewer::render_objects(bool above_object) {
     ObjectManager& object_manager = ObjectManager::get_instance();
     for(auto it = objects.begin(); it != objects.end(); ++it) {
         if(*it != 0) {
-            std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(*it);
+            std::shared_ptr<MapMapObject> object = object_manager.get_object<MapMapObject>(*it);
 
             if(!object)
                 continue;
@@ -407,7 +407,7 @@ void MapViewer::refocus_map() {
         return;
     }
 
-    std::shared_ptr<Object> object = object_manager.get_object<Object>(map_focus_object);
+    std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(map_focus_object);
 
     // If such an object exists, move the map to it
     if (object) {
@@ -448,9 +448,9 @@ void MapViewer::set_map_focus_object(int object_id) {
 
         //moving in-focus icon
         if(ObjectManager::is_valid_object_id(map_focus_object)) {
-            ObjectManager::get_instance().get_object<Object>(map_focus_object)->set_focus(false);
+            ObjectManager::get_instance().get_object<MapObject>(map_focus_object)->set_focus(false);
         }
-        ObjectManager::get_instance().get_object<Object>(object_id)->set_focus(true);
+        ObjectManager::get_instance().get_object<MapObject>(object_id)->set_focus(true);
 
 
         map_focus_object = object_id;

@@ -179,7 +179,7 @@ int main(int argc, const char *argv[]) {
         {KEY_PRESS, KEY("E")},
         [&] (KeyboardInputEvent) {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
+            auto active_player = ObjectManager::get_instance().get_object<MapObject>(id);
             if (!active_player) { return; }
             Engine::open_editor(active_player->get_name());
         }

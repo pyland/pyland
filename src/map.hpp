@@ -212,7 +212,7 @@ public:
     /// FML-valid mapping from strings to object properties,
     /// for hierachically accessing locations on the map by name.
     ///
-    std::map<std::string, ObjectProperties> locations;
+    std::map<std::string, MapObjectProperties> locations;
 
     ///
     /// Get the objects that are on this map

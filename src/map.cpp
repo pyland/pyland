@@ -26,7 +26,7 @@
 #include "layer.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
-#include "object.hpp"
+#include "map_object.hpp"
 #include "object_manager.hpp"
 #include "renderable_component.hpp"
 #include "shader.hpp"

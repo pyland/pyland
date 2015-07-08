@@ -23,6 +23,7 @@ BASE_OBJS = \
 	lifeline_controller.o  \
 	map.o                  \
 	map_loader.o           \
+	map_object.o           \
 	map_viewer.o           \
 	mouse_cursor.o         \
 	challenge.o            \

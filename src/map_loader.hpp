@@ -10,13 +10,13 @@
 #include <vector>
 
 class Layer;
-class MapObject;
+class MapMapObject;
 class TileSet;
 
 ///
 /// This struct holds all the necessary details of an object
 ///
-struct ObjectProperties {
+struct MapObjectProperties {
     const glm::ivec2 position;  //The coordinates of where the object is in-game
     const std::string object_file_location;  //Where the object is located in the file system (relative to game/objects)
     const std::string sprite_file_location;  //Where the sprite of the object is located (relative to object_file_location/sprites)
@@ -71,7 +71,7 @@ public:
     /// Load objects from the TMX map to create a mapping
     /// from names to places and tile ids
     ///
-    std::map<std::string, ObjectProperties> get_object_mapping();
+    std::map<std::string, MapObjectProperties> get_object_mapping();
 
     ///
     /// Load the TMX map from the source file
