@@ -88,11 +88,11 @@ MainWindow::MainWindow(QApplication &app) {
   tabs->setTabPosition(QTabWidget::South);
   // create workspaces and add them to the tabs
   for(int ws = 0; ws < workspace_max; ws++) {
-	  std::string s;
+      std::string s;
 
-	  workspaces[ws] = new QsciScintilla;
-	  QString w = QString("Workspace %1").arg(QString::number(ws + 1));
-	  tabs->addTab(workspaces[ws], w);
+      workspaces[ws] = new QsciScintilla;
+      QString w = QString("Workspace %1").arg(QString::number(ws + 1));
+      tabs->addTab(workspaces[ws], w);
   }
 
   lexer = new QsciLexerPython;
@@ -104,7 +104,7 @@ MainWindow::MainWindow(QApplication &app) {
   // yes, really
   #include "api_list.h"
   for (int api_iter = 0; api_iter < api_names.size(); ++api_iter) {
-	  api->add(api_names.at(api_iter));
+      api->add(api_names.at(api_iter));
   }
   api->prepare();
   QFont font("Monospace");
@@ -149,7 +149,7 @@ MainWindow::MainWindow(QApplication &app) {
   mainWidget->setAttribute(Qt::WA_NativeWindow);
   setCentralWidget(mainWidget);
   for(int ws = 0; ws < workspace_max; ws++) {
-	  initWorkspace(workspaces[ws]);
+      initWorkspace(workspaces[ws]);
   }
 
   createActions();
@@ -164,7 +164,7 @@ MainWindow::MainWindow(QApplication &app) {
 
   int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   if (result != 0) {
-	std::cout << "failed to init SDL\n";
+    std::cout << "failed to init SDL\n";
   }
 
   embedWindow = SDL_CreateWindowFrom((void*)(mainWidget->winId()));
@@ -187,16 +187,16 @@ MainWindow::MainWindow(QApplication &app) {
 bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
   QKeyEvent *keyEvent = NULL;
   if (event->type() == QEvent::KeyPress) {
-	keyEvent = static_cast<QKeyEvent*>(event);
-	if (keyEvent->key()) {
-	  SDL_Event sdlEvent;
-	  sdlEvent.type = SDL_KEYDOWN;
-	  sdlEvent.key.state = SDL_PRESSED;
-	  SDL_PushEvent(&sdlEvent);
-	  std::cout << "got a Qt keydown event\n";
-	}
+    keyEvent = static_cast<QKeyEvent*>(event);
+    if (keyEvent->key()) {
+      SDL_Event sdlEvent;
+      sdlEvent.type = SDL_KEYDOWN;
+      sdlEvent.key.state = SDL_PRESSED;
+      SDL_PushEvent(&sdlEvent);
+      std::cout << "got a Qt keydown event\n";
+    }
   } else {
-	return QObject::eventFilter(obj, event);
+    return QObject::eventFilter(obj, event);
   }
   return true;
 }
@@ -204,11 +204,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
 void MainWindow::timerHandler() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
-	switch(event.type) {
-	  case SDL_KEYDOWN:
-		std::cout << " got an SDL keydown event\n";
-		break;
-	}
+    switch(event.type) {
+      case SDL_KEYDOWN:
+        std::cout << " got an SDL keydown event\n";
+        break;
+    }
   }
   glClear(GL_COLOR_BUFFER_BIT);
   SDL_GL_SwapWindow(embedWindow);
@@ -284,8 +284,8 @@ void MainWindow::documentWasModified()
 
 void MainWindow::clearOutputPanels()
 {
-	outputPane->clear();
-	errorPane->clear();
+    outputPane->clear();
+    errorPane->clear();
 }
 
 void MainWindow::createActions()
@@ -345,5 +345,5 @@ void MainWindow::createToolBar()
 
 void MainWindow::createStatusBar()
 {
-	statusBar()->showMessage(tr("Ready"));
+    statusBar()->showMessage(tr("Ready"));
 }
