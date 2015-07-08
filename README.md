@@ -94,7 +94,7 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 
 ##Usage
 
-To launch :
+To launch Pyland:
 
 ```bash
 cd src
