@@ -119,7 +119,7 @@ std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
                     [&] (std::pair<std::string, int> p) { return p.second == id; }
                 )
             );
-            
+
             if (tile == std::end(names_to_indexes)) {
                 throw std::runtime_error("no name for object tile id " + std::to_string(id));
             }
@@ -130,10 +130,10 @@ std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
 
             LOG(INFO) << "Adding object to mapping " << fullname
                       << " with name " << tile_name;
-            
+
 
             tile_name = object->GetName().substr(0, object->GetName().rfind("/"));
-            
+
             MapObjectProperties properties({
                 glm::ivec2(
                                  object->GetX() / Engine::get_tile_size(),
@@ -145,11 +145,11 @@ std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
             named_tiles_mapping.insert(std::make_pair(fullname, properties));
 
             */
-            
+
             //taking the 'object name' from tiled and splitting into the object location and its python instance name
             std::string object_file_location(object->GetName().substr(0, object->GetName().rfind("/"))); //get everything before last "/"
             std::string object_name(object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size())); //get everything after last "/"
-            
+
             /**/
             MapObjectProperties properties({
                 glm::ivec2(
@@ -167,7 +167,7 @@ std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
             //std::cout << object->GetName() <<std::endl;
             //std::cout << tile_name <<std::endl;
             //std::cout << fullname <<std::endl;
-            
+
         }
     }
 
