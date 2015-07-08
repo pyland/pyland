@@ -38,9 +38,7 @@
    eJxjYBgFlAIAAUQAAQ==
   </data>
  </layer>
- <objectgroup name="OL1" width="0" height="0">
-  <object name="characters/player/playerone" gid="286" x="64" y="320"/>
- </objectgroup>
+ <objectgroup name="OL1" width="0" height="0"/>
  <layer name="TL2" width="9" height="9">
   <data encoding="base64" compression="zlib">
    eJxjYBja4MpAOwAIAG6UANU=
