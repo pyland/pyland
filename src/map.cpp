@@ -33,7 +33,6 @@
 #include "texture_atlas.hpp"
 #include "tileset.hpp"
 
-
 Map::Map(const std::string map_src):
     event_step_on(glm::ivec2(0, 0)),
     event_step_off(glm::ivec2(0, 0))
@@ -47,7 +46,7 @@ Map::Map(const std::string map_src):
             return;
         }
 
-        locations = map_loader.get_object_mapping();
+        locations = map_loader.get_object_mapping(); //returns a vector of MapObjectProperties (see map_loader.hpp for structure)
 
         //Get the loaded map data
         map_width = map_loader.get_map_width();
@@ -96,12 +95,12 @@ bool Map::is_walkable(int x_pos, int y_pos) {
 }
 
 
-void Map::add_object(int object_id) {
+void Map::add_map_object(int object_id) {
     if(ObjectManager::is_valid_object_id(object_id))
         object_ids.push_back(object_id);
 }
 
-void Map::remove_object(int object_id) {
+void Map::remove_map_object(int object_id) {
     if(ObjectManager::is_valid_object_id(object_id)){
         for(auto it = object_ids.begin(); it != object_ids.end(); ++it) {
             //If a valid object

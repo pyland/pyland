@@ -44,22 +44,7 @@ namespace ChallengeHelper {
     /// @param markername the name of the object used to identify it in the TMX map file
     /// @param walkability the walkability status of the object
     /// @param start_frame which frame to start animating the object from
-    /// @param cuttable if the object can be cut down using the cut API call
-    /// @param findable if the object can be found using the loop API call
-    ///
-    int make_object(Challenge *challenge,
-                    std::string markername,
-                    Walkability walkability,
-                    std::string start_frame);
-    ///
-    /// Create MapMapObject from named location
-    /// @param challenge a pointer to the challenge to make the object for
-    /// @param markername the name of the object used to identify it in the TMX map file
-    /// @param walkability the walkability status of the object
-    /// @param start_frame which frame to start animating the object from
     /// @param name the human friendly name to give the object
-    /// @param cuttable if the object can be cut down using the cut API call
-    /// @param findable if the object can be found using the loop API call
     ///
     ///
     int make_object(Challenge *challenge,

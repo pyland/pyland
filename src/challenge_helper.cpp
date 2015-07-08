@@ -34,19 +34,11 @@ glm::vec2 ChallengeHelper::get_location_object(std::string name) {
 int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string marker_name,
                                  Walkability walkability,
-                                 std::string start_frame) {
-
-    return make_object(challenge, marker_name, walkability, marker_name, start_frame);
-}
-int ChallengeHelper::make_object(Challenge *challenge,
-                                 std::string marker_name,
-                                 Walkability walkability,
-                                 std::string name,
-                                 std::string start_frame) {
-
+                                 std::string start_frame,
+                                 std::string name) {
     auto *map = Engine::get_map_viewer()->get_map();
     LOG(INFO) << "checking map for object called " << marker_name;
-    auto properties(map->locations.at("MapObjects/" + marker_name));
+    auto properties(map->locations.at(name));
     LOG(INFO) << "creating object at " << marker_name << " (" << properties.object_file_location << ")";
 
     return challenge->make_object(

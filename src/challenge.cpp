@@ -21,6 +21,7 @@
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
 #include "object_manager.hpp"
+#include "challenge_helper.hpp"
 
 namespace py = boost::python;
 
@@ -41,6 +42,18 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
             challenge_data->next_challenge = next_challenge;
             return false;
         });
+
+        //Add all the objects to the map
+        for(auto location : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
+            int object_id = ChallengeHelper::make_object(
+                this,
+                location.second.object_file_location + "/" + location.first, //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly
+                Walkability::BLOCKED,
+                location.second.sprite_file_location,
+                location.first
+            );
+            std::cout << object_id << std::endl;
+        }
 }
 
 Challenge::~Challenge() {
@@ -84,7 +97,7 @@ int Challenge::make_object(glm::vec2 position,
 
     LOG(INFO) << "created new_object with id: " << new_object_id;
     map_object_ids.push_back(new_object_id);
-    map->add_object(new_object_id);
+    map->add_map_object(new_object_id);
 
     return new_object_id;
 }

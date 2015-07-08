@@ -103,54 +103,13 @@ std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
 
             CHECK_NOTNULL(tileset);
 
-            std::cout << object->GetName().substr(0, object->GetName().rfind("/")) << std::endl; //get everything before last "/"
-            std::cout << object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size()) << std::endl; //get everything after last "/"
-
-            /*
-            auto id(object->GetGid() - tileset->GetFirstGid());
-
-            auto atlas(TextureAtlas::get_shared(map.GetFilepath() + tileset->GetImage()->GetSource()));
-            auto names_to_indexes(atlas->get_names_to_indexes());
-
-            auto tile(
-                std::find_if(
-                    std::begin(names_to_indexes),
-                    std::end(names_to_indexes),
-                    [&] (std::pair<std::string, int> p) { return p.second == id; }
-                )
-            );
-
-            if (tile == std::end(names_to_indexes)) {
-                throw std::runtime_error("no name for object tile id " + std::to_string(id));
-            }
-
-            auto tile_name(tile->first);
-
-            auto fullname(object_group->GetName() + "/" + object->GetName());
-
-            LOG(INFO) << "Adding object to mapping " << fullname
-                      << " with name " << tile_name;
-
-
-            tile_name = object->GetName().substr(0, object->GetName().rfind("/"));
-
-            MapObjectProperties properties({
-                glm::ivec2(
-                                 object->GetX() / Engine::get_tile_size(),
-                    map_height - object->GetY() / Engine::get_tile_size()
-                ),
-                tile_name
-            });
-
-            named_tiles_mapping.insert(std::make_pair(fullname, properties));
-
-            */
-
             //taking the 'object name' from tiled and splitting into the object location and its python instance name
             std::string object_file_location(object->GetName().substr(0, object->GetName().rfind("/"))); //get everything before last "/"
             std::string object_name(object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size())); //get everything after last "/"
 
-            /**/
+            LOG(INFO) << "Adding object to mapping " << object_file_location
+                      << " with name " << object_name;
+
             MapObjectProperties properties({
                 glm::ivec2(
                                  object->GetX() / Engine::get_tile_size(),
@@ -161,13 +120,6 @@ std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
             });
 
             named_tiles_mapping.insert(std::make_pair(object_name, properties));
-            /**/
-
-            //TODO: tile_name, full_name
-            //std::cout << object->GetName() <<std::endl;
-            //std::cout << tile_name <<std::endl;
-            //std::cout << fullname <<std::endl;
-
         }
     }
 

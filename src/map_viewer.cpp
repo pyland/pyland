@@ -163,6 +163,8 @@ void MapViewer::render_objects() {
         if (*it != 0) {
             std::shared_ptr<MapObject> object = object_manager.get_object<MapObject>(*it);
 
+            std::cout << "Have reached map_view.cpp line 166" << std::endl;
+
             if (!object) {
                 continue;
             }

@@ -200,13 +200,13 @@ public:
     /// Add a map object to the map
     /// @param object_id the id of the map object
     ///
-    void add_object(int object_id);
+    void add_map_object(int object_id);
 
     ///
     /// Remove a map object from the map
     /// @param object_id the id of the map object
     ///
-    void remove_object(int object_id);
+    void remove_map_object(int object_id);
 
     ///
     /// FML-valid mapping from strings to object properties,
