@@ -134,45 +134,45 @@ void ChallengeHelper::kill_sprite(Challenge *challenge,
 }
 
 int ChallengeHelper::make_assistant(Challenge *challenge,
-								 std::string marker_name,
-								 std::string assistant_name,
-								 Walkability walkability,
-								 std::string start_frame) {
+                                 std::string marker_name,
+                                 std::string assistant_name,
+                                 Walkability walkability,
+                                 std::string start_frame) {
 
-	auto *map = Engine::get_map_viewer()->get_map();
-	LOG(INFO) << marker_name;
-	auto properties(map->locations.at("Objects/" + marker_name));
+    auto *map = Engine::get_map_viewer()->get_map();
+    LOG(INFO) << marker_name;
+    auto properties(map->locations.at("Objects/" + marker_name));
 
-	LOG(INFO) << properties.tileset;
+    LOG(INFO) << properties.tileset;
 
-	auto new_assistant(std::make_shared<Sprite>(
-		properties.location,
-		assistant_name,
-		walkability,
-		AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
-		start_frame
-	));
-	ObjectManager::get_instance().add_object(new_assistant);
+    auto new_assistant(std::make_shared<Sprite>(
+        properties.location,
+        assistant_name,
+        walkability,
+        AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
+        start_frame
+    ));
+    ObjectManager::get_instance().add_object(new_assistant);
 
-	auto assistant_id(new_assistant->get_id());
+    auto assistant_id(new_assistant->get_id());
 
-	LOG(INFO) << "Adding sprite";
+    LOG(INFO) << "Adding sprite";
 
-	challenge->assistant_ids.push_back(assistant_id);
-	map->add_sprite(assistant_id);
-	Engine::get_map_viewer()->set_map_focus_object(assistant_id);
-	LOG(INFO) << "Creating assistant wrapper";
-	LOG(INFO) << "ID " << assistant_id;
+    challenge->assistant_ids.push_back(assistant_id);
+    map->add_sprite(assistant_id);
+    Engine::get_map_viewer()->set_map_focus_object(assistant_id);
+    LOG(INFO) << "Creating assistant wrapper";
+    LOG(INFO) << "ID " << assistant_id;
 
-	// Register user controled sprite
-	// Yes, this is a memory leak. Deal with it.
-	auto *a_thing(new Entity(properties.location, assistant_name, assistant_id));
+    // Register user controled sprite
+    // Yes, this is a memory leak. Deal with it.
+    auto *a_thing(new Entity(properties.location, assistant_name, assistant_id));
 
-	LOG(INFO) << "Registering assistant";
-	new_assistant->daemon = std::make_unique<LockableEntityThread>(challenge->challenge_data->interpreter->register_entity(*a_thing));
-	LOG(INFO) << "Done!";
+    LOG(INFO) << "Registering assistant";
+    new_assistant->daemon = std::make_unique<LockableEntityThread>(challenge->challenge_data->interpreter->register_entity(*a_thing));
+    LOG(INFO) << "Done!";
 
-	return assistant_id;
+    return assistant_id;
 }
 
 

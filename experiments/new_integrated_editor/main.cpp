@@ -21,12 +21,12 @@ int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(application);
 
-	QApplication app(argc, argv);
-	app.setStyle("gtk");
+    QApplication app(argc, argv);
+    app.setStyle("gtk");
 
-	//    QIcon icon(":images/app.icns");
-	MainWindow mainWin(app);
+    //    QIcon icon(":images/app.icns");
+    MainWindow mainWin(app);
 
-	//    mainWin.setWindowIcon(icon);
-	return app.exec();
+    //    mainWin.setWindowIcon(icon);
+    return app.exec();
 }
