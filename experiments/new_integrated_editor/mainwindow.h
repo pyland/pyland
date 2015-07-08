@@ -43,7 +43,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QApplication &ref);
+    MainWindow();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -71,8 +71,7 @@ private:
     QsciScintilla *textEdit;
     static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
-    QTextEdit *outputPane;
-    QTextEdit *errorPane;
+    QTextEdit *terminalDisplay;
     QSplitter *splitter;
 
     QTabWidget *tabs;

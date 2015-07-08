@@ -25,13 +25,12 @@ int main(int argc, char *argv[])
 	app->setStyle("gtk");
 	app->setAttribute(Qt::AA_NativeWindows, true);
 
-	QIcon icon(":images/app.icns");
-	MainWindow *mainWin = new MainWindow(*app);
+	MainWindow *mainWin = new MainWindow();
+
     int ret = app->exec();
 
     delete mainWin;
     delete app;
 
-	mainWin.setWindowIcon(icon);
 	return ret;
 }

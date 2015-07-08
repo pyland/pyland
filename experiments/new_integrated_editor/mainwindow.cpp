@@ -81,14 +81,57 @@ struct SDL_Window {
 };
 typedef struct SDL_Window SDL_Window;
 
-MainWindow::MainWindow(QApplication &app) {
-
+MainWindow::MainWindow() {
   this->setUnifiedTitleAndToolBarOnMac(true);
 
+  // create workspace with tabs
   tabs = new QHTabWidget();
   tabs->setTabsClosable(false);
   tabs->setMovable(false);
   tabs->setTabPosition(QTabWidget::East);
+
+  // create zoom buttons
+  QHBoxLayout *zoomLayout = new QHBoxLayout;
+
+  QPushButton *buttonIn = new QPushButton("+");
+  QPushButton *buttonOut = new QPushButton("-");
+
+  buttonIn->setMaximumWidth(20);
+  buttonOut->setMaximumWidth(20);
+
+  zoomLayout->addWidget(buttonIn);
+  zoomLayout->addWidget(buttonOut);
+
+  zoomLayout->setContentsMargins(0,0,0,0);
+  zoomLayout->setSpacing(0);
+
+  QWidget *zoomWidget = new QWidget;
+
+  zoomWidget->setLayout(zoomLayout);
+
+  // make zoom buttons slightly transparent
+  zoomWidget->setStyleSheet("background-color: rgba(245,245,165,70);");
+
+  // link zoom buttons to their functions
+  connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
+  connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
+
+  //zoomWidget->setContentsMargins(0,3,26,0);
+
+  // add the workspace and zoom buttons to the same grid position
+  QGridLayout *textLayout = new QGridLayout;
+
+  textLayout->addWidget(tabs,0,0);
+  textLayout->addWidget(zoomWidget,0,0);
+
+  // position zoom widget
+  textLayout->setAlignment(zoomWidget,Qt::AlignTop | Qt::AlignRight);
+  zoomWidget->setContentsMargins(0,3,26,0);
+  textLayout->setContentsMargins(0,0,0,0);
+
+  QWidget *textWidget = new QWidget;
+
+  textWidget->setLayout(textLayout);
 
   // create workspaces and add them to the tabs
   for(int ws = 0; ws < workspace_max; ws++) {
@@ -113,119 +156,100 @@ MainWindow::MainWindow(QApplication &app) {
   font.setStyleHint(QFont::Monospace);
   lexer->setDefaultFont(font);
 
-  // Setup output and error panes
-  //outputPane = new QTextEdit;
-  errorPane = new QTextEdit;
+  // Setup terminal panes
+  QVBoxLayout *terminalLayout = new QVBoxLayout;
 
-  //outputPane->setReadOnly(true);
-  errorPane->setReadOnly(true);
-  errorPane->setLineWrapMode(QTextEdit::NoWrap);
-//  outputPane->setLineWrapMode(QTextEdit::NoWrap);
-//#if defined(Q_OS_WIN)
-//  outputPane->setFontFamily("Courier New");
-//#elif defined(Q_OS_MAC)
-//  outputPane->setFontFamily("Menlo");
-//#else
-//  outputPane->setFontFamily("Bitstream Vera Sans Mono");
-//#endif
+  terminalDisplay = new QTextEdit;
 
-//  outputPane->document()->setMaximumBlockCount(1000);
-  errorPane->document()->setMaximumBlockCount(1000);
+  terminalDisplay->setReadOnly(true);
+  terminalDisplay->setLineWrapMode(QTextEdit::NoWrap);
+  terminalDisplay->document()->setMaximumBlockCount(1000);
+  terminalDisplay->zoomIn(1);
+  terminalDisplay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
-//  outputPane->zoomIn(1);
-  errorPane->zoomIn(1);
-  //errorPane->setMaximumHeight(100);
+  QHBoxLayout *terminalButtonLayout = new QHBoxLayout;
 
-  QVBoxLayout *sideWidgetLayout = new QVBoxLayout;
-  //tabs->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-  //sideWidgetLayout->addWidget(tabs,0,0,0);
-  //errorPane->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+  // Setup terminal buttons
+  QPushButton *button1 = new QPushButton("Run");
+  QPushButton *button2 = new QPushButton("Speed: Slow");
 
-  QWidget *newmainWidget = new QWidget;
+  button1->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+  button2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
-  QWidget *mainWidget = new QWidget;
-  mainWidget->setAttribute(Qt::WA_NativeWindow);
-  //sideWidgetLayout->addWidget(mainWidget);
-  //setCentralWidget(mainWidget);
-  ////sideWidgetLayout->addWidget(mainWidget);
-  for(int ws = 0; ws < workspace_mable to x; ws++) {
+  terminalButtonLayout->addWidget(button1);
+  terminalButtonLayout->addWidget(button2);
+
+  terminalButtonLayout->setContentsMargins(0,0,0,0);
+
+  QWidget *buttons = new QWidget;
+  buttons->setLayout(terminalButtonLayout);
+
+  terminalLayout->addWidget(terminalDisplay);
+  terminalLayout->addWidget(buttons);
+
+  terminalLayout->setContentsMargins(0,0,0,0);
+
+  terminalLayout->setStretchFactor(terminalDisplay,4);
+  terminalLayout->setStretchFactor(buttons,1);
+
+  QWidget *terminal = new QWidget;
+  terminal->setLayout(terminalLayout);
+
+  for(int ws = 0; ws < workspace_max; ws++) {
 	  initWorkspace(workspaces[ws]);
   }
 
+  // Setup draggable splitter for script window and terminal
   splitter = new QSplitter(Qt::Horizontal);
 
-  splitter->addWidget(tabs);
-  splitter->addWidget(errorPane);
+  splitter->addWidget(textWidget);
+  splitter->addWidget(terminal);
 
-  //splitter->setSizes([2,1)];
   splitter->setCollapsible(0,0);
   splitter->setCollapsible(1,0);
   splitter->setStretchFactor(0,5);
   splitter->setStretchFactor(1,3);
 
-  ////sideWidgetLayout->addWidget(splitter);
+  // Setup window
+  QVBoxLayout *windowLayout = new QVBoxLayout;
 
-  //sideWidgetLayout->setStretchFactor(splitter,3);
-  //sideWidgetLayout->setStretchFactor(mainWidget,0);
+  QWidget *gameWidget = new QWidget;
 
-  sideWidgetLayout->addWidget(mainWidget);
-  sideWidgetLayout->addWidget(splitter);
+  gameWidget->setAttribute(Qt::WA_NativeWindow);
 
-  bool result1 = sideWidgetLayout->setStretchFactor(mainWidget,3);
+  windowLayout->addWidget(gameWidget);
+  windowLayout->addWidget(splitter);
 
-  std::cout << result1 << "test";
+  windowLayout->setStretchFactor(gameWidget,3);
+  windowLayout->setStretchFactor(splitter,2);
 
-  bool result2 = sideWidgetLayout->setStretchFactor(splitter,2);
+  QWidget *mainWidget = new QWidget;
 
-  std::cout << result2 << "testing";
+  mainWidget->setLayout(windowLayout);
 
+  setWindowTitle(tr("Pyland"));
+  mainWidget->setWindowIcon(QIcon("/images/icon.png"));
+  QPalette colourPalette(palette());
+  colourPalette.setColor(QPalette::Background,QColor(250,250,197));
+  colourPalette.setColor(QPalette::Button,QColor(245,245,165));
 
-  sideWidgetLayout->setStretch(1,2);
-  //sideWidgetLayout->addStretch(1);
-
-
-
-  //sideWidgetLayout->setStrechFactor(splitter,2);
-
-  newmainWidget->setWindowTitle(tr("Pyland"));
-
-
-
-  newmainWidget->setLayout(sideWidgetLayout);
-  newmainWidget->showMaximized();
-
-  //addDockWidget(Qt::RightDockWidgetArea, errorPane);
-
-  //////policy = widg.sizePolicy();
-  //////policy.setVerticalStretch(1);
-  //////widg.setSizePolicy(policy);
-
-
-//  QWidget *dummySideWidget = new QWidget;
-//  dummySideWidget->setLayout(sideWidgetLayout);
-//  QDockWidget *sideWidget = new QDockWidget(this);
-//  sideWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
-//  sideWidget->setFloating(false);
-//  sideWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
-//  sideWidget->setWidget(dummySideWidget);
-//  addDockWidget(Qt::BottomDockWidgetArea, sideWidget);
+  mainWidget->setPalette(colourPalette);
+  mainWidget->setAutoFillBackground(true);
+  this->setCentralWidget(mainWidget);
+  this->showMaximized();
 
   //createActions();
   //createToolBar();
   //createStatusBar();
 
-
-
-  //this->showMaximized();
-
-  std::cout << mainWidget->winId() << "\n";
+  std::cout << gameWidget->winId() << "\n";
 
   int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   if (result != 0) {
 	std::cout << "failed to init SDL\n";
   }
 
-  embedWindow = SDL_CreateWindowFrom((void*)(mainWidget->winId()));
+  embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
   SDL_SetWindowSize(embedWindow, 200, 200);
   glViewport(0, 0, 200, 200);
   embedWindow->flags |= SDL_WINDOW_OPENGL;
@@ -233,8 +257,8 @@ MainWindow::MainWindow(QApplication &app) {
   glContext = SDL_GL_CreateContext(embedWindow);
   glClearColor(0.25f, 0.50f, 1.0f, 1.0f);
   std::cout << "created context\n";
-  mainWidget->installEventFilter(this);
-  mainWidget->setFocusPolicy(Qt::StrongFocus);
+  gameWidget->installEventFilter(this);
+  gameWidget->setFocusPolicy(Qt::ClickFocus);
   eventTimer = new QTimer(this);
   eventTimer->setSingleShot(false);
   eventTimer->setInterval(0);
@@ -317,20 +341,20 @@ bool MainWindow::saveAs()
 
 void MainWindow::runCode()
 {
-  errorPane->clear();
-  errorPane->hide();
+  terminalDisplay->clear();
+  terminalDisplay->hide();
   statusBar()->showMessage(tr("Running...."), 2000);
   std::string code = ((QsciScintilla*)tabs->currentWidget())->text().toStdString();
 }
 
 void MainWindow::zoomFontIn()
 {
-  ((QsciScintilla*)tabs->currentWidget())->zoomIn(1);
+  ((QsciScintilla*)tabs->currentWidget())->zoomIn(2);
 }
 
 void MainWindow::zoomFontOut()
 {
-  ((QsciScintilla*)tabs->currentWidget())->zoomOut(1);
+  ((QsciScintilla*)tabs->currentWidget())->zoomOut(2);
 }
 
 
@@ -342,12 +366,13 @@ void MainWindow::documentWasModified()
 
 void MainWindow::clearOutputPanels()
 {
-	outputPane->clear();
-	errorPane->clear();
+	terminalDisplay->clear();
 }
 
 void MainWindow::createActions()
 {
+
+
 
   runAct = new QAction(QIcon(":/images/run.png"), tr("&Run"), this);
   runAct->setShortcut(tr("Ctrl+R"));
