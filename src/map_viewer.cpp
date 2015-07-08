@@ -427,7 +427,7 @@ void MapViewer::refocus_map() {
     } else {
         LOG(INFO) << "MapViewer::refocus_map: No objects have focus.";
     }
-    Engine::text_updater();
+    //Engine::text_updater(); TODO: BLEH, remove pernmantley if needed or re-add if not
 }
 
 void MapViewer::set_map(Map* new_map) {

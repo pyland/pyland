@@ -29,12 +29,12 @@
 #include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
 #include "notification_bar.hpp"
-#include "sprite.hpp"
 
 #ifdef USE_GLES
 #include "typeface.hpp"
@@ -286,11 +286,12 @@ int main(int argc, const char *argv[]) {
         {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
         [&] (KeyboardInputEvent) {
             auto id(Engine::get_map_viewer()->get_map_focus_object());
-            auto active_player(ObjectManager::get_instance().get_object<Sprite>(id));
+            auto active_player(ObjectManager::get_instance().get_object<MapObject>(id));
 
             Engine::print_dialogue(
                 active_player->get_name(),
-                active_player->get_instructions()
+                "placeholder string"
+                //active_player->get_instructions() TODO: BLEH remove this!
             );
         }
     ));
@@ -314,17 +315,17 @@ int main(int argc, const char *argv[]) {
             glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
             LOG(INFO) << "interacting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
-            auto sprites = Engine::get_sprites_at(tile_clicked);
+            auto objects = Engine::get_objects_at(tile_clicked);
 
-            if (sprites.size() == 0) {
-                LOG(INFO) << "No sprites to interact with";
+            if (objects.size() == 0) {
+                LOG(INFO) << "No objects to interact with";
             }
-            else if (sprites.size() == 1) {
-                callbackstate.register_number_id(sprites[0]);
+            else if (objects.size() == 1) {
+                callbackstate.register_number_id(objects[0]);
             }
             else {
-                LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number_id(sprites[0]);
+                LOG(WARNING) << "Not sure object object to switch to";
+                callbackstate.register_number_id(objects[0]);
             }
         }
     ));
@@ -343,7 +344,7 @@ int main(int argc, const char *argv[]) {
 
     std::function<void (GameWindow *)> func_char = [&] (GameWindow *) {
         LOG(INFO) << "text window resizing";
-        Engine::text_updater();
+        //Engine::text_updater(); BLEH TODO: Work out what this does and if neccesary
     };
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
@@ -393,7 +394,7 @@ int main(int argc, const char *argv[]) {
             VLOG(3) << "} EM | RM {";
             Engine::get_map_viewer()->render();
             VLOG(3) << "} RM | TD {";
-            Engine::text_displayer();
+            //Engine::text_displayer(); TODO: work out what this did and if neccesary
             challenge_data->notification_bar->text_displayer();
 
             // This is not an input event, because the map can move with

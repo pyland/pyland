@@ -246,7 +246,7 @@ void Engine::print_dialogue(std::string name, std::string text) {
     notification_bar->add_notification(text_to_display);
 }
 
-
+/** TODO BLEH LEGACY CODE, TO BE REMOVED AND IMPLEMENTED IN PYTHON
 void Engine::text_displayer() {
     Map *map = CHECK_NOTNULL(map_viewer->get_map());
 
@@ -260,7 +260,7 @@ void Engine::text_displayer() {
     }
 }
 
-/** TODO BLEH LEGACY CODE, TO BE REMOVED AND IMPLEMENTED IN PYTHON
+ TODO BLEH LEGACY CODE, TO BE REMOVED AND IMPLEMENTED IN PYTHON
 std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_range) {
     std::vector<std::tuple<std::string, int, int>> objects;
 
@@ -327,7 +327,7 @@ bool Engine::cut(int id, glm::ivec2 location) {
 
     return false;
 }
-*/
+
 
 void Engine::text_updater() {
     Map *map = CHECK_NOTNULL(map_viewer->get_map());
@@ -355,6 +355,8 @@ void Engine::update_status(int id, std::string status) {
         object->set_object_status(status);
     }
 }
+
+*/
 
 TextFont Engine::get_game_font() {
     return TextFont(get_game_typeface(), 19);

@@ -19,7 +19,7 @@
 #include "game_time.hpp"
 #include "gil_safe_future.hpp"
 #include "object_manager.hpp"
-#include "sprite.hpp"
+#include "map_object.hpp"
 
 
 Entity::Entity(glm::vec2 start, std::string name, int id):
@@ -91,6 +91,7 @@ void Entity::monologue() {
     });
 }
 
+/** TODO : BLEH Abstract this functionality to python code
 bool Entity::cut(int x, int y) {
     ++call_number;
 
@@ -128,14 +129,15 @@ py::list Entity::look(int search_range) {
         }
     );
 }
+*/
 
 std::string Entity::get_instructions() {
     auto id(this->id);
     return GilSafeFuture<std::string>::execute([id] (GilSafeFuture<std::string> instructions_return) {
-        auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
+        auto sprite(ObjectManager::get_instance().get_object<MapObject>(id));
 
         if (sprite) {
-            instructions_return.set(sprite->get_instructions());
+            //instructions_return.set(sprite->get_instructions()); TODO: BLEH work out what this did
         }
         else {
             instructions_return.set("Try thinking about the problem in a different way.");
@@ -164,7 +166,7 @@ void Entity::__set_game_speed(float game_seconds_per_real_second) {
 void Entity::py_update_status(std::string status){
     auto id(this->id);
     return GilSafeFuture<void>::execute([id, status] (GilSafeFuture<void>) {
-        Engine::update_status(id, status);
+        //Engine::update_status(id, status); TODO: BLEH work out what this did 
     });
 }
 

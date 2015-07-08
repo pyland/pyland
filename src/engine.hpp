@@ -184,11 +184,6 @@ public:
     static NotificationBar* get_notification_bar() { return Engine::notification_bar; }
     static void print_dialogue(std::string name, std::string text);
 
-    /// method for handling sprite test
-    static void text_displayer();
-    static void text_updater();
-    static void update_status(int id, std::string status);
-
     /// global access to game font
     static TextFont get_game_font();
     static Typeface get_game_typeface();
