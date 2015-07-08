@@ -50,9 +50,7 @@ namespace ChallengeHelper {
     int make_object(Challenge *challenge,
                     std::string markername,
                     Walkability walkability,
-                    std::string start_frame,
-                    bool cuttable=false,
-                    bool findable=true);
+                    std::string start_frame);
     ///
     /// Create MapObject from named location
     /// @param challenge a pointer to the challenge to make the object for
@@ -68,52 +66,7 @@ namespace ChallengeHelper {
                     std::string markername,
                     Walkability walkability,
                     std::string start_frame,
-                    std::string name,
-                    bool cuttable=false,
-                    bool findable=true);
-
-    ///
-    /// Create Sprite from named location
-    /// @param challenge a pointer to the challenge to make the object for
-    /// @param markername the name of the object used to identify it in the TMX map file
-    /// @param sprite_name the human readable name to give the character
-    /// @param walkability the walkability status of the object
-    /// @param start_frame which frame to start animating the object from
-    ///
-    int make_sprite(Challenge *challenge,
-                    std::string marker_name,
-                    std::string sprite_name,
-                    Walkability walkability,
-                    std::string start_frame);
-
-    ///
-    /// Create Assisstant from named location
-    /// @param challenge a pointer to the challenge to make the object for
-    /// @param markername the name of the object used to identify it in the TMX map file
-    /// @param assisstant_name the human readable name to give the character
-    /// @param walkability the walkability status of the object
-    /// @param start_frame which frame to start animating the object from
-    ///
-    int make_assistant(Challenge *challenge,
-                        std::string marker_name,
-                        std::string assisstant_name,
-                        Walkability walkability,
-                        std::string start_frame);
-
-    ///
-    /// Kill the sprite at the given location
-    /// @param challenge a pointer to the challenge where you want to kill the sprite
-    ///	@param sprite_id the id of the sprite you want to check for a kill
-    /// @param location the location where, if the sprite is there, it dies
-    /// @param speaker the name of the entity that speaks when the sprite dies
-    /// @param eulogy what the speaker says when the sprite dies
-
-
-    void kill_sprite(Challenge *challenge,
-                     int sprite_id,
-                     glm::vec2 location,
-                     std:: string speaker,
-                     std::string eulogy);
+                    std::string name);
 
     ///
     /// Create MapObjects from named locations
@@ -151,9 +104,7 @@ namespace ChallengeHelper {
                       Walkability walkability,
                       OutputIt output,
                       std::string name,
-                      std::string start_frame="",
-                      bool cuttable=false,
-                      bool findable=true);
+                      std::string start_frame="");
 
     ///
     /// Attach callback to a position
@@ -255,16 +206,12 @@ void ChallengeHelper::make_objects(Challenge *challenge,
 
     std::transform(begin, end, output,
         [&] (std::pair<std::string, ObjectProperties> name_properties) {
-            return challenge->make_map_object(
-                name_properties.second.location,
-                name_properties.first,
-                walkability,
-                AnimationFrames(name_properties.second.tileset.substr(
-                    0, name_properties.second.tileset.length() - start_frame.length() - 1
-                )),
-                start_frame,
-                cuttable,
-                findable
+            return challenge->make_object(
+                name_properties.second.position, //set the position fo the object
+                name_properties.first, //set the name of the objext
+                walkability, //set wether it is walkable or not
+                AnimationFrames(name_properties.second.sprite_file_location), //TODO: work out animation stuff!
+                name_properties.second.sprite_file_location
             );
         }
     );
@@ -299,7 +246,7 @@ void ChallengeHelper::make_interactions(std::string name,
     std::transform(begin, end, output,
         [&] (std::pair<std::string, ObjectProperties> name_properties) {
             return map->event_step_on.register_callback(
-                name_properties.second.location,
+                name_properties.second.position,
                 callback
             );
         }

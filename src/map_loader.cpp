@@ -106,7 +106,7 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
             std::cout << object->GetName().substr(0, object->GetName().rfind("/")) << std::endl; //get everything before last "/"
             std::cout << object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size()) << std::endl; //get everything after last "/"
 
-            /**/
+            /*
             auto id(object->GetGid() - tileset->GetFirstGid());
 
             auto atlas(TextureAtlas::get_shared(map.GetFilepath() + tileset->GetImage()->GetSource()));
@@ -144,13 +144,13 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
 
             named_tiles_mapping.insert(std::make_pair(fullname, properties));
 
-            /**/
+            */
             
             //taking the 'object name' from tiled and splitting into the object location and its python instance name
-            //std::string object_file_location(object->GetName().substr(0, object->GetName().rfind("/"))); //get everything before last "/"
-            //std::string object_name(object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size())); //get everything after last "/"
+            std::string object_file_location(object->GetName().substr(0, object->GetName().rfind("/"))); //get everything before last "/"
+            std::string object_name(object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size())); //get everything after last "/"
             
-            /*
+            /**/
             ObjectProperties properties({
                 glm::ivec2(
                                  object->GetX() / Engine::get_tile_size(),
@@ -161,7 +161,7 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
             });
 
             named_tiles_mapping.insert(std::make_pair(object_name, properties));
-            */
+            /**/
 
             //TODO: tile_name, full_name
             //std::cout << object->GetName() <<std::endl;

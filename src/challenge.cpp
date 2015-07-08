@@ -17,11 +17,10 @@
 #include "interpreter.hpp"
 #include "make_unique.hpp"
 #include "map.hpp"
-#include "map_object.hpp"
+#include "object.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
 #include "object_manager.hpp"
-#include "sprite.hpp"
 
 namespace py = boost::python;
 
@@ -72,24 +71,20 @@ Challenge::~Challenge() {
     LOG(INFO) << " CHALLENGE DESTROYED ";
 }
 
-int Challenge::make_map_object(glm::vec2 position,
-                               std::string name,
-                               Walkability walkability,
-                               AnimationFrames frames,
-                               std::string start_frame,
-                               bool cuttable,
-                               bool findable) {
+int Challenge::make_object(glm::vec2 position,
+                           std::string name,
+                           Walkability walkability,
+                           AnimationFrames frames,
+                           std::string start_frame) {
 
-    auto new_object(std::shared_ptr<MapObject>(new MapObject(position, name, walkability, frames, start_frame)));
-    new_object->set_cuttable(cuttable);
-    new_object->set_findable(findable);
+    auto new_object(std::shared_ptr<Object>(new Object(position, name, walkability, frames, start_frame)));
     ObjectManager::get_instance().add_object(new_object);
 
     auto new_object_id(new_object->get_id());
 
     LOG(INFO) << "created new_object with id: " << new_object_id;
     map_object_ids.push_back(new_object_id);
-    map->add_map_object(new_object_id);
+    map->add_object(new_object_id);
 
     return new_object_id;
 }

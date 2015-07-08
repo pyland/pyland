@@ -14,167 +14,49 @@
 #include "make_unique.hpp"
 #include "map.hpp"
 #include "map_loader.hpp"
-#include "map_object.hpp"
+#include "object.hpp"
 #include "map_viewer.hpp"
 #include "interpreter.hpp"
 #include "object_manager.hpp"
-#include "sprite.hpp"
 
 glm::vec2 ChallengeHelper::get_location_interaction(std::string name) {
     LOG(INFO) << "getting location of " << name;
     auto properties(Engine::get_map_viewer()->get_map()->locations.at("Interactions/" + name));
-    return properties.location;
+    return properties.position;
 }
 
 glm::vec2 ChallengeHelper::get_location_object(std::string name) {
-    LOG(INFO) << "getting location of " << name;
+    LOG(INFO) << "getting position of " << name;
     auto properties(Engine::get_map_viewer()->get_map()->locations.at("Objects/" + name));
-    return properties.location;
+    return properties.position;
 }
 
 int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string marker_name,
                                  Walkability walkability,
-                                 std::string start_frame,
-                                 bool cuttable,
-                                 bool findable) {
+                                 std::string start_frame) {
 
-    return make_object(challenge, marker_name, walkability, marker_name, start_frame, cuttable, findable);
+    return make_object(challenge, marker_name, walkability, marker_name, start_frame);
 }
 int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string marker_name,
                                  Walkability walkability,
                                  std::string name,
-                                 std::string start_frame,
-                                 bool cuttable,
-                                 bool findable) {
+                                 std::string start_frame) {
 
     auto *map = Engine::get_map_viewer()->get_map();
     LOG(INFO) << "checking map for object called " << marker_name;
     auto properties(map->locations.at("Objects/" + marker_name));
-    LOG(INFO) << "creating object at " << marker_name << " (" << properties.tileset << ")";
+    LOG(INFO) << "creating object at " << marker_name << " (" << properties.object_file_location << ")";
 
-    return challenge->make_map_object(
-        properties.location,
+    return challenge->make_object(
+        properties.position,
         name,
         walkability,
-        AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
-        start_frame,
-        cuttable,
-        findable
+        AnimationFrames(properties.sprite_file_location),
+        start_frame
     );
 }
-
-int ChallengeHelper::make_sprite(Challenge *challenge,
-                                 std::string marker_name,
-                                 std::string sprite_name,
-                                 Walkability walkability,
-                                 std::string start_frame) {
-
-    auto *map = Engine::get_map_viewer()->get_map();
-    LOG(INFO) << marker_name;
-    auto properties(map->locations.at("Objects/" + marker_name));
-
-    LOG(INFO) << properties.tileset;
-
-    auto new_sprite(std::make_shared<Sprite>(
-        properties.location,
-        sprite_name,
-        walkability,
-        AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
-        start_frame
-    ));
-    ObjectManager::get_instance().add_object(new_sprite);
-
-    auto sprite_id(new_sprite->get_id());
-
-    LOG(INFO) << "Adding sprite";
-
-    challenge->sprite_ids.push_back(sprite_id);
-    map->add_sprite(sprite_id);
-    Engine::get_map_viewer()->set_map_focus_object(sprite_id);
-    LOG(INFO) << "Creating sprite wrapper";
-    LOG(INFO) << "ID " << sprite_id;
-
-    // Register user controled sprite
-    // Yes, this is a memory leak. Deal with it.
-    auto *a_thing(new Entity(properties.location, sprite_name, sprite_id));
-
-    LOG(INFO) << "Registering sprite";
-    new_sprite->daemon = std::make_unique<LockableEntityThread>(challenge->challenge_data->interpreter->register_entity(*a_thing));
-    LOG(INFO) << "Done!";
-
-    return sprite_id;
-}
-
-void ChallengeHelper::kill_sprite(Challenge *challenge,
-                                  int sprite_id,
-                                  glm::vec2 location,
-                                  std::string speaker,
-                                  std::string eulogy) {
-    auto *map = Engine::get_map_viewer()->get_map();
-    auto player = ObjectManager::get_instance().get_object<Sprite>(sprite_id);
-
-    if((player->get_position()) == (location)) {
-        map->remove_sprite(sprite_id); //at the moment only the sprite is removed
-
-        Engine::print_dialogue (speaker, eulogy);
-
-        EventManager::get_instance().add_timed_event(GameTime::duration(3.0), [challenge] (float completion) {
-            if(completion == 1.0) {
-                challenge->event_finish.trigger(0);
-            }
-            return true;
-        });
-
-    }
-
-
-    return;
-}
-
-int ChallengeHelper::make_assistant(Challenge *challenge,
-                                 std::string marker_name,
-                                 std::string assistant_name,
-                                 Walkability walkability,
-                                 std::string start_frame) {
-
-    auto *map = Engine::get_map_viewer()->get_map();
-    LOG(INFO) << marker_name;
-    auto properties(map->locations.at("Objects/" + marker_name));
-
-    LOG(INFO) << properties.tileset;
-
-    auto new_assistant(std::make_shared<Sprite>(
-        properties.location,
-        assistant_name,
-        walkability,
-        AnimationFrames(properties.tileset.substr(0, properties.tileset.length() - start_frame.length() - 1)),
-        start_frame
-    ));
-    ObjectManager::get_instance().add_object(new_assistant);
-
-    auto assistant_id(new_assistant->get_id());
-
-    LOG(INFO) << "Adding sprite";
-
-    challenge->assistant_ids.push_back(assistant_id);
-    map->add_sprite(assistant_id);
-    Engine::get_map_viewer()->set_map_focus_object(assistant_id);
-    LOG(INFO) << "Creating assistant wrapper";
-    LOG(INFO) << "ID " << assistant_id;
-
-    // Register user controled sprite
-    // Yes, this is a memory leak. Deal with it.
-    auto *a_thing(new Entity(properties.location, assistant_name, assistant_id));
-
-    LOG(INFO) << "Registering assistant";
-    new_assistant->daemon = std::make_unique<LockableEntityThread>(challenge->challenge_data->interpreter->register_entity(*a_thing));
-    LOG(INFO) << "Done!";
-
-    return assistant_id;
-}
-
 
 PositionDispatcher<int>::CallbackID
 ChallengeHelper::make_interaction(std::string name,
@@ -184,7 +66,7 @@ ChallengeHelper::make_interaction(std::string name,
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Interactions/" + name));
 
-    return map->event_step_on.register_callback(properties.location, callback);
+    return map->event_step_on.register_callback(properties.position, callback);
 }
 
 PositionDispatcher<int>::CallbackID
@@ -195,9 +77,10 @@ ChallengeHelper::lose_interaction(std::string name,
     auto *map = Engine::get_map_viewer()->get_map();
     auto properties(map->locations.at("Interactions/" + name));
 
-    return map->event_step_off.register_callback(properties.location, callback);
+    return map->event_step_off.register_callback(properties.position, callback);
 }
 
+/** LEGACY CODE, KEEPING IT HERE FOR REFERENCE BUT WILL BE IMPLEMENTED IN PYTHON TODO REMOVE
 void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
                                         glm::ivec2 pickup_tile,
                                         glm::ivec2 finish_tile,
@@ -216,7 +99,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 start_tile,
         [object_id, pickup_tile, dropoff_tile, start_tile,repeat] (int) {
             if (Engine::is_object_at(start_tile, object_id)) {
                 int id(Engine::get_sprites_at(pickup_tile).front());
-                auto sprite(ObjectManager::get_instance().get_object<Sprite>(id));
+                auto sprite(ObjectManager::get_instance().get_object<Object>(id));
 
                 sprite->add_to_inventory(object_id);
                 //Engine::change_tile(pickup_tile,  5, "blank");
@@ -286,6 +169,7 @@ void ChallengeHelper::create_pickupable(glm::ivec2 object_tile,
         }
     );
 }
+*/
 
 void ChallengeHelper::set_completed_level(int challenge_id) {
   std::ofstream myfile;

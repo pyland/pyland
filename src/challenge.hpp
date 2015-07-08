@@ -49,31 +49,14 @@ public:
     void run();
 
     ///
-    /// Makes a sprite and adds it to the object manager and the current map
-    /// @param position the (x, y) position of the sprite on the map
-    /// @param name the name of the sprite
-    /// @param walkability the walkability properties of the sprite
-    /// @param sheet_id the id of the image of the sprite in its sprite sheet
-    /// @param sheet_name the name of the sprite sheet
+    /// Makes an object and adds it to the object manager and the current map
     /// @return the sprite's id
     ///
-    int make_sprite(glm::vec2 position,
+    int make_object(glm::vec2 position,
                     std::string name,
                     Walkability walkability,
-                    AnimationFrames tiles,
+                    AnimationFrames frames,
                     std::string start_frame);
-
-    ///
-    /// Makes a map object and adds it to the object manager and the current map
-    /// @return the sprite's id
-    ///
-    int make_map_object(glm::vec2 position,
-                        std::string name,
-                        Walkability walkability,
-                        AnimationFrames frames,
-                        std::string start_frame,
-                        bool cuttable=false,
-                        bool findable=true);
 
     int id_type(int id);
     virtual boost::python::object read_message(int id) const;

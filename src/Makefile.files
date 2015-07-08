@@ -23,7 +23,6 @@ BASE_OBJS = \
 	lifeline_controller.o  \
 	map.o                  \
 	map_loader.o           \
-	map_object.o           \
 	map_viewer.o           \
 	mouse_cursor.o         \
 	challenge.o            \
@@ -33,7 +32,6 @@ BASE_OBJS = \
 	object_manager.o       \
 	renderable_component.o \
 	shader.o               \
-	sprite.o               \
 	sprite_switcher.o      \
 	text.o                 \
 	text_font.o            \

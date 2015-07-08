@@ -8,14 +8,14 @@
 #include <utility>
 #include <vector>
 
-#include "object.hpp"
+#include "renderable_component.hpp"
 
 class TileSet;
 
 ///
 /// A layer on the map. These
 ///
-class Layer : public Object {
+class Layer {
 
 public:
     ///
@@ -32,7 +32,30 @@ public:
         SPARSE
     };
 
+    ///
+    /// Get the id of the layer
+    /// @return the id of the layer
+    ///
+    int get_id() { return id; }
+
+    ///
+    /// Get the renderable component
+    /// @return the renderable component for this layer
+    ///
+    RenderableComponent* get_renderable_component() { return &renderable_component; }
+
 private:
+
+    ///
+    /// The layer's id
+    ///
+    int id = 0;
+
+    ///
+    /// The layer's renderable component
+    ///
+    RenderableComponent renderable_component;
+
     ///
     /// The width of the layer in tiles
     ///

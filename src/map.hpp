@@ -52,14 +52,9 @@ class Map {
     std::map<int, std::shared_ptr<std::map<int, int>>> layer_mappings;
 
     ///
-    /// The ids of the map objects that are on this map
+    /// The ids of the objects that are on this map
     ///
-    std::vector<int> map_object_ids;
-
-    ///
-    /// The ids of the sprites that are on this map
-    ///
-    std::vector<int> sprite_ids;
+    std::vector<int> object_ids;
 
     ///
     /// Cache of the tileset texture data for this Map
@@ -202,28 +197,16 @@ public:
     ~Map();
 
     ///
-    /// Add a sprite to the map
-    /// @param sprite_id the id of the sprite
-    ///
-    void add_sprite(int sprite_id);
-
-    ///
-    /// Remove a sprite from the map
-    /// @param sprite_id the id of the sprite
-    ///
-    void remove_sprite(int sprite_id);
-
-    ///
     /// Add a map object to the map
-    /// @param map_object_id the id of the map object
+    /// @param object_id the id of the map object
     ///
-    void add_map_object(int map_object_id);
+    void add_object(int object_id);
 
     ///
     /// Remove a map object from the map
-    /// @param map_object_id the id of the map object
+    /// @param object_id the id of the map object
     ///
-    void remove_map_object(int map_object_id);
+    void remove_object(int object_id);
 
     ///
     /// FML-valid mapping from strings to object properties,
@@ -232,18 +215,12 @@ public:
     std::map<std::string, ObjectProperties> locations;
 
     ///
-    /// Get the sprites that are on this map
+    /// Get the objects that are on this map
     /// @return a vector of sprite ids
     /// - we don't want class users to add sprites to the map
     /// using this vector
     ///
-    const std::vector<int>& get_sprites() { return sprite_ids; }
-
-    ///
-    /// Get the map objects that are on this map
-    /// @return a vector of map object ids
-    ///
-    const std::vector<int>& get_map_objects() { return map_object_ids; }
+    const std::vector<int>& get_objects() { return object_ids; }
 
     ///
     /// Get the map width
