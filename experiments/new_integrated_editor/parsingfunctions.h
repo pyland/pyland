@@ -72,7 +72,7 @@ int create_apih_from_wrapper()
             continue;
         }
         i=0;
-        fout << "  << ";
+        fout << "<< ";
         while(1)
         {
             fout << begin_posn[i];
@@ -85,7 +85,12 @@ int create_apih_from_wrapper()
         }
     }
 
-    fout << ";";
+    //adding the python commands for autocomplete as well
+    fout <<
+    "\n<< \"and\" \n<< \"as\" \n<< \"assert\" \n<< \"break\" \n<< \"class\" \n<< \"continue\" \n<< \"def\" \n<< \"del\" \n<< \"elif\" \n<< \"else\" \n<< \"except\" \n<< \"exec\" \n<< \"finally\" \n<< \"for\" \n<< \"from\" \n<< \"global\" \n<< \"if\" \n<< \"import\" \n<< \"in\" \n<< \"is\" \n<< \"lambda\" \n<< \"not\" \n<< \"or\" \n<< \"pass\" \n<< \"print\" \n<< \"raise\" \n<< \"return\" \n<< \"try\" \n<< \"while\" \n<< \"with\" \n<< \"yield\"\n;"
+    ;
 
+    fin.close();
+    fout.close();
     return 0;
 }

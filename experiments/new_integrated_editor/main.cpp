@@ -33,9 +33,9 @@ int main(int argc, char *argv[])
 
     mainWin->show();
 	int ret = app->exec();
-    std::cout << "Helo2"<<std::endl;
-    SDL_Quit();
-    std::cout<<"Hello1"<<std::endl;
+
+    //Engine::set_game_window(mainWin);
+
     delete mainWin;
     delete app;
 
