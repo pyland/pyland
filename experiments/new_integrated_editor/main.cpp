@@ -18,17 +18,24 @@
 
 #include <iostream>
 #include "mainwindow.h"
+#include "parsingfunctions.h"
+
 int main(int argc, char *argv[])
 {
 
+    create_apih_from_wrapper();
+
 	QApplication *app = new QApplication(argc, argv);
 	app->setStyle("windows");
+	app->setAttribute(Qt::AA_NativeWindows, true);
+
 	MainWindow * mainWin = new MainWindow();
 
     mainWin->show();
 	int ret = app->exec();
-
-
+    std::cout << "Helo2"<<std::endl;
+    SDL_Quit();
+    std::cout<<"Hello1"<<std::endl;
     delete mainWin;
     delete app;
 

@@ -84,33 +84,33 @@ public:
     ~MainWindow();
 
 
-//protected:
-//    void closeEvent(QCloseEvent *event);
-//    bool eventFilter(QObject *obj, QEvent *event);
-//
-//private slots:
-//    void runCode();
-//    bool saveAs();
-//    void documentWasModified();
-//    void zoomFontIn();
-//    void zoomFontOut();
-//    void timerHandler();
-//
+protected:
+    void closeEvent(QCloseEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
+
+private slots:
+    void runCode();
+    bool saveAs();
+    void documentWasModified();
+    void zoomFontIn();
+    void zoomFontOut();
+    void timerHandler();
+
 private:
 
-//    void initWorkspace(QsciScintilla* ws);
-//    void clearOutputPanels();
-//    void createActions();
-//    void createToolBar();
-//    void createStatusBar();
+    void initWorkspace(QsciScintilla* ws);
+    void clearOutputPanels();
+    void createActions();
+    void createToolBar();
+    void createStatusBar();
 //    std::string number_name(int);
 //    std::string workspaceFilename(QsciScintilla* text);
 //    QsciScintilla* filenameToWorkspace(std::string filename);
 //
 
       QsciAPIs*  api;
-//
-//    QsciScintilla *textEdit;
+
+    QsciScintilla *textEdit;
     static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
     QTextEdit *outputPane;
@@ -118,28 +118,28 @@ private:
 
     QTabWidget *tabs;
 
-//    QWidget * dummySideWidget;
-//    QWidget * mainWidget;
-//    QDockWidget * sideWidget;
-//    QVBoxLayout *sideWidgetLayout;
+    QWidget * dummySideWidget;
+    QWidget * mainWidget;
+    QDockWidget * sideWidget;
+    QVBoxLayout *sideWidgetLayout;
 
     QsciLexerPython *lexer;
-//
-//    QToolBar *toolBar;
-//
-//    QAction *runAct;
-//    QAction *stopAct;
-//    QAction *saveAct;
-//    QAction *textIncAct;
-//    QAction *textDecAct;
-//
-//    QAction *saveAsAct;
-//    QAction *exitAct;
+
+    QToolBar *toolBar;
+
+    QAction *runAct;
+    QAction *stopAct;
+    QAction *saveAct;
+    QAction *textIncAct;
+    QAction *textDecAct;
+
+    QAction *saveAsAct;
+    QAction *exitAct;
 //    QAction *cutAct;
 //    QAction *copyAct;
 //    QAction *pasteAct;
-//    QAction *reloadAct;
-//
+    QAction *reloadAct;
+
 //    QCheckBox *print_output;
 //    QCheckBox *check_args;
 //
@@ -147,12 +147,12 @@ private:
 //
 //    QLabel *imageLabel;
 //
-//    SDL_GLContext glContext;
-//    SDL_Window *embedWindow;
-//    QTimer *eventTimer;
-//
-//    QWidget *spacer;
-//
+    SDL_GLContext glContext;
+    SDL_Window *embedWindow;
+    QTimer *eventTimer;
+
+    QWidget *spacer;
+
 
 
 };
