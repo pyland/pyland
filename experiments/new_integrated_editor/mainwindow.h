@@ -76,6 +76,8 @@ private:
 
     QPushButton *buttonIn;
     QPushButton *buttonOut;
+    QPushButton *buttonRun;
+    QPushButton *buttonSpeed;
 
     QTabWidget *tabs;
 

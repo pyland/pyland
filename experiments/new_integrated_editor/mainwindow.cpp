@@ -92,12 +92,15 @@ MainWindow::MainWindow() {
   tabs->setMovable(false);
   tabs->setTabPosition(QTabWidget::East);
   tabs->setUsesScrollButtons(true);
+  tabs->setStyleSheet("QHTabWidget::tab{max-height: 4px};");
+  //MAKE TABS LESS TALL
 
   // create zoom buttons
   QHBoxLayout *zoomLayout = new QHBoxLayout;
 
   buttonIn = new QPushButton("+");
-  buttonOut = new QPushButton("-");     //Minus text does not look centered when running
+  buttonOut = new QPushButton("-");                 //Minus text does not look centered when running
+  //REMOVE YELLOW RECTANGLE ACROSS BUTTONS TO CORNER THAT BLOCKS BUTTONS
 
   buttonIn->setMaximumWidth(20);
   buttonOut->setMaximumWidth(20);
@@ -167,9 +170,8 @@ MainWindow::MainWindow() {
   QHBoxLayout *terminalButtonLayout = new QHBoxLayout;
 
   // Setup terminal buttons
-  QPushButton *buttonRun = new QPushButton("Run");
-  QPushButton *buttonSpeed = new QPushButton("Speed: Slow");
-
+  buttonRun = new QPushButton("Run");
+  buttonSpeed = new QPushButton("Speed: Slow");
 
   buttonRun->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   buttonSpeed->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -378,87 +380,22 @@ void MainWindow::createActions()
 {
   connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
   connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
-
-//  runAct = new QAction(QIcon(":/images/run.png"), tr("&Run"), this);
-//  runAct->setShortcut(tr("Ctrl+R"));
-//  runAct->setStatusTip(tr("Run the code in the current workspace"));
-//  runAct->setToolTip(tr("Run the code in the current workspace (Ctrl-R)"));
-//  connect(runAct, SIGNAL(triggered()), this, SLOT(runCode()));
-
-//  stopAct = new QAction(QIcon(":/images/stop.png"), tr("&Stop"), this);
-//  stopAct->setShortcut(tr("Ctrl+Q"));
-//  stopAct->setStatusTip(tr("Stop all running code"));
-//  stopAct->setToolTip(tr("Stop all running code (Ctrl-Q)"));
-//
-//  saveAsAct = new QAction(QIcon(":/images/save.png"), tr("&Save &As..."), this);
-//  saveAsAct->setStatusTip(tr("Save the current workspace under a new name"));
-//  saveAsAct->setToolTip(tr("Save the current workspace under a new name"));
-//  connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-//
-//  textIncAct = new QAction(QIcon(":/images/size_up.png"), tr("&Increase &Text &Size"), this);
-//  textIncAct->setStatusTip(tr("Make text bigger"));
-//  textIncAct->setToolTip(tr("Make text bigger"));
-//  connect(textIncAct, SIGNAL(triggered()), this, SLOT(zoomFontIn()));
-//
-//  textDecAct = new QAction(QIcon(":/images/size_down.png"), tr("&Decrease &Text &Size"), this);
-//  textDecAct->setStatusTip(tr("Make text smaller"));
-//  textDecAct->setToolTip(tr("Make text smaller"));
-//  connect(textDecAct, SIGNAL(triggered()), this, SLOT(zoomFontOut()));
-//
-//  QAction *reloadAct = new QAction(this);
-//  reloadAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
-//  addAction(reloadAct);
-//  runAct = new QAction(QIcon(":/images/run.png"), tr("&Run"), this);
-//  runAct->setShortcut(tr("Ctrl+R"));
-//  runAct->setStatusTip(tr("Run the code in the current workspace"));
-//  runAct->setToolTip(tr("Run the code in the current workspace (Ctrl-R)"));
-//  connect(runAct, SIGNAL(triggered()), this, SLOT(runCode()));
-//
-//  stopAct = new QAction(QIcon(":/images/stop.png"), tr("&Stop"), this);
-//  stopAct->setShortcut(tr("Ctrl+Q"));
-//  stopAct->setStatusTip(tr("Stop all running code"));
-//  stopAct->setToolTip(tr("Stop all running code (Ctrl-Q)"));
-//
-//  saveAsAct = new QAction(QIcon(":/images/save.png"), tr("&Save &As..."), this);
-//  saveAsAct->setStatusTip(tr("Save the current workspace under a new name"));
-//  saveAsAct->setToolTip(tr("Save the current workspace under a new name"));
-//  connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-//
-//  textIncAct = new QAction(QIcon(":/images/size_up.png"), tr("&Increase &Text &Size"), this);
-//  textIncAct->setStatusTip(tr("Make text bigger"));
-//  textIncAct->setToolTip(tr("Make text bigger"));
-//  connect(textIncAct, SIGNAL(triggered()), this, SLOT(zoomFontIn()));
-//
-//  textDecAct = new QAction(QIcon(":/images/size_down.png"), tr("&Decrease &Text &Size"), this);
-//  textDecAct->setStatusTip(tr("Make text smaller"));
-//  textDecAct->setToolTip(tr("Make text smaller"));
-//  connect(textDecAct, SIGNAL(triggered()), this, SLOT(zoomFontOut()));
-//
-//  QAction *reloadAct = new QAction(this);
-//  reloadAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
-//  addAction(reloadAct);
+  connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
 }
 
 void MainWindow::createToolBar()
 {
-
-  //QWidget *spacer = new QWidget();
-  //spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
   toolBar = new QToolBar;
-
-  toolBar->setIconSize(QSize(270/3, 111/3));
   toolBar->setFloatable(false);
   toolBar->setMovable(false);
 
-  QPushButton *buttonPause = new QPushButton(QIcon("/images/app.icns"),"");
-
   QTextEdit *textInfo = new QTextEdit("");
-  textInfo->setFontPointSize(18.0);
+  textInfo->setContextMenuPolicy(Qt::NoContextMenu);
+  textInfo->setFontPointSize(17.0);
+  textInfo->setTextInteractionFlags(Qt::NoTextInteraction);
 
   //Insert current information
   textInfo->insertPlainText("World: 1   Level: 1    Totems: 0/5");
-
 
   textInfo->setWordWrapMode(QTextOption::NoWrap);
   textInfo->setAlignment(Qt::AlignLeft);
@@ -467,98 +404,11 @@ void MainWindow::createToolBar()
   textInfo->setReadOnly(true);
   textInfo->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
 
+  //toolBar->setMaximumHeight(30);
 
-  QWidget *spacer = new QWidget();
-  spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-  QPushButton *buttonBag = new QPushButton(QIcon("/images/app.icns"),"");
-  buttonBag->setContentsMargins(0,0,0,0);
-  buttonBag->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-
-  QHBoxLayout *playersLayout = new QHBoxLayout;
-
-
-
-  //For each player in the map:
-        QVBoxLayout *p1Layout = new QVBoxLayout;
-        QPushButton *buttonP1 = new QPushButton(QIcon("/images/app.icns"),"");
-        buttonP1->setMaximumHeight(32);
-        buttonP1->setMaximumWidth(32);
-        QLineEdit *textP1 = new QLineEdit("Alex");
-        textP1->setReadOnly(true);
-        textP1->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
-
-        //buttonP1->setContentsMargins(0,0,0,0);
-        //buttonP1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        //textP1->setContentsMargins(0,0,0,0);
-        //textP1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-
-        p1Layout->addWidget(buttonP1);
-        p1Layout->addWidget(textP1);
-        QWidget *p1Widget = new QWidget;
-        p1Widget->setLayout(p1Layout);
-        playersLayout->addWidget(p1Widget);
-
-
-
-
-        QVBoxLayout *p2Layout = new QVBoxLayout;
-        QPushButton *buttonP2 = new QPushButton(QIcon("/images/app.icns"),"");
-        buttonP2->setMaximumHeight(32);
-        buttonP2->setMaximumWidth(32);
-        QLineEdit *textP2 = new QLineEdit("Ben");
-        textP2->setReadOnly(true);
-        textP2->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
-        p2Layout->addWidget(buttonP2);
-        p2Layout->addWidget(textP2);
-        QWidget *p2Widget = new QWidget;
-        p2Widget->setLayout(p2Layout);
-        playersLayout->addWidget(p2Widget);
-
-        QVBoxLayout *p3Layout = new QVBoxLayout;
-        QPushButton *buttonP3 = new QPushButton(QIcon("/images/app.icns"),"");
-        buttonP3->setMaximumHeight(32);
-        buttonP3->setMaximumWidth(32);
-        QLineEdit *textP3 = new QLineEdit("Ben");
-        textP3->setReadOnly(true);
-        textP3->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
-        p3Layout->addWidget(buttonP3);
-        p3Layout->addWidget(textP3);
-        QWidget *p3Widget = new QWidget;
-        p3Widget->setLayout(p3Layout);
-        playersLayout->addWidget(p3Widget);
-
-
-
-  QWidget *playersWidget = new QWidget;
-
-  playersWidget->setLayout(playersLayout);
-
-
-  toolBar->addWidget(buttonPause);
   toolBar->addWidget(textInfo);
-  toolBar->addWidget(spacer);
-  toolBar->addWidget(buttonBag);
-  toolBar->addWidget(playersWidget);
-
-
-  //toolBar->addWidget(spacer);
-
-  toolBar->setStyleSheet("background-color: rgb(245,245,165);");
 
   addToolBar(toolBar);
-
-  //toolBar->addAction(runAct);
-  //toolBar->addAction(stopAct);
-
-  //toolBar->addAction(saveAsAct);
-  //toolBar->addWidget(spacer);
-
-  //toolBar->addAction(textDecAct);
-  //toolBar->addAction(textIncAct);
-
 }
 
 
