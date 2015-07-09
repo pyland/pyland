@@ -47,7 +47,8 @@ MapObject::MapObject(glm::vec2 position,
 
         init_shaders();
         // Hack hack hack
-        load_textures(frames.get_frame(start_frame));
+        //load_textures(frames.get_frame(start_frame)); //frames.get_frame should return the full path_name of the frame wanted!
+        load_textures(std::make_pair(1, "../game/objects/characters/player/sprites/main.png"));
         generate_tex_data(frames.get_frame(start_frame));
         generate_vertex_data();
 
@@ -215,7 +216,7 @@ void MapObject::set_state_on_moving_finish() {
 
 // TODO: rewrite
 void MapObject::load_textures(std::pair<int, std::string> tile) {
-    renderable_component.set_texture(TextureAtlas::get_shared(tile.second));
+    renderable_component.set_texture(TextureAtlas::get_shared(tile.second)); //tile.second is the location of the sprite you wish to load in from the file-system.
 }
 
 bool MapObject::init_shaders() {

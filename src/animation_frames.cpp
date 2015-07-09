@@ -38,10 +38,10 @@ std::pair<int, std::string> AnimationFrames::get_frame(std::string section, floa
 }
 
 std::pair<int, std::string> AnimationFrames::get_frame(std::string section) {
-    std::map<std::string, std::string> names_to_tilesets(TextureAtlas::names_to_tilesets());
+    //std::map<std::string, std::string> names_to_tilesets(TextureAtlas::names_to_tilesets());
 
-    std::string tile_name(animation_frames_root + "/" + section);
-    std::string tileset_name(names_to_tilesets.at(tile_name));
-    auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name)); // << TODO! error most likely not in get_shared but in get_name_index. Look at this tomorrow
-    return std::make_pair(index, tileset_name);
+    //std::string tile_name(animation_frames_root + "/" + section);
+    //std::string tileset_name(names_to_tilesets.at(tile_name));
+    //auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name)); // << TODO! error most likely not in get_shared but in get_name_index. Look at this tomorrow
+    return std::make_pair(1, section);
 }
