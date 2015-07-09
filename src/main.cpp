@@ -56,8 +56,6 @@ Challenge* pick_challenge(ChallengeData* challenge_data);
 int main(int argc, const char *argv[]) {
     std::string map_path("../maps/start_screen.tmx");
 
-    // allows you to pass an alternative text editor to app, otherwise
-    // defaults to gedit. Also allows specification of a map file.
     switch (argc) {
         default:
             std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;

@@ -19,10 +19,6 @@ WARNINGS = \
 	-Wno-sign-conversion            \
 	-Wpointer-arith                 \
 
-#ifeq "$(QMAKING)" ""
-#	QMAKING = /usr/bin/qmake-qt4
-#endif
-
 CXXFLAGS = \
 	-std=c++11   \
 	-O3          \
@@ -35,7 +31,6 @@ CPPFLAGS = \
 	-I./challenges        \
 	-I./input_management  \
 	-I./gui               \
-#	-I./qtgui             \
 	-I./python_embed      \
 	-MMD -MP              \
 	-MF dependencies/$*.d \

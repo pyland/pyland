@@ -14,10 +14,7 @@ GLOG_CXXFLAGS =
 GLOG_LDFLAGS  =
 GLOG_LDLIBS   = $(shell pkg-config libglog --libs)
 
-#QT_LIBFLAGS = -I/usr/include/qt4/QtGui    \
-#              -I/usr/include/qt4/         \
-#              -I/usr/include/qt4/Qt       \
-#              -I/usr/include/qt4/QtCore  \
+
 
 ifeq "$(PLATFORM)" "desktop"
 	GL_CPPFLAGS = $(shell pkg-config gl --cflags)
