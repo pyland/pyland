@@ -48,11 +48,14 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
             int object_id = ChallengeHelper::make_object(
                 this,
                 location.second.object_file_location + "/" + location.first, //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly
-                Walkability::BLOCKED,
-                location.second.sprite_file_location,
-                location.first
+                Walkability::BLOCKED,	//wether it can be walked through	
+                location.first //name of the object
             );
             std::cout << object_id << std::endl;
+
+            //auto object(ObjectManager::get_instance().get_object<MapMapObject>(object_id));
+
+            //object->set_focus(true);
         }
 }
 
@@ -87,10 +90,9 @@ Challenge::~Challenge() {
 int Challenge::make_object(glm::vec2 position,
                            std::string name,
                            Walkability walkability,
-                           AnimationFrames frames,
-                           std::string start_frame) {
+                           AnimationFrames frames) {
 
-    auto new_object(std::shared_ptr<MapObject>(new MapObject(position, name, walkability, frames, start_frame)));
+    auto new_object(std::shared_ptr<MapObject>(new MapObject(position, name, walkability, frames)));
     ObjectManager::get_instance().add_object(new_object);
 
     auto new_object_id(new_object->get_id());

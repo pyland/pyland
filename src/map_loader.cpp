@@ -116,7 +116,7 @@ std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
                     map_height - object->GetY() / Engine::get_tile_size()
                 ),
                 object_file_location,
-                "main"
+                "" //the location of the base animation folder. Always looks relative to object_file_location/. .
             });
 
             named_tiles_mapping.insert(std::make_pair(object_name, properties));

@@ -125,7 +125,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
             object->set_position(tweened_position);
 
-            object->set_tile(object->frames.get_frame(direction + "/walking", completion));
+            //object->set_tile(object->frames.get_frame(direction + "/walking", completion)); TODO: BLEH, investigate what this did
+            object->set_tile(object->frames.get_frame());
 
             if (completion == 1.0) {
                 object->set_state_on_moving_finish();

@@ -55,8 +55,7 @@ public:
     int make_object(glm::vec2 position,
                     std::string name,
                     Walkability walkability,
-                    AnimationFrames frames,
-                    std::string start_frame);
+                    AnimationFrames frames);
 
     int id_type(int id);
     virtual boost::python::object read_message(int id) const;

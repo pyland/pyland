@@ -103,16 +103,6 @@ protected:
     bool moving = false;
 
     ///
-    /// Whether the object can be cut down
-    ///
-    bool cuttable;
-
-    ///
-    /// Whether the object can be found on the map
-    ///
-    bool findable;
-
-    ///
     /// The challenge that created or now owns the object.
     ///
     /// This must be set manually by the challenge,
@@ -137,8 +127,7 @@ public:
     MapObject(glm::vec2 position,
               std::string name,
               Walkability walkability,
-              AnimationFrames walk_frames,
-              std::string start_frame);
+              AnimationFrames walk_frames);
 
 
     virtual ~MapObject();
@@ -146,26 +135,6 @@ public:
     glm::vec2 get_position() { return position; }
 
     virtual void set_position(glm::vec2 position);
-
-    ///
-    /// Set the object's cuttable state
-    ///
-    void set_cuttable(bool _cuttable) { cuttable = _cuttable; }
-
-    ///
-    /// Get the object's cuttable state
-    ///
-    bool is_cuttable() { return cuttable; }
-
-    ///
-    /// Set the object's findable state
-    ///
-    void set_findable(bool _findable) { findable = _findable; }
-
-    ///
-    /// Get the object's findable state
-    ///
-    bool is_findable() { return findable; }
 
     ///
     /// manage collisions for spirtes as they move

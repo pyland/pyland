@@ -15,7 +15,6 @@ class LockableEntityThread;
 /// Layer and MapObject in layer.cpp/hpp and map_object.cpp/hpp respectively. You can look in those
 /// files for more information.
 class Object {
-
 private:
     ///
     /// Boolean to indicate if the object has set itself to be renderable

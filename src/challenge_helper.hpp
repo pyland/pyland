@@ -50,7 +50,6 @@ namespace ChallengeHelper {
     int make_object(Challenge *challenge,
                     std::string markername,
                     Walkability walkability,
-                    std::string start_frame,
                     std::string name);
 
     ///
@@ -59,7 +58,6 @@ namespace ChallengeHelper {
     /// @param markername the name of the object used to identify it in the TMX map file
     /// @param walkability the walkability status of the object
     /// @param output
-    /// @param start_frame which frame to start animating the object from
     /// @param name the human friendly name to give the object
     /// @param cuttable if the object can be cut down using the cut API call
     /// @param findable if the object can be found using the loop API call
@@ -68,28 +66,21 @@ namespace ChallengeHelper {
     void make_objects(Challenge *challenge,
                       std::string marker_name,
                       Walkability walkability,
-                      OutputIt output,
-                      std::string start_frame="",
-                      bool cuttable=false,
-                      bool findable=true);
+                      OutputIt output);
     ///
     /// Create MapMapObjects from named locations
     /// @param challenge a pointer to the challenge to make the object for
     /// @param markername the name of the object used to identify it in the TMX map file
     /// @param walkability the walkability status of the object
     /// @param output a vector of the objects to be inserted
-    /// @param start_frame which frame to start animating the object from
     /// @param name the human friendly name to give the object
-    /// @param cuttable if the object can be cut down using the cut API call
-    /// @param findable if the object can be found using the loop API call
     ///
     template <class OutputIt>
     void make_objects(Challenge *challenge,
                       std::string marker_name,
                       Walkability walkability,
                       OutputIt output,
-                      std::string name,
-                      std::string start_frame="");
+                      std::string name);
 
     ///
     /// Attach callback to a position
@@ -195,8 +186,7 @@ void ChallengeHelper::make_objects(Challenge *challenge,
                 name_properties.second.position, //set the position fo the object
                 name_properties.first, //set the name of the objext
                 walkability, //set wether it is walkable or not
-                AnimationFrames(name_properties.second.sprite_file_location), //TODO: work out animation stuff!
-                name_properties.second.sprite_file_location
+                AnimationFrames(name_properties.second.sprite_file_location) //TODO: work out animation stuff!
             );
         }
     );

@@ -34,7 +34,6 @@ glm::vec2 ChallengeHelper::get_location_object(std::string name) {
 int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string marker_name,
                                  Walkability walkability,
-                                 std::string start_frame,
                                  std::string name) {
     auto *map = Engine::get_map_viewer()->get_map();
     LOG(INFO) << "checking map for object called " << marker_name;
@@ -45,8 +44,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
         properties.position,
         name,
         walkability,
-        AnimationFrames(properties.object_file_location, properties.sprite_file_location),
-        start_frame
+        AnimationFrames(properties.object_file_location, properties.sprite_file_location)
     );
 }
 

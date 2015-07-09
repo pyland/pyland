@@ -15,6 +15,8 @@ AnimationFrames::AnimationFrames(std::string object_file_location, std::string s
     sprite_file_location(sprite_file_location) {
         VLOG(1) << "Frames rooted at " << object_file_location; //TODO: Make log clearer
 }
+
+/*
 std::pair<int, std::string> AnimationFrames::get_frame(std::string section, float completion) {
     std::map<std::string, std::string> names_to_tilesets(TextureAtlas::names_to_tilesets());
     auto begin(maptools::start_of(names_to_tilesets, object_file_location +"/"+ section));
@@ -37,12 +39,8 @@ std::pair<int, std::string> AnimationFrames::get_frame(std::string section, floa
     auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name));
     return std::make_pair(index, tileset_name);
 }
+*/
 
-std::pair<int, std::string> AnimationFrames::get_frame(std::string section) {
-    //std::map<std::string, std::string> names_to_tilesets(TextureAtlas::names_to_tilesets());
-    LOG(INFO) << "the section is: " << section;
-    //std::string tile_name(animation_frames_root + "/" + section);
-    //std::string tileset_name(names_to_tilesets.at(tile_name));
-    //auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name)); // << TODO! error most likely not in get_shared but in get_name_index. Look at this tomorrow
-    return std::make_pair(1, "../game/objects/" + object_file_location + "/sprites/" + sprite_file_location + ".png");
+std::pair<int, std::string> AnimationFrames::get_frame() {
+    return std::make_pair(0, "../game/objects/" + object_file_location + "/sprites/" + sprite_file_location + "/0.png");
 }
