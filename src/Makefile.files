@@ -76,7 +76,7 @@ GUI_OBJS = \
 
 
 PYTHON_OBJS = \
-	python_embed/api.o                 \
+	python_embed/entity.o                 \
 	python_embed/gil_safe_future.o     \
 	python_embed/interpreter.o         \
 	python_embed/interpreter_context.o \
@@ -94,7 +94,7 @@ PYTHON_SHARED_OBJS = \
 	python_embed/wrapper_functions.so
 
 PYTHON_SHARED_OBJS_DEPENDS = \
-	python_embed/api.o
+	python_embed/entity.o
 
 
 TEST_OBJS = \

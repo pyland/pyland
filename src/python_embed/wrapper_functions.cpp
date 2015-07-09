@@ -3,7 +3,7 @@
 #include <string>
 #include <boost/python.hpp>
 #include <iostream>
-#include "api.hpp"
+#include "entity.hpp"
 
 namespace py = boost::python;
 
