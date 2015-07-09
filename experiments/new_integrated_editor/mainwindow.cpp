@@ -58,6 +58,7 @@
 #include <QCheckBox>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QLineEdit>
 
 // QScintilla stuff
 #include <Qsci/qsciapis.h>
@@ -90,12 +91,13 @@ MainWindow::MainWindow() {
   tabs->setTabsClosable(false);
   tabs->setMovable(false);
   tabs->setTabPosition(QTabWidget::East);
+  tabs->setUsesScrollButtons(true);
 
   // create zoom buttons
   QHBoxLayout *zoomLayout = new QHBoxLayout;
 
   buttonIn = new QPushButton("+");
-  buttonOut = new QPushButton("-");
+  buttonOut = new QPushButton("-");     //Minus text does not look centered when running
 
   buttonIn->setMaximumWidth(20);
   buttonOut->setMaximumWidth(20);
@@ -121,7 +123,8 @@ MainWindow::MainWindow() {
 
   // position zoom widget
   textLayout->setAlignment(zoomWidget,Qt::AlignTop | Qt::AlignRight);
-  zoomWidget->setContentsMargins(0,3,26,0);
+  //zoomWidget->setContentsMargins(0,3,26,0);
+  zoomWidget->setContentsMargins(0,3,42,0);
   textLayout->setContentsMargins(0,0,0,0);
 
   QWidget *textWidget = new QWidget;
@@ -174,7 +177,6 @@ MainWindow::MainWindow() {
   terminalButtonLayout->addWidget(buttonRun);
   terminalButtonLayout->addWidget(buttonSpeed);
 
-
   terminalButtonLayout->setContentsMargins(0,0,0,0);
 
   QWidget *buttons = new QWidget;
@@ -223,6 +225,10 @@ MainWindow::MainWindow() {
 
   mainWidget->setLayout(windowLayout);
 
+  createActions();
+  createToolBar();
+  //createStatusBar();
+
   setWindowTitle(tr("Pyland"));
   mainWidget->setWindowIcon(QIcon("/images/icon.png"));
   QPalette colourPalette(palette());
@@ -232,14 +238,12 @@ MainWindow::MainWindow() {
   mainWidget->setPalette(colourPalette);
   mainWidget->setAutoFillBackground(true);
 
-  mainWidget->setMinimumSize(424,318);
+  mainWidget->setMinimumSize(600,420);
+
+  this->setContextMenuPolicy(Qt::NoContextMenu);
 
   this->setCentralWidget(mainWidget);
-  this->showMaximized();
 
-  createActions();
-  //createToolBar();
-  //createStatusBar();
 
   std::cout << gameWidget->winId() << "\n";
 
@@ -263,6 +267,8 @@ MainWindow::MainWindow() {
   eventTimer->setInterval(0);
   connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
   eventTimer->start();
+
+  this->showMaximized();
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
@@ -325,16 +331,7 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
   ws->setCaretWidth(5);
   ws->setMarginWidth(1,5);
   ws->setCaretForegroundColor("deep pink");
-  //ws->hide(ws->horizontalScrollBar());
-//  QScrollBar *scrollBar = new QScrollBar(Qt::Vertical);
-//  scrollBar->setContentsMargins(0,500,-50,-300);
-//  scrollBar->move(250,1000);
-//  scrollBar->show();
-//  scrollBar->setVisible(true);
-//  scrollBar->setMaximumHeight(100);
-//  scrollBar->setMaximumHeight(100);
-//  //scrollBar->setMinimum(100);
-//  ws->setVerticalScrollBar(scrollBar);
+  ws->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -387,7 +384,7 @@ void MainWindow::createActions()
 //  runAct->setStatusTip(tr("Run the code in the current workspace"));
 //  runAct->setToolTip(tr("Run the code in the current workspace (Ctrl-R)"));
 //  connect(runAct, SIGNAL(triggered()), this, SLOT(runCode()));
-//
+
 //  stopAct = new QAction(QIcon(":/images/stop.png"), tr("&Stop"), this);
 //  stopAct->setShortcut(tr("Ctrl+Q"));
 //  stopAct->setStatusTip(tr("Stop all running code"));
@@ -445,20 +442,122 @@ void MainWindow::createActions()
 void MainWindow::createToolBar()
 {
 
+  //QWidget *spacer = new QWidget();
+  //spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  toolBar = new QToolBar;
+
+  toolBar->setIconSize(QSize(270/3, 111/3));
+  toolBar->setFloatable(false);
+  toolBar->setMovable(false);
+
+  QPushButton *buttonPause = new QPushButton(QIcon("/images/app.icns"),"");
+
+  QTextEdit *textInfo = new QTextEdit("");
+  textInfo->setFontPointSize(18.0);
+
+  //Insert current information
+  textInfo->insertPlainText("World: 1   Level: 1    Totems: 0/5");
+
+
+  textInfo->setWordWrapMode(QTextOption::NoWrap);
+  textInfo->setAlignment(Qt::AlignLeft);
+  textInfo->setMinimumWidth(400);
+  textInfo->setMaximumHeight(38);
+  textInfo->setReadOnly(true);
+  textInfo->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
+
+
   QWidget *spacer = new QWidget();
   spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  toolBar = addToolBar(tr("Tools"));
+  QPushButton *buttonBag = new QPushButton(QIcon("/images/app.icns"),"");
+  buttonBag->setContentsMargins(0,0,0,0);
+  buttonBag->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  toolBar->setIconSize(QSize(270/3, 111/3));
-  toolBar->addAction(runAct);
-  toolBar->addAction(stopAct);
 
-  toolBar->addAction(saveAsAct);
+  QHBoxLayout *playersLayout = new QHBoxLayout;
+
+
+
+  //For each player in the map:
+        QVBoxLayout *p1Layout = new QVBoxLayout;
+        QPushButton *buttonP1 = new QPushButton(QIcon("/images/app.icns"),"");
+        buttonP1->setMaximumHeight(32);
+        buttonP1->setMaximumWidth(32);
+        QLineEdit *textP1 = new QLineEdit("Alex");
+        textP1->setReadOnly(true);
+        textP1->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
+
+        //buttonP1->setContentsMargins(0,0,0,0);
+        //buttonP1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        //textP1->setContentsMargins(0,0,0,0);
+        //textP1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+
+        p1Layout->addWidget(buttonP1);
+        p1Layout->addWidget(textP1);
+        QWidget *p1Widget = new QWidget;
+        p1Widget->setLayout(p1Layout);
+        playersLayout->addWidget(p1Widget);
+
+
+
+
+        QVBoxLayout *p2Layout = new QVBoxLayout;
+        QPushButton *buttonP2 = new QPushButton(QIcon("/images/app.icns"),"");
+        buttonP2->setMaximumHeight(32);
+        buttonP2->setMaximumWidth(32);
+        QLineEdit *textP2 = new QLineEdit("Ben");
+        textP2->setReadOnly(true);
+        textP2->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
+        p2Layout->addWidget(buttonP2);
+        p2Layout->addWidget(textP2);
+        QWidget *p2Widget = new QWidget;
+        p2Widget->setLayout(p2Layout);
+        playersLayout->addWidget(p2Widget);
+
+        QVBoxLayout *p3Layout = new QVBoxLayout;
+        QPushButton *buttonP3 = new QPushButton(QIcon("/images/app.icns"),"");
+        buttonP3->setMaximumHeight(32);
+        buttonP3->setMaximumWidth(32);
+        QLineEdit *textP3 = new QLineEdit("Ben");
+        textP3->setReadOnly(true);
+        textP3->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
+        p3Layout->addWidget(buttonP3);
+        p3Layout->addWidget(textP3);
+        QWidget *p3Widget = new QWidget;
+        p3Widget->setLayout(p3Layout);
+        playersLayout->addWidget(p3Widget);
+
+
+
+  QWidget *playersWidget = new QWidget;
+
+  playersWidget->setLayout(playersLayout);
+
+
+  toolBar->addWidget(buttonPause);
+  toolBar->addWidget(textInfo);
   toolBar->addWidget(spacer);
+  toolBar->addWidget(buttonBag);
+  toolBar->addWidget(playersWidget);
 
-  toolBar->addAction(textDecAct);
-  toolBar->addAction(textIncAct);
+
+  //toolBar->addWidget(spacer);
+
+  toolBar->setStyleSheet("background-color: rgb(245,245,165);");
+
+  addToolBar(toolBar);
+
+  //toolBar->addAction(runAct);
+  //toolBar->addAction(stopAct);
+
+  //toolBar->addAction(saveAsAct);
+  //toolBar->addWidget(spacer);
+
+  //toolBar->addAction(textDecAct);
+  //toolBar->addAction(textIncAct);
 
 }
 
