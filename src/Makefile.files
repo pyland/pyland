@@ -47,10 +47,15 @@ CHALLENGE_OBJS = \
 	challenges/cutting_challenge.o      \
 	challenges/final_challenge.o        \
 	challenges/introduction_challenge.o \
-        challenges/base_challenge.o         \
+	challenges/base_challenge.o         \
 	challenges/start_screen.o           \
 	challenges/new_challenge.o	    \
 
+#QT_OBS = \
+#	qtgui/mainwindow.o		\
+#	qtgui/moc_mainwindow.o		\
+#	qtgui/qrc_application.o         \
+#	qtgui/game_init.o		\
 
 HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}            \
@@ -58,6 +63,7 @@ HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${EXECUTABLE_OBJ:.o=.d}       \
 	${GUI_OBJS:.o=.d}             \
+	${QT_OBS: .o=.d}              \
 	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd} \
@@ -80,7 +86,7 @@ GUI_OBJS = \
 	gui/button.o                 \
 	gui/component.o	             \
 	gui/component_group.o        \
-        gui/gui_text.o               \
+	gui/gui_text.o               \
 	gui/gui_window.o             \
 	gui/gui_manager.o            \
 
