@@ -74,6 +74,9 @@ private:
     QTextEdit *terminalDisplay;
     QSplitter *splitter;
 
+    QPushButton *buttonIn;
+    QPushButton *buttonOut;
+
     QTabWidget *tabs;
 
     QsciLexerPython *lexer;

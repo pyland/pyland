@@ -57,6 +57,7 @@
 #include <QRadioButton>
 #include <QCheckBox>
 #include <QScrollArea>
+#include <QScrollBar>
 
 // QScintilla stuff
 #include <Qsci/qsciapis.h>
@@ -93,8 +94,8 @@ MainWindow::MainWindow() {
   // create zoom buttons
   QHBoxLayout *zoomLayout = new QHBoxLayout;
 
-  QPushButton *buttonIn = new QPushButton("+");
-  QPushButton *buttonOut = new QPushButton("-");
+  buttonIn = new QPushButton("+");
+  buttonOut = new QPushButton("-");
 
   buttonIn->setMaximumWidth(20);
   buttonOut->setMaximumWidth(20);
@@ -111,12 +112,6 @@ MainWindow::MainWindow() {
 
   // make zoom buttons slightly transparent
   zoomWidget->setStyleSheet("background-color: rgba(245,245,165,70);");
-
-  // link zoom buttons to their functions
-  connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
-  connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
-
-  //zoomWidget->setContentsMargins(0,3,26,0);
 
   // add the workspace and zoom buttons to the same grid position
   QGridLayout *textLayout = new QGridLayout;
@@ -160,7 +155,6 @@ MainWindow::MainWindow() {
   QVBoxLayout *terminalLayout = new QVBoxLayout;
 
   terminalDisplay = new QTextEdit;
-
   terminalDisplay->setReadOnly(true);
   terminalDisplay->setLineWrapMode(QTextEdit::NoWrap);
   terminalDisplay->document()->setMaximumBlockCount(1000);
@@ -170,14 +164,16 @@ MainWindow::MainWindow() {
   QHBoxLayout *terminalButtonLayout = new QHBoxLayout;
 
   // Setup terminal buttons
-  QPushButton *button1 = new QPushButton("Run");
-  QPushButton *button2 = new QPushButton("Speed: Slow");
+  QPushButton *buttonRun = new QPushButton("Run");
+  QPushButton *buttonSpeed = new QPushButton("Speed: Slow");
 
-  button1->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-  button2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
-  terminalButtonLayout->addWidget(button1);
-  terminalButtonLayout->addWidget(button2);
+  buttonRun->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+  buttonSpeed->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+  terminalButtonLayout->addWidget(buttonRun);
+  terminalButtonLayout->addWidget(buttonSpeed);
+
 
   terminalButtonLayout->setContentsMargins(0,0,0,0);
 
@@ -235,10 +231,13 @@ MainWindow::MainWindow() {
 
   mainWidget->setPalette(colourPalette);
   mainWidget->setAutoFillBackground(true);
+
+  mainWidget->setMinimumSize(424,318);
+
   this->setCentralWidget(mainWidget);
   this->showMaximized();
 
-  //createActions();
+  createActions();
   //createToolBar();
   //createStatusBar();
 
@@ -303,16 +302,15 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
   ws->setTabIndents(true);
   ws->setMatchedBraceBackgroundColor(QColor("dimgray"));
   ws->setMatchedBraceForegroundColor(QColor("white"));
-
   ws->setIndentationWidth(2);
   ws->setIndentationGuides(true);
   ws->setIndentationGuidesForegroundColor(QColor("deep pink"));
-  ws->setBraceMatching( QsciScintilla::SloppyBraceMatch);
+  ws->setBraceMatching(QsciScintilla::SloppyBraceMatch);
   ws->setCaretLineVisible(true);
   ws->setCaretLineBackgroundColor(QColor("whitesmoke"));
   ws->setFoldMarginColors(QColor("whitesmoke"),QColor("whitesmoke"));
   ws->setMarginLineNumbers(0, true);
-  ws->setMarginWidth(0, "1000000");
+  ws->setMarginWidth(0, "100000000");
   ws->setMarginsBackgroundColor(QColor("whitesmoke"));
   ws->setMarginsForegroundColor(QColor("dark gray"));
   ws->setMarginsFont(QFont("Menlo",5, -1, true));
@@ -320,13 +318,23 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
   ws->setText("");
   ws->setLexer(lexer);
   ws->zoomIn(13);
-  ws->setAutoCompletionThreshold(5);
+  ws->setAutoCompletionThreshold(4);
   ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
   ws->setSelectionBackgroundColor("DeepPink");
   ws->setSelectionForegroundColor("white");
   ws->setCaretWidth(5);
+  ws->setMarginWidth(1,5);
   ws->setCaretForegroundColor("deep pink");
-
+  //ws->hide(ws->horizontalScrollBar());
+//  QScrollBar *scrollBar = new QScrollBar(Qt::Vertical);
+//  scrollBar->setContentsMargins(0,500,-50,-300);
+//  scrollBar->move(250,1000);
+//  scrollBar->show();
+//  scrollBar->setVisible(true);
+//  scrollBar->setMaximumHeight(100);
+//  scrollBar->setMaximumHeight(100);
+//  //scrollBar->setMinimum(100);
+//  ws->setVerticalScrollBar(scrollBar);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -349,12 +357,12 @@ void MainWindow::runCode()
 
 void MainWindow::zoomFontIn()
 {
-  ((QsciScintilla*)tabs->currentWidget())->zoomIn(2);
+  ((QsciScintilla*)tabs->currentWidget())->zoomIn(3);
 }
 
 void MainWindow::zoomFontOut()
 {
-  ((QsciScintilla*)tabs->currentWidget())->zoomOut(2);
+  ((QsciScintilla*)tabs->currentWidget())->zoomOut(3);
 }
 
 
@@ -371,38 +379,67 @@ void MainWindow::clearOutputPanels()
 
 void MainWindow::createActions()
 {
+  connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
+  connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
 
-
-
-  runAct = new QAction(QIcon(":/images/run.png"), tr("&Run"), this);
-  runAct->setShortcut(tr("Ctrl+R"));
-  runAct->setStatusTip(tr("Run the code in the current workspace"));
-  runAct->setToolTip(tr("Run the code in the current workspace (Ctrl-R)"));
-  connect(runAct, SIGNAL(triggered()), this, SLOT(runCode()));
-
-  stopAct = new QAction(QIcon(":/images/stop.png"), tr("&Stop"), this);
-  stopAct->setShortcut(tr("Ctrl+Q"));
-  stopAct->setStatusTip(tr("Stop all running code"));
-  stopAct->setToolTip(tr("Stop all running code (Ctrl-Q)"));
-
-  saveAsAct = new QAction(QIcon(":/images/save.png"), tr("&Save &As..."), this);
-  saveAsAct->setStatusTip(tr("Save the current workspace under a new name"));
-  saveAsAct->setToolTip(tr("Save the current workspace under a new name"));
-  connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-
-  textIncAct = new QAction(QIcon(":/images/size_up.png"), tr("&Increase &Text &Size"), this);
-  textIncAct->setStatusTip(tr("Make text bigger"));
-  textIncAct->setToolTip(tr("Make text bigger"));
-  connect(textIncAct, SIGNAL(triggered()), this, SLOT(zoomFontIn()));
-
-  textDecAct = new QAction(QIcon(":/images/size_down.png"), tr("&Decrease &Text &Size"), this);
-  textDecAct->setStatusTip(tr("Make text smaller"));
-  textDecAct->setToolTip(tr("Make text smaller"));
-  connect(textDecAct, SIGNAL(triggered()), this, SLOT(zoomFontOut()));
-
-  QAction *reloadAct = new QAction(this);
-  reloadAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
-  addAction(reloadAct);
+//  runAct = new QAction(QIcon(":/images/run.png"), tr("&Run"), this);
+//  runAct->setShortcut(tr("Ctrl+R"));
+//  runAct->setStatusTip(tr("Run the code in the current workspace"));
+//  runAct->setToolTip(tr("Run the code in the current workspace (Ctrl-R)"));
+//  connect(runAct, SIGNAL(triggered()), this, SLOT(runCode()));
+//
+//  stopAct = new QAction(QIcon(":/images/stop.png"), tr("&Stop"), this);
+//  stopAct->setShortcut(tr("Ctrl+Q"));
+//  stopAct->setStatusTip(tr("Stop all running code"));
+//  stopAct->setToolTip(tr("Stop all running code (Ctrl-Q)"));
+//
+//  saveAsAct = new QAction(QIcon(":/images/save.png"), tr("&Save &As..."), this);
+//  saveAsAct->setStatusTip(tr("Save the current workspace under a new name"));
+//  saveAsAct->setToolTip(tr("Save the current workspace under a new name"));
+//  connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+//
+//  textIncAct = new QAction(QIcon(":/images/size_up.png"), tr("&Increase &Text &Size"), this);
+//  textIncAct->setStatusTip(tr("Make text bigger"));
+//  textIncAct->setToolTip(tr("Make text bigger"));
+//  connect(textIncAct, SIGNAL(triggered()), this, SLOT(zoomFontIn()));
+//
+//  textDecAct = new QAction(QIcon(":/images/size_down.png"), tr("&Decrease &Text &Size"), this);
+//  textDecAct->setStatusTip(tr("Make text smaller"));
+//  textDecAct->setToolTip(tr("Make text smaller"));
+//  connect(textDecAct, SIGNAL(triggered()), this, SLOT(zoomFontOut()));
+//
+//  QAction *reloadAct = new QAction(this);
+//  reloadAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
+//  addAction(reloadAct);
+//  runAct = new QAction(QIcon(":/images/run.png"), tr("&Run"), this);
+//  runAct->setShortcut(tr("Ctrl+R"));
+//  runAct->setStatusTip(tr("Run the code in the current workspace"));
+//  runAct->setToolTip(tr("Run the code in the current workspace (Ctrl-R)"));
+//  connect(runAct, SIGNAL(triggered()), this, SLOT(runCode()));
+//
+//  stopAct = new QAction(QIcon(":/images/stop.png"), tr("&Stop"), this);
+//  stopAct->setShortcut(tr("Ctrl+Q"));
+//  stopAct->setStatusTip(tr("Stop all running code"));
+//  stopAct->setToolTip(tr("Stop all running code (Ctrl-Q)"));
+//
+//  saveAsAct = new QAction(QIcon(":/images/save.png"), tr("&Save &As..."), this);
+//  saveAsAct->setStatusTip(tr("Save the current workspace under a new name"));
+//  saveAsAct->setToolTip(tr("Save the current workspace under a new name"));
+//  connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+//
+//  textIncAct = new QAction(QIcon(":/images/size_up.png"), tr("&Increase &Text &Size"), this);
+//  textIncAct->setStatusTip(tr("Make text bigger"));
+//  textIncAct->setToolTip(tr("Make text bigger"));
+//  connect(textIncAct, SIGNAL(triggered()), this, SLOT(zoomFontIn()));
+//
+//  textDecAct = new QAction(QIcon(":/images/size_down.png"), tr("&Decrease &Text &Size"), this);
+//  textDecAct->setStatusTip(tr("Make text smaller"));
+//  textDecAct->setToolTip(tr("Make text smaller"));
+//  connect(textDecAct, SIGNAL(triggered()), this, SLOT(zoomFontOut()));
+//
+//  QAction *reloadAct = new QAction(this);
+//  reloadAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
+//  addAction(reloadAct);
 }
 
 void MainWindow::createToolBar()
