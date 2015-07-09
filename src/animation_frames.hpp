@@ -6,13 +6,14 @@
 
 class AnimationFrames {
     public:
-        AnimationFrames(std::string animation_frames_root);
+        AnimationFrames(std::string object_file_location, std::string sprite_file_location);
 
         std::pair<int, std::string> get_frame(std::string section, float completion);
         std::pair<int, std::string> get_frame(std::string section);
 
     private:
-        std::string animation_frames_root;
+        std::string object_file_location;
+        std::string sprite_file_location;
 };
 
 #endif

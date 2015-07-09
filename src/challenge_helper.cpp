@@ -45,7 +45,7 @@ int ChallengeHelper::make_object(Challenge *challenge,
         properties.position,
         name,
         walkability,
-        AnimationFrames(properties.sprite_file_location),
+        AnimationFrames(properties.object_file_location, properties.sprite_file_location),
         start_frame
     );
 }

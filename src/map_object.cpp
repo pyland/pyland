@@ -47,8 +47,8 @@ MapObject::MapObject(glm::vec2 position,
 
         init_shaders();
         // Hack hack hack
-        //load_textures(frames.get_frame(start_frame)); //frames.get_frame should return the full path_name of the frame wanted!
-        load_textures(std::make_pair(1, "../game/objects/characters/player/sprites/main.png"));
+        load_textures(frames.get_frame(start_frame)); //frames.get_frame should return the full path_name of the frame wanted!
+        //load_textures(std::make_pair(1, "../game/objects/characters/player/sprites/main.png"));
         generate_tex_data(frames.get_frame(start_frame));
         generate_vertex_data();
 

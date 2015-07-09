@@ -40,6 +40,7 @@
  </layer>
  <objectgroup name="OL1" width="0" height="0">
   <object name="characters/player/playerone" gid="286" x="64" y="320"/>
+  <object name="characters/enemies/crocodile/croc1" gid="296" x="256" y="128"/>
  </objectgroup>
  <layer name="TL2" width="9" height="9">
   <data encoding="base64" compression="zlib">

@@ -10,17 +10,18 @@
 #include "prettyprint.hpp"
 #include "texture_atlas.hpp"
 
-AnimationFrames::AnimationFrames(std::string animation_frames_root):
-    animation_frames_root(animation_frames_root) {
-        VLOG(1) << "Frames rooted at " << animation_frames_root;
+AnimationFrames::AnimationFrames(std::string object_file_location, std::string sprite_file_location):
+    object_file_location(object_file_location),
+    sprite_file_location(sprite_file_location) {
+        VLOG(1) << "Frames rooted at " << object_file_location; //TODO: Make log clearer
 }
 std::pair<int, std::string> AnimationFrames::get_frame(std::string section, float completion) {
     std::map<std::string, std::string> names_to_tilesets(TextureAtlas::names_to_tilesets());
-    auto begin(maptools::start_of(names_to_tilesets, animation_frames_root +"/"+ section));
-    auto end  (maptools::end_of  (names_to_tilesets, animation_frames_root +"/"+ section));
+    auto begin(maptools::start_of(names_to_tilesets, object_file_location +"/"+ section));
+    auto end  (maptools::end_of  (names_to_tilesets, object_file_location +"/"+ section));
 
     auto length(std::distance(begin, end));
-    CHECK_NE(length, 0) << ": there are no DIRECTORIES matching the input " << "(" << animation_frames_root +"/"+ section << ").";
+    CHECK_NE(length, 0) << ": there are no DIRECTORIES matching the input " << "(" << object_file_location +"/"+ section << ").";
 
     auto animation_number(int(completion * float(length) * 2));
     animation_number -= 2 * length == animation_number;
@@ -31,7 +32,7 @@ std::pair<int, std::string> AnimationFrames::get_frame(std::string section, floa
 
     std::string tile_name, tileset_name;
     std::tie   (tile_name, tileset_name) = *begin;
-    tile_name = animation_frames_root +"/"+ section +"/"+ tile_name;
+    tile_name = object_file_location+"/"+ section +"/"+ tile_name;
 
     auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name));
     return std::make_pair(index, tileset_name);
@@ -39,9 +40,9 @@ std::pair<int, std::string> AnimationFrames::get_frame(std::string section, floa
 
 std::pair<int, std::string> AnimationFrames::get_frame(std::string section) {
     //std::map<std::string, std::string> names_to_tilesets(TextureAtlas::names_to_tilesets());
-
+    LOG(INFO) << "the section is: " << section;
     //std::string tile_name(animation_frames_root + "/" + section);
     //std::string tileset_name(names_to_tilesets.at(tile_name));
     //auto index(TextureAtlas::get_shared(tileset_name)->get_name_index(tile_name)); // << TODO! error most likely not in get_shared but in get_name_index. Look at this tomorrow
-    return std::make_pair(1, section);
+    return std::make_pair(1, "../game/objects/" + object_file_location + "/sprites/" + sprite_file_location + ".png");
 }
