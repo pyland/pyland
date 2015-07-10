@@ -71,6 +71,7 @@ class QMenu;
 class QsciScintilla;
 class QProcess;
 class QTextEdit;
+class QSplitter;
 class SonicPiLexer;
 class QString;
 class QSlider;
@@ -94,6 +95,7 @@ private slots:
     void documentWasModified();
     void zoomFontIn();
     void zoomFontOut();
+    void setGameFocus();
     void timerHandler();
 
 private:
@@ -111,12 +113,21 @@ private:
       QsciAPIs*  api;
 
     QsciScintilla *textEdit;
-    static const int workspace_max = 10;
+    static const int workspace_max = 9;
     QsciScintilla *workspaces[workspace_max];
-    QTextEdit *outputPane;
-    QTextEdit *errorPane;
+    QTextEdit *terminalDisplay;
+    QSplitter *splitter;
 
-    QTabWidget *tabs;
+    QPushButton *buttonIn;
+    QPushButton *buttonOut;
+    QPushButton *buttonRun;
+    QPushButton *buttonSpeed;
+
+    QTabWidget *textWidget;
+
+    QTextEdit *textInfo;
+
+    QWidget *gameWidget;
 
     QWidget * dummySideWidget;
     QWidget * mainWidget;
