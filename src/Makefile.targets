@@ -75,6 +75,10 @@ $(EXECUTABLE): $(BASE_OBJS)              \
 		$(TINYXML_LDFLAGS)   $(TINYXML_LDLIBS)   $(TINYXML_CXXFLAGS)   \
 		$(ZLIB_LDFLAGS)      $(ZLIB_LDLIBS)      $(ZLIB_CXXFLAGS)      \
 		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)           \
+		$(QT_INCFLAGS) 	      					\
+		$(QT_CXXFLAGS)      $(QT_DEFINES)		\
+		$(QT_LFLAGS)	    $(QT_LIBS)			\
+	
 
 $(TEST_EXECUTABLE): $(EXECUTABLE) $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS)
 	@echo "${bold}${green}[ Compiling $(TEST_EXECUTABLE) ]${normal}"
@@ -91,7 +95,6 @@ $(TEST_EXECUTABLE): $(EXECUTABLE) $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS)
 		$(TINYXML_LDFLAGS)   $(TINYXML_LDLIBS)   $(TINYXML_CXXFLAGS)   \
 		$(ZLIB_LDFLAGS)      $(ZLIB_LDLIBS)      $(ZLIB_CXXFLAGS)      \
 		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)           \
-		$(QT_LIBFLAGS)
 
 
 #
@@ -135,12 +138,15 @@ $(QT_OBS): %.o : %.cpp | dependencies/qtgui
 	@echo "${bold}[ Compiling qtgui file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 #	@$(QMAKING) -o Makefile.qt qtgui/application.pro
 
-	@$(COMPILER) -c $*.cpp -o $*.o \
-              $(GLOG_CPPFLAGS)   $(GLOG_CXXFLAGS)        \
-              $(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS) \
-              $(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)         \
-              $(CPPFLAGS)        $(CXXFLAGS)             \
-              $(QT_LIBFLAGS)                             \
+	@$(COMPILER)  -c $*.cpp -o $*.o \
+		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
+		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
+		$(PYTHON_CPPFLAGS)   $(PYTHON_CXXFLAGS)   \
+		$(CPPFLAGS)          $(CXXFLAGS)          \
+		$(WARNINGS)	     $(QT_INCFLAGS)  \
+		$(QT_CXXFLAGS) $(QT_DEFINES) \
+		$(QT_INCPATH)			\
+		      
 
 
 $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges

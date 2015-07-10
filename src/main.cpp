@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-
+#include "game_init.hpp"
 #include "button.hpp"
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
@@ -54,9 +54,11 @@ using namespace std;
 
 static std::mt19937 random_generator;
 Challenge* pick_challenge(ChallengeData* challenge_data);
-int main(int argc, const char *argv[]) {
+int main(int argc, char *argv[]) {
+
     std::string map_path("../maps/start_screen.tmx");
 
+    game_init(argc, argv);
     switch (argc) {
         default:
             std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;

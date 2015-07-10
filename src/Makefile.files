@@ -56,6 +56,7 @@ QT_OBS = \
 	qtgui/moc_mainwindow.o		\
 	qtgui/qrc_application.o         \
 	qtgui/game_init.o		\
+	qtgui/parsingfunctions.o	\
 
 HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}            \

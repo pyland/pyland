@@ -18,13 +18,16 @@
 
 #include <iostream>
 #include "mainwindow.h"
-#include "parsingfunctions.h"
+#include "parsingfunctions.hpp"
+
+#include <iostream>
+using namespace std;
 
 int game_init(int argc, char *argv[])
 {
-
+    cout << "REACHED HERE" <<endl;
     create_apih_from_wrapper();
-
+    cout << "REACHED HERE" <<endl;
 	QApplication *app = new QApplication(argc, argv);
 	app->setStyle("windows");
 	app->setAttribute(Qt::AA_NativeWindows, true);
