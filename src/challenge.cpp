@@ -47,7 +47,7 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         for(auto location : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
             int object_id = ChallengeHelper::make_object(
                 this,
-                location.second.object_file_location + "/" + location.first, //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly
+                "Fred", //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly
                 Walkability::BLOCKED,	//wether the object can be walked through	
                 location.first //name of the object
             );
