@@ -55,6 +55,7 @@ private slots:
     void documentWasModified();
     void zoomFontIn();
     void zoomFontOut();
+    void setGameFocus();
     void timerHandler();
 
 private:
@@ -80,6 +81,10 @@ private:
     QPushButton *buttonSpeed;
 
     QTabWidget *textWidget;
+
+    QTextEdit *textInfo;
+
+    QWidget *gameWidget;
 
     QsciLexerPython *lexer;
 

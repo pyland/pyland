@@ -172,7 +172,7 @@ MainWindow::MainWindow() {
   // Setup window
   QVBoxLayout *windowLayout = new QVBoxLayout;
 
-  QWidget *gameWidget = new QWidget;
+  gameWidget = new QWidget;
 
   gameWidget->setAttribute(Qt::WA_NativeWindow);
 
@@ -196,22 +196,14 @@ MainWindow::MainWindow() {
   QPalette colourPalette(palette());
   colourPalette.setColor(QPalette::Background,QColor(250,250,197));
   colourPalette.setColor(QPalette::Button,QColor(245,245,165));
-  colourPalette.setColor(QPalette::Button,QColor(245,245,165));
 
   mainWidget->setPalette(colourPalette);
   mainWidget->setAutoFillBackground(true);
 
-  mainWidget->setStyleSheet("QScrollBar::add-page:horizontal{background:rgb(0,255,0);height:20px;}");
-
-
   mainWidget->setMinimumSize(600,420);
 
   this->setContextMenuPolicy(Qt::NoContextMenu);
-
-  this->setStyleSheet("QScrollBar::add-page:horizontal{background:rgb(0,255,0);height:20px;}");
-
   this->setCentralWidget(mainWidget);
-
 
   std::cout << gameWidget->winId() << "\n";
 
@@ -221,8 +213,8 @@ MainWindow::MainWindow() {
   }
 
   embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
-  SDL_SetWindowSize(embedWindow, 600, 420);
-  glViewport(0, 0, 600, 420);
+  SDL_SetWindowSize(embedWindow, 200, 200);
+  glViewport(0, 0, 200, 200);
   embedWindow->flags |= SDL_WINDOW_OPENGL;
   SDL_GL_LoadLibrary(NULL);
   glContext = SDL_GL_CreateContext(embedWindow);
@@ -299,15 +291,6 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
   ws->setCaretWidth(5);
   ws->setMarginWidth(1,5);
   ws->setCaretForegroundColor("deep pink");
-  //ws->setHorizontalScrollBar(ws->horizontalScrollBar()->setStyleSheet("background: rgb(0,0,255);border: rgb(245,0,0);"));
-  //ws->horizontalScrollBar()->setStyleSheet("background: rgb(0,0,255);border: rgb(245,0,0);");
-  ws->horizontalScrollBar()->setStyleSheet("QScrollBar::add-page:horizontal{background:rgb(0,255,0);}");
-  //ws->horizontalScrollBar()->setStyleSheet("background-color:rgb(0,0,0);window:rgb(255,255,255);");
-
-
-  //ws->setStyleSheet("background: rgb(0,0,255);border: rgb(245,0,0);");
-  //ws->setStyleSheet("QScrollBar::add-page:horizontal,QScrollBar::sub-page:horizontal {background: rgb(0,0,0);};");
-
 
   //Create zoom buttons for text widget
   QHBoxLayout *zoomLayout = new QHBoxLayout;
@@ -333,9 +316,14 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
 
   ws->addScrollBarWidget(zoomWidget,Qt::AlignLeft);
 
+
+
   //Connect buttons to functions
   connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
   connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
+  connect(ws->horizontalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
+  connect(ws->verticalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
+
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -351,19 +339,22 @@ bool MainWindow::saveAs()
 void MainWindow::runCode()
 {
   terminalDisplay->clear();
-  terminalDisplay->hide();
-  statusBar()->showMessage(tr("Running...."), 2000);
+  //terminalDisplay->hide();
+  //statusBar()->showMessage(tr("Running...."), 2000);
   std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
+  setGameFocus();
 }
 
 void MainWindow::zoomFontIn()
 {
   ((QsciScintilla*)textWidget->currentWidget())->zoomIn(3);
+  setGameFocus();
 }
 
 void MainWindow::zoomFontOut()
 {
   ((QsciScintilla*)textWidget->currentWidget())->zoomOut(3);
+
 }
 
 
@@ -382,6 +373,15 @@ void MainWindow::createActions()
 {
 
   connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
+  connect(buttonSpeed,SIGNAL(clicked()),this,SLOT (setGameFocus()));
+  //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
+  //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
+  //connect(textInfo,SIGNAL(selectionChanged()),this,SLOT (setGameFocus()));
+}
+
+void MainWindow::setGameFocus()
+{
+    gameWidget->setFocus();
 }
 
 void MainWindow::createToolBar()
@@ -390,7 +390,7 @@ void MainWindow::createToolBar()
   toolBar->setFloatable(false);
   toolBar->setMovable(false);
 
-  QTextEdit *textInfo = new QTextEdit("");
+  textInfo = new QTextEdit("");
   textInfo->setContextMenuPolicy(Qt::NoContextMenu);
   textInfo->setFontPointSize(17.0);
   textInfo->setTextInteractionFlags(Qt::NoTextInteraction);
