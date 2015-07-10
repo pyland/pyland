@@ -277,7 +277,8 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
   ws->setFoldMarginColors(QColor("whitesmoke"),QColor("whitesmoke"));
   ws->setMarginLineNumbers(0, true);
   ws->setMarginWidth(0, "100000");
-  ws->setMarginsBackgroundColor(QColor("whitesmoke"));
+  //ws->setMarginsForegroundColor(QColor("dark gray"));
+  ws->setMarginsForegroundColor(QColor("gray"));
   ws->setMarginsForegroundColor(QColor("dark gray"));
   ws->setMarginsFont(QFont("Menlo",5, -1, true));
   ws->setUtf8(true);
