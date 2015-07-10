@@ -26,16 +26,16 @@ int main(int argc, char *argv[])
 
     //Q_INIT_RESOURCE(application);
 
-	QApplication *app = new QApplication(argc, argv);
-	app->setStyle("gtk");
-	app->setAttribute(Qt::AA_NativeWindows, true);
+    QApplication *app = new QApplication(argc, argv);
+    app->setStyle("gtk");
+    app->setAttribute(Qt::AA_NativeWindows, true);
 
-	MainWindow *mainWin = new MainWindow();
+    MainWindow *mainWin = new MainWindow();
 
     int ret = app->exec();
 
     delete mainWin;
     delete app;
 
-	return ret;
+    return ret;
 }
