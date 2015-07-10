@@ -1,15 +1,27 @@
 import operator
 import os
 
+import sys
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/..')
+from api_placeholder import API
+
+api = API()
+
 """ This is the base game object,
 Any object you wish to have in game MUST by a child of this
 """
 class GameObject:
 
-    def __init__(self):
+    __name = ""
+
+    def __init__(self, name):
+        self.__name = name
         self.set_sprite("")
         self.set_visible(False)
         self.set_solid(False)
+
+    def get_name(self):
+        return self.__name
 
     def set_sprite(self, sprite_location): #all sprites are relative to sprites/sprite_location/0.png , when objects are animated the engine automatically cycles through the numbered sprites in the folder
         api.set_sprite(self, sprite_location)
@@ -35,12 +47,12 @@ class GameObject:
         api.start_animating(self) #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
         return
 
-    def stop_animating(self)
+    def stop_animating(self):
         self.pause_animating()
         api.set_frame(self, 0) #set animation back to first frame
         return
 
-    def pause_animating(self)
+    def pause_animating(self):
         api.pause_animating(self) #api will pause the animation
         return
 
@@ -70,7 +82,7 @@ class GameObject:
     """ Smoothly slides this object east by one tile 
     The callback is called when the operation is complete
     """
-    def move_east(sel, callbackf):
+    def move_east(self, callback):
         api.move_east(self, callback)
         return
 
@@ -84,12 +96,18 @@ class GameObject:
     """ Smoothly slides this object west by one tile 
     The callback is called when the operation is complete
     """
-    def move_west(self, callback)
+    def move_west(self, callback):
         api.move_south(self, callback)
         return
 
     """ Returns if this object is moving """
-    def moving(self)
+    def moving(self):
         return api.moving(self)
+    
+    """ Returns destroys the object (removes the instance from the map, and cleans up all information associated with it)
+    callback gets run once the operation is complete
+    """
+    def destroy(self, callback):
+        api.destroy(self, callback)
 
 

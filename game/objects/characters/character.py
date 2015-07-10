@@ -61,8 +61,8 @@ However, it doesn't check if the tiles that are being moved to are empty or not.
 """ 
 class Character(GameObject):
 
-    def __init(self):
-        super().__init__()
+    def __init(self, name):
+        super().__init__(name)
         self.set_sprite("main/north")
 
     """ Returns True if the character is moving,
@@ -117,29 +117,38 @@ class Character(GameObject):
         return __is_facing("west")
 
     """ Checks to see if the character is facing in the direction given
+    direction -- a string specifing the direction, either 'north', 'east', 'south' or 'west'
     """
     def __is_facing(self, direction):
-        sprite_location = self.get_sprite()
-        sprite_location = sprite_location[sprite_location.rfind("/") : ] #slice all the characters before the last "/" from the string
+        sprite_location = self.get_sprite()  # The direction is related to where the sprite is stored, so extract the information from there
+        sprite_location = sprite_location[sprite_location.rfind("/") : ] # Slice all the characters before the last "/" from the string
         return (sprite_location == direction)
-        
-    """ Move character in direction by one tile. 
-    Overides general object implementation
+    
+    """ Moves the character in the given direction by one tile and animates them
+    face_x -- the function to make the character face in the correct direction
+    parent_move_x -- the parent move function, calls the engine api but doesn't start the animation
+    callback -- the function that you would like to call after the movement is complete
+    """
+    def __move_x(self, face_x, parent_move_x, callback):
+        self.face_x()
+        self.start_animating()
+        def callbacktwo:  # Have create a wrapper callback function which makes sure that the animation stops before anything else is run
+            self.stop_animating()
+            callback()
+        parent_move_x(callbacktwo)
+        return
+    
+    """ Moves the character North by one tile and makes them face in that direction
+    callback -- the function that you would like to call after the movement is complete
     """
     def move_north(self, callback):
         (x, y, z) = self.get_position()
         if(api.solid_objects_at((x, y + 1, z)).length == 0): #check that the relevant location is free
-            self.face_north()
-            self.start_animating()
-            
-            def callbacktwo:
-                self.stop_animating()
-                callback() 
-            
-            super().move_north(callbacktwo) #pass the callback to say you want the object to stop animating when the operation is complete
+            self.__move_x(self.face_north, super().move_north, callback)
         return
 
-    
+    """ Same as above, but a similar function without a callback required
+    """
     def move_north(self):
         self.move_north(lambda: pass) #move without the callback
 
@@ -149,14 +158,7 @@ class Character(GameObject):
     def move_east(self, callback):
         (x, y, z) = self.get_position()
         if(api.solid_objects_at((x + 1, y, z)).length == 0): #check that the relevant location is free
-            self.face_east()
-            self.start_animating()
-            
-            def callbacktwo:
-                self.stop_animating()
-                callback() 
-            
-            super().move_east(callbacktwo) #pass the callback to say you want the object to stop animating when the operation is complete
+            self.__move_x(self.face_east, super().move_east, callback)
         return
 
     def move_east(self):
@@ -168,14 +170,7 @@ class Character(GameObject):
     def move_south(self, callback):
         (x, y, z) = self.get_position()
         if(api.solid_objects_at((x, y - 1, z)).length == 0): #check that the relevant location is free
-            self.face_south()
-            self.start_animating()
-            
-            def callbacktwo:
-                self.stop_animating()
-                callback() 
-            
-            super().move_south(callbacktwo) #pass the callback to say you want the object to stop animating when the operation is complete
+            self.__move_x(self.face_south, super().move_south, callback)
         return
 
     def move_south(self):
@@ -187,14 +182,7 @@ class Character(GameObject):
     def move_west(self, callback):
         (x, y, z) = self.get_position()
         if(api.solid_objects_at((x - 1, y, z)).length == 0): #check that the relevant location is free
-            self.face_west()
-            self.start_animating()
-            
-            def callbacktwo:
-                self.stop_animating()
-                callback() 
-            
-            super().move_west(callbacktwo) #pass the callback to say you want the object to stop animating when the operation is complete
+            self.__move_x(self.face_west, super().move_west, callback)
         return
 
     def move_west(self):
