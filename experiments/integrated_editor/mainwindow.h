@@ -68,7 +68,7 @@ private:
     QsciScintilla* filenameToWorkspace(std::string filename);
 
     QsciScintilla *textEdit;
-    static const int workspace_max = 8;
+    static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
     QTextEdit *outputPane;
     QTextEdit *errorPane;

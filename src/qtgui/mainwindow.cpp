@@ -82,6 +82,8 @@ struct SDL_Window
 
 typedef struct SDL_Window SDL_Window;
 
+
+
 MainWindow::MainWindow()
 {
 
@@ -127,7 +129,6 @@ MainWindow::MainWindow()
     outputPane->setReadOnly(true);
     errorPane->setReadOnly(true);
     outputPane->setLineWrapMode(QTextEdit::NoWrap);
-
 #if defined(Q_OS_WIN)
     outputPane->setFontFamily("Courier New");
 #elif defined(Q_OS_MAC)

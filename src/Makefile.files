@@ -51,6 +51,12 @@ CHALLENGE_OBJS = \
 	challenges/start_screen.o           \
 	challenges/new_challenge.o	    \
 
+QT_OBS = \
+	qtgui/mainwindow.o		\
+	qtgui/moc_mainwindow.o		\
+	qtgui/qrc_application.o         \
+	qtgui/game_init.o		\
+	qtgui/parsingfunctions.o	\
 
 HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}            \
