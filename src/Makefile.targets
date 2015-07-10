@@ -20,7 +20,6 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 		$(MAKE) CXXFLAGS=-fPIC -C tmx-parser -f Makefile.linux; \
 	fi                                                          \
 
-
 #
 # Folders
 #
@@ -43,6 +42,9 @@ dependencies/python_embed: | dependencies
 dependencies/test: | dependencies
 	@-${MKDIR} dependencies/test
 
+dependencies/qtgui: | dependencies
+	@-$ {MKDIR} dependencies/qtgui
+
 
 
 #
@@ -53,6 +55,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
                $(CHALLENGE_OBJS)         \
                $(EXECUTABLE_OBJ)         \
                $(GUI_OBJS)               \
+	       $(QT_OBS)                 \
                $(INPUT_OBJS)             \
                $(PYTHON_OBJS)            \
                tmx-parser/libtmxparser.a \
@@ -62,6 +65,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
 
 	@$(COMPILER) -o $@ $(EXECUTABLE_OBJ) \
 		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
+                $(QT_OBS)                                                     \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
@@ -71,12 +75,17 @@ $(EXECUTABLE): $(BASE_OBJS)              \
 		$(TINYXML_LDFLAGS)   $(TINYXML_LDLIBS)   $(TINYXML_CXXFLAGS)   \
 		$(ZLIB_LDFLAGS)      $(ZLIB_LDLIBS)      $(ZLIB_CXXFLAGS)      \
 		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)           \
+		$(QT_INCFLAGS) 	      					\
+		$(QT_CXXFLAGS)      $(QT_DEFINES)		\
+		$(QT_LFLAGS)	    $(QT_LIBS)			\
+	
 
 $(TEST_EXECUTABLE): $(EXECUTABLE) $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS)
 	@echo "${bold}${green}[ Compiling $(TEST_EXECUTABLE) ]${normal}"
 
 	@$(COMPILER) -o $@ $(TEST_EXECUTABLE_OBJ) \
 		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(TEST_OBJS) \
+		$(QT_OBS)                                                     \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
@@ -125,6 +134,19 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)         \
 		$(CPPFLAGS)        $(CXXFLAGS)             \
 
+$(QT_OBS): %.o : %.cpp | dependencies/qtgui
+	@echo "${bold}[ Compiling qtgui file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+#	@$(QMAKING) -o Makefile.qt qtgui/application.pro
+
+	@$(COMPILER)  -c $*.cpp -o $*.o \
+		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
+		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
+		$(PYTHON_CPPFLAGS)   $(PYTHON_CXXFLAGS)   \
+		$(CPPFLAGS)          $(CXXFLAGS)          \
+		$(WARNINGS)	     $(QT_INCFLAGS)  \
+		$(QT_CXXFLAGS) $(QT_DEFINES) \
+		$(QT_INCPATH)			\
+		      
 
 
 $(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
@@ -210,6 +232,7 @@ clean:
 		$(CHALLENGE_OBJS)      \
 		$(EXECUTABLE_OBJ)      \
 		$(GUI_OBJS)            \
+		$(QT_OBS)              \
 		$(INPUT_OBJS)          \
 		$(PYTHON_OBJS)         \
 		$(PYTHON_SHARED_OBJS)  \

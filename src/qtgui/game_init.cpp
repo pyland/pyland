@@ -18,9 +18,12 @@
 
 #include <iostream>
 #include "mainwindow.h"
-#include "parsingfunctions.h"
+#include "parsingfunctions.hpp"
 
-int main(int argc, char *argv[])
+#include <iostream>
+using namespace std;
+
+int game_init(int argc, char *argv[])
 {
     create_apih_from_wrapper();
 
@@ -39,5 +42,4 @@ int main(int argc, char *argv[])
     delete app;
 
     return ret;
-
 }
