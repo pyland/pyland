@@ -59,6 +59,7 @@ private slots:
     void timerHandler();
 
 private:
+    Challenge* pick_challenge(ChallengeData* challenge_data);
 
     void initWorkspace(QsciScintilla* ws);
     void clearOutputPanels();
