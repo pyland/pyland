@@ -69,6 +69,8 @@ private:
     std::string workspaceFilename(QsciScintilla* text);
     QsciScintilla* filenameToWorkspace(std::string filename);
 
+    QsciLexerPython *lexer;
+
     QsciScintilla *textEdit;
     static const int workspace_max = 9;
     QsciScintilla *workspaces[workspace_max];
@@ -85,8 +87,6 @@ private:
     QTextEdit *textInfo;
 
     QWidget *gameWidget;
-
-    QsciLexerPython *lexer;
 
     QToolBar *toolBar;
 

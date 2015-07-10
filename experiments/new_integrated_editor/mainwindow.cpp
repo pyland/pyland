@@ -373,7 +373,7 @@ void MainWindow::createActions()
 {
 
   connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-  connect(buttonSpeed,SIGNAL(clicked()),this,SLOT (setGameFocus()));
+  connect(buttonSpeed,SIGNAL(pressed()),this,SLOT (setGameFocus()));
   //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
   //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
   //connect(textInfo,SIGNAL(selectionChanged()),this,SLOT (setGameFocus()));
