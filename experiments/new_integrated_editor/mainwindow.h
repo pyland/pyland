@@ -69,7 +69,7 @@ private:
     QsciScintilla* filenameToWorkspace(std::string filename);
 
     QsciScintilla *textEdit;
-    static const int workspace_max = 10;
+    static const int workspace_max = 9;
     QsciScintilla *workspaces[workspace_max];
     QTextEdit *terminalDisplay;
     QSplitter *splitter;
@@ -79,7 +79,7 @@ private:
     QPushButton *buttonRun;
     QPushButton *buttonSpeed;
 
-    QTabWidget *tabs;
+    QTabWidget *textWidget;
 
     QsciLexerPython *lexer;
 

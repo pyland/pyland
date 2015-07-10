@@ -86,59 +86,18 @@ typedef struct SDL_Window SDL_Window;
 MainWindow::MainWindow() {
   this->setUnifiedTitleAndToolBarOnMac(true);
 
-  // create workspace with tabs
-  tabs = new QHTabWidget();
-  tabs->setTabsClosable(false);
-  tabs->setMovable(false);
-  tabs->setTabPosition(QTabWidget::East);
-  tabs->setUsesScrollButtons(true);
-  tabs->setStyleSheet("QHTabWidget::tab{max-height: 4px};");
-  //MAKE TABS LESS TALL
+  // create workspace with textWidget
+  textWidget = new QHTabWidget();
+  textWidget->setTabsClosable(false);
+  textWidget->setMovable(false);
+  textWidget->setTabPosition(QTabWidget::East);
+  textWidget->setUsesScrollButtons(true);
 
-  // create zoom buttons
-  QHBoxLayout *zoomLayout = new QHBoxLayout;
-
-  buttonIn = new QPushButton("+");
-  buttonOut = new QPushButton("-");                 //Minus text does not look centered when running
-  //REMOVE YELLOW RECTANGLE ACROSS BUTTONS TO CORNER THAT BLOCKS BUTTONS
-
-  buttonIn->setMaximumWidth(20);
-  buttonOut->setMaximumWidth(20);
-
-  zoomLayout->addWidget(buttonIn);
-  zoomLayout->addWidget(buttonOut);
-
-  zoomLayout->setContentsMargins(0,0,0,0);
-  zoomLayout->setSpacing(0);
-
-  QWidget *zoomWidget = new QWidget;
-
-  zoomWidget->setLayout(zoomLayout);
-
-  // make zoom buttons slightly transparent
-  zoomWidget->setStyleSheet("background-color: rgba(245,245,165,70);");
-
-  // add the workspace and zoom buttons to the same grid position
-  QGridLayout *textLayout = new QGridLayout;
-
-  textLayout->addWidget(tabs,0,0);
-  textLayout->addWidget(zoomWidget,0,0);
-
-  // position zoom widget
-  textLayout->setAlignment(zoomWidget,Qt::AlignTop | Qt::AlignRight);
-  //zoomWidget->setContentsMargins(0,3,26,0);
-  zoomWidget->setContentsMargins(0,3,42,0);
-  textLayout->setContentsMargins(0,0,0,0);
-
-  QWidget *textWidget = new QWidget;
-
-  textWidget->setLayout(textLayout);
-
-  // create workspaces and add them to the tabs
+  // create workspaces and add them to the textWidget
   for(int ws = 0; ws < workspace_max; ws++) {
 	  workspaces[ws] = new QsciScintilla;
 	  QString w = QString("%1").arg(QString::number(ws + 1));
-	  tabs->addTab(workspaces[ws], w);
+	  textWidget->addTab(workspaces[ws], w);
   }
 
   lexer = new QsciLexerPython;
@@ -233,16 +192,23 @@ MainWindow::MainWindow() {
 
   setWindowTitle(tr("Pyland"));
   mainWidget->setWindowIcon(QIcon("/images/icon.png"));
+
   QPalette colourPalette(palette());
   colourPalette.setColor(QPalette::Background,QColor(250,250,197));
+  colourPalette.setColor(QPalette::Button,QColor(245,245,165));
   colourPalette.setColor(QPalette::Button,QColor(245,245,165));
 
   mainWidget->setPalette(colourPalette);
   mainWidget->setAutoFillBackground(true);
 
+  mainWidget->setStyleSheet("QScrollBar::add-page:horizontal{background:rgb(0,255,0);height:20px;}");
+
+
   mainWidget->setMinimumSize(600,420);
 
   this->setContextMenuPolicy(Qt::NoContextMenu);
+
+  this->setStyleSheet("QScrollBar::add-page:horizontal{background:rgb(0,255,0);height:20px;}");
 
   this->setCentralWidget(mainWidget);
 
@@ -255,8 +221,8 @@ MainWindow::MainWindow() {
   }
 
   embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
-  SDL_SetWindowSize(embedWindow, 200, 200);
-  glViewport(0, 0, 200, 200);
+  SDL_SetWindowSize(embedWindow, 600, 420);
+  glViewport(0, 0, 600, 420);
   embedWindow->flags |= SDL_WINDOW_OPENGL;
   SDL_GL_LoadLibrary(NULL);
   glContext = SDL_GL_CreateContext(embedWindow);
@@ -318,7 +284,7 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
   ws->setCaretLineBackgroundColor(QColor("whitesmoke"));
   ws->setFoldMarginColors(QColor("whitesmoke"),QColor("whitesmoke"));
   ws->setMarginLineNumbers(0, true);
-  ws->setMarginWidth(0, "100000000");
+  ws->setMarginWidth(0, "100000");
   ws->setMarginsBackgroundColor(QColor("whitesmoke"));
   ws->setMarginsForegroundColor(QColor("dark gray"));
   ws->setMarginsFont(QFont("Menlo",5, -1, true));
@@ -333,7 +299,43 @@ void MainWindow::initWorkspace(QsciScintilla* ws) {
   ws->setCaretWidth(5);
   ws->setMarginWidth(1,5);
   ws->setCaretForegroundColor("deep pink");
-  ws->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  //ws->setHorizontalScrollBar(ws->horizontalScrollBar()->setStyleSheet("background: rgb(0,0,255);border: rgb(245,0,0);"));
+  //ws->horizontalScrollBar()->setStyleSheet("background: rgb(0,0,255);border: rgb(245,0,0);");
+  ws->horizontalScrollBar()->setStyleSheet("QScrollBar::add-page:horizontal{background:rgb(0,255,0);}");
+  //ws->horizontalScrollBar()->setStyleSheet("background-color:rgb(0,0,0);window:rgb(255,255,255);");
+
+
+  //ws->setStyleSheet("background: rgb(0,0,255);border: rgb(245,0,0);");
+  //ws->setStyleSheet("QScrollBar::add-page:horizontal,QScrollBar::sub-page:horizontal {background: rgb(0,0,0);};");
+
+
+  //Create zoom buttons for text widget
+  QHBoxLayout *zoomLayout = new QHBoxLayout;
+
+  buttonIn = new QPushButton("+");
+  buttonOut = new QPushButton("-");                 //Text do not seem centered in buttons
+
+  buttonIn->setMaximumWidth(20);
+  buttonOut->setMaximumWidth(20);
+  buttonIn->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+  buttonOut->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+
+  zoomLayout->addWidget(buttonIn);
+  zoomLayout->addWidget(buttonOut);
+
+  zoomLayout->setContentsMargins(0,0,0,0);
+  zoomLayout->setSpacing(0);
+
+  QWidget *zoomWidget = new QWidget;
+
+  zoomWidget->setLayout(zoomLayout);
+  zoomWidget->setMaximumWidth(40);
+
+  ws->addScrollBarWidget(zoomWidget,Qt::AlignLeft);
+
+  //Connect buttons to functions
+  connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
+  connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -351,17 +353,17 @@ void MainWindow::runCode()
   terminalDisplay->clear();
   terminalDisplay->hide();
   statusBar()->showMessage(tr("Running...."), 2000);
-  std::string code = ((QsciScintilla*)tabs->currentWidget())->text().toStdString();
+  std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
 }
 
 void MainWindow::zoomFontIn()
 {
-  ((QsciScintilla*)tabs->currentWidget())->zoomIn(3);
+  ((QsciScintilla*)textWidget->currentWidget())->zoomIn(3);
 }
 
 void MainWindow::zoomFontOut()
 {
-  ((QsciScintilla*)tabs->currentWidget())->zoomOut(3);
+  ((QsciScintilla*)textWidget->currentWidget())->zoomOut(3);
 }
 
 
@@ -378,8 +380,7 @@ void MainWindow::clearOutputPanels()
 
 void MainWindow::createActions()
 {
-  connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
-  connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
+
   connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
 }
 
