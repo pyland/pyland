@@ -21,11 +21,6 @@ int create_apih_from_wrapper()
     char ln[200];
     char * rest;
 
-    cout << "HELLO" << endl;
-    char a;
-    cin >> a;
-    cout << "YO" << endl;
-
     if(fin.bad())
     {
         cerr << "input file is bad" << endl;
