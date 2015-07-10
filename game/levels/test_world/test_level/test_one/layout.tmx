@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="9" height="9" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="18" height="18" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -18,43 +18,47 @@
  <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/walls.png" width="320" height="1216"/>
  </tileset>
- <layer name="TL1a" width="9" height="9">
+ <layer name="TL1a" width="18" height="18">
   <data encoding="base64" compression="zlib">
-   eJxLYGBgSBjFFGEAd+EeYQ==
+   eJxLYGBgSBjFo3gUj+JRzAAAlhx5gQ==
   </data>
  </layer>
- <layer name="TL1b" width="9" height="9">
+ <layer name="TL1b" width="18" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYCAMZIBYGkqL41GXDaUliTBTggg1xJhDLbtwqeEAYnYoLYzGZ4diADrDAbg=
+   eJxjYBgFo2AUjIJRAAIABRAAAQ==
   </data>
  </layer>
- <layer name="WL1" width="9" height="9">
+ <layer name="WL1" width="18" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlAIAAUQAAQ==
+   eJxjYBgFo2AUjIJRAAIABRAAAQ==
   </data>
  </layer>
- <layer name="CL1" width="9" height="9">
+ <layer name="CL1" width="18" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlAIAAUQAAQ==
+   eJxjYBgFo2AUjIJRAAIABRAAAQ==
   </data>
  </layer>
- <objectgroup name="OL1" width="0" height="0">
-  <object name="test/testone" gid="286" x="64" y="320"/>
-  <object name="characters/enemies/crocodile/croc1" gid="296" x="128" y="128"/>
+ <objectgroup name="OL1" width="18" height="18">
+  <object name="characters/player/player_one" gid="286" x="512" y="896"/>
+  <object name="characters/enemies/crocodile/croc_one" gid="296" x="576" y="1024"/>
+  <object name="boulder/boulder_one" gid="288" x="448" y="576"/>
+  <object name="boulder/boulder_two" gid="288" x="704" y="704"/>
+  <object name="boulder/boulder_three" gid="288" x="832" y="512"/>
+  <object name="portal/portal_one" gid="293" x="960" y="896"/>
  </objectgroup>
- <layer name="TL2" width="9" height="9">
+ <layer name="TL2" width="18" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYBja4MpAOwAIAG6UANU=
+   eJxjYBgFo2AUjIJRAAIABRAAAQ==
   </data>
  </layer>
- <layer name="CL2" width="9" height="9">
+ <layer name="CL2" width="18" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlAIAAUQAAQ==
+   eJxjYBgFo2AUjIJRAAIABRAAAQ==
   </data>
  </layer>
- <layer name="OL2" width="9" height="9">
+ <layer name="OL2" width="18" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlAIAAUQAAQ==
+   eJxjYBgFo2AUjIJRAAIABRAAAQ==
   </data>
  </layer>
 </map>

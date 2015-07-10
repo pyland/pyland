@@ -42,5 +42,5 @@ std::pair<int, std::string> AnimationFrames::get_frame(std::string section, floa
 */
 
 std::pair<int, std::string> AnimationFrames::get_frame() {
-    return std::make_pair(0, "../game/objects/" + object_file_location + "/sprites/" + sprite_file_location + "/0.png");
+    return std::make_pair(0, "../game/objects/" + object_file_location + "/sprites/" + sprite_file_location + "0.png");
 }

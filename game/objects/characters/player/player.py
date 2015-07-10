@@ -33,9 +33,12 @@ class Player(Character):
     """
     def __init__(self, name):
         super().__init__()
-        #self.setSprite(), overwrite what could be grabbed from tiled
-        print('I am alive!!!! I am ' + name) #Maybe have a debug option as well?
-    
+        #register button callbacks
+        api.add_button_callback(api.CONST_BUTTON_UP, self.__handle_movement_input(self.is_facing_north, self.face_north, self.move_north)
+        api.add_button_callback(api.CONST_BUTTON_RIGHT, self.__handle_movement_input(self.is_facing_east, self.face_east, self.move_east)
+        api.add_button_callback(api.CONST_BUTTON_DOWN, self.__handle_movement_input(self.is_facing_south, self.face_south, self.move_south)
+        api.add_button_callback(api.CONST_BUTTON_LEFT, self.__handle_movement_input(self.is_facing_west, self.face_west, self.move_west)
+
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
     This will all be autofilled by the creation script with super filled in to help
@@ -45,11 +48,10 @@ class Player(Character):
     """ This method is run every frame before the graphics are displayed.
     You can put code here you want to run before every frame.
     You MUST but super().beforeFrameUpdate() for this to work. Otherwise this may lead
-    to unexpected behaviour.
+    to unexpected behaviour. MAY NOT BE NEEDED, may be able to do everything with callbacks!
     """
     def before_frame_update(self):
         super().before_frame_update()
-        self.__handle_movement_input()
 
     """ public:
     Put the regular public methods you wish to use here.
@@ -59,40 +61,18 @@ class Player(Character):
     Put the private methods you wish to use here.
     """
     
-    """ This method takes the movement input of the player character and appropriately
-    handles it.
+    """ This method takes the movement input of the player character and returns the appropriate
+    function for moving them in the direction required
+    face_x -- self.face_north/east/south/west() as appropriately required to get them to face in that direction
     """
-    def __handle_movement_input(self):
-        if(not(self.moving())):  #can't register input if the character is in the middle of moving
-            (x, y, z) = self.get_location() #NB z is the layer number of the object
-            if(is_input_pressed(CONST_UP)):
-                if(not(self.is_facing("north"))):
-                    self.faceNorth()
+    def __handle_movement_input(self, is_facing_x, face_x, move_x):
+        def handle_input:
+            if(not(self.moving())):  #can't register input if the character is in the middle of moving
+                if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first  
+                    move_x()
                 else:
-                    (x, y) = map(operator.add, (x, y),(0, 1))
-                    if(is_location_free(x, y, z)):
-                        self.move()
-            elif(is_input_pressed(CONST_DOWN)):
-                if(not(self.is_facing("south"))):
-                    self.face_south()
-                else:
-                    (x, y) = map(operator.add, (x, y),(0, -1))
-                    if(is_location_free(x, y, z)):
-                        self.move_south()
-            elif(is_input_pressed(CONST_RIGHT)):
-                if(not(self.is_facing("east"))):
-                    self.face_east()
-                else:
-                    (x, y) = map(operator.add, (x, y),(1, 0))
-                    if(is_location_free(x, y, z)):
-                        self.move_east()
-            elif(is_input_pressed(CONST_LEFT)):
-                if(not(self.is_facing("west"))):
-                    self.face_west()
-                else:
-                    (x, y) = map(operator.add, (x, y),(-1, 0))
-                    if(is_location_free(x, y, z)):
-                        self.move()
+                    face_x()
+        return handle_input
 
-test = Player("Larry")
-test.before_frame_update()
+
+

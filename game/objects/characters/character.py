@@ -61,53 +61,151 @@ However, it doesn't check if the tiles that are being moved to are empty or not.
 """ 
 class Character(GameObject):
 
-    __state = "main"
-    __moving = False
-    __facing = "north"
-
     def __init(self):
         super().__init__()
-        self.set_sprite("main/north/1.png")
+        self.set_sprite("main/north")
 
     """ Returns True if the character is moving,
     False otherwise.
     """
     def moving(self):
         return self.__moving
-
-    """ Move character in facing direction one tile. """
-    def move(self):
-        """ Pseudo code.
-        moving = True
-        Start animation
-        Start moving in direction facing
-        Once finished, moving = false"""
-        return
-
+    
+    """ Change the sprite folder to "north" """
     def face_north(self):
+        self.__face("north")
         return
     
+    """ Change the sprite folder to "east" """
     def face_east(self):
+        self.__face("east")
         return
 
+    """ Change the sprite folder to "south" """
     def face_south(self):
+        self.__face("south")
         return
 
-    def face_north(self):
+    """ Change the sprite folder to "west" """
+    def face_west(self):
+        self.__face("west")
         return
+
+    """ Get the character to "face" the direction specified
+    simply changes the last part of the sprite folder as relevant
+    """
+    def __face(self, direction):
+        sprite_location = self.get_sprite()
+        sprite_location = sprite_location[0 : sprite_location.rfind("/")] #slice all the characters after the last "/" from the string
+        self.set_sprite(sprite_location + direction) #sprites are now looked for in direction folder :)
+        return
+
+    """ Says if the character is facing north """
+    def is_facing_north(self):
+        return __is_facing("north")
+
+    """ Says if the character is facing east """
+    def is_facing_east(self):
+        return __is_facing("east")
+
+    """ Says if the character is facing south """
+    def is_facing_south(self):
+        return __is_facing("south")
+
+    """ Says if the character is facing west """
+    def is_facing_west(self):
+        return __is_facing("west")
+
+    """ Checks to see if the character is facing in the direction given
+    """
+    def __is_facing(self, direction):
+        sprite_location = self.get_sprite()
+        sprite_location = sprite_location[sprite_location.rfind("/") : ] #slice all the characters before the last "/" from the string
+        return (sprite_location == direction)
+        
+    """ Move character in direction by one tile. 
+    Overides general object implementation
+    """
+    def move_north(self, callback):
+        (x, y, z) = self.get_position()
+        if(api.solid_objects_at((x, y + 1, z)).length == 0): #check that the relevant location is free
+            self.face_north()
+            self.start_animating()
+            
+            def callbacktwo:
+                self.stop_animating()
+                callback() 
+            
+            super().move_north(callbacktwo) #pass the callback to say you want the object to stop animating when the operation is complete
+        return
+
+    
+    def move_north(self):
+        self.move_north(lambda: pass) #move without the callback
+
+    """ Move character in direction by one tile. 
+    Overides general object implementation
+    """
+    def move_east(self, callback):
+        (x, y, z) = self.get_position()
+        if(api.solid_objects_at((x + 1, y, z)).length == 0): #check that the relevant location is free
+            self.face_east()
+            self.start_animating()
+            
+            def callbacktwo:
+                self.stop_animating()
+                callback() 
+            
+            super().move_east(callbacktwo) #pass the callback to say you want the object to stop animating when the operation is complete
+        return
+
+    def move_east(self):
+        self.move_east(lambda: pass) #move without the callback
+    
+    """ Move character in direction by one tile. 
+    Overides general object implementation
+    """
+    def move_south(self, callback):
+        (x, y, z) = self.get_position()
+        if(api.solid_objects_at((x, y - 1, z)).length == 0): #check that the relevant location is free
+            self.face_south()
+            self.start_animating()
+            
+            def callbacktwo:
+                self.stop_animating()
+                callback() 
+            
+            super().move_south(callbacktwo) #pass the callback to say you want the object to stop animating when the operation is complete
+        return
+
+    def move_south(self):
+        self.move_south(lambda: pass) #move without the callback
+
+    """ Move character in direction by one tile. 
+    Overides general object implementation
+    """
+    def move_west(self, callback):
+        (x, y, z) = self.get_position()
+        if(api.solid_objects_at((x - 1, y, z)).length == 0): #check that the relevant location is free
+            self.face_west()
+            self.start_animating()
+            
+            def callbacktwo:
+                self.stop_animating()
+                callback() 
+            
+            super().move_west(callbacktwo) #pass the callback to say you want the object to stop animating when the operation is complete
+        return
+
+    def move_west(self):
+        self.move_west(lambda: pass) #move without the callback
 
     def get_facing(self):
-        return __facing
+        return #parse sprite_location to get facing
 
     def before_frame_update(self):
         super().before_frame_update()
         self.__handle_movement_input()
-
-    def is_facing(self, direction):
-        """ Pseudo code should check which direction character is facing and 
-        see if it is the same. Furthermore it should check if a valid direction has been provided and provide a warning otherwise
-        """
-        return True
 
     def change_state(self, state):
         if(isinstance(state, str)):

@@ -436,7 +436,7 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
     std::string map_name = "";
     switch(next_challenge) {
         case 0:
-            map_name ="../game/levels/test_world/test_level/playaround_area/layout.tmx";
+            map_name ="../game/levels/test_world/test_level/test_one/layout.tmx";
             challenge_data->map_name = map_name;
             challenge = new Challenge(challenge_data);
             break;
