@@ -5,9 +5,11 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 HEADERS       = mainwindow.h \
-                api_list.h
+                api_list.h     \
+		parsingfunctions.hpp   \
 
-SOURCES       = mainwindow.cpp \
+SOURCES       = main.cpp \
+		mainwindow.cpp \
 
 RESOURCES     = application.qrc \
 
