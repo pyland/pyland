@@ -20,13 +20,13 @@ class API:
 
     def move_north(self, game_object, callback):
         print("Testing threading in python!!!!")
-        test_thread = multiprocessing.Process(None, self.wait(callback), None)
-        test_thread.start()
+        p = multiprocessing.Process(target = lambda: self.wait(callback)) # Work out wether to use this or threading.Thread!
+        p.start()
         print("Thread made and running ...")
         return
 
-    def wait(self, callback):
-        print("starting thread...")
+    def __move(self, direction, callback):
+        print("Moving {}...")
         time.sleep(5)
         print("exiting thread...")
         callback()
