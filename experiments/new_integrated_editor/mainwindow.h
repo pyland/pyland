@@ -108,9 +108,8 @@ private:
 //    std::string number_name(int);
 //    std::string workspaceFilename(QsciScintilla* text);
 //    QsciScintilla* filenameToWorkspace(std::string filename);
-//
 
-      QsciAPIs*  api;
+    QsciAPIs*  api;
 
     QsciScintilla *textEdit;
     static const int workspace_max = 9;
