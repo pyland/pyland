@@ -59,8 +59,9 @@ private slots:
     void timerHandler();
 
 private:
-    Challenge* pick_challenge(ChallengeData* challenge_data);
+    //Challenge* pick_challenge(ChallengeData* challenge_data);
 
+    void initGameWindow();
     void initWorkspace(QsciScintilla* ws);
     void clearOutputPanels();
     void createActions();
