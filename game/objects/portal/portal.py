@@ -51,24 +51,11 @@ class Portal(GameObject):
     prevent errors when it comes to this.
     """
 
-    """ This method is run every frame before the graphics are displayed.
-    You can put code here you want to run before every frame.
-    You MUST but super().beforeFrameUpdate() for this to work. Otherwise this may lead
-    to unexpected behaviour.
-    """
-    def before_frame_update(self):
-        super().before_frame_update()
-
-        #get own location
-        location = self.get_location()
-        gameobjects = get_objects_at(location) #returns a list of objects at the location given
-        for gameobject in gameobjects:
-            if(type(gameobject) == Player) #if player is standing on portal
-            level_change(self.get_destination(), self.get_entrance(), self.get_transition()) #change the level, enter by given entrance.
-
     """ public:
     Put the regular public methods you wish to use here.
     """
+    #TODO: work on level_change interaction api.
+    
 
     """ private:
     Put the private methods you wish to use here.
