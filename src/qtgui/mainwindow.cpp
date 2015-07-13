@@ -145,9 +145,9 @@ MainWindow::MainWindow() {
 
   // create workspaces and add them to the textWidget
   for(int ws = 0; ws < workspace_max; ws++) {
-	  workspaces[ws] = new QsciScintilla;
-	  QString w = QString("%1").arg(QString::number(ws + 1));
-	  textWidget->addTab(workspaces[ws], w);
+      workspaces[ws] = new QsciScintilla;
+      QString w = QString("%1").arg(QString::number(ws + 1));
+      textWidget->addTab(workspaces[ws], w);
   }
 
   lexer = new QsciLexerPython;
@@ -159,7 +159,7 @@ MainWindow::MainWindow() {
   // yes, really
   #include "api_list.h"
   for (int api_iter = 0; api_iter < api_names.size(); ++api_iter) {
-	  api->add(api_names.at(api_iter));
+      api->add(api_names.at(api_iter));
   }
   api->prepare();
   QFont font("Monospace");
@@ -205,7 +205,7 @@ MainWindow::MainWindow() {
   terminal->setLayout(terminalLayout);
 
   for(int ws = 0; ws < workspace_max; ws++) {
-	  initWorkspace(workspaces[ws]);
+      initWorkspace(workspaces[ws]);
   }
 
   // Setup draggable splitter for script embedWindow and terminal
@@ -259,7 +259,7 @@ MainWindow::MainWindow() {
 
   int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   if (result != 0) {
-	std::cout << "failed to init SDL\n";
+    std::cout << "failed to init SDL\n";
   }
 
   embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
@@ -677,16 +677,16 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
 bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
   QKeyEvent *keyEvent = NULL;
   if (event->type() == QEvent::KeyPress) {
-	keyEvent = static_cast<QKeyEvent*>(event);
-	if (keyEvent->key()) {
-	  SDL_Event sdlEvent;
-	  sdlEvent.type = SDL_KEYDOWN;
-	  sdlEvent.key.state = SDL_PRESSED;
-	  SDL_PushEvent(&sdlEvent);
-	  std::cout << "got a Qt keydown event\n";
-	}
+    keyEvent = static_cast<QKeyEvent*>(event);
+    if (keyEvent->key()) {
+      SDL_Event sdlEvent;
+      sdlEvent.type = SDL_KEYDOWN;
+      sdlEvent.key.state = SDL_PRESSED;
+      SDL_PushEvent(&sdlEvent);
+      std::cout << "got a Qt keydown event\n";
+    }
   } else {
-	return QObject::eventFilter(obj, event);
+    return QObject::eventFilter(obj, event);
   }
   return true;
 }
@@ -694,11 +694,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
 void MainWindow::timerHandler() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
-	switch(event.type) {
-	  case SDL_KEYDOWN:
-		std::cout << " got an SDL keydown event\n";
-		break;
-	}
+    switch(event.type) {
+      case SDL_KEYDOWN:
+        std::cout << " got an SDL keydown event\n";
+        break;
+    }
   }
   glClear(GL_COLOR_BUFFER_BIT);
   SDL_GL_SwapWindow(embedWindow);
@@ -809,7 +809,7 @@ void MainWindow::documentWasModified()
 
 void MainWindow::clearOutputPanels()
 {
-	terminalDisplay->clear();
+    terminalDisplay->clear();
 }
 
 void MainWindow::createActions()
@@ -858,5 +858,5 @@ void MainWindow::createToolBar()
 
 void MainWindow::createStatusBar()
 {
-	statusBar()->showMessage(tr("Ready"));
+    statusBar()->showMessage(tr("Ready"));
 }
