@@ -14,6 +14,57 @@
 // notice is included.
 //++
 
+// Game window stuff
+#define GLM_FORCE_RADIANS
+
+#include <glog/logging.h>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <chrono>
+#include <functional>
+#include <glm/vec2.hpp>
+#include <iostream>
+#include <memory>
+#include <random>
+#include <ratio>
+#include <string>
+#include <sstream>
+#include <utility>
+#include <vector>
+
+#include "game_init.hpp"
+
+
+//#include "challenge_data.hpp"
+//#include "challenges/cutting_challenge.hpp"
+//#include "engine.hpp"
+//#include "event_manager.hpp"
+//#include "filters.hpp"
+//#include "final_challenge.hpp"
+//#include "game_window.hpp"
+//#include "gui_manager.hpp"
+//#include "gui_window.hpp"
+//#include "input_manager.hpp"
+#include "interpreter.hpp"
+//#include "introduction_challenge.hpp"
+//#include "keyboard_input_event.hpp"
+//#include "lifeline.hpp"
+//#include "map_viewer.hpp"
+//#include "mouse_cursor.hpp"
+//#include "mouse_input_event.hpp"
+//#include "mouse_state.hpp"
+//#include "new_challenge.hpp"
+//#include "notification_bar.hpp"
+//#include "sprite.hpp"
+//#include "start_screen.hpp"
+
+//#ifdef USE_GLES
+//#include "typeface.hpp"
+//#include "text_font.hpp"
+//#include "text.hpp"
+//#endif
+
+
 // Standard stuff
 #include <iostream>
 #include <math.h>
@@ -69,55 +120,8 @@
 
 #include "h_tab_bar.hpp"
 
-// Game window stuff
-#define GLM_FORCE_RADIANS
-
-#include <glog/logging.h>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-#include <chrono>
-#include <functional>
-#include <glm/vec2.hpp>
-#include <iostream>
-#include <memory>
-#include <random>
-#include <ratio>
-#include <string>
-#include <sstream>
-#include <utility>
-#include <vector>
-
-//#include "game_init.hpp"
-//#include "../gui/button.hpp"
-//#include "../callback_state.hpp"
-//#include "../challenge_data.hpp"
-//#include "../challenges/cutting_challenge.hpp"
-//#include "../engine.hpp"
-//#include "../event_manager.hpp"
-//#include "../input_management/filters.hpp"
-//#include "../challenges/final_challenge.hpp"
-//#include "../game_window.hpp"
-//#include "../gui/gui_manager.hpp"
-//#include "../gui/gui_window.hpp"
-//#include "../input_management/input_manager.hpp"
-//#include "../python_embed/interpreter.hpp"
-//#include "../challenges/introduction_challenge.hpp"
-//#include "../input_management/keyboard_input_event.hpp"
-//#include "../lifeline.hpp"
-//#include "../map_viewer.hpp"
-//#include "../mouse_cursor.hpp"
-//#include "../input_management/mouse_input_event.hpp"
-//#include "../input_management/mouse_state.hpp"
-//#include "../challenges/new_challenge.hpp"
-//#include "../notification_bar.hpp"
-//#include "../sprite.hpp"
-//#include "../challenges/start_screen.hpp"
-
-//#ifdef USE_GLES
-//#include "typeface.hpp"
-//#include "text_font.hpp"
-//#include "text.hpp"
-//#endif
+#include "button.hpp"
+//#include "callback_state.hpp"
 
 // Need to access the SDL_Window internals to set the opengl flag
 struct SDL_Window
@@ -136,6 +140,8 @@ typedef struct SDL_Window SDL_Window;
 
 MainWindow::MainWindow()
 {
+    google::InitGoogleLogging("");
+
     this->setUnifiedTitleAndToolBarOnMac(true);
 
     // create workspace with textWidget
@@ -277,9 +283,6 @@ MainWindow::MainWindow()
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
 
-
-
-    //GameWindow embedWindow(800,600,false);
     SDL_SetWindowSize(embedWindow, 600, 420);
     glViewport(0, 0, 600,420);
     embedWindow->flags |= SDL_WINDOW_OPENGL;
@@ -296,7 +299,7 @@ MainWindow::MainWindow()
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
     eventTimer->start();
 
-//    initGameWindow();
+    initGameWindow();
 
     this->showMaximized();
 }
@@ -386,8 +389,8 @@ void MainWindow::initGameWindow()
 //    embedWindow->use_context();
 //    Engine::set_game_window(&embedWindow);
 //
-//    //Create the interpreter
-//    Interpreter interpreter(boost::filesystem::absolute("/../python_embed/wrapper_functions.so").normalize());
+    //Create the interpreter
+//    Interpreter interpreter(boost::filesystem::absolute("../python_embed/wrapper_functions.so").normalize());
 //    //Create the input manager
 //    InputManager* input_manager = embedWindow->get_input_manager();
 //
@@ -912,7 +915,7 @@ void MainWindow::createActions()
 {
 
     connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-    connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
+    //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
     //connect(textInfo,SIGNAL(selectionChanged()),this,SLOT (setGameFocus()));

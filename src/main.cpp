@@ -1,6 +1,4 @@
-﻿#define GLM_FORCE_RADIANS
-
-#include <glog/logging.h>
+﻿#include <glog/logging.h>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <chrono>
@@ -16,36 +14,11 @@
 #include <vector>
 
 #include "game_init.hpp"
-#include "button.hpp"
-#include "callback_state.hpp"
-#include "challenge_data.hpp"
-#include "cutting_challenge.hpp"
-#include "engine.hpp"
-#include "event_manager.hpp"
-#include "filters.hpp"
-#include "final_challenge.hpp"
-#include "game_window.hpp"
-#include "gui_manager.hpp"
-#include "gui_window.hpp"
-#include "input_manager.hpp"
-#include "interpreter.hpp"
-#include "introduction_challenge.hpp"
-#include "keyboard_input_event.hpp"
-#include "lifeline.hpp"
-#include "map_viewer.hpp"
-#include "mouse_cursor.hpp"
-#include "mouse_input_event.hpp"
-#include "mouse_state.hpp"
-#include "new_challenge.hpp"
-#include "notification_bar.hpp"
-#include "sprite.hpp"
-#include "start_screen.hpp"
 
-#ifdef USE_GLES
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
-#endif
+#include "challenge_data.hpp"
+
+#include "engine.hpp"
+
 
 using namespace std;
 
