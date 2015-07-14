@@ -98,9 +98,9 @@ MainWindow::MainWindow() {
 
   // create workspaces and add them to the textWidget
   for(int ws = 0; ws < workspace_max; ws++) {
-	  workspaces[ws] = new QsciScintilla;
-	  QString w = QString("%1").arg(QString::number(ws + 1));
-	  textWidget->addTab(workspaces[ws], w);
+      workspaces[ws] = new QsciScintilla;
+      QString w = QString("%1").arg(QString::number(ws + 1));
+      textWidget->addTab(workspaces[ws], w);
   }
 
   lexer = new QsciLexerPython;
@@ -112,7 +112,7 @@ MainWindow::MainWindow() {
   // yes, really
   #include "api_list.h"
   for (int api_iter = 0; api_iter < api_names.size(); ++api_iter) {
-	  api->add(api_names.at(api_iter));
+      api->add(api_names.at(api_iter));
   }
   api->prepare();
   QFont font("Monospace");
@@ -158,7 +158,7 @@ MainWindow::MainWindow() {
   terminal->setLayout(terminalLayout);
 
   for(int ws = 0; ws < workspace_max; ws++) {
-	  initWorkspace(workspaces[ws]);
+      initWorkspace(workspaces[ws]);
   }
 
   // Setup draggable splitter for script window and terminal
@@ -212,7 +212,7 @@ MainWindow::MainWindow() {
 
   int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
   if (result != 0) {
-	std::cout << "failed to init SDL\n";
+    std::cout << "failed to init SDL\n";
   }
 
   embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
@@ -433,7 +433,7 @@ void MainWindow::documentWasModified()
 
 void MainWindow::clearOutputPanels()
 {
-	terminalDisplay->clear();
+    terminalDisplay->clear();
 }
 
 void MainWindow::createActions()

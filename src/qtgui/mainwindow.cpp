@@ -200,6 +200,7 @@ MainWindow::MainWindow()
     terminalLayout->addWidget(terminalDisplay);
     terminalLayout->addWidget(buttons);
 
+
     terminalLayout->setContentsMargins(0,0,0,0);
 
     terminalLayout->setStretchFactor(terminalDisplay,4);
