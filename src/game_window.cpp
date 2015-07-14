@@ -171,18 +171,21 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
     // SDL already uses width,height = 0,0 for automatic
     // resolution. Sets maximized if not in fullscreen and given
     // width,height = 0,0.
-    window = SDL_CreateWindow ("Pyland",
-                               SDL_WINDOWPOS_CENTERED,
-                               SDL_WINDOWPOS_CENTERED,
-                               width,
-                               height,
-                               (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
-                               | ( (!fullscreen && width == 0 && height == 0) ?
-                                   SDL_WINDOW_MAXIMIZED : 0 )
+//    window = SDL_CreateWindow ("Pyland",
+//                               SDL_WINDOWPOS_CENTERED,
+//                               SDL_WINDOWPOS_CENTERED,
+//                               width,
+//                               height,
+//                               (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
+//                               | ( (!fullscreen && width == 0 && height == 0) ?
+//                                   SDL_WINDOW_MAXIMIZED : 0 )
+
+
+
 #ifdef USE_GL
                    | SDL_WINDOW_OPENGL
 #endif
-                               );
+//                               );
     if (window == nullptr) {
         LOG(ERROR) << "Failed to create SDL window.";
         deinit_sdl();
@@ -190,7 +193,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
     }
 
     SDL_ShowCursor(0);
-    
+
     // Temporary fix (which just seems to work) for a bug where focus
     // events are not generated for the first time focus is changed.
     // SEE ALSO BELOW IN THIS FUNCTION

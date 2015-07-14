@@ -269,6 +269,7 @@ MainWindow::MainWindow()
     }
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
+
     //GameWindow embedWindow(800,600,false);
     SDL_SetWindowSize(embedWindow, 200, 200);
     glViewport(0, 0, 200, 200);
@@ -285,7 +286,7 @@ MainWindow::MainWindow()
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
     eventTimer->start();
 
-    //initGameWindow();
+    initGameWindow();
 
     this->showMaximized();
 }
@@ -369,9 +370,9 @@ void MainWindow::timerHandler()
 
 void MainWindow::initGameWindow()
 {
-//
-//    //Create the game embedWindow to present to the users
-//    //GameWindow embedWindow(800, 600, false);
+
+    //Create the game embedWindow to present to the users
+    //GameWindow embedWindow(800, 600, false);
 //    embedWindow->use_context();
 //    Engine::set_game_window(&embedWindow);
 //
