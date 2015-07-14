@@ -273,21 +273,21 @@ MainWindow::MainWindow()
 
     //GameWindow embedWindow(800,600,false);
     SDL_SetWindowSize(embedWindow, 200, 200);
-    glViewport(0, 0, 200, 200);
-    embedWindow->flags |= SDL_WINDOW_OPENGL;
-    SDL_GL_LoadLibrary(NULL);
-    glContext = SDL_GL_CreateContext(embedWindow);
-    glClearColor(0.25f, 0.50f, 1.0f, 1.0f);
-    std::cout << "created context\n";
-    gameWidget->installEventFilter(this);
-    gameWidget->setFocusPolicy(Qt::ClickFocus);
-    eventTimer = new QTimer(this);
-    eventTimer->setSingleShot(false);
-    eventTimer->setInterval(0);
-    connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
-    eventTimer->start();
+//    glViewport(0, 0, 200, 200);
+//    embedWindow->flags |= SDL_WINDOW_OPENGL;
+//    SDL_GL_LoadLibrary(NULL);
+//    glContext = SDL_GL_CreateContext(embedWindow);
+//    glClearColor(0.25f, 0.50f, 1.0f, 1.0f);
+//    std::cout << "created context\n";
+//    gameWidget->installEventFilter(this);
+//    gameWidget->setFocusPolicy(Qt::ClickFocus);
+//    eventTimer = new QTimer(this);
+//    eventTimer->setSingleShot(false);
+//    eventTimer->setInterval(0);
+//    connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
+//    eventTimer->start();
 
-    initGameWindow();
+//    initGameWindow();
 
     this->showMaximized();
 }

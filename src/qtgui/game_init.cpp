@@ -17,10 +17,12 @@
 #include <QBitmap>
 
 #include "mainwindow.h"
+#include "parsingfunctions.hpp"
+
 int game_init(int argc, char *argv[])
 {
     //Q_INIT_RESOURCE(application);
-
+    create_apih_from_wrapper();
     QApplication *app = new QApplication(argc, argv);
     app->setStyle("gtk");
     app->setAttribute(Qt::AA_NativeWindows, true);
