@@ -22,56 +22,13 @@ As the GameObject is in the base objects folder.
 """
 
 
-""" This class is the parent of all characters in the game
-It provides a lot of useful prebuilt functionality, mainly to do with movement animation.
-
-Lets say you have an object called 'x' in objects/x, by default a sprite will be looked for in objects/x/sprites/main.png, if none is found,
-the object will be invisible in game.
-
-However, a character MUST have at least the following sprites in the specified (relative to objects/x/sprites) locations.
-
-If the sprite location is changed, the following relative paths to that location must still be valid sprites.
-main/north/1.png (state/direction_facing/animation_frame.png)
-main/north/2.png
-main/north/3.png
-main/north/4.png
-
-main/east/1.png
-main/east/2.png
-main/east/3.png
-main/east/4.png
-
-main/south/1.png
-main/south/2.png
-main/south/3.png
-main/south/4.png
-
-main/west/1.png
-main/west/2.png
-main/west/3.png
-main/west/4.png
-
-
-Here the first folder represents the state of the character. (All characters MUST have a "main" state)
-The second folder represents the direction they are facing.
-The filename represents the frames of animation of the character when they are moving. (The first frame is implicitly assumed to be used when they are still)
-
-This benifits of this class is that it provides very simple methods for movement + animation.
-However, it doesn't check if the tiles that are being moved to are empty or not. TODO: Talk about maybe changing this?
 """
-class Map:
-    def solid_objects_at(self, position):
-        (x, y, z) = position
-        return []
-
-game_map = Map()
-
-class Character(GameObject):
+"""
+class Boulder(GameObject):
 
     def __init(self, name):
         super().__init__(name)
-        self.set_sprite("main/north")
-    
+
     """ Change the sprite folder to "north" """
     def face_north(self):
         self.__face("north")
@@ -182,4 +139,3 @@ class Character(GameObject):
         if(isinstance(state, str)):
             self.__state = state
         return
-    

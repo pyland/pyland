@@ -52,13 +52,13 @@ class Crocodile(Character):
             path = path + ", " + instruction #add instruction back to the path
         
         if(instruction == "north"):
-            self.move_north(lambda: self.follow_path(path, repeat))
+            return self.move_north(lambda: self.follow_path(path, repeat))
         elif(instruction == "east"):
-            self.move_east(lambda: self.follow_path(path, repeat))
+            return self.move_east(lambda: self.follow_path(path, repeat))
         elif(instruction == "south"):
-            self.move_south(lambda: self.follow_path(path, repeat))
+            return self.move_south(lambda: self.follow_path(path, repeat))
         elif(instruction == "west"):
-            self.move_west(lambda: self.follow_path(path, repeat))
+            return self.move_west(lambda: self.follow_path(path, repeat))
         else:
             pass #TODO: handle invalid path!!!!!
             print(instruction)

@@ -58,7 +58,7 @@ class API:
 
     def __move(self, direction, callback):
         print("Moving {}...".format(direction))
-        time.sleep(1) #Make a game engine clock version!!!!
+        time.sleep(2) #Make a game engine clock version!!!!
         print("Moving {} complete.".format(direction))
         callback()
         return
