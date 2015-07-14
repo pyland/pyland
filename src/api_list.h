@@ -1,4 +1,4 @@
-//This is the list of functions for auto-complete.
+//This is the list of functions that will be recognised for auto-complete in the QT Text Editor
 
 api_names
 << "id"
