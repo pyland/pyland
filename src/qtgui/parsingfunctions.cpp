@@ -7,7 +7,11 @@
 #include <cstring>
 
 //Takes wrapper functions.cpp, parses the file and generates ap_list.h, which has the list of all functions
-//in a format readable by the text editor widget for auto completion
+//in a format readable by the text editor widget
+//This list of functions is the list of functions the QT Text Editor will recognise for auto-completion
+
+//IMPORTANT! functions.txt is not updated during coding. Replace functions.txt with wrapper_functions.cpp later.
+//ALSO! This breaks if the input file does not exist *** So check for that!
 using namespace std;
 
 int create_apih_from_wrapper()
