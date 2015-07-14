@@ -179,6 +179,7 @@ MainWindow::MainWindow()
     terminalDisplay->document()->setMaximumBlockCount(1000);
     terminalDisplay->zoomIn(1);
     terminalDisplay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    terminalDisplay->setFocusPolicy(Qt::NoFocus);
 
     QHBoxLayout *terminalButtonLayout = new QHBoxLayout;
 
@@ -199,7 +200,6 @@ MainWindow::MainWindow()
 
     terminalLayout->addWidget(terminalDisplay);
     terminalLayout->addWidget(buttons);
-
 
     terminalLayout->setContentsMargins(0,0,0,0);
 
@@ -225,6 +225,8 @@ MainWindow::MainWindow()
     splitter->setStretchFactor(0,5);
     splitter->setStretchFactor(1,3);
 
+    splitter->setFocusPolicy(Qt::NoFocus);
+
     // Setup embedWindow
     QVBoxLayout *windowLayout = new QVBoxLayout;
 
@@ -234,13 +236,14 @@ MainWindow::MainWindow()
 
     windowLayout->addWidget(gameWidget);
     windowLayout->addWidget(splitter);
-
     windowLayout->setStretchFactor(gameWidget,3);
     windowLayout->setStretchFactor(splitter,2);
 
+    windowLayout->setContentsMargins(0,0,0,0);
+
     QWidget *mainWidget = new QWidget;
 
-    mainWidget->setLayout(windowLayout);
+    //mainWidget->setLayout(windowLayout);
 
     createActions();
     createToolBar();
@@ -266,26 +269,32 @@ MainWindow::MainWindow()
     int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
     if (result != 0)
     {
-        std::cout << "failed to init SDL\n";
+        LOG(INFO) << "failed to init SDL\n";
     }
+
+    mainWidget->setLayout(windowLayout);
+
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
 
+
+
     //GameWindow embedWindow(800,600,false);
-    SDL_SetWindowSize(embedWindow, 200, 200);
-//    glViewport(0, 0, 200, 200);
-//    embedWindow->flags |= SDL_WINDOW_OPENGL;
-//    SDL_GL_LoadLibrary(NULL);
-//    glContext = SDL_GL_CreateContext(embedWindow);
-//    glClearColor(0.25f, 0.50f, 1.0f, 1.0f);
-//    std::cout << "created context\n";
-//    gameWidget->installEventFilter(this);
-//    gameWidget->setFocusPolicy(Qt::ClickFocus);
-//    eventTimer = new QTimer(this);
-//    eventTimer->setSingleShot(false);
-//    eventTimer->setInterval(0);
-//    connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
-//    eventTimer->start();
+    SDL_SetWindowSize(embedWindow, 600, 420);
+    glViewport(0, 0, 600,420);
+    embedWindow->flags |= SDL_WINDOW_OPENGL;
+    SDL_GL_LoadLibrary(NULL);
+    glContext = SDL_GL_CreateContext(embedWindow);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    LOG(INFO) << "created context\n";
+    gameWidget->installEventFilter(this);
+    //gameWidget->setFocusPolicy(Qt::ClickFocus);
+    gameWidget->setFocusPolicy(Qt::StrongFocus);
+    eventTimer = new QTimer(this);
+    eventTimer->setSingleShot(false);
+    eventTimer->setInterval(0);
+    connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
+    eventTimer->start();
 
 //    initGameWindow();
 
@@ -868,10 +877,10 @@ bool MainWindow::saveAs()
 
 void MainWindow::runCode()
 {
-    terminalDisplay->clear();
+    //terminalDisplay->clear();
     //terminalDisplay->hide();
     //statusBar()->showMessage(tr("Running...."), 2000);
-    std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
+    //std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
     setGameFocus();
 }
 
@@ -884,7 +893,7 @@ void MainWindow::zoomFontIn()
 void MainWindow::zoomFontOut()
 {
     ((QsciScintilla*)textWidget->currentWidget())->zoomOut(3);
-
+    setGameFocus();
 }
 
 
@@ -903,7 +912,7 @@ void MainWindow::createActions()
 {
 
     connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-    //connect(buttonSpeed,SIGNAL(pressed()),this,SLOT (setGameFocus()));
+    connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
     //connect(textInfo,SIGNAL(selectionChanged()),this,SLOT (setGameFocus()));
@@ -934,6 +943,7 @@ void MainWindow::createToolBar()
     textInfo->setMaximumHeight(38);
     textInfo->setReadOnly(true);
     textInfo->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
+    textInfo->setFocusPolicy(Qt::NoFocus);
 
     //toolBar->setMaximumHeight(30);
 
