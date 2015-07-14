@@ -27,7 +27,7 @@ class GameObject:
         api.set_sprite(self, sprite_location)
         
     def get_sprite(self):
-        return self.__sprite
+        return api.get_sprite(self)
 
     def is_solid(self):
         return api.is_solid(self)
@@ -75,29 +75,29 @@ class GameObject:
     """ Smoothly slides this object north by one tile 
     The callback is called when the operation is complete
     """
-    def move_north(self, callback):
+    def move_north(self, callback = lambda: None):
         api.move_north(self, callback)
         return
 
     """ Smoothly slides this object east by one tile 
     The callback is called when the operation is complete
     """
-    def move_east(self, callback):
+    def move_east(self, callback = lambda: None):
         api.move_east(self, callback)
         return
 
     """ Smoothly slides this object south by one tile 
     The callback is called when the operation is complete
     """
-    def move_south(self, callback):
+    def move_south(self, callback = lambda: None):
         api.move_south(self, callback)
         return
 
     """ Smoothly slides this object west by one tile 
     The callback is called when the operation is complete
     """
-    def move_west(self, callback):
-        api.move_south(self, callback)
+    def move_west(self, callback = lambda: None):
+        api.move_west(self, callback)
         return
 
     """ Returns if this object is moving """

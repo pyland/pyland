@@ -11,6 +11,9 @@ class API:
         #self.object_properties[game_object.get_name()]["sprite_location"] = sprite_location # a placeholder way of holding the information
         return
 
+    def get_sprite(self, game_object):
+        return ""
+
     """ Set the visisbilty of the object's sprites, there must be valid sprites in the folder location for this to be set to true!!! """
     def set_visible(self, game_object, visible):
         print('API: set object visibilty of "{}" to "{}"'.format(game_object.get_name(), visible))
@@ -71,18 +74,18 @@ class API:
 
     """ Returns a 3-tuple of the objects position """
     def get_position(self, game_object):
-        return
+        return (0, 0, 0)
     
     """ Starts animating the object based on the files in the sprite folder """
     def start_animating(self, game_object):
         return
 
-    """ Sets the animation frame of the object to frame_number modulo the number of frames it has """
-    def set_frame(self, game_object, frame_number):
+    """ Pauses the animation on the current frame """
+    def pause_animating(self, game_object):
         return
 
-    """ Pauses the animation on the current frame """
-    def pause_frame(self, game_object):
+    """ Sets the animation frame of the object to frame_number modulo the number of frames it has """
+    def set_frame(self, game_object, frame_number):
         return
 
     """ destroys an object and removes it from the game """
