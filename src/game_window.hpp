@@ -260,7 +260,8 @@ public:
     /// @param height The height of the window. 0 uses current resolution.
     /// @param fullscreen Whether to use fullscreen.
     ///
-    GameWindow(int width, int height, bool fullscreen = false);
+    //GameWindow(int width, int height, bool fullscreen = false);
+    GameWindow(int width, int height, bool fullscreen = false,SDL_Window* window = nullptr);
 
     ///
     /// Shuts down and cleans up both SDL and EGL.

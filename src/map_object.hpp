@@ -17,6 +17,8 @@
 #include "object.hpp"
 #include "walkability.hpp"
 
+#include "challenge.hpp"
+
 #ifndef KEYHASH
 #define KEYHASH
 struct KeyHash {

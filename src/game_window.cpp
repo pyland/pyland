@@ -146,7 +146,7 @@ static std::pair<int, int> query_overscan(int left, int top) {
 #endif
 
 
-GameWindow::GameWindow(int width, int height, bool fullscreen):
+GameWindow::GameWindow(int width, int height, bool fullscreen,SDL_Window* window):
     window_width(width),
     window_height(height),
     window_x(0),

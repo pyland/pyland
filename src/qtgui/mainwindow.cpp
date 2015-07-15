@@ -35,27 +35,15 @@
 #include "game_init.hpp"
 
 
-//#include "challenge_data.hpp"
-//#include "challenges/cutting_challenge.hpp"
-//#include "engine.hpp"
-//#include "event_manager.hpp"
-//#include "filters.hpp"
-//#include "final_challenge.hpp"
-//#include "game_window.hpp"
-//#include "gui_manager.hpp"
-//#include "gui_window.hpp"
-//#include "input_manager.hpp"
+#include "input_manager.hpp"
 #include "interpreter.hpp"
-//#include "introduction_challenge.hpp"
-//#include "keyboard_input_event.hpp"
-//#include "lifeline.hpp"
-//#include "map_viewer.hpp"
-//#include "mouse_cursor.hpp"
-//#include "mouse_input_event.hpp"
-//#include "mouse_state.hpp"
-//#include "new_challenge.hpp"
-//#include "notification_bar.hpp"
-//#include "sprite.hpp"
+#include "sprite.hpp"
+
+
+
+
+
+
 //#include "start_screen.hpp"
 
 //#ifdef USE_GLES
@@ -121,7 +109,26 @@
 #include "h_tab_bar.hpp"
 
 #include "button.hpp"
-//#include "callback_state.hpp"
+#include "callback_state.hpp"
+#include "challenge_data.hpp"
+#include "challenges/cutting_challenge.hpp"
+#include "engine.hpp"
+#include "event_manager.hpp"
+#include "filters.hpp"
+#include "final_challenge.hpp"
+#include "gui_manager.hpp"
+#include "gui_window.hpp"
+#include "introduction_challenge.hpp"
+#include "keyboard_input_event.hpp"
+#include "lifeline.hpp"
+#include "map_viewer.hpp"
+#include "mouse_cursor.hpp"
+#include "mouse_input_event.hpp"
+#include "mouse_state.hpp"
+#include "new_challenge.hpp"
+//#include "notification_bar.hpp"
+
+#include "game_window.hpp"
 
 // Need to access the SDL_Window internals to set the opengl flag
 struct SDL_Window
@@ -280,8 +287,10 @@ MainWindow::MainWindow()
 
     mainWidget->setLayout(windowLayout);
 
-
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
+
+    //GameWindow gameWindow(600,420,false,embedWindow);
+    gameWindow = new GameWindow(600,420,false,embedWindow);
 
     SDL_SetWindowSize(embedWindow, 600, 420);
     glViewport(0, 0, 600,420);
@@ -345,40 +354,40 @@ Challenge* pick_challenge(ChallengeData* challenge_data)
 */
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    QKeyEvent *keyEvent = NULL;
-    if (event->type() == QEvent::KeyPress)
-    {
-        keyEvent = static_cast<QKeyEvent*>(event);
-        if (keyEvent->key())
-        {
-            SDL_Event sdlEvent;
-            sdlEvent.type = SDL_KEYDOWN;
-            sdlEvent.key.state = SDL_PRESSED;
-            SDL_PushEvent(&sdlEvent);
-            std::cout << "got a Qt keydown event\n";
-        }
-    }
-    else
-    {
-        return QObject::eventFilter(obj, event);
-    }
+//    QKeyEvent *keyEvent = NULL;
+//    if (event->type() == QEvent::KeyPress)
+//    {
+//        keyEvent = static_cast<QKeyEvent*>(event);
+//        if (keyEvent->key())
+//        {
+//            SDL_Event sdlEvent;
+//            sdlEvent.type = SDL_KEYDOWN;
+//            sdlEvent.key.state = SDL_PRESSED;
+//            SDL_PushEvent(&sdlEvent);
+//            std::cout << "got a Qt keydown event\n";
+//        }
+//    }
+//    else
+//    {
+//        return QObject::eventFilter(obj, event);
+//    }
     return true;
 }
 
 void MainWindow::timerHandler()
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch(event.type)
-        {
-        case SDL_KEYDOWN:
-            std::cout << " got an SDL keydown event\n";
-            break;
-        }
-    }
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(embedWindow);
+//    SDL_Event event;
+//    while (SDL_PollEvent(&event))
+//    {
+//        switch(event.type)
+//        {
+//        case SDL_KEYDOWN:
+//            std::cout << " got an SDL keydown event\n";
+//            break;
+//        }
+//    }
+//    glClear(GL_COLOR_BUFFER_BIT);
+//    SDL_GL_SwapWindow(embedWindow);
 }
 
 void MainWindow::initGameWindow()

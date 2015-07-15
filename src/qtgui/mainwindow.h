@@ -113,6 +113,7 @@ private:
 
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
+    GameWindow *gameWindow;
     QTimer *eventTimer;
 
 };
