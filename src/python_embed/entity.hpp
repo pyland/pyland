@@ -41,6 +41,8 @@ class Entity {
         ///
         uint64_t call_number;
 
+        void callback_test(PyObject *callback);
+
         ///
         /// Construct Entity with a given place, name and id.
         ///

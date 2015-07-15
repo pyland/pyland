@@ -27,6 +27,20 @@ Entity::Entity(glm::vec2 start, std::string name, int id):
         this->name = std::string(name);
 }
 
+void Entity::callback_test(PyObject *callback) {
+    //Initialize and acquire the global interpreter lock
+    //PyEval_InitThreads();
+
+    //Ensure that the current thread is ready to call the Python C API 
+    //PyGILState_STATE state = PyGILState_Ensure();
+
+    //invoke the python function
+    boost::python::call<void>(callback);
+
+    //release the global interpreter lock so other threads can resume execution
+    //PyGILState_Release(state);
+}
+
 bool Entity::move(int x, int y) {
     ++call_number;
 

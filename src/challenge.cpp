@@ -47,25 +47,27 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         for(auto location : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
             int map_object_id = ChallengeHelper::make_object(
                 this,
-                "Fred", //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly
+                location.first, //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly
                 Walkability::BLOCKED,	//wether the object can be walked through	
                 location.first //name of the object
             );
 
             map_object_ids.push_back(map_object_id);
-
-            //auto *map = Engine::get_map_viewer()->get_map();
-            //auto object(ObjectManager::get_instance().get_object<MapObject>(object_id));
-    
-            //Get the object's properties, replace this with the name of your character
-            //auto properties(map->locations.at("testone")); //Objects refers to the layer here
-            //Specify the object's script, this file path is relative to src/python_embed/scripts.
-            //auto *a_thing(new Entity(properties.position, "../../../game/levels/test_world/test_level/playaround_area/scripts/start", object_id));
-            //Add the object to the interpreter so that it's script will be executed
-            //object->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
-            //Start the script
-            //object->daemon->value->halt_soft(EntityThread::Signal::RESTART);
         }
+
+        int map_object_id = map_object_ids.at(0);
+    
+        auto *map = Engine::get_map_viewer()->get_map();
+        auto object(ObjectManager::get_instance().get_object<MapObject>(map_object_id));
+
+        //Get the object's properties, replace this with the name of your character
+        auto properties(map->locations.at("player_one")); //Objects refers to the layer here
+        //Specify the object's script, this file path is relative to src/python_embed/scripts.
+        auto *a_thing(new Entity(properties.position, "test_world/test_level/test_one", map_object_id));
+        //Add the object to the interpreter so that it's script will be executed
+        object->daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing));
+        //Start the script
+        object->daemon->value->halt_soft(EntityThread::Signal::RESTART);
 }
 
 Challenge::~Challenge() {

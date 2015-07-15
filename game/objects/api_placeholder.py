@@ -1,9 +1,19 @@
 import multiprocessing
 import time
 
+class ObjectProperties:
+    data = {}
+    
+    def set_property(self, object_name, property_name, property_value):
+        if not(object_name in data):
+            data[object_name] = {}
+        data[object_name][property_name] = property_value
+
+
+
 class API:
 
-    object_properties = {}
+    object_properties = ObjectProperties()
     
     """ Given the folder-location of a set of sprites, the object has those sprites displayed as it's sprites """
     def set_sprite(self, game_object, sprite_location):
@@ -56,7 +66,7 @@ class API:
         p.start()
         return
 
-    def __move(self, direction, callback):
+    def __move(self, direction, callback): #add movement and callback to object's event queue!
         print("Moving {}...".format(direction))
         time.sleep(2) #Make a game engine clock version!!!!
         print("Moving {} complete.".format(direction))
