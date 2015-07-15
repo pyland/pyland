@@ -39,6 +39,7 @@
 //#include "text.hpp"
 //#endif
 
+#include"sprite.hpp"
 
 // Standard stuff
 #include <iostream>
@@ -651,7 +652,7 @@ void MainWindow::initGameWindow()
     }
     ));
 
-
+/*
     Lifeline help_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
     [&] (KeyboardInputEvent)
@@ -730,6 +731,7 @@ void MainWindow::initGameWindow()
 
     //Run the map
     bool run_game = true;
+*/
 
 //
 //    //Setup challenge
