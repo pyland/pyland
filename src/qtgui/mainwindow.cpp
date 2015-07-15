@@ -37,7 +37,7 @@
 
 #include "input_manager.hpp"
 #include "interpreter.hpp"
-#include "sprite.hpp"
+//#include "sprite.hpp"
 
 
 
@@ -289,9 +289,6 @@ MainWindow::MainWindow()
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
 
-    //GameWindow gameWindow(600,420,false,embedWindow);
-    gameWindow = new GameWindow(600,420,false,embedWindow);
-
     SDL_SetWindowSize(embedWindow, 600, 420);
     glViewport(0, 0, 600,420);
     embedWindow->flags |= SDL_WINDOW_OPENGL;
@@ -307,6 +304,11 @@ MainWindow::MainWindow()
     eventTimer->setInterval(0);
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
     eventTimer->start();
+
+
+
+    //gameWindow = new GameWindow(600,420,false,embedWindow);
+
 
     initGameWindow();
 

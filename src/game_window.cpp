@@ -146,7 +146,7 @@ static std::pair<int, int> query_overscan(int left, int top) {
 #endif
 
 
-GameWindow::GameWindow(int width, int height, bool fullscreen,SDL_Window* window):
+GameWindow::GameWindow(int width, int height, bool fullscreen,SDL_Window* exWindow):
     window_width(width),
     window_height(height),
     window_x(0),
@@ -162,12 +162,16 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,SDL_Window* window
     close_requested(false),
     graphics_context(this)
 {
+    window = exWindow;
+
+
+
+
     input_manager = new InputManager(this);
 
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
     }
-
     // SDL already uses width,height = 0,0 for automatic
     // resolution. Sets maximized if not in fullscreen and given
     // width,height = 0,0.
