@@ -1,5 +1,6 @@
 import multiprocessing
 import time
+import queue
 
 class ObjectProperties:
     data = {}
@@ -10,10 +11,30 @@ class ObjectProperties:
         data[object_name][property_name] = property_value
 
 
+class EventQueue:
+        queue = queue.Queue()
+        started = False
+        event_process = None
+
+        def add_event(self, event):
+            self.queue.put(event)
+
+        def run(self):
+            if(not(self.started)):
+                self.started = True
+                self.event_process = multiprocessing.Process(target = self.__r).start()
+            return
+
+        def __r(self):
+            i = 0
+            while(True):
+                if not self.queue.empty():
+                    self.queue.get()()
 
 class API:
 
     object_properties = ObjectProperties()
+    event_queue = EventQueue()
     
     """ Given the folder-location of a set of sprites, the object has those sprites displayed as it's sprites """
     def set_sprite(self, game_object, sprite_location):
@@ -44,33 +65,32 @@ class API:
 
     """ Moves the object north, returns immediately but object takes time to actually move """
     def move_north(self, game_object, callback):
-        p = multiprocessing.Process(target = lambda: self.__move("north", callback)) #Make it so that calls to this queue or ignored if object is moving???
-        p.start()
+        self.__move("north", callback)
         return
 
     """ Moves the object east, returns immediately but object takes time to actually move """
     def move_east(self, game_object, callback):
-        p = multiprocessing.Process(target = lambda: self.__move("east", callback))
-        p.start()
+        self.__move("east", callback)
         return
 
     """ Moves the object south, returns immediately but object takes time to actually move """
     def move_south(self, game_object, callback):
-        p = multiprocessing.Process(target = lambda: self.__move("south", callback))
-        p.start()
+        self.__move("south", callback)
         return
 
     """ Moves the object west, returns immediately but object takes time to actually move """
     def move_west(self, game_object, callback):
-        p = multiprocessing.Process(target = lambda: self.__move("west", callback))
-        p.start()
+        self.__move("west", callback)
         return
 
     def __move(self, direction, callback): #add movement and callback to object's event queue!
-        print("Moving {}...".format(direction))
-        time.sleep(2) #Make a game engine clock version!!!!
-        print("Moving {} complete.".format(direction))
-        callback()
+        def move() :
+            print("Moving {}...".format(direction))
+            #time.sleep(2) #Make a game engine clock version!!!!
+            print("Moving {} complete.".format(direction))
+        self.event_queue.add_event(move)		
+        self.event_queue.add_event(callback)
+        self.event_queue.run() #For some reason it has to be called after these, but apart from that it is all fine? very strange
         return
 
     """ Returns true if the object is moving, false otherwise """

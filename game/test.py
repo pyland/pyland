@@ -5,10 +5,10 @@ sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/objects/chara
 from crocodile import Crocodile
 
 
-#croc_one = Crocodile("croc_one")
+croc_one = Crocodile("croc_one")
 
 
-#croc_one.follow_path("east, north, south, west", True)
-#print("woop")
+croc_one.follow_path("east, north, south, west", True)
+print("woop")
 
-call_back_test(lamda: print("hello"))
+#call_back_test(lamda: print("hello"))
