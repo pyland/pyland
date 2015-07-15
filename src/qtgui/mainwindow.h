@@ -27,6 +27,9 @@
 #include <iostream>
 #include <Qsci/qscilexerpython.h>
 #include <SDL2/SDL.h>
+#include "game_window.hpp"
+
+//#include "sprite.hpp"
 
 class QAction;
 class QMenu;

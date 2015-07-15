@@ -26,8 +26,6 @@ static std::mt19937 random_generator;
 Challenge* pick_challenge(ChallengeData* challenge_data);
 int main(int argc, char *argv[]) {
 
-    std::string map_path("../maps/start_screen.tmx");
-
     game_init(argc, argv);
     switch (argc) {
         default:
@@ -36,7 +34,7 @@ int main(int argc, char *argv[]) {
 
         // The lack of break statements is not an error!!!
         case 3:
-            map_path = std::string(argv[2]);
+            //map_path = std::string(argv[2]);
         case 2:
             Engine::set_editor(argv[1]);
         case 1:

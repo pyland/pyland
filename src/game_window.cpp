@@ -201,8 +201,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,SDL_Window* exWind
     // Temporary fix (which just seems to work) for a bug where focus
     // events are not generated for the first time focus is changed.
     // SEE ALSO BELOW IN THIS FUNCTION
-    SDL_HideWindow(window);
-
+    //SDL_HideWindow(window);
 #ifdef USE_GLES
     SDL_GetWindowWMInfo(window, &wm_info);
 #endif
@@ -236,8 +235,9 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,SDL_Window* exWind
     // events are not generated for the first time focus is changed.
     // SEE ALSO ABOVE IN THIS FUNCTION.
     SDL_ShowWindow(window);
-
+    LOG(INFO) << "gone through window!";
     windows[SDL_GetWindowID(window)] = this;
+
 }
 
 GameWindow::~GameWindow() {
