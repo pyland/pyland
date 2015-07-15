@@ -126,8 +126,6 @@ TINYXML_CXXFLAGS =
 TINYXML_LDFLAGS  =
 TINYXML_LDLIBS   = $(shell pkg-config tinyxml --libs)
 
-
-
 TMXPARSER_CPPFLAGS = -I./tmx-parser/TmxParser
 TMXPARSER_CXXFLAGS =
 TMXPARSER_LDFLAGS  = -L./tmx-parser

@@ -19,7 +19,9 @@
 #include "mainwindow.h"
 #include "parsingfunctions.hpp"
 
-int game_init(int argc, char *argv[])
+#include <tuple>
+
+std::tuple<void*,void*,void*> game_init(int argc, char *argv[])
 {
     //Q_INIT_RESOURCE(application);
     create_apih_from_wrapper();
@@ -29,10 +31,12 @@ int game_init(int argc, char *argv[])
 
     MainWindow *mainWin = new MainWindow();
 
-    int ret = app->exec();
+    return std::tuple<void*,void*,void*> (mainWin->getSDLWindow(),app,mainWin);
 
-    delete mainWin;
-    delete app;
-
-    return ret;
+//    int ret = app->exec();
+//
+//    delete mainWin;
+//    delete app;
+//
+//    return ret;
 }

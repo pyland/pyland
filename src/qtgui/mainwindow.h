@@ -44,6 +44,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow();
+    SDL_Window* getSDLWindow();
 
 protected:
     void closeEvent(QCloseEvent *event);
