@@ -24,6 +24,7 @@
 #include <math.h>
 #include <sstream>
 #include <assert.h>
+#include <glog/logging.h>
 
 // SDL stuff
 #include <SDL2/SDL.h>
@@ -49,7 +50,11 @@ GameInit::GameInit(int argc, char *argv[])
 
     MainWindow* mainWin = new MainWindow();
 
+    LOG(INFO) << "t6\n";
+
     sdlWin = mainWin->getSDLWindow();
+
+    LOG(INFO) << "t7\n";
 
 
     //return std::tuple<void*,void*,void*> (mainWin->getSDLWindow(),app,mainWin);
@@ -62,9 +67,9 @@ QApplication* GameInit::getApp(){
     return app;
 }
 
-//MainWindow* getMainWin(){
-//    return mainWin;
-//}
+MainWindow* GameInit::getMainWin(){
+    return mainWin;
+}
 
 SDL_Window* GameInit::getSdlWin(){
     return sdlWin;
@@ -74,13 +79,17 @@ void GameInit::execApp(){
     app->exec();
 }
 
+void GameInit::showMain(){
+    mainWin->showMax();
+}
+
 void GameInit::delApp(){
     delete app;
 }
 
-//void GameInit::delMainWin(){
-//    delete mainWin;
-//}
+void GameInit::delMainWin(){
+    delete mainWin;
+}
 
 
 

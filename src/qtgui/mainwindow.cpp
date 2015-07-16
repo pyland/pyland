@@ -256,13 +256,20 @@ MainWindow::MainWindow()
     //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     LOG(INFO) << "created context\n";
     gameWidget->installEventFilter(this);
+    LOG(INFO) << "created context\n";
     //gameWidget->setFocusPolicy(Qt::ClickFocus);
     gameWidget->setFocusPolicy(Qt::StrongFocus);
+    LOG(INFO) << "created context\n";
     eventTimer = new QTimer(this);
+    LOG(INFO) << "t1\n";
     eventTimer->setSingleShot(false);
+    LOG(INFO) << "t2\n";
     eventTimer->setInterval(0);
+    LOG(INFO) << "t3\n";
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
+    LOG(INFO) << "t4\n";
     eventTimer->start();
+    LOG(INFO) << "t5\n";
 
 //    initGameWindow();
 
@@ -275,6 +282,10 @@ MainWindow::MainWindow()
 
 SDL_Window* MainWindow::getSDLWindow(){
     return embedWindow;
+}
+
+void MainWindow::showMax(){
+    this->showMaximized();
 }
 
 

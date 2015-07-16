@@ -46,24 +46,26 @@
 #include <SDL2/SDL.h>
 
 class QApplication;
+class MainWindow;
 
 //std::tuple<void*,void*,void*> game_init(int argc, char *argv[]);
 
 class GameInit{
 private:
     QApplication* app;
-//    MainWindow *mainWin;
+    MainWindow *mainWin;
     SDL_Window* sdlWin;
 
 public:
     GameInit(int argc, char *argv[]);
 
     QApplication* getApp();
-//    MainWindow* getMainWin();
+    MainWindow* getMainWin();
     SDL_Window* getSdlWin();
     void execApp();
     void delApp();
-    //void delMainWin();
+    void delMainWin();
+    void showMain();
 
 
 };

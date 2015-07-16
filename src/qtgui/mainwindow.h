@@ -54,6 +54,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
     SDL_Window* getSDLWindow();
+    void showMax();
 
 protected:
     void closeEvent(QCloseEvent *event);
