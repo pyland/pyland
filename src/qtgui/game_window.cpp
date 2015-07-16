@@ -78,8 +78,8 @@ int GameWindow::overscan_top  = OVERSCAN_TOP;
 
 //New include calls
 //#include <QApplication>
-#include <tuple>
 #include "game_init.hpp"
+
 
 
 
@@ -191,7 +191,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *ar
     //std::tuple<void*,void*,void*> windowTuple = game_init(0, nullptr);
     //window = (SDL_Window*) (std::get<0>(windowTuple));
 
-    GameInit *curGame = new GameInit(argc, argv);
+    curGame = new GameInit(argc, argv);
 
     LOG(INFO) << "t8\n";
 
@@ -279,19 +279,28 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *ar
 
     LOG(INFO) << "t12\n";
 
-     LOG(INFO) << "About to show main.";
+    LOG(INFO) << "Completed GameWindow constructor.";
 
 
-    //curGame->showMain();
+//    curGame->showMain();
 
-    LOG(INFO) << "About to exec app.";
 
-    curGame->execApp();
+//    curGame->execApp();
 
-    LOG(INFO) << "About to delete stuff.";
+
+
+
 
     //curGame->delApp();
     //curGame->delMainWin();
+}
+
+GameInit* GameWindow::getCurGame(){
+    return curGame;
+}
+
+void GameWindow::executeApp(){
+    curGame->execApp();
 }
 
 GameWindow::~GameWindow() {

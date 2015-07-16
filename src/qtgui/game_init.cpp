@@ -43,7 +43,6 @@ GameInit::GameInit(int argc, char *argv[])
 {
     //Q_INIT_RESOURCE(application);
     create_apih_from_wrapper();
-    //app = new QApplication(argc, argv);
     app = new QApplication(argc,argv);
     app->setStyle("gtk");
     app->setAttribute(Qt::AA_NativeWindows, true);

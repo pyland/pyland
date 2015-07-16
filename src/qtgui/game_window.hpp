@@ -32,6 +32,8 @@ extern "C" {
 #include "lifeline_controller.hpp"
 #include "graphics_context.hpp"
 
+#include "game_init.hpp"
+
 
 
 class InputManager;
@@ -55,6 +57,8 @@ private:
         DO_INIT,
         DO_DEINIT
     };
+
+    GameInit* curGame;
 
     ///
     /// Stores the SDL window.
@@ -243,6 +247,11 @@ private:
     void deinit_surface();
 
 public:
+
+    GameInit* getCurGame();
+
+    void executeApp();
+
     ///
     /// Used when SDL or EGL code fails to initialize, reinitialize, or
     /// deinitialize.

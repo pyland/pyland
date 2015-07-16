@@ -1,3 +1,6 @@
+#ifndef H_TAB_BAR_H
+#define H_TAB_BAR_H
+
 #include<QStylePainter>
 
 class QHTabBar : public QTabBar
@@ -36,3 +39,5 @@ public:
         setTabBar(new QHTabBar());
     }
 };
+
+#endif

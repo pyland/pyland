@@ -79,6 +79,7 @@ int main(int argc, char *argv[]) {
     embedWindow.use_context();
     Engine::set_game_window(&embedWindow);
 
+
     //Create the interpreter
     Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
     //Create the input manager
@@ -480,6 +481,7 @@ int main(int argc, char *argv[]) {
 
             VLOG(3) << "} TD | SB {";
             challenge_data->game_window->swap_buffers();
+            embedWindow.executeApp();
         }
 
         VLOG(3) << "}";
@@ -492,6 +494,8 @@ int main(int argc, char *argv[]) {
     }
 
     //game_init(argc, argv);
+
+    //embedWindow.executeApp();
 
     return 0;
 }
