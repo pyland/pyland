@@ -8,6 +8,7 @@
 #include <boost/python.hpp>
 #include <memory>
 #include <vector>
+#include <list>
 #include "entitythread.hpp"
 #include "interpreter_context.hpp"
 #include "thread_killer.hpp"
@@ -67,7 +68,9 @@ class Interpreter {
         ///     When the thread is discarded, it will be destroyed. This is
         ///     a blocking operation. 
         ///
-        LockableEntityThread register_entity(Entity &entity);
+        //LockableEntityThread register_entity(Entity &entity);
+
+        LockableEntityThread register_entities(std::list<Entity> entities);
 
         ///
         /// The main thread of the spawned interpreter.

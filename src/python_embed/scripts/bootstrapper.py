@@ -152,6 +152,7 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         "move_north": move_north,
         "move_west": move_west,
         "move_south": move_south,
+        "boulder_one": entity,
         "monologue": monologue,
         "read_message": read_message,
         "walkable": walkable,

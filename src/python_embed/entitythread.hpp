@@ -7,12 +7,14 @@
 #include <future>
 #include <map>
 #include <thread>
+#include <list>
 #include "dispatcher.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
+#include "entity.hpp"
 
 class Interpreter;
-class Entity;
+//class Entity;
 class EntityThread;
 
 using EntityThreads = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
@@ -69,7 +71,10 @@ class EntityThread {
         ///
         /// API calls are passed through to this object.
         ///
-        Entity &entity;
+        //Entity &entity;
+    
+        //TODO: Make this not so hacky!
+        std::list<Entity> entities;
 
         ///
         /// Thread spawned by this EntityThread.
@@ -160,7 +165,10 @@ class EntityThread {
         /// @param entity
         ///     The entity to construct the daemon for.
         ///
-        EntityThread(InterpreterContext interpreter_context, Entity &entity);
+        //EntityThread(InterpreterContext interpreter_context, Entity &entity);
+
+        //TODO: Make this not hacked together
+        EntityThread(InterpreterContext interpreter_context, std::list<Entity> entities);
 
         ///
         /// Close the thread and shut down neatly.

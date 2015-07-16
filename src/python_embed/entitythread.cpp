@@ -144,7 +144,94 @@ void run_entity(std::atomic<bool> &on_finish,
     LOG(INFO) << "run_entity: Finished";
 }
 
-EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entity):
+
+void run_entities(std::atomic<bool> &on_finish,
+                std::shared_ptr<py::api::object> entities_object,
+                std::promise<long> thread_id_promise,
+                boost::filesystem::path bootstrapper_file,
+                InterpreterContext interpreter_context,
+                std::map<EntityThread::Signal, PyObject *> signal_to_exception) {
+
+    LOG(INFO) << "run_entity: Starting";
+    Lifeline alert_on_finish([&] () { on_finish = true; });
+
+    bool waiting = true;
+
+    // Register thread with Python, to allow locking
+    lock::ThreadState threadstate(interpreter_context);
+
+    std::unique_ptr<py::api::object> bootstrapper_module;
+
+    {
+        lock::ThreadGIL lock_thread(threadstate);
+
+        LOG(INFO) << "run_entity: Stolen GIL";
+
+        // Get and run bootstrapper
+        bootstrapper_module = std::make_unique<py::api::object>(
+            interpreter_context.import_file(bootstrapper_file)
+        );
+
+        // Asynchronously return thread id to allow killing of this thread
+        //
+        // WARNING:
+        //     This causes subtle race conditions, as setting this requires
+        //     the GIL and the thread killer takes the GIL.
+        //
+        //     BE CAREFUL.
+        //
+        thread_id_promise.set_value(PyThread_get_thread_ident());
+    }
+
+    while (true) {
+        try {
+            lock::ThreadGIL lock_thread(threadstate);
+            LOG(INFO) << "I am here";
+            bootstrapper_module->attr("start")(
+                *entities_object,
+                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::RESTART])),
+                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::STOP])),
+                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::KILL])),
+                waiting
+            );
+            LOG(INFO) << "I am here2";
+        }
+        catch (py::error_already_set &) {
+
+            lock::ThreadGIL lock_thread(threadstate);
+
+            PyObject *type, *value, *traceback;
+            PyErr_Fetch(&type, &value, &traceback);
+
+            if (!type) {
+                throw std::runtime_error("Unknown Python error");
+            }
+
+            if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::RESTART], type)) {
+                waiting = false;
+                continue;
+            }
+            else if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::STOP], type)) {
+                // Just wait.
+                waiting = true;
+                continue;
+            }
+            else if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::KILL], type)) {
+                // We are done.
+                LOG(INFO) << "Thread is killed";
+                return;
+            }
+            else {
+                LOG(WARNING) << "Python error in EntityThread, Python side.";
+            }
+        }
+        waiting = true;
+    }
+
+    LOG(INFO) << "run_entity: Finished";
+}
+
+/*EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entity):
     entity(entity),
     previous_call_number(entity.call_number),
     interpreter_context(interpreter_context),
@@ -190,6 +277,61 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
             interpreter_context,
             signal_to_exception
         );
+} */
+
+//TODO: Make this not hacked together!!!!!!!!!!!!!!!!!!!
+EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Entity> entities):
+    entities(entities),
+    previous_call_number(entities.front().call_number), //TODO: Work out what this did!!!!!!
+    interpreter_context(interpreter_context),
+
+    thread_finished(false),
+
+    Py_BaseAsyncException(make_base_async_exception(PyExc_BaseException, "__main__.BaseAsyncException")),
+
+    signal_to_exception({
+        {
+            EntityThread::Signal::RESTART,
+            make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_RESTART")
+        }, {
+            EntityThread::Signal::STOP,
+            make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_STOP")
+        }, {
+            EntityThread::Signal::KILL,
+            make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_KILL")
+        }
+    })
+
+    {
+        // To get thread_id
+        std::promise<long> thread_id_promise;
+        thread_id_future = thread_id_promise.get_future();
+
+        
+        auto entity_object = std::make_shared<py::list>();
+
+        for(auto entity: entities) {
+            // Wrap the object for Python.
+            //
+            // For implementation justifications, see
+            // http://stackoverflow.com/questions/24477791
+            {
+                lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
+                auto entity_object_minor = boost::ref(entity);
+                entity_object->append(entity_object_minor);
+            };
+        }
+
+        thread = std::thread(
+            run_entities,
+            std::ref(thread_finished),
+            entity_object,
+            std::move(thread_id_promise),
+            // TODO: Extract path into a more logical place
+            boost::filesystem::path("python_embed/scripts/bootstrapper_reborne.py"),
+            interpreter_context,
+            signal_to_exception
+        );
 }
 
 long EntityThread::get_thread_id() {
@@ -223,11 +365,11 @@ void EntityThread::halt_hard() {
 }
 
 bool EntityThread::is_dirty() {
-    return previous_call_number != entity.call_number;
+    return previous_call_number != entities.front().call_number; //TODO: Work out what this did!!!!!!
 }
 
 void EntityThread::clean() {
-    previous_call_number = entity.call_number;
+    previous_call_number = entities.front().call_number;//TODO: Work out what this did!!!!!!
 }
 
 void EntityThread::finish() {
@@ -250,7 +392,7 @@ EntityThread::~EntityThread() {
     lock::GIL lock_gil(interpreter_context, "EntityThread::~EntityThread");
 
     if (!entity_object.unique()) {
-        throw std::runtime_error("multiple references to entity_object on destruction");
+        //throw std::runtime_error("multiple references to entity_object on destruction"); TODO: WORK OUT WHAT THIS DID!
     }
 
     for (auto signal_exception : signal_to_exception) {

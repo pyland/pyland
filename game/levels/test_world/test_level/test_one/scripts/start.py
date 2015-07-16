@@ -13,4 +13,7 @@
 
 #portal_one.set_destination("level_two")
 
-callback_test(lambda: print("hello it works!"))
+
+#boulder_one.move_north()
+
+boulder_one.get_entity().print_dialogue("Hllo")

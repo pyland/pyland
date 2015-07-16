@@ -80,6 +80,8 @@ class Entity {
         bool move_south();
         bool move_north();
         bool move_west();
+        std::string get_name();
+        std::string get_location();
 
         ///
         /// Checks if player can move by the vector given.

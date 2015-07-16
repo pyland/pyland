@@ -3,6 +3,10 @@ import os
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../characters')
 from character import Character
 
+def hello_world():
+    print("hello_world")
+
+
 """ A brief description of the class will go here.
 The auto-generated comment produced by the script should also mention where to get a list of the api
 and which built-in variables exist already.
@@ -12,8 +16,8 @@ class Crocodile(Character):
     """ constructor
     run when the object is created in-engine
     """
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self):
+        super().__init__()
         
             
     """ game engine features (public)

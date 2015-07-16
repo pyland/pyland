@@ -105,6 +105,14 @@ void Entity::monologue() {
     });
 }
 
+std::string Entity::get_name() {
+    return "boulder_one"; //TODO: Make this actually return the entities name!!!
+}
+
+std::string Entity::get_location() {
+    return "characters/enemies/crocodile";  //TODO: Make this actually return the entities location!!!!
+}
+
 /** TODO : BLEH Abstract this functionality to python code
 bool Entity::cut(int x, int y) {
     ++call_number;

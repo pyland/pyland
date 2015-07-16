@@ -13,15 +13,26 @@ Any object you wish to have in game MUST by a child of this
 class GameObject:
 
     __name = ""
+    __entity = None
 
-    def __init__(self, name):
-        self.__name = name
+    def __init__(self):
+        pass
+    
+    """ Set's the entity in the object. The entity is the instance of the C++ class that represent the entity in the game map
+    this class essentially actus as a wrapper for it :) TODO: comment with references to bootstrapper
+    Then performs all the neccesary initialisation :D
+    """
+    def set_entity(self, entity):
+        self.__entity = entity
         self.set_sprite("")
         self.set_visible(False)
         self.set_solid(False)
 
+    def get_entity(self):
+        return self.__entity
+
     def get_name(self):
-        return self.__name
+        return self.__entity.get_name()
 
     def set_sprite(self, sprite_location): #all sprites are relative to sprites/sprite_location/0.png , when objects are animated the engine automatically cycles through the numbered sprites in the folder
         api.set_sprite(self, sprite_location)

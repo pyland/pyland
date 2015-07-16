@@ -24,5 +24,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("read_message",      &Entity::read_message)
         .def("update_status",     &Entity::py_update_status)
         .def("walkable",          &Entity::walkable)
-        .def("callback_test",          &Entity::callback_test);
+        .def("callback_test",     &Entity::callback_test)
+        .def("get_name",          &Entity::get_name)
+        .def("get_location",      &Entity::get_location);
 }

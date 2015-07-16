@@ -68,8 +68,8 @@ game_map = Map()
 
 class Character(GameObject):
 
-    def __init(self, name):
-        super().__init__(name)
+    def __init(self):
+        super().__init__()
         self.set_sprite("main/north")
     
     """ Change the sprite folder to "north" """
