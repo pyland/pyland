@@ -11,32 +11,72 @@
 // notice is included.
 //++
 
-#include <QApplication>
+#include "game_init.hpp"
+#include "mainwindow.h"
+
+//#include <QApplication>
 #include <QSplashScreen>
 #include <QPixmap>
 #include <QBitmap>
 
-#include "mainwindow.h"
+// Standard stuff
+#include <iostream>
+#include <math.h>
+#include <sstream>
+#include <assert.h>
+
+// SDL stuff
+#include <SDL2/SDL.h>
+#include <GL/glu.h>
+
+// Qt stuff
+#include <QApplication>
+
+
 #include "parsingfunctions.hpp"
 
-#include <tuple>
+//#include <tuple>
 
-std::tuple<void*,void*,void*> game_init(int argc, char *argv[])
+//std::tuple<void*,void*,void*> game_init(int argc, char *argv[])
+GameInit::GameInit()
 {
     //Q_INIT_RESOURCE(application);
     create_apih_from_wrapper();
-    QApplication *app = new QApplication(argc, argv);
+    //app = new QApplication(argc, argv);
+    app = new QApplication(0, *"");
     app->setStyle("gtk");
     app->setAttribute(Qt::AA_NativeWindows, true);
 
-    MainWindow *mainWin = new MainWindow();
+    MainWindow* mainWin = new MainWindow();
 
-    return std::tuple<void*,void*,void*> (mainWin->getSDLWindow(),app,mainWin);
+    //sdlWin = mainWin->getSDLWindow();
 
-//    int ret = app->exec();
+
+    //return std::tuple<void*,void*,void*> (mainWin->getSDLWindow(),app,mainWin);
+
+    int ret = app->exec();
 //
-//    delete mainWin;
-//    delete app;
+    delete mainWin;
+    delete app;
 //
 //    return ret;
 }
+
+QApplication* GameInit::getApp(){
+    return app;
+}
+
+//MainWindow* getMainWin(){
+//    return mainWin;
+//}
+
+SDL_Window* GameInit::getSdlWin(){
+    return sdlWin;
+}
+
+void GameInit::execApp(){
+    //app->exec();
+}
+
+
+

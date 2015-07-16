@@ -9,6 +9,7 @@ HEADERS       = mainwindow.h \
 		parsingfunctions.hpp   \
 		h_tab_bar.hpp 	\
 		game_window.hpp \
+		game_init.hpp \
 
 SOURCES       = mainwindow.cpp \
 		game_init.cpp \

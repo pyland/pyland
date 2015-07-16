@@ -266,7 +266,7 @@ MainWindow::MainWindow()
 
 //    initGameWindow();
 
-//    this->showMaximized();
+    this->showMaximized();
 
 
 

@@ -38,6 +38,15 @@ class SonicPiLexer;
 class QString;
 class QSlider;
 
+//class QDialog;
+//class QLabel;
+//class QSplashScreen;
+//class QCheckBox;
+//class QListWidgetItem;
+//class QListWidget;
+//class QProcess;
+//class QFuture;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
