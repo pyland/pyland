@@ -38,26 +38,22 @@
 //#include <tuple>
 
 //std::tuple<void*,void*,void*> game_init(int argc, char *argv[])
-GameInit::GameInit()
+GameInit::GameInit(int argc, char *argv[])
 {
     //Q_INIT_RESOURCE(application);
     create_apih_from_wrapper();
     //app = new QApplication(argc, argv);
-    app = new QApplication(0, *"");
+    app = new QApplication(argc,argv);
     app->setStyle("gtk");
     app->setAttribute(Qt::AA_NativeWindows, true);
 
     MainWindow* mainWin = new MainWindow();
 
-    //sdlWin = mainWin->getSDLWindow();
+    sdlWin = mainWin->getSDLWindow();
 
 
     //return std::tuple<void*,void*,void*> (mainWin->getSDLWindow(),app,mainWin);
 
-    int ret = app->exec();
-//
-    delete mainWin;
-    delete app;
 //
 //    return ret;
 }
@@ -75,8 +71,16 @@ SDL_Window* GameInit::getSdlWin(){
 }
 
 void GameInit::execApp(){
-    //app->exec();
+    app->exec();
 }
+
+void GameInit::delApp(){
+    delete app;
+}
+
+//void GameInit::delMainWin(){
+//    delete mainWin;
+//}
 
 
 

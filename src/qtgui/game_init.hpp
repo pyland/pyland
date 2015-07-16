@@ -56,12 +56,14 @@ private:
     SDL_Window* sdlWin;
 
 public:
-    GameInit();
+    GameInit(int argc, char *argv[]);
 
     QApplication* getApp();
 //    MainWindow* getMainWin();
     SDL_Window* getSdlWin();
     void execApp();
+    void delApp();
+    //void delMainWin();
 
 
 };

@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     /// CREATE GLOBAL OBJECTS
 
     //Create the game embedWindow to present to the users
-    GameWindow embedWindow(800, 600, false);
+    GameWindow embedWindow(800, 600, false,argc, argv);
     embedWindow.use_context();
     Engine::set_game_window(&embedWindow);
 

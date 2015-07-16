@@ -253,7 +253,7 @@ MainWindow::MainWindow()
     embedWindow->flags |= SDL_WINDOW_OPENGL;
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     LOG(INFO) << "created context\n";
     gameWidget->installEventFilter(this);
     //gameWidget->setFocusPolicy(Qt::ClickFocus);
@@ -435,7 +435,7 @@ void MainWindow::createActions()
 {
 
     connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-    connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
+    //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
     //connect(textInfo,SIGNAL(selectionChanged()),this,SLOT (setGameFocus()));
