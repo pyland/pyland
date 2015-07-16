@@ -22,7 +22,8 @@ QT_LFLAGS        = -Wl,-O1
 QT_LIBS = $(SUBLIBS)  -L/usr/lib/arm-linux-gnueabihf -lqscintilla2 -lSDL2 -lGL -lQtGui -lQtCore -lpthread \
 
 QT_CXXFLAGS = -pipe -O2 -Wall -W -D_REENTRANT
-QT_DEFINES = -DQT_WEBKIT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
+QT_DEFINES = -DQT_WEBKIT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED -DMESA_EGL_NO_X11_HEADERS 
+#-DQT_NO_KEYWORDS
 
 QT_INCFLAGS = -I/usr/include/qt4/QtGui    \
               -I/usr/include/qt4/         \

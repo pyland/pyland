@@ -15,50 +15,20 @@
 //++
 
 // Game window stuff
+
+
 #define GLM_FORCE_RADIANS
 
 
 
-#include <glog/logging.h>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
+#include "mainwindow.h"
+#include "h_tab_bar.hpp"
 
-
-#include "game_init.hpp"
-
-
-
-#include "input_manager.hpp"
-#include "interpreter.hpp"
-
-
-#include "start_screen.hpp"
-
-//#ifdef USE_GLES
-//#include "typeface.hpp"
-//#include "text_font.hpp"
-//#include "text.hpp"
-//#endif
-
-#include"sprite.hpp"
-
-// Standard stuff
-#include <iostream>
-#include <math.h>
-#include <sstream>
-#include <assert.h>
-
-// SDL stuff
-#include <SDL2/SDL.h>
-#include <GL/glu.h>
 
 // Qt stuff
 #include <QAction>
-#include <QApplication>
-#include <QCloseEvent>
 #include <QFile>
 #include <QFileInfo>
-#include <QFileDialog>
 #include <QIcon>
 #include <QMenu>
 #include <QMenuBar>
@@ -77,50 +47,43 @@
 #include <QStringList>
 #include <QSplitter>
 #include <QTextStream>
-#include <QPixmap>
 #include <QLabel>
 #include <QPushButton>
 #include <QGridLayout>
 #include <QGroupBox>
-#include <QRadioButton>
 #include <QCheckBox>
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QLineEdit>
+#include <QEvent>
+#include <QCloseEvent>
 
 // QScintilla stuff
 #include <Qsci/qsciapis.h>
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexerpython.h>
 
-#include "mainwindow.h"
+#include <glog/logging.h>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 
-#include "h_tab_bar.hpp"
+// SDL stuff
+#include <SDL2/SDL.h>
+#include <GL/glu.h>
 
-#include "button.hpp"
-#include "callback_state.hpp"
-#include "challenge_data.hpp"
-#include "challenges/cutting_challenge.hpp"
 #include "engine.hpp"
-#include "event_manager.hpp"
-#include "filters.hpp"
-#include "final_challenge.hpp"
+#include "interpreter.hpp"
+#include "callback_state.hpp"
+
+//GUI Stuff
+#include "button.hpp"
 #include "gui_manager.hpp"
-#include "gui_window.hpp"
-#include "introduction_challenge.hpp"
-#include "keyboard_input_event.hpp"
-#include "lifeline.hpp"
-#include "map_viewer.hpp"
-#include "mouse_cursor.hpp"
-#include "mouse_input_event.hpp"
-#include "mouse_state.hpp"
-#include "new_challenge.hpp"
-#include "notification_bar.hpp"
-//#include "notification_bar.hpp"
-//#include "sprite.hpp"
 
-#include "game_window.hpp"
-
+// Standard stuff
+#include <iostream>
+#include <math.h>
+#include <sstream>
+#include <assert.h>
 #include <chrono>
 #include <functional>
 #include <glm/vec2.hpp>
@@ -132,6 +95,7 @@
 #include <sstream>
 #include <utility>
 #include <vector>
+
 
 //#include "sprite.hpp"
 // Need to access the SDL_Window internals to set the opengl flag
@@ -260,8 +224,6 @@ MainWindow::MainWindow()
 
     QWidget *mainWidget = new QWidget;
 
-    //mainWidget->setLayout(windowLayout);
-
     createActions();
     createToolBar();
     //createStatusBar();
@@ -301,7 +263,6 @@ MainWindow::MainWindow()
     glClearColor(1.0f, 0.0f, 1.0f, 0.5f);
     LOG(INFO) << "created context\n";
     gameWidget->installEventFilter(this);
-    //gameWidget->setFocusPolicy(Qt::ClickFocus);
     gameWidget->setFocusPolicy(Qt::StrongFocus);
     eventTimer = new QTimer(this);
     eventTimer->setSingleShot(false);
@@ -355,45 +316,45 @@ Challenge* pick_challenge(ChallengeData* challenge_data)
 */
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-//    QKeyEvent *keyEvent = NULL;
-//    if (event->type() == QEvent::KeyPress)
-//    {
-//        keyEvent = static_cast<QKeyEvent*>(event);
-//        if (keyEvent->key())
-//        {
-//            SDL_Event sdlEvent;
-//            sdlEvent.type = SDL_KEYDOWN;
-//            sdlEvent.key.state = SDL_PRESSED;
-//            SDL_PushEvent(&sdlEvent);
-//            std::cout << "got a Qt keydown event\n";
-//        }
-//    }
-//    else
-//    {
-//        return QObject::eventFilter(obj, event);
-//    }
+    QKeyEvent *keyEvent = NULL;
+    if (event->type() == QEvent::KeyPress)
+    {
+        keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key())
+        {
+            SDL_Event sdlEvent;
+            sdlEvent.type = SDL_KEYDOWN;
+            sdlEvent.key.state = SDL_PRESSED;
+            SDL_PushEvent(&sdlEvent);
+            std::cout << "got a Qt keydown event\n";
+        }
+    }
+    else
+    {
+        return QObject::eventFilter(obj, event);
+    }
     return true;
 }
 
 void MainWindow::timerHandler()
 {
-//    SDL_Event event;
-//    while (SDL_PollEvent(&event))
-//    {
-//        switch(event.type)
-//        {
-//        case SDL_KEYDOWN:
-//            std::cout << " got an SDL keydown event\n";
-//            break;
-//        }
-//    }
-//    glClear(GL_COLOR_BUFFER_BIT);
-//    SDL_GL_SwapWindow(embedWindow);
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        switch(event.type)
+        {
+        case SDL_KEYDOWN:
+            std::cout << " got an SDL keydown event\n";
+            break;
+        }
+    }
+    glClear(GL_COLOR_BUFFER_BIT);
+    SDL_GL_SwapWindow(embedWindow);
 }
 
 void MainWindow::initGameWindow()
 {
-
+/*
     std::string map_path("../maps/start_screen.tmx");
     gameWindow = new GameWindow(600,420,false,embedWindow);
 //
@@ -654,7 +615,7 @@ void MainWindow::initGameWindow()
         Engine::set_global_scale(1.0f);
     }
     ));
-
+*/
 /*
     Lifeline help_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
@@ -818,6 +779,11 @@ void MainWindow::initGameWindow()
 //    }
 }
 
+void MainWindow::setGameFocus()
+{
+    gameWidget->setFocus();
+}
+
 void MainWindow::initWorkspace(QsciScintilla* ws)
 {
     ws->setAutoIndent(true);
@@ -896,10 +862,10 @@ bool MainWindow::saveAs()
 
 void MainWindow::runCode()
 {
-    //terminalDisplay->clear();
+    terminalDisplay->clear();
     //terminalDisplay->hide();
     //statusBar()->showMessage(tr("Running...."), 2000);
-    //std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
+    std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
     setGameFocus();
 }
 
@@ -935,11 +901,6 @@ void MainWindow::createActions()
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
     //connect(textInfo,SIGNAL(selectionChanged()),this,SLOT (setGameFocus()));
-}
-
-void MainWindow::setGameFocus()
-{
-    gameWidget->setFocus();
 }
 
 void MainWindow::createToolBar()

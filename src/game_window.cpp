@@ -164,9 +164,6 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,SDL_Window* exWind
 {
     window = exWindow;
 
-
-
-
     input_manager = new InputManager(this);
 
     if (windows.size() == 0) {

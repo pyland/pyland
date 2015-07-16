@@ -11,35 +11,34 @@
 // notice is included.
 //++
 
-
+#include "h_tab_bar.hpp"
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QDialog>
-#include <QLabel>
-#include <QSplashScreen>
-#include <QCheckBox>
-#include <QListWidgetItem>
-#include <QListWidget>
-#include <QProcess>
-#include <QFuture>
-#include <iostream>
+#include<QMainWindow>
 #include <Qsci/qscilexerpython.h>
 #include <SDL2/SDL.h>
-#include "game_window.hpp"
+//#include "game_window.hpp"
+//
+////#include "sprite.hpp"
 
-//#include "sprite.hpp"
-
-class QAction;
-class QMenu;
-class QsciScintilla;
-class QProcess;
-class QTextEdit;
 class QSplitter;
-class SonicPiLexer;
+class QMainWindow;
+class QObject;
+class QEvent;
+class QCloseEvent;
+class QsciScintilla;
+class QsciLexerPython;
+class QAction;
+class QToolBar;
+class QWidget;
+class QPushButton;
+class QTextEdit;
+class QCheckBox;
+template<class Key, class T> class QMap;
 class QString;
-class QSlider;
+class QTimer;
+class QLabel;
 
 class MainWindow : public QMainWindow
 {
@@ -62,7 +61,6 @@ private slots:
     void timerHandler();
 
 private:
-    //Challenge* pick_challenge(ChallengeData* challenge_data);
 
     void initGameWindow();
     void initWorkspace(QsciScintilla* ws);
@@ -116,7 +114,7 @@ private:
 
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
-    GameWindow *gameWindow;
+    //GameWindow *gameWindow;
     QTimer *eventTimer;
 
 };

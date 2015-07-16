@@ -10,11 +10,7 @@
 // and distribution of modified versions of this work as long as this
 // notice is included.
 //++
-
 #include <QApplication>
-#include <QSplashScreen>
-#include <QPixmap>
-#include <QBitmap>
 
 #include "mainwindow.h"
 #include "parsingfunctions.hpp"
