@@ -121,7 +121,6 @@ def start(entities, RESTART, STOP, KILL, waiting, engine = DummyEngine()):
     
     for entity in entities:
         game_object = wrap_entity_in_game_object(entity)
-        #entity.move_south()
         game_objects.append(game_object)
         engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
         engine.print_debug("whose name is {}".format(game_object.get_name()))

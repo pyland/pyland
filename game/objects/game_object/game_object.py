@@ -28,9 +28,6 @@ class GameObject:
         self.set_visible(False)
         self.set_solid(False)
 
-    def get_entity(self):
-        return self.__entity
-
     def get_name(self):
         return self.__entity.get_name()
 
@@ -87,28 +84,32 @@ class GameObject:
     The callback is called when the operation is complete
     """
     def move_north(self, callback = lambda: None):
-        api.move_north(self, callback)
+        #api.move_north(self, callback)
+        self.__entity.move_north()
         return
 
     """ Smoothly slides this object east by one tile 
     The callback is called when the operation is complete
     """
     def move_east(self, callback = lambda: None):
-        api.move_east(self, callback)
+        #api.move_east(self, callback)
+        self.__entity.move_east()
         return
 
     """ Smoothly slides this object south by one tile 
     The callback is called when the operation is complete
     """
     def move_south(self, callback = lambda: None):
-        api.move_south(self, callback)
+        #api.move_south(self, callback)
+        self.__entity.move_south()
         return
 
     """ Smoothly slides this object west by one tile 
     The callback is called when the operation is complete
     """
     def move_west(self, callback = lambda: None):
-        api.move_west(self, callback)
+        #api.move_west(self, callback)
+        self.__entity.move_west()
         return
 
     """ Returns if this object is moving """

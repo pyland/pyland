@@ -31,13 +31,13 @@ class Player(Character):
     """ constructor
     run when the object is created in-engine
     """
-    def __init__(self, name):
+    def __init__(self):
         super().__init__()
         #register button callbacks
-        api.add_button_callback(api.CONST_BUTTON_UP, self.__handle_movement_input(self.is_facing_north, self.face_north, self.move_north)
-        api.add_button_callback(api.CONST_BUTTON_RIGHT, self.__handle_movement_input(self.is_facing_east, self.face_east, self.move_east)
-        api.add_button_callback(api.CONST_BUTTON_DOWN, self.__handle_movement_input(self.is_facing_south, self.face_south, self.move_south)
-        api.add_button_callback(api.CONST_BUTTON_LEFT, self.__handle_movement_input(self.is_facing_west, self.face_west, self.move_west)
+        #api.add_button_callback(api.CONST_BUTTON_UP, self.__handle_movement_input(self.is_facing_north, self.face_north, self.move_north)
+        #api.add_button_callback(api.CONST_BUTTON_RIGHT, self.__handle_movement_input(self.is_facing_east, self.face_east, self.move_east)
+        #api.add_button_callback(api.CONST_BUTTON_DOWN, self.__handle_movement_input(self.is_facing_south, self.face_south, self.move_south)
+        #api.add_button_callback(api.CONST_BUTTON_LEFT, self.__handle_movement_input(self.is_facing_west, self.face_west, self.move_west)
 
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
@@ -50,8 +50,8 @@ class Player(Character):
     You MUST but super().beforeFrameUpdate() for this to work. Otherwise this may lead
     to unexpected behaviour. MAY NOT BE NEEDED, may be able to do everything with callbacks!
     """
-    def before_frame_update(self):
-        super().before_frame_update()
+    #def before_frame_update(self):
+        #super().before_frame_update()
 
     """ public:
     Put the regular public methods you wish to use here.
@@ -65,14 +65,14 @@ class Player(Character):
     function for moving them in the direction required
     face_x -- self.face_north/east/south/west() as appropriately required to get them to face in that direction
     """
-    def __handle_movement_input(self, is_facing_x, face_x, move_x):
-        def handle_input:
-            if(not(self.moving())):  #can't register input if the character is in the middle of moving
-                if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first  
-                    move_x()
-                else:
-                    face_x()
-        return handle_input
+    #def __handle_movement_input(self, is_facing_x, face_x, move_x):
+    #	def handle_input:
+    #		if(not(self.moving())):  #can't register input if the character is in the middle of moving
+    #			if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first  
+    #				move_x()
+    #			else:
+    #				face_x()
+    #	return handle_input
 
 
 
