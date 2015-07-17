@@ -14,7 +14,6 @@
 #include "game_init.hpp"
 #include "mainwindow.h"
 
-//#include <QApplication>
 #include <QSplashScreen>
 #include <QPixmap>
 #include <QBitmap>
@@ -29,17 +28,12 @@
 // SDL stuff
 #include <SDL2/SDL.h>
 #include <GL/glu.h>
-
+#include "game_main.hpp"
 // Qt stuff
 #include <QApplication>
-
-
 #include "parsingfunctions.hpp"
 
-//#include <tuple>
-
-//std::tuple<void*,void*,void*> game_init(int argc, char *argv[])
-GameInit::GameInit(int argc, char *argv[])
+GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
 {
     //Q_INIT_RESOURCE(application);
     create_apih_from_wrapper();
@@ -47,19 +41,13 @@ GameInit::GameInit(int argc, char *argv[])
     app->setStyle("gtk");
     app->setAttribute(Qt::AA_NativeWindows, true);
 
-    MainWindow* mainWin = new MainWindow();
+    MainWindow* mainWin = new MainWindow(exGame);
 
     LOG(INFO) << "t6\n";
 
     sdlWin = mainWin->getSDLWindow();
 
     LOG(INFO) << "t7\n";
-
-
-    //return std::tuple<void*,void*,void*> (mainWin->getSDLWindow(),app,mainWin);
-
-//
-//    return ret;
 }
 
 QApplication* GameInit::getApp(){

@@ -48,8 +48,6 @@ extern "C" {
 #include "lifeline_controller.hpp"
 #include "graphics_context.hpp"
 
-
-
 #ifdef USE_GLES
 
 #ifdef STATIC_OVERSCAN
@@ -79,20 +77,15 @@ int GameWindow::overscan_top  = OVERSCAN_TOP;
 //New include calls
 //#include <QApplication>
 #include "game_init.hpp"
-
-
-
+#include "game_main.hpp"
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
 GameWindow* GameWindow::focused_window = nullptr;
-
 
 // Need to inherit constructors manually.
 // NOTE: This will, and are required to, copy the message.
 GameWindow::InitException::InitException(const char *message): std::runtime_error(message) {}
 GameWindow::InitException::InitException(const std::string &message): std::runtime_error(message) {}
-
-
 
 #ifdef USE_GLES
 #include <boost/regex.hpp>
@@ -150,8 +143,7 @@ static std::pair<int, int> query_overscan(int left, int top) {
 }
 #endif
 
-
-GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *argv[]):
+GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *argv[], GameMain *exGame):
     window_width(width),
     window_height(height),
     window_x(0),
@@ -191,7 +183,7 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *ar
     //std::tuple<void*,void*,void*> windowTuple = game_init(0, nullptr);
     //window = (SDL_Window*) (std::get<0>(windowTuple));
 
-    curGame = new GameInit(argc, argv);
+    curGame = new GameInit(argc, argv, exGame);
 
     LOG(INFO) << "t8\n";
 
@@ -199,26 +191,14 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *ar
 
     LOG(INFO) << "t9\n";
 
-
     //MainWindow* mainWin = curGame->getMainWin();
-
 
     //window->showMaximized();
 
-
-
-
     //app->exec();
-
-
 
     //delete app;
     //delete (MainWindow*) (std::get<2>(windowTuple));
-
-
-
-
-
 
 //#ifdef USE_GL
 //                   | SDL_WINDOW_OPENGL
@@ -281,15 +261,9 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *ar
 
     LOG(INFO) << "Completed GameWindow constructor.";
 
-
 //    curGame->showMain();
 
-
 //    curGame->execApp();
-
-
-
-
 
     //curGame->delApp();
     //curGame->delMainWin();
@@ -320,7 +294,6 @@ GameWindow::~GameWindow() {
 
     delete input_manager;
 }
-
 
 void GameWindow::init_sdl() {
     int result;

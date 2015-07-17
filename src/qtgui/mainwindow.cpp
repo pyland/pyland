@@ -66,7 +66,7 @@
 #include <Qsci/qscilexerpython.h>
 
 #include "mainwindow.h"
-
+#include "game_main.hpp"
 #include "h_tab_bar.hpp"
 
 // Game window stuff
@@ -102,8 +102,9 @@ struct SDL_Window
 };
 typedef struct SDL_Window SDL_Window;
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(GameMain *exGame)
 {
+    game = exGame;
     this->setUnifiedTitleAndToolBarOnMac(true);
 
     // create workspace with textWidget
@@ -242,10 +243,7 @@ MainWindow::MainWindow()
 
     mainWidget->setLayout(windowLayout);
 
-
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
-
-
 
     //GameWindow embedWindow(800,600,false);
     SDL_SetWindowSize(embedWindow, 600, 420);
@@ -275,9 +273,6 @@ MainWindow::MainWindow()
 
     this->showMaximized();
 
-
-
-
 }
 
 SDL_Window* MainWindow::getSDLWindow(){
@@ -287,8 +282,6 @@ SDL_Window* MainWindow::getSDLWindow(){
 void MainWindow::showMax(){
     this->showMaximized();
 }
-
-
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
@@ -324,6 +317,7 @@ void MainWindow::timerHandler()
             break;
         }
     }
+    game->game_loop();
     glClear(GL_COLOR_BUFFER_BIT);
     SDL_GL_SwapWindow(embedWindow);
 }
@@ -388,8 +382,6 @@ void MainWindow::initWorkspace(QsciScintilla* ws)
     zoomWidget->setMaximumWidth(40);
 
     ws->addScrollBarWidget(zoomWidget,Qt::AlignLeft);
-
-
 
     //Connect buttons to functions
     connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));

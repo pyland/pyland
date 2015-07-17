@@ -15,6 +15,7 @@ BASE_OBJS = \
 	engine.o               \
 	event_manager.o        \
 	game_time.o            \
+	game_main.o	       \
 	graphics_context.o     \
 	image.o                \
 	layer.o                \

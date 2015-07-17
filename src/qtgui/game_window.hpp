@@ -34,12 +34,8 @@ extern "C" {
 
 #include "game_init.hpp"
 
-
-
 class InputManager;
-
-
-
+class GameMain;
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
 ///
@@ -59,7 +55,6 @@ private:
     };
 
     GameInit* curGame;
-
     ///
     /// Stores the SDL window.
     ///
@@ -269,7 +264,7 @@ public:
     /// @param height The height of the window. 0 uses current resolution.
     /// @param fullscreen Whether to use fullscreen.
     ///
-    GameWindow(int width, int height, bool fullscreen = false,int argc = 0, char *argv[] = nullptr) ;
+    GameWindow(int width, int height, bool fullscreen = false,int argc = 0, char *argv[] = nullptr, GameMain *exGame = nullptr) ;
 
     ///
     /// Shuts down and cleans up both SDL and EGL.
@@ -375,7 +370,5 @@ public:
     ///
     Lifeline register_resize_handler(std::function<void(GameWindow*)> func);
 };
-
-
 
 #endif

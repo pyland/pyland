@@ -37,22 +37,14 @@ class QSplitter;
 class SonicPiLexer;
 class QString;
 class QSlider;
-
-//class QDialog;
-//class QLabel;
-//class QSplashScreen;
-//class QCheckBox;
-//class QListWidgetItem;
-//class QListWidget;
-//class QProcess;
-//class QFuture;
+class GameMain;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow();
+    MainWindow(GameMain *exGame);
     SDL_Window* getSDLWindow();
     void showMax();
 
@@ -70,7 +62,6 @@ private slots:
     void timerHandler();
 
 private:
-    //Challenge* pick_challenge(ChallengeData* challenge_data);
 
     void initGameWindow();
     void initWorkspace(QsciScintilla* ws);
@@ -125,6 +116,8 @@ private:
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
     QTimer *eventTimer;
+
+    GameMain *game;
 
 };
 
