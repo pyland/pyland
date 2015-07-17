@@ -39,12 +39,12 @@
   </data>
  </layer>
  <objectgroup name="OL1" width="18" height="18">
-  <object name="characters/player/player_one" gid="286" x="512" y="896"/>
+  <object name="characters/enemies/crocodile/player_one" gid="286" x="512" y="896"/>
   <object name="characters/enemies/crocodile/croc_one" gid="296" x="576" y="1024"/>
-  <object name="boulder/boulder_one" gid="288" x="448" y="576"/>
-  <object name="boulder/boulder_two" gid="288" x="704" y="704"/>
-  <object name="boulder/boulder_three" gid="288" x="832" y="512"/>
-  <object name="portal/portal_one" gid="293" x="960" y="896"/>
+  <object name="characters/enemies/crocodile/boulder_one" gid="288" x="448" y="576"/>
+  <object name="characters/enemies/crocodile/boulder_two" gid="288" x="704" y="704"/>
+  <object name="characters/enemies/crocodile/boulder_three" gid="288" x="832" y="512"/>
+  <object name="characters/enemies/crocodile/portal_one" gid="293" x="960" y="896"/>
  </objectgroup>
  <layer name="TL2" width="18" height="18">
   <data encoding="base64" compression="zlib">

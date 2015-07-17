@@ -16,4 +16,13 @@
 
 #boulder_one.move_north()
 
-boulder_one.get_entity().print_dialogue("Hllo")
+boulder_one.get_entity().move_south()
+boulder_one.get_entity().move_south()
+boulder_one.get_entity().move_south()
+boulder_one.get_entity().move_south()
+boulder_one.get_entity().move_south()
+boulder_one.get_entity().move_south()
+boulder_one.get_entity().move_south()
+boulder_one.get_entity().move_south()
+player_one.get_entity().move_south()
+

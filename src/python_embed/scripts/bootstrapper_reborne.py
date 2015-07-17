@@ -89,15 +89,8 @@ def snake_to_camelcase(snake_string):
 """ Imports the correct files and class for each entity, and then wraps them in the correct game object
 """
 def wrap_entity_in_game_object(entity):
-    print("1")
     #Grabs the object's location in the file system (original data comes from the map's tmx file, eg. characters/enemies/crocodile
-    #entity_location = entity.get_location()
-    entity.callback_test(lambda: print("b"))
     entity_location = entity.get_location()
-    print(entity_location)
-    print("2")
-    print(entity_location)
-    print("3")
     #Imports the correct module based on that path name
     sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + "/../../../game/objects/" + entity_location)  # Go to the correct folder
     module_name = entity_location[entity_location.rfind("/") + 1: ] # Then get the name of the file itself (same name as the folder it's in, so can be extracted from the path name, eg crocodile/crocodile.py)
@@ -127,12 +120,12 @@ def start(entities, RESTART, STOP, KILL, waiting, engine = DummyEngine()):
     """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
     
     for entity in entities:
-        print(entity.get_location())
-        #game_object = wrap_entity_in_game_object(entity)
-        #game_objects.append(game_object)
-        #engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
-        #engine.print_debug("whose name is {}".format(game_object.get_name()))
-    """
+        game_object = wrap_entity_in_game_object(entity)
+        #entity.move_south()
+        game_objects.append(game_object)
+        engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
+        engine.print_debug("whose name is {}".format(game_object.get_name()))
+    
     ScopedInterpreter = create_execution_scope(game_objects, engine, RESTART, STOP, KILL)
     scoped_interpreter = ScopedInterpreter()
     
@@ -186,4 +179,3 @@ def start(entities, RESTART, STOP, KILL, waiting, engine = DummyEngine()):
 
         else:
             break
-        """
