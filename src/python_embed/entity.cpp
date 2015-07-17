@@ -67,31 +67,32 @@ void Entity::callback_test(PyObject *callback) {
     //PyGILState_Release(state);
 }
 
-bool Entity::move(int x, int y) {
+void Entity::move(int x, int y) {
     ++call_number;
 
     auto id = this->id;
-    return GilSafeFuture<bool>::execute(
+    GilSafeFuture<bool>::execute(
         [id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
-            Engine::move_object(id, glm::ivec2(x, y), walk_succeeded_return);
+            Engine::move_object(id, glm::ivec2(x, y), walk_succeeded_return); //This returns a boolean that says wether the move was succesful or not...
         },
         false
     );
+    return;
 }
 
-bool Entity::move_east(){
+void Entity::move_east(){
     return(move(1, 0));
 }
 
-bool Entity::move_west(){
+void Entity::move_west(){
     return(move(-1, 0));
 }
 
-bool Entity::move_north(){
+void Entity::move_north(){
     return(move(0, 1));
 }
 
-bool Entity::move_south(){
+void Entity::move_south(){
     return(move(0, -1));
 }
 

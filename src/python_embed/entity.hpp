@@ -80,12 +80,12 @@ class Entity {
         /// @return
         ///     Whether move was successful.
         ///
-        bool move(int x, int y);
+        void move(int x, int y);
 
-        bool move_east();
-        bool move_south();
-        bool move_north();
-        bool move_west();
+        void move_east();
+        void move_south();
+        void move_north();
+        void move_west();
         
         ///
         /// @return
