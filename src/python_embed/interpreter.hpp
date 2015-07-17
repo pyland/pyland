@@ -45,8 +45,8 @@ class Interpreter {
         ~Interpreter();
 
         ///
-        /// Give an entity to the interpreter, which will be wrapped
-        /// by the Python-side API. This is the canonical way of giving
+        /// Give a list of entities to the interpreter, which will be wrapped
+        /// by the Python-side API as a list of python objects. This is the canonical way of giving
         /// a daemon to an entity.
         ///
         /// Returns the thread in a lockable object. This can be used
@@ -58,8 +58,8 @@ class Interpreter {
         /// @deprecated
         ///     Will be changed to accept an ID.
         ///
-        /// @param entity
-        ///     The game entity to wrap.
+        /// @param entities
+        ///     The list of game entities to be wrapped
         ///
         /// @return
         ///     The thread in a lockable object. This can be used to tell
@@ -68,8 +68,6 @@ class Interpreter {
         ///     When the thread is discarded, it will be destroyed. This is
         ///     a blocking operation. 
         ///
-        //LockableEntityThread register_entity(Entity &entity);
-
         LockableEntityThread register_entities(std::list<Entity> &entities);
 
         ///

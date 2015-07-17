@@ -52,6 +52,7 @@ void print_trace() {
     }
 } */
 
+//A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!! 
 void Entity::callback_test(PyObject *callback) {
     //Initialize and acquire the global interpreter lock
     //PyEval_InitThreads();
@@ -143,46 +144,6 @@ std::string Entity::get_location() {
             instructions_return.set(file_location);
     });
 }
-
-/** TODO : BLEH Abstract this functionality to python code
-bool Entity::cut(int x, int y) {
-    ++call_number;
-
-    auto id = this->id;
-    return GilSafeFuture<bool>::execute(
-        [id, x, y] (GilSafeFuture<bool> cut_succeeded_return) {
-            //we are in an even
-            bool result = Engine::cut(id, glm::ivec2(x, y));
-            cut_succeeded_return.set(result);
-        },
-        true
-    );
-}
-
-py::list Entity::look(int search_range) {
-    ++call_number;
-
-    auto id = this->id;
-    return GilSafeFuture<py::list>::execute(
-        [id, search_range] (GilSafeFuture<py::list> found_objects_return) {
-            py::list objects;
-
-            std::vector<std::tuple<std::string, int, int>> objects_found(Engine::look(id, search_range));
-
-            for (auto object : objects_found) {
-                objects.append(
-                    py::make_tuple(
-                        py::api::object(std::get<0>(object)),
-                        py::api::object(std::get<1>(object)),
-                        py::api::object(std::get<2>(object))
-                    )
-                );
-            }
-            found_objects_return.set(objects);
-        }
-    );
-}
-*/
 
 std::string Entity::get_instructions() {
     auto id(this->id);

@@ -44,7 +44,7 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         });
         
         //Add all the objects to the map
-        //The names of variables need to be refactored to make sense, and this code needs to be cleaned up as there is a bit too much inderection atm!
+        //TODO: The names of variables need to be refactored to make sense, and this code needs to be cleaned up as there is a bit too much inderection atm!
         for(auto properties : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
             int map_object_id = ChallengeHelper::make_object(
                 this,

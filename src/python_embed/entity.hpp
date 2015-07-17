@@ -88,6 +88,11 @@ class Entity {
         bool move_west();
         
         std::string get_name();
+
+        ///
+        /// @return
+        /// 	The game objects location in the file-system (the folder where it's python script and sprites are!)
+        ///
         std::string get_location();
 
         ///
