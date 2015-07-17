@@ -31,3 +31,6 @@ portal_one.move_west()
 portal_one.move_west()
 portal_one.move_west()
 portal_one.move_west()
+
+boulder_four.move_east()
+boulder_four.move_south()

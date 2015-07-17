@@ -45,6 +45,7 @@
   <object name="boulder/boulder_two" gid="288" x="704" y="704"/>
   <object name="boulder/boulder_three" gid="288" x="832" y="512"/>
   <object name="portal/portal_one" gid="293" x="960" y="896"/>
+  <object name="boulder/boulder_four" gid="288" x="320" y="704"/>
  </objectgroup>
  <layer name="TL2" width="18" height="18">
   <data encoding="base64" compression="zlib">

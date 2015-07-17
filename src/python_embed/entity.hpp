@@ -87,11 +87,15 @@ class Entity {
         bool move_north();
         bool move_west();
         
+        ///
+        /// @return
+        ///     The name of the entity, this name is also used as the instance name of the entity in python. :)
+        ///
         std::string get_name();
 
         ///
         /// @return
-        /// 	The game objects location in the file-system (the folder where it's python script and sprites are!)
+        ///     The game objects location in the file-system (the folder where it's python script and sprites are!)
         ///
         std::string get_location();
 
