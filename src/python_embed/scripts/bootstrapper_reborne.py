@@ -91,7 +91,10 @@ def snake_to_camelcase(snake_string):
 def wrap_entity_in_game_object(entity):
     print("1")
     #Grabs the object's location in the file system (original data comes from the map's tmx file, eg. characters/enemies/crocodile
+    #entity_location = entity.get_location()
+    entity.callback_test(lambda: print("b"))
     entity_location = entity.get_location()
+    print(entity_location)
     print("2")
     print(entity_location)
     print("3")
@@ -124,11 +127,11 @@ def start(entities, RESTART, STOP, KILL, waiting, engine = DummyEngine()):
     """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
     
     for entity in entities:
-        engine.print_debug("hoo")
-        game_object = wrap_entity_in_game_object(entity)
-        game_objects.append(game_object)
-        engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
-        engine.print_debug("whose name is {}".format(game_object.get_name()))
+        print(entity.get_location())
+        #game_object = wrap_entity_in_game_object(entity)
+        #game_objects.append(game_object)
+        #engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
+        #engine.print_debug("whose name is {}".format(game_object.get_name()))
     """
     ScopedInterpreter = create_execution_scope(game_objects, engine, RESTART, STOP, KILL)
     scoped_interpreter = ScopedInterpreter()

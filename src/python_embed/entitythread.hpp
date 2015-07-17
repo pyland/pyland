@@ -129,7 +129,7 @@ class EntityThread {
         ///
         /// This exists to be neatly cleaned up in the destructor.
         ///
-        std::shared_ptr<boost::python::api::object> entity_object;
+        std::shared_ptr<boost::python::list> entity_object;
 
         ///
         /// Finish and join the spawned thread.
@@ -168,7 +168,7 @@ class EntityThread {
         //EntityThread(InterpreterContext interpreter_context, Entity &entity);
 
         //TODO: Make this not hacked together
-        EntityThread(InterpreterContext interpreter_context, std::list<Entity> entities);
+        EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities);
 
         ///
         /// Close the thread and shut down neatly.

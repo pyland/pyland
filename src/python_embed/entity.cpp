@@ -12,6 +12,12 @@
 #include <string>
 #include <tuple>
 #include <vector>
+//Here to test print_trace. REmove later!!!!!
+        #include <stdio.h>
+        #include <stdlib.h>
+        #include <sys/wait.h>
+        #include <unistd.h>
+        #include <sys/prctl.h> 
 
 #include "entity.hpp"
 #include "engine.hpp"
@@ -21,11 +27,30 @@
 #include "object_manager.hpp"
 #include "map_object.hpp"
 
-
-Entity::Entity(glm::vec2 start, std::string name, int id):
+Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int id):
     start(start), id(id), call_number(0) {
         this->name = std::string(name);
+        this->file_location = std::string(file_location);
+        LOG(INFO) << "invalid: constructor " << this->id;
 }
+
+/* TODO: Copy this and move it somewhere that it can be used. It is so so so so so so so so so useful! see https://stackoverflow.com/questions/4636456/how-to-get-a-stack-trace-for-c-using-gcc-with-line-number-information/4732119#4732119
+void print_trace() {
+    char pid_buf[30];
+    sprintf(pid_buf, "%d", getpid());
+    char name_buf[512];
+    name_buf[readlink("/proc/self/exe", name_buf, 511)]=0;
+    prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY, 0, 0, 0);
+    int child_pid = fork();
+    if (!child_pid) {           
+        dup2(2,1); // redirect output to stderr
+        fprintf(stdout,"stack trace for %s pid=%s\n",name_buf,pid_buf);
+        execlp("gdb", "gdb", "--batch", "-n", "-ex", "thread", "-ex", "bt", name_buf, pid_buf, NULL);
+        abort(); // If gdb failed to start
+    } else {
+        waitpid(child_pid,NULL,0);
+    }
+} */
 
 void Entity::callback_test(PyObject *callback) {
     //Initialize and acquire the global interpreter lock
@@ -105,12 +130,18 @@ void Entity::monologue() {
     });
 }
 
-std::string Entity::get_name() {
-    return "boulder_one"; //TODO: Make this actually return the entities name!!!
+std::string Entity::get_name() { //TODO: Analyse wether it would be best to get this from the actual object instead of local copies!
+    std::string name = this->name;
+    return GilSafeFuture<std::string>::execute([name] (GilSafeFuture<std::string> instructions_return) {
+            instructions_return.set(name);
+    });
 }
 
 std::string Entity::get_location() {
-    return "characters/enemies/crocodile";  //TODO: Make this actually return the entities location!!!!
+    std::string file_location = this->file_location;
+    return GilSafeFuture<std::string>::execute([file_location] (GilSafeFuture<std::string> instructions_return) {
+            instructions_return.set(file_location);
+    });
 }
 
 /** TODO : BLEH Abstract this functionality to python code

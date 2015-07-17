@@ -25,10 +25,15 @@ class Entity {
 
     public:
         ///
-        /// A name. This is used to find scripts, and eventually
-        /// will be a deprecated or randomly-generated feature.
+        /// A name. The name is used to identify instances of the object in the python
+        /// code.
         ///
         std::string name;
+        
+        ///
+        /// Where the object is in the filesystem relative to game/objects, (where it's python code and sprites are stored!!!!!
+        ///
+        std::string file_location;
 
         ///
         /// ID of entity, referring to in-game object that the API calls are passed to.
@@ -51,8 +56,9 @@ class Entity {
         ///     TODO: replace so as to not require vector displacements.
         ///
         /// @param name
-        ///     A name. This is used to find scripts, and eventually
-        ///     will be a deprecated or randomly-generated feature.
+        ///     A name.
+        ///
+        /// @param file_location
         ///
         /// @param id
         ///     ID of entity, referring to in-game object that the API calls are passed to.
@@ -60,7 +66,7 @@ class Entity {
         /// @return
         ///     New instance of Entity
         ///
-        Entity(glm::vec2 start, std::string name, int id);
+        Entity(glm::vec2 start, std::string name, std::string file_location, int id);
 
         ///
         /// Move entity relative to current location.
@@ -80,6 +86,7 @@ class Entity {
         bool move_south();
         bool move_north();
         bool move_west();
+        
         std::string get_name();
         std::string get_location();
 

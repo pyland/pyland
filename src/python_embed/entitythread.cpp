@@ -186,7 +186,6 @@ void run_entities(std::atomic<bool> &on_finish,
     while (true) {
         try {
             lock::ThreadGIL lock_thread(threadstate);
-            LOG(INFO) << "I am here";
             bootstrapper_module->attr("start")(
                 *entities_object,
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::RESTART])),
@@ -194,7 +193,6 @@ void run_entities(std::atomic<bool> &on_finish,
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::KILL])),
                 waiting
             );
-            LOG(INFO) << "I am here2";
         }
         catch (py::error_already_set &) {
 
@@ -280,7 +278,7 @@ void run_entities(std::atomic<bool> &on_finish,
 } */
 
 //TODO: Make this not hacked together!!!!!!!!!!!!!!!!!!!
-EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Entity> entities):
+EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities):
     entities(entities),
     previous_call_number(entities.front().call_number), //TODO: Work out what this did!!!!!!
     interpreter_context(interpreter_context),
@@ -308,17 +306,16 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Ent
         thread_id_future = thread_id_promise.get_future();
 
         
-        auto entity_object = std::make_shared<py::list>();
+        entity_object = std::make_shared<py::list>(); //A list of all the game_objects is what we want to pass to the boostrapper, so it can handle and name them
 
-        for(auto entity: entities) {
+        for(auto &entity: entities) {
             // Wrap the object for Python.
             //
             // For implementation justifications, see
             // http://stackoverflow.com/questions/24477791
             {
                 lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
-                auto entity_object_minor = boost::ref(entity);
-                entity_object->append(entity_object_minor);
+                entity_object->append(boost::ref(entity));
             };
         }
 
@@ -392,7 +389,7 @@ EntityThread::~EntityThread() {
     lock::GIL lock_gil(interpreter_context, "EntityThread::~EntityThread");
 
     if (!entity_object.unique()) {
-        //throw std::runtime_error("multiple references to entity_object on destruction"); TODO: WORK OUT WHAT THIS DID!
+        throw std::runtime_error("multiple references to entity_object on destruction"); //TODO: WORK OUT WHAT THIS DID!
     }
 
     for (auto signal_exception : signal_to_exception) {

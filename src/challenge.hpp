@@ -13,6 +13,7 @@
 #include "lifeline.hpp"
 #include "sprite_switcher.hpp"
 #include "walkability.hpp"
+#include "entity.hpp"
 
 //Constants to define the different types, used in id_type function
 const int sprite_id_type = 1;
@@ -21,8 +22,11 @@ const int object_id_type = 3;
 
 class ChallengeData;
 class Map;
+class LockableEntityThread;
 
 class Challenge {
+private:
+    std::list<Entity> entity_list; //All the entities are put in a list, the list of entities in the challenge!!!!
 protected:
     Map* map;
     Lifeline esc_callback;
@@ -30,6 +34,10 @@ protected:
 
     std::vector<int> map_object_ids;
 public:
+    ///
+    /// The Python thread for running scripts in.
+    ///
+    std::unique_ptr<LockableEntityThread> daemon;
 
     Challenge(ChallengeData* _challenge_data);
 

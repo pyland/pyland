@@ -70,7 +70,7 @@ class Interpreter {
         ///
         //LockableEntityThread register_entity(Entity &entity);
 
-        LockableEntityThread register_entities(std::list<Entity> entities);
+        LockableEntityThread register_entities(std::list<Entity> &entities);
 
         ///
         /// The main thread of the spawned interpreter.
