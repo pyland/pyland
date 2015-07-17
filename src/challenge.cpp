@@ -44,6 +44,7 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         });
         
         //Add all the objects to the map
+        //The names of variables need to be refactored to make sense, and this code needs to be cleaned up as there is a bit too much inderection atm!
         for(auto properties : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
             int map_object_id = ChallengeHelper::make_object(
                 this,
@@ -51,31 +52,15 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
                 Walkability::BLOCKED,	//wether the object can be walked through	
                 properties.first //name of the object
             );
-
+            //Push the map_object on the Challenge's internal list of map_objects
             map_object_ids.push_back(map_object_id);
-
-            //create object entity to push to python
-            auto object(ObjectManager::get_instance().get_object<MapObject>(map_object_id));
-            //Specify the object's script, this file path is relative to src/python_embed/scripts.
-            LOG(INFO) << "invalid: challenge " << map_object_id;
+            //Create the entity which will be passed to python for each map_object
             auto *a_thing(new Entity(properties.second.position, properties.first, properties.second.object_file_location, map_object_id));
 
             entity_list.push_front(*a_thing); //put all the entities in the entity list!!!
         }
-
-        //int map_object_id = map_object_ids.at(0);
-    
-        //auto *map = Engine::get_map_viewer()->get_map();
-        //auto object(ObjectManager::get_instance().get_object<MapObject>(map_object_id));
-
-        //Get the object's properties, replace this with the name of your character
-        //auto properties(map->locations.at("player_one")); //Objects refers to the layer here
-        //Specify the object's script, this file path is relative to src/python_embed/scripts.
-        // auto *a_thing(new Entity(properties.position, "test_world/test_level/test_one", map_object_id));
-        //Add the object to the interpreter so that it's script will be executed
-        // auto daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entity(*a_thing)); //Old way of working
-        daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entities(entity_list)); //Use boost::python::list to register multiple entities
-        //Start the script, script actually starts before this is called???
+        //The intepreter creates a new python thread which is the main thread for the running level, the list of all objects in the level are passed to it which are then exposed to the python code
+        daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entities(entity_list));
         daemon->value->halt_soft(EntityThread::Signal::RESTART);
 }
 

@@ -26,7 +26,17 @@ class LockableEntityThread;
 
 class Challenge {
 private:
-    std::list<Entity> entity_list; //All the entities are put in a list, the list of entities in the challenge!!!!
+    ///
+    /// This is a list of entities in the challenge.
+    /// An entity is basically the representation of a game object that is passable
+    /// to python after wrapping.
+    ///
+    std::list<Entity> entity_list;
+
+    ///
+    /// The Python thread for running scripts in.
+    ///
+    std::unique_ptr<LockableEntityThread> daemon;
 protected:
     Map* map;
     Lifeline esc_callback;
@@ -34,10 +44,6 @@ protected:
 
     std::vector<int> map_object_ids;
 public:
-    ///
-    /// The Python thread for running scripts in.
-    ///
-    std::unique_ptr<LockableEntityThread> daemon;
 
     Challenge(ChallengeData* _challenge_data);
 
