@@ -109,13 +109,26 @@ int ChallengeHelper::make_sprite(Challenge *challenge,
 
 void ChallengeHelper::kill_sprite(Challenge *challenge,
                                   int sprite_id,
-                                  glm::vec2 location) {
+                                  glm::vec2 location,
+                                  std::string speaker,
+                                  std::string eulogy) {
     auto *map = Engine::get_map_viewer()->get_map();
     auto player = ObjectManager::get_instance().get_object<Sprite>(sprite_id);
-    
+
     if((player->get_position()) == (location)) {
         map->remove_sprite(sprite_id); //at the moment only the sprite is removed
+
+        Engine::print_dialogue (speaker, eulogy);
+
+        EventManager::get_instance().add_timed_event(GameTime::duration(3.0), [challenge] (float completion) {
+            if(completion == 1.0) {
+                challenge->event_finish.trigger(0);
+            }
+            return true;
+        });
+
     }
+
 
     return;
 }

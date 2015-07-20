@@ -1,3 +1,7 @@
-move(east)
+move_south()
+move_east()
+move_east()
+move_east()
+move_east()
+move_east()
 
-#Kanye west
