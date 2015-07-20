@@ -64,7 +64,7 @@ GameMain::GameMain(int argc, char *argv[]):
     gui_manager(),
 
     //Create the callbackstate
-    //callbackstate()
+    callbackstate(),
 
     //Create the map viewer
     map_viewer(&embedWindow, &gui_manager),
@@ -73,6 +73,8 @@ GameMain::GameMain(int argc, char *argv[]):
     buttontype(Engine::get_game_typeface()),
 
     buttonfont(Engine::get_game_font())
+
+    //notification_bar()
 
 
 {
@@ -123,7 +125,7 @@ GameMain::GameMain(int argc, char *argv[]):
 
     sprite_window = std::make_shared<GUIWindow>();
     sprite_window->set_visible(false);
-    std::shared_ptr<Button> run_button = std::make_shared<Button>();
+    run_button = std::make_shared<Button>();
     run_button->set_text(runtext);
     run_button->set_on_click([&] ()
     {
@@ -135,7 +137,7 @@ GameMain::GameMain(int argc, char *argv[]):
     run_button->set_y_offset(0.8f);
     run_button->set_x_offset(0.0f);
 
-    std::shared_ptr<Button> stop_button = std::make_shared<Button>();
+    stop_button = std::make_shared<Button>();
     stop_button->set_text(stoptext);
     stop_button->set_on_click([&] ()
     {

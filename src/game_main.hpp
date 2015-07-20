@@ -38,8 +38,8 @@ private:
     EventManager *em;
 
     std::shared_ptr<GUIWindow> sprite_window;
-    //std::shared_ptr<Button> run_button;
-    //std::shared_ptr<Button> stop_button;
+    std::shared_ptr<Button> run_button;
+    std::shared_ptr<Button> stop_button;
 
     //NotificationBar notification_bar;
 
