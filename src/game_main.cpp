@@ -437,11 +437,11 @@ GameMain::GameMain(int argc, char *argv[]):
 //    while(!embedWindow.check_close() && run_game)
 //    {
     challenge_data->run_challenge = true;
-    Challenge* challenge = pick_challenge(challenge_data);
+    challenge = pick_challenge(challenge_data);
     Engine::set_challenge(challenge);
     challenge->start();
 
-    auto last_clock(std::chrono::steady_clock::now());
+    last_clock = (std::chrono::steady_clock::now());
 
     //Run the challenge - returns after challenge completes
     VLOG(3) << "{";
@@ -468,6 +468,7 @@ GameMain::GameMain(int argc, char *argv[]):
 GameMain::~GameMain(){
     delete notification_bar;
     delete challenge_data;
+    delete challenge;
     delete cursor;
 }
 

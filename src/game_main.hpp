@@ -84,6 +84,9 @@ private:
     ChallengeData *challenge_data;
 
     MouseCursor *cursor;
+    Challenge* challenge;
+
+    std::chrono::time_point<std::chrono::steady_clock> last_clock;
 
 public:
     GameMain(int argc, char *argv[]);
