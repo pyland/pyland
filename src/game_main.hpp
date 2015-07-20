@@ -11,6 +11,9 @@
 #include "typeface.hpp"
 #include "text_font.hpp"
 #include "text.hpp"
+#include "gui_window.hpp"
+#include "button.hpp"
+#include "notification_bar.hpp"
 
 class Challenge;
 class ChallengeData;
@@ -33,6 +36,12 @@ private:
     std::shared_ptr<Text> runtext;
 
     EventManager *em;
+
+    std::shared_ptr<GUIWindow> sprite_window;
+    //std::shared_ptr<Button> run_button;
+    //std::shared_ptr<Button> stop_button;
+
+    //NotificationBar notification_bar;
 
 
 public:

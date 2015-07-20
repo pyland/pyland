@@ -121,7 +121,7 @@ GameMain::GameMain(int argc, char *argv[]):
     //Create the event manager
     em = EventManager::get_instance();
 
-    std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
+    sprite_window = std::make_shared<GUIWindow>();
     sprite_window->set_visible(false);
     std::shared_ptr<Button> run_button = std::make_shared<Button>();
     run_button->set_text(runtext);
@@ -150,8 +150,8 @@ GameMain::GameMain(int argc, char *argv[]):
 
     gui_manager.set_root(sprite_window);
 
-    // build navigation bar buttons
     NotificationBar notification_bar;
+
     Engine::set_notification_bar(&notification_bar);
     //    SpriteSwitcher sprite_switcher;
 
