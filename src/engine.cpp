@@ -95,7 +95,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
-    // animate walking in-place
+    // animate walking in-place TODO: It doesn't actually seem to do this, work out what it does!
     auto MapObject_test(ObjectManager::get_instance().get_object<MapObject>(id));
     if (!MapObject_test) {
         VLOG(2) << "ignore if walkable or not";
@@ -125,7 +125,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
             object->set_position(tweened_position);
 
-            //object->set_tile(object->frames.get_frame(direction + "/walking", completion)); TODO: BLEH, investigate what this did
+            //object->set_tile(object->frames.get_frame(direction + "/walking", completion)); This is what animated the object :) TODO: make it so that python can control this
             object->set_tile(object->frames.get_frame());
 
             if (completion == 1.0) {
