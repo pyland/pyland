@@ -18,27 +18,23 @@
 #include "button.hpp"
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
-#include "cutting_challenge.hpp"
+#include "challenge.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
-#include "final_challenge.hpp"
 #include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
-#include "introduction_challenge.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
-#include "new_challenge.hpp"
 #include "notification_bar.hpp"
-#include "sprite.hpp"
-#include "start_screen.hpp"
 
 #ifdef USE_GLES
 #include "typeface.hpp"
@@ -183,7 +179,7 @@ int main(int argc, const char *argv[]) {
         {KEY_PRESS, KEY("E")},
         [&] (KeyboardInputEvent) {
             auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
+            auto active_player = ObjectManager::get_instance().get_object<MapObject>(id);
             if (!active_player) { return; }
             Engine::open_editor(active_player->get_name());
         }
@@ -290,11 +286,12 @@ int main(int argc, const char *argv[]) {
         {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
         [&] (KeyboardInputEvent) {
             auto id(Engine::get_map_viewer()->get_map_focus_object());
-            auto active_player(ObjectManager::get_instance().get_object<Sprite>(id));
+            auto active_player(ObjectManager::get_instance().get_object<MapObject>(id));
 
             Engine::print_dialogue(
                 active_player->get_name(),
-                active_player->get_instructions()
+                "placeholder string"
+                //active_player->get_instructions() TODO: BLEH remove this!
             );
         }
     ));
@@ -318,17 +315,17 @@ int main(int argc, const char *argv[]) {
             glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
             LOG(INFO) << "interacting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
-            auto sprites = Engine::get_sprites_at(tile_clicked);
+            auto objects = Engine::get_objects_at(tile_clicked);
 
-            if (sprites.size() == 0) {
-                LOG(INFO) << "No sprites to interact with";
+            if (objects.size() == 0) {
+                LOG(INFO) << "No objects to interact with";
             }
-            else if (sprites.size() == 1) {
-                callbackstate.register_number_id(sprites[0]);
+            else if (objects.size() == 1) {
+                callbackstate.register_number_id(objects[0]);
             }
             else {
-                LOG(WARNING) << "Not sure sprite object to switch to";
-                callbackstate.register_number_id(sprites[0]);
+                LOG(WARNING) << "Not sure object object to switch to";
+                callbackstate.register_number_id(objects[0]);
             }
         }
     ));
@@ -347,7 +344,7 @@ int main(int argc, const char *argv[]) {
 
     std::function<void (GameWindow *)> func_char = [&] (GameWindow *) {
         LOG(INFO) << "text window resizing";
-        Engine::text_updater();
+        //Engine::text_updater(); BLEH TODO: Work out what this does and if neccesary
     };
 
     Lifeline text_lifeline_char = window.register_resize_handler(func_char);
@@ -397,7 +394,7 @@ int main(int argc, const char *argv[]) {
             VLOG(3) << "} EM | RM {";
             Engine::get_map_viewer()->render();
             VLOG(3) << "} RM | TD {";
-            Engine::text_displayer();
+            //Engine::text_displayer(); TODO: work out what this did and if neccesary
             challenge_data->notification_bar->text_displayer();
 
             // This is not an input event, because the map can move with
@@ -439,29 +436,9 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
     std::string map_name = "";
     switch(next_challenge) {
         case 0:
-            map_name ="../maps/start_screen.tmx";
+            map_name ="../game/levels/test_world/test_level/test_one/layout.tmx";
             challenge_data->map_name = map_name;
-            challenge = new StartScreen(challenge_data);
-            break;
-        case 1:
-            map_name = "../maps/introduction.tmx";
-            challenge_data->map_name = map_name;
-            challenge = new IntroductionChallenge(challenge_data);
-            break;
-        case 2:
-            map_name = "../maps/cutting_challenge.tmx";
-            challenge_data->map_name = map_name;
-            challenge = new CuttingChallenge(challenge_data);
-            break;
-        case 3:
-            map_name = "../maps/final_challenge.tmx";
-            challenge_data->map_name = map_name;
-            challenge = new FinalChallenge(challenge_data);
-            break;
-        case 4:
-            map_name = "../maps/new_challenge.tmx";
-            challenge_data->map_name = map_name;
-            challenge = new NewChallenge(challenge_data);
+            challenge = new Challenge(challenge_data);
             break;
         default:
             break;

@@ -113,6 +113,9 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
     def move_north():
         return entity.move_north()
 
+    def callback_test(callback):
+        return entity.callback_test(callback)
+
     def walkable(position) -> bool:
         """
         Take a relative position (north, south, east or west)
@@ -140,6 +143,7 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         entity._print_debug(text)
 
     imbued_locals = {
+        "callback_test": callback_test,
         "cut": cut,
         "help": help,
         "get_retrace_steps": get_retrace_steps,
@@ -148,6 +152,7 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         "move_north": move_north,
         "move_west": move_west,
         "move_south": move_south,
+        "boulder_one": entity,
         "monologue": monologue,
         "read_message": read_message,
         "walkable": walkable,
@@ -216,7 +221,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
                 # for proper interrupts.
                 time.sleep(0.05)
 
-            script_filename = "python_embed/scripts/{}.py".format(entity.name);
+            script_filename = "../game/levels/{}/scripts/start.py".format(entity.name); #TODO: implement this path stuff in a config (ini) file!!!!!
             entity.print_debug("Reading from file: {}".format(script_filename))
 
             with open(script_filename, encoding="utf8") as script_file:
