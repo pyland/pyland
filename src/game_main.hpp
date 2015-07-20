@@ -75,9 +75,9 @@ private:
     Lifeline switch_char;
     Lifeline text_lifeline_char;
 //////////////////////////////////////////////////////////////////
-//    std::chrono::steady_clock::time_point start_time;
- //   std::vector<Lifeline> digit_callbacks;
-//    Text tile_identifier_text;
+    std::chrono::steady_clock::time_point start_time;
+    std::vector<Lifeline> digit_callbacks;
+    Text tile_identifier_text;
 
 //    std::function<void (GameWindow*)> func_char;
     bool run_game;

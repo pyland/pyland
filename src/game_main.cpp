@@ -72,9 +72,9 @@ GameMain::GameMain(int argc, char *argv[]):
     //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
     buttontype(Engine::get_game_typeface()),
 
-    buttonfont(Engine::get_game_font())
+    buttonfont(Engine::get_game_font()),
 
-//    tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
+    tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 
 //    cursor(&embedWindow)
 
@@ -227,8 +227,6 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    std::chrono::steady_clock::time_point start_time;
-
     fast_start_ease_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY({"Left Shift", "Right Shift"})},
     [&] (KeyboardInputEvent)
@@ -358,8 +356,6 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    std::vector<Lifeline> digit_callbacks;
-
     for (unsigned int i=0; i<10; ++i)
     {
         digit_callbacks.push_back(
@@ -400,7 +396,6 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Text tile_identifier_text(&embedWindow, Engine::get_game_font(), false);
     tile_identifier_text.move_ratio(1.0f, 0.0f);
     tile_identifier_text.resize(256, 64);
     tile_identifier_text.align_right();
