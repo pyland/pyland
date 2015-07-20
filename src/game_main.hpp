@@ -79,11 +79,11 @@ private:
     std::vector<Lifeline> digit_callbacks;
     Text tile_identifier_text;
 
-//    std::function<void (GameWindow*)> func_char;
+    std::function<void (GameWindow*)> func_char;
     bool run_game;
-//    ChallengeData *challenge_data;
+    ChallengeData *challenge_data;
 
- //   MouseCursor cursor;
+//    MouseCursor cursor;
 
 public:
     GameMain(int argc, char *argv[]);

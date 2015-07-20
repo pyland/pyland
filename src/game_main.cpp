@@ -407,7 +407,7 @@ GameMain::GameMain(int argc, char *argv[]):
     tile_identifier_text.set_text("(?, ?)");
     glm::ivec2 tile_identifier_old_tile;
 
-    std::function<void (GameWindow*)> func_char = [&] (GameWindow *)
+    func_char = [&] (GameWindow *)
     {
         LOG(INFO) << "text embedWindow resizing";
         Engine::text_updater();
@@ -419,7 +419,7 @@ GameMain::GameMain(int argc, char *argv[]):
     run_game = true;
 
     //Setup challenge
-    ChallengeData *challenge_data = (new ChallengeData(
+    challenge_data = (new ChallengeData(
                           map_path,
                           &interpreter,
                           &gui_manager,
