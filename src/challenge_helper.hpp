@@ -224,7 +224,7 @@ namespace ChallengeHelper {
 
 template <class Container>
 void ChallengeHelper::unregister_all(Container *callbacks) {
-    EventManager::get_instance().add_event([callbacks] () {
+    EventManager::get_instance()->add_event([callbacks] () {
         auto *map = Engine::get_map_viewer()->get_map();
         if (!map) { return; }
 

@@ -150,7 +150,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
                            "the jungle to gather the fruit.\n"
     );
 
-    EventManager::get_instance().add_timed_event(GameTime::duration(5.0), [this] (float completion) {
+    EventManager::get_instance()->add_timed_event(GameTime::duration(5.0), [this] (float completion) {
             if(completion == 1.0) {
                 Engine::print_dialogue("Villager",
                                        "You can repair the bridge with vines. \n"
@@ -176,7 +176,7 @@ FinalChallenge::FinalChallenge(ChallengeData *challenge_data): Challenge(challen
             );
 
 
-            EventManager::get_instance().add_timed_event(GameTime::duration(5.0), [] (float completion) {
+            EventManager::get_instance()->add_timed_event(GameTime::duration(5.0), [] (float completion) {
                     if(completion == 1.0) {
                         Engine::print_dialogue("Villager",
                                                "It can be quite a tedious process as the fruit is a "

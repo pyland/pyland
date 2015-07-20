@@ -112,7 +112,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     std::string direction(to_direction(move_by));
 
     // Motion
-    EventManager::get_instance().add_timed_event(
+    EventManager::get_instance()->add_timed_event(
         GameTime::duration(0.3),
         [direction, move_by, walk_succeeded_return, location, target, id] (float completion) mutable {
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);

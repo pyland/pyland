@@ -52,7 +52,7 @@ static T _gsf_execute(std::function<void (GilSafeFuture<T>)> callback,
 
     {
         auto gil_safe_return_value = get_gsf(return_value_promise);
-        EventManager::get_instance().add_event(std::bind(callback, gil_safe_return_value));
+        EventManager::get_instance()->add_event(std::bind(callback, gil_safe_return_value));
     }
 
     {

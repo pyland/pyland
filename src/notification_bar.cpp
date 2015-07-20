@@ -99,7 +99,7 @@ void NotificationBar::move_notification(Direction direction) {
 
 void NotificationBar::add_notification(std::string text_to_display) {
     notification_stack.add_new(text_to_display);
-    EventManager::get_instance().add_event(
+    EventManager::get_instance()->add_event(
         [=] () {
             notification_text->set_text(text_to_display);
             //std::cout << text_to_display << std::endl;

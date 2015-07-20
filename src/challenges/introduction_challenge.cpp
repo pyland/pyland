@@ -423,7 +423,7 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
 
             ChallengeHelper::set_completed_level(1);
 
-            EventManager::get_instance().add_timed_event(GameTime::duration(10.0), [this] (float completion) {
+            EventManager::get_instance()->add_timed_event(GameTime::duration(10.0), [this] (float completion) {
                 if (completion == 1.0) {
                     finish();
                 }
@@ -441,7 +441,7 @@ void IntroductionChallenge::start() {
 }
 
 void IntroductionChallenge::finish() {
-    ChallengeHelper::set_completed_level(1); 
+    ChallengeHelper::set_completed_level(1);
     event_finish.trigger(0);
 }
 

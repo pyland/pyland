@@ -1,4 +1,4 @@
-﻿#define GLM_FORCE_RADIANS
+#define GLM_FORCE_RADIANS
 
 #include <glog/logging.h>
 #include <boost/filesystem/operations.hpp>
@@ -54,10 +54,30 @@ using namespace std;
 static std::mt19937 random_generator;
 
 
-GameMain::GameMain(int argc, char *argv[])
+GameMain::GameMain(int argc, char *argv[]):
+    embedWindow(800, 600, false, argc, argv, this),
+
+    //Create the interpreter
+    interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
+
+    //Create the GUI manager
+    gui_manager(),
+
+    //Create the callbackstate
+    //callbackstate()
+
+    //Create the map viewer
+    map_viewer(&embedWindow, &gui_manager),
+
+    //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
+    buttontype(Engine::get_game_typeface()),
+
+    buttonfont(Engine::get_game_font())
+
+
 {
 
-    std::string map_path("../maps/start_screen.tmx");
+    map_path = ("../maps/start_screen.tmx");
 
     switch (argc)
     {
@@ -80,42 +100,26 @@ GameMain::GameMain(int argc, char *argv[])
     /// CREATE GLOBAL OBJECTS
 
     //Create the game embedWindow to present to the users
-    GameWindow embedWindow(800, 600, false, argc, argv, this);
     embedWindow.use_context();
     Engine::set_game_window(&embedWindow);
 
-
-    //Create the interpreter
-    Interpreter interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize());
     //Create the input manager
-    InputManager* input_manager = embedWindow.get_input_manager();
+    input_manager = embedWindow.get_input_manager();
 
-    //Create the GUI manager
-    GUIManager gui_manager;
-
-    //Create the map viewer
-    MapViewer map_viewer(&embedWindow, &gui_manager);
     Engine::set_map_viewer(&map_viewer);
 
     //    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
 
-    //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    Typeface buttontype = Engine::get_game_typeface();
-    TextFont buttonfont = Engine::get_game_font();
-
-    std::shared_ptr<Text> stoptext = std::make_shared<Text>(&embedWindow, buttonfont, true);
-    std::shared_ptr<Text> runtext = std::make_shared<Text>(&embedWindow, buttonfont, true);
+    stoptext = std::make_shared<Text>(&embedWindow, buttonfont, true);
+    runtext = std::make_shared<Text>(&embedWindow, buttonfont, true);
     // referring to top left corner of text embedWindow
     //    stoptext.move(105, 240 + 20);
     //    runtext.move(5, 240 + 20);
     stoptext->set_text("Halt");
     runtext->set_text("Run");
 
-    //Create the callbackstate
-    CallbackState callbackstate;
-
     //Create the event manager
-    EventManager &em = EventManager::get_instance();
+    em = EventManager::get_instance();
 
     std::shared_ptr<GUIWindow> sprite_window = std::make_shared<GUIWindow>();;
     sprite_window->set_visible(false);
@@ -251,7 +255,7 @@ GameMain::GameMain(int argc, char *argv[])
                         + 5.0f * completion * completion * completion
                     ));
 
-        EventManager::get_instance().time.set_game_seconds_per_real_second(eased);
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(eased);
     }
     ));
 
@@ -259,7 +263,7 @@ GameMain::GameMain(int argc, char *argv[])
     {KEY_RELEASE, KEY({"Left Shift", "Right Shift"})},
     [&] (KeyboardInputEvent)
     {
-        EventManager::get_instance().time.set_game_seconds_per_real_second(1.0);
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(1.0);
     }
     ));
 
@@ -454,9 +458,9 @@ GameMain::GameMain(int argc, char *argv[])
 
     // Call this when end challenge
     // Clean up after the challenge - additional, non-challenge clean-up
-    em.flush_and_disable();
+    em->flush_and_disable();
     delete challenge;
-    em.reenable();
+    em->reenable();
 
 //    }
 
@@ -478,7 +482,7 @@ void GameMain::game_loop()
 //
 //        do
 //        {
-//            EventManager::get_instance().process_events();
+//            EventManager::get_instance()->process_events();
 //        }
 //        while (
 //            std::chrono::steady_clock::now() - last_clock
