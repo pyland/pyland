@@ -14,7 +14,7 @@
 #include <glm/vec2.hpp>
 #include <thread>
 
-#include "api.hpp"
+#include "entity.hpp"
 #include "entitythread.hpp"
 #include "event_manager.hpp"
 #include "interpreter_context.hpp"
@@ -43,7 +43,8 @@ LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, 
 ///     Atomic flag to signal the thread's finishing
 ///
 /// @param entity_object
-///     Python object to pass to the bootstrapper, which has API calls passed to it.
+///     Python object to pass to the bootstrapper, this is a list of the objects in the map,
+///     which the bootstrapper then presents to the python level code appropriately.
 ///
 /// @param thread_id_promise
 ///     Promise allowing the thread to asynchronously return the thread's id,
@@ -58,9 +59,9 @@ LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, 
 ///     by access of the interpreter's PyInterpreterState.
 ///
 ///     Also allows importing files.
-///
-void run_entity(std::atomic<bool> &on_finish,
-                std::shared_ptr<py::api::object> entity_object,
+/// TODO: Create some kind python engine object and suitable api for engine stuff!!!!!
+void run_entities(std::atomic<bool> &on_finish,
+                std::shared_ptr<py::api::object> entities_object,
                 std::promise<long> thread_id_promise,
                 boost::filesystem::path bootstrapper_file,
                 InterpreterContext interpreter_context,
@@ -100,9 +101,8 @@ void run_entity(std::atomic<bool> &on_finish,
     while (true) {
         try {
             lock::ThreadGIL lock_thread(threadstate);
-
             bootstrapper_module->attr("start")(
-                *entity_object,
+                *entities_object,
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::RESTART])),
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::STOP])),
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::KILL])),
@@ -144,9 +144,11 @@ void run_entity(std::atomic<bool> &on_finish,
     LOG(INFO) << "run_entity: Finished";
 }
 
-EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entity):
-    entity(entity),
-    previous_call_number(entity.call_number),
+//TODO: This was based on a version which created a thread for each entity in the level, now it takes a list of entities and creates a thread for them,
+//This needs to be renamed or maybe refactored appropriately
+EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities):
+    entities(entities),
+    previous_call_number(entities.front().call_number), //TODO: Work out what this did!!!!!!
     interpreter_context(interpreter_context),
 
     thread_finished(false),
@@ -171,22 +173,28 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, Entity &entit
         std::promise<long> thread_id_promise;
         thread_id_future = thread_id_promise.get_future();
 
-        // Wrap the object for Python.
-        //
-        // For implementation justifications, see
-        // http://stackoverflow.com/questions/24477791
-        {
-            lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
-            entity_object = std::make_shared<py::api::object>(boost::ref(entity));
-        };
+        
+        entity_object = std::make_shared<py::list>(); //A python list of all the game_objects is what we want to pass to the boostrapper, so it can handle and name them
+
+        //Go through this list of entities, wrap them using boost and then append them to the python list of objects :)
+        for(auto &entity: entities) {
+            // Wrap the object for Python.
+            //
+            // For implementation justifications, see
+            // http://stackoverflow.com/questions/24477791
+            {
+                lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
+                entity_object->append(boost::ref(entity));
+            };
+        }
 
         thread = std::thread(
-            run_entity,
+            run_entities,
             std::ref(thread_finished),
             entity_object,
             std::move(thread_id_promise),
             // TODO: Extract path into a more logical place
-            boost::filesystem::path("python_embed/scripts/bootstrapper.py"),
+            boost::filesystem::path("python_embed/scripts/bootstrapper_reborne.py"),
             interpreter_context,
             signal_to_exception
         );
@@ -223,11 +231,11 @@ void EntityThread::halt_hard() {
 }
 
 bool EntityThread::is_dirty() {
-    return previous_call_number != entity.call_number;
+    return previous_call_number != entities.front().call_number; //TODO: Work out what this did!!!!!!
 }
 
 void EntityThread::clean() {
-    previous_call_number = entity.call_number;
+    previous_call_number = entities.front().call_number;//TODO: Work out what this did!!!!!!
 }
 
 void EntityThread::finish() {
@@ -250,7 +258,7 @@ EntityThread::~EntityThread() {
     lock::GIL lock_gil(interpreter_context, "EntityThread::~EntityThread");
 
     if (!entity_object.unique()) {
-        throw std::runtime_error("multiple references to entity_object on destruction");
+        throw std::runtime_error("multiple references to entity_object on destruction"); //TODO: WORK OUT WHAT THIS DID!
     }
 
     for (auto signal_exception : signal_to_exception) {

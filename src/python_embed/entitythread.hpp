@@ -7,12 +7,14 @@
 #include <future>
 #include <map>
 #include <thread>
+#include <list>
 #include "dispatcher.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
+#include "entity.hpp"
 
 class Interpreter;
-class Entity;
+//class Entity;
 class EntityThread;
 
 using EntityThreads = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
@@ -44,7 +46,7 @@ class LockableEntityThread : public lock::Lockable<std::shared_ptr<EntityThread>
 ///
 /// @warning
 ///     This needs to be, but is not, thread safe in many places.
-///
+/// TODO: Rename this class and it's methods appropriately now that the thread has a list of entities, not just a single entity!!!!
 class EntityThread {
     private:
         ///
@@ -67,9 +69,9 @@ class EntityThread {
         ///
         /// Reference to API's wrapped Entity.
         ///
-        /// API calls are passed through to this object.
+        /// API calls are passed through to the objects in this list.
         ///
-        Entity &entity;
+        std::list<Entity> entities;
 
         ///
         /// Thread spawned by this EntityThread.
@@ -124,7 +126,7 @@ class EntityThread {
         ///
         /// This exists to be neatly cleaned up in the destructor.
         ///
-        std::shared_ptr<boost::python::api::object> entity_object;
+        std::shared_ptr<boost::python::list> entity_object;
 
         ///
         /// Finish and join the spawned thread.
@@ -149,18 +151,19 @@ class EntityThread {
         };
 
         ///
-        /// Construct a EntityThread from a Entity object.
+        /// Construct a EntityThread from an list of Entity objects.
         ///
         /// Spawns a new thread.
+        /// It works by wrapping each entity in a python object and then putting all those objects in a python list.
         ///
         /// @param interpreter_context
         ///     An interpreter context to lock the GIL on.
         ///     The GIL is locked on the main thread.
         ///
-        /// @param entity
-        ///     The entity to construct the daemon for.
+        /// @param entities
+        ///     The list of entites to construct the daemon for.
         ///
-        EntityThread(InterpreterContext interpreter_context, Entity &entity);
+        EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities);
 
         ///
         /// Close the thread and shut down neatly.
