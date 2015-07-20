@@ -7,6 +7,7 @@
 #include <functional>
 #include <chrono>
 #include <vector>
+#include <glm/vec2.hpp>
 #include "game_window.hpp"
 #include "interpreter.hpp"
 #include "gui_manager.hpp"
@@ -74,7 +75,8 @@ private:
     Lifeline help_callback;
     Lifeline switch_char;
     Lifeline text_lifeline_char;
-//////////////////////////////////////////////////////////////////
+
+    glm::ivec2 tile_identifier_old_tile;
     std::chrono::steady_clock::time_point start_time;
     std::vector<Lifeline> digit_callbacks;
     Text tile_identifier_text;

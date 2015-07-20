@@ -405,7 +405,6 @@ GameMain::GameMain(int argc, char *argv[]):
     tile_identifier_text.set_bloom_colour(0x00, 0x0, 0x00, 0xa0);
     tile_identifier_text.set_colour(0xff, 0xff, 0xff, 0xa8);
     tile_identifier_text.set_text("(?, ?)");
-    glm::ivec2 tile_identifier_old_tile;
 
     func_char = [&] (GameWindow *)
     {
@@ -474,51 +473,51 @@ GameMain::~GameMain(){
 
 void GameMain::game_loop()
 {
-//    if (!challenge_data->game_window->check_close() && challenge_data->run_challenge)
-//    {
-//        last_clock = std::chrono::steady_clock::now();
-//
-//        VLOG(3) << "} SB | IM {";
-//        GameWindow::update();
-//
-//        VLOG(3) << "} IM | EM {";
-//
-//        do
-//        {
-//            EventManager::get_instance()->process_events();
-//        }
-//        while (
-//            std::chrono::steady_clock::now() - last_clock
-//            < std::chrono::nanoseconds(1000000000 / 60)
-//        );
-//
-//        VLOG(3) << "} EM | RM {";
-//        Engine::get_map_viewer()->render();
-//        VLOG(3) << "} RM | TD {";
-//        Engine::text_displayer();
-//        challenge_data->notification_bar->text_displayer();
-//
-//        // This is not an input event, because the map can move with
-//        // the mouse staying still.
-//        {
-//            std::pair<int,int> pixels = input_manager->get_mouse_pixels();
-//            glm::ivec2 tile(Engine::get_map_viewer()->pixel_to_tile( {pixels.first, pixels.second}));
-//            if (tile != tile_identifier_old_tile)
-//            {
-//                tile_identifier_old_tile = tile;
-//                std::stringstream position;
-//                position << "(" << tile.x << ", " << tile.y << ")";
-//
-//                tile_identifier_text.set_text(position.str());
-//            }
-//        }
-//        tile_identifier_text.display();
-//
-//        cursor->display();
-//
-//        VLOG(3) << "} TD | SB {";
-//        challenge_data->game_window->swap_buffers();
-//    }
+    if (!challenge_data->game_window->check_close() && challenge_data->run_challenge)
+    {
+        last_clock = std::chrono::steady_clock::now();
+
+        VLOG(3) << "} SB | IM {";
+        GameWindow::update();
+
+        VLOG(3) << "} IM | EM {";
+
+        do
+        {
+            EventManager::get_instance()->process_events();
+        }
+        while (
+            std::chrono::steady_clock::now() - last_clock
+            < std::chrono::nanoseconds(1000000000 / 60)
+        );
+
+        VLOG(3) << "} EM | RM {";
+        Engine::get_map_viewer()->render();
+        VLOG(3) << "} RM | TD {";
+        Engine::text_displayer();
+        challenge_data->notification_bar->text_displayer();
+
+        // This is not an input event, because the map can move with
+        // the mouse staying still.
+        {
+            std::pair<int,int> pixels = input_manager->get_mouse_pixels();
+            glm::ivec2 tile(Engine::get_map_viewer()->pixel_to_tile( {pixels.first, pixels.second}));
+            if (tile != tile_identifier_old_tile)
+            {
+                tile_identifier_old_tile = tile;
+                std::stringstream position;
+                position << "(" << tile.x << ", " << tile.y << ")";
+
+                tile_identifier_text.set_text(position.str());
+            }
+        }
+        tile_identifier_text.display();
+
+        cursor->display();
+
+        VLOG(3) << "} TD | SB {";
+        challenge_data->game_window->swap_buffers();
+    }
     return;
 }
 
