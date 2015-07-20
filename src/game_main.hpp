@@ -18,13 +18,13 @@
 #include "gui_window.hpp"
 #include "button.hpp"
 #include "lifeline.hpp"
-#include "mouse_cursor.hpp"
 
 class Challenge;
 class ChallengeData;
 class InputManager;
 class EventManager;
 class NotificationBar;
+class MouseCursor;
 
 class GameMain{
 private:
@@ -83,7 +83,7 @@ private:
     bool run_game;
     ChallengeData *challenge_data;
 
-//    MouseCursor cursor;
+    MouseCursor *cursor;
 
 public:
     GameMain(int argc, char *argv[]);

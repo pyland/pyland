@@ -429,7 +429,7 @@ GameMain::GameMain(int argc, char *argv[]):
                           0)
                      );
 
-    MouseCursor cursor(&embedWindow);
+    cursor = new MouseCursor(&embedWindow);
 
     //Run the challenge - returns after challenge completes
 
@@ -467,6 +467,8 @@ GameMain::GameMain(int argc, char *argv[]):
 
 GameMain::~GameMain(){
     delete notification_bar;
+    delete challenge_data;
+    delete cursor;
 }
 
 void GameMain::game_loop()
@@ -511,7 +513,7 @@ void GameMain::game_loop()
 //        }
 //        tile_identifier_text.display();
 //
-//        cursor.display();
+//        cursor->display();
 //
 //        VLOG(3) << "} TD | SB {";
 //        challenge_data->game_window->swap_buffers();
