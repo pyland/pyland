@@ -3,6 +3,10 @@
 
 #include <string>
 #include <memory>
+#include <utility>
+#include <functional>
+#include <chrono>
+#include <vector>
 #include "game_window.hpp"
 #include "interpreter.hpp"
 #include "gui_manager.hpp"
@@ -13,12 +17,14 @@
 #include "text.hpp"
 #include "gui_window.hpp"
 #include "button.hpp"
-#include "notification_bar.hpp"
+#include "lifeline.hpp"
+#include "mouse_cursor.hpp"
 
 class Challenge;
 class ChallengeData;
 class InputManager;
 class EventManager;
+class NotificationBar;
 
 class GameMain{
 private:
@@ -41,11 +47,47 @@ private:
     std::shared_ptr<Button> run_button;
     std::shared_ptr<Button> stop_button;
 
-    //NotificationBar notification_bar;
+    NotificationBar *notification_bar;
 
+    std::pair<int,int> original_window_size;
+
+    std::function<void(GameWindow*)> gui_resize_func;
+
+    Lifeline gui_resize_lifeline;
+    Lifeline map_resize_lifeline;
+    Lifeline stop_callback;
+    Lifeline restart_callback;
+    Lifeline editor_callback;
+    Lifeline back_callback;
+    Lifeline fast_start_ease_callback;
+    Lifeline fast_ease_callback;
+    Lifeline fast_finish_ease_callback;
+    Lifeline up_callback;
+    Lifeline down_callback;
+    Lifeline right_callback;
+    Lifeline left_callback;
+    Lifeline monologue_callback;
+    Lifeline mouse_button_lifeline;
+    Lifeline zoom_in_callback;
+    Lifeline zoom_out_callback;
+    Lifeline zoom_zero_callback;
+    Lifeline help_callback;
+    Lifeline switch_char;
+    Lifeline text_lifeline_char;
+//////////////////////////////////////////////////////////////////
+//    std::chrono::steady_clock::time_point start_time;
+ //   std::vector<Lifeline> digit_callbacks;
+//    Text tile_identifier_text;
+
+//    std::function<void (GameWindow*)> func_char;
+    bool run_game;
+//    ChallengeData *challenge_data;
+
+ //   MouseCursor cursor;
 
 public:
     GameMain(int argc, char *argv[]);
+    ~GameMain();
     void game_loop();
     Challenge* pick_challenge(ChallengeData* challenge_data);
 

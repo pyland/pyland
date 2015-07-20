@@ -74,8 +74,9 @@ GameMain::GameMain(int argc, char *argv[]):
 
     buttonfont(Engine::get_game_font())
 
-    //notification_bar()
+//    tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
 
+//    cursor(&embedWindow)
 
 {
 
@@ -152,9 +153,9 @@ GameMain::GameMain(int argc, char *argv[]):
 
     gui_manager.set_root(sprite_window);
 
-    NotificationBar notification_bar;
+    notification_bar = new NotificationBar();
 
-    Engine::set_notification_bar(&notification_bar);
+    Engine::set_notification_bar(notification_bar);
     //    SpriteSwitcher sprite_switcher;
 
     sprite_window->add(run_button);
@@ -162,14 +163,14 @@ GameMain::GameMain(int argc, char *argv[]):
 
 
     // quick fix so buttons in correct location in initial embedWindow before gui_resize_func callback
-    auto original_window_size = embedWindow.get_size();
+    original_window_size = embedWindow.get_size();
     sprite_window->set_width_pixels(original_window_size.first);
     sprite_window->set_height_pixels(original_window_size.second);
 
     gui_manager.parse_components();
 
     //The GUI resize function
-    std::function<void(GameWindow*)> gui_resize_func = [&] (GameWindow* game_window)
+    gui_resize_func = [&] (GameWindow* game_window)
     {
         LOG(INFO) << "GUI resizing";
         auto window_size = (*game_window).get_size();
@@ -177,18 +178,18 @@ GameMain::GameMain(int argc, char *argv[]):
         sprite_window->set_height_pixels(window_size.second);
         gui_manager.parse_components();
     };
-    Lifeline gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
+    gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
 
 
     //The callbacks
     // WARNING: Fragile reference capture
-    Lifeline map_resize_lifeline = embedWindow.register_resize_handler([&] (GameWindow *)
+    map_resize_lifeline = embedWindow.register_resize_handler([&] (GameWindow *)
     {
         map_viewer.resize();
     });
 
 
-    Lifeline stop_callback = input_manager->register_keyboard_handler(filter(
+    stop_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("H")},
     [&] (KeyboardInputEvent)
     {
@@ -196,7 +197,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline restart_callback = input_manager->register_keyboard_handler(filter(
+    restart_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("R")},
     [&] (KeyboardInputEvent)
     {
@@ -204,7 +205,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline editor_callback = input_manager->register_keyboard_handler(filter(
+    editor_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("E")},
     [&] (KeyboardInputEvent)
     {
@@ -218,7 +219,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline back_callback = input_manager->register_keyboard_handler(filter(
+    back_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("ESCAPE")},
     [&] (KeyboardInputEvent)
     {
@@ -226,10 +227,9 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-
     std::chrono::steady_clock::time_point start_time;
 
-    Lifeline fast_start_ease_callback = input_manager->register_keyboard_handler(filter(
+    fast_start_ease_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY({"Left Shift", "Right Shift"})},
     [&] (KeyboardInputEvent)
     {
@@ -237,7 +237,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline fast_ease_callback = input_manager->register_keyboard_handler(filter(
+    fast_ease_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, KEY({"Left Shift", "Right Shift"})},
     [&] (KeyboardInputEvent)
     {
@@ -261,7 +261,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline fast_finish_ease_callback = input_manager->register_keyboard_handler(filter(
+    fast_finish_ease_callback = input_manager->register_keyboard_handler(filter(
     {KEY_RELEASE, KEY({"Left Shift", "Right Shift"})},
     [&] (KeyboardInputEvent)
     {
@@ -270,7 +270,7 @@ GameMain::GameMain(int argc, char *argv[]):
     ));
 
 
-    Lifeline up_callback = input_manager->register_keyboard_handler(filter(
+    up_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
     [&] (KeyboardInputEvent)
     {
@@ -278,7 +278,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline down_callback = input_manager->register_keyboard_handler(filter(
+    down_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Down", "S"})},
     [&] (KeyboardInputEvent)
     {
@@ -286,7 +286,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline right_callback = input_manager->register_keyboard_handler(filter(
+    right_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Right", "D"})},
     [&] (KeyboardInputEvent)
     {
@@ -294,7 +294,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline left_callback = input_manager->register_keyboard_handler(filter(
+    left_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Left", "A"})},
     [&] (KeyboardInputEvent)
     {
@@ -302,7 +302,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline monologue_callback = input_manager->register_keyboard_handler(filter(
+    monologue_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("M")},
     [&] (KeyboardInputEvent)
     {
@@ -310,7 +310,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline mouse_button_lifeline = input_manager->register_mouse_handler(filter(
+    mouse_button_lifeline = input_manager->register_mouse_handler(filter(
     {MOUSE_RELEASE},
     [&] (MouseInputEvent event)
     {
@@ -319,7 +319,7 @@ GameMain::GameMain(int argc, char *argv[]):
                                                                           );
 
 
-    Lifeline zoom_in_callback = input_manager->register_keyboard_handler(filter(
+    zoom_in_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, KEY("=")},
     [&] (KeyboardInputEvent)
     {
@@ -327,7 +327,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline zoom_out_callback = input_manager->register_keyboard_handler(filter(
+    zoom_out_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, KEY("-")},
     [&] (KeyboardInputEvent)
     {
@@ -335,7 +335,7 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-    Lifeline zoom_zero_callback = input_manager->register_keyboard_handler(filter(
+    zoom_zero_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, MODIFIER({"Left Ctrl", "Right Ctrl"}), KEY("0")},
     [&] (KeyboardInputEvent)
     {
@@ -344,7 +344,7 @@ GameMain::GameMain(int argc, char *argv[]):
     ));
 
 
-    Lifeline help_callback = input_manager->register_keyboard_handler(filter(
+    help_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
     [&] (KeyboardInputEvent)
     {
@@ -358,8 +358,8 @@ GameMain::GameMain(int argc, char *argv[]):
     }
     ));
 
-
     std::vector<Lifeline> digit_callbacks;
+
     for (unsigned int i=0; i<10; ++i)
     {
         digit_callbacks.push_back(
@@ -373,7 +373,7 @@ GameMain::GameMain(int argc, char *argv[]):
         );
     }
 
-    Lifeline switch_char = input_manager->register_mouse_handler(filter(
+    switch_char = input_manager->register_mouse_handler(filter(
     {MOUSE_RELEASE},
     [&] (MouseInputEvent event)
     {
@@ -412,32 +412,31 @@ GameMain::GameMain(int argc, char *argv[]):
     tile_identifier_text.set_text("(?, ?)");
     glm::ivec2 tile_identifier_old_tile;
 
-    std::function<void (GameWindow *)> func_char = [&] (GameWindow *)
+    std::function<void (GameWindow*)> func_char = [&] (GameWindow *)
     {
         LOG(INFO) << "text embedWindow resizing";
         Engine::text_updater();
     };
 
-    Lifeline text_lifeline_char = embedWindow.register_resize_handler(func_char);
+    text_lifeline_char = embedWindow.register_resize_handler(func_char);
 
     //Run the map
-    bool run_game = true;
+    run_game = true;
 
     //Setup challenge
-    ChallengeData *challenge_data(new ChallengeData(
-                                      map_path,
-                                      &interpreter,
-                                      &gui_manager,
-                                      &embedWindow,
-                                      input_manager,
-                                      &notification_bar,
-                                      0)
-                                 );
+    ChallengeData *challenge_data = (new ChallengeData(
+                          map_path,
+                          &interpreter,
+                          &gui_manager,
+                          &embedWindow,
+                          input_manager,
+                          notification_bar,
+                          0)
+                     );
 
     MouseCursor cursor(&embedWindow);
+
     //Run the challenge - returns after challenge completes
-
-
 
     //Call this when start new challenge
 //    while(!embedWindow.check_close() && run_game)
@@ -469,6 +468,10 @@ GameMain::GameMain(int argc, char *argv[]):
     //game_init(argc, argv);
 
     //embedWindow.executeApp();
+}
+
+GameMain::~GameMain(){
+    delete notification_bar;
 }
 
 void GameMain::game_loop()
