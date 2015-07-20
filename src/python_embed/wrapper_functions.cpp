@@ -26,5 +26,6 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("walkable",          &Entity::walkable)
         .def("callback_test",     &Entity::callback_test)
         .def("get_name",          &Entity::get_name)
-        .def("get_location",      &Entity::get_location);
+        .def("get_location",      &Entity::get_location)
+        .def("focus",             &Entity::focus);
 }

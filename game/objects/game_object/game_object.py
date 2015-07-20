@@ -8,7 +8,11 @@ from api_placeholder import API
 api = API()
 
 """ This is the base game object,
-Any object you wish to have in game MUST by a child of this
+Any object you wish to have in game MUST by a child of this.
+
+This acts as an abstraction of the C++ entity object and wraps around it.
+In cases where it is appropriate, it calls the entity methods directly, but other times
+makes their behaviour a bit nicer as well.
 """
 class GameObject:
 
@@ -62,6 +66,13 @@ class GameObject:
 
     def pause_animating(self):
         api.pause_animating(self) #api will pause the animation
+        return
+
+    """ Centre the camera on the position of this object, if the object moves, then
+    the camera follows it as well. This is the case until the focus of the camera
+    gets changed to another object or the level is reloaded/changed, snaps instantly """
+    def focus(self):
+        self.__entity.focus()
         return
 
     """ Returns the location of the player,

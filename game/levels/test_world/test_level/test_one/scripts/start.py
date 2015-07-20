@@ -16,6 +16,7 @@
 
 #boulder_one.move_north()
 
+boulder_one.focus()
 boulder_one.move_south()
 boulder_one.move_south()
 boulder_one.move_south()
@@ -24,7 +25,11 @@ boulder_one.move_south()
 boulder_one.move_south()
 boulder_one.move_south()
 boulder_one.move_south()
+
+player_one.focus()
 player_one.move_south()
+
+portal_one.focus()
 portal_one.move_west()
 portal_one.move_west()
 portal_one.move_west()
@@ -32,5 +37,7 @@ portal_one.move_west()
 portal_one.move_west()
 portal_one.move_west()
 
+
+boulder_four.focus()
 boulder_four.move_east()
 boulder_four.move_south()

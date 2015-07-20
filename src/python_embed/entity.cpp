@@ -26,6 +26,7 @@
 #include "gil_safe_future.hpp"
 #include "object_manager.hpp"
 #include "map_object.hpp"
+#include "map_viewer.hpp"
 
 Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int id):
     start(start), id(id), call_number(0) {
@@ -132,7 +133,15 @@ void Entity::monologue() {
     });
 }
 
-std::string Entity::get_name() { //TODO: Analyse wether it would be best to get this from the actual object instead of local copies!
+void Entity::focus() {
+    auto id = this->id;
+    return GilSafeFuture<void>::execute([id] (GilSafeFuture<void>) {
+        MapViewer *map_viewer = Engine::get_map_viewer();
+        map_viewer->set_map_focus_object(id);
+    });
+}
+
+std::string Entity::get_name() { //TODO: Analyse wether it would be best to get this information from the object instance, instead of from the information copied into this instance. (and then not have that information here)
     std::string name = this->name;
     return GilSafeFuture<std::string>::execute([name] (GilSafeFuture<std::string> instructions_return) {
             instructions_return.set(name);
