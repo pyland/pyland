@@ -16,6 +16,8 @@
 
 #boulder_one.move_north()
 
+#boulder_one.callback_test(lambda: boulder_one.callback_test(lambda: print("hohohoho")))
+
 boulder_one.focus()
 boulder_one.move_south()
 boulder_one.move_south()

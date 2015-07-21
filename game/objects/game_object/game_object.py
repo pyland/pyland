@@ -32,6 +32,10 @@ class GameObject:
         self.set_visible(False)
         self.set_solid(False)
 
+    def callback_test(self, callback):
+        self.__entity.callback_test(callback)
+        return
+
     def get_name(self):
         return self.__entity.get_name()
 
