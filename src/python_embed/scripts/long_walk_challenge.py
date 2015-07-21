@@ -24,7 +24,7 @@ Here are some quick tips:
 
 # Here's the interesting part:
 for _ in range(10):
-	move_east()
+    move_east()
 
 # This means:
 #
