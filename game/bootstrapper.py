@@ -7,6 +7,9 @@ import threading
 import traceback
 import importlib
 
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)))
+import game
+
 from contextlib import closing
 from io import BytesIO, TextIOWrapper
 
@@ -37,6 +40,8 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
     imbued_locals = {}
     for game_object in game_objects:
         imbued_locals[game_object.get_name()] = game_object
+
+    imbued_locals["game"] = game
 
     class ScopedInterpreter(code.InteractiveInterpreter):
         def __init__(self):

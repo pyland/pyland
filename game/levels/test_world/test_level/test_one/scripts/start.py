@@ -43,3 +43,5 @@ portal_one.move_west()
 boulder_four.focus()
 boulder_four.move_east()
 boulder_four.move_south()
+
+print(game.getDialogue("welcome"))
