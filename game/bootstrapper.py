@@ -92,7 +92,7 @@ def wrap_entity_in_game_object(entity):
     #Grabs the object's location in the file system (original data comes from the map's tmx file, eg. characters/enemies/crocodile
     entity_location = entity.get_location()
     #Imports the correct module based on that path name
-    sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + "/../../../game/objects/" + entity_location)  # Go to the correct folder
+    sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + "/objects/" + entity_location)  # Go to the correct folder
     module_name = entity_location[entity_location.rfind("/") + 1: ] # Then get the name of the file itself (same name as the folder it's in, so can be extracted from the path name, eg crocodile/crocodile.py)
     module = importlib.import_module(module_name) # Import the module as module
 
@@ -138,7 +138,7 @@ def start(entities, RESTART, STOP, KILL, waiting, engine = DummyEngine()):
                 # for proper interrupts.
                 time.sleep(0.05)
 
-            script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../game/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: implement this path stuff in a config (ini) file!!!!!
+            script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: implement this path stuff in a config (ini) file!!!!!
             engine.print_debug("Reading from file: {}".format(script_filename))
             with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()

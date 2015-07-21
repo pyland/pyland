@@ -194,7 +194,7 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Ent
             entity_object,
             std::move(thread_id_promise),
             // TODO: Extract path into a more logical place
-            boost::filesystem::path("python_embed/scripts/bootstrapper_reborne.py"),
+            boost::filesystem::path("../game/bootstrapper.py"), //TODO: Move this configuration out to an ini file!
             interpreter_context,
             signal_to_exception
         );
