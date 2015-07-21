@@ -1,0 +1,152 @@
+Asset requirements
+
+World 1 - Jungle			(have all)
+World 2 - Desert			(most tiles)
+World 3 - Beach			        (most tiles)
+World 4 - Sea				(most tiles)
+World 5 - Lava				(no tiles?)
+World 6 - Ice				(no tiles)
+World 7 - Monkey Kingdom		(no tiles?)
+
+-------KEY---------
+* Character
+& Animated
+Rest are tiles
+
+****** WORLDS ******
+
+World 1 - Jungle
+	* Toucan
+	* Snakes
+	* Rangers (M/F)
+	& Animated river	
+
+World 2 - Desert
+	Sarcophagus
+	Boulders
+	Trapdoor buttons
+	Cactii
+	Heiroglyphics
+	Pyramids
+		Corner, sides, central tiles separately to mix and match
+	Sphynxes
+	* Camels
+	* Mummies
+	
+World 3 - Savanna
+	* Lion
+	* GNU
+	* Gazelle
+	* Elephants
+	* Hippos
+	* Cheetahs
+	Grassland kinda grass
+	Acacias
+	Dirty terrain
+	
+World 4 - Sea
+	Palm and coconut trees	
+	Coconuts	
+	& Dolphins
+	* Sharks
+		&Sharkfins in water
+	Beach mats
+	Beach parasol
+	Surfboards
+	* Beach clothed people (M/F)
+
+World 5 - Lava
+	& Lava
+	Rocky volcano tiles
+	& Vents
+	& Fireballs
+	* Fire Lizards
+	& Lavafall
+	* Armadillo
+	
+World 6 - Ice
+	Ice tiles
+	Icebergs in water
+	* Eskimo styled people (M/F)
+	Igloos - mix and match
+	Breathing holes
+	*Polar Bears
+	*Penguins
+	*Seals
+	
+World 7 - Monkey Kingdom
+	* Monkey King
+	* Monkey royal family
+	Throne
+	Statues
+	Lamps
+	Carpets
+	Gold architecture
+	Wall tiles
+	Window tiles
+	Door tiles
+	Cemented base
+	* Variety of monkey sprites
+	Jewels	
+ 
+****** SPRITES ******
+
+30 Human Sprites
+	Kids / Adults
+	Male / Female
+	Different ethnicity
+	Different clothes
+
+Main character sprite
+	Male/Female
+	Different Ethnicities
+	Different hair/eye colour
+
+Story characters
+	Napper 1
+	Napper 2
+		
+
+****** ITEMS ******
+
+& Door locking mechanisms (crack the code)
+Rock tablet (read  messages from)
+& Sliding door
+Totem
+
+PyVice
+	Tile sized
+Scripts
+	Tile sized
+	Larger version for shop display
+PyAutoCompleter
+	Tile sized
+	Larger version for shop display
+
+
+
+
+****** CLOTHING ******
+
+Head
+	Hats
+	Helmets
+	Hair dye colours
+
+Trousers
+	Jeans
+	
+	Armour
+
+Tops
+	Colours/Designs
+Shoes
+	Colours/Designs
+
+****** INTERFACES ******
+
+Full game window interfaces (solid colour/texture with pretty borders)
+	Bag
+	PyGuide
+	Shop
+		Look like actual shop/display
