@@ -10,7 +10,7 @@
 // and distribution of modified versions of this work as long as this
 // notice is included.
 //++
-
+#include "game_main.hpp"
 #include "game_init.hpp"
 #include "mainwindow.h"
 
@@ -28,7 +28,6 @@
 // SDL stuff
 #include <SDL2/SDL.h>
 #include <GL/glu.h>
-#include "game_main.hpp"
 // Qt stuff
 #include <QApplication>
 #include "parsingfunctions.hpp"

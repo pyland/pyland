@@ -14,6 +14,8 @@
 // notice is included.
 //++
 
+#include "game_main.hpp"
+
 // Standard stuff
 #include <iostream>
 #include <math.h>
@@ -66,7 +68,6 @@
 #include <Qsci/qscilexerpython.h>
 
 #include "mainwindow.h"
-#include "game_main.hpp"
 #include "h_tab_bar.hpp"
 
 // Game window stuff

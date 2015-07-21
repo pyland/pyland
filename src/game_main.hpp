@@ -8,8 +8,8 @@
 #include <chrono>
 #include <vector>
 #include <glm/vec2.hpp>
-#include "game_window.hpp"
 #include "interpreter.hpp"
+#include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "callback_state.hpp"
 #include "map_viewer.hpp"
