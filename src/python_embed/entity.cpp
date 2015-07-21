@@ -55,17 +55,12 @@ void print_trace() {
 
 //A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!! 
 void Entity::callback_test(PyObject *callback) {
-    //Initialize and acquire the global interpreter lock
-    //PyEval_InitThreads();
-
-    //Ensure that the current thread is ready to call the Python C API 
-    //PyGILState_STATE state = PyGILState_Ensure();
-
-    //invoke the python function
-    boost::python::call<void>(callback);
-
-    //release the global interpreter lock so other threads can resume execution
-    //PyGILState_Release(state);
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    GilSafeFuture<void>::execute([boost_callback] (GilSafeFuture<void>) {
+        PyGILState_STATE state = PyGILState_Ensure();
+        boost_callback();
+        PyGILState_Release(state);
+    });
 }
 
 void Entity::move(int x, int y) {
