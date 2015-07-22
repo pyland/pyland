@@ -213,7 +213,7 @@ $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
 
 # Moc generated files
 qtgui/moc_mainwindow.cpp: qtgui/mainwindow.cpp qtgui/mainwindow.h
-	/usr/lib/qt4/bin/moc -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED \
+	/usr/bin/moc-qt4 -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED \
 		-I/usr/share/qt4/mkspecs/linux-g++ -I. -I/usr/include/qt4/QtCore \
 		-I/usr/include/qt4/QtGui -I/usr/include/qt4 -I./qtgui ./qtgui/mainwindow.h -o \
 		./qtgui/moc_mainwindow.cpp
