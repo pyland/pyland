@@ -48,11 +48,11 @@ void Entity::callback_test(PyObject *callback) {
     EventManager::get_instance().add_event(boost_callback);
 }
 
-void Entity::move(int x, int y) {
+void Entity::move(int x, int y, PyObject *callback) {
     ++call_number;
-
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     auto id = this->id;
-    Engine::move_object(id, glm::ivec2(x, y));
+    Engine::move_object(id, glm::ivec2(x, y), boost_callback);
     //GilSafeFuture<bool>::execute(
     //	[id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
     //		Engine::move_object(id, glm::ivec2(x, y), walk_succeeded_return); //This returns a boolean that says wether the move was succesful or not...
@@ -62,20 +62,20 @@ void Entity::move(int x, int y) {
     return;
 }
 
-void Entity::move_east(){
-    return(move(1, 0));
+void Entity::move_east(PyObject *callback){
+    return(move(1, 0, callback));
 }
 
-void Entity::move_west(){
-    return(move(-1, 0));
+void Entity::move_west(PyObject *callback){
+    return(move(-1, 0, callback));
 }
 
-void Entity::move_north(){
-    return(move(0, 1));
+void Entity::move_north(PyObject *callback){
+    return(move(0, 1, callback));
 }
 
-void Entity::move_south(){
-    return(move(0, -1));
+void Entity::move_south(PyObject *callback){
+    return(move(0, -1, callback));
 }
 
 bool Entity::walkable(int x, int y) {

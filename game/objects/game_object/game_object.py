@@ -104,7 +104,7 @@ class GameObject:
     """
     def move_north(self, callback = lambda: None):
         #api.move_north(self, callback)
-        self.__entity.move_north()
+        self.__entity.move_north(callback)
         return
 
     """ Smoothly slides this object east by one tile 
@@ -112,7 +112,7 @@ class GameObject:
     """
     def move_east(self, callback = lambda: None):
         #api.move_east(self, callback)
-        self.__entity.move_east()
+        self.__entity.move_east(callback)
         return
 
     """ Smoothly slides this object south by one tile 
@@ -120,7 +120,7 @@ class GameObject:
     """
     def move_south(self, callback = lambda: None):
         #api.move_south(self, callback)
-        self.__entity.move_south()
+        self.__entity.move_south(callback)
         return
 
     """ Smoothly slides this object west by one tile 
@@ -128,7 +128,7 @@ class GameObject:
     """
     def move_west(self, callback = lambda: None):
         #api.move_west(self, callback)
-        self.__entity.move_west()
+        self.__entity.move_west(callback)
         return
 
     """ Returns if this object is moving """
