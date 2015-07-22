@@ -11,7 +11,6 @@
 
 #include "challenge.hpp"
 #include "game_window.hpp"
-#include "gil_safe_future.hpp"
 #include "text_font.hpp"
 #include "typeface.hpp"
 
@@ -109,7 +108,6 @@ public:
     /// @param dy move in x by dy tiles
     ///
     static void move_object(int id, glm::ivec2 move_by);
-    static void move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return);
     static void move_object(int id, glm::ivec2 move_by, std::function<void ()> func);
 
     ///

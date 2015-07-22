@@ -76,8 +76,7 @@ GUI_OBJS = \
 
 
 PYTHON_OBJS = \
-	python_embed/entity.o                 \
-	python_embed/gil_safe_future.o     \
+	python_embed/entity.o              \
 	python_embed/interpreter.o         \
 	python_embed/interpreter_context.o \
 	python_embed/locks.o               \
