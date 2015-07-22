@@ -32,6 +32,10 @@ class GameObject:
         self.set_visible(False)
         self.set_solid(False)
 
+    def test(self, text):
+        self.__entity.print_dialogue(text)
+        return
+
     def callback_test(self, callback):
         self.__entity.callback_test(callback)
         return

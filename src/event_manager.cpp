@@ -1,3 +1,5 @@
+#include "python_embed_headers.hpp"
+
 #include <algorithm>
 #include <chrono>
 #include <functional>
@@ -60,6 +62,24 @@ void EventManager::flush_and_disable() {
     // Lock released
 }
 
+/// A quicky class to handle Global intepreter locks for python events on the event queueu
+/// need to have a better way of doing this.
+/// Esentially, in a nutshell, there was a problem when lambda functions containing python code were being passed onto the event 
+/// queue.  In the while loop, the functions were being destructed as they fell out of scope, while the engine wasn't holding
+/// onto the GIL, causing undedertimned behaviour, This hack is a quick workaround that https://stackoverflow.com/questions/28220003/segfault-from-dict-destructor
+/// I will speak to Alex about this to determine what the best thing would be to do, my current thought's are:
+///    - have a special add event for python code for the event quueue
+///    - in process_events, check if it one of those, and if it is ensure GIL is held when object falls out of scope.
+/// TODO: Speak to Alex.
+class gil_lock
+{
+public:
+  gil_lock()  { state_ = PyGILState_Ensure(); }
+  ~gil_lock() { PyGILState_Release(state_);   }
+private:
+  PyGILState_STATE state_;
+};
+
 void EventManager::process_events() {
     // We need to process all the events in the queue
     // Problem is that, when events are being processed, they can add
@@ -72,6 +92,8 @@ void EventManager::process_events() {
     // We then repeat the process until the entire queue is finished
     //
     while (true) {
+        LOG(INFO) << "locating segfault";
+        gil_lock lock; //see comments of class defined above
         //The callback function we need to process
         std::function<void ()> func;
 
@@ -102,6 +124,7 @@ void EventManager::process_events() {
         else {
             LOG(ERROR) << "ERROR in event_manager.cpp in processing, no function";
         }
+        LOG(INFO) << "Done Done the thing!!!";
     }
 }
 void EventManager::add_event(std::function<void ()> func) {

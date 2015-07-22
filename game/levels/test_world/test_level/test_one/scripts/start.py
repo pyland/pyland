@@ -44,4 +44,9 @@ boulder_four.focus()
 boulder_four.move_east()
 boulder_four.move_south()
 
-print(game.getDialogue("welcome"))
+boulder_four.test(game.getDialogue("welcome"))
+
+boulder_four.focus()
+#boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(dialogue))))
+boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(game.getDialogue("welcome")))))
+print("wohooo")
