@@ -20,6 +20,9 @@
 #include <sstream>
 #include <assert.h>
 
+// Python includes
+#include "interpreter.hpp"
+
 // SDL stuff
 #include <SDL2/SDL.h>
 #include <GL/glu.h>
