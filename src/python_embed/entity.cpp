@@ -116,15 +116,11 @@ void Entity::py_print_debug(std::string text) {
 
 void Entity::py_print_dialogue(std::string text) {
     auto name = this->name;
-    //return GilSafeFuture<void>::execute([name, text] (GilSafeFuture<void>) {
-        Engine::print_dialogue(name, text);
-    //});
+    Engine::print_dialogue(name, text);
 }
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
-    //return GilSafeFuture<void>::execute([game_seconds_per_real_second] (GilSafeFuture<void>) {
-        EventManager::get_instance().time.set_game_seconds_per_real_second(game_seconds_per_real_second);
-    //});
+    EventManager::get_instance().time.set_game_seconds_per_real_second(game_seconds_per_real_second);
 }
 
 void Entity::py_update_status(std::string status){
@@ -140,48 +136,40 @@ void Entity::py_update_status(std::string status){
 // but I blame C++
 py::list Entity::get_retrace_steps() {
     auto id(this->id);
-    //return GilSafeFuture<py::list>::execute([id] (GilSafeFuture<py::list> retrace_steps_return) {
-        py::list retrace_steps;
+    py::list retrace_steps;
 
-        auto object(ObjectManager::get_instance().get_object<MapObject>(id));
-        auto &positions(object->get_positions());
+    auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+    auto &positions(object->get_positions());
 
-        auto zipped_locations_begin(boost::make_zip_iterator(boost::make_tuple(
-            std::next(positions.get<insertion_order>().rbegin()), positions.get<insertion_order>().rbegin()
-        )));
-        auto zipped_locations_end(boost::make_zip_iterator(boost::make_tuple(
-            positions.get<insertion_order>().rend(), std::prev(positions.get<insertion_order>().rend())
-        )));
+    auto zipped_locations_begin(boost::make_zip_iterator(boost::make_tuple(
+        std::next(positions.get<insertion_order>().rbegin()), positions.get<insertion_order>().rbegin()
+    )));
+    auto zipped_locations_end(boost::make_zip_iterator(boost::make_tuple(
+        positions.get<insertion_order>().rend(), std::prev(positions.get<insertion_order>().rend())
+    )));
 
-        for (auto pair=zipped_locations_begin; pair != zipped_locations_end; ++pair) {
-            glm::vec2 start(pair->get<0>());
-            glm::vec2 end  (pair->get<1>());
-            auto reverse_change(start - end);
+    for (auto pair=zipped_locations_begin; pair != zipped_locations_end; ++pair) {
+        glm::vec2 start(pair->get<0>());
+        glm::vec2 end  (pair->get<1>());
+        auto reverse_change(start - end);
 
-            retrace_steps.append(py::make_tuple(
-                py::api::object(float(reverse_change.x)),
-                py::api::object(float(reverse_change.y))
-            ));
-        }
-
-        //retrace_steps_return.set(retrace_steps);
-    //});
+        retrace_steps.append(py::make_tuple(
+            py::api::object(float(reverse_change.x)),
+            py::api::object(float(reverse_change.y))
+        ));
+    }
     return retrace_steps;
 }
 
 py::object Entity::read_message() {
     auto id(this->id);
-    //return GilSafeFuture<py::object>::execute([id] (GilSafeFuture<py::object> read_message_return) {
-        auto object(ObjectManager::get_instance().get_object<MapObject>(id));
-        auto *challenge(object->get_challenge());
+    auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+    auto *challenge(object->get_challenge());
 
-        if (challenge) {
-            //read_message_return.set(challenge->read_message(id));
-            return challenge->read_message(id);
-        }
-        else {
-            //read_message_return.set(py::object());
-            return py::object();
-        }
-    //});
+    if (challenge) {
+        return challenge->read_message(id);
+    }
+    else {
+        return py::object();
+    }
 }
