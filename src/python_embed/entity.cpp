@@ -52,12 +52,13 @@ void Entity::move(int x, int y) {
     ++call_number;
 
     auto id = this->id;
-    GilSafeFuture<bool>::execute(
-        [id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
-            Engine::move_object(id, glm::ivec2(x, y), walk_succeeded_return); //This returns a boolean that says wether the move was succesful or not...
-        },
-        false
-    );
+    Engine::move_object(id, glm::ivec2(x, y));
+    //GilSafeFuture<bool>::execute(
+    //	[id, x, y] (GilSafeFuture<bool> walk_succeeded_return) {
+    //		Engine::move_object(id, glm::ivec2(x, y), walk_succeeded_return); //This returns a boolean that says wether the move was succesful or not...
+    //	},
+    //	false
+    //);
     return;
 }
 

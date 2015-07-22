@@ -151,6 +151,79 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     );
 }
 
+//TODO: This needs to work with renderable objects
+void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func) {
+    GilSafeFuture<bool> walk_succeeded_return;
+
+    auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+
+    if (!object || object->is_moving()) { return; }
+
+    // Position should be integral at this point
+    glm::vec2 target(object->get_position());
+    auto location(target);
+    target += move_by;
+
+    VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
+
+    // animate walking in-place TODO: It doesn't actually seem to do this, work out what it does!
+    auto MapObject_test(ObjectManager::get_instance().get_object<MapObject>(id));
+    if (!MapObject_test) {
+        VLOG(2) << "ignore if walkable or not";
+    } else {
+        if (!walkable(target)) { target = location; }
+    }
+
+    object->set_state_on_moving_start(target);
+
+    // Step-off events
+    get_map_viewer()->get_map()->event_step_off.trigger(location, id);
+
+    std::string direction(to_direction(move_by));
+
+    // Motion
+    EventManager::get_instance().add_timed_event(
+        GameTime::duration(0.3),
+        [direction, move_by, walk_succeeded_return, location, target, id, func] (float completion) mutable {
+            auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+            if (!object) { return false; }
+
+            // Long rambly justification about how Ax + B(1-x) can be outside
+            // the range [A, B] (consider when A=B).
+            //
+            // The given formula cannot have this problem when A and B are exactly representable
+            glm::vec2 tweened_position(location + completion * (target-location));
+
+            object->set_position(tweened_position);
+
+            //object->set_tile(object->frames.get_frame(direction + "/walking", completion)); This is what animated the object :) TODO: make it so that python can control this
+            object->set_tile(object->frames.get_frame());
+
+            if (completion == 1.0) {
+                object->set_state_on_moving_finish();
+
+                // TODO: Make this only focus if the object
+                // is the main object.
+                if (Engine::map_viewer) {
+                    Engine::map_viewer->refocus_map();
+                }
+
+                // Step-on events
+                get_map_viewer()->get_map()->event_step_on.trigger(target, id);
+
+                // False when moving in place
+                // TODO: More properz
+                walk_succeeded_return.set(target == location + glm::vec2(move_by));
+
+                EventManager::get_instance().add_event(func);
+            }
+
+            // Run to completion
+            return true;
+        }
+    );
+}
+
 bool Engine::walkable(glm::ivec2 location) {
     int map_width = map_viewer->get_map()->get_width();
     int map_height = map_viewer->get_map()->get_height();
