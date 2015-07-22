@@ -14,8 +14,6 @@
 // notice is included.
 //++
 
-
-
 // Standard stuff
 #include <iostream>
 #include <math.h>
@@ -26,13 +24,9 @@
 #include <SDL2/SDL.h>
 #include <GL/glu.h>
 
-
-
 // Qt stuff
 #include <QAction>
 #include <QApplication>
-
-#include "game_main.hpp"
 
 #include <QCloseEvent>
 #include <QFile>
@@ -67,16 +61,13 @@
 #include <QScrollBar>
 #include <QLineEdit>
 
-
-
 // QScintilla stuff
 #include <Qsci/qsciapis.h>
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexerpython.h>
 
-///game_main.hpp was here
-
 #include "mainwindow.h"
+#include "game_main.hpp"
 #include "h_tab_bar.hpp"
 
 // Game window stuff
@@ -222,11 +213,8 @@ MainWindow::MainWindow(GameMain *exGame)
 
     QWidget *mainWidget = new QWidget;
 
-    //mainWidget->setLayout(windowLayout);
-
     createActions();
     createToolBar();
-    //createStatusBar();
 
     setWindowTitle(tr("Pyland"));
     mainWidget->setWindowIcon(QIcon("/images/icon.png"));
@@ -255,31 +243,19 @@ MainWindow::MainWindow(GameMain *exGame)
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
 
-    //GameWindow embedWindow(800,600,false);
     SDL_SetWindowSize(embedWindow, 600, 420);
     glViewport(0, 0, 600,420);
     embedWindow->flags |= SDL_WINDOW_OPENGL;
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
-    //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     LOG(INFO) << "created context\n";
     gameWidget->installEventFilter(this);
-    LOG(INFO) << "created context\n";
-    //gameWidget->setFocusPolicy(Qt::ClickFocus);
     gameWidget->setFocusPolicy(Qt::StrongFocus);
-    LOG(INFO) << "created context\n";
     eventTimer = new QTimer(this);
-    LOG(INFO) << "t1\n";
     eventTimer->setSingleShot(false);
-    LOG(INFO) << "t2\n";
     eventTimer->setInterval(0);
-    LOG(INFO) << "t3\n";
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
-    LOG(INFO) << "t4\n";
     eventTimer->start();
-    LOG(INFO) << "t5\n";
-
-//    initGameWindow();
 
     this->showMaximized();
 
@@ -330,11 +306,6 @@ void MainWindow::timerHandler()
     game->game_loop();
     glClear(GL_COLOR_BUFFER_BIT);
     SDL_GL_SwapWindow(embedWindow);
-}
-
-void MainWindow::initGameWindow()
-{
-
 }
 
 void MainWindow::initWorkspace(QsciScintilla* ws)
@@ -415,7 +386,6 @@ void MainWindow::runCode()
 {
     //terminalDisplay->clear();
     //terminalDisplay->hide();
-    //statusBar()->showMessage(tr("Running...."), 2000);
     //std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
     setGameFocus();
 }
@@ -446,7 +416,6 @@ void MainWindow::clearOutputPanels()
 
 void MainWindow::createActions()
 {
-
     connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
     //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
@@ -480,8 +449,6 @@ void MainWindow::createToolBar()
     textInfo->setReadOnly(true);
     textInfo->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
     textInfo->setFocusPolicy(Qt::NoFocus);
-
-    //toolBar->setMaximumHeight(30);
 
     toolBar->addWidget(textInfo);
 

@@ -34,7 +34,6 @@
 
 GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
 {
-    //Q_INIT_RESOURCE(application);
     create_apih_from_wrapper();
     app = new QApplication(argc,argv);
     app->setStyle("gtk");
@@ -42,11 +41,8 @@ GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
 
     MainWindow* mainWin = new MainWindow(exGame);
 
-    LOG(INFO) << "t6\n";
-
+    //Get the SDL window from the widget in the QT interface, so it can be drawn to in game_main
     sdlWin = mainWin->getSDLWindow();
-
-    LOG(INFO) << "t7\n";
 }
 
 QApplication* GameInit::getApp(){

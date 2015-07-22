@@ -56,30 +56,14 @@ static std::mt19937 random_generator;
 
 GameMain::GameMain(int argc, char *argv[]):
     embedWindow(800, 600, false, argc, argv, this),
-
-    //Create the interpreter
     interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
-
-    //Create the GUI manager
     gui_manager(),
-
-    //Create the callbackstate
     callbackstate(),
-
-    //Create the map viewer
     map_viewer(&embedWindow, &gui_manager),
-
-    //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    buttontype(Engine::get_game_typeface()),
-
+    buttontype(Engine::get_game_typeface()),        //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
     buttonfont(Engine::get_game_font()),
-
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
-
-//    cursor(&embedWindow)
-
 {
-
     map_path = ("../maps/start_screen.tmx");
 
     switch (argc)
@@ -87,7 +71,6 @@ GameMain::GameMain(int argc, char *argv[]):
     default:
         std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;
         return;
-
         // The lack of break statements is not an error!!!
     case 3:
         map_path = std::string(argv[2]);
@@ -150,7 +133,6 @@ GameMain::GameMain(int argc, char *argv[]):
     stop_button->set_y_offset(0.67f);
     stop_button->set_x_offset(0.0f);
 
-
     gui_manager.set_root(sprite_window);
 
     notification_bar = new NotificationBar();
@@ -160,7 +142,6 @@ GameMain::GameMain(int argc, char *argv[]):
 
     sprite_window->add(run_button);
     sprite_window->add(stop_button);
-
 
     // quick fix so buttons in correct location in initial embedWindow before gui_resize_func callback
     original_window_size = embedWindow.get_size();
@@ -180,14 +161,12 @@ GameMain::GameMain(int argc, char *argv[]):
     };
     gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
 
-
     //The callbacks
     // WARNING: Fragile reference capture
     map_resize_lifeline = embedWindow.register_resize_handler([&] (GameWindow *)
     {
         map_viewer.resize();
     });
-
 
     stop_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("H")},
@@ -313,9 +292,7 @@ GameMain::GameMain(int argc, char *argv[]):
     [&] (MouseInputEvent event)
     {
         gui_manager.mouse_callback_function(event);
-    })
-                                                                          );
-
+    }));
 
     zoom_in_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, KEY("=")},
@@ -340,7 +317,6 @@ GameMain::GameMain(int argc, char *argv[]):
         Engine::set_global_scale(1.0f);
     }
     ));
-
 
     help_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
@@ -425,8 +401,7 @@ GameMain::GameMain(int argc, char *argv[]):
                           &embedWindow,
                           input_manager,
                           notification_bar,
-                          0)
-                     );
+                          0));
 
     cursor = new MouseCursor(&embedWindow);
 
@@ -450,7 +425,6 @@ GameMain::GameMain(int argc, char *argv[]):
 
     embedWindow.executeApp();
 
-
     // Call this when end challenge
     // Clean up after the challenge - additional, non-challenge clean-up
     em->flush_and_disable();
@@ -459,9 +433,6 @@ GameMain::GameMain(int argc, char *argv[]):
 
 //    }
 
-    //game_init(argc, argv);
-
-    //embedWindow.executeApp();
 }
 
 GameMain::~GameMain(){

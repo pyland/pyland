@@ -22,6 +22,7 @@ public:
     void delApp();
     void delMainWin();
     void showMain();
+
 };
 
 #endif

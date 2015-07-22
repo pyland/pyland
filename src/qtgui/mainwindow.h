@@ -62,8 +62,6 @@ private slots:
     void timerHandler();
 
 private:
-
-    void initGameWindow();
     void initWorkspace(QsciScintilla* ws);
     void clearOutputPanels();
     void createActions();

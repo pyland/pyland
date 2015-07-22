@@ -165,40 +165,10 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *ar
         init_sdl(); // May throw InitException
     }
 
-    // SDL already uses width,height = 0,0 for automatic
-    // resolution. Sets maximized if not in fullscreen and given
-    // width,height = 0,0.
-
-//    window = SDL_CreateWindow ("Pyland",
-//                               SDL_WINDOWPOS_CENTERED,
-//                               SDL_WINDOWPOS_CENTERED,
-//                               width,
-//                               height,
-//                               (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
-//                               | ( (!fullscreen && width == 0 && height == 0) ?
-//                                   SDL_WINDOW_MAXIMIZED : 0 )
-
-    //game_init(argc, argv);
-    //tuple<SDL_Window*,QApplication*,MainWindow*> windowTuple = game_init(0, nullptr);
-    //std::tuple<void*,void*,void*> windowTuple = game_init(0, nullptr);
-    //window = (SDL_Window*) (std::get<0>(windowTuple));
-
+    //Create game window using game_init
     curGame = new GameInit(argc, argv, exGame);
 
-    LOG(INFO) << "t8\n";
-
     window = curGame->getSdlWin();
-
-    LOG(INFO) << "t9\n";
-
-    //MainWindow* mainWin = curGame->getMainWin();
-
-    //window->showMaximized();
-
-    //app->exec();
-
-    //delete app;
-    //delete (MainWindow*) (std::get<2>(windowTuple));
 
 //#ifdef USE_GL
 //                   | SDL_WINDOW_OPENGL
@@ -246,27 +216,15 @@ GameWindow::GameWindow(int width, int height, bool fullscreen,int argc, char *ar
         throw e;
     }
 
-    LOG(INFO) << "t10\n";
-
     // Temporary fix (which just seems to work) for a bug where focus
     // events are not generated for the first time focus is changed.
     // SEE ALSO ABOVE IN THIS FUNCTION.
     SDL_ShowWindow(window);
 
-    LOG(INFO) << "t11\n";
-
     windows[SDL_GetWindowID(window)] = this;
-
-    LOG(INFO) << "t12\n";
 
     LOG(INFO) << "Completed GameWindow constructor.";
 
-//    curGame->showMain();
-
-//    curGame->execApp();
-
-    //curGame->delApp();
-    //curGame->delMainWin();
 }
 
 GameInit* GameWindow::getCurGame(){

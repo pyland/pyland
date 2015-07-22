@@ -6,15 +6,12 @@
 class QHTabBar : public QTabBar
 {
 protected:
-    QSize tabSizeHint(int) const
-    {
+    QSize tabSizeHint(int) const {
         return QSize(25, 36);
     }
-    void paintEvent(QPaintEvent *)
-    {
+    void paintEvent(QPaintEvent *) {
         QStylePainter stylePainter(this);
-        for (int i = 0; i < count(); i++)
-        {
+        for (int i = 0; i < count(); i++) {
             QStyleOptionTabV3 tab;
             initStyleOption(&tab,i);
             QString tabText = tab.text;
@@ -29,15 +26,16 @@ protected:
             painter.end();
         }
     }
+
 };
 
 class QHTabWidget : public QTabWidget
 {
 public:
-    QHTabWidget() : QTabWidget()
-    {
+    QHTabWidget() : QTabWidget() {
         setTabBar(new QHTabBar());
     }
+
 };
 
 #endif
