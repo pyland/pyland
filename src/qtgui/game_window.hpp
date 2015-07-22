@@ -242,7 +242,6 @@ private:
     void deinit_surface();
 
 public:
-
     GameInit* getCurGame();
 
     void executeApp();
