@@ -25,7 +25,7 @@
 
 // SDL stuff
 #include <SDL2/SDL.h>
-#include <GL/glu.h>
+//#include <GL/glu.h>
 
 // Qt stuff
 #include <QAction>
@@ -274,6 +274,7 @@ void MainWindow::showMax(){
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
+/*
     QKeyEvent *keyEvent = NULL;
     if (event->type() == QEvent::KeyPress)
     {
@@ -291,6 +292,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
         return QObject::eventFilter(obj, event);
     }
+*/
     return true;
 }
 
