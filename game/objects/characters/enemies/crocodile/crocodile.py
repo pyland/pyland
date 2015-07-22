@@ -1,7 +1,9 @@
 import sys
 import os
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../characters')
-from character import Character
+#sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../characters')
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../game_object')
+from game_object import GameObject
+#from character import Character TODO: it should import from here, but some kind of definitions with the movement functions are screwing around with follow_path, causing the game to freeze.
 
 def hello_world():
     print("hello_world")
@@ -11,7 +13,7 @@ def hello_world():
 The auto-generated comment produced by the script should also mention where to get a list of the api
 and which built-in variables exist already.
 """
-class Crocodile(Character):
+class Crocodile(GameObject):
     
     """ constructor
     run when the object is created in-engine
@@ -54,11 +56,11 @@ class Crocodile(Character):
         path = path[comma_location + 1: ].strip() #remove the instruction from the path itself
         if(repeat):
             path = path + ", " + instruction #add instruction back to the path
-        
         if(instruction == "north"):
             return self.move_north(lambda: self.follow_path(path, repeat))
         elif(instruction == "east"):
-            return self.move_east(lambda: self.follow_path(path, repeat))
+            self.move_east(lambda: self.follow_path(path, repeat))
+            return
         elif(instruction == "south"):
             return self.move_south(lambda: self.follow_path(path, repeat))
         elif(instruction == "west"):
