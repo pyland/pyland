@@ -14,9 +14,6 @@ HEADERS       = mainwindow.h \
 SOURCES       = mainwindow.cpp \
 		game_init.cpp \
 		game_window.cpp \
-
-RESOURCES     = application.qrc \
+		moc_mainwindow.cpp \
 
 LIBS         += -lqscintilla2 -lSDL2 -lGL
-
-ICON = images/app.icns

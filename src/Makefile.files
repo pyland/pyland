@@ -51,10 +51,9 @@ CHALLENGE_OBJS = \
 	challenges/start_screen.o           \
 	challenges/new_challenge.o	    \
 
-QT_OBS = \
+QT_OBJS = \
 	qtgui/mainwindow.o		\
 	qtgui/moc_mainwindow.o		\
-	qtgui/qrc_application.o         \
 	qtgui/game_init.o		\
 	qtgui/parsingfunctions.o	\
 	qtgui/game_window.o          \
@@ -65,6 +64,7 @@ HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${EXECUTABLE_OBJ:.o=.d}       \
 	${GUI_OBJS:.o=.d}             \
+	${QT_OBJS:.o=.d}             \
 	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd} \

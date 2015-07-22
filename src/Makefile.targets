@@ -33,6 +33,9 @@ dependencies/challenges: | dependencies
 dependencies/gui: | dependencies
 	@-${MKDIR} dependencies/gui
 
+dependencies/qtgui: | dependencies
+	@-${MKDIR} dependencies/qtgui
+
 dependencies/input_management: | dependencies
 	@-${MKDIR} dependencies/input_management
 
@@ -41,9 +44,6 @@ dependencies/python_embed: | dependencies
 
 dependencies/test: | dependencies
 	@-${MKDIR} dependencies/test
-
-dependencies/qtgui: | dependencies
-	@-$ {MKDIR} dependencies/qtgui
 
 
 
@@ -55,7 +55,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
                $(CHALLENGE_OBJS)         \
                $(EXECUTABLE_OBJ)         \
                $(GUI_OBJS)               \
-	       $(QT_OBS)                 \
+	       $(QT_OBJS)                 \
                $(INPUT_OBJS)             \
                $(PYTHON_OBJS)            \
                tmx-parser/libtmxparser.a \
@@ -65,7 +65,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
 
 	@$(COMPILER) -o $@ $(EXECUTABLE_OBJ) \
 		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
-                $(QT_OBS)                                                     \
+                $(QT_OBJS)                                                     \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
@@ -85,7 +85,7 @@ $(TEST_EXECUTABLE): $(EXECUTABLE) $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS)
 
 	@$(COMPILER) -o $@ $(TEST_EXECUTABLE_OBJ) \
 		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(TEST_OBJS) \
-		$(QT_OBS)                                                     \
+		$(QT_OBJS)                                                     \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
@@ -134,7 +134,7 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)         \
 		$(CPPFLAGS)        $(CXXFLAGS)             \
 
-$(QT_OBS): %.o : %.cpp | dependencies/qtgui
+$(QT_OBJS): %.o : %.cpp | dependencies/qtgui
 	@echo "${bold}[ Compiling qtgui file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 #	@$(QMAKING) -o Makefile.qt qtgui/application.pro
 
@@ -232,7 +232,7 @@ clean:
 		$(CHALLENGE_OBJS)      \
 		$(EXECUTABLE_OBJ)      \
 		$(GUI_OBJS)            \
-		$(QT_OBS)              \
+		$(QT_OBJS)              \
 		$(INPUT_OBJS)          \
 		$(PYTHON_OBJS)         \
 		$(PYTHON_SHARED_OBJS)  \
@@ -240,6 +240,9 @@ clean:
 		$(TEST_OBJS)           \
 
 	@-$(RM) $(HEADER_DEPENDS)
+
+	@-$(RM) *~ core *.core
+	@-$(RM) moc_mainwindow.cpp	
 
 	@-for directory in dependencies/* dependencies; do \
 	  if [ -d $${directory} ]; then ${RMDIR} $${directory}; fi; \

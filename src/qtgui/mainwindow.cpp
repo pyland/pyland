@@ -14,7 +14,7 @@
 // notice is included.
 //++
 
-#include "game_main.hpp"
+
 
 // Standard stuff
 #include <iostream>
@@ -26,9 +26,14 @@
 #include <SDL2/SDL.h>
 #include <GL/glu.h>
 
+
+
 // Qt stuff
 #include <QAction>
 #include <QApplication>
+
+#include "game_main.hpp"
+
 #include <QCloseEvent>
 #include <QFile>
 #include <QFileInfo>
@@ -62,10 +67,14 @@
 #include <QScrollBar>
 #include <QLineEdit>
 
+
+
 // QScintilla stuff
 #include <Qsci/qsciapis.h>
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexerpython.h>
+
+///game_main.hpp was here
 
 #include "mainwindow.h"
 #include "h_tab_bar.hpp"
