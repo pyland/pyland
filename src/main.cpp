@@ -385,7 +385,7 @@ int main(int argc, const char *argv[]) {
             VLOG(3) << "} IM | EM {";
 
             do {
-                EventManager::get_instance().process_events();
+                EventManager::get_instance().process_events(interpreter.interpreter_context);
             } while (
                   std::chrono::steady_clock::now() - last_clock
                 < std::chrono::nanoseconds(1000000000 / 60)

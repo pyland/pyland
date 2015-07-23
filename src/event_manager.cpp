@@ -11,6 +11,7 @@
 
 #include "event_manager.hpp"
 #include "game_time.hpp"
+#include "locks.hpp"
 
 
 EventManager::EventManager(): enabled(true) {
@@ -62,25 +63,7 @@ void EventManager::flush_and_disable() {
     // Lock released
 }
 
-/// A quicky class to handle Global intepreter locks for python events on the event queueu
-/// need to have a better way of doing this.
-/// Esentially, in a nutshell, there was a problem when lambda functions containing python code were being passed onto the event 
-/// queue.  In the while loop, the functions were being destructed as they fell out of scope, while the engine wasn't holding
-/// onto the GIL, causing undedertimned behaviour, This hack is a quick workaround that https://stackoverflow.com/questions/28220003/segfault-from-dict-destructor
-/// I will speak to Alex about this to determine what the best thing would be to do, my current thought's are:
-///    - have a special add event for python code for the event quueue
-///    - in process_events, check if it one of those, and if it is ensure GIL is held when object falls out of scope.
-/// TODO: Speak to Alex.
-class gil_lock
-{
-public:
-  gil_lock()  { state_ = PyGILState_Ensure(); }
-  ~gil_lock() { PyGILState_Release(state_);   }
-private:
-  PyGILState_STATE state_;
-};
-
-void EventManager::process_events() {
+void EventManager::process_events(InterpreterContext &interpreter_context) {
     // We need to process all the events in the queue
     // Problem is that, when events are being processed, they can add
     // further events. If we have the lock on the lock_guard in the
@@ -93,7 +76,7 @@ void EventManager::process_events() {
     //
     while (true) {
         LOG(INFO) << "locating segfault";
-        gil_lock lock; //see comments of class defined above
+        lock::GIL lock_gil(interpreter_context, "EventManager::process_events"); //lock the Python GIL. Automatically unlocks it on destruction (when it goes out of scope).
         //The callback function we need to process
         std::function<void ()> func;
 

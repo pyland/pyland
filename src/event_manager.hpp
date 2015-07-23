@@ -7,14 +7,21 @@
 
 #include "game_time.hpp"
 
+class InterpreterContext;
+
 ///
 /// The event manager class. This is a thread-safe
 /// implementation.which uses the singleton pattern.
 ///
 class EventManager {
 
+private:
+
     EventManager();
     ~EventManager();
+    
+    EventManager(EventManager const&) = delete;
+    void operator=(EventManager const&) = delete;
 
     ///
     /// The mutex to control access to the queues
@@ -132,7 +139,7 @@ public:
     ///
     /// Processes all events in the current frame queue
     ///
-    void process_events();
+    void process_events(InterpreterContext &interpreter_context);
 
 };
 
