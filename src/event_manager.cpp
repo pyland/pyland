@@ -76,7 +76,10 @@ void EventManager::process_events(InterpreterContext &interpreter_context) {
     //
     while (true) {
         LOG(INFO) << "locating segfault";
-        lock::GIL lock_gil(interpreter_context, "EventManager::process_events"); //lock the Python GIL. Automatically unlocks it on destruction (when it goes out of scope).
+
+        //lock the Python GIL. Automatically unlocks it on destruction (when it goes out of scope).
+        //neccesary for when there are python callbacks on the event queue.
+        lock::GIL lock_gil(interpreter_context, "EventManager::process_events");
         //The callback function we need to process
         std::function<void ()> func;
 
