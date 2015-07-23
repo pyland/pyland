@@ -9,6 +9,9 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
+    google::InitGoogleLogging(argv[0]);
+    google::InstallFailureSignalHandler();
+
     GameMain game(argc, argv);
 
     return 0;
