@@ -22,11 +22,12 @@
 #include "notification_bar.hpp"
 #include "object_manager.hpp"
 #include "challenge_helper.hpp"
+#include "game_engine.hpp"
 
 namespace py = boost::python;
 
 Challenge::Challenge(ChallengeData* _challenge_data) :
-    map(nullptr), sprite_switcher(nullptr), challenge_data(_challenge_data) {
+    game_engine(nullptr), map(nullptr), sprite_switcher(nullptr), challenge_data(_challenge_data) {
         //Load the correct map into the game.
         map = new Map(challenge_data->map_name);
         MapViewer* map_viewer = Engine::get_map_viewer();
@@ -61,8 +62,12 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
 
             entity_list.push_front(*entity); //put all the entities in the entity list!!!
         }
+
+        //create a new GameEngine instance for the python api, we need to review if this is the best place to create it
+        game_engine = new GameEngine();
+
         //The intepreter creates a new python thread which is the main thread for the running level, the list of all objects in the level are passed to it which are then exposed to the python code
-        daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entities(entity_list));
+        daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entities(entity_list, *game_engine));
         daemon->value->halt_soft(EntityThread::Signal::RESTART);
 }
 
@@ -90,6 +95,9 @@ Challenge::~Challenge() {
 
     //Delete the map
     delete map;
+
+    //Delete the game engine wrapper
+    delete game_engine;
     //All threads created for the challenge should have terminated now
     LOG(INFO) << " CHALLENGE DESTROYED ";
 }

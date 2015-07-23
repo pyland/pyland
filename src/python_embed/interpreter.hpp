@@ -14,6 +14,8 @@
 #include "thread_killer.hpp"
 #include "locks.hpp"
 
+class GameEngine;
+
 ///
 /// The Python Interpreter singleton.
 /// Multiple initializations will throw errors.
@@ -61,6 +63,9 @@ class Interpreter {
         /// @param entities
         ///     The list of game entities to be wrapped
         ///
+        /// @param game_engine
+        /// 	The instance of the game_engine interface that will be provided to the python code to interact with the engine.
+        ///
         /// @return
         ///     The thread in a lockable object. This can be used to tell
         ///     the script to perform actions like starting and stopping.
@@ -68,7 +73,7 @@ class Interpreter {
         ///     When the thread is discarded, it will be destroyed. This is
         ///     a blocking operation. 
         ///
-        LockableEntityThread register_entities(std::list<Entity> &entities);
+        LockableEntityThread register_entities(std::list<Entity> &entities, GameEngine &game_engine);
 
         ///
         /// The main thread of the spawned interpreter.

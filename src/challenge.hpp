@@ -23,6 +23,7 @@ const int object_id_type = 3;
 class ChallengeData;
 class Map;
 class LockableEntityThread;
+class GameEngine;
 
 class Challenge {
 private:
@@ -37,6 +38,12 @@ private:
     /// The Python thread for running scripts in.
     ///
     std::unique_ptr<LockableEntityThread> daemon;
+
+    ///
+    /// The instance of a GameEngine object, this is actually used as the interface betwixt C++ and python code. 
+    /// Used for functionality the entities cannot provide
+    ///
+    GameEngine *game_engine;
 protected:
     Map* map;
     Lifeline esc_callback;

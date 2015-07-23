@@ -109,13 +109,21 @@ def wrap_entity_in_game_object(entity):
     
 
 class DummyEngine:
+
+    engine = None
+
+    def __init__(self, engine):
+        self.engine = engine
+        return 
+
     def get_level_location(self):
         return "test_world/test_level/test_one"
     def print_debug(self, string):
         print(string)
         return
 
-def start(entities, RESTART, STOP, KILL, waiting, engine = DummyEngine()):
+def start(entities, engine, RESTART, STOP, KILL, waiting):
+    #engine = DummyEngine(engine)
     """
     Run the main bootstrapper loop! It's fun!
     """

@@ -75,10 +75,8 @@ void EventManager::process_events(InterpreterContext &interpreter_context) {
     // We then repeat the process until the entire queue is finished
     //
     while (true) {
-        LOG(INFO) << "locating segfault";
-
         //lock the Python GIL. Automatically unlocks it on destruction (when it goes out of scope).
-        //neccesary for when there are python callbacks on the event queue.
+        //neccesary for when there are python callbacks on the event queue. As they GIL needs to be locked when the are destructed.
         lock::GIL lock_gil(interpreter_context, "EventManager::process_events");
         //The callback function we need to process
         std::function<void ()> func;
@@ -110,7 +108,6 @@ void EventManager::process_events(InterpreterContext &interpreter_context) {
         else {
             LOG(ERROR) << "ERROR in event_manager.cpp in processing, no function";
         }
-        LOG(INFO) << "Done Done the thing!!!";
     }
 }
 void EventManager::add_event(std::function<void ()> func) {

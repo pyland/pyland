@@ -14,8 +14,9 @@
 #include "entity.hpp"
 
 class Interpreter;
-//class Entity;
+class GameEngine;
 class EntityThread;
+
 
 using EntityThreads = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
 
@@ -163,7 +164,7 @@ class EntityThread {
         /// @param entities
         ///     The list of entites to construct the daemon for.
         ///
-        EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities);
+        EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities, GameEngine &game_engine);
 
         ///
         /// Close the thread and shut down neatly.

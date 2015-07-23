@@ -4,6 +4,7 @@
 #include <boost/python.hpp>
 #include <iostream>
 #include "entity.hpp"
+#include "game_engine.hpp"
 
 namespace py = boost::python;
 
@@ -28,4 +29,9 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("get_name",          &Entity::get_name)
         .def("get_location",      &Entity::get_location)
         .def("focus",             &Entity::focus);
+        
+    py::class_<GameEngine, boost::noncopyable>("GameEngine", py::no_init)
+        .def("add_object",        &GameEngine::add_object)
+        .def("get_level_location",&GameEngine::get_level_location)
+        .def("print_debug",       &GameEngine::print_debug);
 }

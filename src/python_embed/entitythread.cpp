@@ -21,6 +21,7 @@
 #include "lifeline.hpp"
 #include "locks.hpp"
 #include "make_unique.hpp"
+#include "game_engine.hpp"
 
 // For PyThread_get_thread_ident
 #include "pythread.h"
@@ -62,6 +63,7 @@ LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, 
 /// TODO: Create some kind python engine object and suitable api for engine stuff!!!!!
 void run_entities(std::atomic<bool> &on_finish,
                 std::shared_ptr<py::api::object> entities_object,
+                py::api::object game_engine_object,
                 std::promise<long> thread_id_promise,
                 boost::filesystem::path bootstrapper_file,
                 InterpreterContext interpreter_context,
@@ -103,6 +105,7 @@ void run_entities(std::atomic<bool> &on_finish,
             lock::ThreadGIL lock_thread(threadstate);
             bootstrapper_module->attr("start")(
                 *entities_object,
+                game_engine_object,
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::RESTART])),
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::STOP])),
                 py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::KILL])),
@@ -146,7 +149,7 @@ void run_entities(std::atomic<bool> &on_finish,
 
 //TODO: This was based on a version which created a thread for each entity in the level, now it takes a list of entities and creates a thread for them,
 //This needs to be renamed or maybe refactored appropriately
-EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities):
+EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities, GameEngine &game_engine):
     entities(entities),
     previous_call_number(entities.front().call_number), //TODO: Work out what this did!!!!!!
     interpreter_context(interpreter_context),
@@ -188,10 +191,13 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Ent
             };
         }
 
+        py::api::object game_engine_object = py::api::object(boost::ref(game_engine));
+
         thread = std::thread(
             run_entities,
             std::ref(thread_finished),
             entity_object,
+            game_engine_object,
             std::move(thread_id_promise),
             // TODO: Extract path into a more logical place
             boost::filesystem::path("../game/bootstrapper.py"), //TODO: Move this configuration out to an ini file!
