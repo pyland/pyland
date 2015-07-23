@@ -2,6 +2,7 @@
 #define PARSINGFUNCTIONS_H
 #endif
 
+#include <glog/logging.h>
 #include <fstream>
 #include <iostream>
 #include <cstring>
@@ -16,24 +17,25 @@ using namespace std;
 
 int create_apih_from_wrapper()
 {
+    LOG(INFO) << "Creating api_list.h..." << endl;
     //fill this with the pathname of wrapper_functions
-    ifstream fin("functions.txt", ios::in);
+    ifstream fin("qtgui/functions.txt", ios::in);
 
     //change to whatever is required for output file
-    ofstream fout("api_list.h", ios::out|ios::trunc);
+    ofstream fout("qtgui/api_list.h", ios::out|ios::trunc);
 
     char ln[200];
     char * rest;
 
-    if(fin.bad())
+    if(!fin.good())
     {
-        cerr << "input file is bad" << endl;
+        LOG(INFO) << "Input file is bad" << endl;
         return -1;
     }
 
-    if(fout.bad())
+    if(!fout.good())
     {
-        cerr << "output file is bad" << endl;
+        LOG(INFO) << "Output file is bad" << endl;
         return -1;
     }
 
@@ -42,7 +44,7 @@ int create_apih_from_wrapper()
     {
         if(fin.bad()||fin.eof())
         {
-            cerr << "input file is bad" << endl;
+            LOG(INFO) << "Input file is bad" << endl;
             return -1;
         }
 
@@ -96,5 +98,7 @@ int create_apih_from_wrapper()
 
     fin.close();
     fout.close();
+
+    LOG(INFO) << "Created api_list.h " << endl;
     return 0;
 }

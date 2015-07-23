@@ -107,6 +107,8 @@ typedef struct SDL_Window SDL_Window;
 
 MainWindow::MainWindow(GameMain *exGame)
 {
+    LOG(INFO) << "Constructing MainWindow..." << std::endl;
+
     game = exGame;
     this->setUnifiedTitleAndToolBarOnMac(true);
 
@@ -234,13 +236,13 @@ MainWindow::MainWindow(GameMain *exGame)
     this->setCentralWidget(mainWidget);
 
     std::cout << gameWidget->winId() << "\n";
-
+/*
     int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
     if (result != 0)
     {
         LOG(INFO) << "failed to init SDL\n";
     }
-
+*/
     mainWidget->setLayout(windowLayout);
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
@@ -261,12 +263,15 @@ MainWindow::MainWindow(GameMain *exGame)
 
     this->showMaximized();
 
+    LOG(INFO) << "Constructed MainWindow" << std::endl;
+
 }
 
 MainWindow::~MainWindow()
 {
     //delete all objects created with new
 
+    LOG(INFO) << "Destructing MainWindow..." << std::endl;
     delete textWidget;
 
     for(int ws = 0; ws < workspace_max; ws++)
@@ -306,6 +311,8 @@ MainWindow::~MainWindow()
     delete windowLayout;
 
     delete eventTimer;
+
+    LOG(INFO) << "Destructed MainWindow" << std::endl;
 
 }
 
@@ -382,8 +389,8 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     ws->setText("");
     ws->setLexer(lexer);
     ws->zoomIn(13);
-    ws->setAutoCompletionThreshold(4);
-    ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
+    ws->setAutoCompletionThreshold(3);
+    ws->setAutoCompletionSource(QsciScintilla::AcsAll);
     ws->setSelectionBackgroundColor("DeepPink");
     ws->setSelectionForegroundColor("white");
     ws->setCaretWidth(5);

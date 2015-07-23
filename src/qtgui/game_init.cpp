@@ -42,6 +42,7 @@
 
 GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
 {
+    LOG(INFO) << "Creating GameInit..." << std::endl;
     create_apih_from_wrapper();
     app = new QApplication(argc,argv);
     app->setStyle("gtk");
@@ -51,13 +52,19 @@ GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
 
     //Get the SDL window from the widget in the QT interface, so it can be drawn to in game_main
     sdlWin = mainWin->getSDLWindow();
+    LOG(INFO) << "Created GameInit" << std::endl;
+}
+
+void GameInit::cleanUp(){
+    //delete mainWin;
+    //SDL_DestroyWindow (sdlWin);
 }
 
 GameInit::~GameInit()
 {
-    LOG(INFO) << "Deleting game_init... " << endl;
-    delete mainWin;
+    LOG(INFO) << "Deleting GameInit... " << std::endl;
     delete app;
+    LOG(INFO) << "Deleted GameInit" << std::endl;
 }
 
 QApplication* GameInit::getApp(){

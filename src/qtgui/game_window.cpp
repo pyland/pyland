@@ -159,6 +159,7 @@ GameWindow::GameWindow(int width, int height, int argc, char *argv[], GameMain *
     close_requested(false),
     graphics_context(this)
 {
+    LOG(INFO) << "Creating GameWindow... " << std::endl;
     input_manager = new InputManager(this);
 
     if (windows.size() == 0) {
@@ -223,7 +224,7 @@ GameWindow::GameWindow(int width, int height, int argc, char *argv[], GameMain *
 
     windows[SDL_GetWindowID(window)] = this;
 
-    LOG(INFO) << "Completed GameWindow constructor.";
+    LOG(INFO) << "Created GameWindow... " << std::endl;
 
 }
 
@@ -236,22 +237,25 @@ void GameWindow::executeApp(){
 }
 
 GameWindow::~GameWindow() {
+    LOG(INFO) << "Destructing GameWindow... " << std::endl;
     deinit_gl();
-
 #ifdef USE_GLES
     vc_dispmanx_display_close(dispmanDisplay); // (???)
 #endif
     windows.erase(SDL_GetWindowID(window));
+    curGame->cleanUp();
 
-    SDL_DestroyWindow (window);
+    delete curGame;
+
     if (windows.size() == 0) {
         deinit_sdl();
     }
-
     callback_controller.disable();
 
     delete input_manager;
-    delete cur_game;
+
+    LOG(INFO) << "Destructed GameWindow... " << std::endl;
+
 }
 
 void GameWindow::init_sdl() {
@@ -266,9 +270,9 @@ void GameWindow::init_sdl() {
 
     LOG(INFO) << "Initializing SDL...";
     result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");
+        LOG(INFO) << "failed to init SDL\n";
     }
 
 #ifdef USE_GLES
@@ -283,7 +287,7 @@ void GameWindow::deinit_sdl() {
     LOG(INFO) << "Deinitializing SDL...";
 
     // Should always work.
-    SDL_Quit ();
+    //SDL_Quit ();
 
     LOG(INFO) << "SDL deinitialized.";
 }
@@ -548,6 +552,7 @@ void GameWindow::update() {
         switch (event.type) {
         case SDL_QUIT: // Primarily used for killing when we become blind.
             close_all = true;
+            return;
             break;
         case SDL_WINDOWEVENT:
             window = windows[event.window.windowID];

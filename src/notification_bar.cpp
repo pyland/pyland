@@ -120,6 +120,7 @@ void NotificationBar::add_notification(std::string text_to_display) {
     CHECK_NOTNULL(gui_manager);
     gui_manager->get_root()->remove(backward_button->get_id());
     gui_manager->get_root()->remove(forward_button->get_id());
+    delete notification_text;
 }
 
 void NotificationBar::clear_text() {

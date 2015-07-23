@@ -21,6 +21,7 @@ public:
     SDL_Window* getSdlWin();
     void execApp();
     void showMain();
+    void cleanUp();
 
 };
 

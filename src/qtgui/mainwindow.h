@@ -27,7 +27,6 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <iostream>
-#include <Qsci/qsciapis.h>
 #include <Qsci/qscilexerpython.h>
 #include <SDL2/SDL.h>
 
@@ -41,6 +40,7 @@ class SonicPiLexer;
 class QString;
 class QSlider;
 class GameMain;
+class QsciAPIs;
 
 class MainWindow : public QMainWindow
 {
