@@ -53,6 +53,13 @@ GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
     sdlWin = mainWin->getSDLWindow();
 }
 
+GameInit::~GameInit()
+{
+    LOG(INFO) << "Deleting game_init... " << endl;
+    delete mainWin;
+    delete app;
+}
+
 QApplication* GameInit::getApp(){
     return app;
 }
@@ -71,14 +78,6 @@ void GameInit::execApp(){
 
 void GameInit::showMain(){
     mainWin->showMax();
-}
-
-void GameInit::delApp(){
-    delete app;
-}
-
-void GameInit::delMainWin(){
-    delete mainWin;
 }
 
 

@@ -251,6 +251,7 @@ GameWindow::~GameWindow() {
     callback_controller.disable();
 
     delete input_manager;
+    delete cur_game;
 }
 
 void GameWindow::init_sdl() {

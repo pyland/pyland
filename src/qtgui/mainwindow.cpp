@@ -30,7 +30,6 @@
 // Qt stuff
 #include <QAction>
 #include <QApplication>
-
 #include <QCloseEvent>
 #include <QFile>
 #include <QFileInfo>
@@ -130,7 +129,7 @@ MainWindow::MainWindow(GameMain *exGame)
     lexer->setAutoIndentStyle(QsciScintilla::AiMaintain);
 
     // Autocompletion stuff
-    QsciAPIs* api = new QsciAPIs(lexer);
+    api = new QsciAPIs(lexer);
     QStringList api_names;
     // yes, really
 #include "api_list.h"
@@ -144,7 +143,7 @@ MainWindow::MainWindow(GameMain *exGame)
     lexer->setDefaultFont(font);
 
     // Setup terminal panes
-    QVBoxLayout *terminalLayout = new QVBoxLayout;
+    terminalLayout = new QVBoxLayout;
 
     terminalDisplay = new QTextEdit;
     terminalDisplay->setReadOnly(true);
@@ -154,7 +153,7 @@ MainWindow::MainWindow(GameMain *exGame)
     terminalDisplay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     terminalDisplay->setFocusPolicy(Qt::NoFocus);
 
-    QHBoxLayout *terminalButtonLayout = new QHBoxLayout;
+    terminalButtonLayout = new QHBoxLayout;
 
     // Setup terminal buttons
     buttonRun = new QPushButton("Run");
@@ -168,7 +167,7 @@ MainWindow::MainWindow(GameMain *exGame)
 
     terminalButtonLayout->setContentsMargins(0,0,0,0);
 
-    QWidget *buttons = new QWidget;
+    buttons = new QWidget;
     buttons->setLayout(terminalButtonLayout);
 
     terminalLayout->addWidget(terminalDisplay);
@@ -179,12 +178,12 @@ MainWindow::MainWindow(GameMain *exGame)
     terminalLayout->setStretchFactor(terminalDisplay,4);
     terminalLayout->setStretchFactor(buttons,1);
 
-    QWidget *terminal = new QWidget;
+    terminal = new QWidget;
     terminal->setLayout(terminalLayout);
 
     for(int ws = 0; ws < workspace_max; ws++)
     {
-        initWorkspace(workspaces[ws]);
+        initWorkspace(workspaces[ws], ws);
     }
 
     // Setup draggable splitter for script embedWindow and terminal
@@ -201,7 +200,7 @@ MainWindow::MainWindow(GameMain *exGame)
     splitter->setFocusPolicy(Qt::NoFocus);
 
     // Setup embedWindow
-    QVBoxLayout *windowLayout = new QVBoxLayout;
+    windowLayout = new QVBoxLayout;
 
     gameWidget = new QWidget;
 
@@ -214,7 +213,7 @@ MainWindow::MainWindow(GameMain *exGame)
 
     windowLayout->setContentsMargins(0,0,0,0);
 
-    QWidget *mainWidget = new QWidget;
+    mainWidget = new QWidget;
 
     createActions();
     createToolBar();
@@ -261,6 +260,52 @@ MainWindow::MainWindow(GameMain *exGame)
     eventTimer->start();
 
     this->showMaximized();
+
+}
+
+MainWindow::~MainWindow()
+{
+    //delete all objects created with new
+
+    delete textWidget;
+
+    for(int ws = 0; ws < workspace_max; ws++)
+    {
+        delete buttonIn[ws];
+        delete buttonOut[ws];
+        delete zoomWidget[ws];
+        delete zoomLayout[ws];
+        delete workspaces[ws];
+    }
+
+
+    delete lexer;
+    api->clear();
+    delete api;
+
+    delete terminalDisplay;
+
+    delete buttonRun;
+    delete buttonSpeed;
+
+    delete buttons;
+
+    delete terminalButtonLayout;
+
+    delete terminal;
+    delete terminalLayout;
+
+    delete splitter;
+    delete gameWidget;
+
+    delete mainWidget;
+
+    delete textInfo;
+    delete toolBar;
+
+    delete windowLayout;
+
+    delete eventTimer;
 
 }
 
@@ -313,7 +358,7 @@ void MainWindow::timerHandler()
     SDL_GL_SwapWindow(embedWindow);
 }
 
-void MainWindow::initWorkspace(QsciScintilla* ws)
+void MainWindow::initWorkspace(QsciScintilla* ws, int i)
 {
     ws->setAutoIndent(true);
     ws->setIndentationsUseTabs(false);
@@ -346,32 +391,32 @@ void MainWindow::initWorkspace(QsciScintilla* ws)
     ws->setCaretForegroundColor("deep pink");
 
     //Create zoom buttons for text widget
-    QHBoxLayout *zoomLayout = new QHBoxLayout;
+    zoomLayout[i] = new QHBoxLayout;
 
-    buttonIn = new QPushButton("+");
-    buttonOut = new QPushButton("-");                 //Text do not seem centered in buttons
+    buttonIn[i] = new QPushButton("+");
+    buttonOut[i] = new QPushButton("-");                 //Text do not seem centered in buttons
 
-    buttonIn->setMaximumWidth(20);
-    buttonOut->setMaximumWidth(20);
-    buttonIn->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
-    buttonOut->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+    buttonIn[i]->setMaximumWidth(20);
+    buttonOut[i]->setMaximumWidth(20);
+    buttonIn[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+    buttonOut[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
 
-    zoomLayout->addWidget(buttonIn);
-    zoomLayout->addWidget(buttonOut);
+    zoomLayout[i]->addWidget(buttonIn[i]);
+    zoomLayout[i]->addWidget(buttonOut[i]);
 
-    zoomLayout->setContentsMargins(0,0,0,0);
-    zoomLayout->setSpacing(0);
+    zoomLayout[i]->setContentsMargins(0,0,0,0);
+    zoomLayout[i]->setSpacing(0);
 
-    QWidget *zoomWidget = new QWidget;
+    zoomWidget[i] = new QWidget;
 
-    zoomWidget->setLayout(zoomLayout);
-    zoomWidget->setMaximumWidth(40);
+    zoomWidget[i]->setLayout(zoomLayout[i]);
+    zoomWidget[i]->setMaximumWidth(40);
 
-    ws->addScrollBarWidget(zoomWidget,Qt::AlignLeft);
+    ws->addScrollBarWidget(zoomWidget[i],Qt::AlignLeft);
 
     //Connect buttons to functions
-    connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
-    connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
+    connect(buttonIn[i],SIGNAL(released()),this,SLOT (zoomFontIn()));
+    connect(buttonOut[i],SIGNAL(released()),this,SLOT (zoomFontOut()));
     //connect(ws->horizontalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
     //connect(ws->verticalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
 

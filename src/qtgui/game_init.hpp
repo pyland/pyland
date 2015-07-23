@@ -14,13 +14,12 @@ private:
 
 public:
     GameInit(int argc, char *argv[], GameMain* exGame);
+    ~GameInit();
 
     QApplication* getApp();
     MainWindow* getMainWin();
     SDL_Window* getSdlWin();
     void execApp();
-    void delApp();
-    void delMainWin();
     void showMain();
 
 };
