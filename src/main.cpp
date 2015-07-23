@@ -19,6 +19,7 @@
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
 #include "challenge.hpp"
+#include "config.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
@@ -436,7 +437,7 @@ Challenge* pick_challenge(ChallengeData* challenge_data) {
     std::string map_name = "";
     switch(next_challenge) {
         case 0:
-            map_name ="../game/levels/test_world/test_level/test_one/layout.tmx";
+            map_name = Config::get_config_info("level_location");
             challenge_data->map_name = map_name;
             challenge = new Challenge(challenge_data);
             break;
