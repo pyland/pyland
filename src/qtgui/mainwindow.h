@@ -24,6 +24,8 @@
 #include <QListWidget>
 #include <QProcess>
 #include <QFuture>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <iostream>
 #include <Qsci/qscilexerpython.h>
 #include <SDL2/SDL.h>
@@ -38,6 +40,7 @@ class SonicPiLexer;
 class QString;
 class QSlider;
 class GameMain;
+class QsciAPIs;
 
 class MainWindow : public QMainWindow
 {
@@ -45,6 +48,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(GameMain *exGame);
+    ~MainWindow();
     SDL_Window* getSDLWindow();
     void showMax();
 
@@ -63,7 +67,7 @@ private slots:
     void timerHandler();
 
 private:
-    void initWorkspace(QsciScintilla* ws);
+    void initWorkspace(QsciScintilla* ws, int i);
     void clearOutputPanels();
     void createActions();
     void createToolBar();
@@ -75,24 +79,32 @@ private:
     QsciLexerPython *lexer;
 
     QsciScintilla *textEdit;
+
     static const int workspace_max = 9;
     QsciScintilla *workspaces[workspace_max];
+    QWidget *zoomWidget[workspace_max];
+    QHBoxLayout *zoomLayout[workspace_max];
+    QPushButton *buttonIn[workspace_max];
+    QPushButton *buttonOut[workspace_max];
+
+
     QTextEdit *terminalDisplay;
     QSplitter *splitter;
-
-    QPushButton *buttonIn;
-    QPushButton *buttonOut;
     QPushButton *buttonRun;
     QPushButton *buttonSpeed;
-
+    QWidget *mainWidget;
     QTabWidget *textWidget;
-
     QTextEdit *textInfo;
-
     QWidget *gameWidget;
-
     QToolBar *toolBar;
+    QsciAPIs* api;
+    QWidget *buttons;
+    QWidget *terminal;
+    QVBoxLayout *terminalLayout;
+    QHBoxLayout *terminalButtonLayout;
+    QVBoxLayout *windowLayout;
 
+/*
     QAction *runAct;
     QAction *stopAct;
     QAction *saveAct;
@@ -111,7 +123,7 @@ private:
     QMap<QString, QString> *map;
 
     QLabel *imageLabel;
-
+*/
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
     QTimer *eventTimer;

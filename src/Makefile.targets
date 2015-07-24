@@ -213,10 +213,9 @@ $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
 
 # Moc generated files
 qtgui/moc_mainwindow.cpp: qtgui/mainwindow.cpp qtgui/mainwindow.h
-	/usr/bin/moc-qt4 -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED \
-		-I/usr/share/qt4/mkspecs/linux-g++ -I. -I/usr/include/qt4/QtCore \
-		-I/usr/include/qt4/QtGui -I/usr/include/qt4 -I./qtgui ./qtgui/mainwindow.h -o \
-		./qtgui/moc_mainwindow.cpp
+
+	@echo "${bold}[ $(COMPILER): Creating qt file ${red}$ moc_maincwindow.cpp ${normal}${bold} from ${red}$ mainwindow.h ${normal}${bold} ]${normal}"
+	@/usr/bin/moc-qt4 $(QT_DEFINES) $(QT_INCPATH) ./qtgui/mainwindow.h -o ./qtgui/moc_mainwindow.cpp
 
 #
 # Once finished...

@@ -64,6 +64,8 @@ GameMain::GameMain(int argc, char *argv[]):
     buttonfont(Engine::get_game_font()),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 {
+    LOG(INFO) << "Constructing GameMain..." << endl;
+
     map_path = ("../maps/start_screen.tmx");
 
     switch (argc)
@@ -79,9 +81,6 @@ GameMain::GameMain(int argc, char *argv[]):
     case 1:
         break;
     }
-
-    google::InitGoogleLogging(argv[0]);
-    google::InstallFailureSignalHandler();
 
     /// CREATE GLOBAL OBJECTS
 
@@ -432,14 +431,17 @@ GameMain::GameMain(int argc, char *argv[]):
     em->reenable();
 
 //    }
+    LOG(INFO) << "Constructed GameMain" << endl;
 
 }
 
 GameMain::~GameMain(){
+
+    LOG(INFO) << "Destructing GameMain..." << endl;
     delete notification_bar;
     delete challenge_data;
-    delete challenge;
     delete cursor;
+    LOG(INFO) << "Destructed GameMain..." << endl;
 }
 
 void GameMain::game_loop()
