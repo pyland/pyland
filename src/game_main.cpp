@@ -435,7 +435,8 @@ GameMain::GameMain(int argc, char *argv[]):
 
 }
 
-GameMain::~GameMain(){
+GameMain::~GameMain()
+{
 
     LOG(INFO) << "Destructing GameMain..." << endl;
     delete notification_bar;
@@ -492,6 +493,18 @@ void GameMain::game_loop()
         VLOG(3) << "} TD | SB {";
         challenge_data->game_window->swap_buffers();
     }
+    else
+    {
+        em->flush_and_disable();
+        delete challenge;
+        em->reenable();
+
+        challenge_data->run_challenge = true;
+        challenge = pick_challenge(challenge_data);
+        Engine::set_challenge(challenge);
+        challenge->start();
+
+    }
     return;
 }
 
@@ -533,7 +546,8 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data)
     return challenge;
 }
 
-GameWindow* GameMain::getGameWindow(){
+GameWindow* GameMain::getGameWindow()
+{
     return &embedWindow;
 }
 
