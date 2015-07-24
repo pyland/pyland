@@ -43,6 +43,7 @@ using OrderedSet = boost::multi_index_container<
 >;
 
 class GameWindow;
+class MainWindow;
 
 ///
 /// Handles SDL input such that it can be accessed reliably and on
@@ -51,6 +52,7 @@ class GameWindow;
 class InputManager {
 private:
     friend class GameWindow;
+    friend class MainWindow;
 
     ///
     /// The associate GameWindow to handle events for.

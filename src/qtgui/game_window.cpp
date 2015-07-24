@@ -181,7 +181,7 @@ GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *
         throw GameWindow::InitException("Failed to create SDL window");
     }
 
-    SDL_ShowCursor(0);
+    SDL_ShowCursor(1);
 
     // Temporary fix (which just seems to work) for a bug where focus
     // events are not generated for the first time focus is changed.
@@ -532,6 +532,7 @@ void GameWindow::deinit_surface() {
 
 
 void GameWindow::update() {
+
     SDL_Event event;
     bool close_all = false;
 
@@ -560,16 +561,7 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_RESIZED:
             case SDL_WINDOWEVENT_MAXIMIZED:
             case SDL_WINDOWEVENT_RESTORED:
-                window->resizing = true;
-                VLOG(2) << "Need surface reinit (resize)";
-                window->change_surface = InitAction::DO_INIT;
-                focused_window = window;
-                break;
             case SDL_WINDOWEVENT_MOVED:
-                VLOG(2) << "Need surface reinit (moved)";
-                window->change_surface = InitAction::DO_INIT;
-                focused_window = window;
-                break;
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 VLOG(2) << "Need surface reinit (gained focus)";

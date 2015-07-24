@@ -55,6 +55,7 @@ public:
 protected:
     void closeEvent(QCloseEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);
+    SDL_Scancode parseKeyCode(QKeyEvent *keyEvent);
 
 private slots:
     void runCode();

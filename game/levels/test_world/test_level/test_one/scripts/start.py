@@ -27,3 +27,5 @@ croc_one.follow_path("north, east, east, south, west, west", True)
 #boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(dialogue))))
 boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(game.getDialogue("welcome")))))
 print("wohooo")
+
+player_one.focus()
