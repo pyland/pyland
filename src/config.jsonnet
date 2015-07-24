@@ -2,7 +2,7 @@
 {
 
 	"files": {
-		"game_folder": "../game/"
-		"level_location" : self.game_folder + "levels/test_world/test_level/test_one/layout.tmx",
+		"game_folder": "../game/",
+		"level_location" : self.game_folder + "levels/test_world/test_level/test_one/layout.tmx"
 	}
 }

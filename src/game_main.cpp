@@ -1,5 +1,5 @@
 #define GLM_FORCE_RADIANS
-
+#include <fstream>
 #include <glog/logging.h>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -491,18 +491,15 @@ void GameMain::game_loop()
 }
 
 Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
-    int next_challenge(challenge_data->next_challenge);
+    //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
-    std::string map_name = "";
-    switch(next_challenge) {
-        case 0:
-            map_name = Config::get_config_info("level_location");
-            challenge_data->map_name = map_name;
-            challenge = new Challenge(challenge_data);
-            break;
-        default:
-            break;
-    }
+    //std::string map_name = "";
+    std::ifstream input_file("config.json");
+    nlohmann::json j;
+    input_file >> j;
+    std::string map_name = j["files"]["level_location"];
+    challenge_data->map_name = map_name;
+    challenge = new Challenge(challenge_data);
     return challenge;
 }
 

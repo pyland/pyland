@@ -1,13 +1,18 @@
 #include "config.hpp"
-#include "json-parser/json.hpp"
 #include <fstream>
-using namespace nlohmann;
 
 std::string Config::get_config_info(std::string key) {
     std::ifstream input_file("config.json");
-    json j;
-    j << input_file;
+    nlohmann::json j;
+    input_file >> j;
     LOG(INFO) << key;
-    std::string result = j["files"][key];
+    std::string result = j["files"]["level_location"];
     return result;
+}
+
+nlohmann::json Config::get_instance() {
+    std::ifstream input_file("config.json");
+    nlohmann::json j;
+    input_file >> j;
+    return j;
 }
