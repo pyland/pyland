@@ -65,8 +65,8 @@ class Player(Character):
     """ Runs the script whose location is provided as an argument, exposes the PyGuide API to the script to allow it to control this
     player. :) Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
     """
-    def run_script(self, script_location):
-        scriptrunner.start(self, script_location)
+    def run_script(self, script_name):
+        scriptrunner.start(self, script_name)
         return
     
     """ This method takes the movement input of the player character and returns the appropriate

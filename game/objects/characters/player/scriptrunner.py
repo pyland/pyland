@@ -11,12 +11,12 @@ import threading
 
 """ This function runs the script provided in the argument in a seperate thread.
 """
-def start(game_object, script_location):
-    print("Running Player Script: " + script_location) #TODO: change this to some kind of script debug.
+def start(game_object, script_name):
+    print("Running Player Script: " + script_name) #TODO: change this to some kind of script debug.
     #Creates 
     ScopedInterpreter = create_execution_scope(game_object) #Get the class definition for the ScopedIntepreter
     scoped_interpreter = ScopedInterpreter() #create an instance of it
-    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/" + script_location; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
+    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/" + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
     
     #open and print the script
     with open(script_filename, encoding="utf8") as script_file:

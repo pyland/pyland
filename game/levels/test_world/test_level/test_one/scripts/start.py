@@ -17,7 +17,7 @@
 
 
 player_one.focus()
-player_one.run_script("demo.py")
+player_one.run_script("1")
 
 #boulder_one.focus()
 boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_west(lambda: boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_south())))))
