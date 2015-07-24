@@ -454,7 +454,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     else if (event->type() == 3)//QEvent::MouseButtonRelease
     {
         mouseEvent = static_cast<QMouseEvent*>(event);
-
         SDL_Event sdlEvent;
         sdlEvent.type = SDL_MOUSEBUTTONUP;
         sdlEvent.button.state = SDL_PRESSED;
@@ -467,10 +466,19 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         mouseEvent = static_cast<QMouseEvent*>(event);
         SDL_Event sdlEvent;
         sdlEvent.type = SDL_MOUSEMOTION;
+        int *curX = new int;
+        int *curY = new int;
+        *curX = mouseEvent->x();
+        *curY = mouseEvent->y();
+        sdlEvent.button.state = SDL_GetMouseState(curX,curY);
         //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
         sdlEvent.motion.x = mouseEvent->x();
         sdlEvent.motion.y = mouseEvent->y();
+        sdlEvent.motion.xrel = mouseEvent->globalX();
+        sdlEvent.motion.yrel = mouseEvent->globalY();
         SDL_PushEvent(&sdlEvent);
+        delete curX;
+        delete curY;
     }
     else
     {
