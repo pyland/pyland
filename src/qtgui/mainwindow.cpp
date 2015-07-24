@@ -388,7 +388,7 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     ws->setLexer(lexer);
     ws->zoomIn(13);
     ws->setAutoCompletionThreshold(3);
-    ws->setAutoCompletionSource(QsciScintilla::AcsAll);
+    ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
     ws->setSelectionBackgroundColor("DeepPink");
     ws->setSelectionForegroundColor("white");
     ws->setCaretWidth(5);
