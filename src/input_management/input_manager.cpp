@@ -116,10 +116,10 @@ void InputManager::handle_event(SDL_Event* event) {
 }
 
 void InputManager::run_callbacks() {
+
     while (!key_events.empty()) {
         KeyboardInputEvent& event = key_events.front();
         VLOG(3) << event;
-
         keyboard_callbacks.broadcast(event);
         if (event.down) {
             if (event.changed) {
