@@ -33,7 +33,7 @@ EventManager *EventManager::get_instance(){
     return &global_instance;
 }
 
-void EventManager::flush_and_disable() {
+void EventManager::flush_and_disable(InterpreterContext &interpreter_context) {
     //
     // This will clear both lists out. Now, if another thread tries
     // to add something but blocks before getting a lock (but is stil
@@ -50,6 +50,9 @@ void EventManager::flush_and_disable() {
     // it goes out of scope. So we introduce scope here to release
     // the mutex
     {
+        //lock the Python GIL. Automatically unlocks it on destruction (when it goes out of scope).
+        //neccesary for when there are python callbacks on the event queue. As they GIL needs to be locked when the are destructed.
+        lock::GIL lock_gil(interpreter_context, "EventManager::process_events");
         //Lock the lists
         std::lock_guard<std::mutex> lock(queue_mutex);
 
@@ -76,7 +79,7 @@ void EventManager::process_events(InterpreterContext &interpreter_context) {
     //
     while (true) {
         //lock the Python GIL. Automatically unlocks it on destruction (when it goes out of scope).
-        //neccesary for when there are python callbacks on the event queue. As they GIL needs to be locked when the are destructed.
+        //neccesary for when there are python callbacks on the event queue. As they GIL needs to be locked when the are run and destructed.
         lock::GIL lock_gil(interpreter_context, "EventManager::process_events");
         //The callback function we need to process
         std::function<void ()> func;

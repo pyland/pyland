@@ -422,7 +422,7 @@ GameMain::GameMain(int &argc, char **argv):
 
     // Call this when end challenge
     // Clean up after the challenge - additional, non-challenge clean-up
-    em->flush_and_disable();
+    em->flush_and_disable(interpreter.interpreter_context);
     delete challenge;
     em->reenable();
 

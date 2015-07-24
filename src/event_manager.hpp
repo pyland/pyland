@@ -72,7 +72,7 @@ public:
     ///
     /// @see reenable
     ///
-    void flush_and_disable();
+    void flush_and_disable(InterpreterContext &interpreter_context);
 
     ///
     /// Reenable the queue after a call to flush_and_disable.
