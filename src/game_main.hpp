@@ -95,7 +95,7 @@ public:
     ~GameMain();
     void game_loop();
     Challenge* pick_challenge(ChallengeData* challenge_data);
-
+    GameWindow* getGameWindow();
 };
 
 #endif // GAME_MAIN_H

@@ -534,6 +534,7 @@ void GameWindow::deinit_surface() {
 
 
 void GameWindow::update() {
+
     SDL_Event event;
     bool close_all = false;
 
@@ -543,6 +544,7 @@ void GameWindow::update() {
     }
 
     while (SDL_PollEvent(&event)) {
+        std::cout << "GameWindow Scancode " << event.key.keysym.scancode << " " << SDL_GetScancodeName(event.key.keysym.scancode) << "\n";
         GameWindow* window;
         switch (event.type) {
         case SDL_QUIT: // Primarily used for killing when we become blind.
@@ -561,16 +563,7 @@ void GameWindow::update() {
             case SDL_WINDOWEVENT_RESIZED:
             case SDL_WINDOWEVENT_MAXIMIZED:
             case SDL_WINDOWEVENT_RESTORED:
-                window->resizing = true;
-                VLOG(2) << "Need surface reinit (resize)";
-                window->change_surface = InitAction::DO_INIT;
-                focused_window = window;
-                break;
             case SDL_WINDOWEVENT_MOVED:
-                VLOG(2) << "Need surface reinit (moved)";
-                window->change_surface = InitAction::DO_INIT;
-                focused_window = window;
-                break;
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 VLOG(2) << "Need surface reinit (gained focus)";

@@ -64,6 +64,9 @@
 #include <QScrollBar>
 #include <QLineEdit>
 
+//#include <QKeyEvent>
+//#include <qcoreevent.h>
+
 // QScintilla stuff
 #include <Qsci/qsciapis.h>
 #include <Qsci/qsciscintilla.h>
@@ -72,6 +75,7 @@
 #include "mainwindow.h"
 #include "game_main.hpp"
 #include "h_tab_bar.hpp"
+#include "input_manager.hpp"
 
 // Game window stuff
 #define GLM_FORCE_RADIANS
@@ -82,12 +86,10 @@
 #include <chrono>
 #include <functional>
 #include <glm/vec2.hpp>
-#include <iostream>
 #include <memory>
 #include <random>
 #include <ratio>
 #include <string>
-#include <sstream>
 #include <utility>
 #include <vector>
 
@@ -207,6 +209,8 @@ MainWindow::MainWindow(GameMain *exGame)
 
     gameWidget->setAttribute(Qt::WA_NativeWindow);
 
+    gameWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
     windowLayout->addWidget(gameWidget);
     windowLayout->addWidget(splitter);
     windowLayout->setStretchFactor(gameWidget,3);
@@ -246,8 +250,8 @@ MainWindow::MainWindow(GameMain *exGame)
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
 
-    SDL_SetWindowSize(embedWindow, 600, 420);
-    glViewport(0, 0, 600,420);
+    //SDL_SetWindowSize(embedWindow, 600, 420);
+    //glViewport(0, 0, 600,420);
     embedWindow->flags |= SDL_WINDOW_OPENGL;
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
@@ -274,17 +278,33 @@ void MainWindow::showMax(){
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-/*
     QKeyEvent *keyEvent = NULL;
-    if (event->type() == QEvent::KeyPress)
+    if (event->type() == 6)//QEvent::KeyPress)
     {
         keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key())
         {
             SDL_Event sdlEvent;
             sdlEvent.type = SDL_KEYDOWN;
+            //sdlEvent.type = SDL_WINDOWEVENT_CLOSE;
             sdlEvent.key.state = SDL_PRESSED;
+            sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
             SDL_PushEvent(&sdlEvent);
+            //./game->getGameWindow()->get_input_manager()->handle_event(&sdlEvent);
+            std::cout << "got a Qt keydown event\n";
+        }
+    }
+    else if (event->type() == 7){ //QEvent::KeyRelease
+        keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key())
+        {
+            SDL_Event sdlEvent;
+            sdlEvent.type = SDL_KEYUP;
+            //sdlEvent.type = SDL_WINDOWEVENT_CLOSE;
+            sdlEvent.key.state = SDL_PRESSED;
+            sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            SDL_PushEvent(&sdlEvent);
+            //./game->getGameWindow()->get_input_manager()->handle_event(&sdlEvent);
             std::cout << "got a Qt keydown event\n";
         }
     }
@@ -292,25 +312,59 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
         return QObject::eventFilter(obj, event);
     }
-*/
+
     return true;
 }
 
+//https://forum.qt.io/topic/2990/how-to-get-keyboard-scan-code/5
+//bool MainWindow::qwseventFilter(QWSEvent *event)
+//{
+//    QKeyEvent *keyEvent = NULL;
+//    if (event->type() == QWSEvent::Key)//QEvent::KeyPress)
+//    {
+//        SDL_Event sdlEvent;
+//        SDL_PushEvent(&sdlEvent);
+////        keyEvent = static_cast<QKeyEvent*>(event);
+////        if (keyEvent->key())
+////        {
+////            SDL_Event sdlEvent;
+////            sdlEvent.type = SDL_KEYDOWN;
+////            sdlEvent.key.state = SDL_PRESSED;
+////            SDL_PushEvent(&sdlEvent);
+////            //./game->getGameWindow()->get_input_manager()->handle_event(&sdlEvent);
+////            std::cout << "got a Qt keydown event\n";
+////        }
+////    }
+////    else
+////    {
+////        return QObject::eventFilter(obj, event);
+//    }
+//
+//    return true;
+//}
+
 void MainWindow::timerHandler()
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch(event.type)
-        {
-        case SDL_KEYDOWN:
-            std::cout << " got an SDL keydown event\n";
-            break;
-        }
-    }
+//    SDL_Event event;
+//
+//    while (SDL_PollEvent(&event))
+//    {
+//        switch(event.type)
+//        {
+//        case SDL_KEYDOWN:
+//            //SDL_Event sdlEvent;
+//            //sdlEvent.type = SDL_KEYDOWN;
+//           // sdlEvent.key.state = SDL_PRESSED;
+//            SDL_PushEvent(&event);
+//            //std::cout << "MAINWINDOW Scancode " << (event.key.keysym.scancode) << " ";
+//            //game->getGameWindow()->get_input_manager()->handle_event(&event);
+//            std::cout << " got an SDL keydown event\n";
+//            break;
+//        }
+//    }
     game->game_loop();
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(embedWindow);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    //SDL_GL_SwapWindow(embedWindow);
 }
 
 void MainWindow::initWorkspace(QsciScintilla* ws)
@@ -392,6 +446,13 @@ void MainWindow::runCode()
     //terminalDisplay->clear();
     //terminalDisplay->hide();
     //std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+    //ws->highlightAll();
+    //lexer->highlightAll();
+    //ws->clearLineMarkers();
+    std::string code = ws->text().toStdString();
+    std::cout << code;
+    std::cout <<"testing";
     setGameFocus();
 }
 
