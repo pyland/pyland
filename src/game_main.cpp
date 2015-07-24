@@ -66,7 +66,7 @@ GameMain::GameMain(int argc, char *argv[]):
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
 
-    map_path = ("../maps/final_challenge.tmx");
+    map_path = ("../maps/start_screen.tmx");
 
     switch (argc)
     {
@@ -439,11 +439,8 @@ GameMain::~GameMain(){
 
     LOG(INFO) << "Destructing GameMain..." << endl;
     delete notification_bar;
-    LOG(INFO) << "1" << endl;
     delete challenge_data;
-    LOG(INFO) << "2" << endl;
     delete cursor;
-    LOG(INFO) << "3" << endl;
     LOG(INFO) << "Destructed GameMain..." << endl;
 }
 

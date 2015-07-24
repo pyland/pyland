@@ -211,9 +211,6 @@ GameWindow::GameWindow(int width, int height, int argc, char *argv[], GameMain *
         vc_dispmanx_display_close(dispmanDisplay);
 #endif
         SDL_DestroyWindow (window);
-        if (windows.size() == 0) {
-            deinit_sdl();
-        }
         throw e;
     }
 
@@ -243,13 +240,9 @@ GameWindow::~GameWindow() {
     vc_dispmanx_display_close(dispmanDisplay); // (???)
 #endif
     windows.erase(SDL_GetWindowID(window));
-    curGame->cleanUp();
 
     delete curGame;
 
-    if (windows.size() == 0) {
-        deinit_sdl();
-    }
     callback_controller.disable();
 
     delete input_manager;
@@ -287,7 +280,7 @@ void GameWindow::deinit_sdl() {
     LOG(INFO) << "Deinitializing SDL...";
 
     // Should always work.
-    //SDL_Quit ();
+    SDL_Quit ();
 
     LOG(INFO) << "SDL deinitialized.";
 }

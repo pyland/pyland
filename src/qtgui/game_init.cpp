@@ -55,11 +55,6 @@ GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
     LOG(INFO) << "Created GameInit" << std::endl;
 }
 
-void GameInit::cleanUp(){
-    //delete mainWin;
-    //SDL_DestroyWindow (sdlWin);
-}
-
 GameInit::~GameInit()
 {
     LOG(INFO) << "Deleting GameInit... " << std::endl;
