@@ -9,8 +9,8 @@
 #include "gui_manager.hpp"
 #include "object_manager.hpp"
 #include "map.hpp"
+#include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "sprite.hpp"
 #include "sprite_switcher.hpp"
 
 
@@ -21,7 +21,7 @@ float x_offset = 0.8f;
 
 void SpriteSwitcher::add_sprite(int id) {
     // get sprite_name
-    std::string name = ObjectManager::get_instance().get_object<Sprite>(id)->get_sprite_name();
+    std::string name = ObjectManager::get_instance().get_object<MapObject>(id)->get_name();
 
     // build button
     std::shared_ptr<Button> new_button = std::make_shared<Button>();

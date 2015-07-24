@@ -32,7 +32,6 @@ CXXFLAGS = \
 CPPFLAGS = \
 	-I./                  \
 	-I./catch             \
-	-I./challenges        \
 	-I./input_management  \
 	-I./gui               \
 	-I./qtgui             \

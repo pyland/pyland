@@ -3,7 +3,8 @@
 #include <string>
 #include <boost/python.hpp>
 #include <iostream>
-#include "api.hpp"
+#include "entity.hpp"
+#include "game_engine.hpp"
 
 namespace py = boost::python;
 
@@ -12,10 +13,8 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def_readwrite("id",      &Entity::id)
         .def_readwrite("name",    &Entity::name)
         .def("__set_game_speed",  &Entity::__set_game_speed)
-        .def("cut",               &Entity::cut)
         .def("get_instructions",  &Entity::get_instructions)
         .def("get_retrace_steps", &Entity::get_retrace_steps)
-        .def("look",              &Entity::look)
         .def("monologue",         &Entity::monologue)
         .def("move_east",         &Entity::move_east)
         .def("move_west",         &Entity::move_west)
@@ -25,5 +24,14 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("print_dialogue",    &Entity::py_print_dialogue)
         .def("read_message",      &Entity::read_message)
         .def("update_status",     &Entity::py_update_status)
-        .def("walkable",          &Entity::walkable);
+        .def("walkable",          &Entity::walkable)
+        .def("callback_test",     &Entity::callback_test)
+        .def("get_name",          &Entity::get_name)
+        .def("get_location",      &Entity::get_location)
+        .def("focus",             &Entity::focus);
+        
+    py::class_<GameEngine, boost::noncopyable>("GameEngine", py::no_init)
+        .def("add_object",        &GameEngine::add_object)
+        .def("get_level_location",&GameEngine::get_level_location)
+        .def("print_debug",       &GameEngine::print_debug);
 }

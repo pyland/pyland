@@ -27,9 +27,6 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 dependencies:
 	@-${MKDIR} dependencies
 
-dependencies/challenges: | dependencies
-	@-${MKDIR} dependencies/challenges
-
 dependencies/gui: | dependencies
 	@-${MKDIR} dependencies/gui
 
@@ -52,10 +49,9 @@ dependencies/test: | dependencies
 # DO NOT RE-ORDER - tmx parser must come before tinyxml in ldlibs
 
 $(EXECUTABLE): $(BASE_OBJS)              \
-               $(CHALLENGE_OBJS)         \
                $(EXECUTABLE_OBJ)         \
                $(GUI_OBJS)               \
-	       $(QT_OBJS)                 \
+	           $(QT_OBJS)                \
                $(INPUT_OBJS)             \
                $(PYTHON_OBJS)            \
                tmx-parser/libtmxparser.a \
@@ -64,7 +60,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
 	@echo "${bold}${green}[ Compiling $(EXECUTABLE) ]${normal}"
 
 	@$(COMPILER) -o $@ $(EXECUTABLE_OBJ) \
-		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
+		$(BASE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
                 $(QT_OBJS)                                                     \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
@@ -84,7 +80,7 @@ $(TEST_EXECUTABLE): $(EXECUTABLE) $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS)
 	@echo "${bold}${green}[ Compiling $(TEST_EXECUTABLE) ]${normal}"
 
 	@$(COMPILER) -o $@ $(TEST_EXECUTABLE_OBJ) \
-		$(BASE_OBJS) $(CHALLENGE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(TEST_OBJS) \
+		$(BASE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(TEST_OBJS) \
 		$(QT_OBJS)                                                     \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
@@ -138,25 +134,14 @@ $(QT_OBJS): %.o : %.cpp | dependencies/qtgui
 	@echo "${bold}[ Compiling qtgui file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 #	@$(QMAKING) -o Makefile.qt qtgui/application.pro
 
-	@$(COMPILER)  -c $*.cpp -o $*.o \
+	@$(COMPILER)  -c $*.cpp -o $*.o               \
 		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
 		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
 		$(PYTHON_CPPFLAGS)   $(PYTHON_CXXFLAGS)   \
 		$(CPPFLAGS)          $(CXXFLAGS)          \
-		$(WARNINGS)	     $(QT_INCFLAGS)  \
-		$(QT_CXXFLAGS) $(QT_DEFINES) \
-		$(QT_INCPATH)			\
-		      
-
-
-$(CHALLENGE_OBJS): %.o : %.cpp | dependencies/challenges
-	@echo "${bold}[ Compiling challenge object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
-
-	@$(COMPILER) -c $*.cpp -o $*.o \
-		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
-		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
-		$(PYTHON_CPPFLAGS)   $(PYTHON_CXXFLAGS)   \
-		$(CPPFLAGS)          $(CXXFLAGS)          \
+		$(WARNINGS)	     $(QT_INCFLAGS)           \
+		$(QT_CXXFLAGS) $(QT_DEFINES)              \
+		$(QT_INCPATH)			                  \
 
 $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/python_embed
 	@echo "${bold}[ Compiling Python object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -234,10 +219,9 @@ clean:
 
 	@-$(RM) \
 		$(BASE_OBJS)           \
-		$(CHALLENGE_OBJS)      \
 		$(EXECUTABLE_OBJ)      \
 		$(GUI_OBJS)            \
-		$(QT_OBJS)              \
+		$(QT_OBJS)             \
 		$(INPUT_OBJS)          \
 		$(PYTHON_OBJS)         \
 		$(PYTHON_SHARED_OBJS)  \

@@ -326,9 +326,8 @@ void MainWindow::showMax(){
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-/*
     QKeyEvent *keyEvent = NULL;
-    if (event->type() == QEvent::KeyPress)
+    if (event->type() == 6) //QEvent::KeyPress)
     {
         keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key())
@@ -344,7 +343,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
         return QObject::eventFilter(obj, event);
     }
-*/
     return true;
 }
 

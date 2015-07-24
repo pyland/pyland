@@ -11,7 +11,6 @@
 
 #include "challenge.hpp"
 #include "game_window.hpp"
-#include "gil_safe_future.hpp"
 #include "text_font.hpp"
 #include "typeface.hpp"
 
@@ -109,7 +108,7 @@ public:
     /// @param dy move in x by dy tiles
     ///
     static void move_object(int id, glm::ivec2 move_by);
-    static void move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return);
+    static void move_object(int id, glm::ivec2 move_by, std::function<void ()> func);
 
     ///
     /// Determine if a location can be walked on
@@ -125,7 +124,7 @@ public:
     /// @param search range the radius of the circle to search
     /// @return a vector of (name, x, y) tuples
     ///
-    static std::vector<std::tuple<std::string, int, int>> look(int id, int search_range);
+    //static std::vector<std::tuple<std::string, int, int>> look(int id, int search_range); TODO BLEH TO BE REMOVED AND PYTHONED
 
     ///
     /// Cuts down a vine or cuttable object
@@ -133,7 +132,7 @@ public:
     /// @param location the (x,y_ position to cut
     /// @return if the operation succeeded
     ///
-    static bool cut(int id, glm::ivec2 location);
+    //static bool cut(int id, glm::ivec2 location); TODO BLEH TO BE REMOVED AND PYTHONED
 
     ///
     /// Change the tile in the map in the given layer at the provided position
@@ -165,12 +164,6 @@ public:
     static std::vector<int> get_objects_at(glm::vec2 location);
 
     ///
-    /// Get a list of sprites at this point
-    /// @return a vector of object ids
-    ///
-    static std::vector<int> get_sprites_at(glm::vec2 location);
-
-    ///
     /// Get whether a sprite with a certain id is at this tile
     ///
     static bool is_object_at(glm::ivec2 location, int object_id);
@@ -189,11 +182,6 @@ public:
 
     static NotificationBar* get_notification_bar() { return Engine::notification_bar; }
     static void print_dialogue(std::string name, std::string text);
-
-    /// method for handling sprite test
-    static void text_displayer();
-    static void text_updater();
-    static void update_status(int id, std::string status);
 
     /// global access to game font
     static TextFont get_game_font();

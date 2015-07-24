@@ -19,27 +19,22 @@
 #include "button.hpp"
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
-#include "cutting_challenge.hpp"
+#include "config.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
-#include "final_challenge.hpp"
 #include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
-#include "introduction_challenge.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
 #include "map_viewer.hpp"
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
-#include "new_challenge.hpp"
 #include "notification_bar.hpp"
-#include "sprite.hpp"
-#include "start_screen.hpp"
 
 #ifdef USE_GLES
 #include "typeface.hpp"
@@ -322,11 +317,12 @@ GameMain::GameMain(int argc, char *argv[]):
     [&] (KeyboardInputEvent)
     {
         auto id(Engine::get_map_viewer()->get_map_focus_object());
-        auto active_player(ObjectManager::get_instance().get_object<Sprite>(id));
+        auto active_player(ObjectManager::get_instance().get_object<MapObject>(id));
 
         Engine::print_dialogue(
             active_player->get_name(),
-            active_player->get_instructions()
+            "placeholder string"
+                //active_player->get_instructions() TODO: BLEH remove this!
         );
     }
     ));
@@ -353,7 +349,7 @@ GameMain::GameMain(int argc, char *argv[]):
         glm::vec2 tile_clicked(Engine::get_map_viewer()->pixel_to_tile(glm::ivec2(event.to.x, event.to.y)));
         LOG(INFO) << "interacting with tile " << tile_clicked.x << ", " << tile_clicked.y;
 
-        auto sprites = Engine::get_sprites_at(tile_clicked);
+        auto sprites = Engine::get_objects_at(tile_clicked);
 
         if (sprites.size() == 0)
         {
@@ -384,7 +380,7 @@ GameMain::GameMain(int argc, char *argv[]):
     func_char = [&] (GameWindow *)
     {
         LOG(INFO) << "text embedWindow resizing";
-        Engine::text_updater();
+        //Engine::text_updater(); BLEH TODO: Work out what this does and if neccesary
     };
 
     text_lifeline_char = embedWindow.register_resize_handler(func_char);
@@ -457,7 +453,7 @@ void GameMain::game_loop()
 
         do
         {
-            EventManager::get_instance()->process_events();
+            EventManager::get_instance()->process_events(interpreter.interpreter_context);
         }
         while (
             std::chrono::steady_clock::now() - last_clock
@@ -467,7 +463,7 @@ void GameMain::game_loop()
         VLOG(3) << "} EM | RM {";
         Engine::get_map_viewer()->render();
         VLOG(3) << "} RM | TD {";
-        Engine::text_displayer();
+        //Engine::text_displayer(); TODO: work out what this did and if neccesary
         challenge_data->notification_bar->text_displayer();
 
         // This is not an input event, because the map can move with
@@ -494,40 +490,18 @@ void GameMain::game_loop()
     return;
 }
 
-Challenge* GameMain::pick_challenge(ChallengeData* challenge_data)
-{
+Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
     std::string map_name = "";
-    switch(next_challenge)
-    {
-    case 0:
-        map_name ="../maps/start_screen.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new StartScreen(challenge_data);
-        break;
-    case 1:
-        map_name = "../maps/introduction.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new IntroductionChallenge(challenge_data);
-        break;
-    case 2:
-        map_name = "../maps/cutting_challenge.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new CuttingChallenge(challenge_data);
-        break;
-    case 3:
-        map_name = "../maps/final_challenge.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new FinalChallenge(challenge_data);
-        break;
-    case 4:
-        map_name = "../maps/new_challenge.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new NewChallenge(challenge_data);
-        break;
-    default:
-        break;
+    switch(next_challenge) {
+        case 0:
+            map_name = Config::get_config_info("level_location");
+            challenge_data->map_name = map_name;
+            challenge = new Challenge(challenge_data);
+            break;
+        default:
+            break;
     }
     return challenge;
 }
