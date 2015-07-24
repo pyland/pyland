@@ -24,6 +24,8 @@
 #include <QListWidget>
 #include <QProcess>
 #include <QFuture>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <iostream>
 #include <Qsci/qscilexerpython.h>
 #include <SDL2/SDL.h>
@@ -33,16 +35,22 @@ class QMenu;
 class QsciScintilla;
 class QProcess;
 class QTextEdit;
+class QSplitter;
 class SonicPiLexer;
 class QString;
 class QSlider;
+class GameMain;
+class QsciAPIs;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QApplication &ref);
+    MainWindow(GameMain *exGame);
+    ~MainWindow();
+    SDL_Window* getSDLWindow();
+    void showMax();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -54,11 +62,11 @@ private slots:
     void documentWasModified();
     void zoomFontIn();
     void zoomFontOut();
+    void setGameFocus();
     void timerHandler();
 
 private:
-
-    void initWorkspace(QsciScintilla* ws);
+    void initWorkspace(QsciScintilla* ws, int i);
     void clearOutputPanels();
     void createActions();
     void createToolBar();
@@ -67,18 +75,35 @@ private:
     std::string workspaceFilename(QsciScintilla* text);
     QsciScintilla* filenameToWorkspace(std::string filename);
 
-    QsciScintilla *textEdit;
-    static const int workspace_max = 10;
-    QsciScintilla *workspaces[workspace_max];
-    QTextEdit *outputPane;
-    QTextEdit *errorPane;
-
-    QTabWidget *tabs;
-
     QsciLexerPython *lexer;
 
-    QToolBar *toolBar;
+    QsciScintilla *textEdit;
 
+    static const int workspace_max = 9;
+    QsciScintilla *workspaces[workspace_max];
+    QWidget *zoomWidget[workspace_max];
+    QHBoxLayout *zoomLayout[workspace_max];
+    QPushButton *buttonIn[workspace_max];
+    QPushButton *buttonOut[workspace_max];
+
+
+    QTextEdit *terminalDisplay;
+    QSplitter *splitter;
+    QPushButton *buttonRun;
+    QPushButton *buttonSpeed;
+    QWidget *mainWidget;
+    QTabWidget *textWidget;
+    QTextEdit *textInfo;
+    QWidget *gameWidget;
+    QToolBar *toolBar;
+    QsciAPIs* api;
+    QWidget *buttons;
+    QWidget *terminal;
+    QVBoxLayout *terminalLayout;
+    QHBoxLayout *terminalButtonLayout;
+    QVBoxLayout *windowLayout;
+
+/*
     QAction *runAct;
     QAction *stopAct;
     QAction *saveAct;
@@ -97,10 +122,12 @@ private:
     QMap<QString, QString> *map;
 
     QLabel *imageLabel;
-
+*/
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
     QTimer *eventTimer;
+
+    GameMain *game;
 
 };
 

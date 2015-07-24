@@ -28,11 +28,50 @@
 #include <Qsci/qscilexerpython.h>
 #include <SDL2/SDL.h>
 
+// Qt stuff
+#include <QAction>
+#include <QApplication>
+#include <QCloseEvent>
+#include <QFile>
+#include <QFileInfo>
+#include <QFileDialog>
+#include <QIcon>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QDockWidget>
+#include <QPoint>
+#include <QSettings>
+#include <QSize>
+#include <QStatusBar>
+#include <QTextEdit>
+#include <QToolBar>
+#include <QProcess>
+#include <QFont>
+#include <QTabWidget>
+#include <QString>
+#include <QStringList>
+#include <QTextStream>
+#include <QPixmap>
+#include <QLabel>
+#include <QPushButton>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QRadioButton>
+#include <QCheckBox>
+#include <QScrollArea>
+
+// QScintilla stuff
+#include <Qsci/qsciapis.h>
+#include <Qsci/qsciscintilla.h>
+#include <Qsci/qscilexerpython.h>
+
 class QAction;
 class QMenu;
 class QsciScintilla;
 class QProcess;
 class QTextEdit;
+class QSplitter;
 class SonicPiLexer;
 class QString;
 class QSlider;
@@ -42,7 +81,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QApplication &ref);
+    MainWindow();
+    ~MainWindow();
+
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -54,6 +95,7 @@ private slots:
     void documentWasModified();
     void zoomFontIn();
     void zoomFontOut();
+    void setGameFocus();
     void timerHandler();
 
 private:
@@ -63,17 +105,33 @@ private:
     void createActions();
     void createToolBar();
     void createStatusBar();
-    std::string number_name(int);
-    std::string workspaceFilename(QsciScintilla* text);
-    QsciScintilla* filenameToWorkspace(std::string filename);
+//    std::string number_name(int);
+//    std::string workspaceFilename(QsciScintilla* text);
+//    QsciScintilla* filenameToWorkspace(std::string filename);
+
+    QsciAPIs*  api;
 
     QsciScintilla *textEdit;
-    static const int workspace_max = 8;
+    static const int workspace_max = 9;
     QsciScintilla *workspaces[workspace_max];
-    QTextEdit *outputPane;
-    QTextEdit *errorPane;
+    QTextEdit *terminalDisplay;
+    QSplitter *splitter;
 
-    QTabWidget *tabs;
+    QPushButton *buttonIn;
+    QPushButton *buttonOut;
+    QPushButton *buttonRun;
+    QPushButton *buttonSpeed;
+
+    QTabWidget *textWidget;
+
+    QTextEdit *textInfo;
+
+    QWidget *gameWidget;
+
+    QWidget * dummySideWidget;
+    QWidget * mainWidget;
+    QDockWidget * sideWidget;
+    QVBoxLayout *sideWidgetLayout;
 
     QsciLexerPython *lexer;
 
@@ -87,20 +145,25 @@ private:
 
     QAction *saveAsAct;
     QAction *exitAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
+//    QAction *cutAct;
+//    QAction *copyAct;
+//    QAction *pasteAct;
+    QAction *reloadAct;
 
-    QCheckBox *print_output;
-    QCheckBox *check_args;
-
-    QMap<QString, QString> *map;
-
-    QLabel *imageLabel;
-
+//    QCheckBox *print_output;
+//    QCheckBox *check_args;
+//
+//    QMap<QString, QString> *map;
+//
+//    QLabel *imageLabel;
+//
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
     QTimer *eventTimer;
+
+    QWidget *spacer;
+
+
 
 };
 
