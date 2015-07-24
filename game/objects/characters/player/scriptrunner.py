@@ -4,6 +4,8 @@ import io
 import os
 import contextlib
 import time
+import multiprocessing
+import threading
 
 def start(game_object, script):
     print("testing player run scripts")
@@ -16,7 +18,7 @@ def start(game_object, script):
                 script = script_file.read()
                 print(script)
 
-    scoped_interpreter.runcode(script)
+    threading.Thread(target = lambda: scoped_interpreter.runcode(script)).start()
 
 """ Takes an asynchronous function as an argument and returns a version of it that is blocking.
 Works by using callbacks to work out when the function has finished.
