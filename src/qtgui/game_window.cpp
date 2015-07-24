@@ -180,7 +180,7 @@ GameWindow::GameWindow(int width, int height, int argc, char *argv[], GameMain *
         throw GameWindow::InitException("Failed to create SDL window");
     }
 
-    SDL_ShowCursor(0);
+    SDL_ShowCursor(1);
 
     // Temporary fix (which just seems to work) for a bug where focus
     // events are not generated for the first time focus is changed.
@@ -544,7 +544,6 @@ void GameWindow::update() {
     }
 
     while (SDL_PollEvent(&event)) {
-        std::cout << "GameWindow Scancode " << event.key.keysym.scancode << " " << SDL_GetScancodeName(event.key.keysym.scancode) << "\n";
         GameWindow* window;
         switch (event.type) {
         case SDL_QUIT: // Primarily used for killing when we become blind.

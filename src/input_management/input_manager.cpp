@@ -60,38 +60,22 @@ void InputManager::clean() {
 
 void InputManager::handle_event(SDL_Event* event) {
     int button, buttons, button_find;
-    std::cout << "Handling event \n";
     // Used to change the coordinate system of some events to
     // bottom-left originating.
     int height_inv = window->get_size().second - 1;
     switch (event->type) {
     case SDL_KEYDOWN:
-        std::cout << "Detected keydown \n";
-        std::cout << "Scancode " << (event->key.keysym.scancode) << " ";
-        if (event->key.keysym.scancode == SDL_SCANCODE_LEFT){
-            std::cout << "MOVING MAN TO LEFT \n \n \n \n";
-            //callbackstate.man_move(glm::ivec2( 0, 1));
-        }
-
-        if (event->key.keysym.scancode == 4105532){
-            std::cout << "MOVING MAN TO LEFT \n \n \n \n";
-            //callbackstate.man_move(glm::ivec2( 0, 1));
-        }
-
         if (down_keys.find(event->key.keysym.scancode) == std::end(down_keys)) {
-            std::cout << "If statement" << (event->key.keysym.scancode) << "\n";
             down_keys.insert(event->key.keysym.scancode);
             pressed_keys.insert(event->key.keysym.scancode);
             key_events.push(KeyboardInputEvent(this, event->key.keysym.scancode, true, true, true));
         }
         else {
-            std::cout << "Else statement" << (event->key.keysym.scancode) << "\n";
             key_events.push(KeyboardInputEvent(this, event->key.keysym.scancode, true, false, true));
         }
         typed_keys.insert(event->key.keysym.scancode);
         break;
     case SDL_KEYUP:
-        std::cout << "Detected keyup \n";
         key_events.push(KeyboardInputEvent(this, event->key.keysym.scancode, false, true, false));
         down_keys.erase(event->key.keysym.scancode);
         released_keys.insert(event->key.keysym.scancode);
@@ -136,10 +120,8 @@ void InputManager::run_callbacks() {
     while (!key_events.empty()) {
         KeyboardInputEvent& event = key_events.front();
         VLOG(3) << event;
-        std::cout << "Callbacks Not empty  \n";
         keyboard_callbacks.broadcast(event);
         if (event.down) {
-            std::cout << "If keydown  \n";
             if (event.changed) {
                 key_press_callbacks.broadcast(event);
             }
@@ -149,7 +131,6 @@ void InputManager::run_callbacks() {
             }
         }
         else {
-            std::cout << "Else (not keydown) \n";
             key_release_callbacks.broadcast(event);
         }
         key_events.pop();

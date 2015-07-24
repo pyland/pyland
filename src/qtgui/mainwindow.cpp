@@ -16,6 +16,7 @@
 
 // Standard stuff
 #include <iostream>
+#include <string>
 #include <math.h>
 #include <sstream>
 #include <assert.h>
@@ -30,7 +31,6 @@
 // Qt stuff
 #include <QAction>
 #include <QApplication>
-
 #include <QCloseEvent>
 #include <QFile>
 #include <QFileInfo>
@@ -276,22 +276,164 @@ void MainWindow::showMax(){
     this->showMaximized();
 }
 
+SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent){
+    //Hard coded keyboard bindings for raspberry pi
+    //None numerical/alphabetical keys return native virtual keys greater than 6000 that do not directly map to SDL keys
+ //   if ((keyEvent->nativeVirtualKey()) >= 6000){
+//        switch (keyEvent->nativeScanCode()){
+//            case 9:
+//                escape
+//            case 67:
+//                F1
+//
+//            case 68:
+//                F1
+//            case 76:
+//                F10
+//            case 95:
+//                F11
+//            case 96:
+//                F12
+//            case 107:
+//                Prt Scr
+//            case 78:
+//                Scroll lock
+//            case 127:
+//                Pause break
+//            case 22:
+//                backspace
+//            case 23:
+//                tab
+//            case 36:
+//                enter
+//
+//
+//            case 36:
+//                return SDL_SCANCODE_KP_ENTER;
+//            case 113:
+//                return SDL_SCANCODE_LEFT;
+//
+//            default:
+//                break;
+//        }
+        switch (keyEvent->key()){
+            case Qt::Key_Enter:
+                return SDL_SCANCODE_KP_ENTER;
+            case Qt::Key_Left:
+                return SDL_SCANCODE_LEFT;
+            case Qt::Key_Right:
+                return SDL_SCANCODE_RIGHT;
+            case Qt::Key_Up:
+                return SDL_SCANCODE_UP;
+            case Qt::Key_Down:
+                return SDL_SCANCODE_DOWN;
+            case Qt::Key_Escape:
+                return SDL_SCANCODE_ESCAPE;
+            case Qt::Key_Tab:
+                return SDL_SCANCODE_KP_TAB;
+            case Qt::Key_Backspace:
+                return SDL_SCANCODE_BACKSPACE;
+            case Qt::Key_Insert:
+                return SDL_SCANCODE_INSERT;
+            case Qt::Key_Delete:
+                return SDL_SCANCODE_DELETE;
+            case Qt::Key_Pause:
+                return SDL_SCANCODE_PAUSE;
+            case Qt::Key_Print:
+                return SDL_SCANCODE_PRINTSCREEN;
+            case Qt::Key_SysReq:
+                return SDL_SCANCODE_SYSREQ;
+            case Qt::Key_Clear:
+                return SDL_SCANCODE_CLEAR;
+            case Qt::Key_Home:
+                return SDL_SCANCODE_HOME;
+            case Qt::Key_PageUp:
+                return SDL_SCANCODE_PAGEUP;
+            case Qt::Key_PageDown:
+                return SDL_SCANCODE_PAGEDOWN;
+            case Qt::Key_Shift:
+                return SDL_SCANCODE_LSHIFT;
+            case Qt::Key_Control:
+                return SDL_SCANCODE_LCTRL;
+            case Qt::Key_Alt:
+                return SDL_SCANCODE_LALT;
+            case Qt::Key_AltGr:
+                return SDL_SCANCODE_RALT;
+            case Qt::Key_CapsLock:
+                return SDL_SCANCODE_CAPSLOCK;
+            case Qt::Key_NumLock:
+                return SDL_SCANCODE_NUMLOCKCLEAR;
+            case Qt::Key_ScrollLock:
+                return SDL_SCANCODE_SCROLLLOCK;
+            case Qt::Key_F1:
+                return SDL_SCANCODE_F1;
+            case Qt::Key_F2:
+                return SDL_SCANCODE_F2;
+            case Qt::Key_F3:
+                return SDL_SCANCODE_F3;
+            case Qt::Key_F4:
+                return SDL_SCANCODE_F4;
+            case Qt::Key_F5:
+                return SDL_SCANCODE_F5;
+            case Qt::Key_F6:
+                return SDL_SCANCODE_F6;
+            case Qt::Key_F7:
+                return SDL_SCANCODE_F7;
+            case Qt::Key_F8:
+                return SDL_SCANCODE_F8;
+            case Qt::Key_F9:
+                return SDL_SCANCODE_F9;
+            case Qt::Key_F10:
+                return SDL_SCANCODE_F10;
+            case Qt::Key_F11:
+                return SDL_SCANCODE_F11;
+            case Qt::Key_F12:
+                return SDL_SCANCODE_F12;
+            case Qt::Key_Menu:
+                return SDL_SCANCODE_MENU;
+            default:
+                return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+        }
+
+       // return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey() - 65200);
+   // }
+    //return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+}
+
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     QKeyEvent *keyEvent = NULL;
+    QMouseEvent *mouseEvent = NULL;
     if (event->type() == 6)//QEvent::KeyPress)
     {
+        //curCode = curCode + 1;
         keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key())
         {
             SDL_Event sdlEvent;
             sdlEvent.type = SDL_KEYDOWN;
-            //sdlEvent.type = SDL_WINDOWEVENT_CLOSE;
             sdlEvent.key.state = SDL_PRESSED;
-            sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            std::cout << "Count is: " << (keyEvent->count()) << "\n";
+            std::cout << "Native Scan Code is: " << (keyEvent->nativeScanCode()) << "\n";
+            std::cout << "Native Virtual Code is: " << (keyEvent->nativeVirtualKey()) << "\n";
+            std::cout << "Native Modifiers is: " << (keyEvent->nativeModifiers()) << "\n";
+            std::cout << "Key is: " << keyEvent->key() << "\n";
+            std::cout << "Text is: " << keyEvent->text().toStdString() << "\n";
+
+            std::cout << "Parsed Virtual code is: " << (parseKeyCode(keyEvent)) << "\n";
+            std::cout << "Parsed text is: " << (parseKeyCode(keyEvent)) << "\n";
+
+            if ( (keyEvent->key()==Qt::Key_Enter) || (keyEvent->key()==Qt::Key_Return) ) {
+                std::cout << "Enter has been pressed";
+            }
+            //parseKeyCode(keyEvent);
+
+            //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(parseKeyCode(keyEvent));//SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            //sdlEvent.key.keysym.sym
+            sdlEvent.key.keysym.scancode= parseKeyCode(keyEvent);//SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+
+
             SDL_PushEvent(&sdlEvent);
-            //./game->getGameWindow()->get_input_manager()->handle_event(&sdlEvent);
-            std::cout << "got a Qt keydown event\n";
         }
     }
     else if (event->type() == 7){ //QEvent::KeyRelease
@@ -300,13 +442,42 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         {
             SDL_Event sdlEvent;
             sdlEvent.type = SDL_KEYUP;
-            //sdlEvent.type = SDL_WINDOWEVENT_CLOSE;
             sdlEvent.key.state = SDL_PRESSED;
-            sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(parseKeyCode(keyEvent));//SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            sdlEvent.key.keysym.scancode= parseKeyCode(keyEvent);//SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
             SDL_PushEvent(&sdlEvent);
-            //./game->getGameWindow()->get_input_manager()->handle_event(&sdlEvent);
-            std::cout << "got a Qt keydown event\n";
         }
+    }
+    else if (event->type() == 2){ //QEvent::MouseButtonPress
+        mouseEvent = static_cast<QMouseEvent*>(event);
+            SDL_Event sdlEvent;
+            sdlEvent.type = SDL_MOUSEBUTTONDOWN;
+            sdlEvent.button.state = SDL_PRESSED;
+            //sdlEvent.key.button = mouseEvent->button;
+            sdlEvent.button.button = SDL_BUTTON_LEFT;
+            //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            SDL_PushEvent(&sdlEvent);
+    }
+    else if (event->type() == 3){ //QEvent::MouseButtonRelease
+        mouseEvent = static_cast<QMouseEvent*>(event);
+
+            SDL_Event sdlEvent;
+            sdlEvent.type = SDL_MOUSEBUTTONUP;
+            sdlEvent.button.state = SDL_PRESSED;
+            sdlEvent.button.button = SDL_BUTTON_LEFT;
+            //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            SDL_PushEvent(&sdlEvent);
+    }
+    else if (event->type() == 5){ //QEvent::MouseMove
+        mouseEvent = static_cast<QMouseEvent*>(event);
+            SDL_Event sdlEvent;
+            sdlEvent.type = SDL_MOUSEMOTION;
+            //sdlEvent.button.state = SDL_PRESSED;
+            //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            sdlEvent.motion.x = mouseEvent->x();
+            sdlEvent.motion.y = mouseEvent->y();
+            SDL_PushEvent(&sdlEvent);
     }
     else
     {
@@ -316,52 +487,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return true;
 }
 
-//https://forum.qt.io/topic/2990/how-to-get-keyboard-scan-code/5
-//bool MainWindow::qwseventFilter(QWSEvent *event)
-//{
-//    QKeyEvent *keyEvent = NULL;
-//    if (event->type() == QWSEvent::Key)//QEvent::KeyPress)
-//    {
-//        SDL_Event sdlEvent;
-//        SDL_PushEvent(&sdlEvent);
-////        keyEvent = static_cast<QKeyEvent*>(event);
-////        if (keyEvent->key())
-////        {
-////            SDL_Event sdlEvent;
-////            sdlEvent.type = SDL_KEYDOWN;
-////            sdlEvent.key.state = SDL_PRESSED;
-////            SDL_PushEvent(&sdlEvent);
-////            //./game->getGameWindow()->get_input_manager()->handle_event(&sdlEvent);
-////            std::cout << "got a Qt keydown event\n";
-////        }
-////    }
-////    else
-////    {
-////        return QObject::eventFilter(obj, event);
-//    }
-//
-//    return true;
-//}
-
 void MainWindow::timerHandler()
 {
-//    SDL_Event event;
-//
-//    while (SDL_PollEvent(&event))
-//    {
-//        switch(event.type)
-//        {
-//        case SDL_KEYDOWN:
-//            //SDL_Event sdlEvent;
-//            //sdlEvent.type = SDL_KEYDOWN;
-//           // sdlEvent.key.state = SDL_PRESSED;
-//            SDL_PushEvent(&event);
-//            //std::cout << "MAINWINDOW Scancode " << (event.key.keysym.scancode) << " ";
-//            //game->getGameWindow()->get_input_manager()->handle_event(&event);
-//            std::cout << " got an SDL keydown event\n";
-//            break;
-//        }
-//    }
     game->game_loop();
     //glClear(GL_COLOR_BUFFER_BIT);
     //SDL_GL_SwapWindow(embedWindow);
@@ -426,6 +553,7 @@ void MainWindow::initWorkspace(QsciScintilla* ws)
     //Connect buttons to functions
     connect(buttonIn,SIGNAL(released()),this,SLOT (zoomFontIn()));
     connect(buttonOut,SIGNAL(released()),this,SLOT (zoomFontOut()));
+    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
     //connect(ws->horizontalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
     //connect(ws->verticalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
 
@@ -482,7 +610,7 @@ void MainWindow::clearOutputPanels()
 
 void MainWindow::createActions()
 {
-    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
+
     //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
