@@ -30,6 +30,11 @@ def cast(cast_type, value):
 
     return cast_method()
 
+
+""" Returns a class called ScopedIntepreter, which is actually a child of code.InteractiveInterpreter,
+this class is used to interpret and run python level code, while inserting objects who have inherited from
+their parents.
+"""
 def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
     
     """ imbued_locals is a python dictionary of python objects (variables, methods, class instances etc.)
@@ -91,7 +96,12 @@ def snake_to_camelcase(snake_string):
         result += component.title() #title automatically capitalises the first letter of a string! :D
     return result
 
-""" Imports the correct files and class for each entity, and then wraps them in the correct game object
+""" Imports the correct files and class for each entity, and then wraps them in the correct game object class that has been written in python.
+the base of which is in game/objects/game_object/game_object.py (GameObject)
+
+TODO: add a class check to make sure the objects are of the correct class!, have a degrade gracefully,
+if a child class is poorly defined, throw a warning and then try and create an object as their parent until GameObject is reached,
+if GameObject isn't suitable throw and error and say that somthing is seriously wrong!!!!
 """
 def wrap_entity_in_game_object(entity):
     #Grabs the object's location in the file system (original data comes from the map's tmx file, eg. characters/enemies/crocodile
@@ -151,7 +161,7 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
                 # for proper interrupts.
                 time.sleep(0.05)
 
-            script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: implement this path stuff in a config (ini) file!!!!!
+            script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: implement this path stuff in a config (json) file!!!!!
             engine.print_debug("Reading from file: {}".format(script_filename))
             with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()

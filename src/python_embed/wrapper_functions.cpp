@@ -33,5 +33,6 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
     py::class_<GameEngine, boost::noncopyable>("GameEngine", py::no_init)
         .def("add_object",        &GameEngine::add_object)
         .def("get_level_location",&GameEngine::get_level_location)
-        .def("print_debug",       &GameEngine::print_debug);
+        .def("print_debug",       &GameEngine::print_debug)
+        .def("change_level",      &GameEngine::change_level);
 }

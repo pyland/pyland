@@ -1,5 +1,6 @@
 import operator
 import os
+import scriptrunner
 """
 In Python comments,
 could define some standard which the C++ code can use to determine things about it handles 
@@ -60,6 +61,10 @@ class Player(Character):
     """ private:
     Put the private methods you wish to use here.
     """
+
+    def run_script(self, script):
+        scriptrunner.start(self, script)
+        return
     
     """ This method takes the movement input of the player character and returns the appropriate
     function for moving them in the direction required

@@ -1,12 +1,9 @@
 #import Player from characters/player 
 
 #player_one = Player()
-
-""" Auto generate objects based on level data """
 """ Load in saved states """
 
 #print("Creating the level")
-#move_north()
 #player_one.move_north()
 
 #croc_one.follow_path("north, east, south")
@@ -29,3 +26,5 @@ boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_fo
 print("wohooo")
 
 player_one.focus()
+
+player_one.run_script("demo.py")
