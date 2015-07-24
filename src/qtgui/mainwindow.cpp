@@ -16,6 +16,7 @@
 
 // Standard stuff
 #include <iostream>
+#include <string>
 #include <math.h>
 #include <sstream>
 #include <assert.h>
@@ -25,7 +26,6 @@
 
 // SDL stuff
 #include <SDL2/SDL.h>
-//#include <GL/glu.h>
 
 // Qt stuff
 #include <QAction>
@@ -71,6 +71,7 @@
 #include "mainwindow.h"
 #include "game_main.hpp"
 #include "h_tab_bar.hpp"
+#include "input_manager.hpp"
 
 // Game window stuff
 #define GLM_FORCE_RADIANS
@@ -81,12 +82,10 @@
 #include <chrono>
 #include <functional>
 #include <glm/vec2.hpp>
-#include <iostream>
 #include <memory>
 #include <random>
 #include <ratio>
 #include <string>
-#include <sstream>
 #include <utility>
 #include <vector>
 
@@ -208,6 +207,8 @@ MainWindow::MainWindow(GameMain *exGame)
 
     gameWidget->setAttribute(Qt::WA_NativeWindow);
 
+    gameWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
     windowLayout->addWidget(gameWidget);
     windowLayout->addWidget(splitter);
     windowLayout->setStretchFactor(gameWidget,3);
@@ -247,8 +248,8 @@ MainWindow::MainWindow(GameMain *exGame)
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
 
-    SDL_SetWindowSize(embedWindow, 600, 420);
-    glViewport(0, 0, 600,420);
+    //SDL_SetWindowSize(embedWindow, 600, 420);
+    //glViewport(0, 0, 600,420);
     embedWindow->flags |= SDL_WINDOW_OPENGL;
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
@@ -316,18 +317,106 @@ MainWindow::~MainWindow()
 
 }
 
-SDL_Window* MainWindow::getSDLWindow(){
+SDL_Window* MainWindow::getSDLWindow()
+{
     return embedWindow;
 }
 
-void MainWindow::showMax(){
+void MainWindow::showMax()
+{
     this->showMaximized();
+}
+
+SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
+{
+    //Hard coded keyboard bindings for raspberry pi
+    //None numerical/alphabetical keys return native virtual keys greater than 6000 that do not directly map to SDL keys
+    switch (keyEvent->key())
+    {
+    case Qt::Key_Enter:
+        return SDL_SCANCODE_KP_ENTER;
+    case Qt::Key_Left:
+        return SDL_SCANCODE_LEFT;
+    case Qt::Key_Right:
+        return SDL_SCANCODE_RIGHT;
+    case Qt::Key_Up:
+        return SDL_SCANCODE_UP;
+    case Qt::Key_Down:
+        return SDL_SCANCODE_DOWN;
+    case Qt::Key_Escape:
+        return SDL_SCANCODE_ESCAPE;
+    case Qt::Key_Tab:
+        return SDL_SCANCODE_KP_TAB;
+    case Qt::Key_Backspace:
+        return SDL_SCANCODE_BACKSPACE;
+    case Qt::Key_Insert:
+        return SDL_SCANCODE_INSERT;
+    case Qt::Key_Delete:
+        return SDL_SCANCODE_DELETE;
+    case Qt::Key_Pause:
+        return SDL_SCANCODE_PAUSE;
+    case Qt::Key_Print:
+        return SDL_SCANCODE_PRINTSCREEN;
+    case Qt::Key_SysReq:
+        return SDL_SCANCODE_SYSREQ;
+    case Qt::Key_Clear:
+        return SDL_SCANCODE_CLEAR;
+    case Qt::Key_Home:
+        return SDL_SCANCODE_HOME;
+    case Qt::Key_PageUp:
+        return SDL_SCANCODE_PAGEUP;
+    case Qt::Key_PageDown:
+        return SDL_SCANCODE_PAGEDOWN;
+    case Qt::Key_Shift:
+        return SDL_SCANCODE_LSHIFT;
+    case Qt::Key_Control:
+        return SDL_SCANCODE_LCTRL;
+    case Qt::Key_Alt:
+        return SDL_SCANCODE_LALT;
+    case Qt::Key_AltGr:
+        return SDL_SCANCODE_RALT;
+    case Qt::Key_CapsLock:
+        return SDL_SCANCODE_CAPSLOCK;
+    case Qt::Key_NumLock:
+        return SDL_SCANCODE_NUMLOCKCLEAR;
+    case Qt::Key_ScrollLock:
+        return SDL_SCANCODE_SCROLLLOCK;
+    case Qt::Key_F1:
+        return SDL_SCANCODE_F1;
+    case Qt::Key_F2:
+        return SDL_SCANCODE_F2;
+    case Qt::Key_F3:
+        return SDL_SCANCODE_F3;
+    case Qt::Key_F4:
+        return SDL_SCANCODE_F4;
+    case Qt::Key_F5:
+        return SDL_SCANCODE_F5;
+    case Qt::Key_F6:
+        return SDL_SCANCODE_F6;
+    case Qt::Key_F7:
+        return SDL_SCANCODE_F7;
+    case Qt::Key_F8:
+        return SDL_SCANCODE_F8;
+    case Qt::Key_F9:
+        return SDL_SCANCODE_F9;
+    case Qt::Key_F10:
+        return SDL_SCANCODE_F10;
+    case Qt::Key_F11:
+        return SDL_SCANCODE_F11;
+    case Qt::Key_F12:
+        return SDL_SCANCODE_F12;
+    case Qt::Key_Menu:
+        return SDL_SCANCODE_MENU;
+    default:
+        return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+    }
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     QKeyEvent *keyEvent = NULL;
-    if (event->type() == 6) //QEvent::KeyPress)
+    QMouseEvent *mouseEvent = NULL;
+    if (event->type() == 6)//QEvent::KeyPress)
     {
         keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key())
@@ -335,9 +424,53 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             SDL_Event sdlEvent;
             sdlEvent.type = SDL_KEYDOWN;
             sdlEvent.key.state = SDL_PRESSED;
+            sdlEvent.key.keysym.scancode= parseKeyCode(keyEvent);
             SDL_PushEvent(&sdlEvent);
-            std::cout << "got a Qt keydown event\n";
         }
+    }
+    else if (event->type() == 7)//QEvent::KeyRelease
+    {
+        keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key())
+        {
+            SDL_Event sdlEvent;
+            sdlEvent.type = SDL_KEYUP;
+            sdlEvent.key.state = SDL_PRESSED;
+            sdlEvent.key.keysym.scancode= parseKeyCode(keyEvent);//SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+            SDL_PushEvent(&sdlEvent);
+        }
+    }
+    else if (event->type() == 2)//QEvent::MouseButtonPress
+    {
+        mouseEvent = static_cast<QMouseEvent*>(event);
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_MOUSEBUTTONDOWN;
+        sdlEvent.button.state = SDL_PRESSED;
+        //sdlEvent.key.button = mouseEvent->button;
+        sdlEvent.button.button = SDL_BUTTON_LEFT;
+        //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+        SDL_PushEvent(&sdlEvent);
+    }
+    else if (event->type() == 3)//QEvent::MouseButtonRelease
+    {
+        mouseEvent = static_cast<QMouseEvent*>(event);
+
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_MOUSEBUTTONUP;
+        sdlEvent.button.state = SDL_PRESSED;
+        sdlEvent.button.button = SDL_BUTTON_LEFT;
+        //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+        SDL_PushEvent(&sdlEvent);
+    }
+    else if (event->type() == 5)  //QEvent::MouseMove
+    {
+        mouseEvent = static_cast<QMouseEvent*>(event);
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_MOUSEMOTION;
+        //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+        sdlEvent.motion.x = mouseEvent->x();
+        sdlEvent.motion.y = mouseEvent->y();
+        SDL_PushEvent(&sdlEvent);
     }
     else
     {
@@ -348,19 +481,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::timerHandler()
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch(event.type)
-        {
-        case SDL_KEYDOWN:
-            std::cout << " got an SDL keydown event\n";
-            break;
-        }
-    }
     game->game_loop();
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(embedWindow);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    //SDL_GL_SwapWindow(embedWindow);
 }
 
 void MainWindow::initWorkspace(QsciScintilla* ws, int i)
@@ -442,6 +565,13 @@ void MainWindow::runCode()
     //terminalDisplay->clear();
     //terminalDisplay->hide();
     //std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+    //ws->highlightAll();
+    //lexer->highlightAll();
+    //ws->clearLineMarkers();
+    std::string code = ws->text().toStdString();
+    std::cout << code;
+    std::cout <<"testing";
     setGameFocus();
 }
 
@@ -471,7 +601,7 @@ void MainWindow::clearOutputPanels()
 
 void MainWindow::createActions()
 {
-    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
+
     //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
