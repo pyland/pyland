@@ -1,4 +1,4 @@
-#import Player from characters/player 
+#import Player from characters/player
 
 #player_one = Player()
 
@@ -21,9 +21,9 @@
 boulder_one.focus()
 boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_west(lambda: boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_south())))))
 croc_one.focus()
-croc_one.follow_path("north, east, east, south, west, west", True)
-
+#croc_one.follow_path("north, east, east, south, west, west, west, west, north, south", True)
+croc_one.rand_explore()
 
 #boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(dialogue))))
-boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(game.getDialogue("welcome")))))
-print("wohooo")
+#boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(game.getDialogue("welcome")))))
+#print("wohooo")
