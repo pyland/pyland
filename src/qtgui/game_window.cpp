@@ -143,7 +143,7 @@ static std::pair<int, int> query_overscan(int left, int top) {
 }
 #endif
 
-GameWindow::GameWindow(int width, int height, int argc, char *argv[], GameMain *exGame):
+GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *exGame):
     window_width(width),
     window_height(height),
     window_x(0),

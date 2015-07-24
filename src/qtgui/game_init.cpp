@@ -40,7 +40,7 @@
 #include <QApplication>
 #include "parsingfunctions.hpp"
 
-GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
+GameInit::GameInit(int &argc, char **argv, GameMain *exGame)
 {
     LOG(INFO) << "Creating GameInit..." << std::endl;
     create_apih_from_wrapper();

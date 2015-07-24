@@ -49,7 +49,7 @@ using namespace std;
 static std::mt19937 random_generator;
 
 
-GameMain::GameMain(int argc, char *argv[]):
+GameMain::GameMain(int &argc, char **argv):
     embedWindow(800, 600, argc, argv, this),
     interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
     gui_manager(),
