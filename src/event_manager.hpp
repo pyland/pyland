@@ -85,7 +85,7 @@ public:
     /// Getter for the main global event manager.
     /// @return a reference to the global event manager
     ///
-    static EventManager& get_instance();
+    static EventManager* get_instance();
 
     ///
     /// Add an event to the event manager. If the event loop is running,

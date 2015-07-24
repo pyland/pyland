@@ -32,12 +32,10 @@ extern "C" {
 #include "lifeline_controller.hpp"
 #include "graphics_context.hpp"
 
-
+#include "game_init.hpp"
 
 class InputManager;
-
-
-
+class GameMain;
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
 ///
@@ -56,6 +54,7 @@ private:
         DO_DEINIT
     };
 
+    GameInit* curGame;
     ///
     /// Stores the SDL window.
     ///
@@ -243,6 +242,10 @@ private:
     void deinit_surface();
 
 public:
+    GameInit* getCurGame();
+
+    void executeApp();
+
     ///
     /// Used when SDL or EGL code fails to initialize, reinitialize, or
     /// deinitialize.
@@ -260,7 +263,7 @@ public:
     /// @param height The height of the window. 0 uses current resolution.
     /// @param fullscreen Whether to use fullscreen.
     ///
-    GameWindow(int width, int height, bool fullscreen = false);
+    GameWindow(int width, int height, int argc = 0, char *argv[] = nullptr, GameMain *exGame = nullptr) ;
 
     ///
     /// Shuts down and cleans up both SDL and EGL.
@@ -366,7 +369,5 @@ public:
     ///
     Lifeline register_resize_handler(std::function<void(GameWindow*)> func);
 };
-
-
 
 #endif

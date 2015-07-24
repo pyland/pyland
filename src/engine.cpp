@@ -108,7 +108,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func
     std::string direction(to_direction(move_by));
 
     // Motion
-    EventManager::get_instance().add_timed_event(
+    EventManager::get_instance()->add_timed_event(
         GameTime::duration(0.3),
         [direction, move_by, location, target, id, func] (float completion) mutable {
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
@@ -137,7 +137,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func
                 // Step-on events
                 get_map_viewer()->get_map()->event_step_on.trigger(target, id);
 
-                EventManager::get_instance().add_event(func);
+                EventManager::get_instance()->add_event(func);
             }
 
             // Run to completion

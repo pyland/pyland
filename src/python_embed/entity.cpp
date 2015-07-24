@@ -31,7 +31,7 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
 //A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!! 
 void Entity::callback_test(PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
-    EventManager::get_instance().add_event(boost_callback);
+    EventManager::get_instance()->add_event(boost_callback);
 }
 
 void Entity::move(int x, int y, PyObject *callback) {
@@ -120,7 +120,7 @@ void Entity::py_print_dialogue(std::string text) {
 }
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
-    EventManager::get_instance().time.set_game_seconds_per_real_second(game_seconds_per_real_second);
+    EventManager::get_instance()->time.set_game_seconds_per_real_second(game_seconds_per_real_second);
 }
 
 void Entity::py_update_status(std::string status){
