@@ -5,6 +5,8 @@ sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../game
 from game_object import GameObject
 #from character import Character TODO: it should import from here, but some kind of definitions with the movement functions are screwing around with follow_path, causing the game to freeze.
 
+import random
+
 def hello_world():
     print("hello_world")
 
@@ -14,14 +16,14 @@ The auto-generated comment produced by the script should also mention where to g
 and which built-in variables exist already.
 """
 class Crocodile(GameObject):
-    
+
     """ constructor
     run when the object is created in-engine
     """
     def __init__(self):
         super().__init__()
-        
-            
+
+
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
     This will all be autofilled by the creation script with super filled in to help
@@ -51,7 +53,7 @@ class Crocodile(GameObject):
         comma_location = path.find(",") # Find the first comma in the path
         if(comma_location == -1):  # No commas in the path! On last word!
             comma_location = len(path)
-        
+
         instruction = path[ 0 : comma_location].strip() #get instruction and remove whitespace
         path = path[comma_location + 1: ].strip() #remove the instruction from the path itself
         if(repeat):
@@ -69,10 +71,21 @@ class Crocodile(GameObject):
             pass #TODO: handle invalid path!!!!!
             print(instruction)
             print(path)
-        
+
         return
-        
-        
+
+    """ The Crocodile follows a random path forever!
+    """
+    def rand_explore(self):
+        rand = random.randint(1, 4)
+        if rand==1:
+            return self.move_north(lambda: self.rand_explore())
+        elif rand==2:
+            return self.move_south(lambda: self.rand_explore())
+        elif rand==3:
+            return self.move_east(lambda: self.rand_explore())
+        elif rand==4:
+            return self.move_west(lambda: self.rand_explore())
 
     """ private:
     Put the private methods you wish to use here.
