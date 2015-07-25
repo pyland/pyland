@@ -12,9 +12,16 @@ from scoped_interpreter import ScopedInterpreter
 """ This file contains all the implementation details of how player scripts are interpreted and run.
 """
 
-""" This function runs the script provided in the argument in a seperate thread.
+""" This function runs the script provided in the argument in a seperate thread,
+the script has access to a set of API's defined in imbued_locals that allow
+it to control the player object provided.
+
+the callback is run after the script has finished running.
+player_object -- this is the instance of the player_object which is interacted with using the script.
+script_name -- the name of the script that you wish to run
+callback -- the callback function that will run once the script has completed  (in the same thead that the script was running in)
 """
-def start(game_object, script_name):
+def start(player_object, script_name, callback):
     print("Running Player Script: " + script_name) #TODO: change this to some kind of script debug.
 
     """ imbued_locals is a python dictionary of python objects (variables, methods, class instances etc.)
@@ -26,10 +33,10 @@ def start(game_object, script_name):
     imbued_locals = {}
 
     # Provide all the movement functions to the player, but make them blocking.
-    imbued_locals["move_north"] = make_blocking(game_object.move_north)
-    imbued_locals["move_east"] = make_blocking(game_object.move_east)
-    imbued_locals["move_south"] = make_blocking(game_object.move_south)
-    imbued_locals["move_west"] = make_blocking(game_object.move_west)
+    imbued_locals["move_north"] = make_blocking(player_object.move_north)
+    imbued_locals["move_east"] = make_blocking(player_object.move_east)
+    imbued_locals["move_south"] = make_blocking(player_object.move_south)
+    imbued_locals["move_west"] = make_blocking(player_object.move_west)
 
     
     #Creates 
@@ -42,8 +49,16 @@ def start(game_object, script_name):
                 script = script_file.read()
                 print(script)
 
+    """ this is the method that is run in the seperate thread,
+    it runs the script requested first and then runs the callback.
+    the callback is therefore run in the seperate thread.
+    """
+    def thread_target():
+        scoped_interpreter.runcode(script)
+        callback()
+
     #run the script using the scoped_intepreter in a new thread!
-    threading.Thread(target = lambda: scoped_interpreter.runcode(script)).start()
+    threading.Thread(target = thread_target).start()
     return
 
 """ Takes an asynchronous function as an argument and returns a version of it that is blocking.
@@ -58,7 +73,6 @@ def make_blocking(async_function):
     once this runs the while loop while finish and it will return.
     """
     def callback(blocking):
-        print("callback called")
         blocking[0] = False
     
     """ This is the blocking version of the async_function that is provided as and argument.

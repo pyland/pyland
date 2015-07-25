@@ -46,8 +46,9 @@ class ScopedInterpreter(code.InteractiveInterpreter):
                 except:
                     self.showtraceback() # TODO: work out how this works, comment it in bootstrapper.py as well
                 # Read
-                sys.stdout.seek(0)
-                output = sys.stdout.read()
+                #sys.stdout.seek(0) #TODO: fix why this is was unseekable
+                #output = sys.stdout.read()
+                output = False
     
         finally:
             sys.stdout = old_stdout
