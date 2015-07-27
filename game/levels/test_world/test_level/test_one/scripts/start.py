@@ -1,12 +1,9 @@
 #import Player from characters/player
 
 #player_one = Player()
-
-""" Auto generate objects based on level data """
 """ Load in saved states """
 
 #print("Creating the level")
-#move_north()
 #player_one.move_north()
 
 #croc_one.follow_path("north, east, south")
@@ -18,14 +15,17 @@
 
 #boulder_one.callback_test(lambda: boulder_one.callback_test(lambda: print("hohohoho")))
 
-boulder_one.focus()
+
+player_one.focus()
+player_one.run_script("1")
+
+#boulder_one.focus()
 boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_west(lambda: boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_south())))))
-croc_one.focus()
+#croc_one.focus()
 #croc_one.follow_path("north, east, east, south, west, west, west, west, north, south", True)
 croc_one.rand_explore()
 
+
 #boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(dialogue))))
 boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(game.getDialogue("welcome")))))
-print("wohooo")
-
-player_one.focus()
+#print("wohooo")
