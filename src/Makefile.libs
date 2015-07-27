@@ -14,6 +14,58 @@ GLOG_CXXFLAGS =
 GLOG_LDFLAGS  =
 GLOG_LDLIBS   = $(shell pkg-config libglog --libs)
 
+QT_INCPATH = -I/usr/share/qt4/mkspecs/linux-g++ \
+	      -Iqtgui -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui \
+              -I/usr/include/qt4 -I. -Iqtgui -I. \
+
+QT_LFLAGS        = -Wl,-O1
+QT_LIBS = $(SUBLIBS)  -L/usr/lib/arm-linux-gnueabihf -lqscintilla2 -lSDL2 -lGL -lQtGui -lQtCore -lpthread \
+
+QT_CXXFLAGS = -pipe -O2 -Wall -W -D_REENTRANT
+QT_DEFINES = -DQT_WEBKIT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
+
+QT_INCFLAGS = -I/usr/include/qt4/QtGui    \
+              -I/usr/include/qt4/         \
+              -I/usr/include/qt4/Qt       \
+              -I/usr/include/qt4/QtCore   \
+              -I/usr/include/qt4/QSci     \
+              -I/usr/include/qt4/Qt3Support     \
+              -I/usr/include/qt4/QtBus     \
+              -I/usr/include/qt4/QtDeclarative     \
+              -I/usr/include/qt4/QtDesigner     \
+              -I/usr/include/qt4/QtHelp     \
+              -I/usr/include/qt4/QtNetwork     \
+              -I/usr/include/qt4/QtOpenGL     \
+              -I/usr/include/qt4/QtScript     \
+              -I/usr/include/qt4/QtScriptTools     \
+              -I/usr/include/qt4/QtSql     \
+              -I/usr/include/qt4/QtSvg     \
+              -I/usr/include/qt4/QtTest     \
+              -I/usr/include/qt4/QtUiTools     \
+              -I/usr/include/qt4/QtWebKit     \
+              -isystem /usr/include/qt4/QtXml    \
+              -isystem /usr/include/qt4/QtXmlPatterns     \
+	      -isystem /usr/include/qt4/QtGui    \
+              -isystem /usr/include/qt4/         \
+              -isystem /usr/include/qt4/Qt       \
+              -isystem /usr/include/qt4/QtCore   \
+              -isystem /usr/include/qt4/QSci     \
+              -isystem /usr/include/qt4/Qt3Support     \
+              -isystem /usr/include/qt4/QtBus     \
+              -isystem /usr/include/qt4/QtDeclarative     \
+              -isystem /usr/include/qt4/QtDesigner     \
+              -isystem /usr/include/qt4/QtHelp     \
+              -isystem /usr/include/qt4/QtNetwork     \
+              -isystem /usr/include/qt4/QtOpenGL     \
+              -isystem /usr/include/qt4/QtScript     \
+              -isystem /usr/include/qt4/QtScriptTools     \
+              -isystem /usr/include/qt4/QtSql     \
+              -isystem /usr/include/qt4/QtSvg     \
+              -isystem /usr/include/qt4/QtTest     \
+              -isystem /usr/include/qt4/QtUiTools     \
+              -isystem /usr/include/qt4/QtWebKit     \
+              -isystem /usr/include/qt4/QtXml    \
+              -isystem /usr/include/qt4/QtXmlPatterns     \
 
 
 ifeq "$(PLATFORM)" "desktop"
@@ -26,7 +78,7 @@ ifeq "$(PLATFORM)" "desktop"
 	GRAPHICS_CXXFLAGS = $(GL_CXXFLAGS)
 	GRAPHICS_LDFLAGS  = $(GL_LDFLAGS)
 	GRAPHICS_LDLIBS   = $(GL_LDLIBS)
-	CPPFLAGS += -DUSE_GL
+	CPPFLAGS += -DUSE_GL -g -Wall -Wextra
 
 	WARNINGS += -Werror
 else
@@ -73,8 +125,6 @@ TINYXML_CPPFLAGS = $(shell pkg-config tinyxml --cflags)
 TINYXML_CXXFLAGS =
 TINYXML_LDFLAGS  =
 TINYXML_LDLIBS   = $(shell pkg-config tinyxml --libs)
-
-
 
 TMXPARSER_CPPFLAGS = -I./tmx-parser/TmxParser
 TMXPARSER_CXXFLAGS =
