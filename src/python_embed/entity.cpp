@@ -94,6 +94,38 @@ std::string Entity::get_location() {
     return file_location;
 }
 
+std::string Entity::get_sprite() {
+    //stub TODO: write this
+    return "stub";
+}
+
+void Entity::set_sprite(std::string sprite_location) {
+    //stub TODO: write this
+    LOG(INFO) << sprite_location;
+    return;
+}
+
+void Entity::start_animating() {
+    //stub TODO: write this
+    return;
+}
+
+void Entity::pause_animating() {
+    //stub TODO: write this
+    return;
+}
+
+int Entity::get_number_of_animation_frames() {
+    //stub TODO: write this
+    return 0;
+}
+
+void Entity::set_animation_frame(int frame_number) {
+    //stub TODO: write this
+    LOG(INFO) << frame_number;
+    return;
+}
+
 std::string Entity::get_instructions() {
     //auto id(this->id);
     //return GilSafeFuture<std::string>::execute([id] (GilSafeFuture<std::string> instructions_return) {
