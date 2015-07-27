@@ -44,10 +44,13 @@ class GameObject:
         return self.__entity.get_name()
 
     def set_sprite(self, sprite_location): #all sprites are relative to sprites/sprite_location/0.png , when objects are animated the engine automatically cycles through the numbered sprites in the folder
-        api.set_sprite(self, sprite_location)
-        
+        #api.set_sprite(self, sprite_location)
+        self.__entity.set_sprite(sprite_location)
+        return
+
     def get_sprite(self):
-        return api.get_sprite(self)
+        #return api.get_sprite(self)
+        return self.__entity.get_sprite()
 
     def is_solid(self):
         return api.is_solid(self)
@@ -64,7 +67,8 @@ class GameObject:
         return
 
     def start_animating(self):
-        api.start_animating(self) #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
+        #api.start_animating(self) #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
+        self.__entity.start_animating()
         return
 
     def stop_animating(self):
@@ -73,7 +77,8 @@ class GameObject:
         return
 
     def pause_animating(self):
-        api.pause_animating(self) #api will pause the animation
+        #api.pause_animating(self) #api will pause the animation
+        self.__entity.pause_animating()
         return
 
     """ Centre the camera on the position of this object, if the object moves, then

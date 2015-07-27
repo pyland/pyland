@@ -100,6 +100,42 @@ class Entity {
         std::string get_location();
 
         ///
+        /// @return
+        /// 	The folder location of the sprite that is currently being displayed (relative to the object's sprites folder)
+        ///
+        std::string get_sprite();
+
+        ///
+        /// @param sprite_location
+        /// 	Location of the sprite that you want displayed (relative to the oject's sprites folder, (eg main/north))
+        ///
+        void set_sprite(std::string sprite_location);
+
+        ///
+        /// Make the object start animating, cycles through all the numbered png's in the sprite folder set
+        ///
+        ///
+        void start_animating();
+
+        ///
+        /// Make the object pause on the current frame of animation
+        ///
+        ///
+        void pause_animating();
+
+        ///
+        /// @return
+        /// 	The number of animation frames the object has in their set sprite folder
+        ///
+        int get_number_of_animation_frames();
+
+        ///
+        /// @param frame_number
+        /// 	The frame number you want to display of the object's sprite
+        ///
+        void set_animation_frame(int frame_number);
+
+        ///
         /// Checks if player can move by the vector given.
         ///
         /// @param by
@@ -117,20 +153,6 @@ class Entity {
         /// TODO: rename this method, it's a silly name!
         ///
         void monologue();
-
-        ///
-        /// Cut down any objects around the player
-        ///
-        /// @param x
-        ///     x-displacement to shift right by, in tiles.
-        ///
-        /// @param y
-        ///     y-displacement to shift up by, in tiles.
-        ///
-        /// @return
-        ///     Whether cut was successful.
-        ///
-        bool cut(int x, int y);
 
         ///
         /// Centre the camera on this object. Snaps instantly
