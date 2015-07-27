@@ -47,7 +47,7 @@ def start(player_object, script_name, callback):
     #open and print the script
     with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()
-                print(script)
+                #print(script)
 
     """ this is the method that is run in the seperate thread,
     it runs the script requested first and then runs the callback.
@@ -57,8 +57,13 @@ def start(player_object, script_name, callback):
         scoped_interpreter.runcode(script)
         callback()
 
-    #run the script using the scoped_intepreter in a new thread!
-    threading.Thread(target = thread_target).start()
+    #run the script using the scoped_intepreter in a new thread if we are in the main thread. If it happens to be a callback to a player script, run it in the same thread
+    if(threading.current_thread() == threading.main_thread()):
+        threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
+    elif(threading.current_thread().name == player_object.get_name() + "_script_thread"):
+        thread_target()
+    else:
+        print("Error: Trying to run a script for " + player_object.get_name() + " in the thread: " + threading.current_thread().name + "!")
     return
 
 """ Takes an asynchronous function as an argument and returns a version of it that is blocking.

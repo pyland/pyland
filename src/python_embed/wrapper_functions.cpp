@@ -8,6 +8,12 @@
 
 namespace py = boost::python;
 
+///
+/// This is the shared object file that is generated to create the hooks
+/// from the python code into the C++ objects.
+/// If you want to add new methods to either Enity or GameEngine that you
+/// want accessible to the python code, they have to be defined here.
+///
 BOOST_PYTHON_MODULE(wrapper_functions) {
     py::class_<Entity, boost::noncopyable>("Entity", py::no_init)
         .def_readwrite("id",      &Entity::id)
@@ -28,7 +34,13 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("callback_test",     &Entity::callback_test)
         .def("get_name",          &Entity::get_name)
         .def("get_location",      &Entity::get_location)
-        .def("focus",             &Entity::focus);
+        .def("focus",             &Entity::focus)
+        .def("get_sprite",        &Entity::get_sprite)
+        .def("set_sprite",        &Entity::set_sprite)
+        .def("start_animating",   &Entity::start_animating)
+        .def("pause_animating",   &Entity::pause_animating)
+        .def("get_number_of_animation_frames",&Entity::get_number_of_animation_frames)
+        .def("set_animation_frame",&Entity::set_animation_frame);
         
     py::class_<GameEngine, boost::noncopyable>("GameEngine", py::no_init)
         .def("add_object",        &GameEngine::add_object)

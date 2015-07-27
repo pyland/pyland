@@ -97,7 +97,7 @@ class Character(GameObject):
     """
     def __face(self, direction):
         sprite_location = self.get_sprite()
-        sprite_location = sprite_location[0 : sprite_location.rfind("/")] #slice all the characters after the last "/" from the string
+        sprite_location = sprite_location[0 : sprite_location.rfind("/")] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
         self.set_sprite(sprite_location + direction) #sprites are now looked for in direction folder :)
         return
 
