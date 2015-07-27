@@ -382,9 +382,7 @@ GameMain::GameMain(int &argc, char **argv):
                           input_manager,
                           notification_bar
                           //0
-                          ));
-
-    //Call this when starting a new challenge
+                        ));
     challenge_data->run_challenge = true;
     challenge = pick_challenge(challenge_data);
     Engine::set_challenge(challenge);
@@ -411,7 +409,7 @@ GameMain::~GameMain()
     LOG(INFO) << "Destructed GameMain..." << endl;
 }
 
-void GameMain::game_loop()
+void GameMain::game_loop(bool showMouse)
 {
     if (!challenge_data->game_window->check_close() && challenge_data->run_challenge)
     {
@@ -454,7 +452,11 @@ void GameMain::game_loop()
         }
         tile_identifier_text.display();
 
-        cursor->display();
+        //Only show SDL cursor on rapsberry pi, not required on desktop
+        #ifdef USE_GLES
+            //Display when mouse is over the SDL widget
+            if (showMouse) {cursor->display();};
+        #endif
 
         VLOG(3) << "} TD | SB {";
         challenge_data->game_window->swap_buffers();

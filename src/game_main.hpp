@@ -95,8 +95,7 @@ public:
     GameMain(int &argc, char **argv);
     ~GameMain();
 
-    void game_loop();
-
+    void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
     GameWindow* getGameWindow();
 };
