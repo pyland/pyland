@@ -214,7 +214,7 @@ $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
 # Moc generated files
 qtgui/moc_mainwindow.cpp: qtgui/mainwindow.cpp qtgui/mainwindow.h
 
-	@echo "${bold}[ $(COMPILER): Creating qt file ${red}$ moc_maincwindow.cpp ${normal}${bold} from ${red}$ mainwindow.h ${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): Creating qt file ${red}$ moc_mainwindow.cpp ${normal}${bold} from ${red}$ mainwindow.h ${normal}${bold} ]${normal}"
 	@/usr/bin/moc-qt4 $(QT_DEFINES) $(QT_INCPATH) ./qtgui/mainwindow.h -o ./qtgui/moc_mainwindow.cpp
 
 #

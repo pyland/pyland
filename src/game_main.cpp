@@ -406,9 +406,6 @@ GameMain::GameMain(int argc, char *argv[]):
 
     //Run the challenge - returns after challenge completes
 
-    //Call this when start new challenge
-//    while(!embedWindow.check_close() && run_game)
-//    {
     challenge_data->run_challenge = true;
     challenge = pick_challenge(challenge_data);
     Engine::set_challenge(challenge);
@@ -419,18 +416,14 @@ GameMain::GameMain(int argc, char *argv[]):
     //Run the challenge - returns after challenge completes
     VLOG(3) << "{";
 
-
     VLOG(3) << "}";
 
     embedWindow.executeApp();
 
-    // Call this when end challenge
-    // Clean up after the challenge - additional, non-challenge clean-up
     em->flush_and_disable();
     delete challenge;
     em->reenable();
 
-//    }
     LOG(INFO) << "Constructed GameMain" << endl;
 
 }
@@ -445,7 +438,7 @@ GameMain::~GameMain()
     LOG(INFO) << "Destructed GameMain..." << endl;
 }
 
-void GameMain::game_loop()
+void GameMain::game_loop(bool showMouse)
 {
     if (!challenge_data->game_window->check_close() && challenge_data->run_challenge)
     {
@@ -488,7 +481,11 @@ void GameMain::game_loop()
         }
         tile_identifier_text.display();
 
-        cursor->display();
+        //Only show SDL cursor on rapsberry pi, not required on desktop
+        #ifdef USE_GLES
+            //Display when mouse is over the SDL widget
+            if (showMouse) {cursor->display();};
+        #endif
 
         VLOG(3) << "} TD | SB {";
         challenge_data->game_window->swap_buffers();
