@@ -1,20 +1,16 @@
 import operator
 import os
-
 import sys
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/..')
-from api_placeholder import API
 
-api = API()
-
-""" This is the base game object,
-Any object you wish to have in game MUST by a child of this.
-
-This acts as an abstraction of the C++ entity object and wraps around it.
-In cases where it is appropriate, it calls the entity methods directly, but other times
-makes their behaviour a bit nicer as well.
-"""
 class GameObject:
+    """ This is the base game object.
+    
+    Any object you wish to have in game MUST by a child of this.
+
+    This acts as an abstraction of the C++ entity object and wraps around it.
+    In cases where it is appropriate, it calls the entity methods directly, but other times
+    makes their behaviour a bit nicer as well.
+    """
 
     __name = ""
     __entity = None
@@ -22,11 +18,18 @@ class GameObject:
     def __init__(self):
         pass
     
-    """ Set's the entity in the object. The entity is the instance of the C++ class that represent the entity in the game map
-    this class essentially actus as a wrapper for it :) TODO: comment with references to bootstrapper
-    Then performs all the neccesary initialisation :D
-    """
     def set_entity(self, entity):
+        """ Set's the entity in the object.
+
+        The entity is the instance of the C++ class that represent the entity in the game map
+        this class essentially actus as a wrapper for it :) TODO: comment with references to bootstrapper
+        Then performs all the neccesary initialisation :D
+
+        Parameters
+        ----------
+        entity : Entity
+            The C++ Entity instance that you wish to wrap.
+        """
         self.__entity = entity
         self.set_sprite("")
         self.set_visible(False)
@@ -44,106 +47,123 @@ class GameObject:
         return self.__entity.get_name()
 
     def set_sprite(self, sprite_location): #all sprites are relative to sprites/sprite_location/0.png , when objects are animated the engine automatically cycles through the numbered sprites in the folder
-        #api.set_sprite(self, sprite_location)
         self.__entity.set_sprite(sprite_location)
         return
 
     def get_sprite(self):
-        #return api.get_sprite(self)
         return self.__entity.get_sprite()
 
     def is_solid(self):
-        return api.is_solid(self)
+        return True #TODO: implement this in entity
 
     def set_solid(self, solid):
-        api.set_solid(self, solid)
         return
 
     def is_visible(self):
-        return api.is_visible(self)
+        return True #TODO: implement this in entity
 
     def set_visible(self, visible):
-        api.set_visible(self, visible)
         return
 
     def start_animating(self):
-        #api.start_animating(self) #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
+        #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
         self.__entity.start_animating()
         return
 
     def stop_animating(self):
+        """ Stops animating the object, reseting it back to the first frame. """
         self.pause_animating()
-        api.set_frame(self, 0) #set animation back to first frame
+        self.__entity.set_animation_frame(0) #set animation back to first frame
         return
 
     def pause_animating(self):
-        #api.pause_animating(self) #api will pause the animation
+        """ Pauses the animation of the object, displaying the current frame it's on. """
         self.__entity.pause_animating()
         return
 
-    """ Centre the camera on the position of this object, if the object moves, then
-    the camera follows it as well. This is the case until the focus of the camera
-    gets changed to another object or the level is reloaded/changed, snaps instantly """
     def focus(self):
+        """ Centre the camera on the position of this object. And make the object the focus of input.
+
+        If the object moves, then the camera follows it as well. This is the case until
+        the focus of the camera gets changed to another object or the level is reloaded/changed,
+        snaps instantly
+        """
+        
         self.__entity.focus()
         return
 
-    """ Returns the location of the player,
-    the first coordinate is their x-axis position
-    the second coordinate is their y-axis position
-    the third coordinate is the layer they are in. ??
-    """
     def get_position(self):
-        return api.get_position(self) #ask api to return an instance of self
+        """ Returns the location of the player as a 3-tuple.
 
-    """ Sets the position of the object to be at the
-    coordinates given. This method works without any
-    transition animations.
-    """
+        Returns
+        -------
+        tuple of int
+            The first coordinate is their x-axis position,
+            the second coordinate is their y-axis position,
+            the third coordinate is the layer they are in.
+        """
+        return (0, 0, 0) #TODO: implement stub
+
     def set_position(self, position):
-        api.set_position(self, position)
+        """ Sets the position of the object to be at the coordinates given.
+        
+        This happens instantly without any transition animations.
+
+        Parameters
+        ----------
+        position : tuple of int
+            The position you wish to move the object to.
+        """
+        #TODO: implement stub
         return
     
-    """ Smoothly slides this object north by one tile 
-    The callback is put on the event queue when the operation is complete
-    """
     def move_north(self, callback = lambda: None):
-        #api.move_north(self, callback)
+        """ Smoothly slides this object north by one tile.
+        
+        The callback is put on the event queue when the operation is complete.
+        """
         self.__entity.move_north(callback)
         return
 
-    """ Smoothly slides this object east by one tile 
-    The callback is put on the event queue when the operation is complete
-    """
     def move_east(self, callback = lambda: None):
-        #api.move_east(self, callback)
+        """ Smoothly slides this object east by one tile.
+        
+        The callback is put on the event queue when the operation is complete.
+        """
         self.__entity.move_east(callback)
         return
 
-    """ Smoothly slides this object south by one tile 
-    The callback is put on the event queue when the operation is complete
-    """
     def move_south(self, callback = lambda: None):
-        #api.move_south(self, callback)
+        """ Smoothly slides this object south by one tile.
+    
+        The callback is put on the event queue when the operation is complete.
+        """
         self.__entity.move_south(callback)
         return
 
-    """ Smoothly slides this object west by one tile 
-    The callback is put on the event queue when the operation is complete
-    """
     def move_west(self, callback = lambda: None):
-        #api.move_west(self, callback)
+        """ Smoothly slides this object west by one tile.
+        
+        The callback is put on the event queue when the operation is complete
+        """
         self.__entity.move_west(callback)
         return
 
-    """ Returns if this object is moving """
     def moving(self):
-        return api.moving(self)
+        """ Returns if this object is moving.
+        
+        Returns
+        -------
+        bool
+            True if the object is moving, false otherwise.
+        """
+        return False #TODO: implement stub
     
-    """ Returns destroys the object (removes the instance from the map, and cleans up all information associated with it)
-    callback gets run once the operation is complete
-    """
     def destroy(self, callback):
-        api.destroy(self, callback)
+        """ Destroys the object (removes the instance from the map, and cleans up all information associated with it).
+        callback gets run once the operation is complete.
+        """
+        #TODO: implement stub
+        return
 
 
