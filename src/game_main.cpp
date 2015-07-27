@@ -491,7 +491,7 @@ void GameMain::game_loop()
     }
     else
     {
-        em->flush_and_disable();
+        em->flush_and_disable(interpreter.interpreter_context);
         delete challenge;
         em->reenable();
 
