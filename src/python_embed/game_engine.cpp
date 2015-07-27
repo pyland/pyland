@@ -19,10 +19,15 @@ boost::python::list GameEngine::get_objectsAt(int x, int y) {
     return a python list of all the correctly wrapped game-object instances at the location given.
 }
 
+*/
+
+
 void GameEngine::change_level(std::string level_location) {
+    //TODO: run the finish.py script of a level.
+    LOG(INFO) << "Changing level to " << level_location;
     return;
 }
-*/
+
 
 boost::python::object GameEngine::add_object(std::string name, std::string class_location, int x, int y) {
     LOG(INFO) << "Creating an instance of " << class_location << " at (" << x << ", " << y << ") called " << name;
