@@ -24,18 +24,19 @@ public:
     GameWindow* game_window;
     InputManager *input_manager;
     NotificationBar* notification_bar;
-    
-    int next_challenge;
+
+    //next_challenge - should be a string
     bool run_challenge;
-    
+
     //the constructor
     ChallengeData(std::string map_name,
                   Interpreter *interpreter,
                   GUIManager *gui_manager,
                   GameWindow *game_window,
                   InputManager *input_manager,
-                  NotificationBar *notification_bar,
-                  int next_challenge):
+                  NotificationBar *notification_bar
+                  //int next_challenge
+                  ):
 
     //initialise the fields with the parameters passed to the constructor
         map_name(map_name),
@@ -44,7 +45,7 @@ public:
         game_window(game_window),
         input_manager(input_manager),
         notification_bar(notification_bar),
-        next_challenge(next_challenge),
+        //next_challenge(next_challenge),
         run_challenge(true)
     {}
 };

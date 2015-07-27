@@ -61,22 +61,6 @@ GameMain::GameMain(int &argc, char **argv):
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
 
-    map_path = ("../maps/start_screen.tmx");
-
-    switch (argc)
-    {
-    default:
-        std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;
-        return;
-        // The lack of break statements is not an error!!!
-    case 3:
-        map_path = std::string(argv[2]);
-    case 2:
-        Engine::set_editor(argv[1]);
-    case 1:
-        break;
-    }
-
     /// CREATE GLOBAL OBJECTS
 
     //Create the game embedWindow to present to the users
@@ -196,7 +180,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("ESCAPE")},
     [&] (KeyboardInputEvent)
     {
-        Engine::get_challenge()->event_finish.trigger(0);;
+        Engine::get_challenge()->event_finish.trigger();;
     }
     ));
 
@@ -387,24 +371,20 @@ GameMain::GameMain(int &argc, char **argv):
 
     //Run the map
     run_game = true;
+    cursor = new MouseCursor(&embedWindow);
 
     //Setup challenge
     challenge_data = (new ChallengeData(
-                          map_path,
+                          "",
                           &interpreter,
                           &gui_manager,
                           &embedWindow,
                           input_manager,
-                          notification_bar,
-                          0));
+                          notification_bar
+                          //0
+                          ));
 
-    cursor = new MouseCursor(&embedWindow);
-
-    //Run the challenge - returns after challenge completes
-
-    //Call this when start new challenge
-//    while(!embedWindow.check_close() && run_game)
-//    {
+    //Call this when starting a new challenge
     challenge_data->run_challenge = true;
     challenge = pick_challenge(challenge_data);
     Engine::set_challenge(challenge);
@@ -413,27 +393,17 @@ GameMain::GameMain(int &argc, char **argv):
     last_clock = (std::chrono::steady_clock::now());
 
     //Run the challenge - returns after challenge completes
-    VLOG(3) << "{";
-
-
-    VLOG(3) << "}";
-
     embedWindow.executeApp();
 
-    // Call this when end challenge
-    // Clean up after the challenge - additional, non-challenge clean-up
-    em->flush_and_disable(interpreter.interpreter_context);
-    delete challenge;
-    em->reenable();
-
-//    }
     LOG(INFO) << "Constructed GameMain" << endl;
 
 }
 
 GameMain::~GameMain()
 {
-
+    em->flush_and_disable(interpreter.interpreter_context);
+    delete challenge;
+    em->reenable();
     LOG(INFO) << "Destructing GameMain..." << endl;
     delete notification_bar;
     delete challenge_data;
