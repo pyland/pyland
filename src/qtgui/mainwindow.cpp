@@ -15,11 +15,13 @@
 //++
 
 // Standard stuff
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <math.h>
 #include <sstream>
 #include <assert.h>
+using namespace std;
 
 // Python includes
 #include "interpreter.hpp"
@@ -601,8 +603,28 @@ void MainWindow::runCode()
     //ws->highlightAll();
     //lexer->highlightAll();
     //ws->clearLineMarkers();
-    std::string code = ws->text().toStdString();
-    std::cout << code << std::endl;
+
+    auto id = Engine::get_map_viewer()->get_map_focus_object();
+    auto active_player = ObjectManager::get_instance().get_object<Object>(id);
+    if (!active_player)
+    {
+        return;
+    }
+
+    ofstream fout("python_embed/scripts/"+active_player->get_name()+".py", ios::out|ios::trunc);
+
+    if(!fout.good())
+    {
+        LOG(INFO) << "Output file is bad" << endl;
+        return;
+    }
+
+    fout << ws->text().toStdString();
+
+    fout.close();
+
+    game->getCallbackState().restart();
+
     setGameFocus();
 }
 
@@ -632,6 +654,7 @@ void MainWindow::clearOutputPanels()
 
 void MainWindow::createActions()
 {
+    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
     //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));

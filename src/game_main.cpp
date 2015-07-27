@@ -548,3 +548,7 @@ GameWindow* GameMain::getGameWindow()
     return &embedWindow;
 }
 
+CallbackState GameMain::getCallbackState(){
+    return callbackstate;
+}
+

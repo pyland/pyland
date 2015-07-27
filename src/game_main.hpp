@@ -96,6 +96,7 @@ public:
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
     GameWindow* getGameWindow();
+    CallbackState getCallbackState();
 };
 
 #endif // GAME_MAIN_H
