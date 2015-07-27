@@ -237,13 +237,13 @@ MainWindow::MainWindow(GameMain *exGame)
     this->setCentralWidget(mainWidget);
 
     std::cout << gameWidget->winId() << "\n";
-/*
-    int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-    if (result != 0)
-    {
-        LOG(INFO) << "failed to init SDL\n";
-    }
-*/
+    /*
+        int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+        if (result != 0)
+        {
+            LOG(INFO) << "failed to init SDL\n";
+        }
+    */
     mainWidget->setLayout(windowLayout);
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
@@ -255,12 +255,18 @@ MainWindow::MainWindow(GameMain *exGame)
     glContext = SDL_GL_CreateContext(embedWindow);
     LOG(INFO) << "created context\n";
     gameWidget->installEventFilter(this);
+    gameWidget->setMouseTracking(true);
     gameWidget->setFocusPolicy(Qt::StrongFocus);
     eventTimer = new QTimer(this);
     eventTimer->setSingleShot(false);
     eventTimer->setInterval(0);
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
     eventTimer->start();
+
+    //Keep QT window on top, to match SDL window (only do this on raspberry pi)
+#ifdef USE_GLES
+    setWindowFlags(Qt::WindowStaysOnTopHint);
+#endif
 
     this->showMaximized();
 
@@ -329,7 +335,7 @@ void MainWindow::showMax()
 
 SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
 {
-    //Hard coded keyboard bindings for raspberry pi
+    //Hard coded keyboard bindings from QT to SDL for none numerical/alphabetical keys
     //None numerical/alphabetical keys return native virtual keys greater than 6000 that do not directly map to SDL keys
     switch (keyEvent->key())
     {
@@ -408,14 +414,38 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     case Qt::Key_Menu:
         return SDL_SCANCODE_MENU;
     default:
+        //Remaining keys can be mapped directly
         return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
     }
+}
+
+Uint8 MainWindow::parseButton(QMouseEvent *mouseEvent)
+{
+    //Convert from QT mouse button to SDL mouse button
+    switch (mouseEvent->button())
+    {
+    case Qt::LeftButton:
+        return SDL_BUTTON_LEFT;
+    case Qt::RightButton:
+        return SDL_BUTTON_RIGHT;
+    case Qt::MidButton:
+        return SDL_BUTTON_MIDDLE;
+    case Qt::XButton1:
+        return SDL_BUTTON_X1;
+    case Qt::XButton2:
+        return SDL_BUTTON_X2;
+    default:
+        return SDL_BUTTON_LEFT;
+    }
+
+
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     QKeyEvent *keyEvent = NULL;
     QMouseEvent *mouseEvent = NULL;
+    //Check if QT event is a keyboard or mouse event, and push it to SDL
     if (event->type() == 6)//QEvent::KeyPress)
     {
         keyEvent = static_cast<QKeyEvent*>(event);
@@ -446,20 +476,20 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         SDL_Event sdlEvent;
         sdlEvent.type = SDL_MOUSEBUTTONDOWN;
         sdlEvent.button.state = SDL_PRESSED;
-        //sdlEvent.key.button = mouseEvent->button;
-        sdlEvent.button.button = SDL_BUTTON_LEFT;
-        //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+        sdlEvent.button.x = mouseEvent->x();
+        sdlEvent.button.y = mouseEvent->y();
+        sdlEvent.button.button = parseButton(mouseEvent);
         SDL_PushEvent(&sdlEvent);
     }
     else if (event->type() == 3)//QEvent::MouseButtonRelease
     {
         mouseEvent = static_cast<QMouseEvent*>(event);
-
         SDL_Event sdlEvent;
         sdlEvent.type = SDL_MOUSEBUTTONUP;
         sdlEvent.button.state = SDL_PRESSED;
-        sdlEvent.button.button = SDL_BUTTON_LEFT;
-        //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+        sdlEvent.button.x = mouseEvent->x();
+        sdlEvent.button.y = mouseEvent->y();
+        sdlEvent.button.button = parseButton(mouseEvent);
         SDL_PushEvent(&sdlEvent);
     }
     else if (event->type() == 5)  //QEvent::MouseMove
@@ -467,7 +497,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         mouseEvent = static_cast<QMouseEvent*>(event);
         SDL_Event sdlEvent;
         sdlEvent.type = SDL_MOUSEMOTION;
-        //sdlEvent.key.keysym.scancode = SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());//(SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey()));
+        sdlEvent.button.state = SDL_PRESSED;
         sdlEvent.motion.x = mouseEvent->x();
         sdlEvent.motion.y = mouseEvent->y();
         SDL_PushEvent(&sdlEvent);
@@ -481,7 +511,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::timerHandler()
 {
-    game->game_loop();
+    //Execute the game loop for this frame
+    game->game_loop(gameWidget->underMouse());
     //glClear(GL_COLOR_BUFFER_BIT);
     //SDL_GL_SwapWindow(embedWindow);
 }
@@ -570,8 +601,7 @@ void MainWindow::runCode()
     //lexer->highlightAll();
     //ws->clearLineMarkers();
     std::string code = ws->text().toStdString();
-    std::cout << code;
-    std::cout <<"testing";
+    std::cout << code << std::endl;
     setGameFocus();
 }
 
@@ -601,7 +631,6 @@ void MainWindow::clearOutputPanels()
 
 void MainWindow::createActions()
 {
-
     //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));

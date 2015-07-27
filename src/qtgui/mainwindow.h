@@ -42,6 +42,7 @@ class QSlider;
 class GameMain;
 class QsciAPIs;
 
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -56,6 +57,7 @@ protected:
     void closeEvent(QCloseEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);
     SDL_Scancode parseKeyCode(QKeyEvent *keyEvent);
+    Uint8 parseButton(QMouseEvent *mouseEvent);
 
 private slots:
     void runCode();
@@ -86,7 +88,6 @@ private:
     QHBoxLayout *zoomLayout[workspace_max];
     QPushButton *buttonIn[workspace_max];
     QPushButton *buttonOut[workspace_max];
-
 
     QTextEdit *terminalDisplay;
     QSplitter *splitter;
