@@ -18,7 +18,7 @@ import threading
 
 
 player_one.focus()
-player_one.run_script("1")
+#player_one.run_script("1")
 
 #boulder_one.focus()
 boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_west(lambda: boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_south())))))
@@ -30,3 +30,5 @@ croc_one.rand_explore()
 #boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(dialogue))))
 boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(game.getDialogue("welcome")))))
 #print("wohooo")
+
+engine.register_input_callback(engine.INPUT_RUN, lambda: player_one.run_script("1"))

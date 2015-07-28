@@ -64,6 +64,7 @@ def start(player_object, script_name, callback):
         thread_target()
     else:
         print("Error: Trying to run a script for " + player_object.get_name() + " in the thread: " + threading.current_thread().name + "!")
+        threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
     return
 
 """ Takes an asynchronous function as an argument and returns a version of it that is blocking.

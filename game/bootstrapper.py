@@ -46,7 +46,8 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
     for game_object in game_objects:
         imbued_locals[game_object.get_name()] = game_object
 
-    imbued_locals["game"] = game
+    imbued_locals["game"] = game #TODO: merge game and engine into a single cohesive class!!! (if needed?)
+    imbued_locals["engine"] = engine
 
     class ScopedInterpreter(code.InteractiveInterpreter):
         def __init__(self):
@@ -116,21 +117,6 @@ def wrap_entity_in_game_object(entity):
     game_object = wrapper_class()  # create the object
     game_object.set_entity(entity)  # initialise it and wrap the entity instance in it
     return game_object
-    
-
-class DummyEngine:
-
-    engine = None
-
-    def __init__(self, engine):
-        self.engine = engine
-        return 
-
-    def get_level_location(self):
-        return "test_world/test_level/test_one"
-    def print_debug(self, string):
-        print(string)
-        return
 
 def start(entities, engine, RESTART, STOP, KILL, waiting):
     #engine = DummyEngine(engine)

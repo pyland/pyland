@@ -39,14 +39,13 @@
   </data>
  </layer>
  <objectgroup name="OL1" width="26" height="15">
-  <object gid="286" x="256" y="640"/>
-  <object gid="301" x="256" y="384"/>
-  <object gid="292" x="640" y="640"/>
-  <object gid="292" x="640" y="448"/>
-  <object gid="292" x="1152" y="576"/>
-  <object gid="292" x="1216" y="512"/>
-  <object gid="292" x="1280" y="576"/>
-  <object gid="293" x="1216" y="320"/>
+  <object name="characters/player/player_one" gid="286" x="256" y="640"/>
+  <object name="boulder/boulder_one" gid="292" x="640" y="640"/>
+  <object name="boulder/boulder_two" gid="292" x="640" y="448"/>
+  <object name="boulder/boulder_three" gid="292" x="1152" y="576"/>
+  <object name="boulder/boulder_four" gid="292" x="1216" y="512"/>
+  <object name="boulder/boulder_five" gid="292" x="1280" y="576"/>
+  <object name="portal/portal_one" gid="293" x="1216" y="320"/>
  </objectgroup>
  <layer name="TL2" width="26" height="15">
   <data encoding="base64" compression="zlib">

@@ -67,7 +67,6 @@ class Player(Character):
     The callback is run after the script has finished running. TODO: work out if the callback should know if the script failed or not. 
     """
     def run_script(self, script_name, callback = lambda: None):
-        print("hahaha")
         scriptrunner.start(self, script_name, callback)
         return
     
