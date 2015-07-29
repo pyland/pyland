@@ -16,9 +16,10 @@ std::string Config::get_config_info(std::string key) {
 }
 
 nlohmann::json Config::get_instance() {
-    //JsonnetVm* jvm = jsonnet_make();
-    //int* error = nullptr;
-    //jsonnet_evaluate_file(jvm, "config.jsonnet", error);
+    JsonnetVm* jvm = jsonnet_make();
+    int *error = nullptr;
+    //const char *file_location = "/home/tom/Pyland/personal/pyland/src/config.jsonnet";
+    //jsonnet_evaluate_file(jvm, file_location, error);
     std::ifstream input_file("config.json");
     nlohmann::json j;
     input_file >> j;
