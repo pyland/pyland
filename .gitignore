@@ -25,6 +25,7 @@
 \#*\#
 
 # project specific
+src/jsonnet/jsonnet
 game/.idea
 src/Pyland.*
 src/python_embed/interpreter
