@@ -28,6 +28,8 @@ The auto-generated comment produced by the script should also mention where to g
 and which built-in variables exist already.
 """
 class Player(Character):
+
+    __running_script = False;
     
     """ constructor
     run when the object is created in-engine
@@ -58,17 +60,38 @@ class Player(Character):
     Put the regular public methods you wish to use here.
     """
 
+    def run_script(self, script_name, callback = lambda: None):
+        """ Runs the script whose location is provided as an argument, exposes the PyGuide API to the script to allow it to control this player. :)
+
+        Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
+        The callback is run after the script has finished running.
+
+        TODO: work out if the callback should know if the script failed or not.
+        (Or if callback is even needed)
+
+        Parameters
+        ----------
+        script_name : str
+            The name of the script you wish to running, in the player_scripts folder in the root of the game.
+        callback : function
+            The callback function you wish to run after the script has finished runnning.
+        """
+        if not(self.__running_script): #only run script if one currently isn't running.
+            self.__running_script = True # running script TODO: make this system a lot more robust
+            scriptrunner.start(self, script_name, callback)
+        return
+
+    def set_running_script_status(self, status):
+        """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
+        
+        Simply prevents to scripts with player inputs from running simultaneously.
+        """
+        self.__running_script = status
+        return
+
     """ private:
     Put the private methods you wish to use here.
     """
-
-    """ Runs the script whose location is provided as an argument, exposes the PyGuide API to the script to allow it to control this
-    player. :) Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
-    The callback is run after the script has finished running. TODO: work out if the callback should know if the script failed or not. 
-    """
-    def run_script(self, script_name, callback = lambda: None):
-        scriptrunner.start(self, script_name, callback)
-        return
     
     """ This method takes the movement input of the player character and returns the appropriate
     function for moving them in the direction required

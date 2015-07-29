@@ -25,6 +25,7 @@
 \#*\#
 
 # project specific
+src/Pyland.*
 src/python_embed/interpreter
 *main.bin
 *__pycache__/

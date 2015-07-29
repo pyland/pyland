@@ -6,7 +6,7 @@ import contextlib
 import time
 import threading
 
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../components')
+#sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../components')
 from scoped_interpreter import ScopedInterpreter
 
 """ This file contains all the implementation details of how player scripts are interpreted and run.
@@ -55,6 +55,7 @@ def start(player_object, script_name, callback):
     """
     def thread_target():
         scoped_interpreter.runcode(script)
+        player_object.set_running_script_status(False)
         callback()
 
     #run the script using the scoped_intepreter in a new thread if we are in the main thread. If it happens to be a callback to a player script, run it in the same thread
@@ -62,7 +63,7 @@ def start(player_object, script_name, callback):
         threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
     elif(threading.current_thread().name == player_object.get_name() + "_script_thread"):
         thread_target()
-    else:
+    else: #TODO: as scripts will always be run in thread Dummy-1 by the engine, this really shouldn't print anything here :P
         print("Error: Trying to run a script for " + player_object.get_name() + " in the thread: " + threading.current_thread().name + "!")
         threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
     return

@@ -106,9 +106,10 @@ public:
     /// @param id ID of sprite to move
     /// @param dx move in x by dx tiles
     /// @param dy move in x by dy tiles
+    /// @param func the callback to be called once the movement operation is complete (get's put on the event queue)
     ///
-    static void move_object(int id, glm::ivec2 move_by);
     static void move_object(int id, glm::ivec2 move_by, std::function<void ()> func);
+    static void move_object(int id, glm::ivec2 move_by);
 
     ///
     /// Determine if a location can be walked on
