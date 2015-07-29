@@ -48,7 +48,7 @@ GameInit::GameInit(int argc, char *argv[], GameMain *exGame)
     app->setStyle("gtk");
     app->setAttribute(Qt::AA_NativeWindows, true);
 
-    MainWindow* mainWin = new MainWindow(exGame);
+    mainWin = new MainWindow(exGame);
 
     //Get the SDL window from the widget in the QT interface, so it can be drawn to in game_main
     sdlWin = mainWin->getSDLWindow();
@@ -72,6 +72,11 @@ MainWindow* GameInit::getMainWin(){
 
 SDL_Window* GameInit::getSdlWin(){
     return sdlWin;
+}
+
+//Pass on status of game running to main window, for changing the QT button
+void GameInit::pass_running_to_qt(bool option){
+    mainWin->setRunning(option);
 }
 
 void GameInit::execApp(){

@@ -25,7 +25,6 @@
 #include "sprite.hpp"
 #include "text.hpp"
 
-
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
 NotificationBar *Engine::notification_bar(nullptr);
@@ -386,6 +385,12 @@ void Engine::update_status(int id, std::string status) {
         LOG(INFO) << "not a sprite";
     } else {
         sprite->set_sprite_status(status);
+    }
+
+    //Update run button when script has compltede/halted
+    //Will be reimplemented with new input manager
+    if (status == "finished" || status == "stopped" || status == "failed" || status == "killed"){
+        game_window->update_running(false);
     }
 }
 

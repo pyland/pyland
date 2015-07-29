@@ -30,6 +30,11 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
     # Create all of the functions whilst they are
     # able to capture entity in their scope
 
+    north = 0,+1
+    south = 0,-1
+    east = +1,0
+    west = -1,0
+
     def cut(position):
         """
         Take a relative position (north, south, east or west)
@@ -90,7 +95,6 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
 
         entity.monologue()
 
-    """
     def move(position):
 
 
@@ -98,8 +102,6 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         x = cast("int", x)
         y = cast("int", y)
         return entity.move(x, y)
-
-    """
 
     def move_east():
         return entity.move_east()
@@ -140,10 +142,17 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         entity._print_debug(text)
 
     imbued_locals = {
+
+        "north": north,
+        "south": south,
+        "east": east,
+        "west": west,
+
         "cut": cut,
         "help": help,
         "get_retrace_steps": get_retrace_steps,
         "look": look,
+        "move": move,
         "move_east": move_east,
         "move_north": move_north,
         "move_west": move_west,
@@ -216,7 +225,9 @@ def start(entity, RESTART, STOP, KILL, waiting):
                 # for proper interrupts.
                 time.sleep(0.05)
 
-            script_filename = "python_embed/scripts/{}.py".format(entity.name);
+            #Read from current script before new input manager is implemented
+            #to read the correct script
+            script_filename = "python_embed/scripts/Current Script.py";
             entity.print_debug("Reading from file: {}".format(script_filename))
 
             with open(script_filename, encoding="utf8") as script_file:

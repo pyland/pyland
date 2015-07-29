@@ -180,6 +180,7 @@ GameMain::GameMain(int argc, char *argv[]):
     [&] (KeyboardInputEvent)
     {
         callbackstate.restart();
+        //embedWindow->
     }
     ));
 
@@ -418,7 +419,7 @@ GameMain::GameMain(int argc, char *argv[]):
 
     VLOG(3) << "}";
 
-    embedWindow.executeApp();
+    embedWindow.execute_app();
 
     em->flush_and_disable();
     delete challenge;
@@ -550,5 +551,9 @@ GameWindow* GameMain::getGameWindow()
 
 CallbackState GameMain::getCallbackState(){
     return callbackstate;
+}
+
+std::chrono::steady_clock::time_point GameMain::get_start_time(){
+    return start_time;
 }
 

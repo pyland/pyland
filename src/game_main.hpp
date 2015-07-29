@@ -97,6 +97,7 @@ public:
     Challenge* pick_challenge(ChallengeData* challenge_data);
     GameWindow* getGameWindow();
     CallbackState getCallbackState();
+    std::chrono::steady_clock::time_point get_start_time();
 };
 
 #endif // GAME_MAIN_H

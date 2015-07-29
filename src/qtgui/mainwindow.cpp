@@ -21,6 +21,7 @@
 #include <math.h>
 #include <sstream>
 #include <assert.h>
+
 using namespace std;
 
 // Python includes
@@ -74,6 +75,7 @@ using namespace std;
 #include "game_main.hpp"
 #include "h_tab_bar.hpp"
 #include "input_manager.hpp"
+#include "event_manager.hpp"
 
 // Game window stuff
 #define GLM_FORCE_RADIANS
@@ -164,6 +166,9 @@ MainWindow::MainWindow(GameMain *exGame)
 
     buttonRun->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     buttonSpeed->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+    setRunning(false);
+    setFast(false);
 
     terminalButtonLayout->addWidget(buttonRun);
     terminalButtonLayout->addWidget(buttonSpeed);
@@ -545,12 +550,52 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     ws->setLexer(lexer);
     ws->zoomIn(13);
     ws->setAutoCompletionThreshold(3);
-    ws->setAutoCompletionSource(QsciScintilla::AcsAll);
+    //ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
     ws->setSelectionBackgroundColor("DeepPink");
     ws->setSelectionForegroundColor("white");
     ws->setCaretWidth(5);
     ws->setMarginWidth(1,5);
     ws->setCaretForegroundColor("deep pink");
+
+    //Read 9 python scripts and display in scintilla widget
+
+    std::string path = "python_embed/scripts/Script " + std::to_string(i+1) + ".py";
+
+    LOG(INFO) << "Reading in python scripts..." << endl;
+
+    ifstream fin(path, ios::in);
+
+    std::string script = "";
+
+    while(fin)
+    {
+        if(fin.bad())
+        {
+            LOG(INFO) << "Error reading in python script: " << path << endl;
+            return;
+        }
+        else if(fin.eof())
+        {
+            break;
+        }
+
+        std::string curString;
+
+        std::getline(fin,curString);
+
+        script = script + curString;
+
+        if (!fin.eof())
+        {
+            script = script + "\n";
+        }
+    }
+
+    QString qScript = QString(script.c_str());
+
+    ws->setText(qScript);
+
+    fin.close();
 
     //Create zoom buttons for text widget
     zoomLayout[i] = new QHBoxLayout;
@@ -589,6 +634,40 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+//This gets called when clicking on the Run/Halt button
+//and from engine.cpp update_status, when the script terminates
+void MainWindow::setRunning(bool option)
+{
+    running = option;
+
+    if (running)
+    {
+        buttonRun->setText("Halt");
+    }
+    else
+    {
+        buttonRun->setText("Run");
+    }
+
+    updateSpeed();
+
+}
+
+void MainWindow::setFast(bool option)
+{
+    fast = option;
+
+    if (fast)
+    {
+        buttonSpeed->setText("Speed: Fast");
+    }
+    else
+    {
+        buttonSpeed->setText("Speed: Slow");
+    }
+
+}
+
 bool MainWindow::saveAs()
 {
     return false;
@@ -596,36 +675,90 @@ bool MainWindow::saveAs()
 
 void MainWindow::runCode()
 {
-    //terminalDisplay->clear();
-    //terminalDisplay->hide();
-    //std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
-    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
-    //ws->highlightAll();
-    //lexer->highlightAll();
-    //ws->clearLineMarkers();
 
-    auto id = Engine::get_map_viewer()->get_map_focus_object();
-    auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-    if (!active_player)
+    if (running)
     {
-        return;
+        setRunning(false);
+        updateSpeed();
+        game->getCallbackState().stop();
     }
+    else{
+        //terminalDisplay->clear();
+        //terminalDisplay->hide();
+        //ws->highlightAll();
+        //lexer->highlightAll();
+        //ws->clearLineMarkers();
 
-    ofstream fout("python_embed/scripts/"+active_player->get_name()+".py", ios::out|ios::trunc);
+        QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
-    if(!fout.good())
-    {
-        LOG(INFO) << "Output file is bad" << endl;
-        return;
+
+//    auto id = Engine::get_map_viewer()->get_map_focus_object();
+//    auto active_player = ObjectManager::get_instance().get_object<Object>(id);
+//    if (!active_player)
+//    {
+//        return;
+//    }
+
+        int index = (textWidget->currentIndex())+ 1;
+
+        std::string path = "python_embed/scripts/Script " + std::to_string(index) + ".py";
+
+        //Save script as 'Script 1'/'Script 2' etc
+        //Also save as 'Current Script.py' as temporary measure before new input manager
+        //This python script is always run in bootstrapper.py (in start)
+        ofstream fout(path.c_str(), ios::out|ios::trunc);
+        ofstream foutcopy("python_embed/scripts/Current Script.py", ios::out|ios::trunc);
+
+        if(!(fout.good() && foutcopy.good()))
+        {
+            LOG(INFO) << "Output file is bad" << endl;
+            return;
+        }
+
+        fout << ws->text().toStdString();
+        foutcopy << ws->text().toStdString();
+
+        fout.close();
+        foutcopy.close();
+
+        setRunning(true);
+        updateSpeed();
+        game->getCallbackState().restart();
     }
-
-    fout << ws->text().toStdString();
-
-    fout.close();
-
-    game->getCallbackState().restart();
-
     setGameFocus();
+}
+
+void MainWindow::toggleSpeed(){
+    setFast(!fast);
+    updateSpeed();
+    setGameFocus();
+}
+
+//If a script is being run and the speed is set to fast, update the game speed
+//Otherwise keep the game at normal speed
+void MainWindow::updateSpeed(){
+    if (fast && running){
+        auto now(std::chrono::steady_clock::now());
+        auto time_passed = now - game->get_start_time();
+
+        float completion(time_passed / std::chrono::duration<float>(6.0f));
+        completion = std::min(completion, 1.0f);
+
+        // Using an easing function from the internetz:
+        //
+        //     start + (c⁵ - 5·c⁴ + 5·c³) change
+        //
+        float eased(1.0f + 511.0f * (
+                        + 1.0f * completion * completion * completion * completion * completion
+                        - 5.0f * completion * completion * completion * completion
+                        + 5.0f * completion * completion * completion
+                    ));
+
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(eased);
+    }
+    else{
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(1.0);
+    }
 }
 
 void MainWindow::zoomFontIn()
@@ -655,12 +788,13 @@ void MainWindow::clearOutputPanels()
 void MainWindow::createActions()
 {
     connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-    //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
+    connect(buttonSpeed,SIGNAL(released()),this,SLOT (toggleSpeed()));
     //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
     //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
     //connect(textInfo,SIGNAL(selectionChanged()),this,SLOT (setGameFocus()));
 }
 
+//Give the game widget focus so keyboard events are handled
 void MainWindow::setGameFocus()
 {
     gameWidget->setFocus();

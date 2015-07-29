@@ -52,7 +52,9 @@ public:
     ~MainWindow();
     SDL_Window* getSDLWindow();
     void showMax();
-
+    void setRunning(bool option);
+    void setFast(bool option);
+    void updateSpeed();
 protected:
     void closeEvent(QCloseEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);
@@ -61,6 +63,7 @@ protected:
 
 private slots:
     void runCode();
+    void toggleSpeed();
     bool saveAs();
     void documentWasModified();
     void zoomFontIn();
@@ -92,7 +95,9 @@ private:
     QTextEdit *terminalDisplay;
     QSplitter *splitter;
     QPushButton *buttonRun;
+    bool running;
     QPushButton *buttonSpeed;
+    bool fast;
     QWidget *mainWidget;
     QTabWidget *textWidget;
     QTextEdit *textInfo;
