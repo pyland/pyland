@@ -3,6 +3,7 @@
 
 #include <string>
 #include <glog/logging.h>
+
 #include "json-parser/json.hpp"
 
 class Config : public nlohmann::json {

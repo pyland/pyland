@@ -1,5 +1,10 @@
-#include "config.hpp"
 #include <fstream>
+
+#include "config.hpp"
+
+extern "C" {
+    #include "jsonnet/libjsonnet.h"
+}
 
 std::string Config::get_config_info(std::string key) {
     std::ifstream input_file("config.json");
@@ -11,6 +16,9 @@ std::string Config::get_config_info(std::string key) {
 }
 
 nlohmann::json Config::get_instance() {
+    //JsonnetVm* jvm = jsonnet_make();
+    //int* error = nullptr;
+    //jsonnet_evaluate_file(jvm, "config.jsonnet", error);
     std::ifstream input_file("config.json");
     nlohmann::json j;
     input_file >> j;

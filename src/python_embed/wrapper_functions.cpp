@@ -48,7 +48,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("print_debug",       &GameEngine::print_debug)
         .def("change_level",      &GameEngine::change_level)
         .def("register_input_callback", &GameEngine::register_input_callback)
-        .add_static_property("INPUT_UP", &GameEngine::INPUT_UP)
+        .add_static_property("INPUT_UP", &GameEngine::INPUT_UP) //Add constants for different inputs.
         .add_static_property("INPUT_RIGHT", &GameEngine::INPUT_RIGHT)
         .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)
         .add_static_property("INPUT_LEFT", &GameEngine::INPUT_LEFT)

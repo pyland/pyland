@@ -80,7 +80,7 @@ ifeq "$(PLATFORM)" "desktop"
 	GRAPHICS_LDLIBS   = $(GL_LDLIBS)
 	CPPFLAGS += -DUSE_GL -g -Wall -Wextra
 
-	WARNINGS += -Werror
+#	WARNINGS += -Werror
 else
 	X11_CPPFLAGS = $(shell pkg-config x11 --cflags)
 	X11_CXXFLAGS =
@@ -131,7 +131,8 @@ TMXPARSER_CXXFLAGS =
 TMXPARSER_LDFLAGS  = -L./tmx-parser
 TMXPARSER_LDLIBS   = -ltmxparser
 
-
+JSONNET_LDFLAGS    = -L./jsonnet
+JSONNET_LDLIBS     = -ljsonnet
 
 ZLIB_CPPFLAGS = $(shell pkg-config zlib --cflags)
 ZLIB_CXXFLAGS =
