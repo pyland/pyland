@@ -39,7 +39,7 @@ nlohmann::json Config::get_instance() {
     jsonnet_destroy(vm);
     output = jsonnet_to_json("config.jsonnet");
     */
-    std::string output = exec("/home/tom/Pyland/jsonnet/jsonnet/jsonnet /home/tom/Pyland/personal/pyland/src/config.jsonnet");
+    std::string output = exec("jsonnet/jsonnet /home/tom/Pyland/personal/pyland/src/config.jsonnet");
     nlohmann::json j = nlohmann::json::parse(output);
     return j;
 }
