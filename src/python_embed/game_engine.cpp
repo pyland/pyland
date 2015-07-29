@@ -1,6 +1,7 @@
 #include <glog/logging.h>
 
 #include "game_engine.hpp"
+#include "button.hpp"
 
 GameEngine::GameEngine() {
 
@@ -45,4 +46,11 @@ std::string GameEngine::get_level_location() {
 
 void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
+}
+
+void GameEngine::add_button(std::string file_path, int button_type, PyObject* callback) {
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    boost_callback;
+
 }

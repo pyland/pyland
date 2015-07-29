@@ -47,12 +47,6 @@ private:
     Typeface buttontype;
     TextFont buttonfont;
 
-    //Buttons on the screen
-    std::shared_ptr<Text> stoptext;
-    std::shared_ptr<Text> runtext;
-    std::shared_ptr<Button> run_button;
-    std::shared_ptr<Button> stop_button;
-
     //Actions that can be performed on the game window
     std::function<void(GameWindow*)> gui_resize_func;
     Lifeline gui_resize_lifeline;

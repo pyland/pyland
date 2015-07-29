@@ -15,7 +15,7 @@ class GameEngine {
 
         ///
         /// Add an object to the game map at the given position.
-        /// The name is used to give the object a name and the class_location string is 
+        /// The name is used to give the object a name and the class_location string is
         /// used to find the correct Python class to wrap the object.
         ///
         boost::python::object add_object(std::string name, std::string class_location, int x, int y);
@@ -44,6 +44,12 @@ class GameEngine {
         /// the log. It needs to be reviewed if this is the best way of doing things.
         ///
         void print_debug(std::string debug_message);
+
+
+        ///
+        /// To add a button to the challenge
+        ///
+        void add_button(std::string file_path, int button_type, PyObject* callback);
 };
 
 #endif
