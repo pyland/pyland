@@ -32,3 +32,10 @@ boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_fo
 #print("wohooo")
 
 engine.register_input_callback(engine.INPUT_RUN, lambda: player_one.run_script("1"))
+
+engine.register_input_callback(engine.INPUT_UP, player_one.move_north)
+engine.register_input_callback(engine.INPUT_RIGHT, player_one.move_east)
+engine.register_input_callback(engine.INPUT_DOWN, player_one.move_south)
+engine.register_input_callback(engine.INPUT_LEFT, player_one.move_west)
+
+

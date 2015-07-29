@@ -25,6 +25,7 @@
 \#*\#
 
 # project specific
+game/.idea
 src/Pyland.*
 src/python_embed/interpreter
 *main.bin

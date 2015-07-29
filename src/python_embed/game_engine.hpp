@@ -14,6 +14,11 @@
 class GameEngine {
     public:
 
+        static int INPUT_UP() { return InputHandler::INPUT_UP; }
+        static int INPUT_RIGHT() { return InputHandler::INPUT_RIGHT; }
+        static int INPUT_DOWN() { return InputHandler::INPUT_DOWN; }
+        static int INPUT_LEFT() { return InputHandler::INPUT_LEFT; }
+        
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 

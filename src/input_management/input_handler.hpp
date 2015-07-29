@@ -30,9 +30,9 @@ public:
     static const int INPUT_LEFT = 4;
 
     static const int INPUT_RUN = 111;
-    static const int INPUT_CHANGE_SPEED = 6;
+    static const int INPUT_TOGGLE_SPEED = 777;
 
-    static int constexpr INPUT_KEYBOARD(char raw_key);
+    static int constexpr INPUT_KEYBOARD(char raw_key); //TODO: Work out if this is needed.
     
     ///
     /// Puts all of the functions registered against an input on the event queue.

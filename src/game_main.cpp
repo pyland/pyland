@@ -175,8 +175,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("R")},
     [&] (KeyboardInputEvent)
     {
-        //callbackstate.restart();
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN);
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -247,7 +246,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.man_move(glm::ivec2( 0, 1));
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_UP); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -255,7 +254,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Down", "S"})},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.man_move(glm::ivec2( 0, -1));
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_DOWN); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -263,7 +262,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Right", "D"})},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.man_move(glm::ivec2( 1,  0));
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RIGHT); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -271,7 +270,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Left", "A"})},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.man_move(glm::ivec2(-1,  0));
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_LEFT); //Run this list of events registered against run in the input handler
     }
     ));
 
