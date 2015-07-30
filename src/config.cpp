@@ -44,7 +44,7 @@ nlohmann::json Config::get_instance() {
     output = jsonnet_to_json("config.jsonnet");
     */
     if(!created) {
-        std::string output = exec("jsonnet/jsonnet /home/tom/Pyland/personal/pyland/src/config.jsonnet");
+        std::string output = exec("jsonnet/jsonnet config.jsonnet");
         Config::j = nlohmann::json::parse(output);
         Config::created = true;
     }
