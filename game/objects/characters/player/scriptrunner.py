@@ -38,12 +38,12 @@ def start(player_object, script_name, callback):
     imbued_locals["move_south"] = make_blocking(player_object.move_south)
     imbued_locals["move_west"] = make_blocking(player_object.move_west)
 
-    
-    #Creates 
+
+    #Creates
     #ScopedInterpreter = create_execution_scope(game_object) #Get the class definition for the ScopedIntepreter
     scoped_interpreter = ScopedInterpreter(imbued_locals, print) #create an instance of it
     script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/" + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
-    
+
     #open and print the script
     with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()
@@ -59,13 +59,14 @@ def start(player_object, script_name, callback):
         callback()
 
     #run the script using the scoped_intepreter in a new thread if we are in the main thread. If it happens to be a callback to a player script, run it in the same thread
-    if(threading.current_thread() == threading.main_thread()):
-        threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
-    elif(threading.current_thread().name == player_object.get_name() + "_script_thread"):
-        thread_target()
-    else: #TODO: as scripts will always be run in thread Dummy-1 by the engine, this really shouldn't print anything here :P
-        print("Error: Trying to run a script for " + player_object.get_name() + " in the thread: " + threading.current_thread().name + "!")
-        threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
+    #if(threading.current_thread() == threading.main_thread()):
+    #	threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
+    #elif(threading.current_thread().name == player_object.get_name() + "_script_thread"):
+    #	thread_target()
+    #else: #TODO: as scripts will always be run in thread Dummy-1 by the engine, this really shouldn't print anything here :P
+    #	print("Error: Trying to run a script for " + player_object.get_name() + " in the thread: " + threading.current_thread().name + "!")
+    #TODO: Rewrite this to make it clearer what needs to happen and implemente safeguards
+    threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
     return
 
 """ Takes an asynchronous function as an argument and returns a version of it that is blocking.
@@ -81,7 +82,7 @@ def make_blocking(async_function):
     """
     def callback(blocking):
         blocking[0] = False
-    
+
     """ This is the blocking version of the async_function that is provided as and argument.
     simples.
     """
@@ -91,6 +92,6 @@ def make_blocking(async_function):
         while blocking[0]: # run a while loop (block) until the first element of the list that was passed to the callback is false.
             pass #TODO: Find out if there is anything that needs to be done so that this doesn't use CPU time.
         return
-    
+
     return blocking_function
-    
+
