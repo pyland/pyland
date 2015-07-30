@@ -34,7 +34,6 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
     Engine::get_map_viewer()->set_map_focus_object(player);
 
     treasure = ChallengeHelper::make_object(this, "treasure/at", Walkability::BLOCKED, "closed");
-    pathblocker_top = ChallengeHelper::make_object(this, "pathblocker/top", Walkability::BLOCKED, "2");
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/1", Walkability::BLOCKED, "2"));
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/2", Walkability::BLOCKED, "2"));
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/3", Walkability::BLOCKED, "2"));
@@ -56,16 +55,6 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
                 "You need to find the code in the editor that does this and remove the \"#\"s "
                 "infront of it. Then press \"r\" to run it and \"h\" to make it stop."
             );
-
-            editor_lifeline = this->challenge_data->input_manager->register_keyboard_handler(filter(
-                {KEY_PRESS, KEY("R")},
-                [this] (KeyboardInputEvent) {
-                    auto pathblocker(ObjectManager::get_instance().get_object<MapObject>(pathblocker_top));
-
-                    pathblocker->set_tile(TextureAtlas::from_name("test/blank"));
-                    pathblocker->set_walkability(Walkability::WALKABLE);
-                }
-            ));
         }
     ));
 
