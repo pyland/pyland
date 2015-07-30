@@ -2,6 +2,8 @@
 
 #include "game_engine.hpp"
 #include "button.hpp"
+#include "text_font.hpp"
+#include "engine.hpp"
 
 GameEngine::GameEngine() {
 
@@ -49,10 +51,17 @@ void GameEngine::print_debug(std::string debug_message) {
 }
 
 
-void GameEngine::add_button(std::string file_path, int button_type, PyObject* callback) {
+void GameEngine::add_button(std::string file_path, std::string name, int button_type, PyObject* callback) {
 
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
-    boost_callback;
+
+    game_main->buttons.push_back(Button(button_type));
+    Button * new_button = & game_main->buttons.back();
+    new_button->set_picture(file_path);
+    new_button->set_text(name);
+    new_button->set_on_click(boost_callback);
+    game_main->get_sprite_window()->add(*new_button);
+    game_main->refresh_gui();
 }
 
 void GameEngine::register_input_callback(int input_key, PyObject *py_input_callback) {

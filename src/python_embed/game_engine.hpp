@@ -7,11 +7,15 @@
 
 #include "input_handler.hpp"
 
+class GameMain;
 ///
 /// This class is used as the python interface for general game-engine functionality.
 /// The base game.py has the code which wraps around it and provides some additiondal functionality as well.
 ///
 class GameEngine {
+
+    private GameMain * game_main;
+
     public:
 
         static int INPUT_UP() { return InputHandler::INPUT_UP; }
@@ -22,7 +26,9 @@ class GameEngine {
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
-        GameEngine();
+        GameEngine(GameMain * _game_main){
+            game_main = _game_main;
+        }
 
         ///
         /// Add an object to the game map at the given position.
@@ -59,7 +65,7 @@ class GameEngine {
         ///
         /// To add a button to the challenge
         ///
-        void add_button(std::string file_path, int button_type, PyObject* callback);
+        void add_button(std::string file_path, std::string name, int button_type, PyObject* callback);
 
         void register_input_callback(int input_key, PyObject *input_callback);
 

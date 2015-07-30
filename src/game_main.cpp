@@ -364,10 +364,11 @@ GameMain::GameMain(int &argc, char **argv):
 
 GameMain::~GameMain()
 {
+    LOG(INFO) << "Destructing GameMain..." << endl;
     em->flush_and_disable(interpreter.interpreter_context);
     delete challenge;
     em->reenable();
-    LOG(INFO) << "Destructing GameMain..." << endl;
+    buttons.clear();
     delete notification_bar;
     delete challenge_data;
     delete cursor;
@@ -453,7 +454,7 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     nlohmann::json j = Config::get_instance();
     std::string map_name = j["files"]["level_location"];
     challenge_data->map_name = map_name;
-    challenge = new Challenge(challenge_data);
+    challenge = new Challenge(challenge_data, this);
     return challenge;
 }
 
@@ -462,3 +463,8 @@ GameWindow* GameMain::getGameWindow()
     return &embedWindow;
 }
 
+
+void GameMain::refresh_gui()
+{
+    gui_manager.parse_components();
+}

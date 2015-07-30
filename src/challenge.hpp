@@ -24,6 +24,7 @@ class ChallengeData;
 class Map;
 class LockableEntityThread;
 class GameEngine;
+class GameMain;
 
 class Challenge {
 private:
@@ -52,7 +53,7 @@ protected:
     std::vector<int> map_object_ids;
 public:
 
-    Challenge(ChallengeData* _challenge_data);
+    Challenge(ChallengeData* _challenge_data, GameMain * _game_main);
 
     virtual ~Challenge();
 
