@@ -18,6 +18,9 @@
  <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/walls.png" width="320" height="1216"/>
  </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
  <layer name="TL1a" width="26" height="15">
   <data encoding="base64" compression="zlib">
    eJxrZGRgaBzFo3gUj+JRPIqhGAAgrcYN
@@ -28,14 +31,9 @@
    eJy9k80OgjAMx8eFoUZPusTIwYvP50c8qc+gPqAKnPx4Cksykj9l68hMbPILa2n77zZQqm2XRHlt5X/VsTP1GdJzZgnlos0dOVdhrhHo5MTCkgPcr1k6YlLdlDCO/RQ02y2CJ/MfSXs/hunchTOQjNc1Pt7ProdOwebk9mb7+Th01sSG2Ao6TTz0nvt4bnvA16eyc5aROjUn4kgcBJ2Q9bkfKf9XHdzPP3T4d10lcf/Pi/mlcG4DIiNS8DXE0Ndsnaqu1flj0MksTWzCfGNjWGNgjTXa0Y/nGqGPLy+Ui3wBvmdNTw==
   </data>
  </layer>
- <layer name="WL1" width="26" height="15">
+ <layer name="SL1" width="26" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMAoQAAAGGAAB
-  </data>
- </layer>
- <layer name="CL1" width="26" height="15">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMAoQAAAGGAAB
+   eJxjYBgFlAIbJuphQvaQ6z5SzMElT8id1PIPTJyQPCFziLGHkH+oYQ8hMGoPffLPKCAeAAAtxxD1
   </data>
  </layer>
  <objectgroup name="OL1" width="26" height="15">

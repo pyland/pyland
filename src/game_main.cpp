@@ -509,13 +509,9 @@ void GameMain::game_loop(bool showMouse)
 Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
-    //std::string map_name = "";
-    //std::ifstream input_file("config.json");
-    //nlohmann::json j;
-    //input_file >> j;
     nlohmann::json j = Config::get_instance();
-    std::string map_name = j["files"]["level_location"];
-    challenge_data->map_name = map_name;
+    std::string map_name = j["files"]["full_level_location"];
+    challenge_data->map_name = map_name + "/layout.tmx";
     challenge = new Challenge(challenge_data);
     return challenge;
 }

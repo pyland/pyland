@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "config.hpp"
+
 extern "C" {
     #include "jsonnet/libjsonnet.h"
 }
@@ -19,6 +20,9 @@ std::string exec(const char* cmd) {
     pclose(pipe);
     return result;
 }
+
+nlohmann::json Config::j;
+bool Config::created = false;
 
 nlohmann::json Config::get_instance() {
     /*
@@ -39,7 +43,10 @@ nlohmann::json Config::get_instance() {
     jsonnet_destroy(vm);
     output = jsonnet_to_json("config.jsonnet");
     */
-    std::string output = exec("jsonnet/jsonnet /home/tom/Pyland/personal/pyland/src/config.jsonnet");
-    nlohmann::json j = nlohmann::json::parse(output);
-    return j;
+    if(!created) {
+        std::string output = exec("jsonnet/jsonnet /home/tom/Pyland/personal/pyland/src/config.jsonnet");
+        Config::j = nlohmann::json::parse(output);
+        Config::created = true;
+    }
+    return Config::j;
 }
