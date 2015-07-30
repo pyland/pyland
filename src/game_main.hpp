@@ -29,31 +29,32 @@ class MouseCursor;
 
 class GameMain{
 private:
-    std::string map_path;
+
+    //Part of the game window interface
     GameWindow embedWindow;
     Interpreter interpreter;
     InputManager* input_manager;
     GUIManager gui_manager;
     CallbackState callbackstate;
     MapViewer map_viewer;
+    EventManager *em;
+    std::shared_ptr<GUIWindow> sprite_window;
+    NotificationBar *notification_bar;
+    std::pair<int,int> original_window_size;
+    MouseCursor *cursor;
+
+    //Styles for buttons
     Typeface buttontype;
     TextFont buttonfont;
 
+    //Buttons on the screen
     std::shared_ptr<Text> stoptext;
     std::shared_ptr<Text> runtext;
-
-    EventManager *em;
-
-    std::shared_ptr<GUIWindow> sprite_window;
     std::shared_ptr<Button> run_button;
     std::shared_ptr<Button> stop_button;
 
-    NotificationBar *notification_bar;
-
-    std::pair<int,int> original_window_size;
-
+    //Actions that can be performed on the game window
     std::function<void(GameWindow*)> gui_resize_func;
-
     Lifeline gui_resize_lifeline;
     Lifeline map_resize_lifeline;
     Lifeline stop_callback;
@@ -80,19 +81,20 @@ private:
     std::chrono::steady_clock::time_point start_time;
     std::vector<Lifeline> digit_callbacks;
     Text tile_identifier_text;
-
     std::function<void (GameWindow*)> func_char;
+
+    //Variable to run/stop the game
     bool run_game;
+
+    //Data for the present challenge
     ChallengeData *challenge_data;
-
-    MouseCursor *cursor;
     Challenge* challenge;
-
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
 
 public:
     GameMain(int &argc, char **argv);
     ~GameMain();
+
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
     GameWindow* getGameWindow();

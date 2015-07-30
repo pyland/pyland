@@ -40,7 +40,7 @@ private:
     std::unique_ptr<LockableEntityThread> daemon;
 
     ///
-    /// The instance of a GameEngine object, this is actually used as the interface betwixt C++ and python code. 
+    /// The instance of a GameEngine object, this is actually used as the interface betwixt C++ and python code.
     /// Used for functionality the entities cannot provide
     ///
     GameEngine *game_engine;
@@ -57,7 +57,7 @@ public:
     virtual ~Challenge();
 
     ChallengeData* challenge_data;
-    Dispatcher<int> event_finish;
+    Dispatcher<> event_finish;
     std::vector<int> sprite_ids;
     std::vector<int> assistant_ids;
 
