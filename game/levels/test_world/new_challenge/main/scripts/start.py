@@ -41,4 +41,5 @@ engine.register_input_callback(engine.INPUT_RIGHT, player_one.move_east)
 engine.register_input_callback(engine.INPUT_DOWN, player_one.move_south)
 engine.register_input_callback(engine.INPUT_LEFT, player_one.move_west)
 
+engine.play_music()
 
