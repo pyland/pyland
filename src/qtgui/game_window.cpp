@@ -369,38 +369,9 @@ void GameWindow::init_surface() {
                           &child);
 #endif
     // SDL_GetWindowPosition(window, &x, &y);
-    SDL_GetWindowSize(window, &w, &h);
+    //SDL_GetWindowSize(window, &w, &h);
     w = curGameInit->getGameWidth();
     h = curGameInit->getGameHeight();
-#ifdef USE_GL
-    // We don't care in desktop GL.
-    x = y = 0;
-#endif
-    init_surface(x, y, w, h);
-}
-
-void GameWindow::init_surface(int w, int h) {
-    int x, y;
-
-#ifdef USE_GLES
-    // It turns out that SDL's window position information is not good
-    // enough, as it reports for the window border, not the rendering
-    // area. For the time being, we shall be using LibX11 to query the
-    // window's position.
-
-    // child is just a place to put something. We don't need it.
-    Window child;
-    XTranslateCoordinates(wm_info.info.x11.display,
-                          wm_info.info.x11.window,
-                          XDefaultRootWindow(wm_info.info.x11.display),
-                          0,
-                          0,
-                          &x,
-                          &y,
-                          &child);
-#endif
-    // SDL_GetWindowPosition(window, &x, &y);
-    //SDL_GetWindowSize(window, &w, &h);
 #ifdef USE_GL
     // We don't care in desktop GL.
     x = y = 0;

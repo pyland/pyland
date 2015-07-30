@@ -232,7 +232,6 @@ private:
     /// @param w width of surface
     /// @param h height of surface
     ///
-    void init_surface(int w, int h);
     void init_surface(int x, int y, int w, int h);
     ///
     /// Creates the EGL surface. (Gets width and height from X window)

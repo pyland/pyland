@@ -95,42 +95,42 @@ GameMain::GameMain(int &argc, char **argv):
 
     //    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
 
-    stoptext = std::make_shared<Text>(&embedWindow, buttonfont, true);
-    runtext = std::make_shared<Text>(&embedWindow, buttonfont, true);
-    // referring to top left corner of text embedWindow
-    //    stoptext.move(105, 240 + 20);
-    //    runtext.move(5, 240 + 20);
-    stoptext->set_text("Halt");
-    runtext->set_text("Run");
-
-    //Create the event manager
+//    stoptext = std::make_shared<Text>(&embedWindow, buttonfont, true);
+//    runtext = std::make_shared<Text>(&embedWindow, buttonfont, true);
+//    // referring to top left corner of text embedWindow
+//    //    stoptext.move(105, 240 + 20);
+//    //    runtext.move(5, 240 + 20);
+//    stoptext->set_text("Halt");
+//    runtext->set_text("Run");
+//
+//    //Create the event manager
     em = EventManager::get_instance();
-
+//
     sprite_window = std::make_shared<GUIWindow>();
     sprite_window->set_visible(false);
-    run_button = std::make_shared<Button>();
-    run_button->set_text(runtext);
-    run_button->set_on_click([&] ()
-    {
-        LOG(ERROR) << "RUN";
-        callbackstate.restart();
-    });
-    run_button->set_width(0.2f);
-    run_button->set_height(0.2f);
-    run_button->set_y_offset(0.8f);
-    run_button->set_x_offset(0.0f);
-
-    stop_button = std::make_shared<Button>();
-    stop_button->set_text(stoptext);
-    stop_button->set_on_click([&] ()
-    {
-        LOG(ERROR) << "STOP";
-        callbackstate.stop();
-    });
-    stop_button->set_width(0.2f);
-    stop_button->set_height(0.2f);
-    stop_button->set_y_offset(0.67f);
-    stop_button->set_x_offset(0.0f);
+//    run_button = std::make_shared<Button>();
+//    run_button->set_text(runtext);
+//    run_button->set_on_click([&] ()
+//    {
+//        LOG(ERROR) << "RUN";
+//        callbackstate.restart();
+//    });
+//    run_button->set_width(0.2f);
+//    run_button->set_height(0.2f);
+//    run_button->set_y_offset(0.8f);
+//    run_button->set_x_offset(0.0f);
+//
+//    stop_button = std::make_shared<Button>();
+//    stop_button->set_text(stoptext);
+//    stop_button->set_on_click([&] ()
+//    {
+//        LOG(ERROR) << "STOP";
+//        callbackstate.stop();
+//    });
+//    stop_button->set_width(0.2f);
+//    stop_button->set_height(0.2f);
+//    stop_button->set_y_offset(0.67f);
+//    stop_button->set_x_offset(0.0f);
 
     gui_manager.set_root(sprite_window);
 
@@ -139,8 +139,8 @@ GameMain::GameMain(int &argc, char **argv):
     Engine::set_notification_bar(notification_bar);
     //    SpriteSwitcher sprite_switcher;
 
-    sprite_window->add(run_button);
-    sprite_window->add(stop_button);
+//    sprite_window->add(run_button);
+//    sprite_window->add(stop_button);
 
     // quick fix so buttons in correct location in initial embedWindow before gui_resize_func callback
     original_window_size = embedWindow.get_size();
@@ -178,10 +178,7 @@ GameMain::GameMain(int &argc, char **argv):
     Lifeline editor_callback = input_manager->register_keyboard_handler(filter(
         {KEY_PRESS, KEY("E")},
         [&] (KeyboardInputEvent) {
-            auto id = Engine::get_map_viewer()->get_map_focus_object();
-            auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-            if (!active_player) { return; }
-            Engine::open_editor(active_player->get_name());
+            Engine::open_editor();
         }
     ));
 

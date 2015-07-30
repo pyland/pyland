@@ -163,7 +163,7 @@ public:
     /// Open a text editor for the user to edit a file
     /// @param filename name of file in scripts directory
     ///
-    static void open_editor(std::string filename);
+    static void open_editor();
 
     ///
     /// Get a list of objects at this point, doesn't include sprites

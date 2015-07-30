@@ -206,11 +206,11 @@ glm::vec2 Engine::find_object(int id) {
     throw std::runtime_error("Object is not in the map");
 }
 
-void Engine::open_editor(std::string filename) {
+void Engine::open_editor() {
     LOG(INFO) << "Opening editor";
 
     //TODO remove this function in the final version
-    std::string command(editor + std::string(" python_embed/scripts/") + filename +  ".py");
+    std::string command(editor + std::string("python_embed/scripts/Current Script.py"));
 
     // TODO: Make this close safely.
     std::thread([command] () { system(command.c_str()); }).detach();
