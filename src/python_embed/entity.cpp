@@ -101,7 +101,7 @@ std::string Entity::get_sprite() {
 
 void Entity::set_sprite(std::string sprite_location) {
     //stub TODO: write this
-    LOG(INFO) << sprite_location;
+    sprite_location.substr(0);
     return;
 }
 
@@ -122,7 +122,7 @@ int Entity::get_number_of_animation_frames() {
 
 void Entity::set_animation_frame(int frame_number) {
     //stub TODO: write this
-    LOG(INFO) << frame_number;
+    ++frame_number;
     return;
 }
 

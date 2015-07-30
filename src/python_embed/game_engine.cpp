@@ -46,3 +46,9 @@ std::string GameEngine::get_level_location() {
 void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
+
+void GameEngine::register_input_callback(int input_key, PyObject *py_input_callback) {
+    boost::python::object input_callback(boost::python::handle<>(boost::python::borrowed(py_input_callback)));
+    InputHandler::get_instance()->register_input_callback(input_key, input_callback);
+    return;
+}

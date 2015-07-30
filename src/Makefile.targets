@@ -18,7 +18,11 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 		$(MAKE) -C tmx-parser -f Makefile.linux;                \
 	else                                                        \
 		$(MAKE) CXXFLAGS=-fPIC -C tmx-parser -f Makefile.linux; \
-	fi                                                          \
+	fi
+
+jsonnet/libjsonnet.a: jsonnet/Makefile
+	@echo "${bold}[ Compiling jsonnet library ]${normal}"       
+	$(MAKE) -C jsonnet libjsonnet.a;
 
 #
 # Folders
@@ -55,6 +59,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
                $(INPUT_OBJS)             \
                $(PYTHON_OBJS)            \
                tmx-parser/libtmxparser.a \
+               jsonnet/libjsonnet.a      \
                | dependencies            \
 
 	@echo "${bold}${green}[ Compiling $(EXECUTABLE) ]${normal}"
@@ -70,6 +75,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
 		$(TMXPARSER_LDFLAGS) $(TMXPARSER_LDLIBS) $(TMXPARSER_CXXFLAGS) \
 		$(TINYXML_LDFLAGS)   $(TINYXML_LDLIBS)   $(TINYXML_CXXFLAGS)   \
 		$(ZLIB_LDFLAGS)      $(ZLIB_LDLIBS)      $(ZLIB_CXXFLAGS)      \
+		$(JSONNET_LDFLAGS)   $(JSONNET_LDLIBS)                         \
 		$(LDLIBS)            $(LDFLAGS)          $(CXXFLAGS)           \
 		$(QT_INCFLAGS) 	      					\
 		$(QT_CXXFLAGS)      $(QT_DEFINES)		\

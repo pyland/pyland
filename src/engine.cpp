@@ -83,7 +83,10 @@ std::string to_direction(glm::ivec2 direction) {
 void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func) {
     auto object(ObjectManager::get_instance().get_object<MapObject>(id));
 
-    if (!object || object->is_moving()) { return; }
+    if (!object || object->is_moving()) {
+        EventManager::get_instance()->add_event(func); //Even if object can't move, but callback on event queue
+        return;
+    }
 
     // Position should be integral at this point
     glm::vec2 target(object->get_position());
