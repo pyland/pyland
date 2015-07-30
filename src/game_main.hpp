@@ -91,7 +91,7 @@ private:
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
 
 public:
-    GameMain(int argc, char *argv[]);
+    GameMain(int &argc, char **argv);
     ~GameMain();
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
