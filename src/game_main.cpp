@@ -84,12 +84,22 @@ GameMain::GameMain(int &argc, char **argv):
     Engine::set_notification_bar(notification_bar);
     //    SpriteSwitcher sprite_switcher;
 
-    // quick fix so buttons in correct location in initial embedWindow before gui_resize_func callback
+    pause_button = std::make_shared<Button>(ButtonType::SpriteHead);
+    pause_button->set_picture("gui/coin/coin-tile");
+    pause_button->set_text("Pause");
+    pause_button->set_y_offset(0.67f);
+    pause_button->set_x_offset(0.0f);
+    pause_button->set_on_click( [&] () {
+        LOG(INFO) << "PAUSED";
+        //dummy method
+        //pause_menu();
+    });
+
+    sprite_window->add(pause_button);
+
     original_window_size = embedWindow.get_size();
     sprite_window->set_width_pixels(original_window_size.first);
     sprite_window->set_height_pixels(original_window_size.second);
-
-    gui_manager.parse_components();
 
     //The GUI resize function
     gui_resize_func = [&] (GameWindow* game_window)
@@ -352,15 +362,27 @@ GameMain::GameMain(int &argc, char **argv):
     challenge->start();
 
     last_clock = (std::chrono::steady_clock::now());
-
-
-
+    gui_manager.parse_components();
+    //add_button();
 
     //Run the challenge - returns after challenge completes
     embedWindow.executeApp();
 
     LOG(INFO) << "Constructed GameMain" << endl;
 
+}
+
+void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback)
+{
+    std::shared_ptr<Button> new_button;
+    new_button = std::make_shared<Button>(ButtonType::SpriteHead);
+    this->get_buttons().push_back(new_button);
+    new_button->set_picture(file_path);
+    new_button->set_text(name);
+    new_button->set_on_click(callback);
+
+    this->get_sprite_window()->add(new_button);
+    this->refresh_gui();
 }
 
 GameMain::~GameMain()
@@ -456,15 +478,6 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     challenge_data->map_name = map_name + "/layout.tmx";
     challenge = new Challenge(challenge_data, this);
 
-//	std::shared_ptr<Button> new_button;
-//	new_button = std::make_shared<Button>(ButtonType::SpriteHead);
-//	this->get_buttons().push_back(new_button);
-//	new_button->set_picture("gui/coin/coin-tile");
-//	new_button->set_text("Try");
-//
-//	this->get_sprite_window()->add(new_button);
-//	this->refresh_gui();
-
     return challenge;
 }
 
@@ -477,4 +490,5 @@ GameWindow* GameMain::getGameWindow()
 void GameMain::refresh_gui()
 {
     gui_manager.parse_components();
+    //map_viewer.render();
 }
