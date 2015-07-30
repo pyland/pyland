@@ -56,23 +56,14 @@ void GameEngine::print_debug(std::string debug_message) {
 
 void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
 
+    //TODO: Find a way of avoiding this hack
     LOG(INFO) << "Got here";
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
-    std::shared_ptr<Button> new_button;
-    new_button = std::make_shared<Button>(ButtonType::SpriteHead);
-    game_main->get_buttons().push_back(new_button);
-    LOG(INFO) << file_path;
-    LOG(INFO) << name;
-    new_button->set_picture(file_path);
-    new_button->set_text(name);
-    new_button->set_on_click([boost_callback]() {
-        EventManager::get_instance()->add_event(boost_callback);
+    EventManager::get_instance()->add_event([this, file_path, name, boost_callback] {
+        game_main->add_button(file_path, name, boost_callback);
     });
-    new_button->set_width(0.30f);
-    new_button->set_height(0.50f);
-    game_main->get_sprite_window()->add(new_button);
-    game_main->refresh_gui();
+
 }
 
 void GameEngine::register_input_callback(int input_key, PyObject *py_input_callback) {
