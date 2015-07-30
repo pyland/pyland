@@ -14,7 +14,7 @@
 
 // this int refers to the number of levels which have been developed, after this
 // level number we just direct the user to github
-// CHANGE THIS NUMBER WHEN YOU INTRODUCE A NEW LEVEL 
+// CHANGE THIS NUMBER WHEN YOU INTRODUCE A NEW LEVEL
 int encoded_levels = 4;
 
 
@@ -23,7 +23,7 @@ StartScreen::StartScreen(ChallengeData *challenge_data): Challenge(challenge_dat
     ChallengeHelper::make_sprite(this, "sprite/1", "Ben", Walkability::BLOCKED, "east/still/1");
 
     //set up level selection for the 5 level selction points on the map
-    for (int i=1; i<=5; i++) {
+    for (int i=1; i<=4; i++) {
         std::string name = "level/"+std::to_string(i);
         ChallengeHelper::make_interaction(name,
             [i, this] (int) {

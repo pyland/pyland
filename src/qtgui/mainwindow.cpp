@@ -227,7 +227,6 @@ MainWindow::MainWindow(GameMain *exGame)
 
     mainWidget = new QWidget;
 
-    //createActions();
     createToolBar();
 
     setWindowTitle(tr("Pyland"));
@@ -245,7 +244,7 @@ MainWindow::MainWindow(GameMain *exGame)
     this->setContextMenuPolicy(Qt::NoContextMenu);
     this->setCentralWidget(mainWidget);
 
-    std::cout << gameWidget->winId() << "\n";
+    LOG(INFO) << gameWidget->winId() << "\n";
     /*
         int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
         if (result != 0)
@@ -257,7 +256,6 @@ MainWindow::MainWindow(GameMain *exGame)
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
 
-
     LOG(INFO) << "created context\n";
     gameWidget->installEventFilter(this);
     gameWidget->setMouseTracking(true);
@@ -268,27 +266,8 @@ MainWindow::MainWindow(GameMain *exGame)
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
     eventTimer->start();
 
-    //Keep QT window on top, to match SDL window (only do this on raspberry pi)
-//#ifdef USE_GLES
-//    setWindowFlags(Qt::WindowStaysOnTopHint);
-//#endif
-
-    //this->showMaximized();
-    this->show();
-
     int width = (gameWidget->width());
     int height = gameWidget->height();
-
-
-    std::cout << "mainwidget width is" << mainWidget->width() << endl;
-    std::cout << "mainwidget height is" << mainWidget->height() << endl;
-
-    std::cout << "width is" << width << endl;
-    std::cout << "height is" << height << endl;
-
-    //this->hide();
-
-
 
     SDL_SetWindowSize(embedWindow, width, height);
     glViewport(0, 0, width, height);
@@ -296,16 +275,13 @@ MainWindow::MainWindow(GameMain *exGame)
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
 
-    //this->show();
-
-
-    LOG(INFO) << "Constructed MainWindow" << std::endl;
-
     connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
     connect(buttonSpeed,SIGNAL(released()),this,SLOT (toggleSpeed()));
     connect(buttonClear,SIGNAL(released()),this,SLOT (clearTerminal()));
 
+    this->showMaximized();
 
+    LOG(INFO) << "Constructed MainWindow" << std::endl;
 }
 
 MainWindow::~MainWindow()
