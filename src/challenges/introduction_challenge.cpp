@@ -34,7 +34,7 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
     Engine::get_map_viewer()->set_map_focus_object(player);
 
     treasure = ChallengeHelper::make_object(this, "treasure/at", Walkability::BLOCKED, "closed");
-    //pathblocker_top = ChallengeHelper::make_object(this, "pathblocker/top", Walkability::BLOCKED, "2");
+
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/1", Walkability::BLOCKED, "2"));
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/2", Walkability::BLOCKED, "2"));
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/3", Walkability::BLOCKED, "2"));

@@ -30,7 +30,7 @@
  </layer>
  <layer name="Overlay" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMAroA+YB8VwamZ2Ng41LzXAArFRSQwxoI1PfcAtzdMCIhCkBcxmw5w1c4UcNO8kF9LAbW7jSy78DFa6jYBQMFAAApXEFKQ==
+   eJxjYBgFo2AUjIJRMAroA+YB8VwamZ2Ng41LzXAArFRSQwxoo5I5ww0wImFKwFwG7HkDV5qlhp3kAnrYjS1c6eXfgQrXUTAKBgoAAEgbBL4=
   </data>
  </layer>
  <layer name="Collisions" width="30" height="30">
@@ -51,6 +51,5 @@
   <object name="level/2" gid="107" x="1152" y="1344"/>
   <object name="level/3" gid="107" x="1216" y="960"/>
   <object name="level/4" gid="107" x="1600" y="960"/>
-  <object name="level/5" gid="107" x="1792" y="1152"/>
  </objectgroup>
 </map>
