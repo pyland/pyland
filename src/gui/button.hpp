@@ -8,11 +8,9 @@
 
 #include <functional>
 #include <memory>
-
 #include <string>
 #include <utility>
 #include <vector>
-
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>

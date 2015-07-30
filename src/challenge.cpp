@@ -39,19 +39,19 @@ Challenge::Challenge(ChallengeData* _challenge_data) :
         sprite_switcher = new SpriteSwitcher();
 
         //Register a dispatcher to shut the challenge down
-        event_finish.register_callback([&] (int next_challenge) {
+        event_finish.register_callback([&] (){
             challenge_data->run_challenge = false;
-            challenge_data->next_challenge = next_challenge;
+            //challenge_data->next_challenge = next_challenge;
             return false;
         });
-        
+
         //Add all the objects to the map
         //TODO: The names of variables need to be refactored to make sense, and this code needs to be cleaned up as there is a bit too much inderection atm!
         for(auto properties : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
             int map_object_id = ChallengeHelper::make_object(
                 this,
                 properties.first, //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly
-                Walkability::BLOCKED,	//wether the object can be walked through	
+                Walkability::BLOCKED,	//wether the object can be walked through
                 properties.first //name of the object
             );
             //Push the map_object on the Challenge's internal list of map_objects
