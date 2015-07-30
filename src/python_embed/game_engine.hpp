@@ -72,6 +72,8 @@ class GameEngine {
 
         void play_music();
 
+        void print_terminal(std::string text, bool error);
+
 };
 
 #endif

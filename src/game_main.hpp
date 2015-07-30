@@ -93,7 +93,6 @@ public:
 
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
-    GameWindow* getGameWindow();
 
     std::vector<std::shared_ptr<Button>> get_buttons(){
         return buttons;
@@ -105,6 +104,10 @@ public:
 
     void refresh_gui();
     void add_button(std::string file_path, std::string name, std::function<void (void)> callback);
+
+    GameWindow* getGameWindow();
+    CallbackState getCallbackState();
+    std::chrono::steady_clock::time_point get_start_time();
 };
 
 #endif // GAME_MAIN_H

@@ -54,7 +54,11 @@ private:
         DO_DEINIT
     };
 
-    GameInit* curGame;
+    ///
+    /// Stores the game initialising class.
+    ///
+    GameInit* curGameInit;
+
     ///
     /// Stores the SDL window.
     ///
@@ -242,10 +246,6 @@ private:
     void deinit_surface();
 
 public:
-    GameInit* getCurGame();
-
-    void executeApp();
-
     ///
     /// Used when SDL or EGL code fails to initialize, reinitialize, or
     /// deinitialize.
@@ -341,6 +341,31 @@ public:
     /// Input manager getter.
     ///
     InputManager* get_input_manager();
+
+    ///
+    ///Game init getter.
+    ///
+    GameInit* get_cur_game_init();
+
+
+    ///
+    ///Calls game init to run the QT app
+    ///
+    void execute_app();
+
+
+
+    ///
+    ///Function to call the GUI in mainwindow and update the running buttons.
+    ///
+    void update_running(bool option);
+
+
+    ///
+    ///Function to call the GUI in mainwindow and update the running buttons.
+    ///
+    void update_terminal_text(std::string text, bool error);
+
 
     ///
     /// Convert a pair of pixels coordinates into a pair of ratio
