@@ -28,20 +28,8 @@ NotificationBar::NotificationBar() {
     CHECK_NOTNULL(window);
     TextFont notification_buttonfont = Engine::get_game_font();
 
-    /// build back button
-    backward_button = std::make_shared<Button>();
-    backward_button->set_text("<- Previous");
-    backward_button->set_on_click([&] () {
-        LOG(INFO) << "backward button pressed";
-        move_notification(Direction::PREVIOUS);
-    });
-    backward_button->set_width(button_size);
-    backward_button->set_height(button_size);
-    backward_button->set_y_offset(backward_loco.second);
-    backward_button->set_x_offset(backward_loco.first);
-
     //build forwards button
-    forward_button = std::make_shared<Button>();
+    forward_button = std::make_shared<Button>(ButtonType::Board);
     forward_button->set_text("Next ->");
     forward_button->set_on_click([&] () {
         LOG(INFO) << "forward button pressed";
@@ -55,7 +43,6 @@ NotificationBar::NotificationBar() {
 
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
     CHECK_NOTNULL(gui_manager);
-    gui_manager->get_root()->add(backward_button);
     gui_manager->get_root()->add(forward_button);
     gui_manager->parse_components();
 
@@ -110,7 +97,6 @@ void NotificationBar::add_notification(std::string text_to_display) {
 
  void NotificationBar::hide_buttons() {
     forward_button->set_visible(notification_stack.can_forward);
-    backward_button->set_visible(notification_stack.can_backward);
     Engine::get_map_viewer()->get_gui_manager()->parse_components();
 
  }
@@ -118,7 +104,6 @@ void NotificationBar::add_notification(std::string text_to_display) {
  NotificationBar::~NotificationBar() {
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
     CHECK_NOTNULL(gui_manager);
-    gui_manager->get_root()->remove(backward_button->get_id());
     gui_manager->get_root()->remove(forward_button->get_id());
     delete notification_text;
 }

@@ -43,15 +43,9 @@ private:
     std::pair<int,int> original_window_size;
     MouseCursor *cursor;
 
-    //Styles for buttons
-    Typeface buttontype;
-    TextFont buttonfont;
-
-    //Buttons on the screen
-    std::shared_ptr<Text> stoptext;
-    std::shared_ptr<Text> runtext;
-    std::shared_ptr<Button> run_button;
-    std::shared_ptr<Button> stop_button;
+    //The buttons for the gui displayed on the screen
+    //created by GameEngine
+    std::vector<std::shared_ptr<Button>> buttons;
 
     //Actions that can be performed on the game window
     std::function<void(GameWindow*)> gui_resize_func;
@@ -98,6 +92,17 @@ public:
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
     GameWindow* getGameWindow();
+
+    std::vector<std::shared_ptr<Button>> get_buttons(){
+        return buttons;
+    }
+
+    std::shared_ptr<GUIWindow>  get_sprite_window(){
+        return sprite_window;
+    }
+
+    void refresh_gui();
+
 };
 
 #endif // GAME_MAIN_H

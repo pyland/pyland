@@ -56,8 +56,6 @@ GameMain::GameMain(int &argc, char **argv):
     gui_manager(),
     callbackstate(),
     map_viewer(&embedWindow, &gui_manager),
-    buttontype(Engine::get_game_typeface()),        //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    buttonfont(Engine::get_game_font()),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
@@ -73,44 +71,11 @@ GameMain::GameMain(int &argc, char **argv):
 
     Engine::set_map_viewer(&map_viewer);
 
-    //    void (GUIManager::*mouse_callback_function) (MouseInputEvent) = &GUIManager::mouse_callback_function;
-
-    stoptext = std::make_shared<Text>(&embedWindow, buttonfont, true);
-    runtext = std::make_shared<Text>(&embedWindow, buttonfont, true);
-    // referring to top left corner of text embedWindow
-    //    stoptext.move(105, 240 + 20);
-    //    runtext.move(5, 240 + 20);
-    stoptext->set_text("Halt");
-    runtext->set_text("Run");
-
     //Create the event manager
     em = EventManager::get_instance();
 
     sprite_window = std::make_shared<GUIWindow>();
     sprite_window->set_visible(false);
-    run_button = std::make_shared<Button>();
-    run_button->set_text(runtext);
-    run_button->set_on_click([&] ()
-    {
-        LOG(ERROR) << "RUN";
-        callbackstate.restart();
-    });
-    run_button->set_width(0.2f);
-    run_button->set_height(0.2f);
-    run_button->set_y_offset(0.8f);
-    run_button->set_x_offset(0.0f);
-
-    stop_button = std::make_shared<Button>();
-    stop_button->set_text(stoptext);
-    stop_button->set_on_click([&] ()
-    {
-        LOG(ERROR) << "STOP";
-        callbackstate.stop();
-    });
-    stop_button->set_width(0.2f);
-    stop_button->set_height(0.2f);
-    stop_button->set_y_offset(0.67f);
-    stop_button->set_x_offset(0.0f);
 
     gui_manager.set_root(sprite_window);
 
@@ -118,9 +83,6 @@ GameMain::GameMain(int &argc, char **argv):
 
     Engine::set_notification_bar(notification_bar);
     //    SpriteSwitcher sprite_switcher;
-
-    sprite_window->add(run_button);
-    sprite_window->add(stop_button);
 
     // quick fix so buttons in correct location in initial embedWindow before gui_resize_func callback
     original_window_size = embedWindow.get_size();
@@ -400,10 +362,13 @@ GameMain::GameMain(int &argc, char **argv):
 
 GameMain::~GameMain()
 {
+    LOG(INFO) << "Destructing GameMain..." << endl;
     em->flush_and_disable(interpreter.interpreter_context);
     delete challenge;
     em->reenable();
-    LOG(INFO) << "Destructing GameMain..." << endl;
+
+    buttons.clear();
+
     delete notification_bar;
     delete challenge_data;
     delete cursor;
@@ -485,7 +450,7 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     nlohmann::json j = Config::get_instance();
     std::string map_name = j["files"]["full_level_location"];
     challenge_data->map_name = map_name + "/layout.tmx";
-    challenge = new Challenge(challenge_data);
+    challenge = new Challenge(challenge_data, this);
     return challenge;
 }
 
@@ -494,3 +459,8 @@ GameWindow* GameMain::getGameWindow()
     return &embedWindow;
 }
 
+
+void GameMain::refresh_gui()
+{
+    gui_manager.parse_components();
+}

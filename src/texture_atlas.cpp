@@ -30,13 +30,13 @@ extern "C" {
 #include "texture_atlas.hpp"
 
 
-
-bool TextureAtlas::global_name_to_tileset_initialized = false;
+//TODO: Clean up all the fml file stuff that isn't required, cause we're using fml only for gui stuff
+bool TextureAtlas::global_name_to_tileset_initialized = true;
 std::map<std::string, std::string> TextureAtlas::global_name_to_tileset;
 
 std::map<std::string, std::string> const &TextureAtlas::names_to_tilesets() {
     if (!global_name_to_tileset_initialized) {
-        std::ifstream input("../resources/tiles/associated_texture_atlas.fml");
+        std::ifstream input("");
         fml::from_stream(input, global_name_to_tileset);
 
         global_name_to_tileset_initialized = true;
@@ -114,7 +114,7 @@ void TextureAtlas::merge(const std::vector<std::shared_ptr<TextureAtlas>> &atlas
             throw TextureAtlas::LoadException("Inconsistent tile sizes in merging atlases.");
         }
     }
-    
+
     for (auto atlas : atlases) {
         // Free up the old textures, reset layout.
         atlas->deinit_texture();
@@ -270,7 +270,7 @@ void TextureAtlas::init_texture() {
         textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
         reshaped = true;
     }
-    
+
     glGenTextures(1, &gl_texture);
 
     if (gl_texture == 0) {

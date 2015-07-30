@@ -24,7 +24,7 @@ void SpriteSwitcher::add_sprite(int id) {
     std::string name = ObjectManager::get_instance().get_object<MapObject>(id)->get_name();
 
     // build button
-    std::shared_ptr<Button> new_button = std::make_shared<Button>();
+    std::shared_ptr<Button> new_button = std::make_shared<Button>(ButtonType::SpriteHead);
     new_button->set_text(name);
     new_button->set_on_click([id] () {
         LOG(INFO) << "switch sprite focus to " << id;

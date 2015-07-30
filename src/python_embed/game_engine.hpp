@@ -7,26 +7,33 @@
 
 #include "input_handler.hpp"
 
+class GameMain;
 ///
 /// This class is used as the python interface for general game-engine functionality.
 /// The base game.py has the code which wraps around it and provides some additiondal functionality as well.
 ///
 class GameEngine {
+
+    private:
+        GameMain * game_main;
+
     public:
 
         static int INPUT_UP() { return InputHandler::INPUT_UP; }
         static int INPUT_RIGHT() { return InputHandler::INPUT_RIGHT; }
         static int INPUT_DOWN() { return InputHandler::INPUT_DOWN; }
         static int INPUT_LEFT() { return InputHandler::INPUT_LEFT; }
-        
+
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
-        GameEngine();
+        GameEngine(GameMain * _game_main){
+            game_main = _game_main;
+        }
 
         ///
         /// Add an object to the game map at the given position.
-        /// The name is used to give the object a name and the class_location string is 
+        /// The name is used to give the object a name and the class_location string is
         /// used to find the correct Python class to wrap the object.
         ///
         boost::python::object add_object(std::string name, std::string class_location, int x, int y);
@@ -56,7 +63,13 @@ class GameEngine {
         ///
         void print_debug(std::string debug_message);
 
+        ///
+        /// To add a button to the challenge
+        ///
+        void add_button(std::string file_path, std::string name, int button_type, PyObject* callback);
+
         void register_input_callback(int input_key, PyObject *input_callback);
+
 };
 
 #endif
