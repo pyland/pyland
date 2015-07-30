@@ -18,7 +18,6 @@ private:
     Text* notification_text;
 
     std::shared_ptr<Button> forward_button;
-    std::shared_ptr<Button> backward_button;
 
     Lifeline text_box;
 
@@ -35,7 +34,7 @@ public:
     ~NotificationBar();
 
     ///
-    /// generate the backward and forward navigation button text for the notification bar 
+    /// generate the backward and forward navigation button text for the notification bar
     /// TODO: remove_this when GUI fonts is done
     ///
     void text_displayer();

@@ -5,7 +5,7 @@
 #include "gui_text.hpp"
 #include "gui_text_data.hpp"
 #include "text.hpp"
-
+#include <tuple>
 #include <functional>
 #include <memory>
 #include <string>
@@ -21,13 +21,22 @@
 #include <GL/gl.h>
 #endif
 
+enum class ButtonType{
+    Board,
+    SpriteHead
+};
 
 class Button : public ComponentGroup {
     std::shared_ptr<GUIText> button_text;
-public:
-    Button();
-    Button(std::shared_ptr<Text> _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
+    ButtonType type;
+    std::string file_path;
+    std::string picture_name;
 
+public:
+    Button(ButtonType _type);
+    Button(ButtonType _type, std::shared_ptr<Text> _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
+
+    void set_picture(std::string _name);
     std::shared_ptr<Text> get_text();
 
     void set_text(std::shared_ptr<Text> );

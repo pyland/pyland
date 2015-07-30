@@ -2,10 +2,11 @@
 
 #include "game_engine.hpp"
 #include "config.hpp"
+#include "button.hpp"
+#include "text_font.hpp"
+#include "engine.hpp"
+#include "game_main.hpp"
 
-GameEngine::GameEngine() {
-
-}
 
 /*
 boost::python::object GameEngine::addObject(std::string name, std::string class_location, int x, int y) {
@@ -51,8 +52,29 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
+
+void GameEngine::add_button(std::string file_path, std::string name, int button_type, PyObject* callback) {
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
+    std::shared_ptr<Button> new_button;
+    if(button_type == 1){
+        new_button = std::make_shared<Button>(ButtonType::Board);
+    }
+    else if(button_type == 2){
+        new_button = std::make_shared<Button>(ButtonType::SpriteHead);
+    }
+    game_main->get_buttons().push_back(new_button);
+    new_button->set_picture(file_path);
+    new_button->set_text(name);
+    new_button->set_on_click(boost_callback);
+    game_main->get_sprite_window()->add(new_button);
+    game_main->refresh_gui();
+}
+
 void GameEngine::register_input_callback(int input_key, PyObject *py_input_callback) {
     boost::python::object input_callback(boost::python::handle<>(boost::python::borrowed(py_input_callback)));
     InputHandler::get_instance()->register_input_callback(input_key, input_callback);
     return;
+
 }

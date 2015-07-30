@@ -43,7 +43,11 @@
 GameInit::GameInit(int &argc, char **argv, GameMain *exGame)
 {
     LOG(INFO) << "Creating GameInit..." << std::endl;
-    create_apih_from_wrapper();
+
+    bool new_api = false; //TODO: Change this so that it is a command line argument
+    if(new_api){
+        create_apih_from_wrapper();
+    }
     app = new QApplication(argc,argv);
     app->setStyle("gtk");
     app->setAttribute(Qt::AA_NativeWindows, true);
