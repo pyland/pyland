@@ -4,10 +4,8 @@
 #include "button.hpp"
 #include "text_font.hpp"
 #include "engine.hpp"
+#include "game_main.hpp"
 
-GameEngine::GameEngine() {
-
-}
 
 /*
 boost::python::object GameEngine::addObject(std::string name, std::string class_location, int x, int y) {
@@ -55,12 +53,18 @@ void GameEngine::add_button(std::string file_path, std::string name, int button_
 
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
-    game_main->buttons.push_back(Button(button_type));
-    Button * new_button = & game_main->buttons.back();
+    std::shared_ptr<Button> new_button;
+    if(button_type == 1){
+        new_button = std::make_shared<Button>(ButtonType::Board);
+    }
+    else if(button_type == 2){
+        new_button = std::make_shared<Button>(ButtonType::SpriteHead);
+    }
+    game_main->get_buttons().push_back(new_button);
     new_button->set_picture(file_path);
     new_button->set_text(name);
     new_button->set_on_click(boost_callback);
-    game_main->get_sprite_window()->add(*new_button);
+    game_main->get_sprite_window()->add(new_button);
     game_main->refresh_gui();
 }
 

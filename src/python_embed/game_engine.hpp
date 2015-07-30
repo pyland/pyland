@@ -14,7 +14,8 @@ class GameMain;
 ///
 class GameEngine {
 
-    private GameMain * game_main;
+    private:
+        GameMain * game_main;
 
     public:
 

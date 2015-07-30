@@ -45,7 +45,7 @@ private:
 
     //The buttons for the gui displayed on the screen
     //created by GameEngine
-    std::vector<Button> buttons;
+    std::vector<std::shared_ptr<Button>> buttons;
 
     //Actions that can be performed on the game window
     std::function<void(GameWindow*)> gui_resize_func;
@@ -93,7 +93,7 @@ public:
     Challenge* pick_challenge(ChallengeData* challenge_data);
     GameWindow* getGameWindow();
 
-    std::vector<Button> get_buttons(){
+    std::vector<std::shared_ptr<Button>> get_buttons(){
         return buttons;
     }
 

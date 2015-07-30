@@ -56,8 +56,6 @@ GameMain::GameMain(int &argc, char **argv):
     gui_manager(),
     callbackstate(),
     map_viewer(&embedWindow, &gui_manager),
-    buttontype(Engine::get_game_typeface()),        //TODO : REMOVE THIS HACKY EDIT - done for the demo tomorrow
-    buttonfont(Engine::get_game_font()),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
@@ -368,7 +366,9 @@ GameMain::~GameMain()
     em->flush_and_disable(interpreter.interpreter_context);
     delete challenge;
     em->reenable();
+
     buttons.clear();
+
     delete notification_bar;
     delete challenge_data;
     delete cursor;
