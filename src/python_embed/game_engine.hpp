@@ -70,6 +70,8 @@ class GameEngine {
 
         void register_input_callback(int input_key, PyObject *input_callback);
 
+        void play_music();
+
 };
 
 #endif

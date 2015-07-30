@@ -11,6 +11,7 @@ TEST_EXECUTABLE_OBJ = test/test.o
 
 BASE_OBJS = \
 	animation_frames.o     \
+	audio_engine.o         \
 	challenge_helper.o     \
 	config.o               \
 	engine.o               \

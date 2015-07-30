@@ -1,12 +1,13 @@
 #include <glog/logging.h>
 
-#include "game_engine.hpp"
-#include "config.hpp"
-#include "event_manager.hpp"
+#include "audio_engine.hpp"
 #include "button.hpp"
-#include "text_font.hpp"
+#include "config.hpp"
 #include "engine.hpp"
+#include "event_manager.hpp"
+#include "game_engine.hpp"
 #include "game_main.hpp"
+#include "text_font.hpp"
 
 
 /*
@@ -79,5 +80,8 @@ void GameEngine::register_input_callback(int input_key, PyObject *py_input_callb
     boost::python::object input_callback(boost::python::handle<>(boost::python::borrowed(py_input_callback)));
     InputHandler::get_instance()->register_input_callback(input_key, input_callback);
     return;
+}
 
+void GameEngine::play_music() {
+    AudioEngine::get_instance()->play_song("test.ogg");
 }
