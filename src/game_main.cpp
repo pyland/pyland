@@ -26,6 +26,7 @@
 #include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
+#include "input_handler.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
@@ -122,7 +123,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("R")},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.restart();
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -193,7 +194,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.man_move(glm::ivec2( 0, 1));
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_UP); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -201,7 +202,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Down", "S"})},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.man_move(glm::ivec2( 0, -1));
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_DOWN); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -209,7 +210,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Right", "D"})},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.man_move(glm::ivec2( 1,  0));
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RIGHT); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -217,7 +218,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Left", "A"})},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.man_move(glm::ivec2(-1,  0));
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_LEFT); //Run this list of events registered against run in the input handler
     }
     ));
 
@@ -420,6 +421,8 @@ void GameMain::game_loop(bool showMouse)
         #ifdef USE_GLES
             //Display when mouse is over the SDL widget
             if (showMouse) {cursor->display();};
+        #else
+            ++showMouse; //TODO: find a nicer way to avoid unused variable warnings in desktop compiler :P
         #endif
 
         VLOG(3) << "} TD | SB {";
@@ -444,9 +447,10 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
     //std::string map_name = "";
-    std::ifstream input_file("config.json");
-    nlohmann::json j;
-    input_file >> j;
+    //std::ifstream input_file("config.json");
+    //nlohmann::json j;
+    //input_file >> j;
+    nlohmann::json j = Config::get_instance();
     std::string map_name = j["files"]["level_location"];
     challenge_data->map_name = map_name;
     challenge = new Challenge(challenge_data);

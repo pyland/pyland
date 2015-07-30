@@ -5,12 +5,23 @@
 #include <boost/python/list.hpp>
 #include <string>
 
+#include "input_handler.hpp"
+
 ///
 /// This class is used as the python interface for general game-engine functionality.
 /// The base game.py has the code which wraps around it and provides some additiondal functionality as well.
 ///
 class GameEngine {
     public:
+
+        static int INPUT_UP() { return InputHandler::INPUT_UP; }
+        static int INPUT_RIGHT() { return InputHandler::INPUT_RIGHT; }
+        static int INPUT_DOWN() { return InputHandler::INPUT_DOWN; }
+        static int INPUT_LEFT() { return InputHandler::INPUT_LEFT; }
+
+        static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
+        static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
+
         GameEngine();
 
         ///
@@ -45,11 +56,13 @@ class GameEngine {
         ///
         void print_debug(std::string debug_message);
 
-
         ///
         /// To add a button to the challenge
         ///
         void add_button(std::string file_path, int button_type, PyObject* callback);
+
+        void register_input_callback(int input_key, PyObject *input_callback);
+
 };
 
 #endif

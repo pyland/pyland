@@ -47,5 +47,12 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("add_button",        &GameEngine::add_button)
         .def("get_level_location",&GameEngine::get_level_location)
         .def("print_debug",       &GameEngine::print_debug)
-        .def("change_level",      &GameEngine::change_level);
+        .def("change_level",      &GameEngine::change_level)
+        .def("register_input_callback", &GameEngine::register_input_callback)
+        .add_static_property("INPUT_UP", &GameEngine::INPUT_UP) //Add constants for different inputs.
+        .add_static_property("INPUT_RIGHT", &GameEngine::INPUT_RIGHT)
+        .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)
+        .add_static_property("INPUT_LEFT", &GameEngine::INPUT_LEFT)
+        .add_static_property("INPUT_RUN", &GameEngine::INPUT_RUN)
+        .add_static_property("THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING", &GameEngine::THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING);
 }
