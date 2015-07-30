@@ -20,6 +20,7 @@
 #endif
 
 #include "cacheable_resource.hpp"
+#include "config.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
 #include "fml.hpp"
@@ -89,8 +90,8 @@ Map::~Map() {
 bool Map::is_walkable(int x_pos, int y_pos) {
     return std::all_of(std::begin(layer_ids), std::end(layer_ids), [&] (int layer_id) {
             std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
-        // Block only in the case where we're on the collisions layer and the tile is set
-            return !(layer->get_name() == "Collisions" && layer->get_tile(x_pos, y_pos).second);
+        // Block only in the case where we're on the special layer and the tile is set
+            return !(layer->get_name() == Config::get_instance()["layers"]["special_layer_name"] && (layer->get_tile(x_pos, y_pos).second == 1));
     });
 }
 
@@ -180,7 +181,8 @@ void Map::generate_data() {
 
         // Don't generate data for the collisions layer
         // TODO: handle this not being in layer_mappings
-        if (layer->get_name() == "Collisions") {
+        // TODO: let python have some control over which layers are special
+        if (layer->get_name() == Config::get_instance()["layers"]["special_layer_name"]) {
             layer_num++;
             continue;
         }

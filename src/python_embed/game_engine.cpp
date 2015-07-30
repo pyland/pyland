@@ -1,6 +1,7 @@
 #include <glog/logging.h>
 
 #include "game_engine.hpp"
+#include "config.hpp"
 #include "button.hpp"
 #include "text_font.hpp"
 #include "engine.hpp"
@@ -41,7 +42,10 @@ boost::python::object GameEngine::add_object(std::string name, std::string class
 }
 
 std::string GameEngine::get_level_location() {
-    return "test_world/test_level/test_one";
+    nlohmann::json j = Config::get_instance();
+    std::string map_name = j["files"]["level_location"];
+    //return "test_world/test_level/test_one";
+    return map_name;
 }
 
 void GameEngine::print_debug(std::string debug_message) {
