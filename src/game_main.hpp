@@ -43,7 +43,9 @@ private:
     std::pair<int,int> original_window_size;
     MouseCursor *cursor;
 
-    //The buttons for the gui displayed on the screen
+    //The pause button, created in GameMain
+    std::shared_ptr<Button> pause_button;
+    //The gameplay buttons for the gui displayed on the screen
     //created by GameEngine
     std::vector<std::shared_ptr<Button>> buttons;
 
@@ -102,7 +104,7 @@ public:
     }
 
     void refresh_gui();
-
+    void add_button(std::string file_path, std::string name, std::function<void (void)> callback);
 };
 
 #endif // GAME_MAIN_H

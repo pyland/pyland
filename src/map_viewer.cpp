@@ -279,7 +279,7 @@ void MapViewer::render_objects(bool above_object) {
         }
     }
 } */
-    
+
 
 void MapViewer::render_gui() {
     //Calculate the projection matrix
@@ -315,7 +315,7 @@ void MapViewer::render_gui() {
     gui_render_component->release_textures();
     gui_render_component->release_vbos();
     gui_render_component->release_shader();
-     
+
     gui_manager->render_text();
 }
 

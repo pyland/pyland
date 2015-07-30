@@ -31,9 +31,10 @@ boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_w
 boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(game.getDialogue("welcome")))))
 #print("wohooo")
 
-engine.add_button("gui/coin/coin-tile", "Ben", player_one.focus)
-#engine.add_button("gui/coin/coin-tile", "Kio", boulder_one.focus)
-engine.register_input_callback(engine.INPUT_RUN, lambda: player_one.run_script("1"))
+#engine.add_button("gui/coin/coin-tile", "Ben", player_one.focus)
+engine.add_button("gui/coin/coin-tile", "Kio", boulder_one.focus)
+
+#engine.register_input_callback(engine.INPUT_RUN, lambda: player_one.run_script("1"))
 
 engine.register_input_callback(engine.INPUT_UP, player_one.move_north)
 engine.register_input_callback(engine.INPUT_RIGHT, player_one.move_east)
