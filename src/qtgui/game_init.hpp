@@ -20,8 +20,11 @@ public:
     MainWindow* getMainWin();
     SDL_Window* getSdlWin();
     void pass_running_to_qt(bool option);
+    void pass_text_to_qt(std::string text,bool error);
     void execApp();
     void showMain();
+    int getGameWidth();
+    int getGameHeight();
 
 };
 

@@ -49,6 +49,13 @@ private:
     ///
     static float global_scale;
 
+
+    ///
+    /// Specifies whether there has been any output during the current code execution,
+    /// it determine if output separate lines are needed
+    ///
+    static bool any_output;
+
 public:
     ///
     /// Get the global scale
@@ -81,7 +88,7 @@ public:
     /// @param _game_window the game window
     ///
     static void set_game_window(GameWindow* _game_window) { game_window = _game_window; }
-    
+
     ///
     /// Get the game window
     /// @return the game window
@@ -189,6 +196,8 @@ public:
 
     static NotificationBar* get_notification_bar() { return Engine::notification_bar; }
     static void print_dialogue(std::string name, std::string text);
+    static void print_terminal(std::string text, bool error);
+    static void set_any_output(bool option);
 
     /// method for handling sprite test
     static void text_displayer();

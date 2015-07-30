@@ -79,6 +79,11 @@ void GameInit::pass_running_to_qt(bool option){
     mainWin->setRunning(option);
 }
 
+void GameInit::pass_text_to_qt(std::string text, bool error){
+    mainWin->pushTerminalText(text,error);
+}
+
+
 void GameInit::execApp(){
     app->exec();
 }
@@ -87,5 +92,12 @@ void GameInit::showMain(){
     mainWin->showMax();
 }
 
+//Get the current width of game widget
+int GameInit::getGameWidth(){
+    return mainWin->getGameWidgetWidth();
+}
 
+int GameInit::getGameHeight(){
+    return mainWin->getGameWidgetHeight();
+}
 

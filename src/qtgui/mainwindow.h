@@ -55,6 +55,10 @@ public:
     void setRunning(bool option);
     void setFast(bool option);
     void updateSpeed();
+    void pushTerminalText(std::string text, bool error);
+    void updateToolBar();
+    int getGameWidgetWidth();
+    int getGameWidgetHeight();
 protected:
     void closeEvent(QCloseEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);
@@ -70,11 +74,10 @@ private slots:
     void zoomFontOut();
     void setGameFocus();
     void timerHandler();
+    void clearTerminal();
 
 private:
     void initWorkspace(QsciScintilla* ws, int i);
-    void clearOutputPanels();
-    void createActions();
     void createToolBar();
     void createStatusBar();
     std::string number_name(int);
@@ -100,14 +103,22 @@ private:
     bool fast;
     QWidget *mainWidget;
     QTabWidget *textWidget;
-    QTextEdit *textInfo;
     QWidget *gameWidget;
+
+    QLabel *textWorld;
+    QLabel *textLevel;
+    QLabel *textCoins;
+    QLabel *textTotems;
+    QHBoxLayout *textLayout;
+    QWidget *textInfoWidget;
+
     QToolBar *toolBar;
     QsciAPIs* api;
     QWidget *buttons;
     QWidget *terminal;
     QVBoxLayout *terminalLayout;
     QHBoxLayout *terminalButtonLayout;
+    QPushButton *buttonClear;
     QVBoxLayout *windowLayout;
 
 /*

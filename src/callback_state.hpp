@@ -44,6 +44,10 @@ public:
     }
 
     void restart() {
+
+        //Reset anyOuput variable
+        Engine::set_any_output(false);
+
         auto id = Engine::get_map_viewer()->get_map_focus_object();
         auto active_player = ObjectManager::get_instance().get_object<Object>(id);
 

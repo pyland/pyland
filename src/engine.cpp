@@ -32,7 +32,7 @@ GameWindow* Engine::game_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
-
+bool Engine::any_output(false);
 
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
@@ -259,6 +259,12 @@ void Engine::print_dialogue(std::string name, std::string text) {
     notification_bar->add_notification(text_to_display);
 }
 
+void Engine::print_terminal(std::string text, bool error) {
+
+    any_output = true;
+    game_window->update_terminal_text(text,error);
+}
+
 
 void Engine::text_displayer() {
     Map *map = CHECK_NOTNULL(map_viewer->get_map());
@@ -391,7 +397,15 @@ void Engine::update_status(int id, std::string status) {
     //Will be reimplemented with new input manager
     if (status == "finished" || status == "stopped" || status == "failed" || status == "killed"){
         game_window->update_running(false);
+        if (any_output){
+            game_window->update_terminal_text("--- \n",false);
+            any_output = false;
+        }
     }
+}
+
+void Engine::set_any_output(bool option){
+    any_output = option;
 }
 
 TextFont Engine::get_game_font() {

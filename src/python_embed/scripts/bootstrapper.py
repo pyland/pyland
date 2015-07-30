@@ -66,9 +66,9 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
             except ValueError:
                 raise TypeError("help takes at most one argument, {} given".format(len(arguments)))
 
-            entity.print_dialogue(pydoc.render_doc(argument, "Help on %s", renderer=pydoc.plaintext))
+            entity.print_terminal(pydoc.render_doc(argument, "Help on %s", renderer=pydoc.plaintext),False)
         else:
-            entity.print_dialogue(entity.get_instructions())
+            entity.print_terminal(entity.get_instructions(),False)
 
     def get_retrace_steps():
         """
@@ -141,6 +141,13 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
 
         entity._print_debug(text)
 
+    def print_override(text):
+        """
+        Override print function so all text is not printed at the end.
+        """
+
+        entity.print_terminal(text + "\n", False)
+
     imbued_locals = {
 
         "north": north,
@@ -161,6 +168,7 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         "read_message": read_message,
         "walkable": walkable,
 
+        "print": print_override,
         "_print_debug": _print_debug
     }
 
@@ -169,7 +177,7 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
             super().__init__(imbued_locals)
 
         def write(self, data):
-            entity.print_dialogue(data)
+            entity.print_terminal(data,True)
 
         def runcode(self, code):
             old_stdout = sys.stdout
@@ -199,7 +207,7 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
                 sys.stdout = old_stdout
 
             if output:
-                entity.print_dialogue(output)
+                entity.print_terminal(output,False)
 
     return ScopedInterpreter
 
@@ -264,7 +272,7 @@ def start(entity, RESTART, STOP, KILL, waiting):
         except:
             waiting = True
             entity.update_status("failed")
-            entity.print_dialogue(traceback.format_exc());
+            entity.print_terminal(traceback.format_exc(),True);
 
         else:
             break
