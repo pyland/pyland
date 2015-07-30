@@ -353,6 +353,9 @@ GameMain::GameMain(int &argc, char **argv):
 
     last_clock = (std::chrono::steady_clock::now());
 
+
+
+
     //Run the challenge - returns after challenge completes
     embedWindow.executeApp();
 
@@ -445,12 +448,23 @@ void GameMain::game_loop(bool showMouse)
 }
 
 Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
+
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
     nlohmann::json j = Config::get_instance();
     std::string map_name = j["files"]["full_level_location"];
     challenge_data->map_name = map_name + "/layout.tmx";
     challenge = new Challenge(challenge_data, this);
+
+//	std::shared_ptr<Button> new_button;
+//	new_button = std::make_shared<Button>(ButtonType::SpriteHead);
+//	this->get_buttons().push_back(new_button);
+//	new_button->set_picture("gui/coin/coin-tile");
+//	new_button->set_text("Try");
+//
+//	this->get_sprite_window()->add(new_button);
+//	this->refresh_gui();
+
     return challenge;
 }
 

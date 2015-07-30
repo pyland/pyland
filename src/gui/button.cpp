@@ -22,8 +22,8 @@ Button::Button(ButtonType _type) {
     button_text = std::make_shared<GUIText>();
     button_text->set_width(1.0f);
     button_text->set_height(1.0f);
-    button_text->set_x_offset(0.5f);
-    button_text->set_y_offset(0.5f);
+    button_text->set_x_offset(0.4f);
+    button_text->set_y_offset(0.35f);
     set_text("");
     get_text()->set_bloom_radius(4);
     get_text()->align_at_origin(true);
@@ -32,13 +32,15 @@ Button::Button(ButtonType _type) {
     add(button_text);
 
     if(type == ButtonType::Board){
-        set_width(0.50f);
-        set_height(0.50f);
+        set_width(0.40f);
+        set_height(0.40f);
     }
     else if(type == ButtonType::SpriteHead){
-        set_width(0.40f);
+        set_width(0.30f);
         set_height(0.50f);
     }
+    set_x_offset(0.6f);
+    set_y_offset(0.6f);
     picture_name = "gui/coin/coin-tile";
 }
 
@@ -50,8 +52,8 @@ Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<voi
     button_text->set_text(_text);
     button_text->set_width(1.0f);
     button_text->set_height(1.0f);
-    button_text->set_x_offset(0.3f);
-    button_text->set_y_offset(0.5f);
+    button_text->set_x_offset(0.4f);
+    button_text->set_y_offset(0.35f);
     get_text()->set_bloom_radius(4);
     get_text()->align_at_origin(true);
     get_text()->vertical_align_centre();
@@ -107,6 +109,9 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
     int offset = 0;
 
     if(type == ButtonType::Board){
+
+        LOG(INFO) << "£££££££££££££££££££££";
+
         std::tuple<float,float,float,float> background_bounds = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
 
         std::tuple<float,float,float,float> corner_top_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
@@ -319,6 +324,9 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
     int offset = 0;
 
     if(type == ButtonType::Board){
+
+        LOG(INFO) << "£££££££££££££££££££££";
+
         std::tuple<float,float,float,float> background_bounds_vertex = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
         std::tuple<float,float,float,float> edge_top_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
         std::tuple<float,float,float,float> edge_right_bounds_vertex = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
