@@ -76,3 +76,7 @@ void GameEngine::register_input_callback(int input_key, PyObject *py_input_callb
 void GameEngine::play_music() {
     AudioEngine::get_instance()->play_song("test.ogg");
 }
+
+void GameEngine::print_terminal(std::string text, bool error) {
+    Engine::print_terminal(text, error);
+}

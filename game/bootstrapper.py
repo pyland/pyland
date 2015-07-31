@@ -104,7 +104,7 @@ TODO: add a class check to make sure the objects are of the correct class!, have
 if a child class is poorly defined, throw a warning and then try and create an object as their parent until GameObject is reached,
 if GameObject isn't suitable throw and error and say that somthing is seriously wrong!!!!
 """
-def wrap_entity_in_game_object(entity):
+def wrap_entity_in_game_object(entity, engine):
     #Grabs the object's location in the file system (original data comes from the map's tmx file, eg. characters/enemies/crocodile
     entity_location = entity.get_location()
     #Imports the correct module based on that path name
@@ -115,7 +115,7 @@ def wrap_entity_in_game_object(entity):
     #Get the class from the module, will be the same as it's file but in UpperCamelCase eg. SuperCrocodile in super_crocodile.py
     wrapper_class = getattr(module, snake_to_camelcase(module_name))
     game_object = wrapper_class()  # create the object
-    game_object.set_entity(entity)  # initialise it and wrap the entity instance in it
+    game_object.set_entity(entity, engine)  # initialise it and wrap the entity instance in it
     return game_object
 
 def start(entities, engine, RESTART, STOP, KILL, waiting):
@@ -129,7 +129,7 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
     """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
     
     for entity in entities:
-        game_object = wrap_entity_in_game_object(entity)
+        game_object = wrap_entity_in_game_object(entity, engine)
         game_objects.append(game_object)
         engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
         engine.print_debug("whose name is {}".format(game_object.get_name()))

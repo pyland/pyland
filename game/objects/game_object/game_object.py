@@ -14,11 +14,12 @@ class GameObject:
 
     __name = ""
     __entity = None
+    __engine = None
 
     def __init__(self):
         pass
     
-    def set_entity(self, entity):
+    def set_entity(self, entity, engine):
         """ Set's the entity in the object.
 
         The entity is the instance of the C++ class that represent the entity in the game map
@@ -34,6 +35,10 @@ class GameObject:
         self.set_sprite("")
         self.set_visible(False)
         self.set_solid(False)
+        self.__engine = engine
+
+    def get_engine(self):
+        return self.__engine
 
     def test(self, text):
         self.__entity.print_dialogue(text)

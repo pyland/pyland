@@ -22,7 +22,6 @@
 #include "object_manager.hpp"
 #include "text.hpp"
 
-
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
 NotificationBar *Engine::notification_bar(nullptr);
@@ -30,7 +29,7 @@ GameWindow* Engine::game_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
-
+bool Engine::any_output(false);
 
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
@@ -196,11 +195,11 @@ glm::vec2 Engine::find_object(int id) {
     throw std::runtime_error("MapObject is not in the map");
 }
 
-void Engine::open_editor(std::string filename) {
+void Engine::open_editor() {
     LOG(INFO) << "Opening editor";
 
     //TODO remove this function in the final version
-    std::string command(editor + std::string(" python_embed/scripts/") + filename +  ".py");
+    std::string command(editor + std::string("python_embed/scripts/Current Script.py"));
 
     // TODO: Make this close safely.
     std::thread([command] () { system(command.c_str()); }).detach();
@@ -243,6 +242,16 @@ std::string Engine::editor = DEFAULT_PY_EDITOR;
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
     notification_bar->add_notification(text_to_display);
+}
+
+void Engine::print_terminal(std::string text, bool error) {
+
+    any_output = true;
+    game_window->update_terminal_text(text,error);
+}
+
+void Engine::set_any_output(bool option){
+    any_output = option;
 }
 
 TextFont Engine::get_game_font() {
