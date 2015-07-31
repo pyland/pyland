@@ -25,6 +25,7 @@ class GameEngine {
         static int INPUT_LEFT() { return InputHandler::INPUT_LEFT; }
 
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
+        static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
         GameEngine(GameMain * _game_main){

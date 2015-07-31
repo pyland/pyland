@@ -58,6 +58,7 @@ GameMain::GameMain(int &argc, char **argv):
     map_viewer(&embedWindow, &gui_manager),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 {
+    nlohmann::json j = Config::get_instance();
     LOG(INFO) << "Constructing GameMain..." << endl;
 
     /// CREATE GLOBAL OBJECTS

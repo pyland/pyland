@@ -119,6 +119,14 @@ def wrap_entity_in_game_object(entity, engine):
     return game_object
 
 def start(entities, engine, RESTART, STOP, KILL, waiting):
+    while waiting: #TODO: Work out why this waiting thing is here and in EntityThread: Ask Alex!!!
+        # Smallest reasonable wait while
+        # allowing fast interrupts.
+        #
+        # Could later be replaced with locking
+        # for proper interrupts.
+        time.sleep(0.05)
+
     #engine = DummyEngine(engine)
     """
     Run the main bootstrapper loop! It's fun!
@@ -130,6 +138,7 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
     
     for entity in entities:
         game_object = wrap_entity_in_game_object(entity, engine)
+        game_object.initialise() #run the initialisation script on the object if anything needs to be initialised
         game_objects.append(game_object)
         engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
         engine.print_debug("whose name is {}".format(game_object.get_name()))
@@ -139,14 +148,6 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
     
     while True:
         try:
-            while waiting:
-                # Smallest reasonable wait while
-                # allowing fast interrupts.
-                #
-                # Could later be replaced with locking
-                # for proper interrupts.
-                time.sleep(0.05)
-
             script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: implement this path stuff in a config (json) file!!!!!
             engine.print_debug("Reading from file: {}".format(script_filename))
             with open(script_filename, encoding="utf8") as script_file:

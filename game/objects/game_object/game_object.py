@@ -19,6 +19,12 @@ class GameObject:
     def __init__(self):
         pass
     
+    def initialise(self):
+        """
+            Yay!!!!
+        """
+        pass
+
     def set_entity(self, entity, engine):
         """ Set's the entity in the object.
 
@@ -30,6 +36,8 @@ class GameObject:
         ----------
         entity : Entity
             The C++ Entity instance that you wish to wrap.
+        engine: Engine
+            The C++ GameEngine instance, provides some usefule API.
         """
         self.__entity = entity
         self.set_sprite("")

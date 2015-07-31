@@ -12,6 +12,9 @@ from scoped_interpreter import ScopedInterpreter
 """ This file contains all the implementation details of how player scripts are interpreted and run.
 """
 
+class HaltScriptException(Exception):
+    pass
+
 """ This function runs the script provided in the argument in a seperate thread,
 the script has access to a set of API's defined in imbued_locals that allow
 it to control the player object provided.
@@ -21,9 +24,7 @@ player_object -- this is the instance of the player_object which is interacted w
 script_name -- the name of the script that you wish to run
 callback -- the callback function that will run once the script has completed  (in the same thead that the script was running in)
 """
-def start(player_object, script_name, callback):
-    print("Running Player Script: " + script_name) #TODO: change this to some kind of script debug.
-
+def start(player_object, script_name):
     """ imbued_locals is a python dictionary of python objects (variables, methods, class instances etc.)
     available to the player. :)
     eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
@@ -38,35 +39,36 @@ def start(player_object, script_name, callback):
     imbued_locals["move_south"] = make_blocking(player_object.move_south)
     imbued_locals["move_west"] = make_blocking(player_object.move_west)
 
+    #Replace print statement in player script so that all their output goes to the terminal.
+    imbued_locals["print"] = lambda text : player_object.get_engine().print_terminal(text + "\n", False)
+    
 
-    #Creates
-    #ScopedInterpreter = create_execution_scope(game_object) #Get the class definition for the ScopedIntepreter
+
+    #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(imbued_locals, player_object.get_engine().print_terminal) #create an instance of it
     script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/" + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
 
-    #open and print the script
+    #open and read the script
     with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()
-                #print(script)
 
-    """ this is the method that is run in the seperate thread,
-    it runs the script requested first and then runs the callback.
-    the callback is therefore run in the seperate thread.
-    """
     def thread_target():
-        scoped_interpreter.runcode(script)
-        player_object.set_running_script_status(False)
-        callback()
-
-    #run the script using the scoped_intepreter in a new thread if we are in the main thread. If it happens to be a callback to a player script, run it in the same thread
-    #if(threading.current_thread() == threading.main_thread()):
-    #	threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
-    #elif(threading.current_thread().name == player_object.get_name() + "_script_thread"):
-    #	thread_target()
-    #else: #TODO: as scripts will always be run in thread Dummy-1 by the engine, this really shouldn't print anything here :P
-    #	print("Error: Trying to run a script for " + player_object.get_name() + " in the thread: " + threading.current_thread().name + "!")
-    #TODO: Rewrite this to make it clearer what needs to happen and implemente safeguards
-    threading.Thread(target = thread_target, name = (player_object.get_name() + "_script_thread")).start()
+        """ this is the method that is run in the seperate thread,
+        it runs the script requested first and then runs the callback.
+        the callback is therefore run in the seperate thread.
+        """
+        try:
+            scoped_interpreter.runcode(script) #Run the script
+        except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
+            player_object.get_engine().print_terminal("Halted Script\n", True)
+        finally: #perform neccesary cleanup
+            player_object.get_engine().print_terminal("-------------\n", False)
+            player_object.set_running_script_status(False)
+            #TODO: Make it so that the halt button becomes the run button again.
+    
+    thread = threading.Thread(target = thread_target, name = player_object.get_name() + "_script_thread")
+    thread.start()
+    player_object.set_thread_id(thread.ident)
     return
 
 """ Takes an asynchronous function as an argument and returns a version of it that is blocking.

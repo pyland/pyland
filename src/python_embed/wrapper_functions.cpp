@@ -57,5 +57,6 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)
         .add_static_property("INPUT_LEFT", &GameEngine::INPUT_LEFT)
         .add_static_property("INPUT_RUN", &GameEngine::INPUT_RUN)
+        .add_static_property("INPUT_HALT", &GameEngine::INPUT_HALT)
         .add_static_property("THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING", &GameEngine::THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING);
 }
