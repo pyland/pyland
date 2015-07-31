@@ -393,6 +393,9 @@ public:
     /// @return A lifeline which keeps the callback active.
     ///
     Lifeline register_resize_handler(std::function<void(GameWindow*)> func);
+
+    int get_game_window_height();
+    int get_game_window_width();
 };
 
 #endif

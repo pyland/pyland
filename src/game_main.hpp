@@ -1,6 +1,7 @@
 #ifndef GAME_MAIN_H
 #define GAME_MAIN_H
 
+#include <deque>
 #include <string>
 #include <memory>
 #include <utility>
@@ -47,7 +48,7 @@ private:
     std::shared_ptr<Button> pause_button;
     //The gameplay buttons for the gui displayed on the screen
     //created by GameEngine
-    std::vector<std::shared_ptr<Button>> buttons;
+    std::deque<std::shared_ptr<Button>> buttons;
 
     //Actions that can be performed on the game window
     std::function<void(GameWindow*)> gui_resize_func;
@@ -94,7 +95,7 @@ public:
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
 
-    std::vector<std::shared_ptr<Button>> get_buttons(){
+    std::deque<std::shared_ptr<Button>> get_buttons(){
         return buttons;
     }
 
@@ -108,6 +109,8 @@ public:
     GameWindow* getGameWindow();
     CallbackState getCallbackState();
     std::chrono::steady_clock::time_point get_start_time();
+
+    void pause_menu();
 };
 
 #endif // GAME_MAIN_H

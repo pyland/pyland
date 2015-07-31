@@ -11,7 +11,6 @@
 #include "animation_frames.hpp"
 #include "dispatcher.hpp"
 #include "lifeline.hpp"
-#include "sprite_switcher.hpp"
 #include "walkability.hpp"
 #include "entity.hpp"
 
@@ -48,7 +47,6 @@ private:
 protected:
     Map* map;
     Lifeline esc_callback;
-    SpriteSwitcher* sprite_switcher;
 
     std::vector<int> map_object_ids;
 public:

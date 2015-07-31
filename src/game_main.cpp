@@ -1,4 +1,5 @@
 #define GLM_FORCE_RADIANS
+#include <deque>
 #include <fstream>
 #include <glog/logging.h>
 #include <boost/filesystem/operations.hpp>
@@ -49,6 +50,9 @@ using namespace std;
 
 static std::mt19937 random_generator;
 
+const float x_scale = 1.0/680.0;
+const float y_scale = 1.0/360.0;
+bool paused = false;
 
 GameMain::GameMain(int &argc, char **argv):
     embedWindow(800, 600, argc, argv, this),
@@ -77,22 +81,36 @@ GameMain::GameMain(int &argc, char **argv):
     sprite_window = std::make_shared<GUIWindow>();
     sprite_window->set_visible(false);
 
+    buttons.clear();
+    LOG(INFO) << "$$$$$$ " << buttons.size();
     gui_manager.set_root(sprite_window);
 
     notification_bar = new NotificationBar();
 
     Engine::set_notification_bar(notification_bar);
-    //    SpriteSwitcher sprite_switcher;
 
     pause_button = std::make_shared<Button>(ButtonType::SpriteHead);
     pause_button->set_picture("gui/coin/coin-tile");
-    pause_button->set_text("Pause");
-    pause_button->set_y_offset(0.67f);
+    pause_button->set_text("");
+    pause_button->set_width(0.15f);
+    pause_button->set_height(0.35f);
+    pause_button->set_y_offset(embedWindow.get_game_window_height()*y_scale);
     pause_button->set_x_offset(0.0f);
     pause_button->set_on_click( [&] () {
-        LOG(INFO) << "PAUSED";
-        //dummy method
-        //pause_menu();
+
+        if(paused == false){
+            paused = true;
+            LOG(INFO) << "PAUSED";
+            sprite_window->set_visible(true);
+            refresh_gui();
+            pause_menu();
+        }
+        else{
+            paused = false;
+            LOG(INFO) << "RESUMED";
+            sprite_window->set_visible(false);
+            refresh_gui();
+        }
     });
 
     sprite_window->add(pause_button);
@@ -318,14 +336,37 @@ GameMain::GameMain(int &argc, char **argv):
 
 }
 
+void GameMain::pause_menu()
+{
+
+}
+
 void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback)
 {
+    LOG(INFO) << buttons.size();
     std::shared_ptr<Button> new_button;
     new_button = std::make_shared<Button>(ButtonType::SpriteHead);
-    this->get_buttons().push_back(new_button);
+    buttons.push_back(new_button);
     new_button->set_picture(file_path);
     new_button->set_text(name);
     new_button->set_on_click(callback);
+
+    new_button->set_width(0.15f);
+    new_button->set_height(0.35f);
+
+    float org_x_location = embedWindow.get_game_window_width() * x_scale;
+
+    //make space for previous buttons
+    LOG(INFO) << "BUTTON OFFSET ££££££££££££££";
+    LOG(INFO) << embedWindow.get_game_window_width() * x_scale;
+    LOG(INFO) << embedWindow.get_game_window_height() * y_scale;
+    LOG(INFO) << org_x_location - (buttons.size() - 1) * 0.13f;
+    LOG(INFO) << (buttons.size() - 1);
+
+
+
+    new_button->set_x_offset(org_x_location - (buttons.size() - 1) * 0.13f);
+    new_button->set_y_offset(embedWindow.get_game_window_height() * y_scale);
 
     this->get_sprite_window()->add(new_button);
     this->refresh_gui();
