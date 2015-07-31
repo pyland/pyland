@@ -25,5 +25,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("print_dialogue",    &Entity::py_print_dialogue)
         .def("read_message",      &Entity::read_message)
         .def("update_status",     &Entity::py_update_status)
-        .def("walkable",          &Entity::walkable);
+        .def("walkable",          &Entity::walkable)
+        .def("get_x_position",    &Entity::get_x_position)
+        .def("get_y_position",    &Entity::get_y_position);
 }

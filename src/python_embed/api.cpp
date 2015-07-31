@@ -91,6 +91,22 @@ void Entity::monologue() {
     });
 }
 
+int Entity::get_x_position() {
+    auto id(this->id);
+    return GilSafeFuture<int>::execute([id] (GilSafeFuture<int> position) {
+        auto where(Engine::find_object(id));
+        position.set(int(where.x));
+    });
+}
+
+int Entity::get_y_position() {
+    auto id(this->id);
+    return GilSafeFuture<int>::execute([id] (GilSafeFuture<int> position) {
+        auto where(Engine::find_object(id));
+        position.set(int(where.y));
+    });
+}
+
 bool Entity::cut(int x, int y) {
     ++call_number;
 

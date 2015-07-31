@@ -136,3 +136,4 @@ This will create the executable "application" which can then be run.
 * `look(radius)` - Find all objects in a given radius from the character. Parameter: radius of the area to search for objects in.
 
 * `monologue()` - Prints to the screen the name and location of a character.
+* `get_position()` - Returns a tuple of the position of the character.

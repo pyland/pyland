@@ -133,6 +133,9 @@ class Entity {
 
         py::list get_retrace_steps();
         py::object read_message();
+
+        int get_x_position();
+        int get_y_position();
 };
 
 

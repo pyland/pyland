@@ -139,6 +139,13 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
 
         entity._print_debug(text)
 
+    def get_position():
+        """
+        Returns character current position as an tuple of x position and y position.
+        """
+
+        return (entity.get_x_position(), entity.get_y_position())
+
     imbued_locals = {
         "cut": cut,
         "help": help,
@@ -151,6 +158,7 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         "monologue": monologue,
         "read_message": read_message,
         "walkable": walkable,
+        "get_position":get_position,
 
         "_print_debug": _print_debug
     }
