@@ -68,6 +68,7 @@ GameMain::GameMain(int &argc, char **argv):
     paused(false),
     display_button_start(0)
 {
+    nlohmann::json j = Config::get_instance();
     LOG(INFO) << "Constructing GameMain..." << endl;
 
     /// CREATE GLOBAL OBJECTS

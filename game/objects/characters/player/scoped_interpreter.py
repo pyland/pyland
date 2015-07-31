@@ -11,16 +11,20 @@ Creates and defines a class called ScopedIntepreter which is used to run the pla
 """
 class ScopedInterpreter(code.InteractiveInterpreter):
 
+    output_reader = None
+
     """ Creates a scoped intepreter which can be used to run some code which is provided as the argument to runcode()
     imbued_locals -- A dictionary from strings to objects, each object will be available to the code being run in the interpreter under the name given by their dictionary key
     output_reader -- A function which takes a string as an argument, any output from the scoped code will be passed to here: TODO: work out if this is what it actually does!
     """
     def __init__(self, imbued_locals, output_reader):
         super().__init__(imbued_locals)
+        self.output_reader = output_reader
 
     """ TODO: work out what this does, was in bootstrapper.py so assumed to be needed here!"""
     def write(self, data):
-        output_reader(data, True)
+        pass
+        #self.output_reader(data, True)
 
     def runcode(self, code):
         old_stdout = sys.stdout
@@ -46,9 +50,8 @@ class ScopedInterpreter(code.InteractiveInterpreter):
                 except:
                     self.showtraceback() # TODO: work out how this works, comment it in bootstrapper.py as well
                 # Read
-                #sys.stdout.seek(0) #TODO: fix why this is was unseekable
-                #output = sys.stdout.read()
-                output = False
+                sys.stdout.seek(0) #TODO: fix why this is was unseekable
+                output = sys.stdout.read()
     
         finally:
             sys.stdout = old_stdout
@@ -58,6 +61,6 @@ class ScopedInterpreter(code.InteractiveInterpreter):
             TODO: make it so that it prints the output to the player console! However, this version
             only prints to the console once the script has finished as opposed to printing in real time?
             """
-            output_reader(output, False)
+            #self.output_reader(output, False)
 
 

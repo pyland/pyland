@@ -1,6 +1,12 @@
+#Python modules
 import operator
 import os
+import ctypes #for sending exceptions to python threads!!!
+
+#Custom modules
 import scriptrunner
+
+
 """
 In Python comments,
 could define some standard which the C++ code can use to determine things about it handles 
@@ -29,18 +35,27 @@ and which built-in variables exist already.
 """
 class Player(Character):
 
-    __running_script = False;
+    __running_script = False
+    __thread_id = 0
     
-    """ constructor
-    run when the object is created in-engine
-    """
-    def __init__(self):
-        super().__init__()
-        #register button callbacks
-        #api.add_button_callback(api.CONST_BUTTON_UP, self.__handle_movement_input(self.is_facing_north, self.face_north, self.move_north)
-        #api.add_button_callback(api.CONST_BUTTON_RIGHT, self.__handle_movement_input(self.is_facing_east, self.face_east, self.move_east)
-        #api.add_button_callback(api.CONST_BUTTON_DOWN, self.__handle_movement_input(self.is_facing_south, self.face_south, self.move_south)
-        #api.add_button_callback(api.CONST_BUTTON_LEFT, self.__handle_movement_input(self.is_facing_west, self.face_west, self.move_west)
+    def initialise(self):
+        """ An initialiser function.
+        
+        This function is called once all the neccesary set-up of the object has completed
+        run when the object is created in-engine
+        """
+        engine = self.get_engine()
+
+        #register input callbacks to make character playable
+        #register callbacks for running player scripts
+        engine.register_input_callback(engine.INPUT_RUN, self.run_script)
+        engine.register_input_callback(engine.INPUT_HALT, self.halt_script)
+        
+        #register callbacks for character movement
+        engine.register_input_callback(engine.INPUT_UP, self.move_north)
+        engine.register_input_callback(engine.INPUT_RIGHT, self.move_east)
+        engine.register_input_callback(engine.INPUT_DOWN, self.move_south)
+        engine.register_input_callback(engine.INPUT_LEFT, self.move_west)
 
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
@@ -60,8 +75,8 @@ class Player(Character):
     Put the regular public methods you wish to use here.
     """
 
-    def run_script(self, script_name, callback = lambda: None):
-        """ Runs the script whose location is provided as an argument, exposes the PyGuide API to the script to allow it to control this player. :)
+    def run_script(self):
+        """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
 
         Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
         The callback is run after the script has finished running.
@@ -78,8 +93,18 @@ class Player(Character):
         """
         if not(self.__running_script): #only run script if one currently isn't running.
             self.__running_script = True # running script TODO: make this system a lot more robust
-            scriptrunner.start(self, script_name, callback)
+            scriptrunner.start(self, "current")
         return
+
+    def halt_script(self):
+        """ Halts the player script that is running.
+
+        Works by sending the thread the script is running in an Exception, which the thread catches and appropriately handles and
+        stops running.
+        """
+        if(self.__running_script):
+            thread_id = self.__thread_id #TODO: Make this process safer, look at temp.py and add appropriate guards around the next line to check for valid results etc.
+            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
 
     def set_running_script_status(self, status):
         """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
@@ -88,6 +113,13 @@ class Player(Character):
         """
         self.__running_script = status
         return
+
+    def set_thread_id(self, thread_id):
+        self.__thread_id = thread_id
+        return
+
+    def get_thread_id(self):
+        return thread_id
 
     """ private:
     Put the private methods you wish to use here.
