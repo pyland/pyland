@@ -206,16 +206,6 @@ glm::vec2 Engine::find_object(int id) {
     throw std::runtime_error("Object is not in the map");
 }
 
-void Engine::open_editor() {
-    LOG(INFO) << "Opening editor";
-
-    //TODO remove this function in the final version
-    std::string command(editor + std::string("python_embed/scripts/Current Script.py"));
-
-    // TODO: Make this close safely.
-    std::thread([command] () { system(command.c_str()); }).detach();
-}
-
 static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<int> objects) {
     auto &object_manager(ObjectManager::get_instance());
 
@@ -251,8 +241,6 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
         return is_object_at(location, object_id);
     });
 }
-
-std::string Engine::editor = DEFAULT_PY_EDITOR;
 
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
@@ -385,6 +373,7 @@ void Engine::text_updater() {
 
 }
 
+//Update status when script has started or finished
 void Engine::update_status(int id, std::string status) {
     auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
     if (!sprite) {
@@ -392,15 +381,30 @@ void Engine::update_status(int id, std::string status) {
     } else {
         sprite->set_sprite_status(status);
     }
-
-    //Update run button when script has compltede/halted
-    //Will be reimplemented with new input manager
-    if (status == "finished" || status == "stopped" || status == "failed" || status == "killed"){
+    if ((status == "finished" || status == "stopped" || status == "failed" || status == "killed") && sprite->get_just_terminated()){
         game_window->update_running(false);
         if (any_output){
-            game_window->update_terminal_text("--- \n",false);
+            game_window->update_terminal_text("--- " + sprite->get_sprite_name() + "'s script ended--- \n",false);
             any_output = false;
         }
+        sprite->toggle_just_terminated();
+    }
+    else if(status == "running"){
+        sprite->toggle_just_terminated();
+    }
+}
+
+//Update run button when switching between sprites
+void Engine::update_status_buttons(int id){
+    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+    std::string status = sprite->get_sprite_status();
+    //Update run button when script has completed/halted
+    //Will be reimplemented with new input manager
+    if (status == "finished" || status == "nothing" || status == "stopped" || status == "failed" || status == "killed"){
+        game_window->update_running(false);
+    }
+    else if(status == "running"){
+        game_window->update_running(true);
     }
 }
 

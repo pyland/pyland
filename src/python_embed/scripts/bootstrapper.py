@@ -146,7 +146,7 @@ def create_execution_scope(entity, RESTART, STOP, KILL):
         Override print function so all text is not printed at the end.
         """
 
-        entity.print_terminal(text + "\n", False)
+        entity.print_terminal(str(text)+"\n", False)
 
     imbued_locals = {
 

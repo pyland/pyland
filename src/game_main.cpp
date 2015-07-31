@@ -71,13 +71,11 @@ GameMain::GameMain(int argc, char *argv[]):
     switch (argc)
     {
     default:
-        std::cout << "Usage: " << argv[0] << " [EDITOR] [MAP]" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [MAP] " << std::endl;
         return;
         // The lack of break statements is not an error!!!
-    case 3:
-        map_path = std::string(argv[2]);
     case 2:
-        Engine::set_editor(argv[1]);
+        map_path = std::string(argv[1]);
     case 1:
         break;
     }
@@ -392,6 +390,7 @@ void GameMain::game_loop(bool showMouse)
         challenge = pick_challenge(challenge_data);
         Engine::set_challenge(challenge);
         challenge->start();
+        callbackstate.stop();
         //Update tool bar here
         //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
 
@@ -422,11 +421,6 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data)
         challenge = new CuttingChallenge(challenge_data);
         break;
     case 3:
-        map_name = "../maps/final_challenge.tmx";
-        challenge_data->map_name = map_name;
-        challenge = new FinalChallenge(challenge_data);
-        break;
-    case 4:
         map_name = "../maps/new_challenge.tmx";
         challenge_data->map_name = map_name;
         challenge = new NewChallenge(challenge_data);

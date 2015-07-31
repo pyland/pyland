@@ -69,6 +69,9 @@ Sprite::Sprite(glm::ivec2 position,
         status_icon_id = status_icon->get_id();
         LOG(INFO) << "created focus icon with id: " << status_icon_id;
 
+        sprite_status = string_to_status("nothing");
+        just_terminated = false;
+
         //Removed status_icon_image (the stick man icon) to simplify interface
 //        Engine::get_map_viewer()->get_map()->add_map_object(status_icon_id);
 
@@ -179,6 +182,18 @@ Sprite_Status Sprite::string_to_status(std::string status) {
     return string_map[status];
 }
 
+std::string Sprite::status_to_string(Sprite_Status status){
+    std::map<Sprite_Status,std::string> string_map = {
+        { Sprite_Status::NOTHING,        ""},
+        { Sprite_Status::FAILED,    "failed"},
+        { Sprite_Status::KILLED,    "killed"},
+        { Sprite_Status::RUNNING,  "running" },
+        { Sprite_Status::STOPPED,  "stopped"}
+    };
+
+    return string_map[status];
+}
+
 void Sprite::set_sprite_status(std::string _sprite_status) {
     sprite_status = string_to_status(_sprite_status);
 
@@ -209,6 +224,10 @@ void Sprite::set_sprite_status(std::string _sprite_status) {
     }
 }
 
+std::string Sprite::get_sprite_status(){
+    return status_to_string(sprite_status);
+}
+
 void Sprite::set_focus(bool _is_focus) {
     // check focus is actually being changed
     if (_is_focus != is_focus) {
@@ -231,5 +250,15 @@ void Sprite::set_instructions(std::string instructions) {
 
 std::string Sprite::get_instructions() {
     return instructions;
+}
+
+//Flag to check if sprite has just terminated
+//so terminal only prints that it has finished when necessary
+bool Sprite::get_just_terminated(){
+    return just_terminated;
+}
+
+void Sprite::toggle_just_terminated(){
+    just_terminated = !just_terminated;
 }
 
