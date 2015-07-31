@@ -1,5 +1,6 @@
 #include <fstream>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "config.hpp"
 
@@ -23,6 +24,29 @@ std::string exec(const char* cmd) {
 
 nlohmann::json Config::j;
 bool Config::created = false;
+
+int bob(int argc, const char *fn)
+{
+    int error;
+    char *output;
+    struct JsonnetVm *vm;
+    if (argc != 2) {
+        fprintf(stderr, "libjsonnet_test_file <file>\n");
+        return EXIT_FAILURE;
+    }
+    vm = jsonnet_make();
+    output = jsonnet_evaluate_file(vm, fn, &error);
+    if (error) {
+        fprintf(stderr, "%s", output);
+        jsonnet_realloc(vm, output, 0);
+        jsonnet_destroy(vm);
+        return EXIT_FAILURE;
+    } 
+    printf("%s", output);
+    jsonnet_realloc(vm, output, 0);
+    jsonnet_destroy(vm);
+    return EXIT_SUCCESS;
+}
 
 nlohmann::json Config::get_instance() {
     /*
@@ -48,5 +72,19 @@ nlohmann::json Config::get_instance() {
         Config::j = nlohmann::json::parse(output);
         Config::created = true;
     }
+
+    //bob(2, "config.jsonnet");
+  
+    /*if(!created) {
+        //std::string output = exec("jsonnet/jsonnet config.jsonnet");
+        int error;
+        char *output;
+        struct JsonnetVm *vm;
+        vm = jsonnet_make();
+        output = jsonnet_evaluate_file(vm, "config.jsonnet", &error);
+        Config::j = nlohmann::json::parse(output);
+        Config::created = true;
+    }
+    */
     return Config::j;
 }

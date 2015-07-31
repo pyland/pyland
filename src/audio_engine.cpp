@@ -50,11 +50,11 @@ void AudioEngine::play_song(std::string file_location) {
     /* Set the music volume */
     Mix_VolumeMusic(audio_volume);
 
-    music = Mix_LoadMUS("../game/music/test.ogg");
+    music = Mix_LoadMUS("../game/music/beach.ogg");
 
     if ( music == NULL ) {
             fprintf(stderr, "Couldn't load %s: %s\n",
-                "../game/music/test.ogg", SDL_GetError());
+                "../game/music/beach.ogg", SDL_GetError());
             //CleanUp(2);
         }
 

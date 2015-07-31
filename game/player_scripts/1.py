@@ -1,11 +1,8 @@
-move_north()
-move_north()
-move_north()
-
-move_south()
+"""
+This is where you will run python scripts to help
+you complete the game! Read the helpful messages
+in the game and they will tell you what to do! :)
+"""
+print("scar")
 move_east()
-move_east()
-move_south()
-move_west()
-move_south()
-move_west()
+print("hi bob")
