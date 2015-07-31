@@ -97,6 +97,7 @@ GameMain::GameMain(int &argc, char **argv):
 
     sprite_window->add(pause_button);
 
+
     original_window_size = embedWindow.get_size();
     sprite_window->set_width_pixels(original_window_size.first);
     sprite_window->set_height_pixels(original_window_size.second);
@@ -119,14 +120,6 @@ GameMain::GameMain(int &argc, char **argv):
         map_viewer.resize();
     });
 
-    stop_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("H")},
-    [&] (KeyboardInputEvent)
-    {
-        callbackstate.stop();
-    }
-    ));
-
     restart_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("R")},
     [&] (KeyboardInputEvent)
@@ -135,18 +128,11 @@ GameMain::GameMain(int &argc, char **argv):
     }
     ));
 
-    editor_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("E")},
-    [&] (KeyboardInputEvent)
-    {
-        auto id = Engine::get_map_viewer()->get_map_focus_object();
-        auto active_player = ObjectManager::get_instance().get_object<Object>(id);
-        if (!active_player)
-        {
-            return;
+    Lifeline editor_callback = input_manager->register_keyboard_handler(filter(
+        {KEY_PRESS, KEY("E")},
+        [&] (KeyboardInputEvent) {
+            Engine::open_editor();
         }
-        Engine::open_editor(active_player->get_name());
-    }
     ));
 
     back_callback = input_manager->register_keyboard_handler(filter(
@@ -156,47 +142,6 @@ GameMain::GameMain(int &argc, char **argv):
         Engine::get_challenge()->event_finish.trigger();;
     }
     ));
-
-    fast_start_ease_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY({"Left Shift", "Right Shift"})},
-    [&] (KeyboardInputEvent)
-    {
-        start_time = std::chrono::steady_clock::now();
-    }
-    ));
-
-    fast_ease_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_HELD, KEY({"Left Shift", "Right Shift"})},
-    [&] (KeyboardInputEvent)
-    {
-        auto now(std::chrono::steady_clock::now());
-        auto time_passed = now - start_time;
-
-        float completion(time_passed / std::chrono::duration<float>(6.0f));
-        completion = std::min(completion, 1.0f);
-
-        // Using an easing function from the internetz:
-        //
-        //     start + (c⁵ - 5·c⁴ + 5·c³) change
-        //
-        float eased(1.0f + 511.0f * (
-                        + 1.0f * completion * completion * completion * completion * completion
-                        - 5.0f * completion * completion * completion * completion
-                        + 5.0f * completion * completion * completion
-                    ));
-
-        EventManager::get_instance()->time.set_game_seconds_per_real_second(eased);
-    }
-    ));
-
-    fast_finish_ease_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_RELEASE, KEY({"Left Shift", "Right Shift"})},
-    [&] (KeyboardInputEvent)
-    {
-        EventManager::get_instance()->time.set_game_seconds_per_real_second(1.0);
-    }
-    ));
-
 
     up_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
@@ -366,7 +311,8 @@ GameMain::GameMain(int &argc, char **argv):
     //add_button();
 
     //Run the challenge - returns after challenge completes
-    embedWindow.executeApp();
+    embedWindow.execute_app();
+
 
     LOG(INFO) << "Constructed GameMain" << endl;
 
@@ -464,6 +410,8 @@ void GameMain::game_loop(bool showMouse)
         challenge = pick_challenge(challenge_data);
         Engine::set_challenge(challenge);
         challenge->start();
+        //Update tool bar here
+        //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
 
     }
     return;
@@ -486,9 +434,17 @@ GameWindow* GameMain::getGameWindow()
     return &embedWindow;
 }
 
-
 void GameMain::refresh_gui()
 {
     gui_manager.parse_components();
     //map_viewer.render();
 }
+
+CallbackState GameMain::getCallbackState(){
+    return callbackstate;
+}
+
+std::chrono::steady_clock::time_point GameMain::get_start_time(){
+    return start_time;
+}
+

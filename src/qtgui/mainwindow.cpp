@@ -15,11 +15,14 @@
 //++
 
 // Standard stuff
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <math.h>
 #include <sstream>
 #include <assert.h>
+
+using namespace std;
 
 // Python includes
 #include "interpreter.hpp"
@@ -72,6 +75,7 @@
 #include "game_main.hpp"
 #include "h_tab_bar.hpp"
 #include "input_manager.hpp"
+#include "event_manager.hpp"
 
 // Game window stuff
 #define GLM_FORCE_RADIANS
@@ -154,6 +158,8 @@ MainWindow::MainWindow(GameMain *exGame)
     terminalDisplay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     terminalDisplay->setFocusPolicy(Qt::NoFocus);
 
+    QPushButton *buttonClear = new QPushButton("c");
+    terminalDisplay->addScrollBarWidget(buttonClear,Qt::AlignTop);
     terminalButtonLayout = new QHBoxLayout;
 
     // Setup terminal buttons
@@ -162,6 +168,9 @@ MainWindow::MainWindow(GameMain *exGame)
 
     buttonRun->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     buttonSpeed->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+    setRunning(false);
+    setFast(false);
 
     terminalButtonLayout->addWidget(buttonRun);
     terminalButtonLayout->addWidget(buttonSpeed);
@@ -218,7 +227,6 @@ MainWindow::MainWindow(GameMain *exGame)
 
     mainWidget = new QWidget;
 
-    createActions();
     createToolBar();
 
     setWindowTitle(tr("Pyland"));
@@ -236,7 +244,7 @@ MainWindow::MainWindow(GameMain *exGame)
     this->setContextMenuPolicy(Qt::NoContextMenu);
     this->setCentralWidget(mainWidget);
 
-    std::cout << gameWidget->winId() << "\n";
+    LOG(INFO) << gameWidget->winId() << "\n";
     /*
         int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
         if (result != 0)
@@ -248,11 +256,6 @@ MainWindow::MainWindow(GameMain *exGame)
 
     embedWindow = SDL_CreateWindowFrom((void*)(gameWidget->winId()));
 
-    //SDL_SetWindowSize(embedWindow, 600, 420);
-    //glViewport(0, 0, 600,420);
-    embedWindow->flags |= SDL_WINDOW_OPENGL;
-    SDL_GL_LoadLibrary(NULL);
-    glContext = SDL_GL_CreateContext(embedWindow);
     LOG(INFO) << "created context\n";
     gameWidget->installEventFilter(this);
     gameWidget->setMouseTracking(true);
@@ -263,15 +266,22 @@ MainWindow::MainWindow(GameMain *exGame)
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
     eventTimer->start();
 
-    //Keep QT window on top, to match SDL window (only do this on raspberry pi)
-#ifdef USE_GLES
-    setWindowFlags(Qt::WindowStaysOnTopHint);
-#endif
+    int width = (gameWidget->width());
+    int height = gameWidget->height();
+
+    SDL_SetWindowSize(embedWindow, width, height);
+    glViewport(0, 0, width, height);
+    embedWindow->flags |= SDL_WINDOW_OPENGL;
+    SDL_GL_LoadLibrary(NULL);
+    glContext = SDL_GL_CreateContext(embedWindow);
+
+    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
+    connect(buttonSpeed,SIGNAL(released()),this,SLOT (toggleSpeed()));
+    connect(buttonClear,SIGNAL(released()),this,SLOT (clearTerminal()));
 
     this->showMaximized();
 
     LOG(INFO) << "Constructed MainWindow" << std::endl;
-
 }
 
 MainWindow::~MainWindow()
@@ -299,6 +309,7 @@ MainWindow::~MainWindow()
 
     delete buttonRun;
     delete buttonSpeed;
+    delete buttonClear;
 
     delete buttons;
 
@@ -312,7 +323,13 @@ MainWindow::~MainWindow()
 
     delete mainWidget;
 
-    delete textInfo;
+    delete textWorld;
+    delete textLevel;
+    delete textCoins;
+    delete textTotems;
+    delete textLayout;
+    delete textInfoWidget;
+
     delete toolBar;
 
     delete windowLayout;
@@ -445,6 +462,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     QKeyEvent *keyEvent = NULL;
     QMouseEvent *mouseEvent = NULL;
+    //QFocusEvent *focusEvent = NULL;
+    //QResizeEvent *resizeEvent = NULL;
     //Check if QT event is a keyboard or mouse event, and push it to SDL
     if (event->type() == 6)//QEvent::KeyPress)
     {
@@ -502,6 +521,35 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         sdlEvent.motion.y = mouseEvent->y();
         SDL_PushEvent(&sdlEvent);
     }
+    else if(event->type() == 9)  //QEvent::FocusOut
+    {
+        //focusEvent = static_cast<QFocusEvent*>(event);
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_WINDOWEVENT;
+        sdlEvent.window.event = SDL_WINDOWEVENT_HIDDEN;
+        sdlEvent.window.windowID = SDL_GetWindowID(embedWindow);
+        SDL_PushEvent(&sdlEvent);
+    }
+    else if(event->type() == 8)  //QEvent::FocusIn
+    {
+        //focusEvent = static_cast<QFocusEvent*>(event);
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_WINDOWEVENT;
+        sdlEvent.window.event = SDL_WINDOWEVENT_SHOWN;
+        sdlEvent.window.windowID = SDL_GetWindowID(embedWindow);
+        SDL_PushEvent(&sdlEvent);
+    }
+    else if(event->type() == 14)  //QEvent::Resize
+    {
+        //resizeEvent = static_cast<QResizeEvent*>(event);
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_WINDOWEVENT;
+        sdlEvent.window.event = SDL_WINDOWEVENT_RESIZED;
+        sdlEvent.window.windowID = SDL_GetWindowID(embedWindow);
+        sdlEvent.window.data1 = splitter->width();
+        sdlEvent.window.data2 = splitter->height();
+        SDL_PushEvent(&sdlEvent);
+    }
     else
     {
         return QObject::eventFilter(obj, event);
@@ -513,8 +561,6 @@ void MainWindow::timerHandler()
 {
     //Execute the game loop for this frame
     game->game_loop(gameWidget->underMouse());
-    //glClear(GL_COLOR_BUFFER_BIT);
-    //SDL_GL_SwapWindow(embedWindow);
 }
 
 void MainWindow::initWorkspace(QsciScintilla* ws, int i)
@@ -548,6 +594,46 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     ws->setCaretWidth(5);
     ws->setMarginWidth(1,5);
     ws->setCaretForegroundColor("deep pink");
+
+    //Read 9 python scripts and display in scintilla widget
+
+    std::string path = "python_embed/scripts/Script " + std::to_string(i+1) + ".py";
+
+    LOG(INFO) << "Reading in python scripts..." << endl;
+
+    ifstream fin(path, ios::in);
+
+    std::string script = "";
+
+    while(fin)
+    {
+        if(fin.bad())
+        {
+            LOG(INFO) << "Error reading in python script: " << path << endl;
+            return;
+        }
+        else if(fin.eof())
+        {
+            break;
+        }
+
+        std::string curString;
+
+        std::getline(fin,curString);
+
+        script = script + curString;
+
+        if (!fin.eof())
+        {
+            script = script + "\n";
+        }
+    }
+
+    QString qScript = QString(script.c_str());
+
+    ws->setText(qScript);
+
+    fin.close();
 
     //Create zoom buttons for text widget
     zoomLayout[i] = new QHBoxLayout;
@@ -586,6 +672,40 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+//This gets called when clicking on the Run/Halt button
+//and from engine.cpp update_status, when the script terminates
+void MainWindow::setRunning(bool option)
+{
+    running = option;
+
+    if (running)
+    {
+        buttonRun->setText("Halt");
+    }
+    else
+    {
+        buttonRun->setText("Run");
+    }
+
+    updateSpeed();
+
+}
+
+void MainWindow::setFast(bool option)
+{
+    fast = option;
+
+    if (fast)
+    {
+        buttonSpeed->setText("Speed: Fast");
+    }
+    else
+    {
+        buttonSpeed->setText("Speed: Slow");
+    }
+
+}
+
 bool MainWindow::saveAs()
 {
     return false;
@@ -593,16 +713,87 @@ bool MainWindow::saveAs()
 
 void MainWindow::runCode()
 {
-    //terminalDisplay->clear();
-    //terminalDisplay->hide();
-    //std::string code = ((QsciScintilla*)textWidget->currentWidget())->text().toStdString();
-    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
-    //ws->highlightAll();
-    //lexer->highlightAll();
-    //ws->clearLineMarkers();
-    std::string code = ws->text().toStdString();
-    std::cout << code << std::endl;
+
+    if (running)
+    {
+        setRunning(false);
+        updateSpeed();
+        game->getCallbackState().stop();
+    }
+    else{
+        QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+
+        int index = (textWidget->currentIndex())+ 1;
+
+        std::string path = "python_embed/scripts/Script " + std::to_string(index) + ".py";
+
+        //Save script as 'Script 1'/'Script 2' etc
+        //Also save as 'Current Script.py' as temporary measure before new input manager
+        //This python script is always run in bootstrapper.py (in start)
+        ofstream fout(path.c_str(), ios::out|ios::trunc);
+        ofstream foutcopy("python_embed/scripts/Current Script.py", ios::out|ios::trunc);
+
+        if(!(fout.good() && foutcopy.good()))
+        {
+            LOG(INFO) << "Output file is bad" << endl;
+            return;
+        }
+
+        fout << ws->text().toStdString();
+        foutcopy << ws->text().toStdString();
+
+        fout.close();
+        foutcopy.close();
+
+        setRunning(true);
+        updateSpeed();
+        game->getCallbackState().restart();
+    }
     setGameFocus();
+}
+
+void MainWindow::toggleSpeed(){
+    setFast(!fast);
+    updateSpeed();
+    setGameFocus();
+}
+
+//If a script is being run and the speed is set to fast, update the game speed
+//Otherwise keep the game at normal speed
+void MainWindow::updateSpeed(){
+    if (fast && running){
+        auto now(std::chrono::steady_clock::now());
+        auto time_passed = now - game->get_start_time();
+
+        float completion(time_passed / std::chrono::duration<float>(6.0f));
+        completion = std::min(completion, 1.0f);
+
+        // Using an easing function from the internetz:
+        //
+        //     start + (c⁵ - 5·c⁴ + 5·c³) change
+        //
+        float eased(1.0f + 511.0f * (
+                        + 1.0f * completion * completion * completion * completion * completion
+                        - 5.0f * completion * completion * completion * completion
+                        + 5.0f * completion * completion * completion
+                    ));
+
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(eased);
+    }
+    else{
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(1.0);
+    }
+}
+
+void MainWindow::pushTerminalText(std::string text, bool error){
+    //terminalDisplay->insertPlainText(text);
+    if (error){
+        terminalDisplay->setTextColor(QColor("red"));
+    }
+    QString qtext = QString::fromStdString(text);
+    terminalDisplay->insertPlainText(qtext);
+    terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
+    terminalDisplay->setTextColor(QColor("black"));
 }
 
 void MainWindow::zoomFontIn()
@@ -624,19 +815,12 @@ void MainWindow::documentWasModified()
 }
 
 
-void MainWindow::clearOutputPanels()
+void MainWindow::clearTerminal()
 {
     terminalDisplay->clear();
 }
 
-void MainWindow::createActions()
-{
-    //connect(buttonSpeed,SIGNAL(released()),this,SLOT (setGameFocus()));
-    //connect(terminalDisplay,SIGNAL(clicked()),this,SLOT (setGameFocus()));
-    //connect(splitter,SIGNAL(splitterMoved()),this,SLOT (setGameFocus()));
-    //connect(textInfo,SIGNAL(selectionChanged()),this,SLOT (setGameFocus()));
-}
-
+//Give the game widget focus so keyboard events are handled
 void MainWindow::setGameFocus()
 {
     gameWidget->setFocus();
@@ -648,29 +832,56 @@ void MainWindow::createToolBar()
     toolBar->setFloatable(false);
     toolBar->setMovable(false);
 
-    textInfo = new QTextEdit("");
-    textInfo->setContextMenuPolicy(Qt::NoContextMenu);
-    textInfo->setFontPointSize(17.0);
-    textInfo->setTextInteractionFlags(Qt::NoTextInteraction);
+    textLayout = new QHBoxLayout;
 
-    //Insert current information
-    textInfo->insertPlainText("World: 1   Level: 1    Totems: 0/5");
+    textWorld = new QLabel("");
+    textLevel = new QLabel("");
+    textCoins = new QLabel("");
+    textTotems = new QLabel("");
 
-    textInfo->setWordWrapMode(QTextOption::NoWrap);
-    textInfo->setAlignment(Qt::AlignLeft);
-    textInfo->setMinimumWidth(400);
-    textInfo->setMaximumHeight(38);
-    textInfo->setReadOnly(true);
-    textInfo->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);");
-    textInfo->setFocusPolicy(Qt::NoFocus);
+    //Use the required variables
+    textWorld->setText("World: 1");
+    textLevel->setText("Level: 1");
+    textCoins->setText("Coins: 0");
+    textTotems->setText("Totems: 0/5");
 
-    toolBar->addWidget(textInfo);
+    textLayout->addWidget(textWorld);
+    textLayout->addWidget(textLevel);
+    textLayout->addWidget(textCoins);
+    textLayout->addWidget(textTotems);
+    textInfoWidget = new QWidget();
+    textInfoWidget->setLayout(textLayout);
+
+    //textInfoWidget->setMinimumWidth(400);
+    //textInfoWidget->setMaximumHeight(38);
+    textInfoWidget->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);font: 17pt;");
+    textInfoWidget->setFocusPolicy(Qt::NoFocus);
+    textInfoWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+    toolBar->addWidget(textInfoWidget);
 
     addToolBar(toolBar);
+}
+
+void MainWindow::updateToolBar()
+{
+    //Use the require variables
+    textWorld->setText("World: 1");
+    textLevel->setText("Level: 1");
+    textCoins->setText("Coins: 0");
+    textTotems->setText("Totems: 0/5");
 }
 
 
 void MainWindow::createStatusBar()
 {
     statusBar()->showMessage(tr("Ready"));
+}
+
+int MainWindow::getGameWidgetWidth(){
+    return gameWidget->width();
+}
+
+int MainWindow::getGameWidgetHeight(){
+    return gameWidget->height();
 }

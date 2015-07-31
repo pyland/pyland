@@ -20,7 +20,7 @@ class ScopedInterpreter(code.InteractiveInterpreter):
 
     """ TODO: work out what this does, was in bootstrapper.py so assumed to be needed here!"""
     def write(self, data):
-        output_reader(data)
+        output_reader(data, True)
 
     def runcode(self, code):
         old_stdout = sys.stdout
@@ -58,4 +58,6 @@ class ScopedInterpreter(code.InteractiveInterpreter):
             TODO: make it so that it prints the output to the player console! However, this version
             only prints to the console once the script has finished as opposed to printing in real time?
             """
-            output_reader(output)
+            output_reader(output, False)
+
+

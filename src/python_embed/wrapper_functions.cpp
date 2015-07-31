@@ -22,6 +22,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("get_instructions",  &Entity::get_instructions)
         .def("get_retrace_steps", &Entity::get_retrace_steps)
         .def("monologue",         &Entity::monologue)
+        .def("move",              &Entity::move)
         .def("move_east",         &Entity::move_east)
         .def("move_west",         &Entity::move_west)
         .def("move_north",        &Entity::move_north)
@@ -48,8 +49,9 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("get_level_location",&GameEngine::get_level_location)
         .def("print_debug",       &GameEngine::print_debug)
         .def("change_level",      &GameEngine::change_level)
-        .def("play_music",      &GameEngine::play_music)
+        .def("play_music",        &GameEngine::play_music)
         .def("register_input_callback", &GameEngine::register_input_callback)
+        .def("print_terminal",    &GameEngine::print_terminal)
         .add_static_property("INPUT_UP", &GameEngine::INPUT_UP) //Add constants for different inputs.
         .add_static_property("INPUT_RIGHT", &GameEngine::INPUT_RIGHT)
         .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)

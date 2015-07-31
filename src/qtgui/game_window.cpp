@@ -18,7 +18,6 @@
 //      performance signifficantly.
 //
 
-
 #include <fstream>
 #include <glog/logging.h>
 #include <map>
@@ -167,9 +166,9 @@ GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *
     }
 
     //Create game window using game_init
-    curGame = new GameInit(argc, argv, exGame);
+    curGameInit = new GameInit(argc, argv, exGame);
 
-    window = curGame->getSdlWin();
+    window = curGameInit->getSdlWin();
 
 //#ifdef USE_GL
 //                   | SDL_WINDOW_OPENGL
@@ -225,14 +224,6 @@ GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *
 
 }
 
-GameInit* GameWindow::getCurGame(){
-    return curGame;
-}
-
-void GameWindow::executeApp(){
-    curGame->execApp();
-}
-
 GameWindow::~GameWindow() {
     LOG(INFO) << "Destructing GameWindow... " << std::endl;
     deinit_gl();
@@ -241,7 +232,7 @@ GameWindow::~GameWindow() {
 #endif
     windows.erase(SDL_GetWindowID(window));
 
-    delete curGame;
+    delete curGameInit;
 
     callback_controller.disable();
 
@@ -378,7 +369,9 @@ void GameWindow::init_surface() {
                           &child);
 #endif
     // SDL_GetWindowPosition(window, &x, &y);
-    SDL_GetWindowSize(window, &w, &h);
+    //SDL_GetWindowSize(window, &w, &h);
+    w = curGameInit->getGameWidth();
+    h = curGameInit->getGameHeight();
 #ifdef USE_GL
     // We don't care in desktop GL.
     x = y = 0;
@@ -559,6 +552,9 @@ void GameWindow::update() {
                 window->request_close();
                 break;
             case SDL_WINDOWEVENT_RESIZED:
+                window->change_surface = InitAction::DO_INIT;
+                window->resizing = true;
+                break;
             case SDL_WINDOWEVENT_MAXIMIZED:
             case SDL_WINDOWEVENT_RESTORED:
             case SDL_WINDOWEVENT_MOVED:
@@ -739,6 +735,22 @@ void GameWindow::swap_buffers() {
 
 InputManager* GameWindow::get_input_manager() {
     return input_manager;
+}
+
+GameInit* GameWindow::get_cur_game_init(){
+    return curGameInit;
+}
+
+void GameWindow::execute_app(){
+    curGameInit->execApp();
+}
+
+void GameWindow::update_running(bool option){
+    curGameInit->pass_running_to_qt(option);
+}
+
+void GameWindow::update_terminal_text(std::string text, bool error){
+    curGameInit->pass_text_to_qt(text,error);
 }
 
 
