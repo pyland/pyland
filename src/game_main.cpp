@@ -50,9 +50,13 @@ using namespace std;
 
 static std::mt19937 random_generator;
 
+//Multiplication factors for converting game_window width and height to width and height for gui
 const float x_scale = 1.0/680.0;
-const float y_scale = 1.0/360.0;
-bool paused = false;
+const float y_scale = 1.0/340.0;
+
+//The maximum number of sprite head buttons to be displayed on the top
+int button_max = 5;
+const float button_spacing = 0.08f;
 
 GameMain::GameMain(int &argc, char **argv):
     embedWindow(800, 600, argc, argv, this),
@@ -60,7 +64,9 @@ GameMain::GameMain(int &argc, char **argv):
     gui_manager(),
     callbackstate(),
     map_viewer(&embedWindow, &gui_manager),
-    tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
+    tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
+    paused(false),
+    display_button_start(0)
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
 
@@ -82,20 +88,19 @@ GameMain::GameMain(int &argc, char **argv):
     sprite_window->set_visible(false);
 
     buttons.clear();
-    LOG(INFO) << "$$$$$$ " << buttons.size();
     gui_manager.set_root(sprite_window);
 
     notification_bar = new NotificationBar();
 
     Engine::set_notification_bar(notification_bar);
 
-    pause_button = std::make_shared<Button>(ButtonType::SpriteHead);
-    pause_button->set_picture("gui/coin/coin-tile");
+    pause_button = std::make_shared<Button>(ButtonType::Single);
+    pause_button->set_picture("gui/game/pause");
     pause_button->set_text("");
     pause_button->set_width(0.15f);
     pause_button->set_height(0.35f);
     pause_button->set_y_offset(embedWindow.get_game_window_height()*y_scale);
-    pause_button->set_x_offset(0.0f);
+    pause_button->set_x_offset(-0.05f);
     pause_button->set_on_click( [&] () {
 
         if(paused == false){
@@ -113,8 +118,19 @@ GameMain::GameMain(int &argc, char **argv):
         }
     });
 
-    sprite_window->add(pause_button);
+    bag_button = std::make_shared<Button>(ButtonType::Single);
+    bag_button->set_picture("gui/game/bag");
+    bag_button->set_text("Bag");
+    bag_button->set_width(0.15f);
+    bag_button->set_height(0.35f);
+    bag_button->set_y_offset(embedWindow.get_game_window_height()*y_scale);
+    bag_button->set_x_offset(embedWindow.get_game_window_width()*x_scale);
+    bag_button->set_on_click( [&] () {
+        LOG(INFO) << "Bag opened";
+    });
 
+    sprite_window->add(pause_button);
+    sprite_window->add(bag_button);
 
     original_window_size = embedWindow.get_size();
     sprite_window->set_width_pixels(original_window_size.first);
@@ -325,8 +341,7 @@ GameMain::GameMain(int &argc, char **argv):
     challenge->start();
 
     last_clock = (std::chrono::steady_clock::now());
-    gui_manager.parse_components();
-    //add_button();
+    refresh_gui();
 
     //Run the challenge - returns after challenge completes
     embedWindow.execute_app();
@@ -343,33 +358,43 @@ void GameMain::pause_menu()
 
 void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback)
 {
-    LOG(INFO) << buttons.size();
+    if(buttons.size() % button_max == 0 && buttons.size() != 0)
+    {
+        cycle_button = std::make_shared<Button>(ButtonType::Single);
+        cycle_button->set_picture("gui/highlight/selected_object");
+        cycle_button->set_text("Cycle");
+        cycle_button->set_width(0.15f);
+        cycle_button->set_height(0.35f);
+        cycle_button->set_y_offset(embedWindow.get_game_window_height()*y_scale);
+        cycle_button->set_x_offset(embedWindow.get_game_window_width()*x_scale - button_max * button_spacing);
+        cycle_button->set_on_click( [&] () {
+            LOG(INFO) << "Switching bags";
+        });
+        sprite_window->add(cycle_button);
+
+        for(int i=0; i<button_max; i++)
+        {
+            buttons[display_button_start+i]->set_visible(false);
+        }
+        refresh_gui();
+    }
     std::shared_ptr<Button> new_button;
-    new_button = std::make_shared<Button>(ButtonType::SpriteHead);
+    new_button = std::make_shared<Button>(ButtonType::Single);
     buttons.push_back(new_button);
     new_button->set_picture(file_path);
     new_button->set_text(name);
     new_button->set_on_click(callback);
-
     new_button->set_width(0.15f);
     new_button->set_height(0.35f);
 
+    //make space for previous buttons
     float org_x_location = embedWindow.get_game_window_width() * x_scale;
 
-    //make space for previous buttons
-    LOG(INFO) << "BUTTON OFFSET ££££££££££££££";
-    LOG(INFO) << embedWindow.get_game_window_width() * x_scale;
-    LOG(INFO) << embedWindow.get_game_window_height() * y_scale;
-    LOG(INFO) << org_x_location - (buttons.size() - 1) * 0.13f;
-    LOG(INFO) << (buttons.size() - 1);
-
-
-
-    new_button->set_x_offset(org_x_location - (buttons.size() - 1) * 0.13f);
+    new_button->set_x_offset(org_x_location - (((buttons.size()-1) % button_max) + 1) * button_spacing);
     new_button->set_y_offset(embedWindow.get_game_window_height() * y_scale);
 
-    this->get_sprite_window()->add(new_button);
-    this->refresh_gui();
+    sprite_window->add(new_button);
+    refresh_gui();
 }
 
 GameMain::~GameMain()
@@ -488,4 +513,3 @@ CallbackState GameMain::getCallbackState(){
 std::chrono::steady_clock::time_point GameMain::get_start_time(){
     return start_time;
 }
-

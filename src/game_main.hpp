@@ -31,6 +31,9 @@ class MouseCursor;
 class GameMain{
 private:
 
+    //whether or not the game is paused
+    bool paused;
+
     //Part of the game window interface
     GameWindow embedWindow;
     Interpreter interpreter;
@@ -44,11 +47,17 @@ private:
     std::pair<int,int> original_window_size;
     MouseCursor *cursor;
 
-    //The pause button, created in GameMain
+    //The pause button and the bag button, created in GameMain
     std::shared_ptr<Button> pause_button;
+    std::shared_ptr<Button> bag_button;
+
     //The gameplay buttons for the gui displayed on the screen
     //created by GameEngine
     std::deque<std::shared_ptr<Button>> buttons;
+    //While cycling through sprites, this is the index of the first button on the visible page
+    int display_button_start;
+    //A button used to cycle through the sprite heads
+    std::shared_ptr<Button> cycle_button;
 
     //Actions that can be performed on the game window
     std::function<void(GameWindow*)> gui_resize_func;

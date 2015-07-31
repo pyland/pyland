@@ -23,7 +23,7 @@
 
 enum class ButtonType{
     Board,
-    SpriteHead
+    Single
 };
 
 class Button : public ComponentGroup {

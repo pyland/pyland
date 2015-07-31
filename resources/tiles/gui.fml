@@ -32,3 +32,6 @@ gui/wood/edge/bottom: 30
 gui/wood/edge/left: 31
 gui/wood/edge/right: 32
 gui/wood/edge/top: 33
+gui/head/monkey: 34
+gui/game/bag: 35
+gui/game/pause: 36
