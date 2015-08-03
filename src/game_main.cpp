@@ -55,7 +55,7 @@ const float x_scale = 1.0f/680.0f;
 const float y_scale = 1.0f/340.0f;
 
 //The maximum number of sprite head buttons to be displayed on the top
-int button_max = 5;
+unsigned int button_max = 5;
 const float button_spacing = 0.08f;
 
 GameMain::GameMain(int &argc, char **argv):
@@ -64,9 +64,9 @@ GameMain::GameMain(int &argc, char **argv):
     gui_manager(),
     callbackstate(),
     map_viewer(&embedWindow, &gui_manager),
-    tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
     paused(false),
-    display_button_start(0)
+    display_button_start(0),
+    tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 {
     nlohmann::json j = Config::get_instance();
     LOG(INFO) << "Constructing GameMain..." << endl;
@@ -366,7 +366,7 @@ void GameMain::add_button(std::string file_path, std::string name, std::function
         cycle_button->set_on_click( [&] () {
 
             //remove previous set of buttons
-            for(int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
+            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
             {
                 sprite_window->remove(buttons[display_button_start + i]->get_id());
             }
@@ -380,7 +380,7 @@ void GameMain::add_button(std::string file_path, std::string name, std::function
             }
 
             //display new buttons
-            for(int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
+            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
             {
                 sprite_window->add(buttons[display_button_start + i]);
             }
