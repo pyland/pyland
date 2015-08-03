@@ -88,8 +88,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func
     }
 
     // Position should be integral at this point
-    glm::vec2 target(object->get_position());
-    auto location(target);
+    glm::vec2 location(object->get_position());
+    auto target(location);
     target += move_by;
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;

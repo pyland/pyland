@@ -16,7 +16,11 @@ extern "C" {
 #endif
 #ifdef USE_GL
 #define GL_GLEXT_PROTOTYPES
+#ifdef __APPLE__
+#include <OpenGl/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 #endif
 }
 
