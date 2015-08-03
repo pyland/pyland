@@ -11,10 +11,10 @@ class LockableEntityThread;
 
 ///
 /// The class to hold an object's information so that the Engine can
-/// manipulate it.
-///
+/// manipulate it. Objects are essentially what are drawn to the screen so there are two types,
+/// Layer and MapObject in layer.cpp/hpp and map_object.cpp/hpp respectively. You can look in those
+/// files for more information.
 class Object {
-
 private:
     ///
     /// Boolean to indicate if the object has set itself to be renderable

@@ -379,6 +379,13 @@ void GameWindow::init_surface() {
     init_surface(x, y, w, h);
 }
 
+int GameWindow::get_game_window_height(){
+    return curGameInit->getGameHeight();
+}
+
+int GameWindow::get_game_window_width(){
+    return curGameInit->getGameWidth();
+}
 
 void GameWindow::init_surface(int x, int y, int w, int h) {
     deinit_surface();

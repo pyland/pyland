@@ -13,7 +13,5 @@ int main(int argc, char *argv[]) {
     google::InstallFailureSignalHandler();
 
     GameMain game(argc, argv);
-
     return 0;
 }
-

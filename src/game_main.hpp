@@ -1,6 +1,7 @@
 #ifndef GAME_MAIN_H
 #define GAME_MAIN_H
 
+#include <deque>
 #include <string>
 #include <memory>
 #include <utility>
@@ -29,31 +30,37 @@ class MouseCursor;
 
 class GameMain{
 private:
-    std::string map_path;
+
+    //whether or not the game is paused
+    bool paused;
+
+    //Part of the game window interface
     GameWindow embedWindow;
     Interpreter interpreter;
     InputManager* input_manager;
     GUIManager gui_manager;
     CallbackState callbackstate;
     MapViewer map_viewer;
-    Typeface buttontype;
-    TextFont buttonfont;
-
-    std::shared_ptr<Text> stoptext;
-    std::shared_ptr<Text> runtext;
-
     EventManager *em;
-
     std::shared_ptr<GUIWindow> sprite_window;
-    std::shared_ptr<Button> run_button;
-    std::shared_ptr<Button> stop_button;
-
     NotificationBar *notification_bar;
-
     std::pair<int,int> original_window_size;
+    MouseCursor *cursor;
 
+    //The pause button and the bag button, created in GameMain
+    std::shared_ptr<Button> pause_button;
+    std::shared_ptr<Button> bag_button;
+
+    //The gameplay buttons for the gui displayed on the screen
+    //created by GameEngine
+    std::deque<std::shared_ptr<Button>> buttons;
+    //While cycling through sprites, this is the index of the first button on the visible page
+    int display_button_start;
+    //A button used to cycle through the sprite heads
+    std::shared_ptr<Button> cycle_button;
+
+    //Actions that can be performed on the game window
     std::function<void(GameWindow*)> gui_resize_func;
-
     Lifeline gui_resize_lifeline;
     Lifeline map_resize_lifeline;
     Lifeline stop_callback;
@@ -80,24 +87,39 @@ private:
     std::chrono::steady_clock::time_point start_time;
     std::vector<Lifeline> digit_callbacks;
     Text tile_identifier_text;
-
     std::function<void (GameWindow*)> func_char;
+
+    //Variable to run/stop the game
     bool run_game;
+
+    //Data for the present challenge
     ChallengeData *challenge_data;
-
-    MouseCursor *cursor;
     Challenge* challenge;
-
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
 
 public:
     GameMain(int &argc, char **argv);
     ~GameMain();
+
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
+
+    std::deque<std::shared_ptr<Button>> get_buttons(){
+        return buttons;
+    }
+
+    std::shared_ptr<GUIWindow>  get_sprite_window(){
+        return sprite_window;
+    }
+
+    void refresh_gui();
+    void add_button(std::string file_path, std::string name, std::function<void (void)> callback);
+
     GameWindow* getGameWindow();
     CallbackState getCallbackState();
     std::chrono::steady_clock::time_point get_start_time();
+
+    void pause_menu();
 };
 
 #endif // GAME_MAIN_H

@@ -71,9 +71,11 @@ using namespace std;
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexerpython.h>
 
+#include "config.hpp"
 #include "mainwindow.h"
 #include "game_main.hpp"
 #include "h_tab_bar.hpp"
+#include "input_handler.hpp"
 #include "input_manager.hpp"
 #include "event_manager.hpp"
 
@@ -552,7 +554,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
         return QObject::eventFilter(obj, event);
     }
-
     return true;
 }
 
@@ -587,7 +588,7 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     ws->setLexer(lexer);
     ws->zoomIn(13);
     ws->setAutoCompletionThreshold(3);
-    //ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
+    ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
     ws->setSelectionBackgroundColor("DeepPink");
     ws->setSelectionForegroundColor("white");
     ws->setCaretWidth(5);
@@ -596,7 +597,8 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
 
     //Read 9 python scripts and display in scintilla widget
 
-    std::string path = "python_embed/scripts/Script " + std::to_string(i+1) + ".py";
+    std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
+    std::string path = player_scripts_location + "/" + std::to_string(i+1) + ".py";
 
     LOG(INFO) << "Reading in python scripts..." << endl;
 
@@ -717,20 +719,24 @@ void MainWindow::runCode()
     {
         setRunning(false);
         updateSpeed();
-        game->getCallbackState().stop();
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_HALT);
+        //game->getCallbackState().stop();
+        //TODO, create hooks into script-runner to stop the correct script.
     }
     else{
         QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
         int index = (textWidget->currentIndex())+ 1;
 
-        std::string path = "python_embed/scripts/Script " + std::to_string(index) + ".py";
+        //read in the player scripts (as defined in the config file)
+        std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
+        std::string path = player_scripts_location + "/" + std::to_string(index) + ".py";
 
         //Save script as 'Script 1'/'Script 2' etc
         //Also save as 'Current Script.py' as temporary measure before new input manager
         //This python script is always run in bootstrapper.py (in start)
         ofstream fout(path.c_str(), ios::out|ios::trunc);
-        ofstream foutcopy("python_embed/scripts/Current Script.py", ios::out|ios::trunc);
+        ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
 
         if(!(fout.good() && foutcopy.good()))
         {
@@ -746,7 +752,7 @@ void MainWindow::runCode()
 
         setRunning(true);
         updateSpeed();
-        game->getCallbackState().restart();
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
     setGameFocus();
 }

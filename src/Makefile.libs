@@ -78,7 +78,7 @@ ifeq "$(PLATFORM)" "desktop"
 	GRAPHICS_CXXFLAGS = $(GL_CXXFLAGS)
 	GRAPHICS_LDFLAGS  = $(GL_LDFLAGS)
 	GRAPHICS_LDLIBS   = $(GL_LDLIBS)
-	CPPFLAGS += -DUSE_GL
+	CPPFLAGS += -DUSE_GL -g -Wall -Wextra
 
 #	WARNINGS += -Werror
 else
@@ -117,7 +117,7 @@ PYTHON_LDLIBS   = $(shell python${PYTHON_VERSION}-config --libs)
 SDL_CPPFLAGS = $(shell sdl2-config --cflags)
 SDL_CXXFLAGS =
 SDL_LDFLAGS  =
-SDL_LDLIBS   = $(shell sdl2-config --libs) -lSDL2_image -lSDL2_ttf
+SDL_LDLIBS   = $(shell sdl2-config --libs) -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 
 
@@ -131,7 +131,8 @@ TMXPARSER_CXXFLAGS =
 TMXPARSER_LDFLAGS  = -L./tmx-parser
 TMXPARSER_LDLIBS   = -ltmxparser
 
-
+JSONNET_LDFLAGS    = -L./jsonnet
+JSONNET_LDLIBS     = -ljsonnet
 
 ZLIB_CPPFLAGS = $(shell pkg-config zlib --cflags)
 ZLIB_CXXFLAGS =

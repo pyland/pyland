@@ -15,14 +15,11 @@
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
-#include "gil_safe_future.hpp"
 #include "map.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "notification_bar.hpp"
 #include "object_manager.hpp"
-#include "gil_safe_future.hpp"
-#include "sprite.hpp"
 #include "text.hpp"
 
 ///Static variables
@@ -37,7 +34,7 @@ bool Engine::any_output(false);
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
-    Engine::move_object(id, move_by, GilSafeFuture<bool>());
+    Engine::move_object(id, move_by, [] () {});
 }
 
 // Undefined for diagonals, but will return within correct half
@@ -82,11 +79,13 @@ std::string to_direction(glm::ivec2 direction) {
 }
 
 //TODO: This needs to work with renderable objects
-void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return) {
-
+void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func) {
     auto object(ObjectManager::get_instance().get_object<MapObject>(id));
 
-    if (!object || object->is_moving()) { return; }
+    if (!object || object->is_moving()) {
+        EventManager::get_instance()->add_event(func); //Even if object can't move, but callback on event queue
+        return;
+    }
 
     // Position should be integral at this point
     glm::vec2 target(object->get_position());
@@ -95,9 +94,9 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
-    // animate walking in-place
-    auto sprite_test(ObjectManager::get_instance().get_object<Sprite>(id));
-    if (!sprite_test) {
+    // animate walking in-place TODO: It doesn't actually seem to do this, work out what it does!
+    auto MapObject_test(ObjectManager::get_instance().get_object<MapObject>(id));
+    if (!MapObject_test) {
         VLOG(2) << "ignore if walkable or not";
     } else {
         if (!walkable(target)) { target = location; }
@@ -113,7 +112,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     // Motion
     EventManager::get_instance()->add_timed_event(
         GameTime::duration(0.3),
-        [direction, move_by, walk_succeeded_return, location, target, id] (float completion) mutable {
+        [direction, move_by, location, target, id, func] (float completion) mutable {
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             if (!object) { return false; }
 
@@ -125,7 +124,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
 
             object->set_position(tweened_position);
 
-            object->set_tile(object->frames.get_frame(direction + "/walking", completion));
+            //object->set_tile(object->frames.get_frame(direction + "/walking", completion)); This is what animated the object :) TODO: make it so that python can control this
+            object->set_tile(object->frames.get_frame());
 
             if (completion == 1.0) {
                 object->set_state_on_moving_finish();
@@ -139,9 +139,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
                 // Step-on events
                 get_map_viewer()->get_map()->event_step_on.trigger(target, id);
 
-                // False when moving in place
-                // TODO: More properz
-                walk_succeeded_return.set(target == location + glm::vec2(move_by));
+                EventManager::get_instance()->add_event(func);
             }
 
             // Run to completion
@@ -184,26 +182,17 @@ glm::vec2 Engine::find_object(int id) {
     Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
 
     //Check the object is on the map
-    auto map_objects = map->get_map_objects();
-    auto sprites = map->get_sprites();
-    for(auto object_id : map_objects) {
+    auto objects = map->get_objects();
+    for(auto object_id : objects) {
         if(object_id == id) {
-            //Object is on the map so now get its location
+            //MapObject is on the map so now get its location
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             return object->get_position();
         }
     }
 
-    for(auto object_id : sprites) {
-        if(object_id == id) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<Sprite>(id);
-            return object->get_position();
-        }
-    }
-
     //Not on the map
-    throw std::runtime_error("Object is not in the map");
+    throw std::runtime_error("MapObject is not in the map");
 }
 
 static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<int> objects) {
@@ -220,13 +209,9 @@ static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<
 }
 
 std::vector<int> Engine::get_objects_at(glm::vec2 location) {
-    return location_filter_objects(location, map_viewer->get_map()->get_map_objects());
+    return location_filter_objects(location, map_viewer->get_map()->get_objects());
 }
 
-// TODO: Also return MapObjects
-std::vector<int> Engine::get_sprites_at(glm::vec2 location) {
-    return location_filter_objects(location, map_viewer->get_map()->get_sprites());
-}
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     auto objects(get_objects_at(location));
@@ -251,161 +236,6 @@ void Engine::print_terminal(std::string text, bool error) {
 
     any_output = true;
     game_window->update_terminal_text(text,error);
-}
-
-
-void Engine::text_displayer() {
-    Map *map = CHECK_NOTNULL(map_viewer->get_map());
-
-    auto objects = map->get_sprites();
-    for (int object_id : objects) {
-        //Object is on the map so now get its locationg
-        auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
-        if (sprite->get_object_text()) {
-            sprite->get_object_text()->display();
-        }
-    }
-}
-
-std::vector<std::tuple<std::string, int, int>> Engine::look(int id, int search_range) {
-    std::vector<std::tuple<std::string, int, int>> objects;
-
-    Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
-    //Check the object is on the map
-    auto map_objects = map->get_map_objects();
-    auto sprites = map->get_sprites();
-    for(auto object_id : map_objects) {
-        if(object_id != 0) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
-            if(!object)
-                continue;
-
-            if(!object->is_findable())
-                continue;
-            std::string name = object->get_name();
-            //TODO, maybe we should give python the floats - what if the object is moving?
-            //in this case, the position is truncated
-            glm::ivec2 object_pos = object->get_position();
-
-            //Check if in range
-            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-            std::cout << object->get_name() << std::endl;
-            //Circle bounds
-            if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
-                continue;
-
-
-            objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
-        }
-    }
-
-    for(auto object_id : sprites) {
-        if(object_id != 0) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
-            std::string name = object->get_name();
-            //TODO, maybe we should give python the floats - what if the object is moving?
-            //in this case, the position is truncated
-            glm::ivec2 object_pos = object->get_position();
-                        std::cout << object->get_name() << std::endl;
-            //Check if in range
-            std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-
-            //Circle bounds
-            if(glm::length(sprite->get_position() - object->get_position()) > (double)search_range)
-                continue;
-
-            objects.push_back(std::make_tuple(name, object_pos.x, object_pos.y));
-        }
-    }
-    return objects;
-}
-
-bool Engine::cut(int id, glm::ivec2 location) {
-    std::cout << id << std::endl;
-    std::cout << location.x <<std::endl;
-
-    Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
-    std::shared_ptr<Sprite> sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-    glm::ivec2 sprite_pos = sprite->get_position();
-    location = sprite_pos + location;
-
-    //Check bounds
-    if(location.x < 0 || location.x >= map->get_width() ||
-       location.y < 0 || location.y >= map->get_height()) {
-        return false;
-    }
-    auto map_objects = map->get_map_objects();
-    for(auto object_id : map_objects) {
-        if(object_id != 0) {
-            //Object is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<MapObject>(object_id);
-            glm::ivec2 object_pos = object->get_position();
-            if(object_pos == location) {
-                // Remove the object
-                map->remove_map_object(object_id);
-                ObjectManager::get_instance().remove_object(object_id);
-                return true;
-            }
-        }
-    }
-
-
-    return false;
-}
-
-void Engine::text_updater() {
-    Map *map = CHECK_NOTNULL(map_viewer->get_map());
-
-    auto objects = map->get_sprites();
-    for (int object_id : objects) {
-        //Object is on the map so now get its location
-        auto sprite = ObjectManager::get_instance().get_object<Sprite>(object_id);
-
-        glm::ivec2 pixel_position(Engine::get_map_viewer()->tile_to_pixel(sprite->get_position()));
-
-        sprite->get_object_text()->move(
-            pixel_position.x + int(Engine::get_actual_tile_size() / 2.0f),
-            pixel_position.y
-        );
-    }
-
-}
-
-//Update status when script has started or finished
-void Engine::update_status(int id, std::string status) {
-    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-    if (!sprite) {
-        LOG(INFO) << "not a sprite";
-    } else {
-        sprite->set_sprite_status(status);
-    }
-    if ((status == "finished" || status == "stopped" || status == "failed" || status == "killed") && sprite->get_just_terminated()){
-        game_window->update_running(false);
-        if (any_output){
-            game_window->update_terminal_text("--- " + sprite->get_sprite_name() + "'s script ended--- \n",false);
-            any_output = false;
-        }
-        sprite->toggle_just_terminated();
-    }
-    else if(status == "running"){
-        sprite->toggle_just_terminated();
-    }
-}
-
-//Update run button when switching between sprites
-void Engine::update_status_buttons(int id){
-    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
-    std::string status = sprite->get_sprite_status();
-    //Update run button when script has completed/halted
-    //Will be reimplemented with new input manager
-    if (status == "finished" || status == "nothing" || status == "stopped" || status == "failed" || status == "killed"){
-        game_window->update_running(false);
-    }
-    else if(status == "running"){
-        game_window->update_running(true);
-    }
 }
 
 void Engine::set_any_output(bool option){

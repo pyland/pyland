@@ -11,7 +11,7 @@
 #include "engine.hpp"
 #include "entitythread.hpp"
 #include "map_viewer.hpp"
-#include "object.hpp"
+#include "map_object.hpp"
 #include "object_manager.hpp"
 
 

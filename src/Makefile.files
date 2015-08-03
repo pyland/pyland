@@ -11,11 +11,13 @@ TEST_EXECUTABLE_OBJ = test/test.o
 
 BASE_OBJS = \
 	animation_frames.o     \
+	audio_engine.o         \
 	challenge_helper.o     \
+	config.o               \
 	engine.o               \
 	event_manager.o        \
 	game_time.o            \
-	game_main.o	       \
+	game_main.o	           \
 	graphics_context.o     \
 	image.o                \
 	layer.o                \
@@ -26,14 +28,13 @@ BASE_OBJS = \
 	map_object.o           \
 	map_viewer.o           \
 	mouse_cursor.o         \
+	challenge.o            \
 	notification_bar.o     \
 	notification_stack.o   \
 	object.o               \
 	object_manager.o       \
 	renderable_component.o \
 	shader.o               \
-	sprite.o               \
-	sprite_switcher.o      \
 	text.o                 \
 	text_font.o            \
 	texture.o              \
@@ -41,22 +42,12 @@ BASE_OBJS = \
 	tileset.o              \
 	typeface.o             \
 
-
-CHALLENGE_OBJS = \
-	challenges/challenge.o              \
-	challenges/cutting_challenge.o      \
-	challenges/final_challenge.o        \
-	challenges/introduction_challenge.o \
-        challenges/base_challenge.o         \
-	challenges/start_screen.o           \
-	challenges/new_challenge.o	    \
-
 QT_OBJS = \
-	qtgui/mainwindow.o		\
-	qtgui/moc_mainwindow.o		\
-	qtgui/game_init.o		\
-	qtgui/parsingfunctions.o	\
-	qtgui/game_window.o          \
+	qtgui/mainwindow.o		 \
+	qtgui/moc_mainwindow.o   \
+	qtgui/game_init.o		 \
+	qtgui/parsingfunctions.o \
+	qtgui/game_window.o      \
 
 HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}            \
@@ -64,7 +55,7 @@ HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${EXECUTABLE_OBJ:.o=.d}       \
 	${GUI_OBJS:.o=.d}             \
-	${QT_OBJS:.o=.d}             \
+	${QT_OBJS:.o=.d}              \
 	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd} \
@@ -78,6 +69,7 @@ HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
 INPUT_OBJS = \
 	input_management/filters.o              \
 	input_management/input_event.o          \
+	input_management/input_handler.o        \
 	input_management/input_manager.o        \
 	input_management/keyboard_input_event.o \
 	input_management/mouse_input_event.o    \
@@ -87,20 +79,19 @@ GUI_OBJS = \
 	gui/button.o                 \
 	gui/component.o	             \
 	gui/component_group.o        \
-        gui/gui_text.o               \
+    gui/gui_text.o               \
 	gui/gui_window.o             \
 	gui/gui_manager.o            \
 
 
 PYTHON_OBJS = \
-	python_embed/api.o                 \
-	python_embed/gil_safe_future.o     \
+	python_embed/entity.o              \
 	python_embed/interpreter.o         \
 	python_embed/interpreter_context.o \
 	python_embed/locks.o               \
 	python_embed/entitythread.o        \
 	python_embed/thread_killer.o       \
-
+	python_embed/game_engine.o         \
 
 # For precompiling
 PYTHON_HEADER = \
@@ -111,7 +102,7 @@ PYTHON_SHARED_OBJS = \
 	python_embed/wrapper_functions.so
 
 PYTHON_SHARED_OBJS_DEPENDS = \
-	python_embed/api.o
+	python_embed/entity.o
 
 
 TEST_OBJS = \

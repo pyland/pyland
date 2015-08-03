@@ -5,14 +5,12 @@
 #include "gui_text.hpp"
 #include "gui_text_data.hpp"
 #include "text.hpp"
-
+#include <tuple>
 #include <functional>
 #include <memory>
-
 #include <string>
 #include <utility>
 #include <vector>
-
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -23,13 +21,22 @@
 #include <GL/gl.h>
 #endif
 
+enum class ButtonType{
+    Board,
+    Single
+};
 
 class Button : public ComponentGroup {
     std::shared_ptr<GUIText> button_text;
-public:
-    Button();
-    Button(std::shared_ptr<Text> _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
+    ButtonType type;
+    std::string file_path;
+    std::string picture_name;
 
+public:
+    Button(ButtonType _type);
+    Button(ButtonType _type, std::shared_ptr<Text> _text, std::function<void (void)> on_click, float _width, float _height, float _x_offset, float _y_offset);
+
+    void set_picture(std::string _name);
     std::shared_ptr<Text> get_text();
 
     void set_text(std::shared_ptr<Text> );
@@ -42,7 +49,7 @@ public:
     int generate_tile_element_texture_coords(GLfloat* data, int offset, std::tuple<float,float,float,float>vertex_bounds, float element_width, float element_height, std::tuple<float,float,float,float> texture_bounds);
     int calculate_num_tile_elements(std::tuple<float,float,float,float> bounds, float element_width, float element_height);
 
-  std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data();
+    std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data();
 
     std::vector<std::pair<GLfloat*, int>> generate_this_texture_data();
 
