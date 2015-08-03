@@ -263,7 +263,7 @@ public:
     /// @param height The height of the window. 0 uses current resolution.
     /// @param fullscreen Whether to use fullscreen.
     ///
-    GameWindow(int width, int height, int argc = 0, char *argv[] = nullptr, GameMain *exGame = nullptr) ;
+    GameWindow(int width, int height, int &argc, char **argv, GameMain *exGame = nullptr) ;
 
     ///
     /// Shuts down and cleans up both SDL and EGL.

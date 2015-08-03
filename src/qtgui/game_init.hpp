@@ -13,7 +13,7 @@ private:
     SDL_Window* sdlWin;
 
 public:
-    GameInit(int argc, char *argv[], GameMain* exGame);
+    GameInit(int &argc, char **argv, GameMain* exGame);
     ~GameInit();
 
     QApplication* getApp();
