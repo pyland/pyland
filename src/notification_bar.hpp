@@ -17,7 +17,7 @@ private:
     Notification notification_stack;
     Text* notification_text;
 
-    std::shared_ptr<Button> forward_button;
+//	std::shared_ptr<Button> forward_button;
 
     Lifeline text_box;
 

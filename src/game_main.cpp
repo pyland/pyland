@@ -353,7 +353,6 @@ void GameMain::pause_menu()
 
 void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback)
 {
-    LOG(INFO) << "£££Button size is" << buttons.size();
 
     if(buttons.size() == button_max){
         cycle_button = std::make_shared<Button>(ButtonType::Single);
