@@ -29,7 +29,7 @@ class GameMain;
 namespace py = boost::python;
 
 Challenge::Challenge(ChallengeData* _challenge_data, GameMain * _game_main) :
-    game_engine(nullptr), map(nullptr), sprite_switcher(nullptr), challenge_data(_challenge_data) {
+    game_engine(nullptr), map(nullptr), challenge_data(_challenge_data) {
         //Load the correct map into the game.
         map = new Map(challenge_data->map_name);
         MapViewer* map_viewer = Engine::get_map_viewer();
@@ -38,7 +38,6 @@ Challenge::Challenge(ChallengeData* _challenge_data, GameMain * _game_main) :
         }
         map_viewer->set_map(map);
 
-        sprite_switcher = new SpriteSwitcher();
 
         //Register a dispatcher to shut the challenge down
         event_finish.register_callback([&] (){
@@ -74,8 +73,6 @@ Challenge::Challenge(ChallengeData* _challenge_data, GameMain * _game_main) :
 }
 
 Challenge::~Challenge() {
-    // destruct sprite switch
-    delete sprite_switcher;
 
     //Remove all sprites
     for(int sprite_id : sprite_ids) {
