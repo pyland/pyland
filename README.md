@@ -110,18 +110,10 @@ To launch (you must be in the /src folder):
 ```
 
 Keybindings
-* <kbd>e</kbd> - open the editor with current sprite's script
-* <kbd>r</kbd> - run the script for the current sprite
-* <kbd>h</kbd> - stop the script
-* <kbd>Shift</kbd> - Hold down when running a script for fast mode (can't use with manual control)
 
 * <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - move sprite
-* <kbd>m</kbd> - print the focused sprite's location
 
 * <kbd>escape</kbd> - go back to level selection map
-
-* <kbd>=</kbd><kbd>-</kbd> - zooming in and out
-* <kbd>Ctrl</kbd>-<kbd>0</kbd> - return to default zoom level
 
 ##API
 
