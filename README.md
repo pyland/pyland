@@ -26,6 +26,7 @@ sudo apt-get update
 sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
 sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
 sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
+sudo apt-get install libqscintilla2-dev
 ```
 
 Download and install extra dependancies:
@@ -59,6 +60,7 @@ sudo apt-get install libsdl2-image-dev
 sudo apt-get install libsdl2-ttf-dev
 sudo apt-get install libgoogle-glog0
 sudo apt-get install libgoogle-glog-dev
+sudo apt-get install libqscintilla2-dev
 ```
 
 If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
@@ -120,16 +122,6 @@ Keybindings
 
 * <kbd>=</kbd><kbd>-</kbd> - zooming in and out
 * <kbd>Ctrl</kbd>-<kbd>0</kbd> - return to default zoom level
-
-##Installing qt for integrated editor test
-
-Install the following packages:
-
-```bash
-sudo apt-get install libqscintilla2-dev
-```
-
-This will create the executable "application" which can then be run.
 
 ##API
 
