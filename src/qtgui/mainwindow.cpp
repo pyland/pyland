@@ -229,7 +229,7 @@ MainWindow::MainWindow(GameMain *exGame)
 
     mainWidget = new QWidget;
 
-    //createToolBar();
+    createToolBar();
 
     setWindowTitle(tr("Pyland"));
     mainWidget->setWindowIcon(QIcon("/images/icon.png"));

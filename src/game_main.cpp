@@ -51,20 +51,20 @@ using namespace std;
 static std::mt19937 random_generator;
 
 //Multiplication factors for converting game_window width and height to width and height for gui
-const float x_scale = 1.0f/680.0f;
-const float y_scale = 1.0f/340.0f;
+const float x_scale = 1.0f/650.0f;
+const float y_scale = 1.0f/280.0f;
 
 //The maximum number of sprite head buttons to be displayed on the top
 unsigned int button_max = 5;
 const float button_spacing = 0.08f;
 
 GameMain::GameMain(int &argc, char **argv):
+    paused(false),
     embedWindow(800, 600, argc, argv, this),
     interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
     gui_manager(),
     callbackstate(),
     map_viewer(&embedWindow, &gui_manager),
-    paused(false),
     display_button_start(0),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 {
@@ -102,7 +102,7 @@ GameMain::GameMain(int &argc, char **argv):
     pause_button->set_width(0.15f);
     pause_button->set_height(0.35f);
     pause_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
-    pause_button->set_x_offset(-0.05f);
+    pause_button->set_x_offset(0.00f);
     pause_button->set_on_click( [&] () {
 
         if(paused == false){
