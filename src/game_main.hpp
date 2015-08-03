@@ -55,7 +55,7 @@ private:
     //created by GameEngine
     std::deque<std::shared_ptr<Button>> buttons;
     //While cycling through sprites, this is the index of the first button on the visible page
-    int display_button_start;
+    unsigned int display_button_start;
     //A button used to cycle through the sprite heads
     std::shared_ptr<Button> cycle_button;
 
