@@ -15,7 +15,7 @@ BASE_OBJS = \
 	engine.o               \
 	event_manager.o        \
 	game_time.o            \
-	game_window.o          \
+	game_main.o	       \
 	graphics_context.o     \
 	image.o                \
 	layer.o                \
@@ -51,6 +51,12 @@ CHALLENGE_OBJS = \
 	challenges/start_screen.o           \
 	challenges/new_challenge.o	    \
 
+QT_OBJS = \
+	qtgui/mainwindow.o		\
+	qtgui/moc_mainwindow.o		\
+	qtgui/game_init.o		\
+	qtgui/parsingfunctions.o	\
+	qtgui/game_window.o          \
 
 HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}            \
@@ -58,6 +64,7 @@ HEADER_DEPENDS_ROOT = \
 	${EXECUTABLE:.bin=.d}         \
 	${EXECUTABLE_OBJ:.o=.d}       \
 	${GUI_OBJS:.o=.d}             \
+	${QT_OBJS:.o=.d}             \
 	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
 	${PYTHON_SHARED_OBJS:.so=.sd} \

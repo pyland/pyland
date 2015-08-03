@@ -23,11 +23,11 @@ EventManager::~EventManager() {
     delete next_frame_queue;
 }
 
-EventManager &EventManager::get_instance() {
+EventManager *EventManager::get_instance() {
     // Lazy instantiation of the global instance
     static EventManager global_instance;
 
-    return global_instance;
+    return &global_instance;
 }
 
 void EventManager::flush_and_disable() {

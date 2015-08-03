@@ -25,7 +25,6 @@
 #include "sprite.hpp"
 #include "text.hpp"
 
-
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
 NotificationBar *Engine::notification_bar(nullptr);
@@ -33,7 +32,7 @@ GameWindow* Engine::game_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
-
+bool Engine::any_output(false);
 
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
@@ -112,7 +111,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_su
     std::string direction(to_direction(move_by));
 
     // Motion
-    EventManager::get_instance().add_timed_event(
+    EventManager::get_instance()->add_timed_event(
         GameTime::duration(0.3),
         [direction, move_by, walk_succeeded_return, location, target, id] (float completion) mutable {
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
@@ -207,16 +206,6 @@ glm::vec2 Engine::find_object(int id) {
     throw std::runtime_error("Object is not in the map");
 }
 
-void Engine::open_editor(std::string filename) {
-    LOG(INFO) << "Opening editor";
-
-    //TODO remove this function in the final version
-    std::string command(editor + std::string(" python_embed/scripts/") + filename +  ".py");
-
-    // TODO: Make this close safely.
-    std::thread([command] () { system(command.c_str()); }).detach();
-}
-
 static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<int> objects) {
     auto &object_manager(ObjectManager::get_instance());
 
@@ -253,11 +242,15 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     });
 }
 
-std::string Engine::editor = DEFAULT_PY_EDITOR;
-
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
     notification_bar->add_notification(text_to_display);
+}
+
+void Engine::print_terminal(std::string text, bool error) {
+
+    any_output = true;
+    game_window->update_terminal_text(text,error);
 }
 
 
@@ -380,6 +373,7 @@ void Engine::text_updater() {
 
 }
 
+//Update status when script has started or finished
 void Engine::update_status(int id, std::string status) {
     auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
     if (!sprite) {
@@ -387,6 +381,35 @@ void Engine::update_status(int id, std::string status) {
     } else {
         sprite->set_sprite_status(status);
     }
+    if ((status == "finished" || status == "stopped" || status == "failed" || status == "killed") && sprite->get_just_terminated()){
+        game_window->update_running(false);
+        if (any_output){
+            game_window->update_terminal_text("--- " + sprite->get_sprite_name() + "'s script ended--- \n",false);
+            any_output = false;
+        }
+        sprite->toggle_just_terminated();
+    }
+    else if(status == "running"){
+        sprite->toggle_just_terminated();
+    }
+}
+
+//Update run button when switching between sprites
+void Engine::update_status_buttons(int id){
+    auto sprite = ObjectManager::get_instance().get_object<Sprite>(id);
+    std::string status = sprite->get_sprite_status();
+    //Update run button when script has completed/halted
+    //Will be reimplemented with new input manager
+    if (status == "finished" || status == "nothing" || status == "stopped" || status == "failed" || status == "killed"){
+        game_window->update_running(false);
+    }
+    else if(status == "running"){
+        game_window->update_running(true);
+    }
+}
+
+void Engine::set_any_output(bool option){
+    any_output = option;
 }
 
 TextFont Engine::get_game_font() {

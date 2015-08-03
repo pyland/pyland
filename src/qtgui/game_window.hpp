@@ -32,12 +32,10 @@ extern "C" {
 #include "lifeline_controller.hpp"
 #include "graphics_context.hpp"
 
-
+#include "game_init.hpp"
 
 class InputManager;
-
-
-
+class GameMain;
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
 ///
@@ -55,6 +53,11 @@ private:
         DO_INIT,
         DO_DEINIT
     };
+
+    ///
+    /// Stores the game initialising class.
+    ///
+    GameInit* curGameInit;
 
     ///
     /// Stores the SDL window.
@@ -260,7 +263,7 @@ public:
     /// @param height The height of the window. 0 uses current resolution.
     /// @param fullscreen Whether to use fullscreen.
     ///
-    GameWindow(int width, int height, bool fullscreen = false);
+    GameWindow(int width, int height, int &argc, char **argv, GameMain *exGame = nullptr) ;
 
     ///
     /// Shuts down and cleans up both SDL and EGL.
@@ -340,6 +343,31 @@ public:
     InputManager* get_input_manager();
 
     ///
+    ///Game init getter.
+    ///
+    GameInit* get_cur_game_init();
+
+
+    ///
+    ///Calls game init to run the QT app
+    ///
+    void execute_app();
+
+
+
+    ///
+    ///Function to call the GUI in mainwindow and update the running buttons.
+    ///
+    void update_running(bool option);
+
+
+    ///
+    ///Function to call the GUI in mainwindow and update the running buttons.
+    ///
+    void update_terminal_text(std::string text, bool error);
+
+
+    ///
     /// Convert a pair of pixels coordinates into a pair of ratio
     /// coordinates of the distance from the bottom-left to the
     /// top-right.
@@ -366,7 +394,5 @@ public:
     ///
     Lifeline register_resize_handler(std::function<void(GameWindow*)> func);
 };
-
-
 
 #endif

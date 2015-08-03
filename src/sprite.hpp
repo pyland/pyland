@@ -21,10 +21,13 @@ enum class Sprite_Status {NOTHING, RUNNING, STOPPED, FAILED, KILLED};
 class Sprite : public MapObject {
 private:
     Sprite_Status string_to_status(std::string status);
+    std::string status_to_string(Sprite_Status status);
 
     std::string sprite_name;
 
     unsigned int inventory_limit = 1;
+
+    bool just_terminated;
 
 protected:
     ///
@@ -127,6 +130,8 @@ public:
 
     void set_sprite_status(std::string _sprite_status);
 
+    std::string get_sprite_status();
+
     void set_focus(bool _is_focus);
 
     std::string get_sprite_name() {return sprite_name; }
@@ -135,6 +140,10 @@ public:
 
     void set_instructions(std::string instructions);
     std::string get_instructions();
+
+    bool get_just_terminated();
+
+    void toggle_just_terminated();
 };
 
 

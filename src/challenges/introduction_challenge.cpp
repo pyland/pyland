@@ -34,7 +34,7 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
     Engine::get_map_viewer()->set_map_focus_object(player);
 
     treasure = ChallengeHelper::make_object(this, "treasure/at", Walkability::BLOCKED, "closed");
-    pathblocker_top = ChallengeHelper::make_object(this, "pathblocker/top", Walkability::BLOCKED, "2");
+
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/1", Walkability::BLOCKED, "2"));
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/2", Walkability::BLOCKED, "2"));
     pathblockers_bottom.emplace_back(ChallengeHelper::make_object(this, "pathblocker/bottom/3", Walkability::BLOCKED, "2"));
@@ -45,35 +45,10 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
         "Let's go on an adventure!"
     );
 
-    editor_lifeline = this->challenge_data->input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("E")},
-        [this] (KeyboardInputEvent) {
-
-            auto player_obj(ObjectManager::get_instance().get_object<Sprite>(player));
-            player_obj->set_instructions(
-                "Change the script so that you move along the path, and hold Shift to go fast.\n"
-                "\n"
-                "You need to find the code in the editor that does this and remove the \"#\"s "
-                "infront of it. Then press \"r\" to run it and \"h\" to make it stop."
-            );
-
-            editor_lifeline = this->challenge_data->input_manager->register_keyboard_handler(filter(
-                {KEY_PRESS, KEY("R")},
-                [this] (KeyboardInputEvent) {
-                    auto pathblocker(ObjectManager::get_instance().get_object<MapObject>(pathblocker_top));
-
-                    pathblocker->set_tile(TextureAtlas::from_name("test/blank"));
-                    pathblocker->set_walkability(Walkability::WALKABLE);
-                }
-            ));
-        }
-    ));
-
     ChallengeHelper::make_interaction("howto/run_scripts", [this] (int) {
         Engine::print_dialogue(
             "Random Note",
-            "Just walking there will take ages!\n"
-            "Here's a better way. Press \"e\"."
+            "Just walking there will take ages!\nHere's a better way. \nType 'move_east() into the PyScripter below and click run.\nUse a loop and you'll be there in no time.\n"
         );
 
         auto player_obj(ObjectManager::get_instance().get_object<Sprite>(player));
@@ -85,10 +60,10 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
     ChallengeHelper::make_interaction("row/complete/first", [this] (int) {
         Engine::print_dialogue(
             "Ben",
-            "Programming's much faster than scripting...\n"
+            "Programming is much faster than walking the whole way...\n"
             "\n"
             "Well, I can't wait to see what's up ahead.\n"
-            "I have a feeling it's ADVENTURE!\n"
+            "I have a feeling it's an ADVENTURE!\n"
         );
 
         auto player_obj(ObjectManager::get_instance().get_object<Sprite>(player));
@@ -423,7 +398,7 @@ IntroductionChallenge::IntroductionChallenge(ChallengeData *challenge_data): Cha
 
             ChallengeHelper::set_completed_level(1);
 
-            EventManager::get_instance().add_timed_event(GameTime::duration(10.0), [this] (float completion) {
+            EventManager::get_instance()->add_timed_event(GameTime::duration(10.0), [this] (float completion) {
                 if (completion == 1.0) {
                     finish();
                 }
@@ -441,7 +416,7 @@ void IntroductionChallenge::start() {
 }
 
 void IntroductionChallenge::finish() {
-    ChallengeHelper::set_completed_level(1); 
+    ChallengeHelper::set_completed_level(1);
     event_finish.trigger(0);
 }
 

@@ -29,6 +29,7 @@ void SpriteSwitcher::add_sprite(int id) {
     new_button->set_on_click([id] () {
         LOG(INFO) << "switch sprite focus to " << id;
         Engine::get_map_viewer()->set_map_focus_object(id);
+        Engine::update_status_buttons(id);
     });
     float y_location = y_offset - (float)button_num * 0.13f;
     new_button->set_width(sprite_button_size);

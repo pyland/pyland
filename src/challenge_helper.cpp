@@ -120,7 +120,7 @@ void ChallengeHelper::kill_sprite(Challenge *challenge,
 
         Engine::print_dialogue (speaker, eulogy);
 
-        EventManager::get_instance().add_timed_event(GameTime::duration(3.0), [challenge] (float completion) {
+        EventManager::get_instance()->add_timed_event(GameTime::duration(3.0), [challenge] (float completion) {
             if(completion == 1.0) {
                 challenge->event_finish.trigger(0);
             }

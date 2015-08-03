@@ -124,9 +124,9 @@ CuttingChallenge::CuttingChallenge(ChallengeData *challenge_data): Challenge(cha
                     grow_out(spot.x, spot.y);
                 }
                 // Wait before triggering another regrowth.
-                EventManager::get_instance().add_timed_event(GameTime::duration(0.025), [this] (float completion) {
+                EventManager::get_instance()->add_timed_event(GameTime::duration(0.025), [this] (float completion) {
                         if (completion == 1.0) {
-                            EventManager::get_instance().add_event_next_frame(regrow);
+                            EventManager::get_instance()->add_event_next_frame(regrow);
                         }
                         return true;
                     });
@@ -134,7 +134,7 @@ CuttingChallenge::CuttingChallenge(ChallengeData *challenge_data): Challenge(cha
                 Engine::print_dialogue ("Gardener", "Hey, you did it! Meet me back here to talk...");
             }
         });
-    EventManager::get_instance().add_event_next_frame(regrow);
+    EventManager::get_instance()->add_event_next_frame(regrow);
 }
 
 void CuttingChallenge::start() {

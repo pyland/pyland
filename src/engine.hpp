@@ -18,19 +18,9 @@
 class MapViewer;
 class NotificationBar;
 
-///
-/// default python editor, used as long as another isn't passed as command line arg
-#define DEFAULT_PY_EDITOR "gedit"
-
 // Class wrapping the API calls into a static public class
 class Engine {
 private:
-
-    ///
-    /// name of editor used for python editing
-    ///
-    static std::string editor;
-
     static MapViewer *map_viewer;
 
     static NotificationBar* notification_bar;
@@ -48,6 +38,13 @@ private:
     /// by
     ///
     static float global_scale;
+
+
+    ///
+    /// Specifies whether there has been any output during the current code execution,
+    /// it determine if output separate lines are needed
+    ///
+    static bool any_output;
 
 public:
     ///
@@ -81,7 +78,7 @@ public:
     /// @param _game_window the game window
     ///
     static void set_game_window(GameWindow* _game_window) { game_window = _game_window; }
-    
+
     ///
     /// Get the game window
     /// @return the game window
@@ -153,12 +150,6 @@ public:
     static glm::vec2 find_object(int id);
 
     ///
-    /// Open a text editor for the user to edit a file
-    /// @param filename name of file in scripts directory
-    ///
-    static void open_editor(std::string filename);
-
-    ///
     /// Get a list of objects at this point, doesn't include sprites
     /// @return a vector of object ids
     ///
@@ -180,26 +171,28 @@ public:
     ///
     static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
 
-    ///
-    /// set the text editor, opened by the challenges
-    ///
-    static void set_editor(std::string editor) { Engine::editor = editor; }
-
     static void set_notification_bar(NotificationBar *notification_bar) { Engine::notification_bar = notification_bar; }
 
     static NotificationBar* get_notification_bar() { return Engine::notification_bar; }
     static void print_dialogue(std::string name, std::string text);
+    static void print_terminal(std::string text, bool error);
+    static void set_any_output(bool option);
 
     /// method for handling sprite test
     static void text_displayer();
     static void text_updater();
     static void update_status(int id, std::string status);
+    static void update_status_buttons(int id);
 
     /// global access to game font
     static TextFont get_game_font();
     static Typeface get_game_typeface();
 
-    static void set_challenge(Challenge* _challenge) { challenge = _challenge; }
+    static void set_challenge(Challenge* _challenge)
+    {
+        challenge = _challenge;
+        game_window->update_running(false);
+    }
     static Challenge* get_challenge() { return challenge; }
 };
 

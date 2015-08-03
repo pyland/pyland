@@ -18,7 +18,6 @@
 //      performance signifficantly.
 //
 
-
 #include <fstream>
 #include <glog/logging.h>
 #include <map>
@@ -48,8 +47,6 @@ extern "C" {
 #include "lifeline_controller.hpp"
 #include "graphics_context.hpp"
 
-
-
 #ifdef USE_GLES
 
 #ifdef STATIC_OVERSCAN
@@ -76,18 +73,18 @@ int GameWindow::overscan_top  = OVERSCAN_TOP;
 
 #endif
 
-
+//New include calls
+//#include <QApplication>
+#include "game_init.hpp"
+#include "game_main.hpp"
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
 GameWindow* GameWindow::focused_window = nullptr;
-
 
 // Need to inherit constructors manually.
 // NOTE: This will, and are required to, copy the message.
 GameWindow::InitException::InitException(const char *message): std::runtime_error(message) {}
 GameWindow::InitException::InitException(const std::string &message): std::runtime_error(message) {}
-
-
 
 #ifdef USE_GLES
 #include <boost/regex.hpp>
@@ -145,8 +142,7 @@ static std::pair<int, int> query_overscan(int left, int top) {
 }
 #endif
 
-
-GameWindow::GameWindow(int width, int height, bool fullscreen):
+GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *exGame):
     window_width(width),
     window_height(height),
     window_x(0),
@@ -162,35 +158,30 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
     close_requested(false),
     graphics_context(this)
 {
+    LOG(INFO) << "Creating GameWindow... " << std::endl;
     input_manager = new InputManager(this);
 
     if (windows.size() == 0) {
         init_sdl(); // May throw InitException
     }
 
-    // SDL already uses width,height = 0,0 for automatic
-    // resolution. Sets maximized if not in fullscreen and given
-    // width,height = 0,0.
-    window = SDL_CreateWindow ("Pyland",
-                               SDL_WINDOWPOS_CENTERED,
-                               SDL_WINDOWPOS_CENTERED,
-                               width,
-                               height,
-                               (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE)
-                               | ( (!fullscreen && width == 0 && height == 0) ?
-                                   SDL_WINDOW_MAXIMIZED : 0 )
-#ifdef USE_GL
-                   | SDL_WINDOW_OPENGL
-#endif
-                               );
+    //Create game window using game_init
+    curGameInit = new GameInit(argc, argv, exGame);
+
+    window = curGameInit->getSdlWin();
+
+//#ifdef USE_GL
+//                   | SDL_WINDOW_OPENGL
+//#endif
+//                               );
     if (window == nullptr) {
         LOG(ERROR) << "Failed to create SDL window.";
         deinit_sdl();
         throw GameWindow::InitException("Failed to create SDL window");
     }
 
-    SDL_ShowCursor(0);
-    
+    SDL_ShowCursor(1);
+
     // Temporary fix (which just seems to work) for a bug where focus
     // events are not generated for the first time focus is changed.
     // SEE ALSO BELOW IN THIS FUNCTION
@@ -219,9 +210,6 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
         vc_dispmanx_display_close(dispmanDisplay);
 #endif
         SDL_DestroyWindow (window);
-        if (windows.size() == 0) {
-            deinit_sdl();
-        }
         throw e;
     }
 
@@ -231,26 +219,28 @@ GameWindow::GameWindow(int width, int height, bool fullscreen):
     SDL_ShowWindow(window);
 
     windows[SDL_GetWindowID(window)] = this;
+
+    LOG(INFO) << "Created GameWindow... " << std::endl;
+
 }
 
 GameWindow::~GameWindow() {
+    LOG(INFO) << "Destructing GameWindow... " << std::endl;
     deinit_gl();
-
 #ifdef USE_GLES
     vc_dispmanx_display_close(dispmanDisplay); // (???)
 #endif
     windows.erase(SDL_GetWindowID(window));
 
-    SDL_DestroyWindow (window);
-    if (windows.size() == 0) {
-        deinit_sdl();
-    }
+    delete curGameInit;
 
     callback_controller.disable();
 
     delete input_manager;
-}
 
+    LOG(INFO) << "Destructed GameWindow... " << std::endl;
+
+}
 
 void GameWindow::init_sdl() {
     int result;
@@ -264,9 +254,9 @@ void GameWindow::init_sdl() {
 
     LOG(INFO) << "Initializing SDL...";
     result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-
     if (result != 0) {
         throw GameWindow::InitException("Failed to initialize SDL");
+        LOG(INFO) << "failed to init SDL\n";
     }
 
 #ifdef USE_GLES
@@ -379,7 +369,9 @@ void GameWindow::init_surface() {
                           &child);
 #endif
     // SDL_GetWindowPosition(window, &x, &y);
-    SDL_GetWindowSize(window, &w, &h);
+    //SDL_GetWindowSize(window, &w, &h);
+    w = curGameInit->getGameWidth();
+    h = curGameInit->getGameHeight();
 #ifdef USE_GL
     // We don't care in desktop GL.
     x = y = 0;
@@ -533,6 +525,7 @@ void GameWindow::deinit_surface() {
 
 
 void GameWindow::update() {
+
     SDL_Event event;
     bool close_all = false;
 
@@ -546,6 +539,7 @@ void GameWindow::update() {
         switch (event.type) {
         case SDL_QUIT: // Primarily used for killing when we become blind.
             close_all = true;
+            return;
             break;
         case SDL_WINDOWEVENT:
             window = windows[event.window.windowID];
@@ -558,18 +552,12 @@ void GameWindow::update() {
                 window->request_close();
                 break;
             case SDL_WINDOWEVENT_RESIZED:
+                window->change_surface = InitAction::DO_INIT;
+                window->resizing = true;
+                break;
             case SDL_WINDOWEVENT_MAXIMIZED:
             case SDL_WINDOWEVENT_RESTORED:
-                window->resizing = true;
-                VLOG(2) << "Need surface reinit (resize)";
-                window->change_surface = InitAction::DO_INIT;
-                focused_window = window;
-                break;
             case SDL_WINDOWEVENT_MOVED:
-                VLOG(2) << "Need surface reinit (moved)";
-                window->change_surface = InitAction::DO_INIT;
-                focused_window = window;
-                break;
             case SDL_WINDOWEVENT_SHOWN:
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 VLOG(2) << "Need surface reinit (gained focus)";
@@ -747,6 +735,22 @@ void GameWindow::swap_buffers() {
 
 InputManager* GameWindow::get_input_manager() {
     return input_manager;
+}
+
+GameInit* GameWindow::get_cur_game_init(){
+    return curGameInit;
+}
+
+void GameWindow::execute_app(){
+    curGameInit->execApp();
+}
+
+void GameWindow::update_running(bool option){
+    curGameInit->pass_running_to_qt(option);
+}
+
+void GameWindow::update_terminal_text(std::string text, bool error){
+    curGameInit->pass_text_to_qt(text,error);
 }
 
 
