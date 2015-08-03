@@ -45,23 +45,7 @@ sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
 cd ..
 ```
 
-Get source code using git:
-```bash
-sudo apt-get install --no-install-recommends git-core
-git clone http://github.com/pyland/pyland
-```
-
-#### Compiling on Raspberry Pi
-
-For compiling on the Raspberry Pi, use:
-
-```bash
-cd pyland/src
-#Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
-COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
-```
-
-#### Compiling on Desktop - Unix
+#### Getting Dependencies (Desktop)
 
 For desktop, you will need the packages listed above, which can be found here:
 
@@ -78,6 +62,27 @@ sudo apt-get install libgoogle-glog-dev
 ```
 
 If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
+
+#### Getting Pyland source code
+
+Get source code using git:
+
+```bash
+sudo apt-get install --no-install-recommends git-core
+git clone http://github.com/pyland/pyland
+```
+
+#### Compiling on Raspberry Pi
+
+For compiling on the Raspberry Pi, use:
+
+```bash
+cd pyland/src
+#Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
+COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+```
+
+#### Compiling on Desktop - Unix
 
 For compiling on desktop, use:
 
