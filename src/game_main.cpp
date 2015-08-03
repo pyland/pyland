@@ -89,6 +89,7 @@ GameMain::GameMain(int &argc, char **argv):
     sprite_window->set_visible(false);
 
     buttons.clear();
+
     gui_manager.set_root(sprite_window);
 
     notification_bar = new NotificationBar();
@@ -161,13 +162,6 @@ GameMain::GameMain(int &argc, char **argv):
     {
         InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
-    ));
-
-    Lifeline editor_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("E")},
-        [&] (KeyboardInputEvent) {
-            Engine::open_editor();
-        }
     ));
 
     back_callback = input_manager->register_keyboard_handler(filter(
@@ -477,6 +471,7 @@ void GameMain::game_loop(bool showMouse)
         challenge = pick_challenge(challenge_data);
         Engine::set_challenge(challenge);
         challenge->start();
+        callbackstate.stop();
         //Update tool bar here
         //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
 

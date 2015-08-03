@@ -229,7 +229,7 @@ MainWindow::MainWindow(GameMain *exGame)
 
     mainWidget = new QWidget;
 
-    createToolBar();
+    //createToolBar();
 
     setWindowTitle(tr("Pyland"));
     mainWidget->setWindowIcon(QIcon("/images/icon.png"));
@@ -523,18 +523,17 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         sdlEvent.motion.y = mouseEvent->y();
         SDL_PushEvent(&sdlEvent);
     }
-    else if(event->type() == 9)  //QEvent::FocusOut
+    else if(event->type() == 25)  //QEvent::WindowDeactivate
     {
-        //focusEvent = static_cast<QFocusEvent*>(event);
+        //When the window is no longer at the front
         SDL_Event sdlEvent;
         sdlEvent.type = SDL_WINDOWEVENT;
         sdlEvent.window.event = SDL_WINDOWEVENT_HIDDEN;
         sdlEvent.window.windowID = SDL_GetWindowID(embedWindow);
         SDL_PushEvent(&sdlEvent);
     }
-    else if(event->type() == 8)  //QEvent::FocusIn
+    else if(event->type() == 24)  //QEvent::WindowActivate
     {
-        //focusEvent = static_cast<QFocusEvent*>(event);
         SDL_Event sdlEvent;
         sdlEvent.type = SDL_WINDOWEVENT;
         sdlEvent.window.event = SDL_WINDOWEVENT_SHOWN;
@@ -543,7 +542,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     }
     else if(event->type() == 14)  //QEvent::Resize
     {
-        //resizeEvent = static_cast<QResizeEvent*>(event);
         SDL_Event sdlEvent;
         sdlEvent.type = SDL_WINDOWEVENT;
         sdlEvent.window.event = SDL_WINDOWEVENT_RESIZED;
