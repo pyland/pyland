@@ -40,7 +40,7 @@ private:
     CallbackState callbackstate;
     MapViewer map_viewer;
     EventManager *em;
-    std::shared_ptr<GUIWindow> sprite_window;
+    std::shared_ptr<GUIWindow> gui_window;
     NotificationBar *notification_bar;
     std::pair<int,int> original_window_size;
     MouseCursor *cursor;
@@ -99,6 +99,8 @@ private:
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
 
     void config_gui(nlohmann::json j);
+	void open_pause_window();
+	void close_pause_window();
 
 public:
     GameMain(int &argc, char **argv);
@@ -111,8 +113,8 @@ public:
         return buttons;
     }
 
-    std::shared_ptr<GUIWindow>  get_sprite_window(){
-        return sprite_window;
+    std::shared_ptr<GUIWindow>  get_gui_window(){
+        return gui_window;
     }
 
     void refresh_gui();

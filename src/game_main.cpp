@@ -95,12 +95,12 @@ GameMain::GameMain(int &argc, char **argv):
     //Create the event manager
     em = EventManager::get_instance();
 
-    sprite_window = std::make_shared<GUIWindow>();
-    sprite_window->set_visible(false);
+    gui_window = std::make_shared<GUIWindow>();
+    gui_window->set_visible(false);
 
     buttons.clear();
 
-    gui_manager.set_root(sprite_window);
+    gui_manager.set_root(gui_window);
 
     notification_bar = new NotificationBar();
 
@@ -118,15 +118,12 @@ GameMain::GameMain(int &argc, char **argv):
         if(paused == false){
             paused = true;
             LOG(INFO) << "PAUSED";
-            sprite_window->set_visible(true);
-            refresh_gui();
-            pause_menu();
+			open_pause_window();
         }
         else{
             paused = false;
             LOG(INFO) << "RESUMED";
-            sprite_window->set_visible(false);
-            refresh_gui();
+            close_pause_window();
         }
     });
 
@@ -162,9 +159,9 @@ GameMain::GameMain(int &argc, char **argv):
         }
     });
 
-    sprite_window->add(pause_button);
-    sprite_window->add(bag_button);
-    sprite_window->add(bag_window);
+    gui_window->add(pause_button);
+    gui_window->add(bag_button);
+    gui_window->add(bag_window);
 
     //The GUI resize function
     gui_resize_func = [&] (GameWindow* game_window)
@@ -172,8 +169,8 @@ GameMain::GameMain(int &argc, char **argv):
         LOG(INFO) << "GUI resizing";
         auto window_size = (*game_window).get_size();
 
-        sprite_window->set_width_pixels(window_size.first);
-        sprite_window->set_height_pixels(window_size.second);
+        gui_window->set_width_pixels(window_size.first);
+        gui_window->set_height_pixels(window_size.second);
         gui_manager.parse_components();
     };
     gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
@@ -375,13 +372,23 @@ GameMain::GameMain(int &argc, char **argv):
 
 }
 
-void GameMain::pause_menu()
-{
+void GameMain::close_pause_window(){
+	gui_window->set_visible(false);
+	refresh_gui();
+}
+
+void GameMain::open_pause_window(){
+	gui_window->set_visible(true);
+
+	//std::map<int, std::shared_ptr<Component>> * gui_components;
+	refresh_gui();
+}
+
+void GameMain::pause_menu(){
 
 }
 
-void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback)
-{
+void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback){
 
     if(buttons.size() == button_max){
         cycle_button = std::make_shared<Button>(ButtonType::Single);
@@ -397,7 +404,7 @@ void GameMain::add_button(std::string file_path, std::string name, std::function
             //remove previous set of buttons
             for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
             {
-                sprite_window->remove(buttons[display_button_start + i]->get_id());
+                gui_window->remove(buttons[display_button_start + i]->get_id());
             }
 
             //update the button index of buttons to be displayed
@@ -411,13 +418,13 @@ void GameMain::add_button(std::string file_path, std::string name, std::function
             //display new buttons
             for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
             {
-                sprite_window->add(buttons[display_button_start + i]);
+                gui_window->add(buttons[display_button_start + i]);
             }
 
             refresh_gui();
         });
 
-        sprite_window->add(cycle_button);
+        gui_window->add(cycle_button);
 
         refresh_gui();
     }
@@ -438,7 +445,7 @@ void GameMain::add_button(std::string file_path, std::string name, std::function
     new_button->set_y_offset(float(embedWindow.get_game_window_height()) * y_scale);
 
     //add the button onto the screen
-    sprite_window->add(new_button);
+    gui_window->add(new_button);
 
     if((buttons.size() - 1) % button_max == 0 && buttons.size() != 1)
     {

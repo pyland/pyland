@@ -51,7 +51,7 @@ void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
 
     try{
         //Go through all the children of this component
-        for(auto component_pair : parent->get_components()) {
+        for(auto component_pair : *(parent->get_components()) ){
             std::shared_ptr<Component> component = component_pair.second;
 
             //Recalculate the dimensions
@@ -93,7 +93,7 @@ void GUIManager::mouse_callback_function(MouseInputEvent event) {
 bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset) {
     try{
         //Go through all the children of this component
-        for(auto component_pair : root->get_components()) {
+        for(auto component_pair : *(root->get_components())) {
             std::shared_ptr<Component> component = component_pair.second;
 
             //Get the component dimensions
@@ -153,7 +153,7 @@ GUIManager::~GUIManager() {
 
 
 void GUIManager::generate_texture_data() {
-    
+
     //generate the texture data data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
 
@@ -234,11 +234,11 @@ void GUIManager::generate_text_data() {
 
 void GUIManager::render_text() {
    for(auto text_data : components_text) {
-        if(!text_data->get_text()) 
+        if(!text_data->get_text())
             continue;
 
         std::shared_ptr<GUITextData> gui_text_data = text_data->get_gui_text();
-        
+
         int x_pos = gui_text_data->get_transformed_x_offset();
         int y_pos = gui_text_data->get_transformed_y_offset();
         text_data->get_text()->move(x_pos, y_pos);

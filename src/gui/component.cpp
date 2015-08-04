@@ -79,7 +79,7 @@ void Component::set_height(float height) {
     this->height = height;
 }
 
-const std::map<int, std::shared_ptr<Component>>& Component::get_components() {
+const std::map<int, std::shared_ptr<Component>>* Component::get_components() {
     component_no_children_exception exception;
     throw exception;
 }
