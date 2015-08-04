@@ -45,6 +45,9 @@
 
 #include "game_main.hpp"
 
+//This class sets up the game and contains the game loop
+
+
 using namespace std;
 
 static std::mt19937 random_generator;

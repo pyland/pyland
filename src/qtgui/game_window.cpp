@@ -18,8 +18,12 @@
 //      performance signifficantly.
 //
 
+
+//This class sets up the SDL game window
+
 #include "interpreter.hpp"
 
+#include <QApplication>
 #include <QDataStream>
 #include <QMetaType>
 #include <QTextStream>
@@ -52,9 +56,13 @@ extern "C" {
 
 #include "callback.hpp"
 #include "callback_registry.hpp"
+#include "engine.hpp"
+#include "game_main.hpp"
+#include "graphics_context.hpp"
 #include "lifeline.hpp"
 #include "lifeline_controller.hpp"
-#include "graphics_context.hpp"
+#include "mainwindow.h"
+#include "parsingfunctions.hpp"
 
 #ifdef USE_GLES
 
@@ -81,12 +89,6 @@ int GameWindow::overscan_left = OVERSCAN_LEFT;
 int GameWindow::overscan_top  = OVERSCAN_TOP;
 
 #endif
-
-//New include calls
-#include <QApplication>
-#include "game_main.hpp"
-#include "mainwindow.h"
-#include "parsingfunctions.hpp"
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
 GameWindow* GameWindow::focused_window = nullptr;
@@ -186,6 +188,8 @@ GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *
     app->setAttribute(Qt::AA_NativeWindows, true);
 
     mainWin = new MainWindow(exGame);
+
+    Engine::set_main_window(mainWin);
 
      //Get the SDL window from the widget in the QT interface, so it can be drawn to in game_main
     window = mainWin->getSDLWindow();

@@ -11,13 +11,7 @@ TEST_EXECUTABLE_OBJ = test/test.o
 
 BASE_OBJS = \
 	animation_frames.o     \
-	audio_engine.o         \
 	challenge_helper.o     \
-	config.o               \
-	engine.o               \
-	event_manager.o        \
-	game_time.o            \
-	game_main.o	           \
 	graphics_context.o     \
 	image.o                \
 	layer.o                \
@@ -42,27 +36,21 @@ BASE_OBJS = \
 	tileset.o              \
 	typeface.o             \
 
-QT_OBJS = \
-	qtgui/mainwindow.o		 \
-	qtgui/moc_mainwindow.o   \
-	qtgui/parsingfunctions.o \
-	qtgui/game_window.o      \
+CORE_OBJS = \
+	core/audio_engine.o        \
+	core/config.o              \
+	core/engine.o              \
+	core/event_manager.o       \
+	core/game_main.o           \
+	core/game_time.o           \
 
-HEADER_DEPENDS_ROOT = \
-	${BASE_OBJS:.o=.d}            \
-	${CHALLENGE_OBJS:.o=.d}       \
-	${EXECUTABLE:.bin=.d}         \
-	${EXECUTABLE_OBJ:.o=.d}       \
-	${GUI_OBJS:.o=.d}             \
-	${QT_OBJS:.o=.d}              \
-	${INPUT_OBJS:.o=.d}           \
-	${PYTHON_OBJS:.o=.d}          \
-	${PYTHON_SHARED_OBJS:.so=.sd} \
-	${TEST_EXECUTABLE:.bin=.d}    \
-	${TEST_EXECUTABLE_OBJ:.o=.d}  \
-	${TEST_OBJS:.o=.d}            \
-
-HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
+GUI_OBJS = \
+	gui/button.o                 \
+	gui/component.o	             \
+	gui/component_group.o        \
+	gui/gui_text.o               \
+	gui/gui_window.o             \
+	gui/gui_manager.o            \
 
 
 INPUT_OBJS = \
@@ -74,15 +62,6 @@ INPUT_OBJS = \
 	input_management/mouse_input_event.o    \
 	input_management/mouse_state.o          \
 
-GUI_OBJS = \
-	gui/button.o                 \
-	gui/component.o	             \
-	gui/component_group.o        \
-	gui/gui_text.o               \
-	gui/gui_window.o             \
-	gui/gui_manager.o            \
-
-
 PYTHON_OBJS = \
 	python_embed/entity.o              \
 	python_embed/interpreter.o         \
@@ -91,6 +70,12 @@ PYTHON_OBJS = \
 	python_embed/entitythread.o        \
 	python_embed/thread_killer.o       \
 	python_embed/game_engine.o         \
+
+QT_OBJS = \
+	qtgui/game_window.o      \
+	qtgui/mainwindow.o       \
+	qtgui/moc_mainwindow.o   \
+	qtgui/parsingfunctions.o \
 
 # For precompiling
 PYTHON_HEADER = \
@@ -106,3 +91,20 @@ PYTHON_SHARED_OBJS_DEPENDS = \
 
 TEST_OBJS = \
 	test/test_fml.o \
+
+HEADER_DEPENDS_ROOT = \
+	${BASE_OBJS:.o=.d}            \
+	${CORE_OBJS:.o=.d}            \
+	${EXECUTABLE:.bin=.d}         \
+	${EXECUTABLE_OBJ:.o=.d}       \
+	${GUI_OBJS:.o=.d}             \
+	${INPUT_OBJS:.o=.d}           \
+	${PYTHON_OBJS:.o=.d}          \
+	${QT_OBJS:.o=.d}              \
+	${PYTHON_SHARED_OBJS:.so=.sd} \
+	${TEST_EXECUTABLE:.bin=.d}    \
+	${TEST_EXECUTABLE_OBJ:.o=.d}  \
+	${TEST_OBJS:.o=.d}            \
+
+HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
+

@@ -1,3 +1,12 @@
+#include "interpreter.hpp"
+
+#include <QDataStream>
+#include <QMetaType>
+#include <QTextStream>
+#include <QCursor>
+#include <QStyleOption>
+#include <qcoreevent.h>
+
 #include <glog/logging.h>
 #include <algorithm>
 #include <cmath>
@@ -15,6 +24,7 @@
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
+#include "mainwindow.h"
 #include "map.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
@@ -29,8 +39,7 @@ GameWindow* Engine::game_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
-bool Engine::any_output(false);
-
+MainWindow* Engine::main_window(nullptr);
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
@@ -233,13 +242,12 @@ void Engine::print_dialogue(std::string name, std::string text) {
 }
 
 void Engine::print_terminal(std::string text, bool error) {
-
-    any_output = true;
-    game_window->update_terminal_text(text,error);
+    main_window->setAnyOutput(true);
+    main_window->pushTerminalText(text,error);
 }
 
 void Engine::set_any_output(bool option){
-    any_output = option;
+    main_window->setAnyOutput(option);
 }
 
 TextFont Engine::get_game_font() {
