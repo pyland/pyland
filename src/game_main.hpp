@@ -10,6 +10,7 @@
 #include <vector>
 #include <glm/vec2.hpp>
 #include "interpreter.hpp"
+#include "config.hpp"
 #include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "callback_state.hpp"
@@ -96,6 +97,8 @@ private:
     ChallengeData *challenge_data;
     Challenge* challenge;
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
+
+    void config_gui(nlohmann::json j);
 
 public:
     GameMain(int &argc, char **argv);

@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 
-#include "button.hpp"
 #include "lifeline.hpp"
 #include "notification_stack.hpp"
 
@@ -17,16 +16,9 @@ private:
     Notification notification_stack;
     Text* notification_text;
 
-//	std::shared_ptr<Button> forward_button;
-
     Lifeline text_box;
 
     void move_notification(Direction direction);
-
-    ///
-    /// update buttons depending on the notification_stach flags
-    ///
-    void hide_buttons();
 
 public:
 
