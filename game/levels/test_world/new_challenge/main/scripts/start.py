@@ -39,5 +39,5 @@ engine.add_button("gui/coin/coin-tile", "Rock4", boulder_four.focus)
 engine.add_button("gui/coin/coin-tile", "Rock5", boulder_five.focus)
 engine.add_button("gui/coin/coin-tile", "Portal", portal_one.focus)
 
-engine.play_music()
+engine.play_music("beach")
 
