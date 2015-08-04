@@ -120,7 +120,7 @@ $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS) $(EXECUTABLE_OBJ) $(BASE_OBJS): %.o : %.cpp 
 		$(CPPFLAGS)           $(CXXFLAGS)           \
 
 $(CORE_OBJS): %.o : %.cpp | dependencies/core
-	@echo "${bold}[ Compiling core object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling core object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS)   $(GLOG_CXXFLAGS)        \
@@ -133,7 +133,7 @@ $(CORE_OBJS): %.o : %.cpp | dependencies/core
 		$(QT_INCPATH)			           \
 
 $(GUI_OBJS): %.o : %.cpp | dependencies/gui
-	@echo "${bold}[ Compiling gui object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling gui object file ${yellow}$*.o${normal}${bold} from ${yellow}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS)   $(GLOG_CXXFLAGS)        \
@@ -143,7 +143,7 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 		$(CPPFLAGS)        $(CXXFLAGS)             \
 
 $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
-	@echo "${bold}[ Compiling input object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling input object file ${pink}$*.o${normal}${bold} from ${pink}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
@@ -152,7 +152,7 @@ $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 
 
 $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/python_embed
-	@echo "${bold}[ Compiling Python object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling Python object file ${purple}$*.o${normal}${bold} from ${purple}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS)                           \
@@ -162,7 +162,7 @@ $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | d
 		$(CXXFLAGS) $(CPPFLAGS)                    \
 
 $(QT_OBJS): %.o : %.cpp | dependencies/qtgui
-	@echo "${bold}[ Compiling qtgui file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling qtgui file ${turquoise}$*.o${normal}${bold} from ${turquoise}$*.cpp${normal}${bold} ]${normal}"
 #	@$(QMAKING) -o Makefile.qt qtgui/application.pro
 
 	@$(COMPILER)  -c $*.cpp -o $*.o                   \
@@ -175,7 +175,7 @@ $(QT_OBJS): %.o : %.cpp | dependencies/qtgui
 		$(QT_INCPATH)			          \
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
-	@echo "${bold}[ Compiling Python shared object file ${green}$*.so${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
+	@echo "${bold}[ Compiling Python shared object file ${purple}$*.so${normal}${bold} from ${purple}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
@@ -189,11 +189,11 @@ $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies
 #
 
 $(PYTHON_HEADER).unknown:
-	@echo "${bold}[ $(COMPILER): ${GREEN}Don't know how to precompile Python header; ignoring.${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): ${purple}Don't know how to precompile Python header; ignoring.${normal}${bold} ]${normal}"
 	@touch $(PYTHON_HEADER).unknown
 
 $(PYTHON_HEADER).gch: $(PYTHON_HEADER)
-	@echo "${bold}[ $(COMPILER): Precompiling Python header ${green}$<.gch${normal}${bold} from ${green}$<${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): Precompiling Python header ${purple}$<.gch${normal}${bold} from ${purple}$<${normal}${bold} ]${normal}"
 
 	@$(COMPILER) $< -o $<.gch \
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS) \
@@ -202,7 +202,7 @@ $(PYTHON_HEADER).gch: $(PYTHON_HEADER)
 # This largely assumes the setup is constant for clang.
 # clang with precompiled headers may work, but is not guaranteed.
 $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
-	@echo "${bold}[ $(COMPILER): Precompiling Python header ${green}$<.pch${normal}${bold} from ${green}$<${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): Precompiling Python header ${purple}$<.pch${normal}${bold} from ${purple}$<${normal}${bold} ]${normal}"
 
 	@# Apologies for the mess, but I can't think of a better way.
 	@$(COMPILER) -x c++-header $< -o $<.pch \
@@ -220,7 +220,7 @@ $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
 # Moc generated files
 qtgui/moc_mainwindow.cpp: qtgui/mainwindow.cpp qtgui/mainwindow.h
 
-	@echo "${bold}[ $(COMPILER): Creating qt file ${red}$ moc_mainwindow.cpp ${normal}${bold} from ${red}$ mainwindow.h ${normal}${bold} ]${normal}"
+	@echo "${bold}[ $(COMPILER): Creating qt file ${turquoise}$ moc_mainwindow.cpp ${normal}${bold} from ${turquoise}$ mainwindow.h ${normal}${bold} ]${normal}"
 	@/usr/bin/moc-qt4 $(QT_DEFINES) $(QT_INCPATH) ./qtgui/mainwindow.h -o ./qtgui/moc_mainwindow.cpp
 
 #
@@ -259,12 +259,12 @@ clean:
 	  if [ -d $${directory} ]; then ${RMDIR} $${directory}; fi; \
 	done
 
-	@echo "${bold}${green}Made clean${normal}"
+	@echo "${bold}${red}Made clean${normal}"
 
 veryclean: clean
 	@-$(RM) $(PYTHON_HEADER).gch $(PYTHON_HEADER).pch
 	@-$(MAKE) -C tmx-parser -f Makefile.linux clean
-	@echo "${bold}${green}Made very clean${normal}"
+	@echo "${bold}${red}Made very clean${normal}"
 
 -include ${HEADER_DEPENDS}
 
