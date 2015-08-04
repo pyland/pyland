@@ -51,22 +51,22 @@ using namespace std;
 static std::mt19937 random_generator;
 
 //Multiplication factors for converting game_window width and height to width and height for gui
-const float x_scale = 1.0/680.0;
-const float y_scale = 1.0/340.0;
+const float x_scale = 1.0f/650.0f;
+const float y_scale = 1.0f/280.0f;
 
 //The maximum number of sprite head buttons to be displayed on the top
-int button_max = 5;
+unsigned int button_max = 5;
 const float button_spacing = 0.08f;
 
 GameMain::GameMain(int &argc, char **argv):
+    paused(false),
     embedWindow(800, 600, argc, argv, this),
     interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
     gui_manager(),
     callbackstate(),
     map_viewer(&embedWindow, &gui_manager),
-    tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
-    paused(false),
-    display_button_start(0)
+    display_button_start(0),
+    tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 {
     nlohmann::json j = Config::get_instance();
     LOG(INFO) << "Constructing GameMain..." << endl;
@@ -89,6 +89,7 @@ GameMain::GameMain(int &argc, char **argv):
     sprite_window->set_visible(false);
 
     buttons.clear();
+
     gui_manager.set_root(sprite_window);
 
     notification_bar = new NotificationBar();
@@ -100,8 +101,8 @@ GameMain::GameMain(int &argc, char **argv):
     pause_button->set_text("");
     pause_button->set_width(0.15f);
     pause_button->set_height(0.35f);
-    pause_button->set_y_offset(embedWindow.get_game_window_height()*y_scale);
-    pause_button->set_x_offset(-0.05f);
+    pause_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
+    pause_button->set_x_offset(0.00f);
     pause_button->set_on_click( [&] () {
 
         if(paused == false){
@@ -124,8 +125,8 @@ GameMain::GameMain(int &argc, char **argv):
     bag_button->set_text("Bag");
     bag_button->set_width(0.15f);
     bag_button->set_height(0.35f);
-    bag_button->set_y_offset(embedWindow.get_game_window_height()*y_scale);
-    bag_button->set_x_offset(embedWindow.get_game_window_width()*x_scale);
+    bag_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
+    bag_button->set_x_offset(float(embedWindow.get_game_window_width())*x_scale);
     bag_button->set_on_click( [&] () {
         LOG(INFO) << "Bag opened";
     });
@@ -161,13 +162,6 @@ GameMain::GameMain(int &argc, char **argv):
     {
         InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
-    ));
-
-    Lifeline editor_callback = input_manager->register_keyboard_handler(filter(
-        {KEY_PRESS, KEY("E")},
-        [&] (KeyboardInputEvent) {
-            Engine::open_editor();
-        }
     ));
 
     back_callback = input_manager->register_keyboard_handler(filter(
@@ -359,26 +353,46 @@ void GameMain::pause_menu()
 
 void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback)
 {
-    if(buttons.size() % button_max == 0 && buttons.size() != 0)
-    {
+
+    if(buttons.size() == button_max){
         cycle_button = std::make_shared<Button>(ButtonType::Single);
         cycle_button->set_picture("gui/highlight/selected_object");
         cycle_button->set_text("Cycle");
         cycle_button->set_width(0.15f);
         cycle_button->set_height(0.35f);
-        cycle_button->set_y_offset(embedWindow.get_game_window_height()*y_scale);
-        cycle_button->set_x_offset(embedWindow.get_game_window_width()*x_scale - button_max * button_spacing);
+        cycle_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
+        cycle_button->set_x_offset(float(embedWindow.get_game_window_width())*x_scale - float(button_max + 1) * button_spacing);
+
         cycle_button->set_on_click( [&] () {
-            LOG(INFO) << "Switching bags";
+
+            //remove previous set of buttons
+            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
+            {
+                sprite_window->remove(buttons[display_button_start + i]->get_id());
+            }
+
+            //update the button index of buttons to be displayed
+            if(display_button_start + button_max >= buttons.size()){
+                display_button_start = 0;
+            }
+            else{
+                display_button_start += button_max;
+            }
+
+            //display new buttons
+            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
+            {
+                sprite_window->add(buttons[display_button_start + i]);
+            }
+
+            refresh_gui();
         });
+
         sprite_window->add(cycle_button);
 
-        for(int i=0; i<button_max; i++)
-        {
-            buttons[display_button_start+i]->set_visible(false);
-        }
         refresh_gui();
     }
+
     std::shared_ptr<Button> new_button;
     new_button = std::make_shared<Button>(ButtonType::Single);
     buttons.push_back(new_button);
@@ -389,12 +403,19 @@ void GameMain::add_button(std::string file_path, std::string name, std::function
     new_button->set_height(0.35f);
 
     //make space for previous buttons
-    float org_x_location = embedWindow.get_game_window_width() * x_scale;
+    float org_x_location = float(embedWindow.get_game_window_width()) * x_scale;
 
-    new_button->set_x_offset(org_x_location - (((buttons.size()-1) % button_max) + 1) * button_spacing);
-    new_button->set_y_offset(embedWindow.get_game_window_height() * y_scale);
+    new_button->set_x_offset(org_x_location - float(((buttons.size()-1) % button_max) + 1) * button_spacing);
+    new_button->set_y_offset(float(embedWindow.get_game_window_height()) * y_scale);
 
+    //add the button onto the screen
     sprite_window->add(new_button);
+
+    if((buttons.size() - 1) % button_max == 0 && buttons.size() != 1)
+    {
+        cycle_button->call_on_click();
+    }
+
     refresh_gui();
 }
 
@@ -477,6 +498,7 @@ void GameMain::game_loop(bool showMouse)
         challenge = pick_challenge(challenge_data);
         Engine::set_challenge(challenge);
         challenge->start();
+        callbackstate.stop();
         //Update tool bar here
         //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
 

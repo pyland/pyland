@@ -25,8 +25,6 @@ Button::Button(ButtonType _type) {
     set_text("");
 
     get_text()->set_bloom_radius(4);
-    button_text->set_x_offset(0.3f);
-    button_text->set_y_offset(0.5f);
     get_text()->align_at_origin(true);
     get_text()->align_centre();
     get_text()->vertical_align_top();
@@ -54,8 +52,6 @@ Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<voi
     button_text->set_height(1.0f);
 
     get_text()->set_bloom_radius(4);
-    button_text->set_x_offset(0.3f);
-    button_text->set_y_offset(0.5f);
     get_text()->align_at_origin(true);
     get_text()->align_centre();
     get_text()->vertical_align_top();
@@ -159,15 +155,14 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
     }
     else if(type == ButtonType::Single){
 
-        std::tuple<float,float,float,float> background_bounds = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
-
+        std::tuple<float,float,float,float> background_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(element_height_pixels), 0.0f);
         //get total number of floats
         total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
         vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
 
         //Generate the vertex coordinates for each element
-        offset = generate_tile_element_vertex_coords(vertex_data, 0, background_bounds, element_width_pixels, element_height_pixels);
+        offset = generate_vertex_coords_element(vertex_data, 0, background_bounds);
 
     }
     size_vertex_data = offset;
@@ -373,19 +368,15 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
 
     }
     else if(type== ButtonType::Single){
-
-        std::tuple<float,float,float,float> background_bounds_vertex = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
-
         //Load data for texture coordinate bouds
         std::tuple<float,float,float,float> background_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index(picture_name));
 
         //get total number of floats
-        total_floats += calculate_num_tile_elements(background_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += num_floats_per_tile;
 
         texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
 
-        offset = generate_tile_element_texture_coords(texture_data, 0, background_bounds_vertex, element_width_pixels, element_height_pixels, background_bounds);
-
+        offset =  generate_texture_coords_element(texture_data, 0, background_bounds);
     }
     size_texture_data = offset;
 

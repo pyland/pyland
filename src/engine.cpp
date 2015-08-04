@@ -88,8 +88,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func
     }
 
     // Position should be integral at this point
-    glm::vec2 target(object->get_position());
-    auto location(target);
+    glm::vec2 location(object->get_position());
+    auto target(location);
     target += move_by;
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
@@ -195,16 +195,6 @@ glm::vec2 Engine::find_object(int id) {
     throw std::runtime_error("MapObject is not in the map");
 }
 
-void Engine::open_editor() {
-    LOG(INFO) << "Opening editor";
-
-    //TODO remove this function in the final version
-    std::string command(editor + std::string("python_embed/scripts/Current Script.py"));
-
-    // TODO: Make this close safely.
-    std::thread([command] () { system(command.c_str()); }).detach();
-}
-
 static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<int> objects) {
     auto &object_manager(ObjectManager::get_instance());
 
@@ -236,8 +226,6 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
         return is_object_at(location, object_id);
     });
 }
-
-std::string Engine::editor = DEFAULT_PY_EDITOR;
 
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
