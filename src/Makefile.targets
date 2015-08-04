@@ -31,17 +31,20 @@ jsonnet/libjsonnet.a: jsonnet/Makefile
 dependencies:
 	@-${MKDIR} dependencies
 
+dependencies/core: | dependencies
+	@-${MKDIR} dependencies/core
+
 dependencies/gui: | dependencies
 	@-${MKDIR} dependencies/gui
-
-dependencies/qtgui: | dependencies
-	@-${MKDIR} dependencies/qtgui
 
 dependencies/input_management: | dependencies
 	@-${MKDIR} dependencies/input_management
 
 dependencies/python_embed: | dependencies
 	@-${MKDIR} dependencies/python_embed
+
+dependencies/qtgui: | dependencies
+	@-${MKDIR} dependencies/qtgui
 
 dependencies/test: | dependencies
 	@-${MKDIR} dependencies/test
@@ -53,11 +56,12 @@ dependencies/test: | dependencies
 # DO NOT RE-ORDER - tmx parser must come before tinyxml in ldlibs
 
 $(EXECUTABLE): $(BASE_OBJS)              \
+               $(CORE_OBJS)              \
                $(EXECUTABLE_OBJ)         \
                $(GUI_OBJS)               \
-	           $(QT_OBJS)                \
                $(INPUT_OBJS)             \
                $(PYTHON_OBJS)            \
+               $(QT_OBJS)                \
                tmx-parser/libtmxparser.a \
                jsonnet/libjsonnet.a      \
                | dependencies            \
@@ -65,8 +69,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
 	@echo "${bold}${green}[ Compiling $(EXECUTABLE) ]${normal}"
 
 	@$(COMPILER) -o $@ $(EXECUTABLE_OBJ) \
-		$(BASE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) \
-                $(QT_OBJS)                                                     \
+		$(BASE_OBJS) $(CORE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(QT_OBJS)\
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
@@ -86,8 +89,7 @@ $(TEST_EXECUTABLE): $(EXECUTABLE) $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS)
 	@echo "${bold}${green}[ Compiling $(TEST_EXECUTABLE) ]${normal}"
 
 	@$(COMPILER) -o $@ $(TEST_EXECUTABLE_OBJ) \
-		$(BASE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(TEST_OBJS) \
-		$(QT_OBJS)                                                     \
+		$(BASE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(TEST_OBJS) \                                                  \
 		$(BOOST_LDFLAGS)     $(BOOST_LDLIBS)     $(BOOST_CXXFLAGS)     \
 		$(GLOG_LDFLAGS)      $(GLOG_LDLIBS)      $(GLOG_CXXFLAGS)      \
 		$(GRAPHICS_LDFLAGS)  $(GRAPHICS_LDLIBS)  $(GRAPHICS_CXXFLAGS)  \
@@ -117,14 +119,18 @@ $(TEST_EXECUTABLE_OBJ) $(TEST_OBJS) $(EXECUTABLE_OBJ) $(BASE_OBJS): %.o : %.cpp 
 		$(ZLIB_CPPFLAGS)      $(ZLIB_CXXFLAGS)      \
 		$(CPPFLAGS)           $(CXXFLAGS)           \
 
-$(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
-	@echo "${bold}[ Compiling input object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
+$(CORE_OBJS): %.o : %.cpp | dependencies/core
+	@echo "${bold}[ Compiling core object file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
-		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
-		$(SDL_CPPFLAGS)  $(SDL_CXXFLAGS)  \
-		$(CPPFLAGS)      $(CXXFLAGS)      \
-
+		$(GLOG_CPPFLAGS)   $(GLOG_CXXFLAGS)        \
+		$(GRAPHICS_CPPFLAGS)  $(GRAPHICS_CXXFLAGS) \
+		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)      \
+		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)         \
+		$(CPPFLAGS)        $(CXXFLAGS)             \
+		$(WARNINGS)	     $(QT_INCFLAGS)        \
+		$(QT_CXXFLAGS) $(QT_DEFINES)               \
+		$(QT_INCPATH)			           \
 
 $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 	@echo "${bold}[ Compiling gui object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -136,18 +142,14 @@ $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 		$(SDL_CPPFLAGS)    $(SDL_CXXFLAGS)         \
 		$(CPPFLAGS)        $(CXXFLAGS)             \
 
-$(QT_OBJS): %.o : %.cpp | dependencies/qtgui
-	@echo "${bold}[ Compiling qtgui file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
-#	@$(QMAKING) -o Makefile.qt qtgui/application.pro
+$(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
+	@echo "${bold}[ Compiling input object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
 
-	@$(COMPILER)  -c $*.cpp -o $*.o               \
-		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
-		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
-		$(PYTHON_CPPFLAGS)   $(PYTHON_CXXFLAGS)   \
-		$(CPPFLAGS)          $(CXXFLAGS)          \
-		$(WARNINGS)	     $(QT_INCFLAGS)           \
-		$(QT_CXXFLAGS) $(QT_DEFINES)              \
-		$(QT_INCPATH)			                  \
+	@$(COMPILER) -c $*.cpp -o $*.o \
+		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
+		$(SDL_CPPFLAGS)  $(SDL_CXXFLAGS)  \
+		$(CPPFLAGS)      $(CXXFLAGS)      \
+
 
 $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | dependencies/python_embed
 	@echo "${bold}[ Compiling Python object file ${green}$*.o${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -158,6 +160,19 @@ $(PYTHON_OBJS): %.o : %.cpp $(PYTHON_HEADER).$(PRECOMPILED_HEADER_EXTENSION) | d
 		$(PYTHON_CPPFLAGS) $(PYTHON_CXXFLAGS)      \
 		$(PYTHON_INCLUDE_PCH)                      \
 		$(CXXFLAGS) $(CPPFLAGS)                    \
+
+$(QT_OBJS): %.o : %.cpp | dependencies/qtgui
+	@echo "${bold}[ Compiling qtgui file ${red}$*.o${normal}${bold} from ${red}$*.cpp${normal}${bold} ]${normal}"
+#	@$(QMAKING) -o Makefile.qt qtgui/application.pro
+
+	@$(COMPILER)  -c $*.cpp -o $*.o                   \
+		$(GLOG_CPPFLAGS)     $(GLOG_CXXFLAGS)     \
+		$(GRAPHICS_CPPFLAGS) $(GRAPHICS_CXXFLAGS) \
+		$(PYTHON_CPPFLAGS)   $(PYTHON_CXXFLAGS)   \
+		$(CPPFLAGS)          $(CXXFLAGS)          \
+		$(WARNINGS)	     $(QT_INCFLAGS)       \
+		$(QT_CXXFLAGS) $(QT_DEFINES)              \
+		$(QT_INCPATH)			          \
 
 $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
 	@echo "${bold}[ Compiling Python shared object file ${green}$*.so${normal}${bold} from ${green}$*.cpp${normal}${bold} ]${normal}"
@@ -225,11 +240,12 @@ clean:
 
 	@-$(RM) \
 		$(BASE_OBJS)           \
+		$(CORE_OBJS)           \
 		$(EXECUTABLE_OBJ)      \
 		$(GUI_OBJS)            \
-		$(QT_OBJS)             \
 		$(INPUT_OBJS)          \
 		$(PYTHON_OBJS)         \
+		$(QT_OBJS)             \
 		$(PYTHON_SHARED_OBJS)  \
 		$(TEST_EXECUTABLE_OBJ) \
 		$(TEST_OBJS)           \

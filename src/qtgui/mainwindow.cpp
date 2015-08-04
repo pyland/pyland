@@ -14,7 +14,7 @@
 // notice is included.
 //++
 
-//Class which defines and sets up the QT main window
+//This class sets up and handles the QT main window
 
 // Standard stuff
 #include <fstream>
@@ -272,6 +272,7 @@ MainWindow::MainWindow(GameMain *exGame)
 
     int width = (gameWidget->width());
     int height = gameWidget->height();
+    anyOutput = false;
 
     SDL_SetWindowSize(embedWindow, width, height);
     glViewport(0, 0, width, height);
@@ -752,42 +753,6 @@ void MainWindow::runCode()
     setGameFocus();
 }
 
-//This gets called when clicking on the Run/Halt button
-//and from engine.cpp update_status, when the script terminates
-void MainWindow::setRunning(bool option)
-{
-    running = option;
-
-    if (running)
-    {
-        buttonRun->setText("Halt");
-    }
-    else
-    {
-        buttonRun->setText("Run");
-    }
-
-    updateSpeed();
-
-}
-
-void MainWindow::setFast(bool option)
-{
-    fast = option;
-
-    if (fast)
-    {
-        buttonSpeed->setText("Speed: Fast");
-    }
-    else
-    {
-        buttonSpeed->setText("Speed: Slow");
-    }
-
-}
-
-
-
 void MainWindow::toggleSpeed(){
     setFast(!fast);
     updateSpeed();
@@ -880,6 +845,43 @@ void MainWindow::createStatusBar()
     statusBar()->showMessage(tr("Ready"));
 }
 
+//This gets called when clicking on the Run/Halt button
+//and from engine.cpp update_status, when the script terminates
+void MainWindow::setRunning(bool option)
+{
+    running = option;
+
+    if (running)
+    {
+        buttonRun->setText("Halt");
+    }
+    else
+    {
+        buttonRun->setText("Run");
+    }
+
+    updateSpeed();
+
+}
+
+void MainWindow::setFast(bool option)
+{
+    fast = option;
+
+    if (fast)
+    {
+        buttonSpeed->setText("Speed: Fast");
+    }
+    else
+    {
+        buttonSpeed->setText("Speed: Slow");
+    }
+
+}
+
+void MainWindow::setAnyOutput(bool option){
+    anyOutput = option;
+}
 
 SDL_Window* MainWindow::getSDLWindow()
 {
@@ -894,3 +896,6 @@ int MainWindow::getGameWidgetHeight(){
     return gameWidget->height();
 }
 
+bool MainWindow::getAnyOutput(){
+    return anyOutput;
+}
