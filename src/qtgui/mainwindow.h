@@ -52,14 +52,16 @@ public:
     ~MainWindow();
 
     void showMax();
-    void setRunning(bool option);
-    void setFast(bool option);
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
     void updateToolBar();
+    void setRunning(bool option);
+    void setFast(bool option);
+    void setAnyOutput(bool option);
     SDL_Window* getSDLWindow();
     int getGameWidgetWidth();
     int getGameWidgetHeight();
+    bool getAnyOutput();
 protected:
     SDL_Scancode parseKeyCode(QKeyEvent *keyEvent);
     Uint8 parseButton(QMouseEvent *mouseEvent);
@@ -128,6 +130,9 @@ private:
 
     GameMain *game;
 
+    //Specifies whether there has been any output during the current code execution,
+    //it determine if output separate lines are needed
+    bool anyOutput;
 };
 
 #endif

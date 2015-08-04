@@ -23,6 +23,7 @@
 
 #include "interpreter.hpp"
 
+#include <QApplication>
 #include <QDataStream>
 #include <QMetaType>
 #include <QTextStream>
@@ -55,10 +56,13 @@ extern "C" {
 
 #include "callback.hpp"
 #include "callback_registry.hpp"
-
+#include "engine.hpp"
+#include "game_main.hpp"
+#include "graphics_context.hpp"
 #include "lifeline.hpp"
 #include "lifeline_controller.hpp"
-#include "graphics_context.hpp"
+#include "mainwindow.h"
+#include "parsingfunctions.hpp"
 
 #ifdef USE_GLES
 
@@ -85,14 +89,6 @@ int GameWindow::overscan_left = OVERSCAN_LEFT;
 int GameWindow::overscan_top  = OVERSCAN_TOP;
 
 #endif
-
-//New include calls
-#include <QApplication>
-#include "game_main.hpp"
-#include "mainwindow.h"
-#include "parsingfunctions.hpp"
-
-#include "engine.hpp"
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
 GameWindow* GameWindow::focused_window = nullptr;

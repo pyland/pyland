@@ -41,13 +41,6 @@ private:
     ///
     static float global_scale;
 
-
-    ///
-    /// Specifies whether there has been any output during the current code execution,
-    /// it determine if output separate lines are needed
-    ///
-    static bool any_output;
-
 public:
     ///
     /// Get the global scale
