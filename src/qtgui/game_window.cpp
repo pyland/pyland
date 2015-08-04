@@ -83,9 +83,7 @@ int GameWindow::overscan_top  = OVERSCAN_TOP;
 #endif
 
 //New include calls
-//#include <QApplication>
 #include <QApplication>
-#include "game_init.hpp"
 #include "game_main.hpp"
 #include "mainwindow.h"
 #include "parsingfunctions.hpp"
@@ -255,11 +253,7 @@ GameWindow::~GameWindow() {
 #endif
     windows.erase(SDL_GetWindowID(window));
 
-    //delete curGameInit;
-
     delete app;
-    //delete mainWin;
-
 
     callback_controller.disable();
 

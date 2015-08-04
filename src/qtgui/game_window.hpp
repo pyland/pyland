@@ -32,10 +32,10 @@ extern "C" {
 #include "lifeline_controller.hpp"
 #include "graphics_context.hpp"
 
-#include "game_init.hpp"
-
 class InputManager;
 class GameMain;
+class MainWindow;
+class QApplication;
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
 ///

@@ -45,7 +45,6 @@ BASE_OBJS = \
 QT_OBJS = \
 	qtgui/mainwindow.o		 \
 	qtgui/moc_mainwindow.o   \
-	qtgui/game_init.o		 \
 	qtgui/parsingfunctions.o \
 	qtgui/game_window.o      \
 

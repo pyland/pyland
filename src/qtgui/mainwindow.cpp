@@ -14,6 +14,8 @@
 // notice is included.
 //++
 
+//Class which defines and sets up the QT main window
+
 // Standard stuff
 #include <fstream>
 #include <iostream>
