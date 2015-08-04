@@ -11,3 +11,5 @@ coconut_six.set_weight(32)
 coconut_seven.set_weight(64)
 
 engine.print_terminal(str(coconut_one.get_weight()), False)
+
+engine.play_music("beach")
