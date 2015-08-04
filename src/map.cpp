@@ -20,6 +20,7 @@
 #endif
 
 #include "cacheable_resource.hpp"
+#include "config.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
 #include "fml.hpp"
@@ -32,7 +33,6 @@
 #include "shader.hpp"
 #include "texture_atlas.hpp"
 #include "tileset.hpp"
-
 
 Map::Map(const std::string map_src):
     event_step_on(glm::ivec2(0, 0)),
@@ -47,7 +47,7 @@ Map::Map(const std::string map_src):
             return;
         }
 
-        locations = map_loader.get_object_mapping();
+        locations = map_loader.get_object_mapping(); //returns a vector of MapObjectProperties (see map_loader.hpp for structure)
 
         //Get the loaded map data
         map_width = map_loader.get_map_width();
@@ -90,47 +90,25 @@ Map::~Map() {
 bool Map::is_walkable(int x_pos, int y_pos) {
     return std::all_of(std::begin(layer_ids), std::end(layer_ids), [&] (int layer_id) {
             std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
-        // Block only in the case where we're on the collisions layer and the tile is set
-            return !(layer->get_name() == "Collisions" && layer->get_tile(x_pos, y_pos).second);
+        // Block only in the case where we're on the special layer and the tile is set
+            return !(layer->get_name() == Config::get_instance()["layers"]["special_layer_name"] && (layer->get_tile(x_pos, y_pos).second == 1));
     });
 }
 
 
-void Map::add_map_object(int map_object_id) {
-    if(ObjectManager::is_valid_object_id(map_object_id))
-        map_object_ids.push_back(map_object_id);
+void Map::add_map_object(int object_id) {
+    if(ObjectManager::is_valid_object_id(object_id))
+        object_ids.push_back(object_id);
 }
 
-void Map::remove_map_object(int map_object_id) {
-    if(ObjectManager::is_valid_object_id(map_object_id)){
-        for(auto it = map_object_ids.begin(); it != map_object_ids.end(); ++it) {
+void Map::remove_map_object(int object_id) {
+    if(ObjectManager::is_valid_object_id(object_id)){
+        for(auto it = object_ids.begin(); it != object_ids.end(); ++it) {
             //If a valid object
             if(*it != 0) {
-                //remove it if its the map_object
-                if(*it == map_object_id) {
-                    map_object_ids.erase(it);
-                    return;
-                }
-            }
-        }
-    }
-}
-
-void Map::add_sprite(int sprite_id) {
-    if (ObjectManager::is_valid_object_id(sprite_id)) {
-        event_sprite_add.trigger(sprite_id);
-        sprite_ids.push_back(sprite_id);
-    }
-}
-
-void Map::remove_sprite(int sprite_id) {
-    if(ObjectManager::is_valid_object_id(sprite_id)){
-        for(auto it = sprite_ids.begin(); it != sprite_ids.end(); ++it) {
-            //If a valid object
-            if(*it != 0) {
-                //remove it if its the sprite
-                if(*it == sprite_id) {
-                    sprite_ids.erase(it);
+                //remove it if its the object
+                if(*it == object_id) {
+                    object_ids.erase(it);
                     return;
                 }
             }
@@ -203,7 +181,8 @@ void Map::generate_data() {
 
         // Don't generate data for the collisions layer
         // TODO: handle this not being in layer_mappings
-        if (layer->get_name() == "Collisions") {
+        // TODO: let python have some control over which layers are special
+        if (layer->get_name() == Config::get_instance()["layers"]["special_layer_name"]) {
             layer_num++;
             continue;
         }

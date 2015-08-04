@@ -11,26 +11,15 @@
 
 #include "challenge.hpp"
 #include "game_window.hpp"
-#include "gil_safe_future.hpp"
 #include "text_font.hpp"
 #include "typeface.hpp"
 
 class MapViewer;
 class NotificationBar;
 
-///
-/// default python editor, used as long as another isn't passed as command line arg
-#define DEFAULT_PY_EDITOR "gedit"
-
 // Class wrapping the API calls into a static public class
 class Engine {
 private:
-
-    ///
-    /// name of editor used for python editing
-    ///
-    static std::string editor;
-
     static MapViewer *map_viewer;
 
     static NotificationBar* notification_bar;
@@ -48,6 +37,13 @@ private:
     /// by
     ///
     static float global_scale;
+
+
+    ///
+    /// Specifies whether there has been any output during the current code execution,
+    /// it determine if output separate lines are needed
+    ///
+    static bool any_output;
 
 public:
     ///
@@ -81,7 +77,7 @@ public:
     /// @param _game_window the game window
     ///
     static void set_game_window(GameWindow* _game_window) { game_window = _game_window; }
-    
+
     ///
     /// Get the game window
     /// @return the game window
@@ -107,9 +103,10 @@ public:
     /// @param id ID of sprite to move
     /// @param dx move in x by dx tiles
     /// @param dy move in x by dy tiles
+    /// @param func the callback to be called once the movement operation is complete (get's put on the event queue)
     ///
+    static void move_object(int id, glm::ivec2 move_by, std::function<void ()> func);
     static void move_object(int id, glm::ivec2 move_by);
-    static void move_object(int id, glm::ivec2 move_by, GilSafeFuture<bool> walk_succeeded_return);
 
     ///
     /// Determine if a location can be walked on
@@ -125,7 +122,7 @@ public:
     /// @param search range the radius of the circle to search
     /// @return a vector of (name, x, y) tuples
     ///
-    static std::vector<std::tuple<std::string, int, int>> look(int id, int search_range);
+    //static std::vector<std::tuple<std::string, int, int>> look(int id, int search_range); TODO BLEH TO BE REMOVED AND PYTHONED
 
     ///
     /// Cuts down a vine or cuttable object
@@ -133,7 +130,7 @@ public:
     /// @param location the (x,y_ position to cut
     /// @return if the operation succeeded
     ///
-    static bool cut(int id, glm::ivec2 location);
+    //static bool cut(int id, glm::ivec2 location); TODO BLEH TO BE REMOVED AND PYTHONED
 
     ///
     /// Change the tile in the map in the given layer at the provided position
@@ -153,22 +150,10 @@ public:
     static glm::vec2 find_object(int id);
 
     ///
-    /// Open a text editor for the user to edit a file
-    /// @param filename name of file in scripts directory
-    ///
-    static void open_editor(std::string filename);
-
-    ///
     /// Get a list of objects at this point, doesn't include sprites
     /// @return a vector of object ids
     ///
     static std::vector<int> get_objects_at(glm::vec2 location);
-
-    ///
-    /// Get a list of sprites at this point
-    /// @return a vector of object ids
-    ///
-    static std::vector<int> get_sprites_at(glm::vec2 location);
 
     ///
     /// Get whether a sprite with a certain id is at this tile
@@ -180,26 +165,22 @@ public:
     ///
     static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
 
-    ///
-    /// set the text editor, opened by the challenges
-    ///
-    static void set_editor(std::string editor) { Engine::editor = editor; }
-
     static void set_notification_bar(NotificationBar *notification_bar) { Engine::notification_bar = notification_bar; }
 
     static NotificationBar* get_notification_bar() { return Engine::notification_bar; }
     static void print_dialogue(std::string name, std::string text);
-
-    /// method for handling sprite test
-    static void text_displayer();
-    static void text_updater();
-    static void update_status(int id, std::string status);
+    static void print_terminal(std::string text, bool error);
+    static void set_any_output(bool option);
 
     /// global access to game font
     static TextFont get_game_font();
     static Typeface get_game_typeface();
 
-    static void set_challenge(Challenge* _challenge) { challenge = _challenge; }
+    static void set_challenge(Challenge* _challenge)
+    {
+        challenge = _challenge;
+        game_window->update_running(false);
+    }
     static Challenge* get_challenge() { return challenge; }
 };
 

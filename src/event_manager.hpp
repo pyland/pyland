@@ -7,14 +7,21 @@
 
 #include "game_time.hpp"
 
+class InterpreterContext;
+
 ///
 /// The event manager class. This is a thread-safe
 /// implementation.which uses the singleton pattern.
 ///
 class EventManager {
 
+private:
+
     EventManager();
     ~EventManager();
+    
+    EventManager(EventManager const&) = delete;
+    void operator=(EventManager const&) = delete;
 
     ///
     /// The mutex to control access to the queues
@@ -65,7 +72,7 @@ public:
     ///
     /// @see reenable
     ///
-    void flush_and_disable();
+    void flush_and_disable(InterpreterContext &interpreter_context);
 
     ///
     /// Reenable the queue after a call to flush_and_disable.
@@ -78,7 +85,7 @@ public:
     /// Getter for the main global event manager.
     /// @return a reference to the global event manager
     ///
-    static EventManager& get_instance();
+    static EventManager* get_instance();
 
     ///
     /// Add an event to the event manager. If the event loop is running,
@@ -132,7 +139,7 @@ public:
     ///
     /// Processes all events in the current frame queue
     ///
-    void process_events();
+    void process_events(InterpreterContext &interpreter_context);
 
 };
 

@@ -22,22 +22,20 @@
 
 int main(int argc, char *argv[])
 {
-
     create_apih_from_wrapper();
 
-	QApplication *app = new QApplication(argc, argv);
-	app->setStyle("windows");
-	app->setAttribute(Qt::AA_NativeWindows, true);
+    //Q_INIT_RESOURCE(application);
 
-	MainWindow * mainWin = new MainWindow();
+    QApplication *app = new QApplication(argc, argv);
+    app->setStyle("gtk");
+    app->setAttribute(Qt::AA_NativeWindows, true);
 
-    mainWin->show();
-	int ret = app->exec();
+    MainWindow *mainWin = new MainWindow();
 
-    //Engine::set_game_window(mainWin);
+    int ret = app->exec();
 
     delete mainWin;
     delete app;
 
-	return ret;
+    return ret;
 }

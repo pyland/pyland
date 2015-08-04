@@ -86,7 +86,7 @@ World 7 - Monkey Kingdom
 	Window tiles
 	Door tiles
 	Cemented base
-	* Monkeys, monkeys
+	* Variety of monkey sprites
 	Jewels	
  
 ****** SPRITES ******
@@ -108,8 +108,28 @@ Story characters
 
 ****** ITEMS ******
 
+
 ****** CLOTHING ******
+
+Head
+	Hats
+	Helmets
+	Hair dye colours
+
+Trousers
+	Jeans
+	
+	Armour
+
+Tops
+	Colours/Designs
+Shoes
+	Colours/Designs
 
 ****** INTERFACES ******
 
-
+Full game window interfaces (solid colour/texture with pretty borders)
+	Bag
+	PyGuide
+	Shop
+		Look like actual shop/display

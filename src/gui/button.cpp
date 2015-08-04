@@ -5,8 +5,7 @@
 #include <tuple>
 #include <utility>
 #include <vector>
-
-
+#include <memory>
 
 #ifdef USE_GLES
 #include <GLES2/gl2.h>
@@ -18,36 +17,52 @@
 #endif
 
 
-Button::Button() {
+Button::Button(ButtonType _type) {
+    type = _type;
+    alignment = ButtonAlignment::TopRight;
     button_text = std::make_shared<GUIText>();
     button_text->set_width(1.0f);
     button_text->set_height(1.0f);
     button_text->set_x_offset(0.3f);
-    button_text->set_y_offset(0.5f);
+    button_text->set_y_offset(0.1f);
     set_text("");
+
     get_text()->set_bloom_radius(4);
-    get_text()->align_at_origin(true);
-    get_text()->vertical_align_centre();
-    get_text()->align_centre();
+
     add(button_text);
+
+    picture_name = "gui/black-tile";
 }
 
-Button::Button(std::shared_ptr<Text>  _text, std::function<void (void)> on_click,
+Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<void (void)> on_click,
                float _width, float _height, float _x_offset, float _y_offset) :
     ComponentGroup(on_click, _width, _height, _x_offset, _y_offset) {
+
+    alignment = ButtonAlignment::TopRight;
+    type= _type;
     button_text = std::make_shared<GUIText>();
-    button_text->set_text(_text);
     button_text->set_width(1.0f);
     button_text->set_height(1.0f);
     button_text->set_x_offset(0.3f);
-    button_text->set_y_offset(0.5f);
+    button_text->set_y_offset(0.3f);
+    button_text->set_text(_text);
     get_text()->set_bloom_radius(4);
-    get_text()->align_at_origin(true);
-    get_text()->vertical_align_centre();
-    get_text()->align_centre();
 
     add(button_text);
 }
+
+void Button::set_alignment(ButtonAlignment _alignment){
+    alignment = _alignment;
+}
+
+ButtonAlignment Button::get_alignment(){
+    return alignment;
+}
+
+void Button::set_picture(std::string _name){
+    picture_name = _name;
+}
+
 void Button::set_text(std::string text) {
     //TODO DEBUG
     Typeface buttontype = Engine::get_game_typeface();
@@ -63,6 +78,7 @@ std::shared_ptr<Text> Button::get_text() {
 }
 
 void Button::set_text(std::shared_ptr<Text> _text) {
+
     button_text->set_text(_text);
     get_text()->set_bloom_radius(4);
 }
@@ -85,56 +101,71 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
     float background_top = float(height_pixels) - element_height_pixels;
     //    if(background_top < element_height_pixels) background_top = element_height_pixels;
 
-
-    //edges
-    //    float top_edge_right = float(width_pixels) - element_width_pixels;
-    //    if(top_edge_right < ele
-
-
-    //left right top bottom
-    //The vertex bounds for these components
-    std::tuple<float,float,float,float> background_bounds = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
-
-    std::tuple<float,float,float,float> corner_top_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
-    std::tuple<float,float,float,float> corner_top_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
-    std::tuple<float,float,float,float> corner_bottom_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(element_height_pixels), 0.0f);
-    std::tuple<float,float,float,float> corner_bottom_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(element_height_pixels), 0.0f);
-    std::tuple<float,float,float,float> edge_top_bounds = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
-    std::tuple<float,float,float,float> edge_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
-    std::tuple<float,float,float,float> edge_bottom_bounds = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(element_height_pixels), 0.0f);
-    std::tuple<float,float,float,float> edge_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
-
     //Generate the data buffer
     int num_floats_per_tile = 12;
     int total_floats = 0;
-    //get total number of flotas
-    total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(corner_top_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(corner_top_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(corner_bottom_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(corner_bottom_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(edge_top_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(edge_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    int offset = 0;
 
-    vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+    if(type == ButtonType::Board){
 
+        std::tuple<float,float,float,float> background_bounds = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
 
-
-
-    //Generate the vertex coordinates for each element
-    int offset = generate_tile_element_vertex_coords(vertex_data, 0, background_bounds, element_width_pixels, element_height_pixels);
-    offset = generate_vertex_coords_element(vertex_data, offset, corner_top_left_bounds);
-    offset = generate_vertex_coords_element(vertex_data, offset, corner_top_right_bounds);
-    offset = generate_vertex_coords_element(vertex_data, offset, corner_bottom_right_bounds);
-    offset = generate_vertex_coords_element(vertex_data, offset, corner_bottom_left_bounds);
-    offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_top_bounds, element_width_pixels, element_height_pixels);
-    offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_right_bounds, element_width_pixels, element_height_pixels);
-    offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_bottom_bounds, element_width_pixels, element_height_pixels);
-    offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_left_bounds, element_width_pixels, element_height_pixels);
+        std::tuple<float,float,float,float> corner_top_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
+        std::tuple<float,float,float,float> corner_top_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
+        std::tuple<float,float,float,float> corner_bottom_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(element_height_pixels), 0.0f);
+        std::tuple<float,float,float,float> corner_bottom_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(element_height_pixels), 0.0f);
+        std::tuple<float,float,float,float> edge_top_bounds = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
+        std::tuple<float,float,float,float> edge_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
+        std::tuple<float,float,float,float> edge_bottom_bounds = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(element_height_pixels), 0.0f);
+        std::tuple<float,float,float,float> edge_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
 
 
+        //get total number of floats
+        total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(corner_top_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(corner_top_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(corner_bottom_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(corner_bottom_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(edge_top_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(edge_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+
+        vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+
+        //Generate the vertex coordinates for each element
+        offset = generate_tile_element_vertex_coords(vertex_data, 0, background_bounds, element_width_pixels, element_height_pixels);
+        offset = generate_vertex_coords_element(vertex_data, offset, corner_top_left_bounds);
+        offset = generate_vertex_coords_element(vertex_data, offset, corner_top_right_bounds);
+        offset = generate_vertex_coords_element(vertex_data, offset, corner_bottom_right_bounds);
+        offset = generate_vertex_coords_element(vertex_data, offset, corner_bottom_left_bounds);
+        offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_top_bounds, element_width_pixels, element_height_pixels);
+        offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_right_bounds, element_width_pixels, element_height_pixels);
+        offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_bottom_bounds, element_width_pixels, element_height_pixels);
+        offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_left_bounds, element_width_pixels, element_height_pixels);
+    }
+    else if(type == ButtonType::Single){
+        std::tuple<float,float,float,float> background_bounds;
+
+        if(alignment == ButtonAlignment::TopLeft){
+            background_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
+        }
+        else if(alignment == ButtonAlignment::TopRight){
+            background_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
+        }
+        else /*if(alignment == ButtonAlignment::BottomLeft)*/{
+            background_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(element_height_pixels), 0.0f);
+        }
+
+        //get total number of floats
+        total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+
+        vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+
+        //Generate the vertex coordinates for each element
+        offset = generate_vertex_coords_element(vertex_data, 0, background_bounds);
+
+    }
     size_vertex_data = offset;
 
     vertices.push_back(std::make_pair(vertex_data, total_floats));
@@ -292,59 +323,62 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
     //    if(background_right < element_width_pixels) background_right = element_width_pixels;
     float background_top = float(height_pixels) - element_height_pixels;
     //    if(background_top < element_height_pixels) background_top = element_height_pixels;
-
-
-    //edges
-    //    float top_edge_right = float(width_pixels) - element_width_pixels;
-    //    if(top_edge_right < ele
-
-
-    //left right top bottom
-    //The vertex bounds for these components
-    std::tuple<float,float,float,float> background_bounds_vertex = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
-    std::tuple<float,float,float,float> edge_top_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
-    std::tuple<float,float,float,float> edge_right_bounds_vertex = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
-    std::tuple<float,float,float,float> edge_bottom_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(element_height_pixels), 0.0f);
-    std::tuple<float,float,float,float> edge_left_bounds_vertex = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
-
-
-    //Load data for texture coordinate bouds
-    std::tuple<float,float,float,float> background_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/background/1"));
-    std::tuple<float,float,float,float> corner_top_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/topleft"));
-    std::tuple<float,float,float,float> corner_top_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/topright"));
-    std::tuple<float,float,float,float> corner_bottom_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/bottomright"));
-    std::tuple<float,float,float,float> corner_bottom_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/bottomleft"));
-    std::tuple<float,float,float,float> edge_top_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/edge/top"));
-    std::tuple<float,float,float,float> edge_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/edge/right"));
-    std::tuple<float,float,float,float> edge_bottom_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/edge/bottom"));
-    std::tuple<float,float,float,float> edge_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/edge/left"));
-
-
     //Generate the data buffer
     int num_floats_per_tile = 12;
     int total_floats = 0;
-    //get total number of flotas
-    total_floats += calculate_num_tile_elements(background_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += num_floats_per_tile * 4 ; // 4 corners
-    total_floats += calculate_num_tile_elements(edge_top_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(edge_right_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    int offset = 0;
 
-    texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+    if(type == ButtonType::Board){
 
+        std::tuple<float,float,float,float> background_bounds_vertex = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
+        std::tuple<float,float,float,float> edge_top_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
+        std::tuple<float,float,float,float> edge_right_bounds_vertex = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
+        std::tuple<float,float,float,float> edge_bottom_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(element_height_pixels), 0.0f);
+        std::tuple<float,float,float,float> edge_left_bounds_vertex = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
 
+        //Load data for texture coordinate bouds
+        std::tuple<float,float,float,float> background_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/background/1"));
+        std::tuple<float,float,float,float> corner_top_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/topleft"));
+        std::tuple<float,float,float,float> corner_top_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/topright"));
+        std::tuple<float,float,float,float> corner_bottom_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/bottomright"));
+        std::tuple<float,float,float,float> corner_bottom_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/corner/bottomleft"));
+        std::tuple<float,float,float,float> edge_top_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/edge/top"));
+        std::tuple<float,float,float,float> edge_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/edge/right"));
+        std::tuple<float,float,float,float> edge_bottom_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/edge/bottom"));
+        std::tuple<float,float,float,float> edge_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/wood/edge/left"));
 
-    int offset = generate_tile_element_texture_coords(texture_data, 0, background_bounds_vertex, element_width_pixels, element_height_pixels, background_bounds);
-    offset =  generate_texture_coords_element(texture_data, offset, corner_top_left_bounds);
-    offset =  generate_texture_coords_element(texture_data, offset, corner_top_right_bounds);
-    offset =  generate_texture_coords_element(texture_data, offset, corner_bottom_right_bounds);
-    offset =  generate_texture_coords_element(texture_data, offset, corner_bottom_left_bounds);
-    offset =   generate_tile_element_texture_coords(texture_data, offset, edge_top_bounds_vertex, element_width_pixels, element_height_pixels, edge_top_bounds);
-    offset =   generate_tile_element_texture_coords(texture_data, offset, edge_right_bounds_vertex, element_width_pixels, element_height_pixels, edge_right_bounds);
-    offset =   generate_tile_element_texture_coords(texture_data, offset, edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels, edge_bottom_bounds);
-    offset =   generate_tile_element_texture_coords(texture_data, offset, edge_left_bounds_vertex, element_width_pixels, element_height_pixels, edge_left_bounds);
+        //get total number of floats
+        total_floats += calculate_num_tile_elements(background_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += num_floats_per_tile * 4 ; // 4 corners
+        total_floats += calculate_num_tile_elements(edge_top_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(edge_right_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+        total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
+        texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+
+        offset = generate_tile_element_texture_coords(texture_data, 0, background_bounds_vertex, element_width_pixels, element_height_pixels, background_bounds);
+        offset =  generate_texture_coords_element(texture_data, offset, corner_top_left_bounds);
+        offset =  generate_texture_coords_element(texture_data, offset, corner_top_right_bounds);
+        offset =  generate_texture_coords_element(texture_data, offset, corner_bottom_right_bounds);
+        offset =  generate_texture_coords_element(texture_data, offset, corner_bottom_left_bounds);
+        offset =   generate_tile_element_texture_coords(texture_data, offset, edge_top_bounds_vertex, element_width_pixels, element_height_pixels, edge_top_bounds);
+        offset =   generate_tile_element_texture_coords(texture_data, offset, edge_right_bounds_vertex, element_width_pixels, element_height_pixels, edge_right_bounds);
+        offset =   generate_tile_element_texture_coords(texture_data, offset, edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels, edge_bottom_bounds);
+        offset =   generate_tile_element_texture_coords(texture_data, offset, edge_left_bounds_vertex, element_width_pixels, element_height_pixels, edge_left_bounds);
+
+    }
+    else if(type== ButtonType::Single){
+        //Load data for texture coordinate bouds
+        std::tuple<float,float,float,float> background_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index(picture_name));
+
+        //get total number of floats
+        total_floats += num_floats_per_tile;
+
+        texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+
+        offset =  generate_texture_coords_element(texture_data, 0, background_bounds);
+    }
     size_texture_data = offset;
 
     texture_coords.push_back(std::make_pair(texture_data, total_floats));

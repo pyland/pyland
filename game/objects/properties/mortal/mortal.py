@@ -1,0 +1,3 @@
+
+class Mortal:
+    pass

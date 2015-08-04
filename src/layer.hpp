@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include "renderable_component.hpp"
 #include "object.hpp"
 
 class TileSet;
@@ -33,6 +34,7 @@ public:
     };
 
 private:
+
     ///
     /// The width of the layer in tiles
     ///

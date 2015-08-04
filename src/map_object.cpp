@@ -12,6 +12,7 @@
 #include "engine.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
+#include "object_manager.hpp"
 #include "shader.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
@@ -29,14 +30,11 @@
 MapObject::MapObject(glm::vec2 position,
                      std::string name,
                      Walkability walkability,
-                     AnimationFrames frames,
-                     std::string start_frame):
+                     AnimationFrames frames):
     Object(name),
     render_above_sprite(false),
     walkability(walkability),
     position(position),
-    cuttable(false),
-    findable(true),
     frames(frames)
     {
 
@@ -46,8 +44,9 @@ MapObject::MapObject(glm::vec2 position,
 
         init_shaders();
         // Hack hack hack
-        load_textures(frames.get_frame(start_frame));
-        generate_tex_data(frames.get_frame(start_frame));
+        load_textures(frames.get_frame()); //frames.get_frame should return the full path_name of the frame wanted!
+        //load_textures(std::make_pair(1, "../game/objects/characters/player/sprites/main.png")); TODO: BLEH cleanup
+        generate_tex_data(frames.get_frame());
         generate_vertex_data();
 
         LOG(INFO) << "MapObject initialized";
@@ -214,7 +213,7 @@ void MapObject::set_state_on_moving_finish() {
 
 // TODO: rewrite
 void MapObject::load_textures(std::pair<int, std::string> tile) {
-    renderable_component.set_texture(TextureAtlas::get_shared(tile.second));
+    renderable_component.set_texture(TextureAtlas::get_shared(tile.second)); //tile.second is the location of the sprite you wish to load in from the file-system.
 }
 
 bool MapObject::init_shaders() {
@@ -242,4 +241,20 @@ void MapObject::set_challenge(Challenge *challenge) {
 
 Challenge const *MapObject::get_challenge() {
     return challenge;
+}
+
+void MapObject::set_focus(bool _is_focus) {
+    // check focus is actually being changed
+    if (_is_focus != is_focus) {
+        LOG(INFO) << "trying to set focus to "<< is_focus;
+        is_focus = _is_focus;
+
+        auto focus_icon = ObjectManager::get_instance().get_object<MapObject>(focus_icon_id);
+        if (!focus_icon) {
+            LOG(ERROR) << "Object manager no longer has focus_icon";
+            return;
+        }
+
+        focus_icon->set_renderable(is_focus);
+    }
 }
