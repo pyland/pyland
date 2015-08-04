@@ -55,9 +55,20 @@ private:
     };
 
     ///
-    /// Stores the game initialising class.
+    /// Stores the game initialising instance.
     ///
-    GameInit* curGameInit;
+    //GameInit* curGameInit;
+
+    ///
+    /// Stores the qt main window instance.
+    ///
+    MainWindow* mainWin;
+
+
+    ///
+    /// Stores the qt application instance.
+    ///
+    QApplication* app;
 
     ///
     /// Stores the SDL window.
@@ -343,9 +354,9 @@ public:
     InputManager* get_input_manager();
 
     ///
-    ///Game init getter.
+    ///Main window getter.
     ///
-    GameInit* get_cur_game_init();
+    MainWindow* get_main_win();
 
 
     ///

@@ -18,6 +18,15 @@
 //      performance signifficantly.
 //
 
+#include "interpreter.hpp"
+
+#include <QDataStream>
+#include <QMetaType>
+#include <QTextStream>
+#include <QCursor>
+#include <QStyleOption>
+#include <qcoreevent.h>
+
 #include <fstream>
 #include <glog/logging.h>
 #include <map>
@@ -75,8 +84,11 @@ int GameWindow::overscan_top  = OVERSCAN_TOP;
 
 //New include calls
 //#include <QApplication>
+#include <QApplication>
 #include "game_init.hpp"
 #include "game_main.hpp"
+#include "mainwindow.h"
+#include "parsingfunctions.hpp"
 
 std::map<Uint32,GameWindow*> GameWindow::windows = std::map<Uint32,GameWindow*>();
 GameWindow* GameWindow::focused_window = nullptr;
@@ -165,10 +177,21 @@ GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *
         init_sdl(); // May throw InitException
     }
 
-    //Create game window using game_init
-    curGameInit = new GameInit(argc, argv, exGame);
+    LOG(INFO) << "Creating MainWindow..." << std::endl;
 
-    window = curGameInit->getSdlWin();
+    bool new_api = false; //TODO: Change this so that it is a command line argument
+    if(new_api){
+        create_apih_from_wrapper();
+    }
+    app = new QApplication(argc,argv);
+    app->setStyle("gtk");
+    app->setAttribute(Qt::AA_NativeWindows, true);
+
+    mainWin = new MainWindow(exGame);
+
+     //Get the SDL window from the widget in the QT interface, so it can be drawn to in game_main
+    window = mainWin->getSDLWindow();
+    LOG(INFO) << "Created MainWindow" << std::endl;
 
 //#ifdef USE_GL
 //                   | SDL_WINDOW_OPENGL
@@ -232,11 +255,15 @@ GameWindow::~GameWindow() {
 #endif
     windows.erase(SDL_GetWindowID(window));
 
-    delete curGameInit;
+    //delete curGameInit;
 
     callback_controller.disable();
 
     delete input_manager;
+
+    delete mainWin;
+
+    delete app;
 
     LOG(INFO) << "Destructed GameWindow... " << std::endl;
 
@@ -370,8 +397,10 @@ void GameWindow::init_surface() {
 #endif
     // SDL_GetWindowPosition(window, &x, &y);
     //SDL_GetWindowSize(window, &w, &h);
-    w = curGameInit->getGameWidth();
-    h = curGameInit->getGameHeight();
+    //w = curGameInit->getGameWidth();
+    //h = curGameInit->getGameHeight();
+    w = mainWin->getGameWidgetWidth();
+    h = mainWin->getGameWidgetHeight();
 #ifdef USE_GL
     // We don't care in desktop GL.
     x = y = 0;
@@ -380,11 +409,11 @@ void GameWindow::init_surface() {
 }
 
 int GameWindow::get_game_window_height(){
-    return curGameInit->getGameHeight();
+    return mainWin->getGameWidgetHeight();
 }
 
 int GameWindow::get_game_window_width(){
-    return curGameInit->getGameWidth();
+    return mainWin->getGameWidgetWidth();
 }
 
 void GameWindow::init_surface(int x, int y, int w, int h) {
@@ -744,20 +773,20 @@ InputManager* GameWindow::get_input_manager() {
     return input_manager;
 }
 
-GameInit* GameWindow::get_cur_game_init(){
-    return curGameInit;
+MainWindow* GameWindow::get_main_win(){
+    return mainWin;
 }
 
 void GameWindow::execute_app(){
-    curGameInit->execApp();
+    app->exec();
 }
 
 void GameWindow::update_running(bool option){
-    curGameInit->pass_running_to_qt(option);
+    mainWin->setRunning(option);
 }
 
 void GameWindow::update_terminal_text(std::string text, bool error){
-    curGameInit->pass_text_to_qt(text,error);
+    mainWin->pushTerminalText(text,error);
 }
 
 
