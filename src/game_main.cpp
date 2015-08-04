@@ -16,7 +16,6 @@
 #include <utility>
 #include <vector>
 
-#include "game_init.hpp"
 #include "button.hpp"
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
