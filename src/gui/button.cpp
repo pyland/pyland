@@ -32,6 +32,16 @@ Button::Button(ButtonType _type) {
     add(button_text);
 
     picture_name = "gui/black-tile";
+
+	if(type == ButtonType::Board){
+		set_width(1.0f);
+		set_height(0.85f);
+	}
+	else if(type == ButtonType::Single){
+		set_width(0.5f);
+		set_height(0.5f);
+	}
+
 }
 
 Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<void (void)> on_click,
