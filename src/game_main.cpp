@@ -50,13 +50,22 @@ using namespace std;
 
 static std::mt19937 random_generator;
 
-//Multiplication factors for converting game_window width and height to width and height for gui
-const float x_scale = 1.0f/650.0f;
-const float y_scale = 1.0f/280.0f;
+float button_width;
+float button_height;
+float x_scale;
+float y_scale;
+unsigned int button_max;
+float button_spacing;
 
-//The maximum number of sprite head buttons to be displayed on the top
-unsigned int button_max = 5;
-const float button_spacing = 0.08f;
+void GameMain::config_gui(nlohmann::json j)
+{
+    button_width = j["gui_constants"]["button_width"];
+    button_height = j["gui_constants"]["button_height"];
+    x_scale = j["gui_constants"]["x_scale"];
+    y_scale = j["gui_constants"]["y_scale"];
+    button_max = j["gui_constants"]["button_max"];
+    button_spacing = j["gui_constants"]["button_spacing"];
+}
 
 GameMain::GameMain(int &argc, char **argv):
     paused(false),
@@ -71,6 +80,7 @@ GameMain::GameMain(int &argc, char **argv):
     nlohmann::json j = Config::get_instance();
     LOG(INFO) << "Constructing GameMain..." << endl;
 
+    config_gui(j);
     /// CREATE GLOBAL OBJECTS
 
     //Create the game embedWindow to present to the users
@@ -98,9 +108,9 @@ GameMain::GameMain(int &argc, char **argv):
 
     pause_button = std::make_shared<Button>(ButtonType::Single);
     pause_button->set_picture("gui/game/pause");
-    pause_button->set_text("");
-    pause_button->set_width(0.15f);
-    pause_button->set_height(0.35f);
+    pause_button->set_alignment(ButtonAlignment::TopLeft);
+    pause_button->set_width(button_width);
+    pause_button->set_height(button_height);
     pause_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
     pause_button->set_x_offset(0.00f);
     pause_button->set_on_click( [&] () {
@@ -123,8 +133,9 @@ GameMain::GameMain(int &argc, char **argv):
     bag_button = std::make_shared<Button>(ButtonType::Single);
     bag_button->set_picture("gui/game/bag");
     bag_button->set_text("Bag");
-    bag_button->set_width(0.15f);
-    bag_button->set_height(0.35f);
+    bag_button->set_alignment(ButtonAlignment::TopRight);
+    bag_button->set_width(button_width);
+    bag_button->set_height(button_height);
     bag_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
     bag_button->set_x_offset(float(embedWindow.get_game_window_width())*x_scale);
     bag_button->set_on_click( [&] () {
@@ -356,10 +367,10 @@ void GameMain::add_button(std::string file_path, std::string name, std::function
 
     if(buttons.size() == button_max){
         cycle_button = std::make_shared<Button>(ButtonType::Single);
-        cycle_button->set_picture("gui/highlight/selected_object");
+        cycle_button->set_picture("gui/game/buttons/cycle");
         cycle_button->set_text("Cycle");
-        cycle_button->set_width(0.15f);
-        cycle_button->set_height(0.35f);
+        cycle_button->set_width(button_width);
+        cycle_button->set_height(button_height);
         cycle_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
         cycle_button->set_x_offset(float(embedWindow.get_game_window_width())*x_scale - float(button_max + 1) * button_spacing);
 
@@ -399,8 +410,8 @@ void GameMain::add_button(std::string file_path, std::string name, std::function
     new_button->set_picture(file_path);
     new_button->set_text(name);
     new_button->set_on_click(callback);
-    new_button->set_width(0.15f);
-    new_button->set_height(0.35f);
+    new_button->set_width(button_width);
+    new_button->set_height(button_height);
 
     //make space for previous buttons
     float org_x_location = float(embedWindow.get_game_window_width()) * x_scale;

@@ -26,11 +26,19 @@ enum class ButtonType{
     Single
 };
 
+enum class ButtonAlignment{
+    TopLeft,
+    TopRight,
+    BottomLeft
+};
+
 class Button : public ComponentGroup {
+
     std::shared_ptr<GUIText> button_text;
     ButtonType type;
     std::string file_path;
     std::string picture_name;
+    ButtonAlignment alignment;
 
 public:
     Button(ButtonType _type);
@@ -38,6 +46,9 @@ public:
 
     void set_picture(std::string _name);
     std::shared_ptr<Text> get_text();
+
+    void set_alignment(ButtonAlignment _alignment);
+    ButtonAlignment get_alignment();
 
     void set_text(std::shared_ptr<Text> );
     void set_text(std::string);
