@@ -58,9 +58,12 @@ git clone http://github.com/pyland/pyland
 For compiling on the Raspberry Pi, use:
 
 ```bash
-cd pyland
+cd pyland/src/
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
 COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+cd jsonnet/
+make
+cd ..
 ```
 
 #### Compiling on Desktop - Unix
@@ -99,7 +102,7 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 To launch :
 
 ```bash
-cd src
+#Must be in the src folder
 ./main.bin
 ```
 
