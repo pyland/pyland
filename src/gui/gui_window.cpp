@@ -65,7 +65,7 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
     total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
 
-    vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+    vertex_data = new GLfloat[total_floats];
 
 
 
@@ -279,7 +279,7 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
     total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
     total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
 
-    texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+    texture_data = new GLfloat[total_floats];
 
 
 
