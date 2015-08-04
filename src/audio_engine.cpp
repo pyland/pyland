@@ -1,6 +1,6 @@
+#include <glog/logging.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#include <glog/logging.h>
 
 #include <stdio.h>
 
@@ -30,6 +30,13 @@ AudioEngine *AudioEngine::get_instance(){
     static AudioEngine global_instance;
 
     return &global_instance;
+}
+
+void AudioEngine::play_sound_effect(std::string file_location) {
+    //TODO: Implement this,
+    //Needs to be able to able to play mutliple sound effects at once, maybe you shoul be able to specify what comes 
+    //out of each earphone etc.
+    //read on how to do this and look at playwave.c
 }
 
 void AudioEngine::set_music_volume(int volume) {
@@ -80,6 +87,7 @@ void AudioEngine::play_music(std::string file_location) {
         return;
     }
 
-    Mix_FadeInMusic(music,looping,2000);;
+    //Start playing the music.
+    Mix_FadeInMusic(music, looping, 0);
     return;
 }

@@ -1,7 +1,9 @@
+#ifndef AUDIO_ENGINE_H
+#define AUDIO_ENGINE_H
 #include <string>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
+struct _Mix_Music;
+typedef _Mix_Music Mix_Music;
 
 ///
 /// An abstraction of how the Audio is run. Uses SDLmixer underneath to provide sound
@@ -16,10 +18,10 @@ public:
     static AudioEngine* get_instance();
 
     ///
-    /// Play the song in the location given.
+    /// Play the sound effect from the file_location given
     /// @param file_location
-    ///     The file location of the song that to be played. (Has to be an Ogg Vorbis file)
-    void play_music(std::string file_location);
+    ///     The file location of the sound effect to be played
+    void play_sound_effect(std::string file_location);
 
     ///
     /// Set the music volume anywhere between 0 and 128
@@ -27,7 +29,18 @@ public:
     ///     The volume you wish to set the music to.
     void set_music_volume(int volume);
 
+
+    ///
+    /// Get the music volume
+    /// @return
+    ///     The volume of the music currently playing (aywhere between 0 and 128)
     int get_music_volume();
+
+    ///
+    /// Play the song in the location given.
+    /// @param file_location
+    ///     The file location of the song that to be played. (Has to be an Ogg Vorbis file)
+    void play_music(std::string file_location);
 
 private:
 
@@ -41,3 +54,5 @@ private:
     bool audio_open;  //if the audio player is currently open.
 
 };
+
+#endif
