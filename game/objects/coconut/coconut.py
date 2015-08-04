@@ -17,6 +17,9 @@ and replace it with:
 import sys
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../game_object')
 from game_object import GameObject
+
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../properties/bagable')
+from bagable import Bagable
 """
 As the GameObject is in the base objects folder.
 """
@@ -24,7 +27,7 @@ As the GameObject is in the base objects folder.
 
 """
 """
-class Coconut(GameObject):
+class Coconut(GameObject, Bagable):
     weight = 0
 
     def set_weight(self, new_weight):
