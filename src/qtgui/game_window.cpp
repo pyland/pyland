@@ -177,7 +177,7 @@ GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *
         init_sdl(); // May throw InitException
     }
 
-    LOG(INFO) << "Creating MainWindow..." << std::endl;
+    LOG(INFO) << "Creating QApplication..." << std::endl;
 
     bool new_api = false; //TODO: Change this so that it is a command line argument
     if(new_api){
@@ -191,7 +191,7 @@ GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *
 
      //Get the SDL window from the widget in the QT interface, so it can be drawn to in game_main
     window = mainWin->getSDLWindow();
-    LOG(INFO) << "Created MainWindow" << std::endl;
+    LOG(INFO) << "Created QApplication" << std::endl;
 
 //#ifdef USE_GL
 //                   | SDL_WINDOW_OPENGL
@@ -257,13 +257,13 @@ GameWindow::~GameWindow() {
 
     //delete curGameInit;
 
+    delete app;
+    //delete mainWin;
+
+
     callback_controller.disable();
 
     delete input_manager;
-
-    delete mainWin;
-
-    delete app;
 
     LOG(INFO) << "Destructed GameWindow... " << std::endl;
 
