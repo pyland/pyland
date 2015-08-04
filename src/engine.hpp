@@ -14,6 +14,7 @@
 #include "text_font.hpp"
 #include "typeface.hpp"
 
+class MainWindow;
 class MapViewer;
 class NotificationBar;
 
@@ -25,6 +26,8 @@ private:
     static NotificationBar* notification_bar;
 
     static GameWindow* game_window;
+
+    static MainWindow* main_window;
 
     static Challenge* challenge;
     ///
@@ -77,6 +80,12 @@ public:
     /// @param _game_window the game window
     ///
     static void set_game_window(GameWindow* _game_window) { game_window = _game_window; }
+
+    ///
+    /// Set the main window
+    /// @param _main_window the main window
+    ///
+    static void set_main_window(MainWindow* _main_window) { main_window = _main_window; }
 
     ///
     /// Get the game window

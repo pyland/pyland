@@ -15,6 +15,7 @@
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_time.hpp"
+//#include "mainwindow.h"
 #include "map.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
@@ -30,7 +31,7 @@ Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
 bool Engine::any_output(false);
-
+MainWindow* Engine::main_window(nullptr);
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly

@@ -14,7 +14,7 @@
 // notice is included.
 //++
 
-//Class which defines and sets up the QT main window
+//This class sets up and handles the QT main window
 
 // Standard stuff
 #include <fstream>
