@@ -155,7 +155,7 @@ void Map::generate_tileset_coords(std::shared_ptr<TextureAtlas> atlas) {
 
     //Each tile needs 8 floats to describe its position in the image
     try {
-        tileset_tex_coords = new GLfloat[sizeof(GLfloat)* texture_count * 4 * 2];
+        tileset_tex_coords = new GLfloat[texture_count * 4 * 2];
     }
     catch (std::bad_alloc& ba) {
         LOG(ERROR) << "Out of Memory in Map::generate_tileset_coords";

@@ -104,7 +104,7 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
 
     GLfloat *map_object_tex_data;
     try {
-        map_object_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
+        map_object_tex_data = new GLfloat[num_floats];
     }
     catch(std::bad_alloc &) {
         LOG(ERROR) << "ERROR in MapObject::generate_tex_data(), cannot allocate memory";
@@ -160,7 +160,7 @@ void MapObject::generate_vertex_data() {
     GLfloat *map_object_vert_data(nullptr);
 
     try {
-        map_object_vert_data = new GLfloat[sizeof(GLfloat)*num_floats];
+        map_object_vert_data = new GLfloat[num_floats];
     }
     catch(std::bad_alloc& ba) {
         LOG(ERROR) << "ERROR in MapObject::generate_vertex_data(), cannot allocate memory";
