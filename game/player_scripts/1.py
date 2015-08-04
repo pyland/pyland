@@ -7,3 +7,5 @@ in the game and they will tell you what to do! :)
 print(str(7//6))
 
 print("HELLO")
+
+print_bag_items()
