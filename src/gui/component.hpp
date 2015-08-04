@@ -126,15 +126,15 @@ protected:
 
 
     ///
-    /// The texture atlas being used for this GUI - 
-    /// 
+    /// The texture atlas being used for this GUI -
+    ///
     std::shared_ptr<TextureAtlas> texture_atlas;
 public:
     Component();
     Component(std::function<void (void)> on_click, float _width, float _height, float _xo_offset, float _y_offset);
- 
-    ~Component(); 
-   
+
+    ~Component();
+
     ///
     /// Generates the vertex data for this particular component. This
     /// data is in the local 'object' space and will need to be
@@ -151,8 +151,8 @@ public:
 
     ///
     /// Generates the text data for this component
-    /// 
-    /// 
+    ///
+    ///
     virtual std::vector<std::shared_ptr<GUIText>> generate_text_data() = 0;
 
     ///
@@ -184,7 +184,7 @@ public:
     ///
     /// Call the component's on click function
     ///
-    void call_on_click() { on_click_func(); }
+    void call_on_click();
 
     ///
     /// Clear the handler - replaces with a void lambda that does nothing

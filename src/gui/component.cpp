@@ -1,4 +1,5 @@
 #include <mutex>
+#include "event_manager.hpp"
 
 #include "component.hpp"
 
@@ -11,10 +12,14 @@ int Component::get_new_id() {
     return ++next_component_id;
 }
 
+void Component::call_on_click() {
+    EventManager::get_instance()->add_event(on_click_func); //puts the function on the event queue
+}
+
 Component::Component(std::function<void (void)> on_click, float _width,
-                     float _height, float _x_offset, float _y_offset) : 
+                     float _height, float _x_offset, float _y_offset) :
     parent(nullptr),
-    vertex_data(nullptr), size_vertex_data(0), 
+    vertex_data(nullptr), size_vertex_data(0),
     texture_data(nullptr), size_texture_data(0),
     id(0), width(_width), height(_height),
     width_pixels(0),height_pixels(0),

@@ -16,21 +16,26 @@
 #include <QPixmap>
 #include <QBitmap>
 
+#include <iostream>
 #include "mainwindow.h"
+#include "parsingfunctions.h"
+
 int main(int argc, char *argv[])
 {
+    create_apih_from_wrapper();
+
     //Q_INIT_RESOURCE(application);
 
-	QApplication *app = new QApplication(argc, argv);
-	app->setStyle("gtk");
-	app->setAttribute(Qt::AA_NativeWindows, true);
+    QApplication *app = new QApplication(argc, argv);
+    app->setStyle("gtk");
+    app->setAttribute(Qt::AA_NativeWindows, true);
 
-	MainWindow *mainWin = new MainWindow();
+    MainWindow *mainWin = new MainWindow();
 
     int ret = app->exec();
 
     delete mainWin;
     delete app;
 
-	return ret;
+    return ret;
 }

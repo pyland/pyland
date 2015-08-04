@@ -11,7 +11,7 @@ Concepts. It was started as a summer intern project at the University of
 Cambridge Computer Laboratory June-August 2014 supported by a grant from the
 Broadcom Foundation. It was started by Ben Catterall, Heidi Howard, Joshua
 Landau, and Ashley Newson under the supervision of Alex Bradbury and Robert
-Mullins. It's currently being worked upon by Tom Read-Cutting, Alex Day and Anindya Sharma.
+Mullins. It's currently being worked upon by Tom Read-Cutting, Alexander Day and Anindya Sharma.
 
 ![Screenshot](https://raw.githubusercontent.com/pyland/pyland/master/resources/screenshot.png)
 
@@ -25,7 +25,9 @@ Install packages from raspbian repo:
 sudo apt-get update
 sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
 sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
+sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-
+sudo apt-get install libts-dev
+
 ```
 
 Download and install extra dependancies:
@@ -56,9 +58,12 @@ git clone http://github.com/pyland/pyland
 For compiling on the Raspberry Pi, use:
 
 ```bash
-cd pyland
+cd pyland/src/
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
 COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+cd jsonnet/
+make
+cd ..
 ```
 
 #### Compiling on Desktop - Unix
@@ -97,7 +102,7 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 To launch :
 
 ```bash
-cd src
+#Must be in the src folder
 ./main.bin
 ```
 
