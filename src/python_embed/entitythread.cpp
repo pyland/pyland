@@ -37,6 +37,29 @@ LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value):
 LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, std::shared_ptr<std::mutex> lock):
     lock::Lockable<std::shared_ptr<EntityThread>>(value, lock) {}
 
+
+//https://stackoverflow.com/questions/1418015/how-to-get-python-exception-text TODO: comment and cleanup this code
+std::string handle_pyerror()
+{
+    using namespace boost::python;
+    using namespace boost;
+
+    PyObject *exc,*val,*tb;
+    object formatted_list, formatted;
+    PyErr_Fetch(&exc,&val,&tb);
+    handle<> hexc(exc),hval(allow_null(val)),htb(allow_null(tb)); 
+    object traceback(import("traceback"));
+    if (!tb) {
+        object format_exception_only(traceback.attr("format_exception_only"));
+        formatted_list = format_exception_only(hexc,hval);
+    } else {
+        object format_exception(traceback.attr("format_exception"));
+        formatted_list = format_exception(hexc,hval,htb);
+    }
+    formatted = str("\n").join(formatted_list);
+    return extract<std::string>(formatted);
+}
+
 ///
 /// A thread function running a player's daemon.
 ///
@@ -83,11 +106,17 @@ void run_entities(std::atomic<bool> &on_finish,
         lock::ThreadGIL lock_thread(threadstate);
 
         LOG(INFO) << "run_entity: Stolen GIL";
-
-        // Get and run bootstrapper
-        bootstrapper_module = std::make_unique<py::api::object>(
-            interpreter_context.import_file(bootstrapper_file)
-        );
+        
+        try {
+            // Import the bootstrapper file, check it for errors
+            bootstrapper_module = std::make_unique<py::api::object>(
+                interpreter_context.import_file(bootstrapper_file)
+            );
+        } catch (py::error_already_set &) { //catch any errors in the setup.
+            std::string msg = handle_pyerror();
+            LOG(INFO) << msg;
+            throw std::runtime_error("Python error");
+        }
 
         // Asynchronously return thread id to allow killing of this thread
         //
@@ -138,7 +167,13 @@ void run_entities(std::atomic<bool> &on_finish,
                 return;
             }
             else {
-                LOG(WARNING) << "Python error in EntityThread, Python side.";
+                py::handle<> hType(type);
+                py::object extype(hType);
+                py::handle<> hTraceback(traceback);
+                py::object ptraceback(hTraceback);
+                LOG(ERROR) << "Python error, details: ";
+                std::string error_message = py::extract<std::string>(value);
+                LOG(ERROR) << error_message; //Log the error message.
             }
         }
         waiting = true;

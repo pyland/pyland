@@ -9,6 +9,8 @@ import importlib
 
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)))
 import game
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/engine')
+import engine
 
 from contextlib import closing
 from io import BytesIO, TextIOWrapper

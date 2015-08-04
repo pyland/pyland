@@ -10,6 +10,8 @@ coconut_five.set_weight(16)
 coconut_six.set_weight(32)
 coconut_seven.set_weight(64)
 
-engine.print_terminal(str(coconut_one.get_weight()), False)
+engine.print_terminal(str(coconut_one.get_weight()) + "\n", False)
 
 engine.play_music("beach")
+
+engine.print_terminal(str([a for a in dir(engine) if not a.startswith('__')]) + "\n", False)
