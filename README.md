@@ -25,7 +25,9 @@ Install packages from raspbian repo:
 sudo apt-get update
 sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
 sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
+sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-
+sudo apt-get install libts-dev
+
 ```
 
 Download and install extra dependancies:

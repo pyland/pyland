@@ -31,13 +31,13 @@ boulder_one.move_south(lambda: boulder_one.move_south(lambda: boulder_one.move_w
 boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: print(game.getDialogue("welcome")))))
 #print("wohooo")
 
-engine.add_button("gui/coin/coin-tile", "Ben", player_one.focus)
-engine.add_button("gui/coin/coin-tile", "Rock1", boulder_one.focus)
-engine.add_button("gui/coin/coin-tile", "Rock2", boulder_two.focus)
-engine.add_button("gui/coin/coin-tile", "Rock3", boulder_three.focus)
-engine.add_button("gui/coin/coin-tile", "Rock4", boulder_four.focus)
-engine.add_button("gui/coin/coin-tile", "Rock5", boulder_five.focus)
-engine.add_button("gui/coin/coin-tile", "Portal", portal_one.focus)
+engine.add_button("gui/head/monkey", "Ben", player_one.focus)
+engine.add_button("gui/head/monkey", "Rock1", boulder_one.focus)
+engine.add_button("gui/head/monkey", "Rock2", boulder_two.focus)
+engine.add_button("gui/head/monkey", "Rock3", boulder_three.focus)
+engine.add_button("gui/head/monkey", "Rock4", boulder_four.focus)
+engine.add_button("gui/head/monkey", "Rock5", boulder_five.focus)
+engine.add_button("gui/head/monkey", "Portal", portal_one.focus)
 
 engine.play_music("beach")
 
