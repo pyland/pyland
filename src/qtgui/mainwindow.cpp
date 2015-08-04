@@ -112,7 +112,8 @@ struct SDL_Window
 };
 typedef struct SDL_Window SDL_Window;
 
-MainWindow::MainWindow(GameMain *exGame)
+MainWindow::MainWindow(GameMain *exGame) :
+    colourPalette(palette())
 {
     LOG(INFO) << "Constructing MainWindow..." << std::endl;
 
@@ -236,9 +237,7 @@ MainWindow::MainWindow(GameMain *exGame)
     setWindowTitle(tr("Pyland"));
     mainWidget->setWindowIcon(QIcon("/images/icon.png"));
 
-    QPalette colourPalette(palette());
-    colourPalette.setColor(QPalette::Background,QColor(250,250,197));
-    colourPalette.setColor(QPalette::Button,QColor(245,245,165));
+    setColourScheme(250,250,197,245,245,165);
 
     mainWidget->setPalette(colourPalette);
     mainWidget->setAutoFillBackground(true);
@@ -881,6 +880,11 @@ void MainWindow::setFast(bool option)
 
 void MainWindow::setAnyOutput(bool option){
     anyOutput = option;
+}
+
+void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2){
+    colourPalette.setColor(QPalette::Background,QColor(250,250,197));
+    colourPalette.setColor(QPalette::Button,QColor(245,245,165));
 }
 
 SDL_Window* MainWindow::getSDLWindow()
