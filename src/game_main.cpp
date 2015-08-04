@@ -68,12 +68,13 @@ void GameMain::config_gui(nlohmann::json j)
 }
 
 GameMain::GameMain(int &argc, char **argv):
-    paused(false),
     embedWindow(800, 600, argc, argv, this),
     interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
     gui_manager(),
     callbackstate(),
     map_viewer(&embedWindow, &gui_manager),
+    paused(false),
+    bag_open(false),
     display_button_start(0),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
 {
@@ -130,6 +131,10 @@ GameMain::GameMain(int &argc, char **argv):
         }
     });
 
+    bag_window = std::make_shared<Button>(ButtonType::Board);
+	bag_window->set_clickable(false);
+	bag_window->set_visible(false);
+
     bag_button = std::make_shared<Button>(ButtonType::Single);
     bag_button->set_picture("gui/game/bag");
     bag_button->set_text("Bag");
@@ -138,22 +143,36 @@ GameMain::GameMain(int &argc, char **argv):
     bag_button->set_height(button_height);
     bag_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
     bag_button->set_x_offset(float(embedWindow.get_game_window_width())*x_scale);
+
     bag_button->set_on_click( [&] () {
-        LOG(INFO) << "Bag opened";
+
+        if(bag_open == false){
+
+            bag_open = true;
+            LOG(INFO) << "Bag opened";
+            bag_window->set_visible(true);
+            refresh_gui();
+            //bag_menu();
+        }
+        else{
+
+            bag_open = false;
+            LOG(INFO) << "Bag closed";
+            bag_window->set_visible(false);
+            refresh_gui();
+        }
     });
 
     sprite_window->add(pause_button);
     sprite_window->add(bag_button);
-
-    original_window_size = embedWindow.get_size();
-    sprite_window->set_width_pixels(original_window_size.first);
-    sprite_window->set_height_pixels(original_window_size.second);
+    sprite_window->add(bag_window);
 
     //The GUI resize function
     gui_resize_func = [&] (GameWindow* game_window)
     {
         LOG(INFO) << "GUI resizing";
         auto window_size = (*game_window).get_size();
+
         sprite_window->set_width_pixels(window_size.first);
         sprite_window->set_height_pixels(window_size.second);
         gui_manager.parse_components();
