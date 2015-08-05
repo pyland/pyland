@@ -83,11 +83,17 @@ void run_entities(std::atomic<bool> &on_finish,
         lock::ThreadGIL lock_thread(threadstate);
 
         LOG(INFO) << "run_entity: Stolen GIL";
-
-        // Get and run bootstrapper
-        bootstrapper_module = std::make_unique<py::api::object>(
-            interpreter_context.import_file(bootstrapper_file)
-        );
+        
+        try {
+            // Import the bootstrapper file, check it for errors
+            bootstrapper_module = std::make_unique<py::api::object>(
+                interpreter_context.import_file(bootstrapper_file)
+            );
+        } catch (py::error_already_set &) { //catch any errors in the setup.
+            std::string msg = lock::get_python_error_message(); //get message
+            LOG(INFO) << msg;  //log it
+            throw std::runtime_error("Python error"); //throw runtime error
+        }
 
         // Asynchronously return thread id to allow killing of this thread
         //
@@ -138,7 +144,9 @@ void run_entities(std::atomic<bool> &on_finish,
                 return;
             }
             else {
-                LOG(WARNING) << "Python error in EntityThread, Python side.";
+                std::string msg = lock::get_python_error_message(); //get message
+                LOG(INFO) << msg;  //log it
+                throw std::runtime_error("Python error");
             }
         }
         waiting = true;

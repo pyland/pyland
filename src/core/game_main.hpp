@@ -99,8 +99,8 @@ private:
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
 
     void config_gui(nlohmann::json j);
-	void open_pause_window();
-	void close_pause_window();
+    void open_pause_window();
+    void close_pause_window();
 
 public:
     GameMain(int &argc, char **argv);

@@ -9,6 +9,8 @@ import importlib
 
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)))
 import game
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/engine')
+from engine import Engine
 
 from contextlib import closing
 from io import BytesIO, TextIOWrapper
@@ -118,7 +120,7 @@ def wrap_entity_in_game_object(entity, engine):
     game_object.set_entity(entity, engine)  # initialise it and wrap the entity instance in it
     return game_object
 
-def start(entities, engine, RESTART, STOP, KILL, waiting):
+def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
     while waiting: #TODO: Work out why this waiting thing is here and in EntityThread: Ask Alex!!!
         # Smallest reasonable wait while
         # allowing fast interrupts.
@@ -127,6 +129,7 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
         # for proper interrupts.
         time.sleep(0.05)
 
+    engine = Engine(cpp_engine)	#wrap the cpp engine in the python engine wrapper
     #engine = DummyEngine(engine)
     """
     Run the main bootstrapper loop! It's fun!
@@ -140,6 +143,7 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
         game_object = wrap_entity_in_game_object(entity, engine)
         game_object.initialise() #run the initialisation script on the object if anything needs to be initialised
         game_objects.append(game_object)
+        engine.register_game_object(game_object)
         engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
         engine.print_debug("whose name is {}".format(game_object.get_name()))
     

@@ -121,7 +121,7 @@ GameMain::GameMain(int &argc, char **argv):
         if(paused == false){
             paused = true;
             LOG(INFO) << "PAUSED";
-			open_pause_window();
+            open_pause_window();
         }
         else{
             paused = false;
@@ -131,8 +131,8 @@ GameMain::GameMain(int &argc, char **argv):
     });
 
     bag_window = std::make_shared<Button>(ButtonType::Board);
-	bag_window->set_clickable(false);
-	bag_window->set_visible(false);
+    bag_window->set_clickable(false);
+    bag_window->set_visible(false);
 
     bag_button = std::make_shared<Button>(ButtonType::Single);
     bag_button->set_picture("gui/game/bag");
@@ -376,43 +376,43 @@ GameMain::GameMain(int &argc, char **argv):
 }
 
 void GameMain::close_pause_window(){
-	gui_window->set_visible(false);
+    gui_window->set_visible(false);
 
-	const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
+    const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
 
-	typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
+    typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
 
-	for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
-		if(i->second == bag_window){
-			continue;
-		}
-		else{
-			i->second->set_visible(true);
-			i->second->set_clickable(true);
-		}
-	}
+    for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+        if(i->second == bag_window){
+            continue;
+        }
+        else{
+            i->second->set_visible(true);
+            i->second->set_clickable(true);
+        }
+    }
 
-	refresh_gui();
+    refresh_gui();
 }
 
 void GameMain::open_pause_window(){
-	gui_window->set_visible(true);
+    gui_window->set_visible(true);
 
-	const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
+    const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
 
-	typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
+    typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
 
-	for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
-		if(i->second == pause_button){
-			continue;
-		}
-		else{
-			i->second->set_visible(false);
-			i->second->set_clickable(false);
-		}
-	}
+    for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+        if(i->second == pause_button){
+            continue;
+        }
+        else{
+            i->second->set_visible(false);
+            i->second->set_clickable(false);
+        }
+    }
 
-	refresh_gui();
+    refresh_gui();
 }
 
 void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback){
