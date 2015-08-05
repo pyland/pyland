@@ -24,4 +24,9 @@ engine.get_objects_at((8, 4))
 engine.get_objects_at((9, 4))
 engine.get_objects_at(player_one.get_position())
 
+engine.add_button("gui/head/monkey", "Ben", player_one.focus)
+engine.add_button("gui/head/monkey", "Rock1", coconut_one.focus)
+engine.add_button("gui/head/monkey", "Rock2", coconut_two.focus)
+engine.add_button("gui/head/monkey", "Portal", exit_portal.focus)
+
 engine.print_terminal(str(player_one.get_position()) + "\n", False)

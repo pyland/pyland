@@ -61,6 +61,16 @@ Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<voi
     add(button_text);
 }
 
+void Button::resize_text(float width, float height){
+	button_text->set_width(width);
+	button_text->set_height(height);
+}
+
+void Button::move_text(float x_offset, float y_offset){
+	button_text->set_x_offset(x_offset);
+	button_text->set_y_offset(y_offset);
+}
+
 void Button::set_alignment(ButtonAlignment _alignment){
     alignment = _alignment;
 }
@@ -175,6 +185,9 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
         //Generate the vertex coordinates for each element
         offset = generate_vertex_coords_element(vertex_data, 0, background_bounds);
 
+    }
+    else{
+		//it is of type NoPicture, do nothing
     }
     size_vertex_data = offset;
 
@@ -388,6 +401,9 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
         texture_data = new GLfloat[total_floats];
 
         offset =  generate_texture_coords_element(texture_data, 0, background_bounds);
+    }
+    else{
+		//it is of type NoPicture, do nothing
     }
     size_texture_data = offset;
 

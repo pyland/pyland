@@ -24,11 +24,11 @@
 #include "challenge_helper.hpp"
 #include "game_engine.hpp"
 
-class GameMain;
+class GUIMain;
 
 namespace py = boost::python;
 
-Challenge::Challenge(ChallengeData* _challenge_data, GameMain * _game_main) :
+Challenge::Challenge(ChallengeData* _challenge_data, GUIMain * _gui_main) :
     game_engine(nullptr), map(nullptr), challenge_data(_challenge_data) {
         //Load the correct map into the game.
         map = new Map(challenge_data->map_name);
@@ -65,7 +65,7 @@ Challenge::Challenge(ChallengeData* _challenge_data, GameMain * _game_main) :
         }
 
         //create a new GameEngine instance for the python api, we need to review if this is the best place to create it
-        game_engine = new GameEngine(_game_main);
+        game_engine = new GameEngine(_gui_main);
 
         //The intepreter creates a new python thread which is the main thread for the running level, the list of all objects in the level are passed to it which are then exposed to the python code
         daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entities(entity_list, *game_engine));
