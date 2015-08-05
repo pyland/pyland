@@ -85,3 +85,7 @@ boost::python::list GameEngine::get_objects_at(int x, int y) {
     }
     return python_list;
 }
+
+void GameEngine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
+    Engine::set_ui_colours(r1,b1,g1,r2,b2,g2);
+}

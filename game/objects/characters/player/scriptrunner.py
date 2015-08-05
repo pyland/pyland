@@ -39,11 +39,16 @@ def start(player_object, script_name):
     imbued_locals["move_south"] = make_blocking(player_object.move_south)
     imbued_locals["move_west"] = make_blocking(player_object.move_west)
 
+    printed_flag = [False]
+    def user_print(text):
+         printed_flag[0] = True
+         player_object.get_engine().print_terminal(str(text), False) #autoconvert print to strings (do not need to convert within the game)
+
     #Replace print statement in player script so that all their output goes to the terminal.
-    player_print = lambda text : player_object.get_engine().print_terminal(str(text) + "\n", False) #define the player printing function
-    imbued_locals["print"] = player_print #autoconvert print to strings (do not need to convert within the game)
-    
-    imbued_locals["print_bag_items"] = lambda: player_print(player_object.bag_items_string())
+    imbued_locals["print"] = user_print
+    imbued_locals["print_bag_items"] = lambda: user_print(player_object.bag_items_string())
+
+
 
     imbued_locals["get_position"] = player_object.get_position
 
@@ -65,10 +70,11 @@ def start(player_object, script_name):
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
             player_object.get_engine().print_terminal("Halted Script\n", True)
         finally: #perform neccesary cleanup
-            player_object.get_engine().print_terminal("-------------\n", False)
+            if printed_flag[0]:
+                player_object.get_engine().print_terminal("-------------", False)
             player_object.set_running_script_status(False)
             #TODO: Make it so that the halt button becomes the run button again.
-    
+
     thread = threading.Thread(target = thread_target, name = player_object.get_name() + "_script_thread")
     thread.start()
     player_object.set_thread_id(thread.ident)
