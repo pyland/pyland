@@ -45,6 +45,8 @@ def start(player_object, script_name):
     
     imbued_locals["print_bag_items"] = lambda: player_print(player_object.bag_items_string())
 
+    imbued_locals["get_position"] = player_object.get_position
+
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(imbued_locals, player_object.get_engine().print_terminal) #create an instance of it
     script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/" + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!

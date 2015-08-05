@@ -14,4 +14,14 @@ engine.print_terminal(str(coconut_one.get_weight()) + "\n", False)
 
 engine.play_music("beach")
 
-engine.print_terminal(str([a for a in dir(engine) if not a.startswith('__')]) + "\n", False)
+engine.get_objects_at((7, 0))
+engine.get_objects_at((7, 2))
+engine.get_objects_at((4, 4))
+engine.get_objects_at((5, 4))
+engine.get_objects_at((6, 4))
+engine.get_objects_at((7, 4))
+engine.get_objects_at((8, 4))
+engine.get_objects_at((9, 4))
+engine.get_objects_at(player_one.get_position())
+
+engine.print_terminal(str(player_one.get_position()) + "\n", False)

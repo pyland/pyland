@@ -47,6 +47,7 @@ class Player(Character):
         This function is called once all the neccesary set-up of the object has completed
         run when the object is created in-engine
         """
+        super().initialise
         engine = self.get_engine()
 
         #register input callbacks to make character playable

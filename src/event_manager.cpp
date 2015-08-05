@@ -106,7 +106,12 @@ void EventManager::process_events(InterpreterContext &interpreter_context) {
 
         //Dispatch the callback
         if(func) {
-            func();
+            try {
+                func();
+            } catch(boost::python::error_already_set &) { //catch any python erros
+                std::string msg = lock::get_python_error_message(); //get python error message
+                LOG(INFO) << msg;  //log it and continue running
+            }
         }
         else {
             LOG(ERROR) << "ERROR in event_manager.cpp in processing, no function";

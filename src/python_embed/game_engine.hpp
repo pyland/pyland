@@ -74,7 +74,6 @@ class GameEngine {
         void play_music(std::string song_name);
 
         void print_terminal(std::string text, bool error);
-
 };
 
 #endif

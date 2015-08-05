@@ -115,7 +115,7 @@ class GameObject:
             the second coordinate is their y-axis position,
             the third coordinate is the layer they are in.
         """
-        return (0, 0, 0) #TODO: implement stub
+        return self.__entity.get_position() #TODO: implement stub
 
     def set_position(self, position):
         """ Sets the position of the object to be at the coordinates given.
@@ -178,5 +178,8 @@ class GameObject:
         """
         #TODO: implement stub
         return
+
+    def get_id(self):
+        return self.__entity.get_id()
 
 

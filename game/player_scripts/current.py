@@ -8,4 +8,6 @@ print(str(7//6))
 
 print("HELLO")
 
+print(get_position())
+
 print_bag_items()
