@@ -53,7 +53,6 @@ public:
     MainWindow(GameMain *exGame);
     ~MainWindow();
 
-    void showWindow();
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
     void updateToolBar();

@@ -776,7 +776,6 @@ MainWindow* GameWindow::get_main_win(){
 }
 
 void GameWindow::execute_app(){
-    //mainWin->showWindow();
     app->exec();
 }
 
