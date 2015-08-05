@@ -50,20 +50,23 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(GameMain *exGame);
     ~MainWindow();
-    SDL_Window* getSDLWindow();
+
     void showMax();
-    void setRunning(bool option);
-    void setFast(bool option);
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
     void updateToolBar();
+    void setRunning(bool option);
+    void setFast(bool option);
+    void setAnyOutput(bool option);
+    SDL_Window* getSDLWindow();
     int getGameWidgetWidth();
     int getGameWidgetHeight();
+    bool getAnyOutput();
 protected:
-    void closeEvent(QCloseEvent *event);
-    bool eventFilter(QObject *obj, QEvent *event);
     SDL_Scancode parseKeyCode(QKeyEvent *keyEvent);
     Uint8 parseButton(QMouseEvent *mouseEvent);
+    bool eventFilter(QObject *obj, QEvent *event);
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     void runCode();
@@ -121,32 +124,15 @@ private:
     QPushButton *buttonClear;
     QVBoxLayout *windowLayout;
 
-/*
-    QAction *runAct;
-    QAction *stopAct;
-    QAction *saveAct;
-    QAction *textIncAct;
-    QAction *textDecAct;
-
-    QAction *saveAsAct;
-    QAction *exitAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-
-    QCheckBox *print_output;
-    QCheckBox *check_args;
-
-    QMap<QString, QString> *map;
-
-    QLabel *imageLabel;
-*/
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
     QTimer *eventTimer;
 
     GameMain *game;
 
+    //Specifies whether there has been any output during the current code execution,
+    //it determine if output separate lines are needed
+    bool anyOutput;
 };
 
 #endif

@@ -14,6 +14,7 @@
 #include "text_font.hpp"
 #include "typeface.hpp"
 
+class MainWindow;
 class MapViewer;
 class NotificationBar;
 
@@ -26,6 +27,8 @@ private:
 
     static GameWindow* game_window;
 
+    static MainWindow* main_window;
+
     static Challenge* challenge;
     ///
     /// The size of a tile
@@ -37,13 +40,6 @@ private:
     /// by
     ///
     static float global_scale;
-
-
-    ///
-    /// Specifies whether there has been any output during the current code execution,
-    /// it determine if output separate lines are needed
-    ///
-    static bool any_output;
 
 public:
     ///
@@ -77,6 +73,12 @@ public:
     /// @param _game_window the game window
     ///
     static void set_game_window(GameWindow* _game_window) { game_window = _game_window; }
+
+    ///
+    /// Set the main window
+    /// @param _main_window the main window
+    ///
+    static void set_main_window(MainWindow* _main_window) { main_window = _main_window; }
 
     ///
     /// Get the game window

@@ -33,7 +33,7 @@ ComponentGroup::ComponentGroup() {
 }
 
 ComponentGroup::ComponentGroup(std::function<void (void)> on_click, float _width,
-                     float _height, float _x_offset, float _y_offset) : 
+                     float _height, float _x_offset, float _y_offset) :
     Component(on_click, _width, _height, _x_offset, _y_offset)
 {
 
@@ -52,16 +52,16 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
     //Add this components data
    group_data.push_back(std::make_pair(vertex_data, size_vertex_data));
 
-    
+
     //Go through all the components in this group
     for(auto component : components) {
         std::vector<std::pair<GLfloat*, int>> component_vector = component.second->generate_vertex_data();
-        
+
         //get all the pointers in the component - deals with ComponentGroup children
         for(auto component_data_pair : component_vector) {
             //comvert this into this component's local spacd
             //Calcuate how far to translate this component
-            int pixel_offset_x = 0; 
+            int pixel_offset_x = 0;
             float component_x_offset = component.second->get_x_offset();
             int pixel_offset_y = 0 ;
             float component_y_offset = component.second->get_y_offset();
@@ -89,7 +89,7 @@ std::vector<std::pair<GLfloat*,int>> ComponentGroup::generate_vertex_data() {
                 component_vertices[i] = vertex.x;
                 component_vertices[i+1] = vertex.y;
             }
-            
+
             //add to this group
             group_data.push_back(component_data_pair);
         }
@@ -110,7 +110,7 @@ std::vector<std::pair<GLfloat*, int>> ComponentGroup::generate_texture_data() {
    //Go through all the components in this group
     for(auto component_pair : components) {
         std::vector<std::pair<GLfloat*, int>> component_data = component_pair.second->generate_texture_data();
-        
+
         //get all the pointers in the component - deals with ComponentGroup children
         for(auto component_vertex_ptr : component_data) {
             //add to this group
@@ -126,12 +126,12 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
 
    //Call the implementation of this class  to generate it's data
     std::vector<std::shared_ptr<GUIText>> group_data = generate_this_text_data();
-   
+
     //Calculate the final positions on screen for the text.
     //We use the text offset and the width of the component then add this to the x and y offsets of the component. We thus only need to do this once.
     //
     for(std::shared_ptr<GUIText> this_data : group_data) {
-            int pixel_offset_x = 0; 
+            int pixel_offset_x = 0;
             float component_x_offset = (float)this_data->get_x_offset();
             int pixel_offset_y = 0 ;
             float component_y_offset = (float)this_data->get_y_offset();
@@ -149,7 +149,7 @@ std::vector<std::shared_ptr<GUIText>> ComponentGroup::generate_text_data() {
    //Go through all the components in this group
     for(auto component_pair : components) {
         std::vector<std::shared_ptr<GUIText>> component_data = component_pair.second->generate_text_data();
-        
+
         //get all the text data in the component - deals with ComponentGroup children
         for(auto text_data : component_data) {
             //add to this group
@@ -164,7 +164,7 @@ void ComponentGroup::add(std::shared_ptr<Component> component) {
     components[component->get_id()] = component;
     component->set_parent(this);
 
-    //We calculate the pixel display dimensions 
+    //We calculate the pixel display dimensions
 
     //calculate the pixel locations for this component, using the parent's dimensions
     component->set_width_pixels((int)((float)width_pixels*component->get_width()));
@@ -191,6 +191,6 @@ std::shared_ptr<Component> ComponentGroup::get_component(int component_id) {
     return component;
 }
 
-const std::map<int, std::shared_ptr<Component>>& ComponentGroup::get_components() {
-    return components;
+const std::map<int, std::shared_ptr<Component>>* ComponentGroup::get_components() {
+    return &components;
 }

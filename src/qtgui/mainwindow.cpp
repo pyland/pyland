@@ -14,6 +14,8 @@
 // notice is included.
 //++
 
+//This class sets up and handles the QT main window
+
 // Standard stuff
 #include <fstream>
 #include <iostream>
@@ -270,6 +272,7 @@ MainWindow::MainWindow(GameMain *exGame)
 
     int width = (gameWidget->width());
     int height = gameWidget->height();
+    anyOutput = false;
 
     SDL_SetWindowSize(embedWindow, width, height);
     glViewport(0, 0, width, height);
@@ -342,9 +345,146 @@ MainWindow::~MainWindow()
 
 }
 
-SDL_Window* MainWindow::getSDLWindow()
+void MainWindow::initWorkspace(QsciScintilla* ws, int i)
 {
-    return embedWindow;
+    ws->setAutoIndent(true);
+    ws->setIndentationsUseTabs(false);
+    ws->setBackspaceUnindents(true);
+    ws->setTabIndents(true);
+    ws->setMatchedBraceBackgroundColor(QColor("dimgray"));
+    ws->setMatchedBraceForegroundColor(QColor("white"));
+    ws->setIndentationWidth(2);
+    ws->setIndentationGuides(true);
+    ws->setIndentationGuidesForegroundColor(QColor("deep pink"));
+    ws->setBraceMatching(QsciScintilla::SloppyBraceMatch);
+    ws->setCaretLineVisible(true);
+    ws->setCaretLineBackgroundColor(QColor("whitesmoke"));
+    ws->setFoldMarginColors(QColor("whitesmoke"),QColor("whitesmoke"));
+    ws->setMarginLineNumbers(0, true);
+    ws->setMarginWidth(0, "100000");
+    ws->setMarginsForegroundColor(QColor("gray"));
+    ws->setMarginsForegroundColor(QColor("dark gray"));
+    ws->setMarginsFont(QFont("Menlo",5, -1, true));
+    ws->setUtf8(true);
+    ws->setText("");
+    ws->setLexer(lexer);
+    ws->zoomIn(13);
+    ws->setAutoCompletionThreshold(3);
+    ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
+    ws->setSelectionBackgroundColor("DeepPink");
+    ws->setSelectionForegroundColor("white");
+    ws->setCaretWidth(5);
+    ws->setMarginWidth(1,5);
+    ws->setCaretForegroundColor("deep pink");
+
+    //Read 9 python scripts and display in scintilla widget
+
+    std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
+    std::string path = player_scripts_location + "/" + std::to_string(i+1) + ".py";
+
+    LOG(INFO) << "Reading in python scripts..." << endl;
+
+    ifstream fin(path, ios::in);
+
+    std::string script = "";
+
+    while(fin)
+    {
+        if(fin.bad())
+        {
+            LOG(INFO) << "Error reading in python script: " << path << endl;
+            return;
+        }
+        else if(fin.eof())
+        {
+            break;
+        }
+
+        std::string curString;
+
+        std::getline(fin,curString);
+
+        script = script + curString;
+
+        if (!fin.eof())
+        {
+            script = script + "\n";
+        }
+    }
+
+    QString qScript = QString(script.c_str());
+
+    ws->setText(qScript);
+
+    fin.close();
+
+    //Create zoom buttons for text widget
+    zoomLayout[i] = new QHBoxLayout;
+
+    buttonIn[i] = new QPushButton("+");
+    buttonOut[i] = new QPushButton("-");                 //Text do not seem centered in buttons
+
+    buttonIn[i]->setMaximumWidth(20);
+    buttonOut[i]->setMaximumWidth(20);
+    buttonIn[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+    buttonOut[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+
+    zoomLayout[i]->addWidget(buttonIn[i]);
+    zoomLayout[i]->addWidget(buttonOut[i]);
+
+    zoomLayout[i]->setContentsMargins(0,0,0,0);
+    zoomLayout[i]->setSpacing(0);
+
+    zoomWidget[i] = new QWidget;
+
+    zoomWidget[i]->setLayout(zoomLayout[i]);
+    zoomWidget[i]->setMaximumWidth(40);
+
+    ws->addScrollBarWidget(zoomWidget[i],Qt::AlignLeft);
+
+    //Connect buttons to functions
+    connect(buttonIn[i],SIGNAL(released()),this,SLOT (zoomFontIn()));
+    connect(buttonOut[i],SIGNAL(released()),this,SLOT (zoomFontOut()));
+    //connect(ws->horizontalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
+    //connect(ws->verticalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
+
+}
+
+void MainWindow::createToolBar()
+{
+    toolBar = new QToolBar;
+    toolBar->setFloatable(false);
+    toolBar->setMovable(false);
+
+    textLayout = new QHBoxLayout;
+
+    textWorld = new QLabel("");
+    textLevel = new QLabel("");
+    textCoins = new QLabel("");
+    textTotems = new QLabel("");
+
+    //Use the required variables
+    textWorld->setText("World: 1");
+    textLevel->setText("Level: 1");
+    textCoins->setText("Coins: 0");
+    textTotems->setText("Totems: 0/5");
+
+    textLayout->addWidget(textWorld);
+    textLayout->addWidget(textLevel);
+    textLayout->addWidget(textCoins);
+    textLayout->addWidget(textTotems);
+    textInfoWidget = new QWidget();
+    textInfoWidget->setLayout(textLayout);
+
+    //textInfoWidget->setMinimumWidth(400);
+    //textInfoWidget->setMaximumHeight(38);
+    textInfoWidget->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);font: 17pt;");
+    textInfoWidget->setFocusPolicy(Qt::NoFocus);
+    textInfoWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+    toolBar->addWidget(textInfoWidget);
+
+    addToolBar(toolBar);
 }
 
 void MainWindow::showMax()
@@ -563,153 +703,9 @@ void MainWindow::timerHandler()
     game->game_loop(gameWidget->underMouse());
 }
 
-void MainWindow::initWorkspace(QsciScintilla* ws, int i)
-{
-    ws->setAutoIndent(true);
-    ws->setIndentationsUseTabs(false);
-    ws->setBackspaceUnindents(true);
-    ws->setTabIndents(true);
-    ws->setMatchedBraceBackgroundColor(QColor("dimgray"));
-    ws->setMatchedBraceForegroundColor(QColor("white"));
-    ws->setIndentationWidth(2);
-    ws->setIndentationGuides(true);
-    ws->setIndentationGuidesForegroundColor(QColor("deep pink"));
-    ws->setBraceMatching(QsciScintilla::SloppyBraceMatch);
-    ws->setCaretLineVisible(true);
-    ws->setCaretLineBackgroundColor(QColor("whitesmoke"));
-    ws->setFoldMarginColors(QColor("whitesmoke"),QColor("whitesmoke"));
-    ws->setMarginLineNumbers(0, true);
-    ws->setMarginWidth(0, "100000");
-    ws->setMarginsForegroundColor(QColor("gray"));
-    ws->setMarginsForegroundColor(QColor("dark gray"));
-    ws->setMarginsFont(QFont("Menlo",5, -1, true));
-    ws->setUtf8(true);
-    ws->setText("");
-    ws->setLexer(lexer);
-    ws->zoomIn(13);
-    ws->setAutoCompletionThreshold(3);
-    ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
-    ws->setSelectionBackgroundColor("DeepPink");
-    ws->setSelectionForegroundColor("white");
-    ws->setCaretWidth(5);
-    ws->setMarginWidth(1,5);
-    ws->setCaretForegroundColor("deep pink");
-
-    //Read 9 python scripts and display in scintilla widget
-
-    std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
-    std::string path = player_scripts_location + "/" + std::to_string(i+1) + ".py";
-
-    LOG(INFO) << "Reading in python scripts..." << endl;
-
-    ifstream fin(path, ios::in);
-
-    std::string script = "";
-
-    while(fin)
-    {
-        if(fin.bad())
-        {
-            LOG(INFO) << "Error reading in python script: " << path << endl;
-            return;
-        }
-        else if(fin.eof())
-        {
-            break;
-        }
-
-        std::string curString;
-
-        std::getline(fin,curString);
-
-        script = script + curString;
-
-        if (!fin.eof())
-        {
-            script = script + "\n";
-        }
-    }
-
-    QString qScript = QString(script.c_str());
-
-    ws->setText(qScript);
-
-    fin.close();
-
-    //Create zoom buttons for text widget
-    zoomLayout[i] = new QHBoxLayout;
-
-    buttonIn[i] = new QPushButton("+");
-    buttonOut[i] = new QPushButton("-");                 //Text do not seem centered in buttons
-
-    buttonIn[i]->setMaximumWidth(20);
-    buttonOut[i]->setMaximumWidth(20);
-    buttonIn[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
-    buttonOut[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
-
-    zoomLayout[i]->addWidget(buttonIn[i]);
-    zoomLayout[i]->addWidget(buttonOut[i]);
-
-    zoomLayout[i]->setContentsMargins(0,0,0,0);
-    zoomLayout[i]->setSpacing(0);
-
-    zoomWidget[i] = new QWidget;
-
-    zoomWidget[i]->setLayout(zoomLayout[i]);
-    zoomWidget[i]->setMaximumWidth(40);
-
-    ws->addScrollBarWidget(zoomWidget[i],Qt::AlignLeft);
-
-    //Connect buttons to functions
-    connect(buttonIn[i],SIGNAL(released()),this,SLOT (zoomFontIn()));
-    connect(buttonOut[i],SIGNAL(released()),this,SLOT (zoomFontOut()));
-    //connect(ws->horizontalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
-    //connect(ws->verticalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
-
-}
-
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
-}
-
-//This gets called when clicking on the Run/Halt button
-//and from engine.cpp update_status, when the script terminates
-void MainWindow::setRunning(bool option)
-{
-    running = option;
-
-    if (running)
-    {
-        buttonRun->setText("Halt");
-    }
-    else
-    {
-        buttonRun->setText("Run");
-    }
-
-    updateSpeed();
-
-}
-
-void MainWindow::setFast(bool option)
-{
-    fast = option;
-
-    if (fast)
-    {
-        buttonSpeed->setText("Speed: Fast");
-    }
-    else
-    {
-        buttonSpeed->setText("Speed: Slow");
-    }
-
-}
-
-bool MainWindow::saveAs()
-{
-    return false;
 }
 
 void MainWindow::runCode()
@@ -801,6 +797,16 @@ void MainWindow::pushTerminalText(std::string text, bool error){
     terminalDisplay->setTextColor(QColor("black"));
 }
 
+void MainWindow::updateToolBar()
+{
+    //Use the require variables
+    textWorld->setText("World: 1");
+    textLevel->setText("Level: 1");
+    textCoins->setText("Coins: 0");
+    textTotems->setText("Totems: 0/5");
+}
+
+
 void MainWindow::zoomFontIn()
 {
     ((QsciScintilla*)textWidget->currentWidget())->zoomIn(3);
@@ -813,74 +819,73 @@ void MainWindow::zoomFontOut()
     setGameFocus();
 }
 
-
-void MainWindow::documentWasModified()
-{
-    setWindowModified(textEdit->isModified());
-}
-
-
-void MainWindow::clearTerminal()
-{
-    terminalDisplay->clear();
-}
-
 //Give the game widget focus so keyboard events are handled
 void MainWindow::setGameFocus()
 {
     gameWidget->setFocus();
 }
 
-void MainWindow::createToolBar()
+void MainWindow::clearTerminal()
 {
-    toolBar = new QToolBar;
-    toolBar->setFloatable(false);
-    toolBar->setMovable(false);
-
-    textLayout = new QHBoxLayout;
-
-    textWorld = new QLabel("");
-    textLevel = new QLabel("");
-    textCoins = new QLabel("");
-    textTotems = new QLabel("");
-
-    //Use the required variables
-    textWorld->setText("World: 1");
-    textLevel->setText("Level: 1");
-    textCoins->setText("Coins: 0");
-    textTotems->setText("Totems: 0/5");
-
-    textLayout->addWidget(textWorld);
-    textLayout->addWidget(textLevel);
-    textLayout->addWidget(textCoins);
-    textLayout->addWidget(textTotems);
-    textInfoWidget = new QWidget();
-    textInfoWidget->setLayout(textLayout);
-
-    //textInfoWidget->setMinimumWidth(400);
-    //textInfoWidget->setMaximumHeight(38);
-    textInfoWidget->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);font: 17pt;");
-    textInfoWidget->setFocusPolicy(Qt::NoFocus);
-    textInfoWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-
-    toolBar->addWidget(textInfoWidget);
-
-    addToolBar(toolBar);
+    terminalDisplay->clear();
 }
 
-void MainWindow::updateToolBar()
+bool MainWindow::saveAs()
 {
-    //Use the require variables
-    textWorld->setText("World: 1");
-    textLevel->setText("Level: 1");
-    textCoins->setText("Coins: 0");
-    textTotems->setText("Totems: 0/5");
+    return false;
 }
 
+void MainWindow::documentWasModified()
+{
+    setWindowModified(textEdit->isModified());
+}
 
 void MainWindow::createStatusBar()
 {
     statusBar()->showMessage(tr("Ready"));
+}
+
+//This gets called when clicking on the Run/Halt button
+//and from engine.cpp update_status, when the script terminates
+void MainWindow::setRunning(bool option)
+{
+    running = option;
+
+    if (running)
+    {
+        buttonRun->setText("Halt");
+    }
+    else
+    {
+        buttonRun->setText("Run");
+    }
+
+    updateSpeed();
+
+}
+
+void MainWindow::setFast(bool option)
+{
+    fast = option;
+
+    if (fast)
+    {
+        buttonSpeed->setText("Speed: Fast");
+    }
+    else
+    {
+        buttonSpeed->setText("Speed: Slow");
+    }
+
+}
+
+void MainWindow::setAnyOutput(bool option){
+    anyOutput = option;
+}
+
+SDL_Window* MainWindow::getSDLWindow()
+{
+    return embedWindow;
 }
 
 int MainWindow::getGameWidgetWidth(){
@@ -889,4 +894,8 @@ int MainWindow::getGameWidgetWidth(){
 
 int MainWindow::getGameWidgetHeight(){
     return gameWidget->height();
+}
+
+bool MainWindow::getAnyOutput(){
+    return anyOutput;
 }

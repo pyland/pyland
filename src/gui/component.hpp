@@ -160,7 +160,7 @@ public:
     /// This returns an empty map for Component.
     /// @return a reference to a constant map object
     ///
-    virtual const std::map<int, std::shared_ptr<Component>>& get_components();
+    virtual const std::map<int, std::shared_ptr<Component>>* get_components();
 
     ///
     /// Set the visibility

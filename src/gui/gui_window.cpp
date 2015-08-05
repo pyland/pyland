@@ -36,8 +36,8 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     //edges
     //    float top_edge_right = float(width_pixels) - element_width_pixels;
     //    if(top_edge_right < ele
-    
-    
+
+
     //left right top bottom
     //The vertex bounds for these components
     std::tuple<float,float,float,float> background_bounds = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
@@ -56,16 +56,16 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     int total_floats = 0;
     //get total number of flotas
     total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-    total_floats += calculate_num_tile_elements(corner_top_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(corner_top_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(corner_bottom_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(corner_bottom_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(edge_top_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(edge_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
+    total_floats += calculate_num_tile_elements(corner_top_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(corner_top_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(corner_bottom_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(corner_bottom_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_top_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-    vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+    vertex_data = new GLfloat[total_floats];
 
 
 
@@ -81,7 +81,7 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_bottom_bounds, element_width_pixels, element_height_pixels);
     offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_left_bounds, element_width_pixels, element_height_pixels);
 
-    
+
     size_vertex_data = offset;
 
 
@@ -165,7 +165,7 @@ int GUIWindow::calculate_num_tile_elements(std::tuple<float,float,float,float> b
     if(num_y_float > float(num_y)) {
         num_y++;
     }
-    
+
     return num_x * num_y;
 }
 int GUIWindow::generate_tile_element_texture_coords(GLfloat* data, int offset, std::tuple<float,float,float,float> vertex_bounds, float element_width, float element_height, std::tuple<float,float,float,float> texture_bounds) {
@@ -245,8 +245,8 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
     //edges
     //    float top_edge_right = float(width_pixels) - element_width_pixels;
     //    if(top_edge_right < ele
-    
-    
+
+
     //left right top bottom
     //The vertex bounds for these components
     std::tuple<float,float,float,float> background_bounds_vertex = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
@@ -274,12 +274,12 @@ std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_texture_data() {
     //get total number of flotas
     total_floats += calculate_num_tile_elements(background_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
     total_floats += num_floats_per_tile * 4; //4 corners
-    total_floats += calculate_num_tile_elements(edge_top_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(edge_right_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
-    total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;        
+    total_floats += calculate_num_tile_elements(edge_top_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_right_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-    texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+    texture_data = new GLfloat[total_floats];
 
 
 
@@ -322,7 +322,7 @@ int GUIWindow::generate_vertex_coords_element(GLfloat* data, int offset, std::tu
     //bottom right
     data[offset + 10] = std::get<1>(bounds);
     data[offset + 11] = std::get<2>(bounds);
-    
+
     return offset + 12;
 }
 int GUIWindow::generate_texture_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds) {

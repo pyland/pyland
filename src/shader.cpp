@@ -90,7 +90,7 @@ Shader::Shader(const std::string vs, const std::string fs): CacheableResource() 
         glGetProgramiv(program_obj, GL_INFO_LOG_LENGTH, &info_len);
 
         if(info_len > 1) {
-            char* info_log = new char[sizeof(char)*info_len];
+            char* info_log = new char[info_len];
 
             glGetProgramInfoLog(program_obj, info_len, nullptr, info_log);
             LOG(ERROR) << "Program linking:\n" << info_log;
@@ -142,7 +142,7 @@ GLuint Shader::load_shader(GLenum type, const std::string src) {
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_len);
 
         if(info_len > 1) {
-            char* info_log = new char[sizeof(char) * info_len];
+            char* info_log = new char[info_len];
 
             glGetShaderInfoLog(shader, info_len, nullptr, info_log);
             LOG(ERROR) << "Shader loading failed:\n"<< info_log;
