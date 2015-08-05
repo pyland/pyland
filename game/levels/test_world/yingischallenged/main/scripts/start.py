@@ -13,12 +13,12 @@ coconut_seven.set_weight(64)
 engine.print_terminal(str(coconut_one.get_weight()) + "\n", False)
 
 engine.play_music("beach")
-
 engine.get_objects_at((7, 0))
 engine.get_objects_at((7, 2))
 engine.get_objects_at((4, 4))
 engine.get_objects_at((5, 4))
 engine.get_objects_at((6, 4))
+engine.get_objects_at((1, 1))
 engine.get_objects_at((7, 4))
 engine.get_objects_at((8, 4))
 engine.get_objects_at((9, 4))

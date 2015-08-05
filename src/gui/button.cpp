@@ -19,44 +19,54 @@
 
 Button::Button(ButtonType _type) {
     type = _type;
+    alignment = ButtonAlignment::TopRight;
     button_text = std::make_shared<GUIText>();
     button_text->set_width(1.0f);
     button_text->set_height(1.0f);
+    button_text->set_x_offset(0.3f);
+    button_text->set_y_offset(0.1f);
     set_text("");
 
     get_text()->set_bloom_radius(4);
-    get_text()->align_at_origin(true);
-    get_text()->align_centre();
-    get_text()->vertical_align_top();
 
     add(button_text);
 
-    if(type == ButtonType::Single){
-        set_width(0.40f);
-        set_height(0.40f);
+    picture_name = "gui/black-tile";
+
+    if(type == ButtonType::Board){
+        set_width(1.0f);
+        set_height(0.85f);
     }
     else if(type == ButtonType::Single){
-        set_width(0.15f);
-        set_height(0.35f);
+        set_width(0.5f);
+        set_height(0.5f);
     }
-    picture_name = "gui/coin/coin-tile";
+
 }
 
 Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<void (void)> on_click,
                float _width, float _height, float _x_offset, float _y_offset) :
     ComponentGroup(on_click, _width, _height, _x_offset, _y_offset) {
-    type = _type;
+
+    alignment = ButtonAlignment::TopRight;
+    type= _type;
     button_text = std::make_shared<GUIText>();
-    button_text->set_text(_text);
     button_text->set_width(1.0f);
     button_text->set_height(1.0f);
-
+    button_text->set_x_offset(0.3f);
+    button_text->set_y_offset(0.3f);
+    button_text->set_text(_text);
     get_text()->set_bloom_radius(4);
-    get_text()->align_at_origin(true);
-    get_text()->align_centre();
-    get_text()->vertical_align_top();
 
     add(button_text);
+}
+
+void Button::set_alignment(ButtonAlignment _alignment){
+    alignment = _alignment;
+}
+
+ButtonAlignment Button::get_alignment(){
+    return alignment;
 }
 
 void Button::set_picture(std::string _name){
@@ -69,11 +79,6 @@ void Button::set_text(std::string text) {
     TextFont buttonfont = Engine::get_game_font();
 
     std::shared_ptr<Text> new_text = std::make_shared<Text>(Engine::get_game_window(), buttonfont, true);
-
-    new_text->align_at_origin(true);
-    new_text->align_centre();
-    new_text->vertical_align_top();
-
     new_text->set_text(text);
     button_text->set_text(new_text);
     get_text()->set_bloom_radius(4);
@@ -83,10 +88,6 @@ std::shared_ptr<Text> Button::get_text() {
 }
 
 void Button::set_text(std::shared_ptr<Text> _text) {
-
-    _text->align_at_origin(true);
-    _text->align_centre();
-    _text->vertical_align_top();
 
     button_text->set_text(_text);
     get_text()->set_bloom_radius(4);
@@ -140,7 +141,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
         total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
         total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-        vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+        vertex_data = new GLfloat[total_floats];
 
         //Generate the vertex coordinates for each element
         offset = generate_tile_element_vertex_coords(vertex_data, 0, background_bounds, element_width_pixels, element_height_pixels);
@@ -154,12 +155,22 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
         offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_left_bounds, element_width_pixels, element_height_pixels);
     }
     else if(type == ButtonType::Single){
+        std::tuple<float,float,float,float> background_bounds;
 
-        std::tuple<float,float,float,float> background_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(element_height_pixels), 0.0f);
+        if(alignment == ButtonAlignment::TopLeft){
+            background_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
+        }
+        else if(alignment == ButtonAlignment::TopRight){
+            background_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
+        }
+        else /*if(alignment == ButtonAlignment::BottomLeft)*/{
+            background_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(element_height_pixels), 0.0f);
+        }
+
         //get total number of floats
         total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-        vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+        vertex_data = new GLfloat[total_floats];
 
         //Generate the vertex coordinates for each element
         offset = generate_vertex_coords_element(vertex_data, 0, background_bounds);
@@ -354,7 +365,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
         total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
         total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-        texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+        texture_data = new GLfloat[total_floats];
 
         offset = generate_tile_element_texture_coords(texture_data, 0, background_bounds_vertex, element_width_pixels, element_height_pixels, background_bounds);
         offset =  generate_texture_coords_element(texture_data, offset, corner_top_left_bounds);
@@ -374,7 +385,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
         //get total number of floats
         total_floats += num_floats_per_tile;
 
-        texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+        texture_data = new GLfloat[total_floats];
 
         offset =  generate_texture_coords_element(texture_data, 0, background_bounds);
     }

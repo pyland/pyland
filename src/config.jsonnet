@@ -10,5 +10,20 @@
 	},
 	"layers": { //define layer properties
 		"special_layer_name": "SL1" //The name of the layer which provides special properties to tiles on the map.
+	},
+
+	//define constants for rendering sizes
+	"gui_constants": {
+		"button_width": 0.08,
+		"button_height": 0.12,
+
+		//multiplying factors for converting between window sizes and gui scales
+		"x_scale": 1.0/660.0,
+		"y_scale": 1.0/285.0,
+		
+		//the maximum number of sprite heads displayed on the screen		
+		"button_max": 5,
+		//the distance between two buttons
+		"button_spacing": 0.08
 	}
 }

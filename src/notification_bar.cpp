@@ -28,22 +28,9 @@ NotificationBar::NotificationBar() {
     CHECK_NOTNULL(window);
     TextFont notification_buttonfont = Engine::get_game_font();
 
-    //build forwards button
-//	forward_button = std::make_shared<Button>(ButtonType::Board);
-//	forward_button->set_text("Next ->");
-//	forward_button->set_on_click([&] () {
-//		LOG(INFO) << "forward button pressed";
-//		move_notification(Direction::NEXT);
-//	});
-//	forward_button->set_width(button_size);
-//	forward_button->set_height(button_size);
-//	forward_button->set_y_offset(forward_loco.second);
-//	forward_button->set_x_offset(forward_loco.first);
-
 
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
     CHECK_NOTNULL(gui_manager);
-//	gui_manager->get_root()->add(forward_button);
     gui_manager->parse_components();
 
     // text object for notifications
@@ -81,7 +68,6 @@ void NotificationBar::move_notification(Direction direction) {
         direction == Direction::NEXT ? notification_stack.forward()
                                      : notification_stack.backward()
     );
-    hide_buttons();
 }
 
 void NotificationBar::add_notification(std::string text_to_display) {
@@ -92,19 +78,12 @@ void NotificationBar::add_notification(std::string text_to_display) {
             //std::cout << text_to_display << std::endl;
         }
     );
-    hide_buttons();
  }
 
- void NotificationBar::hide_buttons() {
-//	forward_button->set_visible(notification_stack.can_forward);
-    Engine::get_map_viewer()->get_gui_manager()->parse_components();
-
- }
 
  NotificationBar::~NotificationBar() {
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
     CHECK_NOTNULL(gui_manager);
-//	gui_manager->get_root()->remove(forward_button->get_id());
     delete notification_text;
 }
 
