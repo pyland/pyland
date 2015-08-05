@@ -250,6 +250,10 @@ void Engine::set_any_output(bool option){
     main_window->setAnyOutput(option);
 }
 
+void Engine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
+    main_window->setColourScheme(r1,b1,g1,r2,b2,g2);
+}
+
 TextFont Engine::get_game_font() {
     return TextFont(get_game_typeface(), 19);
 }
