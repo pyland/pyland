@@ -41,7 +41,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     pause_button->set_alignment(ButtonAlignment::TopLeft);
     pause_button->set_width(button_width);
     pause_button->set_height(button_height);
-    pause_button->set_y_offset(float(embedWindow->get_game_window_height())*y_scale);
+    pause_button->set_y_offset(0.87f);
     pause_button->set_x_offset(0.00f);
     pause_button->set_on_click( [&] () {
 
@@ -63,8 +63,8 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     bag_button->set_alignment(ButtonAlignment::TopRight);
     bag_button->set_width(button_width);
     bag_button->set_height(button_height);
-    bag_button->set_y_offset(float(embedWindow->get_game_window_height())*y_scale);
-    bag_button->set_x_offset(float(embedWindow->get_game_window_width())*x_scale);
+    bag_button->set_y_offset(0.87f);
+    bag_button->set_x_offset(0.91f);
 
     bag_button->set_on_click( [&] () {
 
@@ -170,8 +170,8 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
         cycle_button->set_text("Cycle");
         cycle_button->set_width(button_width);
         cycle_button->set_height(button_height);
-        cycle_button->set_y_offset(float(embedWindow->get_game_window_height())*y_scale);
-        cycle_button->set_x_offset(float(embedWindow->get_game_window_width())*x_scale - float(button_max + 1) * button_spacing);
+        cycle_button->set_y_offset(0.87f);
+        cycle_button->set_x_offset(0.91f - float(button_max + 1) * button_spacing);
 
         cycle_button->set_on_click( [&] () {
 
@@ -213,10 +213,10 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     new_button->set_height(button_height);
 
     //make space for previous buttons
-    float org_x_location = float(embedWindow->get_game_window_width()) * x_scale;
+    float org_x_location = 0.91f;
 
     new_button->set_x_offset(org_x_location - float(((buttons.size()-1) % button_max) + 1) * button_spacing);
-    new_button->set_y_offset(float(embedWindow->get_game_window_height()) * y_scale);
+    new_button->set_y_offset(0.87f);
 
     //add the button onto the screen
     gui_window->add(new_button);
