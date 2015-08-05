@@ -141,7 +141,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
         total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
         total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-        vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+        vertex_data = new GLfloat[total_floats];
 
         //Generate the vertex coordinates for each element
         offset = generate_tile_element_vertex_coords(vertex_data, 0, background_bounds, element_width_pixels, element_height_pixels);
@@ -170,7 +170,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
         //get total number of floats
         total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-        vertex_data = new GLfloat[sizeof(GLfloat) * total_floats];
+        vertex_data = new GLfloat[total_floats];
 
         //Generate the vertex coordinates for each element
         offset = generate_vertex_coords_element(vertex_data, 0, background_bounds);
@@ -365,7 +365,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
         total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
         total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-        texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+        texture_data = new GLfloat[total_floats];
 
         offset = generate_tile_element_texture_coords(texture_data, 0, background_bounds_vertex, element_width_pixels, element_height_pixels, background_bounds);
         offset =  generate_texture_coords_element(texture_data, offset, corner_top_left_bounds);
@@ -385,7 +385,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
         //get total number of floats
         total_floats += num_floats_per_tile;
 
-        texture_data = new GLfloat[sizeof(GLfloat) * total_floats];
+        texture_data = new GLfloat[total_floats];
 
         offset =  generate_texture_coords_element(texture_data, 0, background_bounds);
     }

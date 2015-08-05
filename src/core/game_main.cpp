@@ -377,18 +377,42 @@ GameMain::GameMain(int &argc, char **argv):
 
 void GameMain::close_pause_window(){
 	gui_window->set_visible(false);
+
+	const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
+
+	typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
+
+	for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+		if(i->second == bag_window){
+			continue;
+		}
+		else{
+			i->second->set_visible(true);
+			i->second->set_clickable(true);
+		}
+	}
+
 	refresh_gui();
 }
 
 void GameMain::open_pause_window(){
 	gui_window->set_visible(true);
 
-	//std::map<int, std::shared_ptr<Component>> * gui_components;
+	const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
+
+	typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
+
+	for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+		if(i->second == pause_button){
+			continue;
+		}
+		else{
+			i->second->set_visible(false);
+			i->second->set_clickable(false);
+		}
+	}
+
 	refresh_gui();
-}
-
-void GameMain::pause_menu(){
-
 }
 
 void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback){

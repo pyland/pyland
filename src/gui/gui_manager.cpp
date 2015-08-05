@@ -166,7 +166,7 @@ void GUIManager::generate_texture_data() {
     GLfloat* gui_tex_data = nullptr;
     //Create a buffer for the data
     try {
-        gui_tex_data  = new GLfloat[sizeof(GLfloat)*num_floats];
+        gui_tex_data  = new GLfloat[num_floats];
     }
     catch(std::bad_alloc& ba) {
         LOG(ERROR) << "ERROR: bad_alloc caught in GUIManager::generate_tex_data()" << ba.what();
@@ -205,7 +205,7 @@ void GUIManager::generate_vertex_data() {
     //Create a buffer for the data
     GLfloat* gui_data = nullptr;
     try {
-        gui_data  = new GLfloat[sizeof(GLfloat)*num_floats];
+        gui_data  = new GLfloat[num_floats];
     }
     catch(std::bad_alloc& ba) {
         LOG(ERROR) << "bad_alloc caught in GUIManager::generate_vertex_data()" << ba.what();

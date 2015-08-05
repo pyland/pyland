@@ -124,7 +124,6 @@ public:
     CallbackState getCallbackState();
     std::chrono::steady_clock::time_point get_start_time();
 
-    void pause_menu();
 };
 
 #endif // GAME_MAIN_H
