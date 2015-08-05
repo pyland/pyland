@@ -57,13 +57,13 @@ GameMain::GameMain(int &argc, char **argv):
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
 
-	nlohmann::json j = Config::get_instance();
+    nlohmann::json j = Config::get_instance();
     /// CREATE GLOBAL OBJECTS
 
     //Create the input manager
     input_manager = embedWindow.get_input_manager();
 
-	//The GUI resize function
+    //The GUI resize function
 
     gui_resize_func = [&] (GameWindow* game_window)
     {

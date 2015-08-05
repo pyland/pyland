@@ -9,25 +9,25 @@
 #include "notification_bar.hpp"
 
 GUIMain::GUIMain(GameWindow * _embedWindow):
-	embedWindow(_embedWindow),
-	gui_manager(),
-	map_viewer(embedWindow, &gui_manager),
-	em(EventManager::get_instance()),
-	bag_open(false),
+    embedWindow(_embedWindow),
+    gui_manager(),
+    map_viewer(embedWindow, &gui_manager),
+    em(EventManager::get_instance()),
+    bag_open(false),
     display_button_start(0)
 
 {
-	LOG(INFO) << "Constructing GUIMain...";
+    LOG(INFO) << "Constructing GUIMain...";
 
-	config_gui();
+    config_gui();
 
-	//Create the game embedWindow to present to the users
-	embedWindow->use_context();
-	Engine::set_game_window(embedWindow);
+    //Create the game embedWindow to present to the users
+    embedWindow->use_context();
+    Engine::set_game_window(embedWindow);
 
-	Engine::set_map_viewer(&map_viewer);
+    Engine::set_map_viewer(&map_viewer);
 
-	gui_window = std::make_shared<GUIWindow>();
+    gui_window = std::make_shared<GUIWindow>();
     gui_window->set_visible(false);
 
     gui_manager.set_root(gui_window);
@@ -48,7 +48,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
         if(em->is_paused() == false){
             em->pause();
             LOG(INFO) << "PAUSED";
-			open_pause_window();
+            open_pause_window();
         }
         else{
             em->resume();
@@ -87,18 +87,18 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     bag_window = std::make_shared<Button>(ButtonType::Board);
     bag_window->set_text("Bag");
-	bag_window->set_clickable(false);
-	bag_window->set_visible(false);
-	bag_window->move_text(0.5f, 0.9f);
+    bag_window->set_clickable(false);
+    bag_window->set_visible(false);
+    bag_window->move_text(0.5f, 0.9f);
 
-	pyguide_button = std::make_shared<Button>(ButtonType::NoPicture);
-	pyguide_button->set_text("PyGuide");
+    pyguide_button = std::make_shared<Button>(ButtonType::NoPicture);
+    pyguide_button->set_text("PyGuide");
     pyguide_button->set_alignment(ButtonAlignment::TopRight);
     pyguide_button->set_width(button_width);
     pyguide_button->set_height(button_height);
     pyguide_button->set_y_offset(0.8f);
     pyguide_button->set_x_offset(0.5f);
-	pyguide_button->set_visible(false);
+    pyguide_button->set_visible(false);
 
     bag_window->add(pyguide_button);
 
@@ -112,7 +112,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
 void GUIMain::config_gui()
 {
-	nlohmann::json j = Config::get_instance();
+    nlohmann::json j = Config::get_instance();
 
     button_width = j["gui_constants"]["button_width"];
     button_height = j["gui_constants"]["button_height"];
@@ -123,43 +123,43 @@ void GUIMain::config_gui()
 }
 
 void GUIMain::close_pause_window(){
-	gui_window->set_visible(false);
+    gui_window->set_visible(false);
 
-	const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
+    const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
 
-	typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
+    typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
 
-	for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
-		if(i->second == bag_window){
-			continue;
-		}
-		else{
-			i->second->set_visible(true);
-			i->second->set_clickable(true);
-		}
-	}
+    for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+        if(i->second == bag_window){
+            continue;
+        }
+        else{
+            i->second->set_visible(true);
+            i->second->set_clickable(true);
+        }
+    }
 
-	refresh_gui();
+    refresh_gui();
 }
 
 void GUIMain::open_pause_window(){
-	gui_window->set_visible(true);
+    gui_window->set_visible(true);
 
-	const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
+    const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
 
-	typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
+    typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
 
-	for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
-		if(i->second == pause_button){
-			continue;
-		}
-		else{
-			i->second->set_visible(false);
-			i->second->set_clickable(false);
-		}
-	}
+    for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+        if(i->second == pause_button){
+            continue;
+        }
+        else{
+            i->second->set_visible(false);
+            i->second->set_clickable(false);
+        }
+    }
 
-	refresh_gui();
+    refresh_gui();
 }
 
 void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback){
@@ -236,9 +236,9 @@ void GUIMain::refresh_gui()
 
 GUIMain::~GUIMain()
 {
-	LOG(INFO) << "Destructing GUIMain...";
+    LOG(INFO) << "Destructing GUIMain...";
 
-	buttons.clear();
+    buttons.clear();
     delete notification_bar;
 
     LOG(INFO) << "Destructed GUIMain.";
