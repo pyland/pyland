@@ -33,14 +33,16 @@
 class QAction;
 class QMenu;
 class QsciScintilla;
+class QsciAPIs;
 class QProcess;
 class QTextEdit;
 class QSplitter;
 class SonicPiLexer;
 class QString;
 class QSlider;
+class QPalette;
 class GameMain;
-class QsciAPIs;
+
 
 
 class MainWindow : public QMainWindow
@@ -51,13 +53,14 @@ public:
     MainWindow(GameMain *exGame);
     ~MainWindow();
 
-    void showMax();
+    void showWindow();
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
     void updateToolBar();
     void setRunning(bool option);
     void setFast(bool option);
     void setAnyOutput(bool option);
+    void setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2);
     SDL_Window* getSDLWindow();
     int getGameWidgetWidth();
     int getGameWidgetHeight();
@@ -123,6 +126,8 @@ private:
     QHBoxLayout *terminalButtonLayout;
     QPushButton *buttonClear;
     QVBoxLayout *windowLayout;
+
+    QPalette colourPalette;
 
     SDL_GLContext glContext;
     SDL_Window *embedWindow;

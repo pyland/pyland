@@ -112,7 +112,8 @@ struct SDL_Window
 };
 typedef struct SDL_Window SDL_Window;
 
-MainWindow::MainWindow(GameMain *exGame)
+MainWindow::MainWindow(GameMain *exGame):
+    colourPalette(palette())
 {
     LOG(INFO) << "Constructing MainWindow..." << std::endl;
 
@@ -236,14 +237,11 @@ MainWindow::MainWindow(GameMain *exGame)
     setWindowTitle(tr("Pyland"));
     mainWidget->setWindowIcon(QIcon("/images/icon.png"));
 
-    QPalette colourPalette(palette());
-    colourPalette.setColor(QPalette::Background,QColor(250,250,197));
-    colourPalette.setColor(QPalette::Button,QColor(245,245,165));
+    setColourScheme(250,250,197,245,245,165);
 
-    mainWidget->setPalette(colourPalette);
     mainWidget->setAutoFillBackground(true);
 
-    mainWidget->setMinimumSize(600,420);
+    mainWidget->setMinimumSize(900,630);
 
     this->setContextMenuPolicy(Qt::NoContextMenu);
     this->setCentralWidget(mainWidget);
@@ -476,9 +474,6 @@ void MainWindow::createToolBar()
     textInfoWidget = new QWidget();
     textInfoWidget->setLayout(textLayout);
 
-    //textInfoWidget->setMinimumWidth(400);
-    //textInfoWidget->setMaximumHeight(38);
-    textInfoWidget->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);font: 17pt;");
     textInfoWidget->setFocusPolicy(Qt::NoFocus);
     textInfoWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
@@ -487,7 +482,7 @@ void MainWindow::createToolBar()
     addToolBar(toolBar);
 }
 
-void MainWindow::showMax()
+void MainWindow::showWindow()
 {
     this->showMaximized();
 }
@@ -787,11 +782,10 @@ void MainWindow::updateSpeed(){
 }
 
 void MainWindow::pushTerminalText(std::string text, bool error){
-    //terminalDisplay->insertPlainText(text);
     if (error){
         terminalDisplay->setTextColor(QColor("red"));
     }
-    QString qtext = QString::fromStdString(text);
+    QString qtext = QString::fromStdString(text+"\n");
     terminalDisplay->insertPlainText(qtext);
     terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
     terminalDisplay->setTextColor(QColor("black"));
@@ -881,6 +875,19 @@ void MainWindow::setFast(bool option)
 
 void MainWindow::setAnyOutput(bool option){
     anyOutput = option;
+}
+
+void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2){
+
+    textInfoWidget->setStyleSheet(("background-color: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
+                                  "border: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
+                                  "font: 17pt;").c_str());
+
+
+    colourPalette.setColor(QPalette::Background,QColor(r1,g1,b1));
+    colourPalette.setColor(QPalette::Button,QColor(r2,g2,b2));
+
+    mainWidget->setPalette(colourPalette);
 }
 
 SDL_Window* MainWindow::getSDLWindow()

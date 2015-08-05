@@ -55,6 +55,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("register_input_callback", &GameEngine::register_input_callback)
         .def("print_terminal",    &GameEngine::print_terminal)
         .def("get_objects_at",    &GameEngine::get_objects_at)
+        .def("set_ui_colours",    &GameEngine::set_ui_colours)
         .add_static_property("INPUT_UP", &GameEngine::INPUT_UP) //Add constants for different inputs.
         .add_static_property("INPUT_RIGHT", &GameEngine::INPUT_RIGHT)
         .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)
