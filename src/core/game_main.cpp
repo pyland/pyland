@@ -173,7 +173,6 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("R")},
     [&] (KeyboardInputEvent)
     {
-        Engine::update_colours(0,0,0,0,0,0);
         InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
     ));

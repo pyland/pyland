@@ -80,3 +80,7 @@ void GameEngine::play_music() {
 void GameEngine::print_terminal(std::string text, bool error) {
     Engine::print_terminal(text, error);
 }
+
+void GameEngine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
+    Engine::set_ui_colours(r1,b1,g1,r2,b2,g2);
+}

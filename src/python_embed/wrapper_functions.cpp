@@ -52,6 +52,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("play_music",        &GameEngine::play_music)
         .def("register_input_callback", &GameEngine::register_input_callback)
         .def("print_terminal",    &GameEngine::print_terminal)
+        .def("set_ui_colours",    &GameEngine::set_ui_colours)
         .add_static_property("INPUT_UP", &GameEngine::INPUT_UP) //Add constants for different inputs.
         .add_static_property("INPUT_RIGHT", &GameEngine::INPUT_RIGHT)
         .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)

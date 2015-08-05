@@ -53,7 +53,7 @@ public:
     MainWindow(GameMain *exGame);
     ~MainWindow();
 
-    void showMax();
+    void showWindow();
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
     void updateToolBar();
@@ -127,11 +127,11 @@ private:
     QPushButton *buttonClear;
     QVBoxLayout *windowLayout;
 
+    QPalette colourPalette;
+
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
     QTimer *eventTimer;
-
-    QPalette colourPalette;
 
     GameMain *game;
 

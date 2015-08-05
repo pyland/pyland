@@ -75,6 +75,8 @@ class GameEngine {
 
         void print_terminal(std::string text, bool error);
 
+        void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
+
 };
 
 #endif
