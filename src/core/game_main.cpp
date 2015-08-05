@@ -75,7 +75,6 @@ GameMain::GameMain(int &argc, char **argv):
     gui_manager(),
     callbackstate(),
     map_viewer(&embedWindow, &gui_manager),
-    paused(false),
     bag_open(false),
     display_button_start(0),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
@@ -118,13 +117,13 @@ GameMain::GameMain(int &argc, char **argv):
     pause_button->set_x_offset(0.00f);
     pause_button->set_on_click( [&] () {
 
-        if(paused == false){
-            paused = true;
+        if(em->is_paused() == false){
+            em->pause();
             LOG(INFO) << "PAUSED";
 			open_pause_window();
         }
         else{
-            paused = false;
+            em->resume();
             LOG(INFO) << "RESUMED";
             close_pause_window();
         }
