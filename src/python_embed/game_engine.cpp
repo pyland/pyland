@@ -6,7 +6,7 @@
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_engine.hpp"
-#include "game_main.hpp"
+#include "gui_main.hpp"
 #include "text_font.hpp"
 
 
@@ -62,7 +62,7 @@ void GameEngine::add_button(std::string file_path, std::string name, PyObject* c
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
     EventManager::get_instance()->add_event([this, file_path, name, boost_callback] {
-        game_main->add_button(file_path, name, boost_callback);
+        gui_main->add_button(file_path, name, boost_callback);
     });
 
 }

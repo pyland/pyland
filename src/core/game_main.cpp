@@ -16,26 +16,22 @@
 #include <utility>
 #include <vector>
 
-#include "button.hpp"
+#include "game_main.hpp"
+
 #include "callback_state.hpp"
 #include "challenge_data.hpp"
 #include "config.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "filters.hpp"
-#include "game_window.hpp"
-#include "gui_manager.hpp"
-#include "gui_window.hpp"
 #include "input_handler.hpp"
 #include "input_manager.hpp"
 #include "interpreter.hpp"
 #include "keyboard_input_event.hpp"
 #include "lifeline.hpp"
-#include "map_viewer.hpp"
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
-#include "notification_bar.hpp"
 
 #ifdef USE_GLES
 #include "typeface.hpp"
@@ -43,137 +39,40 @@
 #include "text.hpp"
 #endif
 
-#include "game_main.hpp"
-
 //This class sets up the game and contains the game loop
-
 
 using namespace std;
 
 static std::mt19937 random_generator;
 
-float button_width;
-float button_height;
-float x_scale;
-float y_scale;
-unsigned int button_max;
-float button_spacing;
-
-void GameMain::config_gui(nlohmann::json j)
-{
-    button_width = j["gui_constants"]["button_width"];
-    button_height = j["gui_constants"]["button_height"];
-    x_scale = j["gui_constants"]["x_scale"];
-    y_scale = j["gui_constants"]["y_scale"];
-    button_max = j["gui_constants"]["button_max"];
-    button_spacing = j["gui_constants"]["button_spacing"];
-}
-
 GameMain::GameMain(int &argc, char **argv):
+
     embedWindow(800, 600, argc, argv, this),
     interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
-    gui_manager(),
+    gui(&embedWindow),
     callbackstate(),
-    map_viewer(&embedWindow, &gui_manager),
-    bag_open(false),
-    display_button_start(0),
+    em(EventManager::get_instance()),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
+
 {
-    nlohmann::json j = Config::get_instance();
     LOG(INFO) << "Constructing GameMain..." << endl;
 
-    config_gui(j);
+	nlohmann::json j = Config::get_instance();
     /// CREATE GLOBAL OBJECTS
-
-    //Create the game embedWindow to present to the users
-    embedWindow.use_context();
-    Engine::set_game_window(&embedWindow);
 
     //Create the input manager
     input_manager = embedWindow.get_input_manager();
 
-    Engine::set_map_viewer(&map_viewer);
-
-    //Create the event manager
-    em = EventManager::get_instance();
-
-    gui_window = std::make_shared<GUIWindow>();
-    gui_window->set_visible(false);
-
-    buttons.clear();
-
-    gui_manager.set_root(gui_window);
-
-    notification_bar = new NotificationBar();
-
-    Engine::set_notification_bar(notification_bar);
-
-    pause_button = std::make_shared<Button>(ButtonType::Single);
-    pause_button->set_picture("gui/game/pause");
-    pause_button->set_alignment(ButtonAlignment::TopLeft);
-    pause_button->set_width(button_width);
-    pause_button->set_height(button_height);
-    pause_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
-    pause_button->set_x_offset(0.00f);
-    pause_button->set_on_click( [&] () {
-
-        if(em->is_paused() == false){
-            em->pause();
-            LOG(INFO) << "PAUSED";
-			open_pause_window();
-        }
-        else{
-            em->resume();
-            LOG(INFO) << "RESUMED";
-            close_pause_window();
-        }
-    });
-
-    bag_window = std::make_shared<Button>(ButtonType::Board);
-	bag_window->set_clickable(false);
-	bag_window->set_visible(false);
-
-    bag_button = std::make_shared<Button>(ButtonType::Single);
-    bag_button->set_picture("gui/game/bag");
-    bag_button->set_text("Bag");
-    bag_button->set_alignment(ButtonAlignment::TopRight);
-    bag_button->set_width(button_width);
-    bag_button->set_height(button_height);
-    bag_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
-    bag_button->set_x_offset(float(embedWindow.get_game_window_width())*x_scale);
-
-    bag_button->set_on_click( [&] () {
-
-        if(bag_open == false){
-
-            bag_open = true;
-            LOG(INFO) << "Bag opened";
-            bag_window->set_visible(true);
-            refresh_gui();
-            //bag_menu();
-        }
-        else{
-
-            bag_open = false;
-            LOG(INFO) << "Bag closed";
-            bag_window->set_visible(false);
-            refresh_gui();
-        }
-    });
-
-    gui_window->add(pause_button);
-    gui_window->add(bag_button);
-    gui_window->add(bag_window);
-
-    //The GUI resize function
+	//The GUI resize function
     gui_resize_func = [&] (GameWindow* game_window)
     {
         LOG(INFO) << "GUI resizing";
+
         auto window_size = (*game_window).get_size();
 
-        gui_window->set_width_pixels(window_size.first);
-        gui_window->set_height_pixels(window_size.second);
-        gui_manager.parse_components();
+        gui.get_gui_window()->set_width_pixels(window_size.first);
+        gui.get_gui_window()->set_height_pixels(window_size.second);
+        gui.refresh_gui();
     };
     gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
 
@@ -181,7 +80,7 @@ GameMain::GameMain(int &argc, char **argv):
     // WARNING: Fragile reference capture
     map_resize_lifeline = embedWindow.register_resize_handler([&] (GameWindow *)
     {
-        map_viewer.resize();
+        gui.get_map_viewer()->resize();
     });
 
     restart_callback = input_manager->register_keyboard_handler(filter(
@@ -244,7 +143,7 @@ GameMain::GameMain(int &argc, char **argv):
     {MOUSE_RELEASE},
     [&] (MouseInputEvent event)
     {
-        gui_manager.mouse_callback_function(event);
+        gui.get_gui_manager()->mouse_callback_function(event);
     }));
 
     zoom_in_callback = input_manager->register_keyboard_handler(filter(
@@ -352,10 +251,10 @@ GameMain::GameMain(int &argc, char **argv):
     challenge_data = (new ChallengeData(
                           "",
                           &interpreter,
-                          &gui_manager,
+                          gui.get_gui_manager(),
                           &embedWindow,
                           input_manager,
-                          notification_bar
+                          gui.get_notification_bar()
                           //0
                         ));
     challenge_data->run_challenge = true;
@@ -364,7 +263,7 @@ GameMain::GameMain(int &argc, char **argv):
     challenge->start();
 
     last_clock = (std::chrono::steady_clock::now());
-    refresh_gui();
+    gui.refresh_gui();
 
     //Run the challenge - returns after challenge completes
     embedWindow.execute_app();
@@ -374,113 +273,6 @@ GameMain::GameMain(int &argc, char **argv):
 
 }
 
-void GameMain::close_pause_window(){
-	gui_window->set_visible(false);
-
-	const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
-
-	typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
-
-	for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
-		if(i->second == bag_window){
-			continue;
-		}
-		else{
-			i->second->set_visible(true);
-			i->second->set_clickable(true);
-		}
-	}
-
-	refresh_gui();
-}
-
-void GameMain::open_pause_window(){
-	gui_window->set_visible(true);
-
-	const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
-
-	typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
-
-	for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
-		if(i->second == pause_button){
-			continue;
-		}
-		else{
-			i->second->set_visible(false);
-			i->second->set_clickable(false);
-		}
-	}
-
-	refresh_gui();
-}
-
-void GameMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback){
-
-    if(buttons.size() == button_max){
-        cycle_button = std::make_shared<Button>(ButtonType::Single);
-        cycle_button->set_picture("gui/game/buttons/cycle");
-        cycle_button->set_text("Cycle");
-        cycle_button->set_width(button_width);
-        cycle_button->set_height(button_height);
-        cycle_button->set_y_offset(float(embedWindow.get_game_window_height())*y_scale);
-        cycle_button->set_x_offset(float(embedWindow.get_game_window_width())*x_scale - float(button_max + 1) * button_spacing);
-
-        cycle_button->set_on_click( [&] () {
-
-            //remove previous set of buttons
-            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
-            {
-                gui_window->remove(buttons[display_button_start + i]->get_id());
-            }
-
-            //update the button index of buttons to be displayed
-            if(display_button_start + button_max >= buttons.size()){
-                display_button_start = 0;
-            }
-            else{
-                display_button_start += button_max;
-            }
-
-            //display new buttons
-            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
-            {
-                gui_window->add(buttons[display_button_start + i]);
-            }
-
-            refresh_gui();
-        });
-
-        gui_window->add(cycle_button);
-
-        refresh_gui();
-    }
-
-    std::shared_ptr<Button> new_button;
-    new_button = std::make_shared<Button>(ButtonType::Single);
-    buttons.push_back(new_button);
-    new_button->set_picture(file_path);
-    new_button->set_text(name);
-    new_button->set_on_click(callback);
-    new_button->set_width(button_width);
-    new_button->set_height(button_height);
-
-    //make space for previous buttons
-    float org_x_location = float(embedWindow.get_game_window_width()) * x_scale;
-
-    new_button->set_x_offset(org_x_location - float(((buttons.size()-1) % button_max) + 1) * button_spacing);
-    new_button->set_y_offset(float(embedWindow.get_game_window_height()) * y_scale);
-
-    //add the button onto the screen
-    gui_window->add(new_button);
-
-    if((buttons.size() - 1) % button_max == 0 && buttons.size() != 1)
-    {
-        cycle_button->call_on_click();
-    }
-
-    refresh_gui();
-}
-
 GameMain::~GameMain()
 {
     LOG(INFO) << "Destructing GameMain..." << endl;
@@ -488,9 +280,6 @@ GameMain::~GameMain()
     delete challenge;
     em->reenable();
 
-    buttons.clear();
-
-    delete notification_bar;
     delete challenge_data;
     delete cursor;
     LOG(INFO) << "Destructed GameMain..." << endl;
@@ -575,7 +364,7 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     nlohmann::json j = Config::get_instance();
     std::string map_name = j["files"]["full_level_location"];
     challenge_data->map_name = map_name + "/layout.tmx";
-    challenge = new Challenge(challenge_data, this);
+    challenge = new Challenge(challenge_data, &gui);
 
     return challenge;
 }
@@ -583,12 +372,6 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
 GameWindow* GameMain::getGameWindow()
 {
     return &embedWindow;
-}
-
-void GameMain::refresh_gui()
-{
-    gui_manager.parse_components();
-    //map_viewer.render();
 }
 
 CallbackState GameMain::getCallbackState(){

@@ -24,10 +24,11 @@ int text_border_width = 20;
 
 NotificationBar::NotificationBar() {
 
+	LOG(INFO) << "Creating NotificationBar...";
+
     GameWindow* window = Engine::get_map_viewer()->get_window();
     CHECK_NOTNULL(window);
     TextFont notification_buttonfont = Engine::get_game_font();
-
 
     GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
     CHECK_NOTNULL(gui_manager);
@@ -36,7 +37,7 @@ NotificationBar::NotificationBar() {
     // text object for notifications
     notification_text = new Text(window, Engine::get_game_font(), true);
     notification_text->set_bloom_radius(6);
-    notification_text->set_text("Welcome to Project Zygote");
+    notification_text->set_text("Welcome to Project Pyland!");
     // referring to top left corner of text window
     notification_text->move(text_border_width, text_border_width);
     auto window_size = window->get_size();
@@ -56,6 +57,7 @@ NotificationBar::NotificationBar() {
 
     notification_stack = Notification();
 
+	LOG(INFO) << "Created NotificationBar.";
 }
 
 void NotificationBar::text_displayer() {
