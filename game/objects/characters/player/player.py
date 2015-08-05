@@ -24,6 +24,8 @@ and replace it with:
 import sys
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../characters')
 from character import Character
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../properties/bagable')
+from bagable import Bagable
 """
 As the Character is in the characters folder.
 """
@@ -37,6 +39,7 @@ class Player(Character):
 
     __running_script = False
     __thread_id = 0
+    __bag = None
     
     def initialise(self):
         """ An initialiser function.
@@ -44,6 +47,7 @@ class Player(Character):
         This function is called once all the neccesary set-up of the object has completed
         run when the object is created in-engine
         """
+        super().initialise
         engine = self.get_engine()
 
         #register input callbacks to make character playable
@@ -74,6 +78,25 @@ class Player(Character):
     """ public:
     Put the regular public methods you wish to use here.
     """
+
+
+    def pick_up_objects(self):
+        """ Pick up and put all bagable objects in front of the player in the player's bag.
+        
+        """
+        engine = self.get_engine()
+        #object_list = engine.get_objects_at(location_in_fron_of_player)
+        #for(object in object_list):
+        #	if(type(object) == Bagable):
+        #		bag.insert(object)
+        return
+
+    def bag_items_string(self):
+        #result = ""
+        #for(item in bag)
+        #	result += item.name + " : " + item.property + "\n"
+        #return result
+        return "coconut_one : weight: 5"
 
     def run_script(self):
         """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)

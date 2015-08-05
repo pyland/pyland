@@ -33,14 +33,14 @@ Button::Button(ButtonType _type) {
 
     picture_name = "gui/black-tile";
 
-	if(type == ButtonType::Board){
-		set_width(1.0f);
-		set_height(0.85f);
-	}
-	else if(type == ButtonType::Single){
-		set_width(0.5f);
-		set_height(0.5f);
-	}
+    if(type == ButtonType::Board){
+        set_width(1.0f);
+        set_height(0.85f);
+    }
+    else if(type == ButtonType::Single){
+        set_width(0.5f);
+        set_height(0.5f);
+    }
 
 }
 

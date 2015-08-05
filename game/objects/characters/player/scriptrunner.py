@@ -40,9 +40,12 @@ def start(player_object, script_name):
     imbued_locals["move_west"] = make_blocking(player_object.move_west)
 
     #Replace print statement in player script so that all their output goes to the terminal.
-    imbued_locals["print"] = lambda text : player_object.get_engine().print_terminal(str(text) + "\n", False) #autoconvert print to strings (do not need to convert within the game)
+    player_print = lambda text : player_object.get_engine().print_terminal(str(text) + "\n", False) #define the player printing function
+    imbued_locals["print"] = player_print #autoconvert print to strings (do not need to convert within the game)
     
+    imbued_locals["print_bag_items"] = lambda: player_print(player_object.bag_items_string())
 
+    imbued_locals["get_position"] = player_object.get_position
 
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(imbued_locals, player_object.get_engine().print_terminal) #create an instance of it

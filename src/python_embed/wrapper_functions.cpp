@@ -41,7 +41,9 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("start_animating",   &Entity::start_animating)
         .def("pause_animating",   &Entity::pause_animating)
         .def("get_number_of_animation_frames",&Entity::get_number_of_animation_frames)
-        .def("set_animation_frame",&Entity::set_animation_frame);
+        .def("set_animation_frame",&Entity::set_animation_frame)
+        .def("get_id",            &Entity::get_id)
+        .def("get_position",      &Entity::get_position);
 
     py::class_<GameEngine, boost::noncopyable>("GameEngine", py::no_init)
         .def("add_object",        &GameEngine::add_object)
@@ -52,6 +54,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("play_music",        &GameEngine::play_music)
         .def("register_input_callback", &GameEngine::register_input_callback)
         .def("print_terminal",    &GameEngine::print_terminal)
+        .def("get_objects_at",    &GameEngine::get_objects_at)
         .add_static_property("INPUT_UP", &GameEngine::INPUT_UP) //Add constants for different inputs.
         .add_static_property("INPUT_RIGHT", &GameEngine::INPUT_RIGHT)
         .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)
