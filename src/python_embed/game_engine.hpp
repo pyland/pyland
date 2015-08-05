@@ -71,10 +71,9 @@ class GameEngine {
 
         void register_input_callback(int input_key, PyObject *input_callback);
 
-        void play_music();
+        void play_music(std::string song_name);
 
         void print_terminal(std::string text, bool error);
-
 };
 
 #endif

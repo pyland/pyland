@@ -36,5 +36,5 @@ engine.add_button("gui/head/monkey", "Rock1", boulder_one.focus)
 engine.add_button("gui/head/monkey", "Rock2", boulder_two.focus)
 engine.add_button("gui/head/monkey", "Portal", portal_one.focus)
 
-engine.play_music()
+engine.play_music("beach")
 
