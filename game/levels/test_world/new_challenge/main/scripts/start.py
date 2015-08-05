@@ -34,10 +34,7 @@ boulder_four.callback_test(lambda: boulder_four.callback_test(lambda: boulder_fo
 engine.add_button("gui/head/monkey", "Ben", player_one.focus)
 engine.add_button("gui/head/monkey", "Rock1", boulder_one.focus)
 engine.add_button("gui/head/monkey", "Rock2", boulder_two.focus)
-engine.add_button("gui/head/monkey", "Rock3", boulder_three.focus)
-engine.add_button("gui/head/monkey", "Rock4", boulder_four.focus)
-engine.add_button("gui/head/monkey", "Rock5", boulder_five.focus)
 engine.add_button("gui/head/monkey", "Portal", portal_one.focus)
 
-engine.play_music()
+engine.play_music("beach")
 

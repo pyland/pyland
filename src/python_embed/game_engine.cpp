@@ -6,7 +6,7 @@
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_engine.hpp"
-#include "game_main.hpp"
+#include "gui_main.hpp"
 #include "text_font.hpp"
 
 
@@ -18,11 +18,6 @@ boost::python::object GameEngine::addObject(std::string name, std::string class_
     create a new instance of that class and use it to wrap the entity instance
     return that intance, that instance will also be located at the coordinates given in-game
 }
-
-boost::python::list GameEngine::get_objectsAt(int x, int y) {
-    return a python list of all the correctly wrapped game-object instances at the location given.
-}
-
 */
 
 
@@ -62,7 +57,7 @@ void GameEngine::add_button(std::string file_path, std::string name, PyObject* c
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
     EventManager::get_instance()->add_event([this, file_path, name, boost_callback] {
-        game_main->add_button(file_path, name, boost_callback);
+        gui_main->add_button(file_path, name, boost_callback);
     });
 
 }
@@ -73,12 +68,22 @@ void GameEngine::register_input_callback(int input_key, PyObject *py_input_callb
     return;
 }
 
-void GameEngine::play_music() {
-    AudioEngine::get_instance()->play_song("test.ogg");
+void GameEngine::play_music(std::string song_name) {
+    AudioEngine::get_instance()->play_music("../game/music/" + song_name + ".ogg");
 }
 
 void GameEngine::print_terminal(std::string text, bool error) {
     Engine::print_terminal(text, error);
+}
+
+boost::python::list GameEngine::get_objects_at(int x, int y) {
+    std::vector<int> object_ids = Engine::get_objects_at(glm::ivec2(x, y));
+    boost::python::list python_list;
+    //Go through the vector of object_ids and append them to the python list
+    for(auto object_id: object_ids) {
+        python_list.append(object_id);
+    }
+    return python_list;
 }
 
 void GameEngine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){

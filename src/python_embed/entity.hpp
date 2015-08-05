@@ -4,6 +4,7 @@
 #include <boost/python/base_type_traits.hpp>
 #include <boost/python/object_core.hpp>
 #include <boost/python/list.hpp>
+#include <boost/python/tuple.hpp>
 #include <stdint.h>
 
 #include <glm/vec2.hpp>
@@ -183,6 +184,11 @@ class Entity {
 
         py::list get_retrace_steps();
         py::object read_message();
+
+        //Get the id of the entity
+        int get_id();
+
+        py::tuple get_position();
 };
 
 

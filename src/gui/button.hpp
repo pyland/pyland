@@ -23,7 +23,8 @@
 
 enum class ButtonType{
     Board,
-    Single
+    Single,
+    NoPicture
 };
 
 enum class ButtonAlignment{
@@ -53,6 +54,9 @@ public:
     void set_text(std::shared_ptr<Text> );
     void set_text(std::string);
 
+	void resize_text(float width, float height);
+	void move_text(float x_offset, float y_offset);
+
     int generate_vertex_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds);
     int generate_texture_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds);
 
@@ -60,11 +64,11 @@ public:
     int generate_tile_element_texture_coords(GLfloat* data, int offset, std::tuple<float,float,float,float>vertex_bounds, float element_width, float element_height, std::tuple<float,float,float,float> texture_bounds);
     int calculate_num_tile_elements(std::tuple<float,float,float,float> bounds, float element_width, float element_height);
 
-    std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data();
+    std::vector<std::pair<GLfloat*, int>> generate_this_vertex_data() override;
 
-    std::vector<std::pair<GLfloat*, int>> generate_this_texture_data();
+    std::vector<std::pair<GLfloat*, int>> generate_this_texture_data() override;
 
-    std::vector<std::shared_ptr<GUIText>> generate_this_text_data();
+    std::vector<std::shared_ptr<GUIText>> generate_this_text_data() override;
 
 };
 

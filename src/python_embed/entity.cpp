@@ -205,3 +205,13 @@ py::object Entity::read_message() {
         return py::object();
     }
 }
+
+int Entity::get_id() {
+    return this->id;
+}
+
+py::tuple Entity::get_position() {
+    auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
+    glm::ivec2 position = object->get_position();
+    return py::make_tuple(position.x, position.y);
+}

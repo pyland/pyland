@@ -46,7 +46,11 @@ def start(player_object, script_name):
 
     #Replace print statement in player script so that all their output goes to the terminal.
     imbued_locals["print"] = user_print
+    imbued_locals["print_bag_items"] = lambda: user_print(player_object.bag_items_string())
 
+
+
+    imbued_locals["get_position"] = player_object.get_position
 
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(imbued_locals, player_object.get_engine().print_terminal) #create an instance of it
