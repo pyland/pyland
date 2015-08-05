@@ -241,7 +241,7 @@ MainWindow::MainWindow(GameMain *exGame):
 
     mainWidget->setAutoFillBackground(true);
 
-    mainWidget->setMinimumSize(900,630);
+    mainWidget->setMinimumSize(600,420);
 
     this->setContextMenuPolicy(Qt::NoContextMenu);
     this->setCentralWidget(mainWidget);
@@ -480,11 +480,6 @@ void MainWindow::createToolBar()
     toolBar->addWidget(textInfoWidget);
 
     addToolBar(toolBar);
-}
-
-void MainWindow::showWindow()
-{
-    this->showMaximized();
 }
 
 SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
