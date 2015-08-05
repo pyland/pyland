@@ -162,7 +162,6 @@ MainWindow::MainWindow(GameMain *exGame):
     terminalDisplay->zoomIn(1);
     terminalDisplay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     terminalDisplay->setFocusPolicy(Qt::NoFocus);
-    terminalDisplay->setStyleSheet("background-color: rgb(255,255,255);font: 17pt;");
 
     QPushButton *buttonClear = new QPushButton("c");
     terminalDisplay->addScrollBarWidget(buttonClear,Qt::AlignTop);
@@ -786,7 +785,7 @@ void MainWindow::pushTerminalText(std::string text, bool error){
     if (error){
         terminalDisplay->setTextColor(QColor("red"));
     }
-    QString qtext = QString::fromStdString(text);
+    QString qtext = QString::fromStdString(text+"\n");
     terminalDisplay->insertPlainText(qtext);
     terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
     terminalDisplay->setTextColor(QColor("black"));

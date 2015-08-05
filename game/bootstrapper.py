@@ -36,7 +36,7 @@ this class is used to interpret and run python level code, while inserting objec
 their parents.
 """
 def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
-    
+
     """ imbued_locals is a python dictionary of python objects (variables, methods, class instances etc.)
     eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
     will be refering to what blob is known as here.
@@ -135,17 +135,17 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
     game_objects = list()
     print(entities)
     """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
-    
+
     for entity in entities:
         game_object = wrap_entity_in_game_object(entity, engine)
         game_object.initialise() #run the initialisation script on the object if anything needs to be initialised
         game_objects.append(game_object)
         engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
         engine.print_debug("whose name is {}".format(game_object.get_name()))
-    
+
     ScopedInterpreter = create_execution_scope(game_objects, engine, RESTART, STOP, KILL)
     scoped_interpreter = ScopedInterpreter()
-    
+
     while True:
         try:
             script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: implement this path stuff in a config (json) file!!!!!
@@ -156,9 +156,7 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
 
 
             #entity.update_status("running"), all the update status stuff are from old version of bootstrapper TODO: work out what this should change to
-
             scoped_interpreter.runcode(script)
-
             #entity.update_status("finished")
 
         except RESTART:
@@ -183,8 +181,9 @@ def start(entities, engine, RESTART, STOP, KILL, waiting):
         # For all other errors, output and stop
         except:
             waiting = True
+            engine.print_terminal("Test",False);
             #entity.update_status("failed")
-            engine.print_dialogue(traceback.format_exc());
+            engine.print_terminal(str(traceback.format_exc()),True);
 
         else:
             break
