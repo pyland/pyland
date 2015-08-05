@@ -57,7 +57,6 @@ class Engine:
         object_ids = self.__cpp_engine.get_objects_at(x, y) #get a list of the ids of all the objects at the given position from the game engine
         for object_id in object_ids:                        #iterate over all the object_ids and grab the object associated with each one.
             game_objects.append(self.__game_objects[object_id])
-            self.print_terminal(self.__game_objects[object_id].get_name() + "\n")
         
         #return a list of the objects at the given position
         return game_objects

@@ -10,10 +10,10 @@ coconut_five.set_weight(16)
 coconut_six.set_weight(32)
 coconut_seven.set_weight(64)
 
-engine.print_terminal(str(coconut_one.get_weight()) + "\n", False)
+engine.print_terminal(coconut_one.get_weight(), False)
 
 engine.play_music("beach")
-engine.get_objects_at((7, 0))
+engine.print_terminal(engine.get_objects_at((7, 0))[0].get_name())
 engine.get_objects_at((7, 2))
 engine.get_objects_at((4, 4))
 engine.get_objects_at((5, 4))
