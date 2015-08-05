@@ -43,6 +43,7 @@ CORE_OBJS = \
 	core/event_manager.o       \
 	core/game_main.o           \
 	core/game_time.o           \
+	core/gui_main.o            \
 
 GUI_OBJS = \
 	gui/button.o                 \

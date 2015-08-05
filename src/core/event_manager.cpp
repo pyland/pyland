@@ -14,7 +14,7 @@
 #include "locks.hpp"
 
 
-EventManager::EventManager(): enabled(true) {
+EventManager::EventManager(): enabled(true), paused(false) {
     // Allocate on the heap so that we can swap the curr_frame and next_frame
     curr_frame_queue = new std::list<std::function<void ()>>();
     next_frame_queue = new std::list<std::function<void ()>>();
@@ -31,6 +31,18 @@ EventManager *EventManager::get_instance(){
     static EventManager global_instance;
 
     return &global_instance;
+}
+
+bool EventManager::is_paused(){
+	return paused;
+}
+
+void EventManager::pause(){
+	paused = true;
+}
+
+void EventManager::resume(){
+	paused = false;
 }
 
 void EventManager::flush_and_disable(InterpreterContext &interpreter_context) {
@@ -78,6 +90,7 @@ void EventManager::process_events(InterpreterContext &interpreter_context) {
     // We then repeat the process until the entire queue is finished
     //
     while (true) {
+
         //lock the Python GIL. Automatically unlocks it on destruction (when it goes out of scope).
         //neccesary for when there are python callbacks on the event queue. As they GIL needs to be locked when the are run and destructed.
         lock::GIL lock_gil(interpreter_context, "EventManager::process_events");

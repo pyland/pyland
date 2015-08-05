@@ -14,19 +14,13 @@
 #include "game_window.hpp"
 #include "gui_manager.hpp"
 #include "callback_state.hpp"
-#include "map_viewer.hpp"
-#include "typeface.hpp"
-#include "text_font.hpp"
-#include "text.hpp"
-#include "gui_window.hpp"
-#include "button.hpp"
+#include "gui_main.hpp"
 #include "lifeline.hpp"
 
 class Challenge;
 class ChallengeData;
 class InputManager;
 class EventManager;
-class NotificationBar;
 class MouseCursor;
 
 class GameMain{
@@ -36,29 +30,12 @@ private:
     GameWindow embedWindow;
     Interpreter interpreter;
     InputManager* input_manager;
-    GUIManager gui_manager;
+    GUIMain gui;
     CallbackState callbackstate;
-    MapViewer map_viewer;
     EventManager *em;
-    std::shared_ptr<GUIWindow> gui_window;
-    NotificationBar *notification_bar;
+
     std::pair<int,int> original_window_size;
     MouseCursor *cursor;
-
-    bool paused; //whether or not the game is paused
-    std::shared_ptr<Button> pause_button;
-
-    bool bag_open; //whether or not the bag is open
-    std::shared_ptr<Button> bag_button;
-    std::shared_ptr<Button> bag_window;
-
-    //The gameplay buttons for the gui displayed on the screen
-    //created by GameEngine
-    std::deque<std::shared_ptr<Button>> buttons;
-    //While cycling through sprites, this is the index of the first button on the visible page
-    unsigned int display_button_start;
-    //A button used to cycle through the sprite heads
-    std::shared_ptr<Button> cycle_button;
 
     //Actions that can be performed on the game window
     std::function<void(GameWindow*)> gui_resize_func;
@@ -98,9 +75,6 @@ private:
     Challenge* challenge;
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
 
-    void config_gui(nlohmann::json j);
-    void open_pause_window();
-    void close_pause_window();
 
 public:
     GameMain(int &argc, char **argv);
@@ -108,17 +82,6 @@ public:
 
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
-
-    std::deque<std::shared_ptr<Button>> get_buttons(){
-        return buttons;
-    }
-
-    std::shared_ptr<GUIWindow>  get_gui_window(){
-        return gui_window;
-    }
-
-    void refresh_gui();
-    void add_button(std::string file_path, std::string name, std::function<void (void)> callback);
 
     GameWindow* getGameWindow();
     CallbackState getCallbackState();
