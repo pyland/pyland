@@ -101,3 +101,10 @@ void GameEngine::trigger_run(){
 int GameEngine::get_run_script(){
     return Engine::get_run_script();
 }
+
+bool GameEngine::is_solid(int x, int y) {
+    return !Engine::walkable(glm::ivec2(x, y)); //TODO: Make syntax of Engine match this!
+}
+
+
+

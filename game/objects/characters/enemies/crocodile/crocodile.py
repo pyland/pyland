@@ -49,24 +49,41 @@ class Crocodile(Character):
     def follow_path(self, path, repeat = False):
         if(path.strip() == ""): #if path is empty terminate
             return
+        
+        engine = self.get_engine()
+        x, y = self.get_position()
 
         comma_location = path.find(",") # Find the first comma in the path
         if(comma_location == -1):  # No commas in the path! On last word!
             comma_location = len(path)
 
+        old_path = path #store the old_path
+        
         instruction = path[ 0 : comma_location].strip() #get instruction and remove whitespace
         path = path[comma_location + 1: ].strip() #remove the instruction from the path itself
         if(repeat):
-            path = path + ", " + instruction #add instruction back to the path
+            path = path + ", " + instruction #add instruction back to the path, at the end if to be repeated
         if(instruction == "north"):
-            return self.move_north(lambda: self.follow_path(path, repeat))
+            if engine.is_solid((x, y+1)): #if position isn't walkable, then wait
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
+            else:
+                return self.move_north(lambda: self.follow_path(path, repeat))
         elif(instruction == "east"):
-            self.move_east(lambda: self.follow_path(path, repeat))
+            if engine.is_solid((x+1, y)):
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
+            else:
+                return self.move_east(lambda: self.follow_path(path, repeat))
             return
         elif(instruction == "south"):
-            return self.move_south(lambda: self.follow_path(path, repeat))
+            if engine.is_solid((x, y-1)):
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
+            else:
+                return self.move_south(lambda: self.follow_path(path, repeat))
         elif(instruction == "west"):
-            return self.move_west(lambda: self.follow_path(path, repeat))
+            if engine.is_solid((x-1, y)):
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
+            else:
+                return self.move_west(lambda: self.follow_path(path, repeat))
         else:
             pass #TODO: handle invalid path!!!!!
             print(instruction)

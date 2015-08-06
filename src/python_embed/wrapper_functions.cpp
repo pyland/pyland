@@ -31,7 +31,9 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("read_message",      &Entity::read_message)
         .def("update_status",     &Entity::py_update_status)
         .def("set_solidity",      &Entity::set_solidity)
+        .def("is_solid",          &Entity::is_solid)
         .def("callback_test",     &Entity::callback_test)
+        .def("wait",              &Entity::wait)
         .def("get_name",          &Entity::get_name)
         .def("get_location",      &Entity::get_location)
         .def("focus",             &Entity::focus)
@@ -59,6 +61,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("set_finished",      &GameEngine::set_finished)
         .def("trigger_run",       &GameEngine::trigger_run)
         .def("get_run_script",    &GameEngine::get_run_script)
+        .def("is_solid"      ,    &GameEngine::is_solid)
         .add_static_property("INPUT_UP", &GameEngine::INPUT_UP) //Add constants for different inputs.
         .add_static_property("INPUT_RIGHT", &GameEngine::INPUT_RIGHT)
         .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)
