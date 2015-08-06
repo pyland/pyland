@@ -23,6 +23,7 @@ class Entity {
         ///
         glm::vec2 start;
         std::string sprite_location;
+        bool animating = false;
 
     public:
         ///

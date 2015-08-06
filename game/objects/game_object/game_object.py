@@ -98,6 +98,9 @@ class GameObject:
         self.__entity.pause_animating()
         return
 
+    def get_number_of_animation_frames(self):
+        return self.__entity.get_number_of_animation_frames()
+
     def focus(self):
         """ Centre the camera on the position of this object. And make the object the focus of input.
 

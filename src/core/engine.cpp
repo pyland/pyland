@@ -133,9 +133,6 @@ void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func
 
             object->set_position(tweened_position);
 
-            //object->set_tile(object->frames.get_frame(direction + "/walking", completion)); This is what animated the object :) TODO: make it so that python can control this
-            object->set_tile(object->frames.get_frame());
-
             if (completion == 1.0) {
                 object->set_state_on_moving_finish();
 

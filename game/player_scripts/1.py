@@ -9,3 +9,5 @@ print("HELLO")
 
 print(get_position())
 print_bag_items()
+
+move_south()

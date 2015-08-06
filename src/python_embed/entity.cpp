@@ -100,14 +100,25 @@ std::string Entity::get_sprite() {
 }
 
 void Entity::set_sprite(std::string sprite_location) {
-    this->sprite_location = sprite_location;
+    this->sprite_location = sprite_location; //TODO: Make this method safe, make it so that if the sprite location doesn't exist the game gracefully handles it.
+    int id = this->id;
+    EventManager *em = EventManager::get_instance();
+    em->add_event([id, sprite_location] () {
+        auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+        object->set_tile(std::make_pair(0, "../game/objects/characters/player/sprites/" + sprite_location + "/0.png"));
+    });
     return;
 
     //display 0.png
 }
 
 void Entity::start_animating() {
-    //stub TODO: write this
+    EventManager *em = EventManager::get_instance();
+    int id = this->id;
+    bool *animating = &(this->animating);
+    em->add_event([id, animating] () {
+        auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+    });
     return;
 }
 
@@ -117,8 +128,6 @@ void Entity::pause_animating() {
 }
 
 int Entity::get_number_of_animation_frames() {
-    namespace fs = boost::filesystem;
-
     nlohmann::json j = Config::get_instance();
 
     std::string config_location = j["files"]["object_location"];
@@ -129,9 +138,9 @@ int Entity::get_number_of_animation_frames() {
 
 
 
-    int num_frames = std::count_if(fs::directory_iterator(full_file_location),
-                         fs::directory_iterator(), 
-                         [](const fs::directory_entry& e) { 
+    int num_frames = (int) std::count_if(boost::filesystem::directory_iterator(full_file_location),
+                         boost::filesystem::directory_iterator(), 
+                         [](const boost::filesystem::directory_entry& e) { 
                               return e.path().extension() == ".png";
                          });
     return num_frames;
