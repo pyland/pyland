@@ -5,7 +5,7 @@
 #include "input_handler.hpp"
 
 InputHandler::InputHandler() {
-    
+
 }
 
 InputHandler::~InputHandler() {
@@ -22,6 +22,7 @@ InputHandler *InputHandler::get_instance() {
 void InputHandler::run_list(int input_key) {
     function_list *fl = grab_list(input_key);
     for (function_list::const_iterator iterator = fl->begin(); iterator != fl->end(); ++iterator) {
+        if(input_key == INPUT_HALT) LOG(INFO) << "hehe";
         EventManager::get_instance()->add_event(*iterator);
     }
     return;
@@ -48,7 +49,7 @@ void InputHandler::register_input_callback(int input_key, std::function<void()> 
 
 std::list<std::function<void()>> *InputHandler::grab_list(int input_key) {
     function_list *fl = nullptr; //declare a pointer to a funcit list
-    
+
     //try to find the correct input key
     std::unordered_map<int, function_list*>::const_iterator mit = event_map.find(input_key);
 
