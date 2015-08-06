@@ -65,6 +65,8 @@ GameMain::GameMain(int &argc, char **argv):
 
     //The GUI resize function
 
+	original_window_size = embedWindow.get_size();
+
     gui_resize_func = [&] (GameWindow* game_window)
     {
         LOG(INFO) << "GUI resizing";
@@ -147,21 +149,21 @@ GameMain::GameMain(int &argc, char **argv):
         gui.get_gui_manager()->mouse_callback_function(event);
     }));
 
-    zoom_in_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_HELD, KEY("=")},
-    [&] (KeyboardInputEvent)
-    {
-        Engine::set_global_scale(Engine::get_global_scale() * 1.01f);
-    }
-    ));
-
-    zoom_out_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_HELD, KEY("-")},
-    [&] (KeyboardInputEvent)
-    {
-        Engine::set_global_scale(Engine::get_global_scale() / 1.01f);
-    }
-    ));
+//    zoom_in_callback = input_manager->register_keyboard_handler(filter(
+//    {KEY_HELD, KEY("=")},
+//    [&] (KeyboardInputEvent)
+//    {
+//        Engine::set_global_scale(Engine::get_global_scale() * 1.01f);
+//    }
+//    ));
+//
+//    zoom_out_callback = input_manager->register_keyboard_handler(filter(
+//    {KEY_HELD, KEY("-")},
+//    [&] (KeyboardInputEvent)
+//    {
+//        Engine::set_global_scale(Engine::get_global_scale() / 1.01f);
+//    }
+//    ));
 
     zoom_zero_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, MODIFIER({"Left Ctrl", "Right Ctrl"}), KEY("0")},
