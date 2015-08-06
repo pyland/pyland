@@ -83,6 +83,20 @@ class Player(Character):
     Put the regular public methods you wish to use here.
     """
 
+    def focus(self):
+        """Override focus method for generic game_object, to update running button
+        """
+        #self.__entity.focus()
+        super().focus();
+        engine = self.get_engine()
+        if (self.__running_script):
+            engine.set_running()
+        else:
+            engine.set_finished()
+
+        return
+
+
 
     def test_display(self):
         engine = self.get_engine()
