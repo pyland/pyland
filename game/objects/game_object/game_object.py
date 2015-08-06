@@ -106,14 +106,13 @@ class GameObject:
         return
 
     def get_position(self):
-        """ Returns the location of the player as a 3-tuple.
+        """ Returns the location of the player as a 2-tuple.
 
         Returns
         -------
         tuple of int
             The first coordinate is their x-axis position,
             the second coordinate is their y-axis position,
-            the third coordinate is the layer they are in.
         """
         return self.__entity.get_position() #TODO: implement stub
 

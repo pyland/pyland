@@ -55,10 +55,10 @@ private:
     bool enabled;
 
 
-	///
-	/// Whether the game is paused or not.
-	/// When true, the event manager loop halts.
-	///
+    ///
+    /// Whether the game is paused or not.
+    /// When true, the event manager loop halts.
+    ///
     bool paused;
 
 public:
@@ -148,22 +148,22 @@ public:
     ///
     void process_events(InterpreterContext &interpreter_context);
 
-	///
-	/// Pauses the game so and stops running events
-	/// This is called from GameMain
-	///
-	void pause();
+    ///
+    /// Pauses the game so and stops running events
+    /// This is called from GameMain
+    ///
+    void pause();
 
-	///
-	/// Resumes the game
-	/// This is called from GameMain
-	///
-	void resume();
+    ///
+    /// Resumes the game
+    /// This is called from GameMain
+    ///
+    void resume();
 
-	///
-	/// Whether or not the game is paused
-	///
-	bool is_paused();
+    ///
+    /// Whether or not the game is paused
+    ///
+    bool is_paused();
 
 };
 
