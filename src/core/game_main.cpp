@@ -65,7 +65,7 @@ GameMain::GameMain(int &argc, char **argv):
 
     //The GUI resize function
 
-	original_window_size = embedWindow.get_size();
+    original_window_size = embedWindow.get_size();
 
     gui_resize_func = [&] (GameWindow* game_window)
     {
