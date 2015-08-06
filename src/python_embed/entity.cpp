@@ -58,24 +58,15 @@ void Entity::move_south(PyObject *callback){
     return(move(0, -1, callback));
 }
 
-//TODO: remove this completely, ok for now but collisions can (and should) be moved to python
-bool Entity::walkable(int x, int y) {
-    ++call_number;
-
+void Entity::set_solidity(bool solidity) {
     auto id = this->id;
-    return Engine::walkable(glm::ivec2(Engine::find_object(id)) + glm::ivec2(x, y));
-}
-
-void Entity::monologue() {
-    auto id = this->id;
-    auto name = this->name;
-    std::ostringstream stream;
-
-    auto where(Engine::find_object(id));
-    stream << "I am " << name << " and "
-           << "I am standing at " << where.x << ", " << where.y << "!";
-
-    Engine::print_dialogue(name, stream.str());
+    Walkability w;
+    if(solidity) w = Walkability::BLOCKED;
+    else w = Walkability::WALKABLE;
+    EventManager::get_instance()->add_event([w, id] () {
+        auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+        object->set_walkability(w);
+    });
 }
 
 void Entity::focus() {

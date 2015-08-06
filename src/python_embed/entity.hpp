@@ -137,23 +137,12 @@ class Entity {
         void set_animation_frame(int frame_number);
 
         ///
-        /// Checks if player can move by the vector given.
+        /// Set the solidity of the Entity. (This is whether or not other solid MapObjects can got 'through' it)
         ///
-        /// @param by
-        ///     position representing movement in the axes.
-        ///     TODO: replace so as to not require vector displacements.
+        /// @param solidity
+        ///     Whether you want the object to be solid (true) or not solid (false)
         ///
-        /// @return
-        ///     Whether the area is walkable.
-        ///
-        bool walkable(int x, int y);
-
-        ///
-        /// Prints to standard output the name and position of entity.
-        ///
-        /// TODO: rename this method, it's a silly name!
-        ///
-        void monologue();
+        void set_solidity(bool solidity);
 
         ///
         /// Centre the camera on this object. Snaps instantly
@@ -185,9 +174,20 @@ class Entity {
         py::list get_retrace_steps();
         py::object read_message();
 
-        //Get the id of the entity
+        ///
+        /// Get the id of the Entity. (The id being what is used to look up instances of the MapObject)
+        /// 
+        /// @return
+        ///     The id of the MapObject the Entity is associated with.
+        /// 
         int get_id();
 
+        ///
+        /// Get the position of the Entity on the map as a python tuple.
+        /// 
+        /// @return
+        ///     The position of the Entity
+        /// 
         py::tuple get_position();
 };
 
