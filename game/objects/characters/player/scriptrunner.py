@@ -77,12 +77,12 @@ def start(player_object, script_name):
         the callback is therefore run in the seperate thread.
         """
         try:
-            scoped_interpreter.runcode(script) #Run the script
+            scoped_interpreter.runcode(script, HaltScriptException) #Run the script
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
-            player_object.get_engine().print_terminal("Halted Script\n", True)
+            player_object.get_engine().print_terminal("Halted Script", True)
         finally: #perform neccesary cleanup
             if printed_flag[0]:
-                player_object.get_engine().print_terminal("-------------", False)
+                player_object.get_engine().print_terminal("------ " + player_object.get_character_name() + "'s script has ended -------", False)
             player_object.set_running_script_status(False)
             #TODO: Make it so that the halt button becomes the run button again.
 
@@ -104,7 +104,6 @@ def make_blocking(async_function):
     """
     def callback(blocking):
         blocking[0] = False
-
     """ This is the blocking version of the async_function that is provided as and argument.
     simples.
     """

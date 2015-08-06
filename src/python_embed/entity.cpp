@@ -5,6 +5,7 @@
 #include <boost/multi_index/detail/ord_index_node.hpp>
 #include <boost/python/list.hpp>
 #include <boost/range/adaptor/reversed.hpp>
+#include <boost/filesystem.hpp>
 #include <glm/vec2.hpp>
 #include <glog/logging.h>
 #include <ostream>
@@ -13,6 +14,7 @@
 #include <tuple>
 #include <vector>
 
+#include "config.hpp"
 #include "entity.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
@@ -23,12 +25,14 @@
 
 Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int id):
     start(start), id(id), call_number(0) {
-        this->name = std::string(name);
-        this->file_location = std::string(file_location);
-        LOG(INFO) << "invalid: constructor " << this->id;
+    this->name = std::string(name);
+    this->file_location = std::string(file_location);
+
+    this->sprite_location = "";
+    LOG(INFO) << "invalid: constructor " << this->id;
 }
 
-//A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!! 
+//A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!!
 void Entity::callback_test(PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     EventManager::get_instance()->add_event(boost_callback);
@@ -42,46 +46,43 @@ void Entity::move(int x, int y, PyObject *callback) {
     return;
 }
 
-void Entity::move_east(PyObject *callback){
-    return(move(1, 0, callback));
+void Entity::move_east(PyObject *callback) {
+    return (move(1, 0, callback));
 }
 
-void Entity::move_west(PyObject *callback){
-    return(move(-1, 0, callback));
+void Entity::move_west(PyObject *callback) {
+    return (move(-1, 0, callback));
 }
 
-void Entity::move_north(PyObject *callback){
-    return(move(0, 1, callback));
+void Entity::move_north(PyObject *callback) {
+    return (move(0, 1, callback));
 }
 
-void Entity::move_south(PyObject *callback){
-    return(move(0, -1, callback));
+void Entity::move_south(PyObject *callback) {
+    return (move(0, -1, callback));
 }
 
-//TODO: remove this completely, ok for now but collisions can (and should) be moved to python
-bool Entity::walkable(int x, int y) {
-    ++call_number;
-
+void Entity::set_solidity(bool solidity) {
     auto id = this->id;
-    return Engine::walkable(glm::ivec2(Engine::find_object(id)) + glm::ivec2(x, y));
-}
-
-void Entity::monologue() {
-    auto id = this->id;
-    auto name = this->name;
-    std::ostringstream stream;
-
-    auto where(Engine::find_object(id));
-    stream << "I am " << name << " and "
-           << "I am standing at " << where.x << ", " << where.y << "!";
-
-    Engine::print_dialogue(name, stream.str());
+    Walkability w;
+    if(solidity) w = Walkability::BLOCKED;
+    else w = Walkability::WALKABLE;
+    EventManager::get_instance()->add_event([w, id] () {
+        auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+        object->set_walkability(w);
+    });
 }
 
 void Entity::focus() {
     auto id = this->id;
     MapViewer *map_viewer = Engine::get_map_viewer();
     map_viewer->set_map_focus_object(id);
+}
+
+bool Entity::is_focus() {
+    auto id = this->id;
+    MapViewer *map_viewer = Engine::get_map_viewer();
+    return (id == map_viewer->get_map_focus_object());
 }
 
 std::string Entity::get_name() { //TODO: Analyse wether it would be best to get this information from the object instance, instead of from the information copied into this instance. (and then not have that information here)
@@ -95,18 +96,29 @@ std::string Entity::get_location() {
 }
 
 std::string Entity::get_sprite() {
-    //stub TODO: write this
-    return "stub";
+    return this->sprite_location;
 }
 
 void Entity::set_sprite(std::string sprite_location) {
-    //stub TODO: write this
-    sprite_location.substr(0);
+    this->sprite_location = sprite_location; //TODO: Make this method safe, make it so that if the sprite location doesn't exist the game gracefully handles it.
+    int id = this->id;
+    EventManager *em = EventManager::get_instance();
+    em->add_event([id, sprite_location] () {
+        auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+        object->set_tile(std::make_pair(0, "../game/objects/characters/player/sprites/" + sprite_location + "/0.png"));
+    });
     return;
+
+    //display 0.png
 }
 
 void Entity::start_animating() {
-    //stub TODO: write this
+    EventManager *em = EventManager::get_instance();
+    int id = this->id;
+    bool *animating = &(this->animating);
+    em->add_event([id, animating] () {
+        auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+    });
     return;
 }
 
@@ -116,8 +128,23 @@ void Entity::pause_animating() {
 }
 
 int Entity::get_number_of_animation_frames() {
-    //stub TODO: write this
-    return 0;
+    nlohmann::json j = Config::get_instance();
+
+    std::string config_location = j["files"]["object_location"];
+    std::string full_file_location = config_location + "/" + file_location + "/sprites/" + this->sprite_location;
+    //std::cout << file_location << std::endl;
+    std::cout << full_file_location << std::endl;
+
+
+
+
+    int num_frames = (int) std::count_if(boost::filesystem::directory_iterator(full_file_location),
+                         boost::filesystem::directory_iterator(), 
+                         [](const boost::filesystem::directory_entry& e) { 
+                              return e.path().extension() == ".png";
+                         });
+    return num_frames;
+
 }
 
 void Entity::set_animation_frame(int frame_number) {
@@ -129,14 +156,14 @@ void Entity::set_animation_frame(int frame_number) {
 std::string Entity::get_instructions() {
     //auto id(this->id);
     //return GilSafeFuture<std::string>::execute([id] (GilSafeFuture<std::string> instructions_return) {
-    //	auto sprite(ObjectManager::get_instance().get_object<MapObject>(id));
+    //  auto sprite(ObjectManager::get_instance().get_object<MapObject>(id));
     //
-    //	if (sprite) {
-    //		//instructions_return.set(sprite->get_instructions()); TODO: BLEH work out what this did
-    //	}
-    //	else {
-    //		instructions_return.set("Try thinking about the problem in a different way.");
-    //	}
+    //  if (sprite) {
+    //      //instructions_return.set(sprite->get_instructions()); TODO: BLEH work out what this did
+    //  }
+    //  else {
+    //      instructions_return.set("Try thinking about the problem in a different way.");
+    //  }
     //});
     return "HH";
 }
@@ -155,10 +182,10 @@ void Entity::__set_game_speed(float game_seconds_per_real_second) {
     EventManager::get_instance()->time.set_game_seconds_per_real_second(game_seconds_per_real_second);
 }
 
-void Entity::py_update_status(std::string status){
+void Entity::py_update_status(std::string status) {
     //auto id(this->id);
     //return GilSafeFuture<void>::execute([id, status] (GilSafeFuture<void>) {
-        //Engine::update_status(id, status); TODO: BLEH work out what this did 
+    //Engine::update_status(id, status); TODO: BLEH work out what this did
     //});
     LOG(INFO) << status;
 }
@@ -174,21 +201,21 @@ py::list Entity::get_retrace_steps() {
     auto &positions(object->get_positions());
 
     auto zipped_locations_begin(boost::make_zip_iterator(boost::make_tuple(
-        std::next(positions.get<insertion_order>().rbegin()), positions.get<insertion_order>().rbegin()
-    )));
+                                    std::next(positions.get<insertion_order>().rbegin()), positions.get<insertion_order>().rbegin()
+                                )));
     auto zipped_locations_end(boost::make_zip_iterator(boost::make_tuple(
-        positions.get<insertion_order>().rend(), std::prev(positions.get<insertion_order>().rend())
-    )));
+                                  positions.get<insertion_order>().rend(), std::prev(positions.get<insertion_order>().rend())
+                              )));
 
-    for (auto pair=zipped_locations_begin; pair != zipped_locations_end; ++pair) {
+    for (auto pair = zipped_locations_begin; pair != zipped_locations_end; ++pair) {
         glm::vec2 start(pair->get<0>());
         glm::vec2 end  (pair->get<1>());
         auto reverse_change(start - end);
 
         retrace_steps.append(py::make_tuple(
-            py::api::object(float(reverse_change.x)),
-            py::api::object(float(reverse_change.y))
-        ));
+                                 py::api::object(float(reverse_change.x)),
+                                 py::api::object(float(reverse_change.y))
+                             ));
     }
     return retrace_steps;
 }

@@ -15,7 +15,7 @@ def getDialogue(identifier):
     dialogue = "invalid dialogue identifier" #TODO: Make it so that game complains much more about this in debug mode!!!!
     if(row != None):
         english, français, nederlands, hindi, pyrate = row
-        dialogue = pyrate
+        dialogue = nederlands
     conn.close()
     return dialogue
 
