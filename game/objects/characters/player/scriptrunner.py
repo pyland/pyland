@@ -98,16 +98,11 @@ def make_blocking(async_function):
     Therefore the function must be a function which takes a callback as an argument which runs when event
     that the function initiates has finished.
     """
-    
-    def callback(lock):
-        """ Accept a lock and realease it. """
-        lock.release()
-
     def blocking_function():
         """ This is the blocking version of the async_function that is provided as and argument. """
         lock = threading.Lock()
         lock.acquire()
-        async_function(lambda: callback(lock)) #run the async_function with the callback provided above as its argument
+        async_function(lock.release) #run the async_function with the callback provided above as its argument
         lock.acquire() # Try to a acquire a lock until it is released. It isn't released until the callback releases it.
         lock.release() # release the lock, it isn't needed anymore
         return
