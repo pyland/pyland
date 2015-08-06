@@ -28,13 +28,13 @@
 #include "map.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "notification_bar.hpp"
 #include "object_manager.hpp"
 #include "text.hpp"
+#include "text_box.hpp"
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
-NotificationBar *Engine::notification_bar(nullptr);
+std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
 GameWindow* Engine::game_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
@@ -132,9 +132,6 @@ void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func
             glm::vec2 tweened_position(location + completion * (target-location));
 
             object->set_position(tweened_position);
-
-            //object->set_tile(object->frames.get_frame(direction + "/walking", completion)); This is what animated the object :) TODO: make it so that python can control this
-            object->set_tile(object->frames.get_frame());
 
             if (completion == 1.0) {
                 object->set_state_on_moving_finish();
@@ -242,7 +239,7 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
 
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
-    notification_bar->add_notification(text_to_display);
+    notification_bar->add_message(text_to_display);
 }
 
 void Engine::print_terminal(std::string text, bool error) {

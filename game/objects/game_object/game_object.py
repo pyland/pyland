@@ -72,6 +72,10 @@ class GameObject:
     def set_solid(self, solid):
         return
 
+    def set_solidity(self, solidity):
+        self.__entity.set_solidity(solidity)
+        return
+
     def is_visible(self):
         return True #TODO: implement this in entity
 
@@ -94,6 +98,9 @@ class GameObject:
         self.__entity.pause_animating()
         return
 
+    def get_number_of_animation_frames(self):
+        return self.__entity.get_number_of_animation_frames()
+
     def focus(self):
         """ Centre the camera on the position of this object. And make the object the focus of input.
 
@@ -104,6 +111,12 @@ class GameObject:
         
         self.__entity.focus()
         return
+
+    def is_focus(self):
+        """ Return if the object is being focused on by the camera
+        """
+        
+        return self.__entity.is_focus()
 
     def get_position(self):
         """ Returns the location of the player as a 2-tuple.
