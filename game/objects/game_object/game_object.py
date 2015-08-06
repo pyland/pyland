@@ -4,7 +4,7 @@ import sys
 
 class GameObject:
     """ This is the base game object.
-    
+
     Any object you wish to have in game MUST by a child of this.
 
     This acts as an abstraction of the C++ entity object and wraps around it.
@@ -18,7 +18,7 @@ class GameObject:
 
     def __init__(self):
         pass
-    
+
     def initialise(self):
         """
             Yay!!!!
@@ -108,14 +108,13 @@ class GameObject:
         the focus of the camera gets changed to another object or the level is reloaded/changed,
         snaps instantly
         """
-        
         self.__entity.focus()
         return
 
     def is_focus(self):
         """ Return if the object is being focused on by the camera
         """
-        
+
         return self.__entity.is_focus()
 
     def get_position(self):
@@ -131,7 +130,7 @@ class GameObject:
 
     def set_position(self, position):
         """ Sets the position of the object to be at the coordinates given.
-        
+
         This happens instantly without any transition animations.
 
         Parameters
@@ -141,10 +140,10 @@ class GameObject:
         """
         #TODO: implement stub
         return
-    
+
     def move_north(self, callback = lambda: None):
         """ Smoothly slides this object north by one tile.
-        
+
         The callback is put on the event queue when the operation is complete.
         """
         self.__entity.move_north(callback)
@@ -152,7 +151,7 @@ class GameObject:
 
     def move_east(self, callback = lambda: None):
         """ Smoothly slides this object east by one tile.
-        
+
         The callback is put on the event queue when the operation is complete.
         """
         self.__entity.move_east(callback)
@@ -160,7 +159,7 @@ class GameObject:
 
     def move_south(self, callback = lambda: None):
         """ Smoothly slides this object south by one tile.
-    
+
         The callback is put on the event queue when the operation is complete.
         """
         self.__entity.move_south(callback)
@@ -168,7 +167,7 @@ class GameObject:
 
     def move_west(self, callback = lambda: None):
         """ Smoothly slides this object west by one tile.
-        
+
         The callback is put on the event queue when the operation is complete
         """
         self.__entity.move_west(callback)
@@ -176,14 +175,14 @@ class GameObject:
 
     def moving(self):
         """ Returns if this object is moving.
-        
+
         Returns
         -------
         bool
             True if the object is moving, false otherwise.
         """
         return False #TODO: implement stub
-    
+
     def destroy(self, callback):
         """ Destroys the object (removes the instance from the map, and cleans up all information associated with it).
         callback gets run once the operation is complete.
