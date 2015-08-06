@@ -22,6 +22,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     config_gui();
 
+	Engine::set_gui(this);
     //Create the game embedWindow to present to the users
     embedWindow->use_context();
     Engine::set_game_window(embedWindow);
@@ -34,6 +35,10 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     gui_manager.set_root(gui_window);
 
     notification_bar = std::make_shared<TextBox>();
+	notification_bar->set_width(notification_width);
+	notification_bar->set_height(notification_height);
+	notification_bar->set_x_offset(left_x_offset);
+	notification_bar->set_y_offset(bottom_y_offset);
 
     Engine::set_notification_bar(notification_bar);
 
@@ -111,6 +116,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     gui_window->add(bag_button);
     gui_window->add(bag_window);
 	gui_window->add(pyguide_window);
+	gui_window->add(notification_bar);
 
     LOG(INFO) << "Constructed GUIMain.";
 }
@@ -313,6 +319,9 @@ void GUIMain::config_gui()
 
     menu_x_offset = j["scales"]["menu_x_offset"];
     menu_y_offset = j["scales"]["menu_y_offset"];
+
+	notification_width = j["scales"]["notification_width"];
+	notification_height = j["scales"]["notification_height"];
 
     button_width = j["scales"]["button_width"];
     button_height = j["scales"]["button_height"];

@@ -40,6 +40,7 @@ Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
 MainWindow* Engine::main_window(nullptr);
+GUIMain* Engine::gui_main(nullptr);
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
@@ -233,9 +234,8 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     });
 }
 
-void Engine::print_dialogue(std::string name, std::string text) {
-    std::string text_to_display = name + " : " + text;
-    notification_bar->add_message(text_to_display);
+void Engine::print_dialogue(std::string text) {
+    notification_bar->add_message(text);
 }
 
 void Engine::print_terminal(std::string text, bool error) {

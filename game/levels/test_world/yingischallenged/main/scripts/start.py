@@ -30,16 +30,9 @@ engine.get_objects_at(player_one.get_position())
 
 engine.add_button("gui/head/monkey", player_one.get_character_name(), player_one.focus)
 engine.add_button("gui/head/monkey", player_two.get_character_name(), player_two.focus)
-"""
-engine.add_button("gui/head/monkey", "Rock1", coconut_one.focus)
-engine.add_button("gui/head/monkey", "Rock2", coconut_two.focus)
-engine.add_button("gui/head/monkey", "Rock3", coconut_three.focus)
-engine.add_button("gui/head/monkey", "Rock4", coconut_four.focus)
-engine.add_button("gui/head/monkey", "Rock5", coconut_five.focus)
-engine.add_button("gui/head/monkey", "Rock6", coconut_six.focus)
-engine.add_button("gui/head/monkey", "Rock7", coconut_seven.focus)
-engine.add_button("gui/head/monkey", "Portal", exit_portal.focus)
-"""
+
+engine.print_dialogue("gfdhigjhdfkgjhfkjghdfkhgj")
+engine.print_dialogue("gfdhigjhdfkgjhfkjghdfkhg$$$$$$$$$$$$$$$$$$$$$j")
 
 engine.print_terminal(player_one.get_position(), False)
 

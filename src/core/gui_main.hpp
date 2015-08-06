@@ -37,6 +37,9 @@ private:
 	float menu_x_offset;
 	float menu_y_offset;
 
+	float notification_height;
+	float notification_width;
+
 	float button_width;
 	float button_height;
 

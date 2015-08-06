@@ -68,6 +68,7 @@ class GameEngine {
         /// To add a button to the challenge
         ///
         void add_button(std::string file_path, std::string name, PyObject* callback);
+		void print_dialogue(std::string text);
 
         void register_input_callback(int input_key, PyObject *input_callback);
 

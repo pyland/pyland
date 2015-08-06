@@ -12,6 +12,7 @@
 
 #include "challenge.hpp"
 #include "game_window.hpp"
+#include "gui_main.hpp"
 #include "text_font.hpp"
 #include "typeface.hpp"
 
@@ -27,6 +28,8 @@ private:
     static std::shared_ptr<TextBox> notification_bar;
 
     static GameWindow* game_window;
+
+	static GUIMain *gui_main;
 
     static MainWindow* main_window;
 
@@ -168,10 +171,13 @@ public:
     ///
     static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
 
-    static void set_notification_bar(std::shared_ptr<TextBox> notification_bar) { Engine::notification_bar = notification_bar; }
-
+    static void set_notification_bar(std::shared_ptr<TextBox> _notification_bar) { Engine::notification_bar = _notification_bar; }
     static std::shared_ptr<TextBox> get_notification_bar() { return Engine::notification_bar; }
-    static void print_dialogue(std::string name, std::string text);
+
+	static void set_gui(GUIMain * _gui_main) { Engine::gui_main = _gui_main; }
+	static GUIMain* get_gui() { return gui_main; }
+
+    static void print_dialogue(std::string text);
     static void print_terminal(std::string text, bool error);
     static void set_any_output(bool option);
     static void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);

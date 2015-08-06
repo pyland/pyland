@@ -5,8 +5,8 @@
 #include "text_stack.hpp"
 
 TextStack::TextStack():
-    can_forward(false),
-    can_backward(false) {
+    _can_forward(false),
+    _can_backward(false) {
     stack_iterator = std::end(message_stack);
 }
 
@@ -35,7 +35,7 @@ std::string TextStack::backward() {
 std::string TextStack::forward() {
     // Empty stack
     if (stack_iterator == std::end(message_stack)) {
-        return "";
+        return ("");
     }
 
     // Don't go off the end.
@@ -49,19 +49,20 @@ std::string TextStack::forward() {
 
 void TextStack::update_flags() {
     if (stack_iterator == std::begin(message_stack)) {
-        can_backward = false;
+        _can_backward = false;
     } else {
-        can_backward = true;
+        _can_backward = true;
     }
 
     if (stack_iterator == std::prev(std::end(message_stack))) {
-        can_forward = false;
+        _can_forward = false;
     } else {
-        can_forward = true;
+        _can_forward = true;
     }
 }
 
 void TextStack::clear() {
     message_stack.clear();
     stack_iterator = std::end(message_stack);
+    update_flags();
 }

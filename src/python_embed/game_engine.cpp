@@ -49,6 +49,14 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
+void GameEngine::print_dialogue(std::string text) {
+	LOG(INFO) << "Printing- " << text;
+
+    EventManager::get_instance()->add_event([this, text] {
+        Engine::print_dialogue(text);
+		gui_main->refresh_gui();
+    });
+}
 
 void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
 

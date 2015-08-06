@@ -50,6 +50,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("add_button",        &GameEngine::add_button)
         .def("get_level_location",&GameEngine::get_level_location)
         .def("print_debug",       &GameEngine::print_debug)
+        .def("print_dialogue",    &GameEngine::print_dialogue)
         .def("change_level",      &GameEngine::change_level)
         .def("play_music",        &GameEngine::play_music)
         .def("register_input_callback", &GameEngine::register_input_callback)

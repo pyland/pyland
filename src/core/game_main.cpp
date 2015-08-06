@@ -181,9 +181,7 @@ GameMain::GameMain(int &argc, char **argv):
         auto active_player(ObjectManager::get_instance().get_object<MapObject>(id));
 
         Engine::print_dialogue(
-            active_player->get_name(),
             "placeholder string"
-                //active_player->get_instructions() TODO: BLEH remove this!
         );
     }
     ));
@@ -256,9 +254,7 @@ GameMain::GameMain(int &argc, char **argv):
                           &interpreter,
                           gui.get_gui_manager(),
                           &embedWindow,
-                          input_manager,
-                          gui.get_notification_bar()
-                          //0
+                          input_manager
                         ));
     challenge_data->run_challenge = true;
     challenge = pick_challenge(challenge_data);

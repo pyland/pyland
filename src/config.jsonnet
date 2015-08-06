@@ -27,7 +27,7 @@
 		//for placing the buttons on top of the screen
 		"left_x_offset": 0.0,
 		"right_x_offset": 0.91,
-		"bottom_y_offset": 0.0,
+		"bottom_y_offset": 0.2,
 		"top_y_offset": 0.87,				
 
 		//for placing the title of a menu
@@ -37,6 +37,10 @@
 		//for placing an item on the menu
 		"menu_x_offset": 0.0,
 		"menu_y_offset": 0.75,		
+		
+		//the sizes of the buttons on top of the screen
+		"notification_width": 1.0,
+		"notification_height": 0.3,
 
 		//the sizes of the buttons on top of the screen
 		"button_width": 0.08,

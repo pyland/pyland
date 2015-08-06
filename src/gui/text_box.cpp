@@ -18,7 +18,7 @@ TextBox::TextBox() {
 
     /// build back button
     backward_button = std::make_shared<Button>(ButtonType::Single);
-    backward_button->set_text("<- Previous");
+    backward_button->set_visible(text_stack.can_backward());
     backward_button->set_on_click([&] () {
         LOG(INFO) << "backward button pressed";
         traverse_text(Direction::PREVIOUS);
@@ -26,7 +26,7 @@ TextBox::TextBox() {
 
     //build forwards button
     forward_button = std::make_shared<Button>(ButtonType::Single);
-    forward_button->set_text("Next ->");
+    forward_button->set_visible(text_stack.can_forward());
     forward_button->set_on_click([&] () {
         LOG(INFO) << "forward button pressed";
         traverse_text(Direction::NEXT);
@@ -37,34 +37,15 @@ TextBox::TextBox() {
 
     // text object for notifications
     text = std::make_shared<GUIText>();
+	text->set_width(1.0f);
+    text->set_height(1.0f);
+    text->set_x_offset(0.0f);
+    text->set_y_offset(0.0f);
 
     set_text("");
-
     get_text()->set_bloom_radius(6);
 
     add(text);
-
-//    text = new Text(window, Engine::get_game_font(), true);
-//	text->set_bloom_radius(6);
-//    text->set_text("Welcome to Project Zygote");
-    // referring to top left corner of text window
-//	notification_text->move(text_border_width, text_border_width);
-//    auto window_size = window->get_size();
-//    notification_text->resize(window_size.first-text_border_width, 0);
-//    notification_text->align_at_origin(true);
-//    notification_text->align_left();
-//    notification_text->vertical_align_bottom();
-
-    // callback to resize text when window size changes
-//    std::function<void (GameWindow *)> func = [&] (GameWindow *game_window) {
-//        LOG(INFO) << "text window resizing";
-//        auto window_size = (*game_window).get_size();
-//        notification_text->resize(window_size.first-text_border_width, 0);
-//    };
-//
-//    text_box = (window->register_resize_handler(func));
-//
-//    notification_stack = Notification();
 
 }
 
@@ -75,6 +56,7 @@ void TextBox::set_text(std::string _text) {
     new_text->set_text(_text);
     text->set_text(new_text);
     get_text()->set_bloom_radius(6);
+    Engine::get_gui()->refresh_gui();
 }
 
 std::shared_ptr<Text> TextBox::get_text() {
@@ -85,16 +67,19 @@ void TextBox::set_text(std::shared_ptr<Text> _text) {
 
     text->set_text(_text);
     get_text()->set_bloom_radius(6);
+    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::resize_text(float width, float height){
     text->set_width(width);
     text->set_height(height);
+    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::move_text(float x_offset, float y_offset){
     text->set_x_offset(x_offset);
     text->set_y_offset(y_offset);
+    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::traverse_text(Direction direction) {
@@ -110,30 +95,25 @@ void TextBox::add_message(std::string text_to_display) {
     EventManager::get_instance()->add_event(
         [=] () {
             set_text(text_to_display);
-            //std::cout << text_to_display << std::endl;
         }
     );
     hide_buttons();
  }
 
  void TextBox::hide_buttons() {
-    forward_button->set_visible(text_stack.can_forward);
-    backward_button->set_visible(text_stack.can_backward);
-//    Engine::get_map_viewer()->get_gui_manager()->parse_components();
-
+    forward_button->set_visible(text_stack.can_forward());
+    backward_button->set_visible(text_stack.can_backward());
+    Engine::get_gui()->refresh_gui();
  }
 
 TextBox::~TextBox() {
-//    GUIManager* gui_manager = Engine::get_map_viewer()->get_gui_manager();
-//    CHECK_NOTNULL(gui_manager);
-//    gui_manager->get_root()->remove(backward_button->get_id());
-//    gui_manager->get_root()->remove(forward_button->get_id());
 
 }
 
 void TextBox::clear_text() {
     set_text("");
     text_stack.clear();
+    Engine::get_gui()->refresh_gui();
 }
 
 std::vector<std::pair<GLfloat*, int>> TextBox::generate_this_vertex_data() {
