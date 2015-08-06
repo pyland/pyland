@@ -114,12 +114,12 @@ void GUIMain::config_gui()
 {
 	nlohmann::json j = Config::get_instance();
 
-    button_width = j["gui_constants"]["button_width"];
-    button_height = j["gui_constants"]["button_height"];
-    x_scale = j["gui_constants"]["x_scale"];
-    y_scale = j["gui_constants"]["y_scale"];
-    button_max = j["gui_constants"]["button_max"];
-    button_spacing = j["gui_constants"]["button_spacing"];
+    button_width = j["scales"]["button_width"];
+    button_height = j["scales"]["button_height"];
+    x_scale = j["scales"]["x_scale"];
+    y_scale = j["scales"]["y_scale"];
+    button_max = j["scales"]["button_max"];
+    button_spacing = j["scales"]["button_spacing"];
 }
 
 void GUIMain::close_pause_window(){
