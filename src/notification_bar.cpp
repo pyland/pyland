@@ -24,7 +24,7 @@ int text_border_width = 20;
 
 NotificationBar::NotificationBar() {
 
-	LOG(INFO) << "Creating NotificationBar...";
+    LOG(INFO) << "Creating NotificationBar...";
 
     GameWindow* window = Engine::get_map_viewer()->get_window();
     CHECK_NOTNULL(window);
@@ -57,7 +57,7 @@ NotificationBar::NotificationBar() {
 
     notification_stack = Notification();
 
-	LOG(INFO) << "Created NotificationBar.";
+    LOG(INFO) << "Created NotificationBar.";
 }
 
 void NotificationBar::text_displayer() {

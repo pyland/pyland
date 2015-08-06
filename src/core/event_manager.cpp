@@ -34,15 +34,15 @@ EventManager *EventManager::get_instance(){
 }
 
 bool EventManager::is_paused(){
-	return paused;
+    return paused;
 }
 
 void EventManager::pause(){
-	paused = true;
+    paused = true;
 }
 
 void EventManager::resume(){
-	paused = false;
+    paused = false;
 }
 
 void EventManager::flush_and_disable(InterpreterContext &interpreter_context) {

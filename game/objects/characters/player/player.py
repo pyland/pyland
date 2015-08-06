@@ -80,6 +80,15 @@ class Player(Character):
     """
 
 
+    def test_display(self):
+        engine = self.get_engine()
+        x, y = self.get_position()
+        game_objects = engine.get_objects_at((x, y+1)) 
+        for game_object in game_objects:
+            if isinstance(game_object, Bagable):
+                engine.print_terminal("Object is bagable")
+            engine.print_terminal(game_object.get_name())
+
     def pick_up_objects(self):
         """ Pick up and put all bagable objects in front of the player in the player's bag.
         
