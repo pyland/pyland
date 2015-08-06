@@ -30,7 +30,7 @@ class Entity {
         /// code.
         ///
         std::string name;
-        
+
         ///
         /// Where the object is in the filesystem relative to game/objects, (where it's python code and sprites are stored!!!!!
         ///
@@ -87,7 +87,7 @@ class Entity {
         void move_south(PyObject *callback);
         void move_north(PyObject *callback);
         void move_west(PyObject *callback);
-        
+
         ///
         /// @return
         ///     The name of the entity, this name is also used as the instance name of the entity in python. :)
