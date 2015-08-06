@@ -252,7 +252,7 @@ clean:
 
 	@-$(RM) $(HEADER_DEPENDS)
 
-	@-$(RM) *~ core *.core
+	@-$(RM) *~core *.core
 	@-$(RM) moc_mainwindow.cpp	
 
 	@-for directory in dependencies/* dependencies; do \
