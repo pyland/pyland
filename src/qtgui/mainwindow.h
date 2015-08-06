@@ -56,6 +56,8 @@ public:
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
     void updateToolBar();
+    void runCode(int script);
+    void toggleSpeed();
     void setRunning(bool option);
     void setFast(bool option);
     void setAnyOutput(bool option);
@@ -64,6 +66,9 @@ public:
     int getGameWidgetWidth();
     int getGameWidgetHeight();
     bool getAnyOutput();
+    int getCurrentScript();
+    int getExecuteScript();
+
 protected:
     SDL_Scancode parseKeyCode(QKeyEvent *keyEvent);
     Uint8 parseButton(QMouseEvent *mouseEvent);
@@ -71,8 +76,6 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void runCode();
-    void toggleSpeed();
     bool saveAs();
     void documentWasModified();
     void zoomFontIn();
@@ -80,6 +83,8 @@ private slots:
     void setGameFocus();
     void timerHandler();
     void clearTerminal();
+    void clickRun();
+    void clickSpeed();
 
 private:
     void initWorkspace(QsciScintilla* ws, int i);
@@ -137,6 +142,9 @@ private:
     //Specifies whether there has been any output during the current code execution,
     //it determine if output separate lines are needed
     bool anyOutput;
+
+    //Index of the script to be executed
+    int executeIndex;
 };
 
 #endif

@@ -9,7 +9,7 @@ import scriptrunner
 
 """
 In Python comments,
-could define some standard which the C++ code can use to determine things about it handles 
+could define some standard which the C++ code can use to determine things about it handles
 the python code
 """
 
@@ -40,10 +40,10 @@ class Player(Character):
     __running_script = False
     __thread_id = 0
     __bag = None
-    
+
     def initialise(self):
         """ An initialiser function.
-        
+
         This function is called once all the neccesary set-up of the object has completed
         run when the object is created in-engine
         """
@@ -87,7 +87,7 @@ class Player(Character):
     def test_display(self):
         engine = self.get_engine()
         x, y = self.get_position()
-        game_objects = engine.get_objects_at((x, y+1)) 
+        game_objects = engine.get_objects_at((x, y+1))
         for game_object in game_objects:
             if isinstance(game_object, Bagable):
                 engine.print_terminal("Object is bagable")
@@ -95,7 +95,7 @@ class Player(Character):
 
     def pick_up_objects(self):
         """ Pick up and put all bagable objects in front of the player in the player's bag.
-        
+
         """
         engine = self.get_engine()
         #object_list = engine.get_objects_at(location_in_fron_of_player)
@@ -128,8 +128,9 @@ class Player(Character):
             The callback function you wish to run after the script has finished runnning.
         """
         if not(self.__running_script): #only run script if one currently isn't running.
+            engine = self.get_engine()
             self.__running_script = True # running script TODO: make this system a lot more robust
-            scriptrunner.start(self, "current")
+            scriptrunner.start(self, engine.get_run_script())
         return
 
     def halt_script(self):
@@ -144,7 +145,7 @@ class Player(Character):
 
     def set_running_script_status(self, status):
         """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
-        
+
         Simply prevents to scripts with player inputs from running simultaneously.
         """
         self.__running_script = status
@@ -160,7 +161,7 @@ class Player(Character):
     """ private:
     Put the private methods you wish to use here.
     """
-    
+
     """ This method takes the movement input of the player character and returns the appropriate
     function for moving them in the direction required
     face_x -- self.face_north/east/south/west() as appropriately required to get them to face in that direction
@@ -168,7 +169,7 @@ class Player(Character):
     #def __handle_movement_input(self, is_facing_x, face_x, move_x):
     #	def handle_input:
     #		if(not(self.moving())):  #can't register input if the character is in the middle of moving
-    #			if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first  
+    #			if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first
     #				move_x()
     #			else:
     #				face_x()
