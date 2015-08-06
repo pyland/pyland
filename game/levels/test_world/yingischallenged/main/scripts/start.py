@@ -17,7 +17,7 @@ coconut_one.set_solidity(False);
 
 engine.print_terminal(coconut_one.get_weight(), False)
 
-engine.play_music("beach")
+engine.play_music("eery")
 engine.get_objects_at((7, 2))
 engine.get_objects_at((4, 4))
 engine.get_objects_at((5, 4))
