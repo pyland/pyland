@@ -19,7 +19,7 @@
 #include "map.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "notification_bar.hpp"
+#include "text_box.hpp"
 #include "object_manager.hpp"
 #include "challenge_helper.hpp"
 #include "game_engine.hpp"

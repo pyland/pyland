@@ -12,11 +12,12 @@ WARNINGS = \
 	-isystem ./catch                \
 	-isystem ./tmx-parser           \
 	-isystem ./tmx-parser/TmxParser \
+	-isystem ./jsonnet              \
+	-isystem ./json-parser          \
 	-pedantic                       \
 	-Wall -Wextra                   \
 	-Wconversion                    \
 	-Wmissing-braces                \
-	-Wno-sign-conversion            \
 	-Wpointer-arith                 \
 
 ifeq "$(QMAKING)" ""
