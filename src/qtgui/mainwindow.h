@@ -64,6 +64,10 @@ public:
     int getGameWidgetWidth();
     int getGameWidgetHeight();
     bool getAnyOutput();
+    int getCurrentScript();
+    void runCode();
+    void toggleSpeed();
+
 protected:
     SDL_Scancode parseKeyCode(QKeyEvent *keyEvent);
     Uint8 parseButton(QMouseEvent *mouseEvent);
@@ -71,8 +75,6 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void runCode();
-    void toggleSpeed();
     bool saveAs();
     void documentWasModified();
     void zoomFontIn();
@@ -80,6 +82,8 @@ private slots:
     void setGameFocus();
     void timerHandler();
     void clearTerminal();
+    void clickRun();
+    void clickSpeed();
 
 private:
     void initWorkspace(QsciScintilla* ws, int i);

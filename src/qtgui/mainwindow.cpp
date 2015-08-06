@@ -278,8 +278,8 @@ MainWindow::MainWindow(GameMain *exGame):
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
 
-    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-    connect(buttonSpeed,SIGNAL(released()),this,SLOT (toggleSpeed()));
+    connect(buttonRun,SIGNAL(released()),this,SLOT (clickRun()));
+    connect(buttonSpeed,SIGNAL(released()),this,SLOT (clickSpeed()));
     connect(buttonClear,SIGNAL(released()),this,SLOT (clearTerminal()));
 
     this->showMaximized();
@@ -489,7 +489,9 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     switch (keyEvent->key())
     {
     case Qt::Key_Enter:
-        return SDL_SCANCODE_KP_ENTER;
+        return SDL_SCANCODE_RETURN;
+    case Qt::Key_Return:
+        return SDL_SCANCODE_RETURN;
     case Qt::Key_Left:
         return SDL_SCANCODE_LEFT;
     case Qt::Key_Right:
@@ -698,9 +700,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+void MainWindow::clickRun(){
+    runCode();
+}
+
 void MainWindow::runCode()
 {
-
     if (running)
     {
         setRunning(false);
@@ -712,7 +717,7 @@ void MainWindow::runCode()
     else{
         QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
-        int index = (textWidget->currentIndex())+ 1;
+        int index = getCurrentScript();
 
         //read in the player scripts (as defined in the config file)
         std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
@@ -743,7 +748,12 @@ void MainWindow::runCode()
     setGameFocus();
 }
 
+void MainWindow::clickSpeed(){
+    toggleSpeed();
+}
+
 void MainWindow::toggleSpeed(){
+    std::cout << "toggling" << std::endl;
     setFast(!fast);
     updateSpeed();
     setGameFocus();
@@ -900,4 +910,8 @@ int MainWindow::getGameWidgetHeight(){
 
 bool MainWindow::getAnyOutput(){
     return anyOutput;
+}
+
+int MainWindow::getCurrentScript(){
+    return (textWidget->currentIndex())+ 1;
 }

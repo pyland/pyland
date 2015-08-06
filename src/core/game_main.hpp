@@ -52,11 +52,9 @@ private:
     Lifeline down_callback;
     Lifeline right_callback;
     Lifeline left_callback;
-    Lifeline monologue_callback;
+    Lifeline run_callback;
+    Lifeline speed_callback;
     Lifeline mouse_button_lifeline;
-    Lifeline zoom_in_callback;
-    Lifeline zoom_out_callback;
-    Lifeline zoom_zero_callback;
     Lifeline help_callback;
     Lifeline switch_char;
     Lifeline text_lifeline_char;

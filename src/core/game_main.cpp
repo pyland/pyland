@@ -77,6 +77,11 @@ GameMain::GameMain(int &argc, char **argv):
         gui.get_gui_window()->set_height_pixels(window_size.second);
         gui.refresh_gui();
     };
+
+    //Register InputHandler callbacks
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TOGGLE_SPEED, Engine::trigger_speed);
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_RUN, Engine::trigger_run);
+
     gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
 
     //The callbacks
@@ -134,13 +139,30 @@ GameMain::GameMain(int &argc, char **argv):
     }
     ));
 
-    monologue_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("M")},
+    run_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("Return")},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.monologue();
+        std::cout << "Enter" << std::endl;
+        Engine::trigger_run();
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN);
+        //callbackstate.restart();
     }
     ));
+
+    speed_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("Space")},
+    [&] (KeyboardInputEvent)
+    {
+
+        std::cout << "Space" << std::endl;
+        //Engine::trigger_speed();
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_TOGGLE_SPEED);
+        //Engine::
+        //callbackstate.restart();
+    }
+    ));
+
 
     mouse_button_lifeline = input_manager->register_mouse_handler(filter(
     {MOUSE_RELEASE},
@@ -148,45 +170,6 @@ GameMain::GameMain(int &argc, char **argv):
     {
         gui.get_gui_manager()->mouse_callback_function(event);
     }));
-
-//    zoom_in_callback = input_manager->register_keyboard_handler(filter(
-//    {KEY_HELD, KEY("=")},
-//    [&] (KeyboardInputEvent)
-//    {
-//        Engine::set_global_scale(Engine::get_global_scale() * 1.01f);
-//    }
-//    ));
-//
-//    zoom_out_callback = input_manager->register_keyboard_handler(filter(
-//    {KEY_HELD, KEY("-")},
-//    [&] (KeyboardInputEvent)
-//    {
-//        Engine::set_global_scale(Engine::get_global_scale() / 1.01f);
-//    }
-//    ));
-
-    zoom_zero_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, MODIFIER({"Left Ctrl", "Right Ctrl"}), KEY("0")},
-    [&] (KeyboardInputEvent)
-    {
-        Engine::set_global_scale(1.0f);
-    }
-    ));
-
-    help_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
-    [&] (KeyboardInputEvent)
-    {
-        auto id(Engine::get_map_viewer()->get_map_focus_object());
-        auto active_player(ObjectManager::get_instance().get_object<MapObject>(id));
-
-        Engine::print_dialogue(
-            active_player->get_name(),
-            "placeholder string"
-                //active_player->get_instructions() TODO: BLEH remove this!
-        );
-    }
-    ));
 
     for (unsigned int i=0; i<10; ++i)
     {
