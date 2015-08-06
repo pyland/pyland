@@ -218,6 +218,10 @@ std::vector<int> Engine::get_objects_at(glm::vec2 location) {
     return location_filter_objects(location, map_viewer->get_map()->get_objects());
 }
 
+MainWindow* Engine::get_main_window(){
+    return main_window;
+}
+
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     auto objects(get_objects_at(location));
@@ -249,6 +253,22 @@ void Engine::set_any_output(bool option){
 
 void Engine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
     main_window->setColourScheme(r1,b1,g1,r2,b2,g2);
+}
+
+void Engine::set_finished(){
+    main_window->setRunning(false);
+}
+
+void Engine::trigger_run(int script){
+    main_window->runCode(script);
+}
+
+void Engine::trigger_speed(){
+    main_window->toggleSpeed();
+}
+
+int Engine::get_run_script(){
+    return main_window->getExecuteScript();
 }
 
 TextFont Engine::get_game_font() {
