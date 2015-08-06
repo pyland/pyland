@@ -35,6 +35,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("get_name",          &Entity::get_name)
         .def("get_location",      &Entity::get_location)
         .def("focus",             &Entity::focus)
+        .def("is_focus",          &Entity::is_focus)
         .def("get_sprite",        &Entity::get_sprite)
         .def("set_sprite",        &Entity::set_sprite)
         .def("start_animating",   &Entity::start_animating)

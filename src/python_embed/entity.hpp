@@ -9,8 +9,8 @@
 
 #include <glm/vec2.hpp>
 #include <string>
+#include <iostream>
 
-#include<iostream>
 namespace py = boost::python;
 
 ///
@@ -22,7 +22,7 @@ class Entity {
         /// Starting postiton for this entity, used to reset location when entity dies.
         ///
         glm::vec2 start;
-
+        std::string sprite_location;
 
     public:
         ///
@@ -148,6 +148,11 @@ class Entity {
         /// Centre the camera on this object. Snaps instantly
         ///
         void focus();
+
+        ///
+        /// Returns if the object is the camera focus
+        ///
+        bool is_focus();
 
         ///
         /// Look for any objects in a range. Returns an array of
