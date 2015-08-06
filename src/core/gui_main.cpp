@@ -6,7 +6,7 @@
 #include "gui_manager.hpp"
 #include "gui_window.hpp"
 #include "map_viewer.hpp"
-#include "notification_bar.hpp"
+#include "text_box.hpp"
 
 GUIMain::GUIMain(GameWindow * _embedWindow):
     embedWindow(_embedWindow),
@@ -14,6 +14,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     map_viewer(embedWindow, &gui_manager),
     em(EventManager::get_instance()),
     bag_open(false),
+    pyguide_open(false),
     display_button_start(0)
 
 {
@@ -32,7 +33,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     gui_manager.set_root(gui_window);
 
-    notification_bar = new NotificationBar();
+    notification_bar = std::make_shared<TextBox>();
 
     Engine::set_notification_bar(notification_bar);
 
@@ -41,8 +42,8 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     pause_button->set_alignment(ButtonAlignment::TopLeft);
     pause_button->set_width(button_width);
     pause_button->set_height(button_height);
-    pause_button->set_y_offset(0.87f);
-    pause_button->set_x_offset(0.00f);
+    pause_button->set_x_offset(left_x_offset);
+    pause_button->set_y_offset(top_y_offset);
     pause_button->set_on_click( [&] () {
 
         if(em->is_paused() == false){
@@ -63,25 +64,18 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     bag_button->set_alignment(ButtonAlignment::TopRight);
     bag_button->set_width(button_width);
     bag_button->set_height(button_height);
-    bag_button->set_y_offset(0.87f);
-    bag_button->set_x_offset(0.91f);
+    bag_button->set_x_offset(right_x_offset);
+    bag_button->set_y_offset(top_y_offset);
 
     bag_button->set_on_click( [&] () {
 
         if(bag_open == false){
-
-            bag_open = true;
-            LOG(INFO) << "Bag opened";
-            bag_window->set_visible(true);
-            refresh_gui();
-            //bag_menu();
+			bag_open = true;
+            open_bag();
         }
         else{
-
-            bag_open = false;
-            LOG(INFO) << "Bag closed";
-            bag_window->set_visible(false);
-            refresh_gui();
+			bag_open = false;
+            close_bag();
         }
     });
 
@@ -89,57 +83,91 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     bag_window->set_text("Bag");
     bag_window->set_clickable(false);
     bag_window->set_visible(false);
-    bag_window->move_text(0.5f, 0.9f);
+    bag_window->move_text(title_x_offset, title_y_offset);
+
+	pyguide_window = std::make_shared<Button>(ButtonType::Board);
+    pyguide_window->set_text("PyGuide");
+    pyguide_window->set_clickable(false);
+    pyguide_window->set_visible(false);
+    pyguide_window->move_text(title_x_offset, title_y_offset);
 
     pyguide_button = std::make_shared<Button>(ButtonType::NoPicture);
     pyguide_button->set_text("PyGuide");
-    pyguide_button->set_alignment(ButtonAlignment::TopRight);
+    pyguide_button->set_alignment(ButtonAlignment::BottomLeft);
     pyguide_button->set_width(button_width);
     pyguide_button->set_height(button_height);
-    pyguide_button->set_y_offset(0.8f);
-    pyguide_button->set_x_offset(0.5f);
+    pyguide_button->set_x_offset(menu_x_offset);
+    pyguide_button->set_y_offset(menu_y_offset);
     pyguide_button->set_visible(false);
+
+	pyguide_button->set_on_click( [&] () {
+		pyguide_open = true;
+		open_pyguide();
+    });
 
     bag_window->add(pyguide_button);
 
     gui_window->add(pause_button);
     gui_window->add(bag_button);
     gui_window->add(bag_window);
-
+	gui_window->add(pyguide_window);
 
     LOG(INFO) << "Constructed GUIMain.";
 }
 
-void GUIMain::config_gui()
-{
-    nlohmann::json j = Config::get_instance();
+void GUIMain::open_pyguide(){
 
-    button_width = j["gui_constants"]["button_width"];
-    button_height = j["gui_constants"]["button_height"];
-    x_scale = j["gui_constants"]["x_scale"];
-    y_scale = j["gui_constants"]["y_scale"];
-    button_max = j["gui_constants"]["button_max"];
-    button_spacing = j["gui_constants"]["button_spacing"];
+	close_bag();
+	pyguide_window->set_visible(true);
+
+    refresh_gui();
+    LOG(INFO) << "PyGuide opened";
 }
 
-void GUIMain::close_pause_window(){
-    gui_window->set_visible(false);
+void GUIMain::close_pyguide(){
 
-    const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
+	pyguide_window->set_visible(false);
 
-    typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
+    refresh_gui();
+    LOG(INFO) << "PyGuide closed";
+}
 
-    for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
-        if(i->second == bag_window){
-            continue;
-        }
-        else{
-            i->second->set_visible(true);
-            i->second->set_clickable(true);
-        }
+void GUIMain::open_bag(){
+
+    bag_window->set_visible(true);
+
+	close_pyguide();
+	pyguide_open = false;
+
+	pyguide_button->set_visible(true);
+	pyguide_button->set_clickable(true);
+
+    for(unsigned int i=0; i!=bag_items.size(); i++){
+		bag_items[i]->set_visible(true);
+		bag_items[i]->set_clickable(true);
     }
 
     refresh_gui();
+    LOG(INFO) << "Bag opened";
+}
+
+void GUIMain::close_bag(){
+
+	bag_window->set_visible(false);
+
+	close_pyguide();
+	pyguide_open = false;
+
+	pyguide_button->set_visible(false);
+	pyguide_button->set_clickable(false);
+
+    for(unsigned int i=0; i!=bag_items.size(); i++){
+		bag_items[i]->set_visible(false);
+		bag_items[i]->set_clickable(false);
+    }
+
+    refresh_gui();
+    LOG(INFO) << "Bag closed";
 }
 
 void GUIMain::open_pause_window(){
@@ -157,6 +185,31 @@ void GUIMain::open_pause_window(){
             i->second->set_visible(false);
             i->second->set_clickable(false);
         }
+        bag_open = false;
+        pyguide_open = false;
+    }
+
+    refresh_gui();
+}
+
+void GUIMain::close_pause_window(){
+    gui_window->set_visible(false);
+
+    const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
+
+    typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
+
+    for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+        if(i->second == bag_window){
+            continue;
+        }
+        else if(i->second == pyguide_window){
+			continue;
+        }
+        else{
+            i->second->set_visible(true);
+            i->second->set_clickable(true);
+        }
     }
 
     refresh_gui();
@@ -170,8 +223,8 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
         cycle_button->set_text("Cycle");
         cycle_button->set_width(button_width);
         cycle_button->set_height(button_height);
-        cycle_button->set_y_offset(0.87f);
-        cycle_button->set_x_offset(0.91f - float(button_max + 1) * button_spacing);
+        cycle_button->set_x_offset(right_x_offset - float(button_max + 1) * horizontal_button_spacing);
+        cycle_button->set_y_offset(top_y_offset);
 
         cycle_button->set_on_click( [&] () {
 
@@ -213,10 +266,10 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     new_button->set_height(button_height);
 
     //make space for previous buttons
-    float org_x_location = 0.91f;
+    float org_x_location = right_x_offset;
 
-    new_button->set_x_offset(org_x_location - float(((buttons.size()-1) % button_max) + 1) * button_spacing);
-    new_button->set_y_offset(0.87f);
+    new_button->set_x_offset(org_x_location - float(((buttons.size()-1) % button_max) + 1) * horizontal_button_spacing);
+    new_button->set_y_offset(top_y_offset);
 
     //add the button onto the screen
     gui_window->add(new_button);
@@ -239,7 +292,34 @@ GUIMain::~GUIMain()
     LOG(INFO) << "Destructing GUIMain...";
 
     buttons.clear();
-    delete notification_bar;
 
     LOG(INFO) << "Destructed GUIMain.";
 }
+
+void GUIMain::config_gui()
+{
+    nlohmann::json j = Config::get_instance();
+
+	x_scale = j["scales"]["x_scale"];
+    y_scale = j["scales"]["y_scale"];
+
+    left_x_offset = j["scales"]["left_x_offset"];
+    right_x_offset = j["scales"]["right_x_offset"];
+    bottom_y_offset = j["scales"]["bottom_y_offset"];
+    top_y_offset = j["scales"]["top_y_offset"];
+
+    title_x_offset = j["scales"]["title_x_offset"];
+    title_y_offset = j["scales"]["title_y_offset"];
+
+    menu_x_offset = j["scales"]["menu_x_offset"];
+    menu_y_offset = j["scales"]["menu_y_offset"];
+
+    button_width = j["scales"]["button_width"];
+    button_height = j["scales"]["button_height"];
+
+	horizontal_button_spacing = j["scales"]["horizontal_button_spacing"];
+    vertical_button_spacing = j["scales"]["vertical_button_spacing"];
+
+    button_max = j["scales"]["button_max"];
+}
+
