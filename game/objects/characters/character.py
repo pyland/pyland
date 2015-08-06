@@ -68,9 +68,18 @@ game_map = Map()
 
 class Character(GameObject):
 
+    __character_name = ""
+
     def initialise(self):
         super().initialise
         self.set_sprite("main/north")
+        self.__character_name = self.get_name()
+
+    def get_character_name(self):
+        return self.__character_name
+
+    def set_character_name(self, character_name):
+        self.__character_name = character_name
     
     """ Change the sprite folder to "north" """
     def face_north(self):
@@ -96,8 +105,9 @@ class Character(GameObject):
     simply changes the last part of the sprite folder as relevant
     """
     def __face(self, direction):
+        engine = self.get_engine()
         sprite_location = self.get_sprite()
-        sprite_location = sprite_location[0 : sprite_location.rfind("/")] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
+        sprite_location = sprite_location[0 : sprite_location.rfind("/") + 1] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
         self.set_sprite(sprite_location + direction) #sprites are now looked for in direction folder :)
         return
 
