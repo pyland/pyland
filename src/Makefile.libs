@@ -15,8 +15,8 @@ GLOG_LDFLAGS  =
 GLOG_LDLIBS   = $(shell pkg-config libglog --libs)
 
 QT_INCPATH = -I/usr/share/qt4/mkspecs/linux-g++ \
-	      -isystem qtgui -isystem /usr/include/qt4/QtCore -isystem /usr/include/qt4/QtGui \
-              -isystem /usr/include/qt4 -I. -Iqtgui -I. \
+	      -I/qtgui -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui \
+              -I/usr/include/qt4 -I. -Iqtgui -I. \
 
 QT_LFLAGS        = -Wl,-O1
 QT_LIBS = $(SUBLIBS)  -L/usr/lib/arm-linux-gnueabihf -lqscintilla2 -lSDL2 -lGL -lQtGui -lQtCore -lpthread \

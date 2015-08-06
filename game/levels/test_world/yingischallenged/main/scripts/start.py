@@ -3,7 +3,6 @@
 player_one.focus()
 player_one.set_character_name("Benjo")
 player_two.set_character_name("That Annoying Kid from Up")
-engine.print_terminal(str(player_one._GameObject__entity.get_number_of_animation_frames()), False)
 
 coconut_one.set_weight(1)
 coconut_two.set_weight(2)
@@ -17,7 +16,7 @@ coconut_one.set_solidity(False);
 
 engine.print_terminal(coconut_one.get_weight(), False)
 
-engine.play_music("eery")
+engine.play_music("heroic")
 engine.get_objects_at((7, 2))
 engine.get_objects_at((4, 4))
 engine.get_objects_at((5, 4))
@@ -40,6 +39,8 @@ engine.add_button("gui/head/monkey", "Rock6", coconut_six.focus)
 engine.add_button("gui/head/monkey", "Rock7", coconut_seven.focus)
 engine.add_button("gui/head/monkey", "Portal", exit_portal.focus)
 """
+
+croc_one.follow_path("north, east, east, east, south, south, west, west, west, north", True)
 
 engine.print_terminal(player_one.get_position(), False)
 
