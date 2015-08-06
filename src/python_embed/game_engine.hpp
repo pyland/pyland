@@ -7,7 +7,7 @@
 
 #include "input_handler.hpp"
 
-class GameMain;
+class GUIMain;
 ///
 /// This class is used as the python interface for general game-engine functionality.
 /// The base game.py has the code which wraps around it and provides some additiondal functionality as well.
@@ -15,7 +15,7 @@ class GameMain;
 class GameEngine {
 
     private:
-        GameMain * game_main;
+        GUIMain * gui_main;
 
     public:
 
@@ -28,8 +28,8 @@ class GameEngine {
         static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
-        GameEngine(GameMain * _game_main){
-            game_main = _game_main;
+        GameEngine(GUIMain * _gui_main){
+            gui_main = _gui_main;
         }
 
         ///
@@ -74,6 +74,8 @@ class GameEngine {
         void play_music(std::string song_name);
 
         void print_terminal(std::string text, bool error);
+
+        void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
 
 };
 

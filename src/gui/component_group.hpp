@@ -60,7 +60,7 @@ public:
     /// Get the map listing all the components of the group
     /// @return a reference to a constant map object
     ///
-    const std::map<int, std::shared_ptr<Component>>& get_components();
+    const std::map<int, std::shared_ptr<Component>> * get_components();
 
     ///
     /// Generates the vertex data for this particular component. This

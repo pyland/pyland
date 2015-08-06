@@ -19,7 +19,7 @@ private:
 
     EventManager();
     ~EventManager();
-    
+
     EventManager(EventManager const&) = delete;
     void operator=(EventManager const&) = delete;
 
@@ -53,6 +53,13 @@ private:
     /// When false, they are silently ignored.
     ///
     bool enabled;
+
+
+    ///
+    /// Whether the game is paused or not.
+    /// When true, the event manager loop halts.
+    ///
+    bool paused;
 
 public:
     ///
@@ -140,6 +147,23 @@ public:
     /// Processes all events in the current frame queue
     ///
     void process_events(InterpreterContext &interpreter_context);
+
+    ///
+    /// Pauses the game so and stops running events
+    /// This is called from GameMain
+    ///
+    void pause();
+
+    ///
+    /// Resumes the game
+    /// This is called from GameMain
+    ///
+    void resume();
+
+    ///
+    /// Whether or not the game is paused
+    ///
+    bool is_paused();
 
 };
 
