@@ -85,7 +85,6 @@ def make_blocking(async_function):
     """
     def callback(blocking):
         blocking[0] = False
-
     """ This is the blocking version of the async_function that is provided as and argument.
     simples.
     """

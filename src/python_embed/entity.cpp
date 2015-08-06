@@ -5,6 +5,7 @@
 #include <boost/multi_index/detail/ord_index_node.hpp>
 #include <boost/python/list.hpp>
 #include <boost/range/adaptor/reversed.hpp>
+#include <boost/filesystem.hpp>
 #include <glm/vec2.hpp>
 #include <glog/logging.h>
 #include <ostream>
@@ -13,6 +14,7 @@
 #include <tuple>
 #include <vector>
 
+#include "config.hpp"
 #include "entity.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
@@ -23,12 +25,14 @@
 
 Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int id):
     start(start), id(id), call_number(0) {
-        this->name = std::string(name);
-        this->file_location = std::string(file_location);
-        LOG(INFO) << "invalid: constructor " << this->id;
+    this->name = std::string(name);
+    this->file_location = std::string(file_location);
+
+    this->sprite_location = "";
+    LOG(INFO) << "invalid: constructor " << this->id;
 }
 
-//A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!! 
+//A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!!
 void Entity::callback_test(PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     EventManager::get_instance()->add_event(boost_callback);
@@ -42,20 +46,20 @@ void Entity::move(int x, int y, PyObject *callback) {
     return;
 }
 
-void Entity::move_east(PyObject *callback){
-    return(move(1, 0, callback));
+void Entity::move_east(PyObject *callback) {
+    return (move(1, 0, callback));
 }
 
-void Entity::move_west(PyObject *callback){
-    return(move(-1, 0, callback));
+void Entity::move_west(PyObject *callback) {
+    return (move(-1, 0, callback));
 }
 
-void Entity::move_north(PyObject *callback){
-    return(move(0, 1, callback));
+void Entity::move_north(PyObject *callback) {
+    return (move(0, 1, callback));
 }
 
-void Entity::move_south(PyObject *callback){
-    return(move(0, -1, callback));
+void Entity::move_south(PyObject *callback) {
+    return (move(0, -1, callback));
 }
 
 //TODO: remove this completely, ok for now but collisions can (and should) be moved to python
@@ -95,14 +99,14 @@ std::string Entity::get_location() {
 }
 
 std::string Entity::get_sprite() {
-    //stub TODO: write this
-    return "stub";
+    return sprite_location;
 }
 
 void Entity::set_sprite(std::string sprite_location) {
-    //stub TODO: write this
-    sprite_location.substr(0);
+    this->sprite_location = sprite_location;
     return;
+
+    //display 0.png
 }
 
 void Entity::start_animating() {
@@ -116,8 +120,25 @@ void Entity::pause_animating() {
 }
 
 int Entity::get_number_of_animation_frames() {
-    //stub TODO: write this
-    return 0;
+    namespace fs = boost::filesystem;
+
+    nlohmann::json j = Config::get_instance();
+
+    std::string config_location = j["files"]["object_location"];
+    std::string full_file_location = config_location + "/" + file_location + "/sprites/" + this->sprite_location;
+    //std::cout << file_location << std::endl;
+    std::cout << full_file_location << std::endl;
+
+
+
+
+    int num_frames = std::count_if(fs::directory_iterator(full_file_location),
+                         fs::directory_iterator(), 
+                         [](const fs::directory_entry& e) { 
+                              return e.path().extension() == ".png";
+                         });
+    return num_frames;
+
 }
 
 void Entity::set_animation_frame(int frame_number) {
@@ -129,14 +150,14 @@ void Entity::set_animation_frame(int frame_number) {
 std::string Entity::get_instructions() {
     //auto id(this->id);
     //return GilSafeFuture<std::string>::execute([id] (GilSafeFuture<std::string> instructions_return) {
-    //	auto sprite(ObjectManager::get_instance().get_object<MapObject>(id));
+    //  auto sprite(ObjectManager::get_instance().get_object<MapObject>(id));
     //
-    //	if (sprite) {
-    //		//instructions_return.set(sprite->get_instructions()); TODO: BLEH work out what this did
-    //	}
-    //	else {
-    //		instructions_return.set("Try thinking about the problem in a different way.");
-    //	}
+    //  if (sprite) {
+    //      //instructions_return.set(sprite->get_instructions()); TODO: BLEH work out what this did
+    //  }
+    //  else {
+    //      instructions_return.set("Try thinking about the problem in a different way.");
+    //  }
     //});
     return "HH";
 }
@@ -155,10 +176,10 @@ void Entity::__set_game_speed(float game_seconds_per_real_second) {
     EventManager::get_instance()->time.set_game_seconds_per_real_second(game_seconds_per_real_second);
 }
 
-void Entity::py_update_status(std::string status){
+void Entity::py_update_status(std::string status) {
     //auto id(this->id);
     //return GilSafeFuture<void>::execute([id, status] (GilSafeFuture<void>) {
-        //Engine::update_status(id, status); TODO: BLEH work out what this did 
+    //Engine::update_status(id, status); TODO: BLEH work out what this did
     //});
     LOG(INFO) << status;
 }
@@ -174,21 +195,21 @@ py::list Entity::get_retrace_steps() {
     auto &positions(object->get_positions());
 
     auto zipped_locations_begin(boost::make_zip_iterator(boost::make_tuple(
-        std::next(positions.get<insertion_order>().rbegin()), positions.get<insertion_order>().rbegin()
-    )));
+                                    std::next(positions.get<insertion_order>().rbegin()), positions.get<insertion_order>().rbegin()
+                                )));
     auto zipped_locations_end(boost::make_zip_iterator(boost::make_tuple(
-        positions.get<insertion_order>().rend(), std::prev(positions.get<insertion_order>().rend())
-    )));
+                                  positions.get<insertion_order>().rend(), std::prev(positions.get<insertion_order>().rend())
+                              )));
 
-    for (auto pair=zipped_locations_begin; pair != zipped_locations_end; ++pair) {
+    for (auto pair = zipped_locations_begin; pair != zipped_locations_end; ++pair) {
         glm::vec2 start(pair->get<0>());
         glm::vec2 end  (pair->get<1>());
         auto reverse_change(start - end);
 
         retrace_steps.append(py::make_tuple(
-            py::api::object(float(reverse_change.x)),
-            py::api::object(float(reverse_change.y))
-        ));
+                                 py::api::object(float(reverse_change.x)),
+                                 py::api::object(float(reverse_change.y))
+                             ));
     }
     return retrace_steps;
 }

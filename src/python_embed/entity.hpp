@@ -8,8 +8,8 @@
 
 #include <glm/vec2.hpp>
 #include <string>
+#include <iostream>
 
-#include<iostream>
 namespace py = boost::python;
 
 ///
@@ -21,6 +21,7 @@ class Entity {
         /// Starting postiton for this entity, used to reset location when entity dies.
         ///
         glm::vec2 start;
+        std::sprite_location;
 
 
     public:

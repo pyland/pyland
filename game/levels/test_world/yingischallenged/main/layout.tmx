@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="64" tileheight="64" nextobjectid="25">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="41" height="21" tilewidth="64" tileheight="64" nextobjectid="25">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -21,30 +21,40 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <layer name="TL1a" width="15" height="8">
+ <layer name="TL1b" width="41" height="21">
   <data encoding="base64" compression="zlib">
-   eJxLYGBgSCADJ5GpbxTTFwMAkaYtAw==
+   eJztw0ENAAAMA6GTWv8qpmI/SFg1VVVVXx7pVkLw
   </data>
  </layer>
- <layer name="TL1b" width="15" height="8">
+ <layer name="waterLayer" width="41" height="21">
   <data encoding="base64" compression="zlib">
-   eJydkEEKACAIBH1xVnTJenwKK0mnShiajbaDTEQVsJKBewk5ur1vcIbfYn/0kEUZyjy8I89w532B305FJwF57Bbae3oZ39Nvd+BMH13rLHA7Hk0=
+   eJxjYBgFo2DwAjkglgFiaSQsg0TLEBDHpgabPC5zxIlwowTFvqQMSFJJDS0BMWE0FNw4FOJ6oN04Go7UAcMlHAc6Xw8FNw6FuB4KbhyNa+qAoVBfE2O/Gs1dgR9gC0cAPzMGpw==
   </data>
  </layer>
- <layer name="SL1" width="15" height="8">
+ <layer name="SpecialLayer" width="41" height="21">
   <data encoding="base64" compression="zlib">
-   eJyzYWJgsBnCmFhATb2kgIHWCwAR3hA7
+   eJyzYWJgsBnFIxKDgDWUHkiAz322TLixNR45aqrB5U4YgJkxUGDUjdQBo26kDiDWjQMJiHHjQJeN1sMkHEfdSBgMFzeO5hnCYLjE9agbCQNsbgQAVHVBkg==
+  </data>
+ </layer>
+ <layer name="Tl1a" width="41" height="21">
+  <data encoding="base64" compression="zlib">
+   eJzNVdkKxDAI9F8L27z1oC89Pn4rKIgYNXtlB8Qcmk4yJp0AYL5tJZuovwTtRRj35yBXxun5qZKPfiNbaWz7Q9tvu4g79g/qoz+FP40xHSfbl5i/jFg5p9fimJ08a7xRXG8U8sxL1tPRi5QDrXlvPIyxVo6DMkRx5i1jLgPkwNz4bmcwqHZkxcjXnDMcM3eFv5XdfwZFeQvMj+9MBh5Hq568+ZZzBMhr7e25NZ45jlDnK89xT36zpZZa1oo4os3BejUdI31r51gUt8w59nwf5ZukIc/R+8fI3NZ6jNZDeHUj+UVafwtRXb+j9afeSVyH/zvW3clqrfGK3rWc6G730HpU/egd87S29h29M1ZeJgehuTNe1fqXYH5PqIt8Ng==
+  </data>
+ </layer>
+ <layer name="Bridge" width="41" height="21">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2BogqtEqLlGJXNGwSgYBSMLXBlg+y8PsP2jYBSQCgY6zQ50nh0Fo4AQAABaPwXP
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="11" name="portal/exit_portal" gid="293" x="448" y="384" width="64" height="64"/>
-  <object id="13" name="coconut/coconut_two" gid="287" x="320" y="256" width="64" height="64"/>
-  <object id="14" name="coconut/coconut_three" gid="287" x="384" y="256" width="64" height="64"/>
-  <object id="15" name="coconut/coconut_four" gid="287" x="448" y="256" width="64" height="64"/>
-  <object id="16" name="coconut/coconut_five" gid="287" x="512" y="256" width="64" height="64"/>
-  <object id="17" name="coconut/coconut_six" gid="287" x="576" y="256" width="64" height="64"/>
-  <object id="18" name="coconut/coconut_seven" gid="287" x="640" y="256" width="64" height="64"/>
-  <object id="19" name="coconut/coconut_one" gid="287" x="256" y="256" width="64" height="64"/>
-  <object id="22" name="characters/player/player_one" gid="286" x="448" y="512" width="64" height="64"/>
+  <object id="11" name="portal/exit_portal" gid="293" x="2432" y="320" width="64" height="64"/>
+  <object id="13" name="coconut/coconut_two" gid="287" x="128" y="768" width="64" height="64"/>
+  <object id="14" name="coconut/coconut_three" gid="287" x="704" y="256" width="64" height="64"/>
+  <object id="15" name="coconut/coconut_four" gid="287" x="1280" y="256" width="64" height="64"/>
+  <object id="16" name="coconut/coconut_five" gid="287" x="1856" y="256" width="64" height="64"/>
+  <object id="17" name="coconut/coconut_six" gid="287" x="2368" y="768" width="64" height="64"/>
+  <object id="18" name="coconut/coconut_seven" gid="287" x="2368" y="1088" width="64" height="64"/>
+  <object id="19" name="coconut/coconut_one" gid="287" x="128" y="1088" width="64" height="64"/>
+  <object id="22" name="characters/player/player_one" gid="286" x="1278.24" y="905.25" width="64" height="64"/>
  </objectgroup>
 </map>
