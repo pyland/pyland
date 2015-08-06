@@ -90,6 +90,10 @@ void GameEngine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
     Engine::set_ui_colours(r1,b1,g1,r2,b2,g2);
 }
 
+void GameEngine::set_running(){
+    Engine::set_running();
+}
+
 void GameEngine::set_finished(){
     Engine::set_finished();
 }
