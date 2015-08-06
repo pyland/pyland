@@ -4,6 +4,7 @@
 #include <boost/python/base_type_traits.hpp>
 #include <boost/python/object_core.hpp>
 #include <boost/python/list.hpp>
+#include <boost/python/tuple.hpp>
 #include <stdint.h>
 
 #include <glm/vec2.hpp>
@@ -23,14 +24,13 @@ class Entity {
         glm::vec2 start;
         std::string sprite_location;
 
-
     public:
         ///
         /// A name. The name is used to identify instances of the object in the python
         /// code.
         ///
         std::string name;
-        
+
         ///
         /// Where the object is in the filesystem relative to game/objects, (where it's python code and sprites are stored!!!!!
         ///
@@ -87,7 +87,7 @@ class Entity {
         void move_south(PyObject *callback);
         void move_north(PyObject *callback);
         void move_west(PyObject *callback);
-        
+
         ///
         /// @return
         ///     The name of the entity, this name is also used as the instance name of the entity in python. :)
@@ -137,28 +137,22 @@ class Entity {
         void set_animation_frame(int frame_number);
 
         ///
-        /// Checks if player can move by the vector given.
+        /// Set the solidity of the Entity. (This is whether or not other solid MapObjects can got 'through' it)
         ///
-        /// @param by
-        ///     position representing movement in the axes.
-        ///     TODO: replace so as to not require vector displacements.
+        /// @param solidity
+        ///     Whether you want the object to be solid (true) or not solid (false)
         ///
-        /// @return
-        ///     Whether the area is walkable.
-        ///
-        bool walkable(int x, int y);
-
-        ///
-        /// Prints to standard output the name and position of entity.
-        ///
-        /// TODO: rename this method, it's a silly name!
-        ///
-        void monologue();
+        void set_solidity(bool solidity);
 
         ///
         /// Centre the camera on this object. Snaps instantly
         ///
         void focus();
+
+        ///
+        /// Returns if the object is the camera focus
+        ///
+        bool is_focus();
 
         ///
         /// Look for any objects in a range. Returns an array of
@@ -184,6 +178,22 @@ class Entity {
 
         py::list get_retrace_steps();
         py::object read_message();
+
+        ///
+        /// Get the id of the Entity. (The id being what is used to look up instances of the MapObject)
+        /// 
+        /// @return
+        ///     The id of the MapObject the Entity is associated with.
+        /// 
+        int get_id();
+
+        ///
+        /// Get the position of the Entity on the map as a python tuple.
+        /// 
+        /// @return
+        ///     The position of the Entity
+        /// 
+        py::tuple get_position();
 };
 
 

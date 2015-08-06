@@ -61,16 +61,25 @@ However, it doesn't check if the tiles that are being moved to are empty or not.
 """
 class Map:
     def solid_objects_at(self, position):
-        (x, y, z) = position
+        (x, y) = position
         return []
 
 game_map = Map()
 
 class Character(GameObject):
 
-    def __init(self):
-        super().__init__()
+    __character_name = ""
+
+    def initialise(self):
+        super().initialise
         self.set_sprite("main/north")
+        self.__character_name = self.get_name()
+
+    def get_character_name(self):
+        return self.__character_name
+
+    def set_character_name(self, character_name):
+        self.__character_name = character_name
     
     """ Change the sprite folder to "north" """
     def face_north(self):
@@ -143,8 +152,8 @@ class Character(GameObject):
     callback -- the function that you would like to call after the movement is complete
     """
     def move_north(self, callback = lambda: None):
-        (x, y, z) = self.get_position()
-        if(len(game_map.solid_objects_at((x, y + 1, z))) == 0): #check that the relevant location is free
+        x, y = self.get_position()
+        if(len(game_map.solid_objects_at((x, y + 1))) == 0): #check that the relevant location is free
             self.__move_x(self.face_north, super().move_north, callback)
         return
 
@@ -152,8 +161,8 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_east(self, callback = lambda: None):
-        (x, y, z) = self.get_position()
-        if(len(game_map.solid_objects_at((x + 1, y, z))) == 0): #check that the relevant location is free
+        x, y = self.get_position()
+        if(len(game_map.solid_objects_at((x + 1, y))) == 0): #check that the relevant location is free
             self.__move_x(self.face_east, super().move_east, callback)
         return
     
@@ -161,8 +170,8 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_south(self, callback = lambda: None):
-        (x, y, z) = self.get_position()
-        if(len(game_map.solid_objects_at((x, y - 1, z))) == 0): #check that the relevant location is free
+        x, y = self.get_position()
+        if(len(game_map.solid_objects_at((x, y - 1))) == 0): #check that the relevant location is free
             self.__move_x(self.face_south, super().move_south, callback)
         return
 
@@ -170,8 +179,8 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_west(self, callback = lambda: None):
-        (x, y, z) = self.get_position()
-        if(len(game_map.solid_objects_at((x - 1, y, z))) == 0): #check that the relevant location is free
+        x, y = self.get_position()
+        if(len(game_map.solid_objects_at((x - 1, y))) == 0): #check that the relevant location is free
             self.__move_x(self.face_west, super().move_west, callback)
         return
 
