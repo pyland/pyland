@@ -38,6 +38,19 @@ void Entity::callback_test(PyObject *callback) {
     EventManager::get_instance()->add_event(boost_callback);
 }
 
+void Entity::wait(double gametime, PyObject *callback) {
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    EventManager::get_instance()->add_timed_event(
+        GameTime::duration(gametime),
+        [boost_callback] (float completion) mutable {
+            if (completion == 1.0) {
+                EventManager::get_instance()->add_event(boost_callback);
+            }
+            return true;
+        }
+    );
+}
+
 void Entity::move(int x, int y, PyObject *callback) {
     ++call_number;
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
@@ -71,6 +84,10 @@ void Entity::set_solidity(bool solidity) {
         auto object(ObjectManager::get_instance().get_object<MapObject>(id));
         object->set_walkability(w);
     });
+}
+
+bool Entity::is_solid() {
+    return true; //TODO, IMPLEMENT!!!!!
 }
 
 void Entity::focus() {
