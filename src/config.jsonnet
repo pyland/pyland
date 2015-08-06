@@ -16,18 +16,45 @@
 
 	//define constants for rendering sizes
 	"scales": {
+		
+		//multiplying factors for converting between window sizes and gui scales
+		"x_scale": 1.0/660.0,
+		"y_scale": 1.0/285.0,		
 
+		//for placing the buttons on top of the screen
+		"left_x_offset": 0.0,
+		"right_x_offset": 0.91,
+		"bottom_y_offset": 0.0,
+		"top_y_offset": 0.87,				
+
+		//for placing the title of a menu
+		"title_x_offset": 0.5,
+		"title_y_offset": 0.9,
+
+		//for placing an item on the menu
+		"menu_x_offset": 0.0,
+		"menu_y_offset": 0.75,		
+
+		//the sizes of the buttons on top of the screen
 		"button_width": 0.08,
 		"button_height": 0.12,
 
-		//multiplying factors for converting between window sizes and gui scales
-		"x_scale": 1.0/660.0,
-		"y_scale": 1.0/285.0,
-		
-		//the maximum number of sprite heads displayed on the screen		
-		"button_max": 5,
 		//the distance between two buttons
-		"button_spacing": 0.08
-	}
+		"horizontal_button_spacing": 0.08,
+		"vertical_button_spacing": 0.10,
 
+		//the maximum number of sprite heads displayed on the screen		
+		"button_max": 5
+	},
+
+	//define the text to be displayed for different PyGuide apis
+	
+	// the commands are indexed, so that the guide can read them in by number
+	// while putting them in here, use the following syntax-
+	// "index": "pyguide api: description"
+	
+	"pyguide_apis": {
+		"1": "move_east(): This moves the present character towards the right by one step",
+		"2": "print(args): This prints the argument args to the terminal"		
+	}
 }

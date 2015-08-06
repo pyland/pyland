@@ -28,13 +28,13 @@
 #include "map.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "notification_bar.hpp"
 #include "object_manager.hpp"
 #include "text.hpp"
+#include "text_box.hpp"
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
-NotificationBar *Engine::notification_bar(nullptr);
+std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
 GameWindow* Engine::game_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
@@ -238,7 +238,7 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
 
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
-    notification_bar->add_notification(text_to_display);
+    notification_bar->add_message(text_to_display);
 }
 
 void Engine::print_terminal(std::string text, bool error) {

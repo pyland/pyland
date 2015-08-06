@@ -2,25 +2,25 @@
 #include <list>
 #include <string>
 
-#include "notification_stack.hpp"
+#include "text_stack.hpp"
 
-Notification::Notification(): 
+TextStack::TextStack():
     can_forward(false),
     can_backward(false) {
     stack_iterator = std::end(message_stack);
 }
 
-void Notification::add_new(std::string new_notifcation) {
-    message_stack.push_back(new_notifcation);
+void TextStack::add_new(std::string new_message) {
+    message_stack.push_back(new_message);
     stack_iterator = std::prev(std::end(message_stack));
 
     update_flags();
 }
 
-std::string Notification::backward() {
+std::string TextStack::backward() {
     // Empty stack
     if (stack_iterator == std::end(message_stack)) {
-        return "";
+        return ("");
     }
 
     // Don't go off the en... start.
@@ -32,7 +32,7 @@ std::string Notification::backward() {
     return *stack_iterator;
 }
 
-std::string Notification::forward() {
+std::string TextStack::forward() {
     // Empty stack
     if (stack_iterator == std::end(message_stack)) {
         return "";
@@ -47,7 +47,7 @@ std::string Notification::forward() {
     return *stack_iterator;
 }
 
-void Notification::update_flags() {
+void TextStack::update_flags() {
     if (stack_iterator == std::begin(message_stack)) {
         can_backward = false;
     } else {
@@ -61,7 +61,7 @@ void Notification::update_flags() {
     }
 }
 
-void Notification::clear() {
+void TextStack::clear() {
     message_stack.clear();
     stack_iterator = std::end(message_stack);
 }

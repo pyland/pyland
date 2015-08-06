@@ -312,8 +312,6 @@ void GameMain::game_loop(bool showMouse)
         VLOG(3) << "} EM | RM {";
         Engine::get_map_viewer()->render();
         VLOG(3) << "} RM | TD {";
-        //Engine::text_displayer(); TODO: work out what this did and if neccesary
-        challenge_data->notification_bar->text_displayer();
 
         // This is not an input event, because the map can move with
         // the mouse staying still.

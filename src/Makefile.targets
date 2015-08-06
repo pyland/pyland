@@ -256,7 +256,7 @@ clean:
 	@-$(RM) moc_mainwindow.cpp	
 
 	@-for directory in dependencies/* dependencies; do \
-	  if [ -d $${directory} ]; then ${RMDIR} $${directory}; fi; \
+		if [ -d $${directory} ]; then ${RMDIR} $${directory}; fi; \
 	done
 
 	@echo "${bold}${red}Made clean${normal}"
