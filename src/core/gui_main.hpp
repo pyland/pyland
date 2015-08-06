@@ -20,19 +20,19 @@ class GUIMain {
 
 private:
 
-	float button_width;
-	float button_height;
-	float x_scale;
-	float y_scale;
-	unsigned int button_max;
-	float button_spacing;
+    float button_width;
+    float button_height;
+    float x_scale;
+    float y_scale;
+    unsigned int button_max;
+    float button_spacing;
 
-	GameWindow * embedWindow;
-	GUIManager gui_manager;
-	MapViewer map_viewer;
-	EventManager *em;
+    GameWindow * embedWindow;
+    GUIManager gui_manager;
+    MapViewer map_viewer;
+    EventManager *em;
 
-	std::shared_ptr<GUIWindow> gui_window;
+    std::shared_ptr<GUIWindow> gui_window;
     NotificationBar *notification_bar;
 
     std::shared_ptr<Button> pause_button;
@@ -53,31 +53,31 @@ private:
     std::shared_ptr<Button> cycle_button;
 
     void open_pause_window();
-	void close_pause_window();
-	void config_gui();
+    void close_pause_window();
+    void config_gui();
 
 public:
 
     GUIMain(GameWindow * embedWindow);
     ~GUIMain();
 
-	std::shared_ptr<GUIWindow> get_gui_window(){
-		return gui_window;
-	}
+    std::shared_ptr<GUIWindow> get_gui_window(){
+        return gui_window;
+    }
 
-	GUIManager * get_gui_manager(){
-		return &gui_manager;
-	}
+    GUIManager * get_gui_manager(){
+        return &gui_manager;
+    }
 
-	NotificationBar * get_notification_bar(){
-		return notification_bar;
-	}
+    NotificationBar * get_notification_bar(){
+        return notification_bar;
+    }
 
-	MapViewer * get_map_viewer(){
-		return &map_viewer;
-	}
+    MapViewer * get_map_viewer(){
+        return &map_viewer;
+    }
 
-	void refresh_gui();
+    void refresh_gui();
     void add_button(std::string file_path, std::string name, std::function<void (void)> callback);
 };
 

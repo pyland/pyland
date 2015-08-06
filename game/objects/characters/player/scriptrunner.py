@@ -15,22 +15,28 @@ from scoped_interpreter import ScopedInterpreter
 class HaltScriptException(Exception):
     pass
 
-""" This function runs the script provided in the argument in a seperate thread,
-the script has access to a set of API's defined in imbued_locals that allow
-it to control the player object provided.
-
-the callback is run after the script has finished running.
-player_object -- this is the instance of the player_object which is interacted with using the script.
-script_name -- the name of the script that you wish to run
-callback -- the callback function that will run once the script has completed  (in the same thead that the script was running in)
-"""
 def start(player_object, script_name):
-    """ imbued_locals is a python dictionary of python objects (variables, methods, class instances etc.)
-    available to the player. :)
-    eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
-    will be refering to what blob is known as here.
-    Here the list of game_objects is being looped through, and their names are being mapped to each instance :)
+    """ This function runs the script provided in the argument in a seperate thread.
+
+    The script has access to a set of API's defined in imbued_locals that allow
+    it to control the player object provided.
+
+    the callback is run after the script has finished running.
+
+    Parameters
+    ----------
+    player_object : Player
+        This is the instance of the player_object which is interacted with using the script.
+    script_name : str
+        The name of the script that you wish to run. The game looks in the script folder for it.
     """
+
+
+    #Imbued_locals is a python dictionary of python objects (variables, methods, class instances etc.)
+    #available to the player. :)
+    #eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
+    #will be refering to what blob is known as here.
+    #Here the list of game_objects is being looped through, and their names are being mapped to each instance :)
     imbued_locals = {}
 
     # Provide all the movement functions to the player, but make them blocking.
@@ -39,18 +45,22 @@ def start(player_object, script_name):
     imbued_locals["move_south"] = make_blocking(player_object.move_south)
     imbued_locals["move_west"] = make_blocking(player_object.move_west)
 
+
+    #All the stuff to define new print stuff
     printed_flag = [False]
     def user_print(text):
-         printed_flag[0] = True
-         player_object.get_engine().print_terminal(str(text), False) #autoconvert print to strings (do not need to convert within the game)
+        """ A simple mthod to print text to the game console for the user, overrides the python default print method """
+        printed_flag[0] = True
+        player_object.get_engine().print_terminal(text, False) #autoconvert print to strings (do not need to convert within the game)
 
     #Replace print statement in player script so that all their output goes to the terminal.
     imbued_locals["print"] = user_print
     imbued_locals["print_bag_items"] = lambda: user_print(player_object.bag_items_string())
 
-
-
+    #the method to get the position of the player
     imbued_locals["get_position"] = player_object.get_position
+
+    imbued_locals["test_display"] = player_object.test_display
 
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(imbued_locals, player_object.get_engine().print_terminal) #create an instance of it
@@ -61,8 +71,9 @@ def start(player_object, script_name):
                 script = script_file.read()
 
     def thread_target():
-        """ this is the method that is run in the seperate thread,
-        it runs the script requested first and then runs the callback.
+        """ This is the method that is run in the seperate thread.
+        
+        It runs the script requested first and then runs the callback.
         the callback is therefore run in the seperate thread.
         """
         try:
