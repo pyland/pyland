@@ -54,6 +54,15 @@ private:
     Lifeline left_callback;
     Lifeline run_callback;
     Lifeline speed_callback;
+    Lifeline script1_callback;
+    Lifeline script2_callback;
+    Lifeline script3_callback;
+    Lifeline script4_callback;
+    Lifeline script5_callback;
+    Lifeline script6_callback;
+    Lifeline script7_callback;
+    Lifeline script8_callback;
+    Lifeline script9_callback;
     Lifeline mouse_button_lifeline;
     Lifeline help_callback;
     Lifeline switch_char;

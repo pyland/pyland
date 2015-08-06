@@ -80,7 +80,16 @@ GameMain::GameMain(int &argc, char **argv):
 
     //Register InputHandler callbacks
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TOGGLE_SPEED, Engine::trigger_speed);
-    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_RUN, Engine::trigger_run);
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_RETURN, [] () {Engine::trigger_run(0); } );
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_ONE, [] () {Engine::trigger_run(1); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TWO, [] () {Engine::trigger_run(2); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_THREE, [] () {Engine::trigger_run(3); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_FOUR, [] () {Engine::trigger_run(4); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_FIVE, [] () {Engine::trigger_run(5); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SIX, [] () {Engine::trigger_run(6); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SEVEN, [] () {Engine::trigger_run(7); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_EIGHT, [] () {Engine::trigger_run(8); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_NINE, [] () {Engine::trigger_run(9); });
 
     gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
 
@@ -91,13 +100,6 @@ GameMain::GameMain(int &argc, char **argv):
         gui.get_map_viewer()->resize();
     });
 
-    restart_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("R")},
-    [&] (KeyboardInputEvent)
-    {
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
-    }
-    ));
 
     back_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("ESCAPE")},
@@ -143,10 +145,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("Return")},
     [&] (KeyboardInputEvent)
     {
-        std::cout << "Enter" << std::endl;
-        Engine::trigger_run();
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN);
-        //callbackstate.restart();
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RETURN);
     }
     ));
 
@@ -154,15 +153,81 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("Space")},
     [&] (KeyboardInputEvent)
     {
-
-        std::cout << "Space" << std::endl;
-        //Engine::trigger_speed();
         InputHandler::get_instance()->run_list(InputHandler::INPUT_TOGGLE_SPEED);
-        //Engine::
-        //callbackstate.restart();
     }
     ));
 
+    script1_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("1")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_ONE);
+    }
+    ));
+
+    script2_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("2")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_TWO);
+    }
+    ));
+
+    script3_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("3")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_THREE);
+    }
+    ));
+
+    script4_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("4")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_FOUR);
+    }
+    ));
+
+    script5_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("5")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_FIVE);
+    }
+    ));
+
+    script6_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("6")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_SIX);
+    }
+    ));
+
+    script7_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("7")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_SEVEN);
+    }
+    ));
+
+    script8_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("8")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_EIGHT);
+    }
+    ));
+
+    script9_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("9")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
+    }
+    ));
 
     mouse_button_lifeline = input_manager->register_mouse_handler(filter(
     {MOUSE_RELEASE},

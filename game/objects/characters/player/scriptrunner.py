@@ -64,7 +64,8 @@ def start(player_object, script_name):
 
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(imbued_locals, player_object.get_engine().print_terminal) #create an instance of it
-    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/" + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
+    #script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/Script " + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
+    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/"+str(script_name)+".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
 
     #open and read the script
     with open(script_filename, encoding="utf8") as script_file:
@@ -72,7 +73,7 @@ def start(player_object, script_name):
 
     def thread_target():
         """ This is the method that is run in the seperate thread.
-        
+
         It runs the script requested first and then runs the callback.
         the callback is therefore run in the seperate thread.
         """
@@ -80,10 +81,12 @@ def start(player_object, script_name):
             scoped_interpreter.runcode(script) #Run the script
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
             player_object.get_engine().print_terminal("Halted Script\n", True)
+            player_object.get_engine().set_finished()
         finally: #perform neccesary cleanup
             if printed_flag[0]:
                 player_object.get_engine().print_terminal("-------------", False)
             player_object.set_running_script_status(False)
+            player_object.get_engine().set_finished()
             #TODO: Make it so that the halt button becomes the run button again.
 
     thread = threading.Thread(target = thread_target, name = player_object.get_name() + "_script_thread")

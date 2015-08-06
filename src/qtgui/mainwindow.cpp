@@ -271,6 +271,7 @@ MainWindow::MainWindow(GameMain *exGame):
     int width = (gameWidget->width());
     int height = gameWidget->height();
     anyOutput = false;
+    executeIndex = 1;
 
     SDL_SetWindowSize(embedWindow, width, height);
     glViewport(0, 0, width, height);
@@ -701,10 +702,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
 }
 
 void MainWindow::clickRun(){
-    runCode();
+    //Run the currently open script
+    runCode(0);
 }
 
-void MainWindow::runCode()
+//Script defines the current script to execute
+//If zero the currently open script is run
+void MainWindow::runCode(int script)
 {
     if (running)
     {
@@ -727,22 +731,28 @@ void MainWindow::runCode()
         //Also save as 'Current Script.py' as temporary measure before new input manager
         //This python script is always run in bootstrapper.py (in start)
         ofstream fout(path.c_str(), ios::out|ios::trunc);
-        ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
+        //ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
 
-        if(!(fout.good() && foutcopy.good()))
+        if(!(fout.good()))// && foutcopy.good()))
         {
             LOG(INFO) << "Output file is bad" << endl;
             return;
         }
 
         fout << ws->text().toStdString();
-        foutcopy << ws->text().toStdString();
+        //foutcopy << ws->text().toStdString();
 
         fout.close();
-        foutcopy.close();
+        //foutcopy.close();
 
         setRunning(true);
         updateSpeed();
+        if (script == 0){
+            executeIndex = getCurrentScript();
+        }
+        else{
+            executeIndex = script;
+        }
         InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
     setGameFocus();
@@ -753,7 +763,6 @@ void MainWindow::clickSpeed(){
 }
 
 void MainWindow::toggleSpeed(){
-    std::cout << "toggling" << std::endl;
     setFast(!fast);
     updateSpeed();
     setGameFocus();
@@ -912,6 +921,13 @@ bool MainWindow::getAnyOutput(){
     return anyOutput;
 }
 
+//Get the currently open script tab number
 int MainWindow::getCurrentScript(){
     return (textWidget->currentIndex())+ 1;
+}
+
+//Get the number of the script that is to be run
+//This may be different to the open one (due to keybindings)
+int MainWindow::getExecuteScript(){
+    return executeIndex;
 }

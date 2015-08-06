@@ -182,8 +182,10 @@ public:
     static void print_terminal(std::string text, bool error);
     static void set_any_output(bool option);
     static void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
-    static void trigger_run();
+    static void set_finished();
+    static void trigger_run(int script);
     static void trigger_speed();
+    static int get_run_script();
 
     /// global access to game font
     static TextFont get_game_font();

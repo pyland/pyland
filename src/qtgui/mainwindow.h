@@ -56,6 +56,8 @@ public:
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
     void updateToolBar();
+    void runCode(int script);
+    void toggleSpeed();
     void setRunning(bool option);
     void setFast(bool option);
     void setAnyOutput(bool option);
@@ -65,8 +67,7 @@ public:
     int getGameWidgetHeight();
     bool getAnyOutput();
     int getCurrentScript();
-    void runCode();
-    void toggleSpeed();
+    int getExecuteScript();
 
 protected:
     SDL_Scancode parseKeyCode(QKeyEvent *keyEvent);
@@ -141,6 +142,9 @@ private:
     //Specifies whether there has been any output during the current code execution,
     //it determine if output separate lines are needed
     bool anyOutput;
+
+    //Index of the script to be executed
+    int executeIndex;
 };
 
 #endif
