@@ -17,7 +17,7 @@ coconut_one.set_solidity(False);
 
 engine.print_terminal(coconut_one.get_weight(), False)
 
-engine.play_music("beach")
+engine.play_music("eery")
 engine.get_objects_at((7, 2))
 engine.get_objects_at((4, 4))
 engine.get_objects_at((5, 4))
@@ -44,14 +44,5 @@ engine.add_button("gui/head/monkey", "Portal", exit_portal.focus)
 engine.print_terminal(player_one.get_position(), False)
 
 engine.print_terminal(game.getDialogue("welcome"))
-
-#b = lambda: engine.print_terminal(player_one.get_number_of_animation_frames())
-b = lambda: engine.print_terminal(player_one.get_sprite())
-b()
-engine.register_input_callback(engine.INPUT_DOWN, b)
-engine.register_input_callback(engine.INPUT_UP, b)
-engine.register_input_callback(engine.INPUT_LEFT, b)
-engine.register_input_callback(engine.INPUT_RIGHT, b)
-#engine.print_terminal(player_one.get_sprite())
 
 #engine.print_terminal(engine.getDialogue("welcome"))
