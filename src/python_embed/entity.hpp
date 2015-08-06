@@ -21,7 +21,7 @@ class Entity {
         /// Starting postiton for this entity, used to reset location when entity dies.
         ///
         glm::vec2 start;
-        std::sprite_location;
+        std::string sprite_location;
 
 
     public:

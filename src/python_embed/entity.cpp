@@ -99,7 +99,7 @@ std::string Entity::get_location() {
 }
 
 std::string Entity::get_sprite() {
-    return sprite_location;
+    return this->sprite_location;
 }
 
 void Entity::set_sprite(std::string sprite_location) {
