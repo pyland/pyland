@@ -6,12 +6,15 @@
 		//"level_location": "/test_world/test_level/test_one",
 		"level_location": "/test_world/yingischallenged/main",
 		"full_level_location" : self.game_folder + "/levels" + self.level_location,
-		"player_scripts": self.game_folder + "/player_scripts"
+		"player_scripts": self.game_folder + "/player_scripts",
+		"object_location": self.game_folder + "/objects"
+		
 	},
 
 	//define layer properties
-	"layers": { 
-		"special_layer_name": "SL1" //The name of the layer which provides special properties to tiles on the map.
+	"layers": {
+		"special_layer_name": "SpecialLayer" //The name of the layer which provides special properties to tiles on the map.
+
 	},
 
 	//define constants for rendering sizes

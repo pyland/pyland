@@ -112,6 +112,8 @@ TMXPARSER_CXXFLAGS =
 TMXPARSER_LDFLAGS  = -L./tmx-parser
 TMXPARSER_LDLIBS   = -ltmxparser
 
+JSON_INC_FLAGS = -isystem ./json-parser
+
 JSONNET_LDFLAGS    = -L./jsonnet
 JSONNET_LDLIBS     = -ljsonnet
 

@@ -130,7 +130,7 @@ $(CORE_OBJS): %.o : %.cpp | dependencies/core
 		$(CPPFLAGS)        $(CXXFLAGS)             \
 		$(WARNINGS)	     $(QT_INCFLAGS)        \
 		$(QT_CXXFLAGS) $(QT_DEFINES)               \
-		$(QT_INCPATH)			           \
+		$(QT_INCPATH)      $(JSON_INC_FLAGS)	   \
 
 $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 	@echo "${bold}[ Compiling gui object file ${yellow}$*.o${normal}${bold} from ${yellow}$*.cpp${normal}${bold} ]${normal}"
