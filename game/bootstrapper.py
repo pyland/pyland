@@ -7,7 +7,6 @@ import threading
 import traceback
 import importlib
 
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/engine')
 from engine import Engine
 

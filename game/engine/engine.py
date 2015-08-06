@@ -1,6 +1,6 @@
-
 import sqlite3
 import os
+
 
 class Engine:
     """ This class is a python wrapper for all the engine features that are exposed to the game.
@@ -31,20 +31,20 @@ class Engine:
         return dialogue
     
     def __init__(self, cpp_engine):
+        """ On initialisation, the cplusplus engine is passed to this class to enable it to access the api of the game.
+     
+        Parameters
+        ----------
+        cpp_engine : C++GameEngine
+            Represents an instance of the C++ engein. All of whom's properties are inherited by Engine
+        """
         #Database
         #--------
         self.all_languages = ["english", "français", "nederlands", "hindi", "pyrate"]
         self.dblocation = os.path.dirname(os.path.realpath(__file__)) + "/database.db"
         self.language = "english"
         self.conn = sqlite3.connect(self.dblocation)
-        """ On initialisation, the cplusplus engine is passed to this class to enable it to access the api of the game.
-       
-        
-        Parameters
-        ----------
-        cpp_engine : C++GameEngine
-            Represents an instance of the C++ engein. All of whom's properties are inherited by Engine
-        """
+
         self.__cpp_engine = cpp_engine
         #Use some magic trickery to give the Engine class all the methods of the C++GameEngine with their functionality
         engine_properties = [a for a in dir(self.__cpp_engine) if not a.startswith('__')]   #get all the engine properties with the magic and private methods filtered out
@@ -110,9 +110,5 @@ class Engine:
             if true the message is printed red, else it printed in black
         """
         self.__cpp_engine.print_terminal(str(message), highlighted)
-
-
-
-
 
 
