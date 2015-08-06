@@ -47,14 +47,14 @@ public:
     ///
     void add_message(std::string text_to_display);
 
-	void set_text(std::string _text);
-	std::shared_ptr<Text> get_text();
-	void set_text(std::shared_ptr<Text> _text);
-	void resize_text(float width, float height);
-	void move_text(float x_offset, float y_offset);
-	void traverse_text(Direction direction);
+    void set_text(std::string _text);
+    std::shared_ptr<Text> get_text();
+    void set_text(std::shared_ptr<Text> _text);
+    void resize_text(float width, float height);
+    void move_text(float x_offset, float y_offset);
+    void traverse_text(Direction direction);
 
-	///
+    ///
     ///Methods to be defined when inheriting properties from ComponentGroup
     ///These don't do anything as such because no image is to be displayed in the textbox
     ///
