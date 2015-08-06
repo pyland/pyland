@@ -64,9 +64,7 @@ GameMain::GameMain(int &argc, char **argv):
     input_manager = embedWindow.get_input_manager();
 
     //The GUI resize function
-
-	original_window_size = embedWindow.get_size();
-
+    original_window_size = embedWindow.get_size();
     gui_resize_func = [&] (GameWindow* game_window)
     {
         LOG(INFO) << "GUI resizing";
@@ -76,6 +74,8 @@ GameMain::GameMain(int &argc, char **argv):
         gui.get_gui_window()->set_width_pixels(window_size.first);
         gui.get_gui_window()->set_height_pixels(window_size.second);
         gui.refresh_gui();
+
+        original_window_size = window_size;
     };
 
     //Register InputHandler callbacks
@@ -360,8 +360,6 @@ void GameMain::game_loop(bool showMouse)
         VLOG(3) << "} EM | RM {";
         Engine::get_map_viewer()->render();
         VLOG(3) << "} RM | TD {";
-        //Engine::text_displayer(); TODO: work out what this did and if neccesary
-        challenge_data->notification_bar->text_displayer();
 
         // This is not an input event, because the map can move with
         // the mouse staying still.

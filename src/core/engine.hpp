@@ -7,6 +7,7 @@
 
 #include <glm/vec2.hpp>
 #include <string>
+#include <memory>
 #include <vector>
 
 #include "challenge.hpp"
@@ -16,14 +17,14 @@
 
 class MainWindow;
 class MapViewer;
-class NotificationBar;
+class TextBox;
 
 // Class wrapping the API calls into a static public class
 class Engine {
 private:
     static MapViewer *map_viewer;
 
-    static NotificationBar* notification_bar;
+    static std::shared_ptr<TextBox> notification_bar;
 
     static GameWindow* game_window;
 
@@ -173,9 +174,9 @@ public:
     ///
     static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
 
-    static void set_notification_bar(NotificationBar *notification_bar) { Engine::notification_bar = notification_bar; }
+    static void set_notification_bar(std::shared_ptr<TextBox> notification_bar) { Engine::notification_bar = notification_bar; }
 
-    static NotificationBar* get_notification_bar() { return Engine::notification_bar; }
+    static std::shared_ptr<TextBox> get_notification_bar() { return Engine::notification_bar; }
     static void print_dialogue(std::string name, std::string text);
 
     /// trigger qt mainwindow functions

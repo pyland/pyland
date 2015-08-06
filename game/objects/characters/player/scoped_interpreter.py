@@ -22,7 +22,7 @@ class ScopedInterpreter(code.InteractiveInterpreter):
         super().__init__(imbued_locals)
         self.output_reader = output_reader
 
-    def runcode(self, code):
+    def runcode(self, code, HaltScriptException):
         #"""TODO: work out how to catch exceptions safely and handle them with python,
         #then we can query the database to print output and errors messages cleanly to the user!"""
         #TODO: work out what the hell contextlib.closing does, don't forget to change bootstrapper.py based on that!
@@ -35,6 +35,8 @@ class ScopedInterpreter(code.InteractiveInterpreter):
             # source of the implementaion we're overloading.
             try:
                 exec(code, self.locals)
+            except HaltScriptException as He:
+                raise He
             except Exception as e:
                 #Print out any errors caught in the code to the game terminal
                 self.output_reader(traceback.format_exc(), True) 
