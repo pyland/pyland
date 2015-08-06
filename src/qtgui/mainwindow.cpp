@@ -487,8 +487,6 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
 {
     //Hard coded keyboard bindings from QT to SDL for none numerical/alphabetical keys
     //None numerical/alphabetical keys return native virtual keys greater than 6000 that do not directly map to SDL keys
-    std::cout << "key is " << (keyEvent->key()) << std::endl;
-    std::cout << "key is " << (keyEvent->nativeScanCode()) << std::endl;
     switch (keyEvent->key())
     {
     case Qt::Key_Enter:
