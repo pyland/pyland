@@ -13,7 +13,7 @@ coconut_five.set_weight(16)
 coconut_six.set_weight(32)
 coconut_seven.set_weight(64)
 
-coconut_one.set_solidity(True);
+coconut_one.set_solidity(False);
 
 engine.print_terminal(coconut_one.get_weight(), False)
 
@@ -41,4 +41,8 @@ engine.add_button("gui/head/monkey", "Rock7", coconut_seven.focus)
 engine.add_button("gui/head/monkey", "Portal", exit_portal.focus)
 """
 
-engine.print_terminal(str(player_one.get_position()) + "\n", False)
+engine.print_terminal(player_one.get_position(), False)
+
+engine.print_terminal(game.getDialogue("welcome"))
+
+#engine.print_terminal(engine.getDialogue("welcome"))
