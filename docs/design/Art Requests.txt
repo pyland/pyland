@@ -100,7 +100,6 @@ World 7 - Monkey Kingdom
 Main character sprite
 	Male/Female
 	Different Ethnicities
-	Different hair/eye colour
 
 Story characters
 	Napper 1
@@ -108,22 +107,6 @@ Story characters
 		
 
 ****** ITEMS ******
-
-& Door locking mechanisms (crack the code)
-Rock tablet (read  messages from)
-& Sliding door
-Totem
-
-PyVice
-	Tile sized
-Scripts
-	Tile sized
-	Larger version for shop display
-PyAutoCompleter
-	Tile sized
-	Larger version for shop display
-
-
 
 
 ****** CLOTHING ******

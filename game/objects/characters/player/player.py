@@ -47,18 +47,23 @@ class Player(Character):
         This function is called once all the neccesary set-up of the object has completed
         run when the object is created in-engine
         """
+        super().initialise()
         engine = self.get_engine()
+
+        def focus_func(func):
+            """ Wraps functions so that they are only run if the player is the focus """
+            return lambda: func() if self.is_focus() else None
 
         #register input callbacks to make character playable
         #register callbacks for running player scripts
-        engine.register_input_callback(engine.INPUT_RUN, self.run_script)
-        engine.register_input_callback(engine.INPUT_HALT, self.halt_script)
-        
+        engine.register_input_callback(engine.INPUT_RUN, focus_func(self.run_script))
+        engine.register_input_callback(engine.INPUT_HALT, focus_func(self.halt_script))
+
         #register callbacks for character movement
-        engine.register_input_callback(engine.INPUT_UP, self.move_north)
-        engine.register_input_callback(engine.INPUT_RIGHT, self.move_east)
-        engine.register_input_callback(engine.INPUT_DOWN, self.move_south)
-        engine.register_input_callback(engine.INPUT_LEFT, self.move_west)
+        engine.register_input_callback(engine.INPUT_UP, focus_func(self.move_north))
+        engine.register_input_callback(engine.INPUT_RIGHT, focus_func(self.move_east))
+        engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.move_south))
+        engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.move_west))
 
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
@@ -78,6 +83,15 @@ class Player(Character):
     Put the regular public methods you wish to use here.
     """
 
+
+    def test_display(self):
+        engine = self.get_engine()
+        x, y = self.get_position()
+        game_objects = engine.get_objects_at((x, y+1)) 
+        for game_object in game_objects:
+            if isinstance(game_object, Bagable):
+                engine.print_terminal("Object is bagable")
+            engine.print_terminal(game_object.get_name())
 
     def pick_up_objects(self):
         """ Pick up and put all bagable objects in front of the player in the player's bag.
@@ -124,7 +138,7 @@ class Player(Character):
         Works by sending the thread the script is running in an Exception, which the thread catches and appropriately handles and
         stops running.
         """
-        if(self.__running_script):
+        if self.__running_script:
             thread_id = self.__thread_id #TODO: Make this process safer, look at temp.py and add appropriate guards around the next line to check for valid results etc.
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
 

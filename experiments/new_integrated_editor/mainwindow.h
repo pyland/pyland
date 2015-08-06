@@ -111,6 +111,8 @@ private:
 
     QsciAPIs*  api;
 
+    QsciLexerPython *lexer;
+
     QsciScintilla *textEdit;
     static const int workspace_max = 9;
     QsciScintilla *workspaces[workspace_max];
