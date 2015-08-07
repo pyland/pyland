@@ -82,10 +82,14 @@ class Engine:
         self.__cpp_engine.print_terminal(str(message), highlighted)
 
     def create_object(self, class_location, object_name, position):
+        """ This is meant to return a new instance of a given game object, but it hasn't been properly implemented yet """
         x, y = position
         spam = self.__cpp_engine.create_object(class_location, object_name, x, y)
         return spam
 
+    def get_tile_type(self, position):
+        x, y = position
+        return self.__cpp_engine.get_tile_type(x, y)
 
 
 

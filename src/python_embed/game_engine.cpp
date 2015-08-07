@@ -16,6 +16,10 @@ void GameEngine::change_level(std::string level_location) {
     return;
 }
 
+int GameEngine::get_tile_type(int x, int y) {
+    return Engine::get_tile_type(x, y);
+}
+
 
 boost::python::object GameEngine::create_object(std::string class_location, std::string object_name, int x, int y) {
     LOG(INFO) << "Creating an instance of " << class_location << " at (" << x << ", " << y << ") called " << object_name;
@@ -37,7 +41,6 @@ void GameEngine::print_debug(std::string debug_message) {
 
 
 void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
-
     //TODO: Find a way of avoiding this hack
     LOG(INFO) << "Adding a new button: " << name;
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
@@ -45,7 +48,6 @@ void GameEngine::add_button(std::string file_path, std::string name, PyObject* c
     EventManager::get_instance()->add_event([this, file_path, name, boost_callback] {
         gui_main->add_button(file_path, name, boost_callback);
     });
-
 }
 
 void GameEngine::register_input_callback(int input_key, PyObject *py_input_callback) {

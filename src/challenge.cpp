@@ -62,17 +62,6 @@ Challenge::Challenge(ChallengeData* _challenge_data, GUIMain * _gui_main) :
 }
 
 Challenge::~Challenge() {
-
-    //Remove all sprites
-    for(int sprite_id : sprite_ids) {
-        ObjectManager::get_instance().remove_object(sprite_id);
-    }
-
-    //Remove all assistants
-    for(int assistant_id : assistant_ids) {
-        ObjectManager::get_instance().remove_object(assistant_id);
-    }
-
     //Remove all map objects
     for(int map_object_id : map_object_ids) {
         ObjectManager::get_instance().remove_object(map_object_id);
@@ -105,20 +94,6 @@ int Challenge::make_object(glm::vec2 position,
     map->add_map_object(new_object_id);
 
     return new_object_id;
-}
-
-int Challenge::id_type(int id){
-    for(int sprite_id : sprite_ids) {
-        if (id == sprite_id){
-            return sprite_id_type;
-        }
-    }
-    for(int assistant_id : assistant_ids) {
-        if (id == assistant_id){
-            return assistant_id_type;
-        }
-    }
-    return object_id_type;
 }
 
 py::object Challenge::read_message(int) const {

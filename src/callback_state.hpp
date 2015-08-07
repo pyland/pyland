@@ -78,10 +78,7 @@ public:
 
     void man_move(glm::vec2 direction) {
         auto id = Engine::get_map_viewer()->get_map_focus_object();
-        Challenge* current_challenge = Engine::get_challenge();
-        if (!(current_challenge->id_type(id) == assistant_id_type)){
-            Engine::move_object(id, direction);
-        }
+        Engine::move_object(id, direction);
     }
 
     void monologue () {

@@ -88,11 +88,24 @@ Map::~Map() {
 }
 
 bool Map::is_walkable(int x_pos, int y_pos) {
-    return std::all_of(std::begin(layer_ids), std::end(layer_ids), [&] (int layer_id) {
-            std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
+    for(auto it = std::begin(layer_ids); it != std::end(layer_ids); ++it) {
+        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(*it);
         // Block only in the case where we're on the special layer and the tile is set
-            return !(layer->get_name() == Config::get_instance()["layers"]["special_layer_name"] && (layer->get_tile(x_pos, y_pos).second == 1));
-    });
+        if(layer->get_name() == Config::get_instance()["layers"]["special_layer_name"] && (layer->get_tile(x_pos, y_pos).second == 1)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int Map::get_tile_type(int x, int y) {
+    for(auto it = layer_ids.begin(); it != layer_ids.end(); ++it) {
+        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(*it);
+        if(layer->get_name() == Config::get_instance()["layers"]["special_layer_name"]) {
+            return layer->get_tile(x, y).second;
+        }
+    }
+    return -1; 
 }
 
 

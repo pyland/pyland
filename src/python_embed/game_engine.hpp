@@ -28,6 +28,11 @@ class GameEngine {
 
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
+
+        static int TILE_TYPE_SOLID() { return 1; }
+        static int TILE_TYPE_WATER() { return 2; }
+
+
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
         GameEngine(GUIMain *_gui_main, Challenge *challenge){
@@ -55,6 +60,8 @@ class GameEngine {
         ///
         ///
         void change_level(std::string level_location);
+
+        int get_tile_type(int x, int y);
 
         ///
         /// Get the location of the level data in the file system relative to the game/levels folder.

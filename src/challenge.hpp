@@ -14,11 +14,6 @@
 #include "walkability.hpp"
 #include "entity.hpp"
 
-//Constants to define the different types, used in id_type function
-const int sprite_id_type = 1;
-const int assistant_id_type = 2;
-const int object_id_type = 3;
-
 class ChallengeData;
 class Entity;
 class Map;
@@ -58,8 +53,6 @@ public:
 
     ChallengeData* challenge_data;
     Dispatcher<> event_finish;
-    std::vector<int> sprite_ids; //TODO: remove
-    std::vector<int> assistant_ids; //TODO:remove
 
     virtual void start();
     virtual void finish();
@@ -78,7 +71,6 @@ public:
                     Walkability walkability,
                     AnimationFrames frames);
 
-    int id_type(int id);
     virtual boost::python::object read_message(int id) const;
 
     ///

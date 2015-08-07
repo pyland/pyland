@@ -237,6 +237,10 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     });
 }
 
+int Engine::get_tile_type(int x, int y) {
+    return map_viewer->get_map()->get_tile_type(x, y);
+}
+
 void Engine::print_dialogue(std::string name, std::string text) {
     std::string text_to_display = name + " : " + text;
     notification_bar->add_message(text_to_display);

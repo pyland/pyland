@@ -110,6 +110,46 @@ class Crocodile(Character):
         elif rand==5:
             return self.wait(0.3, self.rand_explore)
 
+
+    def move_north(self, callback):
+        super().move_north(callback)
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x, y+1)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")
+        else:
+            self.change_state("main")
+    
+    def move_east(self, callback):
+        super().move_east(callback)
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x+1, y)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")
+        else:
+            self.change_state("main")
+
+    def move_south(self, callback):
+        super().move_south(callback)
+        engine = self.get_engine()
+        x, y = self.get_position()
+
+        if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_SOLID):
+            self.change_state("swim")
+        elif(engine.get_tile_type((x, y-1)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")
+        else:
+            self.change_state("main")
+
+    def move_west(self, callback):
+        super().move_west(callback)
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x+1, y)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")
+        else:
+            self.change_state("main")
+
     """ private:
     Put the private methods you wish to use here.
     """

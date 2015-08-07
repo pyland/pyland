@@ -14,7 +14,6 @@
 	//define layer properties
 	"layers": {
 		"special_layer_name": "SpecialLayer" //The name of the layer which provides special properties to tiles on the map.
-
 	},
 
 	//define constants for rendering sizes
