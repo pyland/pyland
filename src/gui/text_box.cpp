@@ -16,40 +16,82 @@
 TextBox::TextBox(TextBoxType _type) {
 
 	type = _type;
+	buffer_size = 100;
     TextFont buttonfont = Engine::get_game_font();
 
     //build forwards button
     forward_button = std::make_shared<Button>(ButtonType::Single);
     forward_button->set_visible(text_stack.can_forward());
 	forward_button->set_alignment(ButtonAlignment::BottomLeft);
-	if(text_stack.can_forward()){
-		//forward_button->set_text("FORWARD");
-	}
-	else{
-		//forward_button->set_text("CLOSE");
-		forward_button->set_picture("gui/status/failed");
-	}
-	forward_button->move_text(0.0f, 0.0f);
-	forward_button->set_picture("gui/status/running");
 
-    forward_button->set_on_click([&] () {
-        LOG(INFO) << "forward button pressed";
+	backward_button = std::make_shared<Button>(ButtonType::Single);
+    backward_button->set_visible(text_stack.can_backward());
+	backward_button->set_alignment(ButtonAlignment::BottomLeft);
 
-		if(text_stack.can_forward()){
-			traverse_text(Direction::NEXT);
+	if(type == TextBoxType::Forward){
+		forward_button->move_text(0.0f, 0.0f);
+		forward_button->set_picture("gui/status/running");
 
-			if(!text_stack.can_forward()){
-				//forward_button->set_text("CLOSE");
-				forward_button->set_picture("gui/status/failed");
+		forward_button->set_on_click([&] () {
+			LOG(INFO) << "forward button pressed";
+
+			if(text_stack.can_forward()){
+				traverse_text(Direction::NEXT);
+
+				if(!text_stack.can_forward()){
+					forward_button->set_picture("gui/status/failed");
+				}
+				Engine::get_gui()->refresh_gui();
 			}
-			Engine::get_gui()->refresh_gui();
-		}
-		else{
-			close();
-		}
-    });
+			else{
+				close();
+			}
+		});
 
-    this->add(forward_button);
+		this->add(forward_button);
+    }
+    else if(type == TextBoxType::Both){
+		forward_button->move_text(0.0f, 0.0f);
+		forward_button->set_picture("gui/status/running");
+
+		forward_button->set_on_click([&] () {
+			LOG(INFO) << "forward button pressed";
+
+			if(text_stack.can_forward()){
+				traverse_text(Direction::NEXT);
+
+				if(!text_stack.can_forward()){
+					forward_button->set_picture("gui/status/failed");
+				}
+				else if(text_stack.can_forward()){
+					forward_button->set_picture("gui/status/running");
+				}
+				Engine::get_gui()->refresh_gui();
+			}
+		});
+
+		backward_button->move_text(0.0f, 0.0f);
+		backward_button->set_picture("gui/status/running");
+
+		backward_button->set_on_click([&] () {
+			LOG(INFO) << "backward button pressed";
+
+			if(text_stack.can_backward()){
+				traverse_text(Direction::PREVIOUS);
+
+				if(!text_stack.can_backward()){
+					backward_button->set_picture("gui/status/failed");
+				}
+				else if(text_stack.can_backward()){
+					backward_button->set_picture("gui/status/running");
+				}
+				Engine::get_gui()->refresh_gui();
+			}
+		});
+
+		this->add(forward_button);
+		this->add(backward_button);
+    }
 
     // text object for notifications
     text = std::make_shared<GUIText>();
@@ -66,15 +108,27 @@ TextBox::TextBox(TextBoxType _type) {
 }
 
 void TextBox::open(){
+
 	this->set_visible(true);
 	forward_button->set_visible(true);
 
-	if(text_stack.can_forward()){
-		//forward_button->set_text("FORWARD");
+	if(type == TextBoxType::Forward){
+		forward_button->set_visible(true);
+
+		if(!text_stack.can_forward()){
+			forward_button->set_picture("gui/status/failed");
+		}
 	}
-	else{
-		//forward_button->set_text("CLOSE");
-		forward_button->set_picture("gui/status/failed");
+	else if(type == TextBoxType::Both){
+		forward_button->set_visible(true);
+		backward_button->set_visible(true);
+
+		if(!text_stack.can_forward()){
+			forward_button->set_picture("gui/status/failed");
+		}
+		if(!text_stack.can_backward()){
+			backward_button->set_picture("gui/status/failed");
+		}
 	}
 
 	this->set_text(text_stack.present());
@@ -83,7 +137,14 @@ void TextBox::open(){
 
 void TextBox::close(){
 
-	forward_button->set_visible(false);
+	if(type == TextBoxType::Forward){
+		forward_button->set_visible(false);
+	}
+	else if(type == TextBoxType::Both){
+		forward_button->set_visible(false);
+		backward_button->set_visible(false);
+	}
+
 	this->set_visible(false);
 	Engine::get_gui()->refresh_gui();
 }
@@ -102,13 +163,31 @@ void TextBox::add_message(std::string text_to_display) {
 
 
 void TextBox::resize_buttons(float width, float height){
-	forward_button->set_width(width);
-	forward_button->set_height(height);
+
+	if(type == TextBoxType::Forward){
+		forward_button->set_width(width);
+		forward_button->set_height(height);
+	}
+	else if(type == TextBoxType::Both){
+		forward_button->set_width(width);
+		forward_button->set_height(height);
+		backward_button->set_width(width);
+		backward_button->set_height(height);
+	}
 }
 
-void TextBox::move_buttons(float x_offset, float y_offset){
-	forward_button->set_x_offset(x_offset);
-	forward_button->set_y_offset(y_offset);
+void TextBox::move_buttons(float x_offset, float y_offset, float spacing /* = 0.0f */){
+
+	if(type == TextBoxType::Forward){
+		forward_button->set_x_offset(x_offset);
+		forward_button->set_y_offset(y_offset);
+	}
+	else if(type == TextBoxType::Both){
+		forward_button->set_x_offset(x_offset);
+		forward_button->set_y_offset(y_offset);
+		backward_button->set_x_offset(x_offset - spacing);
+		backward_button->set_y_offset(y_offset);
+	}
 }
 
 void TextBox::clear_text() {

@@ -49,16 +49,22 @@ void GUIMain::create_pyguide(){
     pyguide_window->set_text("PyGuide");
     pyguide_window->set_clickable(false);
     pyguide_window->set_visible(false);
-    pyguide_window->move_text(title_x_offset, title_y_offset);
+    pyguide_window->move_text(pyguide_title_x_offset, pyguide_title_y_offset);
 
 	py_help = std::make_shared<TextBox>(TextBoxType::Both);
 	py_help->set_width(py_help_width);
 	py_help->set_height(py_help_height);
 	py_help->set_x_offset(py_help_x);
 	py_help->set_y_offset(py_help_y);
+	py_help->set_visible(false);
 
+	py_help->move_text(py_help_text_x, py_help_text_y);
+	py_help->resize_text(py_help_text_width, py_help_text_height);
+	py_help->move_buttons(py_help_button_x, py_help_button_y, py_help_button_spacing);
+	py_help->resize_buttons(py_help_button_width, py_help_button_height);
 
 	gui_window->add(pyguide_window);
+	pyguide_window->add(py_help);
 }
 
 void GUIMain::create_pause_menu(){
@@ -166,7 +172,14 @@ void GUIMain::open_pyguide(){
 
     close_bag();
     pyguide_window->set_visible(true);
+	py_help->set_visible(true);
 
+	nlohmann::json j = Config::get_instance();
+	for(int i=0; i<py_apis_num; i++){
+		std::string help = j["pyguide_apis"][std::to_string(i)];
+		py_help->add_message(help);
+	}
+	py_help->open();
     refresh_gui();
     LOG(INFO) << "PyGuide opened";
 }
@@ -174,7 +187,8 @@ void GUIMain::open_pyguide(){
 void GUIMain::close_pyguide(){
 
     pyguide_window->set_visible(false);
-
+	py_help->set_visible(false);
+	py_help->close();
     refresh_gui();
     LOG(INFO) << "PyGuide closed";
 }
@@ -360,6 +374,8 @@ void GUIMain::config_gui()
 
     title_x_offset = j["scales"]["title_x_offset"];
     title_y_offset = j["scales"]["title_y_offset"];
+    pyguide_title_x_offset = j["scales"]["pyguide_title_x_offset"];
+    pyguide_title_y_offset = j["scales"]["pyguide_title_y_offset"];
 
     menu_x_offset = j["scales"]["menu_x_offset"];
     menu_y_offset = j["scales"]["menu_y_offset"];
@@ -377,6 +393,22 @@ void GUIMain::config_gui()
 	notification_button_x = j["scales"]["notification_button_x"];
 	notification_button_y = j["scales"]["notification_button_y"];
 
+	py_help_width = j["scales"]["py_help_width"];
+	py_help_height = j["scales"]["py_help_height"];
+	py_help_x = j["scales"]["py_help_x"];
+	py_help_y = j["scales"]["py_help_y"];
+
+	py_help_text_width = j["scales"]["py_help_text_width"];
+	py_help_text_height = j["scales"]["py_help_text_height"];
+	py_help_text_x = j["scales"]["py_help_text_x"];
+	py_help_text_y = j["scales"]["py_help_text_y"];
+
+	py_help_button_width = j["scales"]["py_help_button_width"];
+	py_help_button_height = j["scales"]["py_help_button_height"];
+	py_help_button_x = j["scales"]["py_help_button_x"];
+	py_help_button_y = j["scales"]["py_help_button_y"];
+	py_help_button_spacing = j["scales"]["py_help_button_spacing"];
+
     button_width = j["scales"]["button_width"];
     button_height = j["scales"]["button_height"];
 
@@ -384,5 +416,7 @@ void GUIMain::config_gui()
     vertical_button_spacing = j["scales"]["vertical_button_spacing"];
 
     button_max = j["scales"]["button_max"];
+
+    py_apis_num = j["pyguide_apis"]["number"];
 }
 

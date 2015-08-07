@@ -36,6 +36,9 @@ private:
 
     float title_x_offset;
     float title_y_offset;
+    float pyguide_title_x_offset;
+    float pyguide_title_y_offset;
+
 
     float menu_x_offset;
     float menu_y_offset;
@@ -53,20 +56,23 @@ private:
 	float notification_button_x;
 	float notification_button_y;
 
+	float py_apis_num;
+
 	float py_help_width;
 	float py_help_height;
 	float py_help_x;
 	float py_help_y;
 
-	float py_next_width;
-	float py_next_height;
-	float py_next_x;
-	float py_next_y;
+	float py_help_text_width;
+	float py_help_text_height;
+	float py_help_text_x;
+	float py_help_text_y;
 
-	float py_back_width;
-	float py_back_height;
-	float py_back_x;
-	float py_back_y;
+	float py_help_button_width;
+	float py_help_button_height;
+	float py_help_button_x;
+	float py_help_button_y;
+	float py_help_button_spacing;
 
 	float button_width;
 	float button_height;
