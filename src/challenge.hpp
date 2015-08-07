@@ -20,6 +20,7 @@ const int assistant_id_type = 2;
 const int object_id_type = 3;
 
 class ChallengeData;
+class Entity;
 class Map;
 class LockableEntityThread;
 class GameEngine;
@@ -57,8 +58,8 @@ public:
 
     ChallengeData* challenge_data;
     Dispatcher<> event_finish;
-    std::vector<int> sprite_ids;
-    std::vector<int> assistant_ids;
+    std::vector<int> sprite_ids; //TODO: remove
+    std::vector<int> assistant_ids; //TODO:remove
 
     virtual void start();
     virtual void finish();
@@ -79,6 +80,11 @@ public:
 
     int id_type(int id);
     virtual boost::python::object read_message(int id) const;
+
+    ///
+    /// Create an entity and return a pointer to it. (Also correctly sets it up in the challenge, map etc.) Used by Challenge and GameEngine
+    ///
+    Entity *create_entity(std::string name, std::string object_file_location, std::string sprite_file_location, glm::ivec2 position);
 };
 
 #endif

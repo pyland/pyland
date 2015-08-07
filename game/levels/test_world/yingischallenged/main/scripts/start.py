@@ -16,7 +16,11 @@ coconut_one.set_solidity(False);
 
 engine.print_terminal(coconut_one.get_weight(), False)
 
-engine.play_music("heroic")
+#player_9000 = engine.create_object("characters/enemies/crocodile", "player_9000", (10, 10))
+
+player_9000 = engine.create_object("characters/player", "player_9000", (10, 10))
+
+engine.play_music("calm")
 engine.get_objects_at((7, 2))
 engine.get_objects_at((4, 4))
 engine.get_objects_at((5, 4))
@@ -41,6 +45,8 @@ engine.add_button("gui/head/monkey", "Portal", exit_portal.focus)
 """
 
 croc_one.follow_path("north, east, east, east, south, south, west, west, west, north", True)
+croc_two.rand_explore()
+croc_three.rand_explore()
 
 engine.print_terminal(player_one.get_position(), False)
 

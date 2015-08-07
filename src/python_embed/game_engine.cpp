@@ -2,24 +2,13 @@
 
 #include "audio_engine.hpp"
 #include "button.hpp"
+#include "challenge.hpp"
 #include "config.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_engine.hpp"
 #include "gui_main.hpp"
 #include "text_font.hpp"
-
-
-/*
-boost::python::object GameEngine::addObject(std::string name, std::string class_location, int x, int y) {
-    use the challenge instance to make and object and load it into the challenge
-    wrap the object an entity instance
-    grab the class from the class location
-    create a new instance of that class and use it to wrap the entity instance
-    return that intance, that instance will also be located at the coordinates given in-game
-}
-*/
-
 
 void GameEngine::change_level(std::string level_location) {
     //TODO: run the finish.py script of a level.
@@ -28,14 +17,11 @@ void GameEngine::change_level(std::string level_location) {
 }
 
 
-boost::python::object GameEngine::add_object(std::string name, std::string class_location, int x, int y) {
-    LOG(INFO) << "Creating an instance of " << class_location << " at (" << x << ", " << y << ") called " << name;
-    //use the challenge instance to make and object and load it into the challenge
-    //wrap the object an entity instance
-    //grab the class from the class location
-    //create a new instance of that class and use it to wrap the entity instance
-    //return that intance, that instance will also be located at the coordinates given in-game
-    return boost::python::list();
+boost::python::object GameEngine::create_object(std::string class_location, std::string object_name, int x, int y) {
+    LOG(INFO) << "Creating an instance of " << class_location << " at (" << x << ", " << y << ") called " << object_name;
+    //Entity *entity = challenge->create_entity(object_name, class_location, "", glm::ivec2(x, y)); //For some reason this freezes the game when called from here.
+    boost::python::list b = boost::python::list();
+    return b;
 }
 
 std::string GameEngine::get_level_location() {
@@ -109,6 +95,5 @@ int GameEngine::get_run_script(){
 bool GameEngine::is_solid(int x, int y) {
     return !Engine::walkable(glm::ivec2(x, y)); //TODO: Make syntax of Engine match this!
 }
-
 
 

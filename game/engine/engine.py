@@ -62,6 +62,10 @@ class Engine:
         return game_objects
 
     def is_solid(self, position):
+        """ Returns if a given position "is solid" (true if it can't be walked on, false otherwise) 
+        
+        The Goald if this little wrapper is to make it so that a tuple is accepted.
+        """
         x, y = position                                     #Extract the position x and y coordinates
         return self.__cpp_engine.is_solid(x, y)
 
@@ -76,5 +80,17 @@ class Engine:
             if true the message is printed red, else it printed in black
         """
         self.__cpp_engine.print_terminal(str(message), highlighted)
+
+    def create_object(self, class_location, object_name, position):
+        x, y = position
+        spam = self.__cpp_engine.create_object(class_location, object_name, x, y)
+        return spam
+
+
+
+
+
+
+
 
 

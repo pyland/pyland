@@ -98,15 +98,17 @@ class Crocodile(Character):
     """ The Crocodile follows a random path forever!
     """
     def rand_explore(self):
-        rand = random.randint(1, 4)
+        rand = random.randint(1, 5)
         if rand==1:
-            return self.move_north(lambda: self.rand_explore())
+            return self.move_north(self.rand_explore)
         elif rand==2:
-            return self.move_south(lambda: self.rand_explore())
+            return self.move_south(self.rand_explore)
         elif rand==3:
-            return self.move_east(lambda: self.rand_explore())
+            return self.move_east(self.rand_explore)
         elif rand==4:
-            return self.move_west(lambda: self.rand_explore())
+            return self.move_west(self.rand_explore)
+        elif rand==5:
+            return self.wait(0.3, self.rand_explore)
 
     """ private:
     Put the private methods you wish to use here.

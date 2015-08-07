@@ -7,6 +7,7 @@
 
 #include "input_handler.hpp"
 
+class Challenge;
 class GUIMain;
 ///
 /// This class is used as the python interface for general game-engine functionality.
@@ -15,7 +16,8 @@ class GUIMain;
 class GameEngine {
 
     private:
-        GUIMain * gui_main;
+        GUIMain *gui_main;
+        Challenge *challenge;
 
     public:
 
@@ -28,8 +30,9 @@ class GameEngine {
         static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
-        GameEngine(GUIMain * _gui_main){
+        GameEngine(GUIMain *_gui_main, Challenge *challenge){
             gui_main = _gui_main;
+            challenge = challenge;
         }
 
         ///
@@ -37,7 +40,7 @@ class GameEngine {
         /// The name is used to give the object a name and the class_location string is
         /// used to find the correct Python class to wrap the object.
         ///
-        boost::python::object add_object(std::string name, std::string class_location, int x, int y);
+        boost::python::object create_object(std::string class_location, std::string object_name, int x, int y);
 
         ///
         /// Returns a list of python objects at the location given.

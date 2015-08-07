@@ -66,6 +66,9 @@
   <object name="characters/player/player_nine" gid="286" x="1152" y="1152" width="64" height="64"/>
   <object name="characters/player/player_ten" gid="286" x="1024" y="1024" width="64" height="64"/>
   <object name="characters/player/player_eleven" gid="286" x="832" y="896" width="64" height="64"/>
-  <object name="characters/enemies/crocodile/croc_one" gid="296" x="896" y="640"/>
+  <object name="characters/enemies/crocodile/croc_two" gid="296" x="640" y="576"/>
+  <object name="characters/player/player_20" gid="286" x="1280" y="512"/>
+  <object name="characters/enemies/crocodile/croc_one" gid="296" x="919" y="608"/>
+  <object name="characters/enemies/crocodile/croc_three" gid="296" x="768" y="640"/>
  </objectgroup>
 </map>

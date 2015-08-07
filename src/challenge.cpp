@@ -49,23 +49,12 @@ Challenge::Challenge(ChallengeData* _challenge_data, GUIMain * _gui_main) :
         //Add all the objects to the map
         //TODO: The names of variables need to be refactored to make sense, and this code needs to be cleaned up as there is a bit too much inderection atm!
         for(auto properties : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
-            int map_object_id = ChallengeHelper::make_object(
-                this,
-                properties.first, //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly
-                Walkability::BLOCKED,	//wether the object can be walked through
-                properties.first //name of the object
-            );
-            //Push the map_object on the Challenge's internal list of map_objects
-            map_object_ids.push_back(map_object_id);
-            //Create the entity which will be passed to python for each map_object
-            //TODO: See if using handlers to keep track of existing entities instead of raw pointers makes more sense.
-            auto *entity(new Entity(properties.second.position, properties.first, properties.second.object_file_location, map_object_id));
-
-            entity_list.push_front(*entity); //put all the entities in the entity list!!!
+            //Create the entity, it automatically gets added to the entity_list
+            create_entity(properties.first, properties.second.object_file_location, properties.second.sprite_file_location, properties.second.position);
         }
 
         //create a new GameEngine instance for the python api, we need to review if this is the best place to create it
-        game_engine = new GameEngine(_gui_main);
+        game_engine = new GameEngine(_gui_main, this);
 
         //The intepreter creates a new python thread which is the main thread for the running level, the list of all objects in the level are passed to it which are then exposed to the python code
         daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entities(entity_list, *game_engine));
@@ -146,6 +135,23 @@ void Challenge::finish()
 
 }
 
+Entity *Challenge::create_entity(std::string object_name, std::string object_file_location, std::string sprite_file_location, glm::ivec2 position) {
+    int map_object_id = ChallengeHelper::make_object(
+        this,
+        object_name, //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly  (in game_engine.cpp as well)
+        Walkability::WALKABLE,	//wether the object can be walked through
+        object_file_location,
+        sprite_file_location,
+        position
+    );
+    //Push the map_object on the Challenge's internal list of map_objects
+    map_object_ids.push_back(map_object_id);
+    //Create the entity which will be passed to python for each map_object
+    auto *entity(new Entity(position, object_name, object_file_location, map_object_id));
+
+    entity_list.push_front(*entity); //put all the entities in the entity list!!!
+    return entity;
+}
 
 
 
