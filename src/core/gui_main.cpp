@@ -253,6 +253,9 @@ void GUIMain::close_pause_window(){
         else if(i->second == pyguide_window){
             continue;
         }
+        else if(i->second == notification_bar){
+            continue;
+        }
         else{
             i->second->set_visible(true);
             i->second->set_clickable(true);
