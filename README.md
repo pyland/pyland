@@ -130,11 +130,23 @@ To launch (you must be in the /src folder):
 ```
 
 Keybindings
+* <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - Move sprite
+* <kbd>Enter</kbd> - Run the current script/halt running script
+* <kbd>1-9</kbd> - Run the script of given number/halt running script
+* <kbd>Space</kbd> - Toggle speed
+* <kbd>Tab</kbd> - Switch player
 
-* <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - move sprite
+* <kbd>escape</kbd> - Go back to level selection map
 
-* <kbd>escape</kbd> - go back to level selection map
+##Installing qt for integrated editor test
 
+Install the following packages:
+
+```bash
+sudo apt-get install libqscintilla2-dev
+```
+
+This will create the executable "application" which can then be run.
 ##API
 
 * `help()` and `help(command)` - Get help on the current task and any in-game (or other) commands.

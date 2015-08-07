@@ -60,6 +60,10 @@ void MapObject::set_walkability(Walkability walkability) {
     regenerate_blockers();
 }
 
+Walkability MapObject::get_walkability() {
+    return this->walkability;
+}
+
 void MapObject::regenerate_blockers() {
     body_blockers.clear();
     switch (walkability) {
