@@ -113,44 +113,60 @@ class Crocodile(Character):
 
 
     def __check_swim_state(self, callback):
+        """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
+
+        It is called as a callback once the crocodile has finished moving as that gives the smoothest change-over.
+        """
         engine = self.get_engine()
         x, y = self.get_position()
         if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
             self.change_state("swim")
         return callback()
 
+    """ Overriding movement methods so that crocodiles swim in water :) """
     def move_north(self, callback):
         super().move_north(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
+         #if the crocodile is about to move to a land position, show land sprite before movement begins (gives best results)
         if(engine.get_tile_type((x, y+1)) == engine.TILE_TYPE_STANDARD):
-            self.change_state("main")
+            self.wait(0.1, lambda: self.change_state("main")) #delay there so that crocs that go over water change sprite for a flash.
     
     def move_east(self, callback):
         super().move_east(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
         if(engine.get_tile_type((x+1, y)) == engine.TILE_TYPE_STANDARD):
-            self.change_state("main")
+            self.wait(0.1, lambda: self.change_state("main"))
 
     def move_south(self, callback):
         super().move_south(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
         if(engine.get_tile_type((x, y-1)) == engine.TILE_TYPE_STANDARD):
-            self.change_state("main")
+            self.wait(0.1, lambda: self.change_state("main"))
 
     def move_west(self, callback):
         super().move_west(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
         if(engine.get_tile_type((x-1, y)) == engine.TILE_TYPE_STANDARD):
-            self.change_state("main")
+            self.wait(0.1, lambda: self.change_state("main"))
 
     """ private:
     Put the private methods you wish to use here.
     """
 
+    def __check_swim_state(self, callback):
+        """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
+
+        It is called as a callback once the crocodile has finished moving as that gives the smoothest change-over.
+        """
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")
+        return callback()
 
 
 

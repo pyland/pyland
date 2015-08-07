@@ -46,7 +46,7 @@ engine.add_button("gui/head/monkey", "Rock7", coconut_seven.focus)
 engine.add_button("gui/head/monkey", "Portal", exit_portal.focus)
 """
 
-croc_one.follow_path("north, east, east, east, south, south, west, west, west, north", True)
+croc_one.follow_path("north, east, east, north, east, south, south, south, west, west, west, north", True)
 croc_two.rand_explore()
 croc_three.rand_explore()
 
