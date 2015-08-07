@@ -102,10 +102,11 @@ std::string Entity::get_sprite() {
 void Entity::set_sprite(std::string sprite_location) {
     this->sprite_location = sprite_location; //TODO: Make this method safe, make it so that if the sprite location doesn't exist the game gracefully handles it.
     int id = this->id;
+    std::string file_location = this->file_location;
     EventManager *em = EventManager::get_instance();
-    em->add_event([id, sprite_location] () {
+    em->add_event([id, sprite_location, file_location] () { //put changing the player tile on the event queue
         auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-        object->set_tile(std::make_pair(0, "../game/objects/characters/player/sprites/" + sprite_location + "/0.png"));
+        object->set_tile(std::make_pair(0, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/0.png"));
     });
     return;
 

@@ -75,11 +75,11 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     bag_button->set_on_click( [&] () {
 
         if(bag_open == false){
-			bag_open = true;
+            bag_open = true;
             open_bag();
         }
         else{
-			bag_open = false;
+            bag_open = false;
             close_bag();
         }
     });
@@ -90,7 +90,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     bag_window->set_visible(false);
     bag_window->move_text(title_x_offset, title_y_offset);
 
-	pyguide_window = std::make_shared<Button>(ButtonType::Board);
+    pyguide_window = std::make_shared<Button>(ButtonType::Board);
     pyguide_window->set_text("PyGuide");
     pyguide_window->set_clickable(false);
     pyguide_window->set_visible(false);
@@ -105,9 +105,9 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     pyguide_button->set_y_offset(menu_y_offset);
     pyguide_button->set_visible(false);
 
-	pyguide_button->set_on_click( [&] () {
-		pyguide_open = true;
-		open_pyguide();
+    pyguide_button->set_on_click( [&] () {
+        pyguide_open = true;
+        open_pyguide();
     });
 
     bag_window->add(pyguide_button);
@@ -118,13 +118,14 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 	gui_window->add(pyguide_window);
 	gui_window->add(notification_bar);
 
+
     LOG(INFO) << "Constructed GUIMain.";
 }
 
 void GUIMain::open_pyguide(){
 
-	close_bag();
-	pyguide_window->set_visible(true);
+    close_bag();
+    pyguide_window->set_visible(true);
 
     refresh_gui();
     LOG(INFO) << "PyGuide opened";
@@ -132,7 +133,7 @@ void GUIMain::open_pyguide(){
 
 void GUIMain::close_pyguide(){
 
-	pyguide_window->set_visible(false);
+    pyguide_window->set_visible(false);
 
     refresh_gui();
     LOG(INFO) << "PyGuide closed";
@@ -142,15 +143,15 @@ void GUIMain::open_bag(){
 
     bag_window->set_visible(true);
 
-	close_pyguide();
-	pyguide_open = false;
+    close_pyguide();
+    pyguide_open = false;
 
-	pyguide_button->set_visible(true);
-	pyguide_button->set_clickable(true);
+    pyguide_button->set_visible(true);
+    pyguide_button->set_clickable(true);
 
     for(unsigned int i=0; i!=bag_items.size(); i++){
-		bag_items[i]->set_visible(true);
-		bag_items[i]->set_clickable(true);
+        bag_items[i]->set_visible(true);
+        bag_items[i]->set_clickable(true);
     }
 
     refresh_gui();
@@ -159,17 +160,17 @@ void GUIMain::open_bag(){
 
 void GUIMain::close_bag(){
 
-	bag_window->set_visible(false);
+    bag_window->set_visible(false);
 
-	close_pyguide();
-	pyguide_open = false;
+    close_pyguide();
+    pyguide_open = false;
 
-	pyguide_button->set_visible(false);
-	pyguide_button->set_clickable(false);
+    pyguide_button->set_visible(false);
+    pyguide_button->set_clickable(false);
 
     for(unsigned int i=0; i!=bag_items.size(); i++){
-		bag_items[i]->set_visible(false);
-		bag_items[i]->set_clickable(false);
+        bag_items[i]->set_visible(false);
+        bag_items[i]->set_clickable(false);
     }
 
     refresh_gui();
@@ -210,7 +211,7 @@ void GUIMain::close_pause_window(){
             continue;
         }
         else if(i->second == pyguide_window){
-			continue;
+            continue;
         }
         else{
             i->second->set_visible(true);
@@ -306,7 +307,7 @@ void GUIMain::config_gui()
 {
     nlohmann::json j = Config::get_instance();
 
-	x_scale = j["scales"]["x_scale"];
+    x_scale = j["scales"]["x_scale"];
     y_scale = j["scales"]["y_scale"];
 
     left_x_offset = j["scales"]["left_x_offset"];
@@ -326,7 +327,7 @@ void GUIMain::config_gui()
     button_width = j["scales"]["button_width"];
     button_height = j["scales"]["button_height"];
 
-	horizontal_button_spacing = j["scales"]["horizontal_button_spacing"];
+    horizontal_button_spacing = j["scales"]["horizontal_button_spacing"];
     vertical_button_spacing = j["scales"]["vertical_button_spacing"];
 
     button_max = j["scales"]["button_max"];

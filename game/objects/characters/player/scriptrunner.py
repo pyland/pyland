@@ -64,7 +64,8 @@ def start(player_object, script_name):
 
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(imbued_locals, player_object.get_engine().print_terminal) #create an instance of it
-    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/" + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
+    #script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/Script " + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
+    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/"+str(script_name)+".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
 
     #open and read the script
     with open(script_filename, encoding="utf8") as script_file:
@@ -72,7 +73,7 @@ def start(player_object, script_name):
 
     def thread_target():
         """ This is the method that is run in the seperate thread.
-        
+
         It runs the script requested first and then runs the callback.
         the callback is therefore run in the seperate thread.
         """
@@ -80,10 +81,12 @@ def start(player_object, script_name):
             scoped_interpreter.runcode(script, HaltScriptException) #Run the script
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
             player_object.get_engine().print_terminal("Halted Script", True)
+            player_object.get_engine().set_finished()
         finally: #perform neccesary cleanup
             if printed_flag[0]:
                 player_object.get_engine().print_terminal("------ " + player_object.get_character_name() + "'s script has ended -------", False)
             player_object.set_running_script_status(False)
+            player_object.get_engine().set_finished()
             #TODO: Make it so that the halt button becomes the run button again.
 
     thread = threading.Thread(target = thread_target, name = player_object.get_name() + "_script_thread")
@@ -91,27 +94,20 @@ def start(player_object, script_name):
     player_object.set_thread_id(thread.ident)
     return
 
-""" Takes an asynchronous function as an argument and returns a version of it that is blocking.
-Works by using callbacks to work out when the function has finished.
-Therefore the function must be a function which takes a callback as an argument which runs when event
-that the function initiates has finished.
-"""
 def make_blocking(async_function):
-    """ This callback is really simple, accepts a list
-    and sets the first element to False, as the blocking_function
-    is while loop that runs until the first element of a list is False,
-    once this runs the while loop while finish and it will return.
-    """
-    def callback(blocking):
-        blocking[0] = False
-    """ This is the blocking version of the async_function that is provided as and argument.
-    simples.
+    """ Takes an asynchronous function as an argument and returns a version of it that is blocking.
+
+    Works by using callbacks to work out when the function has finished.
+    Therefore the function must be a function which takes a callback as an argument which runs when event
+    that the function initiates has finished.
     """
     def blocking_function():
-        blocking = [True] # create a list who's first member is true,
-        async_function(lambda: callback(blocking)) #run the async_function with the callback provided above as its argument
-        while blocking[0]: # run a while loop (block) until the first element of the list that was passed to the callback is false.
-            pass #TODO: Find out if there is anything that needs to be done so that this doesn't use CPU time.
+        """ This is the blocking version of the async_function that is provided as and argument. """
+        lock = threading.Lock()
+        lock.acquire()
+        async_function(lock.release) #run the async_function with the callback provided above as its argument
+        lock.acquire() # Try to a acquire a lock until it is released. It isn't released until the callback releases it.
+        lock.release() # release the lock, it isn't needed anymore
         return
 
     return blocking_function

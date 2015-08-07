@@ -97,3 +97,15 @@ boost::python::list GameEngine::get_objects_at(int x, int y) {
 void GameEngine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
     Engine::set_ui_colours(r1,b1,g1,r2,b2,g2);
 }
+
+void GameEngine::set_finished(){
+    Engine::set_finished();
+}
+
+void GameEngine::trigger_run(){
+    Engine::trigger_run(0);
+}
+
+int GameEngine::get_run_script(){
+    return Engine::get_run_script();
+}

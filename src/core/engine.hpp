@@ -162,6 +162,12 @@ public:
     static std::vector<int> get_objects_at(glm::vec2 location);
 
     ///
+    /// Get the instance of the QT mainwindow
+    ///
+    ///
+    static MainWindow* get_main_window();
+
+    ///
     /// Get whether a sprite with a certain id is at this tile
     ///
     static bool is_object_at(glm::ivec2 location, int object_id);
@@ -178,9 +184,15 @@ public:
 	static GUIMain* get_gui() { return gui_main; }
 
     static void print_dialogue(std::string text);
+
+    /// trigger qt mainwindow functions
     static void print_terminal(std::string text, bool error);
     static void set_any_output(bool option);
     static void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
+    static void set_finished();
+    static void trigger_run(int script);
+    static void trigger_speed();
+    static int get_run_script();
 
     /// global access to game font
     static TextFont get_game_font();

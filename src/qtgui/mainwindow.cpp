@@ -271,6 +271,7 @@ MainWindow::MainWindow(GameMain *exGame):
     int width = (gameWidget->width());
     int height = gameWidget->height();
     anyOutput = false;
+    executeIndex = 1;
 
     SDL_SetWindowSize(embedWindow, width, height);
     glViewport(0, 0, width, height);
@@ -278,8 +279,8 @@ MainWindow::MainWindow(GameMain *exGame):
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
 
-    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-    connect(buttonSpeed,SIGNAL(released()),this,SLOT (toggleSpeed()));
+    connect(buttonRun,SIGNAL(released()),this,SLOT (clickRun()));
+    connect(buttonSpeed,SIGNAL(released()),this,SLOT (clickSpeed()));
     connect(buttonClear,SIGNAL(released()),this,SLOT (clearTerminal()));
 
     this->showMaximized();
@@ -489,7 +490,9 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     switch (keyEvent->key())
     {
     case Qt::Key_Enter:
-        return SDL_SCANCODE_KP_ENTER;
+        return SDL_SCANCODE_RETURN;
+    case Qt::Key_Return:
+        return SDL_SCANCODE_RETURN;
     case Qt::Key_Left:
         return SDL_SCANCODE_LEFT;
     case Qt::Key_Right:
@@ -698,9 +701,15 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void MainWindow::runCode()
-{
+void MainWindow::clickRun(){
+    //Run the currently open script
+    runCode(0);
+}
 
+//Script defines the current script to execute
+//If zero the currently open script is run
+void MainWindow::runCode(int script)
+{
     if (running)
     {
         setRunning(false);
@@ -712,7 +721,7 @@ void MainWindow::runCode()
     else{
         QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
-        int index = (textWidget->currentIndex())+ 1;
+        int index = getCurrentScript();
 
         //read in the player scripts (as defined in the config file)
         std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
@@ -722,25 +731,35 @@ void MainWindow::runCode()
         //Also save as 'Current Script.py' as temporary measure before new input manager
         //This python script is always run in bootstrapper.py (in start)
         ofstream fout(path.c_str(), ios::out|ios::trunc);
-        ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
+        //ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
 
-        if(!(fout.good() && foutcopy.good()))
+        if(!(fout.good()))// && foutcopy.good()))
         {
             LOG(INFO) << "Output file is bad" << endl;
             return;
         }
 
         fout << ws->text().toStdString();
-        foutcopy << ws->text().toStdString();
+        //foutcopy << ws->text().toStdString();
 
         fout.close();
-        foutcopy.close();
+        //foutcopy.close();
 
         setRunning(true);
         updateSpeed();
+        if (script == 0){
+            executeIndex = getCurrentScript();
+        }
+        else{
+            executeIndex = script;
+        }
         InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
     setGameFocus();
+}
+
+void MainWindow::clickSpeed(){
+    toggleSpeed();
 }
 
 void MainWindow::toggleSpeed(){
@@ -900,4 +919,15 @@ int MainWindow::getGameWidgetHeight(){
 
 bool MainWindow::getAnyOutput(){
     return anyOutput;
+}
+
+//Get the currently open script tab number
+int MainWindow::getCurrentScript(){
+    return (textWidget->currentIndex())+ 1;
+}
+
+//Get the number of the script that is to be run
+//This may be different to the open one (due to keybindings)
+int MainWindow::getExecuteScript(){
+    return executeIndex;
 }

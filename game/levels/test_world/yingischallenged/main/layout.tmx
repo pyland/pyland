@@ -57,5 +57,15 @@
   <object name="coconut/coconut_one" gid="287" x="128" y="1088" width="64" height="64"/>
   <object name="characters/player/player_one" gid="286" x="1152" y="960" width="64" height="64"/>
   <object name="characters/player/player_two" gid="286" x="1280" y="960" width="64" height="64"/>
+  <object name="characters/player/player_three" gid="286" x="1408" y="960" width="64" height="64"/>
+  <object name="characters/player/player_four" gid="286" x="1536" y="960" width="64" height="64"/>
+  <object name="characters/player/player_five" gid="286" x="1664" y="960" width="64" height="64"/>
+  <object name="characters/player/player_six" gid="286" x="960" y="832" width="64" height="64"/>
+  <object name="characters/player/player_seven" gid="286" x="1344" y="768" width="64" height="64"/>
+  <object name="characters/player/player_eight" gid="286" x="1600" y="1088" width="64" height="64"/>
+  <object name="characters/player/player_nine" gid="286" x="1152" y="1152" width="64" height="64"/>
+  <object name="characters/player/player_ten" gid="286" x="1024" y="1024" width="64" height="64"/>
+  <object name="characters/player/player_eleven" gid="286" x="832" y="896" width="64" height="64"/>
+  <object name="characters/enemies/crocodile/croc_one" gid="296" x="896" y="640"/>
  </objectgroup>
 </map>

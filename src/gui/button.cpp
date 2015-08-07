@@ -42,10 +42,10 @@ Button::Button(ButtonType _type) {
         set_height(0.5f);
     }
     else if(type == ButtonType::NoPicture){
-		set_width(0.5f);
-		set_height(0.5f);
-		button_text->set_x_offset(0.2f);
-		button_text->set_y_offset(0.5f);
+        set_width(0.5f);
+        set_height(0.5f);
+        button_text->set_x_offset(0.2f);
+        button_text->set_y_offset(0.5f);
     }
 
 }
