@@ -2,7 +2,7 @@
 
 player_one.focus()
 player_one.set_character_name("Benjo")
-player_two.set_character_name("That Annoying Kid from Up")
+player_two.set_character_name("Bob")
 
 coconut_one.set_weight(1)
 coconut_two.set_weight(2)
@@ -27,8 +27,8 @@ engine.get_objects_at((8, 4))
 engine.get_objects_at((9, 4))
 engine.get_objects_at(player_one.get_position())
 
-engine.add_button("gui/head/monkey", player_one.get_character_name(), player_one.focus)
-engine.add_button("gui/head/monkey", player_two.get_character_name(), player_two.focus)
+#engine.add_button("gui/head/monkey", player_one.get_character_name(), player_one.focus)
+#engine.add_button("gui/head/monkey", player_two.get_character_name(), player_two.focus)
 """
 engine.add_button("gui/head/monkey", "Rock1", coconut_one.focus)
 engine.add_button("gui/head/monkey", "Rock2", coconut_two.focus)

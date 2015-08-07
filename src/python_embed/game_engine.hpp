@@ -85,6 +85,8 @@ class GameEngine {
 
         int get_run_script();
 
+        bool is_solid(int x, int y);
+
 };
 
 #endif

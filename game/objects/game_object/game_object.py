@@ -42,7 +42,7 @@ class GameObject:
         self.__entity = entity
         self.set_sprite("")
         self.set_visible(False)
-        self.set_solid(False)
+        self.set_solidity(False)
         self.__engine = engine
 
     def get_engine(self):
@@ -56,6 +56,10 @@ class GameObject:
         self.__entity.callback_test(callback)
         return
 
+    def wait(self, time, callback):
+        self.__entity.wait(time, callback)
+        return
+
     def get_name(self):
         return self.__entity.get_name()
 
@@ -67,10 +71,7 @@ class GameObject:
         return self.__entity.get_sprite()
 
     def is_solid(self):
-        return True #TODO: implement this in entity
-
-    def set_solid(self, solid):
-        return
+        return self.__entity.is_solid()
 
     def set_solidity(self, solidity):
         self.__entity.set_solidity(solidity)
@@ -173,7 +174,7 @@ class GameObject:
         self.__entity.move_west(callback)
         return
 
-    def moving(self):
+    def is_moving(self):
         """ Returns if this object is moving.
 
         Returns
@@ -181,7 +182,7 @@ class GameObject:
         bool
             True if the object is moving, false otherwise.
         """
-        return False #TODO: implement stub
+        return self.__entity.is_moving()
 
     def destroy(self, callback):
         """ Destroys the object (removes the instance from the map, and cleans up all information associated with it).

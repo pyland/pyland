@@ -202,6 +202,11 @@ public:
     virtual void set_walkability(Walkability walkability);
 
     ///
+    /// Returns the walkability of the mapobject
+    ///
+    virtual Walkability get_walkability();
+
+    ///
     /// Get if the object is moving
     /// @return the object's moving status
     ///
