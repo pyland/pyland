@@ -157,6 +157,28 @@ class Player(Character):
             thread_id = self.__thread_id #TODO: Make this process safer, look at temp.py and add appropriate guards around the next line to check for valid results etc.
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
 
+    """ Override character move methods to prevent movement if script is running
+    """
+    def move_north(self, callback = lambda: None):
+        if (not self.__running_script): #Check that a script isn't running
+            super().move_north(callback)
+        return
+
+    def move_east(self, callback = lambda: None):
+        if (not self.__running_script): #Check that a script isn't running
+            super().move_east(callback)
+        return
+
+    def move_south(self, callback = lambda: None):
+        if (not self.__running_script): #Check that a script isn't running
+            super().move_south(callback)
+        return
+
+    def move_west(self, callback = lambda: None):
+        if (not self.__running_script): #Check that a script isn't running
+            super().move_west(callback)
+        return
+
     def set_running_script_status(self, status):
         """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
 
