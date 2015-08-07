@@ -48,18 +48,12 @@ void GameEngine::print_debug(std::string debug_message) {
 
 void GameEngine::add_dialogue(std::string text) {
     LOG(INFO) << "Adding@ " << text;
-
-    EventManager::get_instance()->add_event([this, text] {
-        Engine::add_dialogue(text);
-    });
+    Engine::add_dialogue(text);
 }
 
 void GameEngine::open_dialogue_box() {
     LOG(INFO) << "Opening notification bar";
-
-    EventManager::get_instance()->add_event([this] {
-        Engine::open_notification_bar();
-    });
+    Engine::open_notification_bar();
 }
 
 void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {

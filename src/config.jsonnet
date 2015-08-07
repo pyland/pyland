@@ -7,7 +7,9 @@
 		"level_location": "/test_world/yingischallenged/main",
 		"full_level_location" : self.game_folder + "/levels" + self.level_location,
 		"player_scripts": self.game_folder + "/player_scripts",
-		"object_location": self.game_folder + "/objects"
+		"object_location": self.game_folder + "/objects",
+		"font_location": self.game_folder + "/fonts",
+		"dialogue_font": self.font_location + "/Ubuntu-R.ttf"
 		
 	},
 
