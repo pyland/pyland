@@ -35,7 +35,7 @@ boost::python::object GameEngine::create_object(std::string class_location, std:
 }
 
 std::string GameEngine::get_level_location() {
-    nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
     std::string map_name = j["files"]["level_location"];
     //return "test_world/test_level/test_one";
     return map_name;

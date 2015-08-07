@@ -298,7 +298,7 @@ GUIMain::~GUIMain()
 
 void GUIMain::config_gui()
 {
-    nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
 
     x_scale = j["scales"]["x_scale"];
     y_scale = j["scales"]["y_scale"];

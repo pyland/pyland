@@ -11,6 +11,7 @@ class Config : public nlohmann::json {
         static nlohmann::json j;
         static bool created;
     public:
+        typedef nlohmann::json json;
         static nlohmann::json get_instance();
 };
 
