@@ -7,8 +7,6 @@ import threading
 import traceback
 import importlib
 
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)))
-import game
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/engine')
 from engine import Engine
 
@@ -49,7 +47,6 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
         print(game_object.get_name())
         imbued_locals[game_object.get_name()] = game_object
 
-    imbued_locals["game"] = game #TODO: merge game and engine into a single cohesive class!!! (if needed?)
     imbued_locals["engine"] = engine
 
     class ScopedInterpreter(code.InteractiveInterpreter):
