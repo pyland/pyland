@@ -75,6 +75,11 @@ void Entity::move_south(PyObject *callback) {
     return (move(0, -1, callback));
 }
 
+bool Entity::is_moving() {
+    auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
+    return object->is_moving();
+}
+
 void Entity::set_solidity(bool solidity) {
     auto id = this->id;
     Walkability w;
@@ -87,7 +92,13 @@ void Entity::set_solidity(bool solidity) {
 }
 
 bool Entity::is_solid() {
-    return true; //TODO, IMPLEMENT!!!!!
+    auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
+    Walkability w = object->get_walkability();
+    if(w == Walkability::BLOCKED) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void Entity::focus() {

@@ -174,7 +174,7 @@ class GameObject:
         self.__entity.move_west(callback)
         return
 
-    def moving(self):
+    def is_moving(self):
         """ Returns if this object is moving.
 
         Returns
@@ -182,7 +182,7 @@ class GameObject:
         bool
             True if the object is moving, false otherwise.
         """
-        return False #TODO: implement stub
+        return self.__entity.is_moving()
 
     def destroy(self, callback):
         """ Destroys the object (removes the instance from the map, and cleans up all information associated with it).

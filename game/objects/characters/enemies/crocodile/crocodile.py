@@ -65,22 +65,26 @@ class Crocodile(Character):
             path = path + ", " + instruction #add instruction back to the path, at the end if to be repeated
         if(instruction == "north"):
             if engine.is_solid((x, y+1)): #if position isn't walkable, then wait
+                self.face_north()
                 return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
             else:
                 return self.move_north(lambda: self.follow_path(path, repeat))
         elif(instruction == "east"):
-            if engine.is_solid((x+1, y)):
+            if engine.is_solid((x+1, y)): #if the position you are trying to move to is taken, wait
+                self.face_east()
                 return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
             else:
                 return self.move_east(lambda: self.follow_path(path, repeat))
             return
         elif(instruction == "south"):
             if engine.is_solid((x, y-1)):
+                self.face_south()
                 return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
             else:
                 return self.move_south(lambda: self.follow_path(path, repeat))
         elif(instruction == "west"):
             if engine.is_solid((x-1, y)):
+                self.face_west()
                 return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
             else:
                 return self.move_west(lambda: self.follow_path(path, repeat))

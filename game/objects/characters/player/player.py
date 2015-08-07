@@ -65,6 +65,8 @@ class Player(Character):
         engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.move_south))
         engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.move_west))
 
+        engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
+
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
     This will all be autofilled by the creation script with super filled in to help
@@ -182,7 +184,7 @@ class Player(Character):
     """
     #def __handle_movement_input(self, is_facing_x, face_x, move_x):
     #	def handle_input:
-    #		if(not(self.moving())):  #can't register input if the character is in the middle of moving
+    #		if(not(self.is_moving())):  #can't register input if the character is in the middle of moving
     #			if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first
     #				move_x()
     #			else:
