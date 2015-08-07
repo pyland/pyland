@@ -46,6 +46,7 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
     """
     imbued_locals = {}
     for game_object in game_objects:
+        print(game_object.get_name())
         imbued_locals[game_object.get_name()] = game_object
 
     imbued_locals["game"] = game #TODO: merge game and engine into a single cohesive class!!! (if needed?)
