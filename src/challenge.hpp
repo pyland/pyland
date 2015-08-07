@@ -52,10 +52,6 @@ public:
     virtual ~Challenge();
 
     ChallengeData* challenge_data;
-    Dispatcher<> event_finish;
-
-    virtual void start();
-    virtual void finish();
 
     ///
     /// Runs the challenge by calling all the needed subsystems

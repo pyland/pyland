@@ -10,6 +10,12 @@
 #include "gui_main.hpp"
 #include "text_font.hpp"
 
+
+GameEngine::GameEngine(GUIMain *_gui_main, Challenge *_challenge){
+    gui_main = _gui_main;
+    challenge = _challenge;
+}
+
 void GameEngine::change_level(std::string level_location) {
     //TODO: run the finish.py script of a level.
     LOG(INFO) << "Changing level to " << level_location;
@@ -23,7 +29,7 @@ int GameEngine::get_tile_type(int x, int y) {
 
 boost::python::object GameEngine::create_object(std::string class_location, std::string object_name, int x, int y) {
     LOG(INFO) << "Creating an instance of " << class_location << " at (" << x << ", " << y << ") called " << object_name;
-    //Entity *entity = challenge->create_entity(object_name, class_location, "", glm::ivec2(x, y)); //For some reason this freezes the game when called from here.
+    Entity *entity = challenge->create_entity(object_name, class_location, "", glm::ivec2(x, y)); //For some reason this freezes the game when called from here.
     boost::python::list b = boost::python::list();
     return b;
 }
@@ -38,7 +44,6 @@ std::string GameEngine::get_level_location() {
 void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
-
 
 void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
     //TODO: Find a way of avoiding this hack

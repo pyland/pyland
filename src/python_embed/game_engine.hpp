@@ -35,11 +35,7 @@ class GameEngine {
 
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
-        GameEngine(GUIMain *_gui_main, Challenge *challenge){
-            gui_main = _gui_main;
-            challenge = challenge;
-        }
-
+        GameEngine(GUIMain *_gui_main, Challenge *_challenge);
         ///
         /// Add an object to the game map at the given position.
         /// The name is used to give the object a name and the class_location string is

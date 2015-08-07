@@ -38,14 +38,6 @@ Challenge::Challenge(ChallengeData* _challenge_data, GUIMain * _gui_main) :
         }
         map_viewer->set_map(map);
 
-
-        //Register a dispatcher to shut the challenge down
-        event_finish.register_callback([&] (){
-            challenge_data->run_challenge = false;
-            //challenge_data->next_challenge = next_challenge;
-            return false;
-        });
-
         //Add all the objects to the map
         //TODO: The names of variables need to be refactored to make sense, and this code needs to be cleaned up as there is a bit too much inderection atm!
         for(auto properties : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
@@ -98,16 +90,6 @@ int Challenge::make_object(glm::vec2 position,
 
 py::object Challenge::read_message(int) const {
     return py::object();
-}
-
-void Challenge::start()
-{
-
-}
-
-void Challenge::finish()
-{
-
 }
 
 Entity *Challenge::create_entity(std::string object_name, std::string object_file_location, std::string sprite_file_location, glm::ivec2 position) {
