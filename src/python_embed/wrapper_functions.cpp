@@ -26,6 +26,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("move_west",         &Entity::move_west)
         .def("move_north",        &Entity::move_north)
         .def("move_south",        &Entity::move_south)
+        .def("is_moving",         &Entity::is_moving)
         .def("print_debug",       &Entity::py_print_debug)
         .def("read_message",      &Entity::read_message)
         .def("update_status",     &Entity::py_update_status)

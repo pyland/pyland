@@ -94,6 +94,12 @@ class Entity {
         void move_north(PyObject *callback);
         void move_west(PyObject *callback);
 
+
+        ///
+        /// @return
+        ///     True if the entity is moving, false otherwise.
+        bool is_moving();
+
         ///
         /// @return
         ///     The name of the entity, this name is also used as the instance name of the entity in python. :)

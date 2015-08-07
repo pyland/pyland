@@ -2,7 +2,7 @@
 
 player_one.focus()
 player_one.set_character_name("Benjo")
-player_two.set_character_name("That Annoying Kid from Up")
+player_two.set_character_name("Bob")
 
 coconut_one.set_weight(1)
 coconut_two.set_weight(2)
