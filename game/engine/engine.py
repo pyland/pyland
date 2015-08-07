@@ -1,3 +1,6 @@
+import os
+import sys
+import importlib
 
 class Engine:
     """ This class is a python wrapper for all the engine features that are exposed to the game.
@@ -24,17 +27,6 @@ class Engine:
         for engine_property in engine_properties:                                           #loop over all the engine properties
             if not hasattr(self, engine_property):                                          #only add the property if the engine doesn't have something by that name
                 setattr(self, engine_property, getattr(self.__cpp_engine, engine_property)) #set the all the properties of Engine to match cpp_engine.
-
-
-    def register_game_object(self, game_object):
-        """ Register a game object. 
-
-        Parmeters
-        ---------
-        game_object : GameObject
-            The game object you wish to register
-        """
-        self.__game_objects[game_object.get_id()] = game_object # associate each game_object with it's id
 
     def get_objects_at(self, position):
         """ Returns a list of all the objects at a given position
@@ -81,20 +73,52 @@ class Engine:
         """
         self.__cpp_engine.print_terminal(str(message), highlighted)
 
-    def create_object(self, class_location, object_name, position):
+    def create_object(self, object_file_location, object_name, position):
         """ This is meant to return a new instance of a given game object, but it hasn't been properly implemented yet """
         x, y = position
-        spam = self.__cpp_engine.create_object(class_location, object_name, x, y)
-        return spam
+        entity = self.__cpp_engine.create_object( object_file_location, object_name, x, y)
+        return self.wrap_entity_in_game_object(self, entity)
 
     def get_tile_type(self, position):
         x, y = position
         return self.__cpp_engine.get_tile_type(x, y)
 
+    def __snake_to_camelcase(self, snake_string):
+        """ converts snake_case to CamelCase 
 
+        eg "name_name_name" -> "NameNameName"		
+        """
+        components = snake_string.split('_')
+        result = ""
+        for component in components:
+            result += component.title() #title automatically capitalises the first letter of a string! :D
+        return result
 
+    def wrap_entity_in_game_object(self, entity):
+        """ Imports the correct files and class for each entity, and then wraps them in the correct game object class that has been written in python.
 
+        Used by bootstrapper.py and self.create_object()
+        TODO: add a class check to make sure the objects are of the correct class!, have a degrade gracefully,
+        if a child class is poorly defined, throw a warning and then try and create an object as their parent until GameObject is reached,
+        if GameObject isn't suitable throw and error and say that somthing is seriously wrong!!!!
 
+        Parmeters
+        ---------
+        entity : C++Entity
+            The entity you wish to wrap.
+        """
+        #Grabs the object's location in the file system (original data comes from the map's tmx file, eg. characters/enemies/crocodile
+        entity_location = entity.get_location()
+        #Imports the correct module based on that path name
+        sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + "/../objects/" + entity_location)  # Go to the correct folder
+        # Then get the name of the file itself (same name as the folder it's in, so can be extracted from the path name, eg crocodile/crocodile.py)
+        module_name = entity_location[entity_location.rfind("/") + 1: ]
+        module = importlib.import_module(module_name) # Import the module as module
 
-
+        #Get the class from the module, will be the same as it's file but in UpperCamelCase eg. SuperCrocodile in super_crocodile.py
+        wrapper_class = getattr(module, self.__snake_to_camelcase(module_name))
+        game_object = wrapper_class()  # create the object
+        game_object.set_entity(entity, self)  # initialise it and wrap the entity instance in it
+        self.__game_objects[game_object.get_id()] = game_object #Store the object and associate with it's id in the engine's dictionary
+        return game_object
 

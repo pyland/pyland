@@ -41,7 +41,7 @@ class GameEngine {
         /// The name is used to give the object a name and the class_location string is
         /// used to find the correct Python class to wrap the object.
         ///
-        boost::python::object create_object(std::string class_location, std::string object_name, int x, int y);
+        boost::python::object create_object(std::string object_file_location, std::string object_name, int x, int y);
 
         ///
         /// Returns a list of python objects at the location given.

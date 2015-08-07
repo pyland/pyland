@@ -26,7 +26,6 @@ int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string sprite_file_location,
                                  glm::ivec2 position) {
     LOG(INFO) << "creating object at " << name << " (" << position.x << ", " << position.y << ")";
-
     return challenge->make_object(
         position,
         name,

@@ -8,6 +8,8 @@
 #include "event_manager.hpp"
 #include "game_engine.hpp"
 #include "gui_main.hpp"
+#include "map_loader.hpp"
+#include "map.hpp"
 #include "text_font.hpp"
 
 
@@ -27,11 +29,10 @@ int GameEngine::get_tile_type(int x, int y) {
 }
 
 
-boost::python::object GameEngine::create_object(std::string class_location, std::string object_name, int x, int y) {
-    LOG(INFO) << "Creating an instance of " << class_location << " at (" << x << ", " << y << ") called " << object_name;
-    Entity *entity = challenge->create_entity(object_name, class_location, "", glm::ivec2(x, y)); //For some reason this freezes the game when called from here.
-    boost::python::list b = boost::python::list();
-    return b;
+boost::python::object GameEngine::create_object(std::string object_file_location, std::string object_name, int x, int y) {
+    LOG(INFO) << "Creating an instance of " << object_file_location << " at (" << x << ", " << y << ") called " << object_name;
+    Entity *entity = challenge->create_entity(object_name, object_file_location, "", glm::ivec2(x, y)); //For some reason this freezes the game when called from here.
+    return boost::python::api::object(boost::ref(*entity));
 }
 
 std::string GameEngine::get_level_location() {

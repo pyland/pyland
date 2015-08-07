@@ -19,6 +19,8 @@ engine.print_terminal(coconut_one.get_weight(), False)
 #player_9000 = engine.create_object("characters/enemies/crocodile", "player_9000", (10, 10))
 
 #player_9000 = engine.create_object("characters/player", "player_9000", (10, 10))
+#player_9000.move_south(None)
+#engine.print_debug("bobobobobobo")
 
 engine.play_music("calm")
 engine.get_objects_at((7, 2))
