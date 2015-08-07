@@ -745,9 +745,20 @@ void MainWindow::runCode(int script)
     }
     else
     {
-        QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+        int index;
+        QsciScintilla *ws;
 
-        int index = getCurrentScript();
+        if (script == 0)
+        {
+            index = getCurrentScript();
+            ws = (QsciScintilla*)textWidget->currentWidget();
+        }
+        else
+        {
+            index = script;
+            ws = (QsciScintilla*)textWidget->widget(script-1);  //Subtract one since first widget is at qt index 0
+
+        }
 
         //read in the player scripts (as defined in the config file)
         std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
