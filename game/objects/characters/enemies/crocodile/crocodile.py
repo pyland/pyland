@@ -133,10 +133,7 @@ class Crocodile(Character):
         super().move_south(callback)
         engine = self.get_engine()
         x, y = self.get_position()
-
-        if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_SOLID):
-            self.change_state("swim")
-        elif(engine.get_tile_type((x, y-1)) == engine.TILE_TYPE_WATER):
+        if(engine.get_tile_type((x, y-1)) == engine.TILE_TYPE_WATER):
             self.change_state("swim")
         else:
             self.change_state("main")
