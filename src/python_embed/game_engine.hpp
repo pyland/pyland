@@ -78,11 +78,15 @@ class GameEngine {
 
         void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
 
+        void set_running();
+
         void set_finished();
 
         void trigger_run();
 
         int get_run_script();
+
+        bool is_solid(int x, int y);
 
 };
 

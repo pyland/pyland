@@ -566,8 +566,32 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     case Qt::Key_Menu:
         return SDL_SCANCODE_MENU;
     default:
-        //Remaining keys can be mapped directly
-        return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+        switch (keyEvent->nativeScanCode())
+        {
+        //Map keypad numbers to standard numbers for executing scripts
+        //Numlock must be on
+        case 87:
+            return SDL_SCANCODE_1;
+        case 88:
+            return SDL_SCANCODE_2;
+        case 89:
+            return SDL_SCANCODE_3;
+        case 83:
+            return SDL_SCANCODE_4;
+        case 84:
+            return SDL_SCANCODE_5;
+        case 85:
+            return SDL_SCANCODE_6;
+        case 79:
+            return SDL_SCANCODE_7;
+        case 80:
+            return SDL_SCANCODE_8;
+        case 81:
+            return SDL_SCANCODE_9;
+        default:
+            //Remaining keys can be mapped directly
+            return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+        }
     }
 }
 
@@ -701,7 +725,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void MainWindow::clickRun(){
+void MainWindow::clickRun()
+{
     //Run the currently open script
     runCode(0);
 }
@@ -718,7 +743,8 @@ void MainWindow::runCode(int script)
         //game->getCallbackState().stop();
         //TODO, create hooks into script-runner to stop the correct script.
     }
-    else{
+    else
+    {
         QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
         int index = getCurrentScript();
@@ -747,10 +773,12 @@ void MainWindow::runCode(int script)
 
         setRunning(true);
         updateSpeed();
-        if (script == 0){
+        if (script == 0)
+        {
             executeIndex = getCurrentScript();
         }
-        else{
+        else
+        {
             executeIndex = script;
         }
         InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
@@ -758,11 +786,13 @@ void MainWindow::runCode(int script)
     setGameFocus();
 }
 
-void MainWindow::clickSpeed(){
+void MainWindow::clickSpeed()
+{
     toggleSpeed();
 }
 
-void MainWindow::toggleSpeed(){
+void MainWindow::toggleSpeed()
+{
     setFast(!fast);
     updateSpeed();
     setGameFocus();
@@ -770,8 +800,10 @@ void MainWindow::toggleSpeed(){
 
 //If a script is being run and the speed is set to fast, update the game speed
 //Otherwise keep the game at normal speed
-void MainWindow::updateSpeed(){
-    if (fast && running){
+void MainWindow::updateSpeed()
+{
+    if (fast && running)
+    {
         auto now(std::chrono::steady_clock::now());
         auto time_passed = now - game->get_start_time();
 
@@ -790,13 +822,16 @@ void MainWindow::updateSpeed(){
 
         EventManager::get_instance()->time.set_game_seconds_per_real_second(eased);
     }
-    else{
+    else
+    {
         EventManager::get_instance()->time.set_game_seconds_per_real_second(1.0);
     }
 }
 
-void MainWindow::pushTerminalText(std::string text, bool error){
-    if (error){
+void MainWindow::pushTerminalText(std::string text, bool error)
+{
+    if (error)
+    {
         terminalDisplay->setTextColor(QColor("red"));
     }
     QString qtext = QString::fromStdString(text+"\n");
@@ -887,15 +922,17 @@ void MainWindow::setFast(bool option)
 
 }
 
-void MainWindow::setAnyOutput(bool option){
+void MainWindow::setAnyOutput(bool option)
+{
     anyOutput = option;
 }
 
-void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2){
+void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2)
+{
 
     textInfoWidget->setStyleSheet(("background-color: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
-                                  "border: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
-                                  "font: 17pt;").c_str());
+                                   "border: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
+                                   "font: 17pt;").c_str());
 
 
     colourPalette.setColor(QPalette::Background,QColor(r1,g1,b1));
@@ -909,25 +946,30 @@ SDL_Window* MainWindow::getSDLWindow()
     return embedWindow;
 }
 
-int MainWindow::getGameWidgetWidth(){
+int MainWindow::getGameWidgetWidth()
+{
     return gameWidget->width();
 }
 
-int MainWindow::getGameWidgetHeight(){
+int MainWindow::getGameWidgetHeight()
+{
     return gameWidget->height();
 }
 
-bool MainWindow::getAnyOutput(){
+bool MainWindow::getAnyOutput()
+{
     return anyOutput;
 }
 
 //Get the currently open script tab number
-int MainWindow::getCurrentScript(){
+int MainWindow::getCurrentScript()
+{
     return (textWidget->currentIndex())+ 1;
 }
 
 //Get the number of the script that is to be run
 //This may be different to the open one (due to keybindings)
-int MainWindow::getExecuteScript(){
+int MainWindow::getExecuteScript()
+{
     return executeIndex;
 }

@@ -51,6 +51,11 @@ class Entity {
         void callback_test(PyObject *callback);
 
         ///
+        /// Call the callback after a given number of in-game time-units
+        ///
+        void wait(double gametime, PyObject *callback);
+
+        ///
         /// Construct Entity with a given place, name and id.
         ///
         /// @param start
@@ -144,6 +149,14 @@ class Entity {
         ///     Whether you want the object to be solid (true) or not solid (false)
         ///
         void set_solidity(bool solidity);
+
+        ///
+        /// Return the solidity of the object
+        ///
+        /// @return
+        ///     True if object is solid, false otherwise
+        ///
+        bool is_solid();
 
         ///
         /// Centre the camera on this object. Snaps instantly

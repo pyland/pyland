@@ -61,6 +61,10 @@ class Engine:
         #return a list of the objects at the given position
         return game_objects
 
+    def is_solid(self, position):
+        x, y = position                                     #Extract the position x and y coordinates
+        return self.__cpp_engine.is_solid(x, y)
+
     def print_terminal(self, message, highlighted = False):
         """ print the given message to in-game terminal
         
