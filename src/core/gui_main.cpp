@@ -24,6 +24,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     //Create the game embedWindow to present to the users
     embedWindow->use_context();
+
     Engine::set_game_window(embedWindow);
 
     Engine::set_map_viewer(&map_viewer);
@@ -106,6 +107,8 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     });
 
     bag_window->add(pyguide_button);
+
+    button_index = 0;
 
     gui_window->add(pause_button);
     gui_window->add(bag_button);
@@ -321,5 +324,11 @@ void GUIMain::config_gui()
     vertical_button_spacing = j["scales"]["vertical_button_spacing"];
 
     button_max = j["scales"]["button_max"];
+}
+
+void GUIMain::click_next_player(){
+    button_index = button_index + 1;
+    if (button_index > buttons.size()) button_index = 0;
+    buttons[button_index]->call_on_click();
 }
 

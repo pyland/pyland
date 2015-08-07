@@ -54,6 +54,7 @@ private:
     Lifeline left_callback;
     Lifeline run_callback;
     Lifeline speed_callback;
+    Lifeline switch_callback;
     Lifeline script1_callback;
     Lifeline script2_callback;
     Lifeline script3_callback;
@@ -93,6 +94,7 @@ public:
     GameWindow* getGameWindow();
     CallbackState getCallbackState();
     std::chrono::steady_clock::time_point get_start_time();
+    void focus_next();
 
 };
 

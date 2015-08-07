@@ -23,6 +23,7 @@
 #include "dispatcher.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
+#include "game_main.hpp"
 #include "game_time.hpp"
 #include "mainwindow.h"
 #include "map.hpp"
@@ -35,11 +36,12 @@
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
 std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
+GameMain* Engine::game_main(nullptr);
 GameWindow* Engine::game_window(nullptr);
+MainWindow* Engine::main_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
-MainWindow* Engine::main_window(nullptr);
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
@@ -242,10 +244,20 @@ void Engine::print_dialogue(std::string name, std::string text) {
     notification_bar->add_message(text_to_display);
 }
 
+//Print to the QT terminal widget
 void Engine::print_terminal(std::string text, bool error) {
     main_window->setAnyOutput(true);
     main_window->pushTerminalText(text,error);
 }
+
+
+//Focuses on the next player that has a focus button for it
+void Engine::focus_next() {
+    std::cout << "Focusing next" << std::endl;
+    game_main->focus_next();
+    return;
+}
+
 
 void Engine::set_any_output(bool option){
     main_window->setAnyOutput(option);

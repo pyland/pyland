@@ -82,6 +82,7 @@ def start(player_object, script_name):
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
             player_object.get_engine().print_terminal("Halted Script", True)
             player_object.get_engine().set_finished()
+            printed_flag[0] = True
         finally: #perform neccesary cleanup
             if printed_flag[0]:
                 player_object.get_engine().print_terminal("---" + player_object.get_character_name() + "'s script has ended---", False)

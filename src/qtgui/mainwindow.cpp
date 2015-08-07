@@ -504,7 +504,7 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     case Qt::Key_Escape:
         return SDL_SCANCODE_ESCAPE;
     case Qt::Key_Tab:
-        return SDL_SCANCODE_KP_TAB;
+        return SDL_SCANCODE_TAB;
     case Qt::Key_Backspace:
         return SDL_SCANCODE_BACKSPACE;
     case Qt::Key_Insert:

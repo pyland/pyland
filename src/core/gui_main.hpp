@@ -77,6 +77,8 @@ private:
     //The gameplay buttons for the gui displayed on the screen
     //created by GameEngine
     std::deque<std::shared_ptr<Button>> buttons;
+    //The index for the currently highlighted player
+    unsigned int button_index;
     //While cycling through sprites, this is the index of the first button on the visible page
     unsigned int display_button_start;
     //A button used to cycle through the sprite heads
@@ -113,5 +115,9 @@ public:
 
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();
+
+    //Simulate clicking on the next player button
+    void click_next_player();
+
 };
 #endif
