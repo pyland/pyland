@@ -46,6 +46,22 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
+void GameEngine::add_dialogue(std::string text) {
+    LOG(INFO) << "Adding@ " << text;
+
+    EventManager::get_instance()->add_event([this, text] {
+        Engine::add_dialogue(text);
+    });
+}
+
+void GameEngine::open_dialogue_box() {
+    LOG(INFO) << "Opening notification bar";
+
+    EventManager::get_instance()->add_event([this] {
+        Engine::open_notification_bar();
+    });
+}
+
 void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
     //TODO: Find a way of avoiding this hack
     LOG(INFO) << "Adding a new button: " << name;

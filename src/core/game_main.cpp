@@ -295,9 +295,7 @@ GameMain::GameMain(int &argc, char **argv):
                           &interpreter,
                           gui.get_gui_manager(),
                           &embedWindow,
-                          input_manager,
-                          gui.get_notification_bar()
-                          //0
+                          input_manager
                         ));
     challenge_data->run_challenge = true;
     challenge = pick_challenge(challenge_data);

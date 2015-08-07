@@ -34,12 +34,12 @@
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
-std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
 GameWindow* Engine::game_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
 MainWindow* Engine::main_window(nullptr);
+GUIMain* Engine::gui_main(nullptr);
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
@@ -241,9 +241,12 @@ int Engine::get_tile_type(int x, int y) {
     return map_viewer->get_map()->get_tile_type(x, y);
 }
 
-void Engine::print_dialogue(std::string name, std::string text) {
-    std::string text_to_display = name + " : " + text;
-    notification_bar->add_message(text_to_display);
+void Engine::add_dialogue(std::string text) {
+    gui_main->add_message(text);
+}
+
+void Engine::open_notification_bar(){
+    gui_main->open_notification_bar();
 }
 
 void Engine::print_terminal(std::string text, bool error) {

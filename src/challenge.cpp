@@ -59,7 +59,6 @@ Challenge::~Challenge() {
         ObjectManager::get_instance().remove_object(map_object_id);
     }
 
-    Engine::get_notification_bar()->clear_text();
     Engine::get_map_viewer()->set_map(nullptr);
 
     //Delete the map

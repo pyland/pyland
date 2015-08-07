@@ -168,8 +168,8 @@ int Entity::get_number_of_animation_frames() {
 
 
     int num_frames = (int) std::count_if(boost::filesystem::directory_iterator(full_file_location),
-                         boost::filesystem::directory_iterator(), 
-                         [](const boost::filesystem::directory_entry& e) { 
+                         boost::filesystem::directory_iterator(),
+                         [](const boost::filesystem::directory_entry& e) {
                               return e.path().extension() == ".png";
                          });
     return num_frames;
@@ -202,10 +202,9 @@ void Entity::py_print_debug(std::string text) {
     LOG(INFO) << text;
 }
 
-void Entity::py_print_dialogue(std::string text) {
-    auto name = this->name;
-    Engine::print_dialogue(name, text);
-}
+//void Entity::py_print_dialogue(std::string text) {
+//    Engine::print_dialogue(text);
+//}
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
     EventManager::get_instance()->time.set_game_seconds_per_real_second(game_seconds_per_real_second);

@@ -21,13 +21,13 @@ These install instructions may be incomplete and you may require additional pack
 #### Getting Dependencies (Raspberry Pi)
 
 Install packages from raspbian repo:
-```bash
+```
 sudo apt-get update
 sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
 sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-
 sudo apt-get install libts-dev
-
+sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
+sudo apt-get install libqscintilla2-dev
 ```
 
 Download and install extra dependancies:
@@ -66,8 +66,7 @@ make
 cd ..
 ```
 
-#### Compiling on Desktop - Unix
-
+#### Compiling on Desktop GNU/Linux
 For desktop, you will need the packages listed above, which can be found here:
 
 ```bash
@@ -80,9 +79,31 @@ sudo apt-get install libsdl2-image-dev
 sudo apt-get install libsdl2-ttf-dev
 sudo apt-get install libgoogle-glog0
 sudo apt-get install libgoogle-glog-dev
+sudo apt-get install libqscintilla2-dev
 ```
 
 If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
+
+#### Getting Pyland source code
+
+Get source code using git:
+
+```bash
+sudo apt-get install --no-install-recommends git-core
+git clone http://github.com/pyland/pyland
+```
+
+#### Compiling on Raspberry Pi
+
+For compiling on the Raspberry Pi, use:
+
+```bash
+cd pyland/src
+#Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
+COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+```
+
+#### Compiling on Desktop - Unix
 
 For compiling on desktop, use:
 
@@ -92,6 +113,8 @@ For compiling on desktop, use:
 #
 # Set COMPILER to the most recent g++ or clang++ version available,
 # but at least g++-4.7 or a recent clang++. Plain "g++" is the default.
+
+cd pyland/src
 PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.4 LIBBOOST_PYTHON=boost_python-py34 make
 ```
 
@@ -99,7 +122,7 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 
 ##Usage
 
-To launch :
+To launch (you must be in the /src folder):
 
 ```bash
 #Must be in the src folder
@@ -107,18 +130,13 @@ To launch :
 ```
 
 Keybindings
-* <kbd>e</kbd> - open the editor with current sprite's script
-* <kbd>r</kbd> - run the script for the current sprite
-* <kbd>h</kbd> - stop the script
-* <kbd>Shift</kbd> - Hold down when running a script for fast mode (can't use with manual control)
+* <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - Move sprite
+* <kbd>Enter</kbd> - Run the current script/halt running script
+* <kbd>1-9</kbd> - Run the script of given number/halt running script
+* <kbd>Space</kbd> - Toggle speed
+* <kbd>Tab</kbd> - Switch player
 
-* <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - move sprite
-* <kbd>m</kbd> - print the focused sprite's location
-
-* <kbd>escape</kbd> - go back to level selection map
-
-* <kbd>=</kbd><kbd>-</kbd> - zooming in and out
-* <kbd>Ctrl</kbd>-<kbd>0</kbd> - return to default zoom level
+* <kbd>escape</kbd> - Go back to level selection map
 
 ##Installing qt for integrated editor test
 
@@ -129,7 +147,6 @@ sudo apt-get install libqscintilla2-dev
 ```
 
 This will create the executable "application" which can then be run.
-
 ##API
 
 * `help()` and `help(command)` - Get help on the current task and any in-game (or other) commands.
