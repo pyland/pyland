@@ -36,7 +36,7 @@ engine.get_objects_at(player_one.get_position())
 engine.add_button("gui/head/monkey", player_one.get_character_name(), player_one.focus)
 engine.add_button("gui/head/monkey", player_two.get_character_name(), player_two.focus)
 
-engine.add_dialogue("Hello, WelndWelcomo Pyland!Hello, Welcome to Pyland!Hello, Welcome to Pyland!")
+engine.add_dialogue(game.getDialogue("welcome"))
 engine.open_dialogue_box()
 
 croc_one.follow_path("north, east, east, north, east, south, south, south, west, west, west, north", True)
@@ -45,7 +45,6 @@ croc_three.rand_explore()
 
 engine.print_terminal(player_one.get_position(), False)
 
-engine.print_terminal(game.getDialogue("welcome"))
 
 #engine.print_terminal(engine.getDialogue("welcome"))
 
