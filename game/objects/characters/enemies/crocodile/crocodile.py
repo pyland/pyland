@@ -111,40 +111,40 @@ class Crocodile(Character):
             return self.wait(0.3, self.rand_explore)
 
 
-    def move_north(self, callback):
-        super().move_north(callback)
+
+    def __check_swim_state(self, callback):
         engine = self.get_engine()
         x, y = self.get_position()
-        if(engine.get_tile_type((x, y+1)) == engine.TILE_TYPE_WATER):
+        if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
             self.change_state("swim")
-        else:
+        return callback()
+
+    def move_north(self, callback):
+        super().move_north(lambda: self.__check_swim_state(callback))
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x, y+1)) == engine.TILE_TYPE_STANDARD):
             self.change_state("main")
     
     def move_east(self, callback):
-        super().move_east(callback)
+        super().move_east(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
-        if(engine.get_tile_type((x+1, y)) == engine.TILE_TYPE_WATER):
-            self.change_state("swim")
-        else:
+        if(engine.get_tile_type((x+1, y)) == engine.TILE_TYPE_STANDARD):
             self.change_state("main")
 
     def move_south(self, callback):
-        super().move_south(callback)
+        super().move_south(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
-        if(engine.get_tile_type((x, y-1)) == engine.TILE_TYPE_WATER):
-            self.change_state("swim")
-        else:
+        if(engine.get_tile_type((x, y-1)) == engine.TILE_TYPE_STANDARD):
             self.change_state("main")
 
     def move_west(self, callback):
-        super().move_west(callback)
+        super().move_west(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
-        if(engine.get_tile_type((x+1, y)) == engine.TILE_TYPE_WATER):
-            self.change_state("swim")
-        else:
+        if(engine.get_tile_type((x-1, y)) == engine.TILE_TYPE_STANDARD):
             self.change_state("main")
 
     """ private:

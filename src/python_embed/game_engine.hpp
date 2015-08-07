@@ -29,6 +29,7 @@ class GameEngine {
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
 
+        static int TILE_TYPE_STANDARD() { return 0; }
         static int TILE_TYPE_SOLID() { return 1; }
         static int TILE_TYPE_WATER() { return 2; }
 
