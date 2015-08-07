@@ -60,10 +60,10 @@ class Player(Character):
         engine.register_input_callback(engine.INPUT_HALT, focus_func(self.halt_script))
 
         #register callbacks for character movement
-        engine.register_input_callback(engine.INPUT_UP, focus_func(self.move_north))
-        engine.register_input_callback(engine.INPUT_RIGHT, focus_func(self.move_east))
-        engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.move_south))
-        engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.move_west))
+        engine.register_input_callback(engine.INPUT_UP, focus_func(self.__input_move_north))
+        engine.register_input_callback(engine.INPUT_RIGHT, focus_func(self.__input_move_east))
+        engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.__input_move_south))
+        engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.__input_move_west))
 
         engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
 
@@ -161,24 +161,24 @@ class Player(Character):
 
     """ Override character move methods to prevent movement if script is running
     """
-    def move_north(self, callback = lambda: None):
-        if (not self.__running_script): #Check that a script isn't running
-            super().move_north(callback)
+    def __input_move_north(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            self.move_north(callback)
         return
 
-    def move_east(self, callback = lambda: None):
-        if (not self.__running_script): #Check that a script isn't running
-            super().move_east(callback)
+    def __input_move_east(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            self.move_east(callback)
         return
 
-    def move_south(self, callback = lambda: None):
-        if (not self.__running_script): #Check that a script isn't running
-            super().move_south(callback)
+    def __input_move_south(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            self.move_south(callback)
         return
 
-    def move_west(self, callback = lambda: None):
-        if (not self.__running_script): #Check that a script isn't running
-            super().move_west(callback)
+    def __input_move_west(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            self.move_west(callback)
         return
 
     def set_running_script_status(self, status):
