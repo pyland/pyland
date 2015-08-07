@@ -258,6 +258,10 @@ void Engine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
     main_window->setColourScheme(r1,b1,g1,r2,b2,g2);
 }
 
+void Engine::set_running(){
+    main_window->setRunning(true);
+}
+
 void Engine::set_finished(){
     main_window->setRunning(false);
 }
