@@ -34,15 +34,36 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     gui_manager.set_root(gui_window);
 
-    notification_bar = std::make_shared<TextBox>();
-	notification_bar->set_width(notification_width);
-	notification_bar->set_height(notification_height);
-	notification_bar->set_x_offset(left_x_offset);
-	notification_bar->set_y_offset(bottom_y_offset);
+	create_notification_bar();
+	create_pause_menu();
+	create_bag();
+	create_pyguide();
 
-    Engine::set_notification_bar(notification_bar);
 
-    pause_button = std::make_shared<Button>(ButtonType::Single);
+    LOG(INFO) << "Constructed GUIMain.";
+}
+
+void GUIMain::create_pyguide(){
+
+	pyguide_window = std::make_shared<Board>(ButtonType::Board);
+    pyguide_window->set_text("PyGuide");
+    pyguide_window->set_clickable(false);
+    pyguide_window->set_visible(false);
+    pyguide_window->move_text(title_x_offset, title_y_offset);
+
+	py_help = std::make_shared<TextBox>(TextBoxType::Both);
+	py_help->set_width(py_help_width);
+	py_help->set_height(py_help_height);
+	py_help->set_x_offset(py_help_x);
+	py_help->set_y_offset(py_help_y);
+
+
+	gui_window->add(pyguide_window);
+}
+
+void GUIMain::create_pause_menu(){
+
+	pause_button = std::make_shared<Button>(ButtonType::Single);
     pause_button->set_picture("gui/game/pause");
     pause_button->set_alignment(ButtonAlignment::TopLeft);
     pause_button->set_width(button_width);
@@ -62,8 +83,12 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
             close_pause_window();
         }
     });
+	gui_window->add(pause_button);
+}
 
-    bag_button = std::make_shared<Button>(ButtonType::Single);
+void GUIMain::create_bag(){
+
+	bag_button = std::make_shared<Button>(ButtonType::Single);
     bag_button->set_picture("gui/game/bag");
     bag_button->set_text("Bag");
     bag_button->set_alignment(ButtonAlignment::TopRight);
@@ -84,17 +109,11 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
         }
     });
 
-    bag_window = std::make_shared<Button>(ButtonType::Board);
+    bag_window = std::make_shared<Board>(ButtonType::Board);
     bag_window->set_text("Bag");
     bag_window->set_clickable(false);
     bag_window->set_visible(false);
     bag_window->move_text(title_x_offset, title_y_offset);
-
-    pyguide_window = std::make_shared<Button>(ButtonType::Board);
-    pyguide_window->set_text("PyGuide");
-    pyguide_window->set_clickable(false);
-    pyguide_window->set_visible(false);
-    pyguide_window->move_text(title_x_offset, title_y_offset);
 
     pyguide_button = std::make_shared<Button>(ButtonType::NoPicture);
     pyguide_button->set_text("PyGuide");
@@ -110,16 +129,37 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
         open_pyguide();
     });
 
-    bag_window->add(pyguide_button);
-
-    gui_window->add(pause_button);
-    gui_window->add(bag_button);
+	bag_window->add(pyguide_button);
+	gui_window->add(bag_button);
     gui_window->add(bag_window);
-	gui_window->add(pyguide_window);
-	gui_window->add(notification_bar);
+}
 
+void GUIMain::create_notification_bar(){
 
-    LOG(INFO) << "Constructed GUIMain.";
+	notification_bar = std::make_shared<TextBox>(TextBoxType::Forward);
+	notification_bar->set_width(notification_width);
+	notification_bar->set_height(notification_height);
+	notification_bar->set_x_offset(left_x_offset);
+	notification_bar->set_y_offset(bottom_y_offset);
+	notification_bar->move_text(notification_text_x, notification_text_y);
+	notification_bar->resize_text(notification_text_width, notification_text_height);
+	notification_bar->resize_buttons(notification_button_width, notification_button_height);
+	notification_bar->move_buttons(notification_button_x, notification_button_y);
+	notification_bar->set_visible(false);
+
+    gui_window->add(notification_bar);
+}
+
+void GUIMain::open_notification_bar(){
+	notification_bar->open();
+}
+
+void GUIMain::close_notification_bar(){
+	notification_bar->close();
+}
+
+void GUIMain::add_message(std::string text){
+	notification_bar->add_message(text);
 }
 
 void GUIMain::open_pyguide(){
@@ -323,6 +363,16 @@ void GUIMain::config_gui()
 
 	notification_width = j["scales"]["notification_width"];
 	notification_height = j["scales"]["notification_height"];
+
+	notification_text_width = j["scales"]["notification_text_width"];
+	notification_text_height = j["scales"]["notification_text_height"];
+	notification_text_x = j["scales"]["notification_text_x"];
+	notification_text_y = j["scales"]["notification_text_y"];
+
+	notification_button_width = j["scales"]["notification_button_width"];
+	notification_button_height = j["scales"]["notification_button_height"];
+	notification_button_x = j["scales"]["notification_button_x"];
+	notification_button_y = j["scales"]["notification_button_y"];
 
     button_width = j["scales"]["button_width"];
     button_height = j["scales"]["button_height"];

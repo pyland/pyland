@@ -49,12 +49,19 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
-void GameEngine::print_dialogue(std::string text) {
-	LOG(INFO) << "Printing- " << text;
+void GameEngine::add_dialogue(std::string text) {
+	LOG(INFO) << "Adding@ " << text;
 
     EventManager::get_instance()->add_event([this, text] {
-        Engine::print_dialogue(text);
-		gui_main->refresh_gui();
+        Engine::add_dialogue(text);
+    });
+}
+
+void GameEngine::open_dialogue_box() {
+	LOG(INFO) << "Opening notification bar";
+
+    EventManager::get_instance()->add_event([this] {
+        Engine::open_notification_bar();
     });
 }
 

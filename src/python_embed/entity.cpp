@@ -174,9 +174,9 @@ void Entity::py_print_debug(std::string text) {
     LOG(INFO) << text;
 }
 
-void Entity::py_print_dialogue(std::string text) {
-    Engine::print_dialogue(text);
-}
+//void Entity::py_print_dialogue(std::string text) {
+//    Engine::print_dialogue(text);
+//}
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
     EventManager::get_instance()->time.set_game_seconds_per_real_second(game_seconds_per_real_second);

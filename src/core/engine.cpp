@@ -34,7 +34,6 @@
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
-std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
 GameWindow* Engine::game_window(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
@@ -238,8 +237,12 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     });
 }
 
-void Engine::print_dialogue(std::string text) {
-    notification_bar->add_message(text);
+void Engine::add_dialogue(std::string text) {
+    gui_main->add_message(text);
+}
+
+void Engine::open_notification_bar(){
+	gui_main->open_notification_bar();
 }
 
 void Engine::print_terminal(std::string text, bool error) {

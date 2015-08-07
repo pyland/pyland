@@ -16,6 +16,9 @@
 /// The entire GUI, which consists of all the components in it.
 /// Created by GameMain and contained in it
 ///
+
+typedef Button Board;
+
 class GUIMain {
 
 private:
@@ -37,8 +40,33 @@ private:
     float menu_x_offset;
     float menu_y_offset;
 
-	float notification_height;
 	float notification_width;
+	float notification_height;
+
+	float notification_text_width;
+	float notification_text_height;
+	float notification_text_x;
+	float notification_text_y;
+
+	float notification_button_width;
+	float notification_button_height;
+	float notification_button_x;
+	float notification_button_y;
+
+	float py_help_width;
+	float py_help_height;
+	float py_help_x;
+	float py_help_y;
+
+	float py_next_width;
+	float py_next_height;
+	float py_next_x;
+	float py_next_y;
+
+	float py_back_width;
+	float py_back_height;
+	float py_back_x;
+	float py_back_y;
 
 	float button_width;
 	float button_height;
@@ -55,23 +83,29 @@ private:
     EventManager *em;
 
     std::shared_ptr<GUIWindow> gui_window;
+
+    void create_notification_bar();
     std::shared_ptr<TextBox> notification_bar;
 
+	void create_pause_menu();
     //The button to pause the game
     std::shared_ptr<Button> pause_button;
     void open_pause_window();
     void close_pause_window();
 
+	void create_bag();
+
     bool bag_open; //whether or not the bag is open
     std::shared_ptr<Button> bag_button;
-    std::shared_ptr<Button> bag_window;
+    std::shared_ptr<Board> bag_window;
+    std::shared_ptr<Button> pyguide_button;
     std::deque<std::shared_ptr<Button>> bag_items;
     void open_bag();
     void close_bag();
 
+	void create_pyguide();
     bool pyguide_open; //whether or not the PyGuide is open
-    std::shared_ptr<Button> pyguide_button;
-    std::shared_ptr<Button> pyguide_window;
+    std::shared_ptr<Board> pyguide_window;
     std::shared_ptr<TextBox> py_help;
     std::deque<std::shared_ptr<Button>> pyguide_commands;
     void open_pyguide();
@@ -113,6 +147,14 @@ public:
     //file path is the location of the image in gui.png, and name is the name to be displayed on screen
     //callback is added to the event manager when the button is pressed
     void add_button(std::string file_path, std::string name, std::function<void (void)> callback);
+
+
+	//To add a message to the notification bar
+	void add_message(std::string text);
+
+	void open_notification_bar();
+	void close_notification_bar();
+
 
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();

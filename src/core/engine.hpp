@@ -25,8 +25,6 @@ class Engine {
 private:
     static MapViewer *map_viewer;
 
-    static std::shared_ptr<TextBox> notification_bar;
-
     static GameWindow* game_window;
 
 	static GUIMain *gui_main;
@@ -177,13 +175,11 @@ public:
     ///
     static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
 
-    static void set_notification_bar(std::shared_ptr<TextBox> _notification_bar) { Engine::notification_bar = _notification_bar; }
-    static std::shared_ptr<TextBox> get_notification_bar() { return Engine::notification_bar; }
-
 	static void set_gui(GUIMain * _gui_main) { Engine::gui_main = _gui_main; }
 	static GUIMain* get_gui() { return gui_main; }
 
-    static void print_dialogue(std::string text);
+    static void add_dialogue(std::string text);
+    static void open_notification_bar();
 
     /// trigger qt mainwindow functions
     static void print_terminal(std::string text, bool error);

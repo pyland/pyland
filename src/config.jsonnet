@@ -27,7 +27,7 @@
 		//for placing the buttons on top of the screen
 		"left_x_offset": 0.0,
 		"right_x_offset": 0.91,
-		"bottom_y_offset": 0.2,
+		"bottom_y_offset": 0.0,
 		"top_y_offset": 0.87,				
 
 		//for placing the title of a menu
@@ -41,6 +41,24 @@
 		//the sizes of the buttons on top of the screen
 		"notification_width": 1.0,
 		"notification_height": 0.3,
+
+		//the parameters for notification text
+		"notification_text_width": 0.9,
+		"notification_text_height": 0.4, 
+		"notification_text_x": 0.03,
+		"notification_text_y": 0.7,
+
+		//the parameters for notification button (next, back etc)
+		"notification_button_width": 0.5,
+		"notification_button_height": 1.0, 
+		"notification_button_x": 0.9,
+		"notification_button_y": 0.35,
+
+		//the parameters for the py help text box which explains commands
+		"py_help_width": 0.5,
+		"py_help_height": 0.5, 
+		"py_help_x": 0.5,
+		"py_help_y": 0.0,
 
 		//the sizes of the buttons on top of the screen
 		"button_width": 0.08,
