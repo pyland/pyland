@@ -218,7 +218,7 @@ void GUIMain::close_pause_window(){
     refresh_gui();
 }
 
-void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback){
+void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback, int button_id){
 
     if(buttons.size() == button_max){
         cycle_button = std::make_shared<Button>(ButtonType::Single);
@@ -264,7 +264,11 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     buttons.push_back(new_button);
     new_button->set_picture(file_path);
     new_button->set_text(name);
-    new_button->set_on_click(callback);
+    //Map button_id to cur_button_index in array
+    //Create function to map button_id to cur_button_index so can call set_button_index(cur_button_index)\
+    int cur_button_index = buttons.size() - 1;
+    new_button->set_on_click([this, cur_button_index, callback] () {callback();this->set_button_index(cur_button_index);});
+    //HIGHLIGHT BUTTON WHEN CLICKED
     new_button->set_width(button_width);
     new_button->set_height(button_height);
 
@@ -326,9 +330,36 @@ void GUIMain::config_gui()
     button_max = j["scales"]["button_max"];
 }
 
+void GUIMain::set_button_index(int value){
+    button_index = value;
+    update_selected();
+}
+
 void GUIMain::click_next_player(){
+    std::cout << "Button index is " << std::to_string(button_index) << std::endl;
+    bool selected_on_cur_cycle = false;
+    if ((button_index < display_button_start+button_max) && (button_index >= display_button_start)) selected_on_cur_cycle = true;
     button_index = button_index + 1;
-    if (button_index > buttons.size()) button_index = 0;
+    if (button_index >= buttons.size()){
+        button_index = 0;
+    }
+    if (selected_on_cur_cycle && ((button_index >= display_button_start+button_max) || (button_index < display_button_start))) cycle_button->call_on_click();
+    //Call cycle_button->call_on_click(); if you want to cycle
+    update_selected();
     buttons[button_index]->call_on_click();
+}
+
+void GUIMain::update_selected(){
+    for (unsigned int i=0;i<buttons.size();i++){
+        if (button_index == i){
+            buttons[i]->set_text("SELECTED");
+            refresh_gui();
+        }
+        else{
+            buttons[i]->set_text("NOT SELECTED");
+            refresh_gui();
+        }
+    }
+
 }
 

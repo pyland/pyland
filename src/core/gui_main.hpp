@@ -111,13 +111,19 @@ public:
     //To add a button to the screen- is called from game engine
     //file path is the location of the image in gui.png, and name is the name to be displayed on screen
     //callback is added to the event manager when the button is pressed
-    void add_button(std::string file_path, std::string name, std::function<void (void)> callback);
+    void add_button(std::string file_path, std::string name, std::function<void (void)> callback, int button_id);
 
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();
 
+    //Update the currently selected player button index
+    void set_button_index(int value);
+
     //Simulate clicking on the next player button
     void click_next_player();
+
+    //Update GUI buttons to reflect currently selected sprite
+    void update_selected();
 
 };
 #endif

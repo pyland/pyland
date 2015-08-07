@@ -40,6 +40,7 @@ class Player(Character):
     __running_script = False
     __thread_id = 0
     __bag = None
+    __focus_button_id = 0
 
     def initialise(self):
         """ An initialiser function.
@@ -65,7 +66,9 @@ class Player(Character):
         engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.__input_move_south))
         engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.__input_move_west))
 
-        engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
+        #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
+
+        __focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
 
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
@@ -87,6 +90,7 @@ class Player(Character):
 
     def focus(self):
         """Override focus method for generic game_object, to update running button
+        and update focused player button above
         """
         #self.__entity.focus()
         super().focus();
@@ -95,7 +99,7 @@ class Player(Character):
             engine.set_running()
         else:
             engine.set_finished()
-
+        #engine.select_button(button_id);
         return
 
 

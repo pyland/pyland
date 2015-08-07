@@ -16,6 +16,7 @@ class GameEngine {
 
     private:
         GUIMain * gui_main;
+        static int button_id;
 
     public:
 
@@ -66,8 +67,8 @@ class GameEngine {
 
         ///
         /// To add a button to the challenge
-        ///
-        void add_button(std::string file_path, std::string name, PyObject* callback);
+        /// Returns the button_id associated with the python player
+        int add_button(std::string file_path, std::string name, PyObject* callback);
 
         void register_input_callback(int input_key, PyObject *input_callback);
 
