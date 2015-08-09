@@ -46,6 +46,7 @@ wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog-dev_0.3.3-1_armhf.deb
 sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
 cd ..
 ```
+Also requires libsdl2-mixer-dev, not currently on the raspbian repo.
 
 Get source code using git:
 ```bash
@@ -80,6 +81,7 @@ sudo apt-get install libsdl2-ttf-dev
 sudo apt-get install libgoogle-glog0
 sudo apt-get install libgoogle-glog-dev
 sudo apt-get install libqscintilla2-dev
+sudo apt-get install libsdl2-mixer-dev 
 ```
 
 If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
