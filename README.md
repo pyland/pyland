@@ -99,6 +99,9 @@ For compiling on the Raspberry Pi, use:
 
 ```bash
 cd pyland/src
+cd jsonnet
+make
+cd..
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
 COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
@@ -115,6 +118,9 @@ For compiling on desktop, use:
 # but at least g++-4.7 or a recent clang++. Plain "g++" is the default.
 
 cd pyland/src
+cd jsonnet
+make
+cd..
 PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.4 LIBBOOST_PYTHON=boost_python-py34 make
 ```
 
