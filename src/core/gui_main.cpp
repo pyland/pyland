@@ -265,8 +265,8 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     new_button->set_picture(file_path);
     new_button->set_text(name);
     //Map button_id to cur_button_index in array
-    //Create function to map button_id to cur_button_index so can call set_button_index(cur_button_index)\
-    int cur_button_index = buttons.size() - 1;
+    //Create function to map button_id to cur_button_index so can call set_button_index(cur_button_index)
+    int cur_button_index = (int) (buttons.size() - 1);
     new_button->set_on_click([this, cur_button_index, callback] () {callback();this->set_button_index(cur_button_index);});
     //HIGHLIGHT BUTTON WHEN CLICKED
     new_button->set_width(button_width);

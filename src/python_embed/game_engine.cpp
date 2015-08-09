@@ -20,7 +20,7 @@ boost::python::object GameEngine::addObject(std::string name, std::string class_
 }
 */
 
-GameEngine::button_id = 0;
+int GameEngine::button_id = 0;
 
 void GameEngine::change_level(std::string level_location) {
     //TODO: run the finish.py script of a level.
