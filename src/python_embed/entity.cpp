@@ -32,7 +32,9 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
     LOG(INFO) << "invalid: constructor " << this->id;
 
     this->animating = false;
-    
+
+    this->current_frame = 0;
+
 
 
 }
@@ -148,7 +150,7 @@ void Entity::set_sprite(std::string sprite_location) {
 
 void Entity::start_animating() {
     this->animating = true;
-    this->animate(0);
+    this->animate(this->current_frame);
 }
 
 void Entity::pause_animating() {
@@ -196,6 +198,7 @@ int Entity::get_number_of_animation_frames() {
 }
 
 void Entity::set_animation_frame(int frame_number) {
+    this->current_frame = frame_number;
     auto sprite_location = this->sprite_location;
     int id = this->id;
     std::string file_location = this->file_location;
