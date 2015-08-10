@@ -20,8 +20,6 @@ boost::python::object GameEngine::addObject(std::string name, std::string class_
 }
 */
 
-int GameEngine::button_id = 0;
-
 void GameEngine::change_level(std::string level_location) {
     //TODO: run the finish.py script of a level.
     LOG(INFO) << "Changing level to " << level_location;
@@ -51,18 +49,25 @@ void GameEngine::print_debug(std::string debug_message) {
 }
 
 
-int GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
+unsigned int GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
     //TODO: Find a way of avoiding this hack
     LOG(INFO) << "Adding a new button: " << name;
-    button_id++;
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
-    //Uniquely identify each button in gameengine
-    EventManager::get_instance()->add_event([this, file_path, name, boost_callback, button_id] {
-        gui_main->add_button(file_path, name, boost_callback, button_id);
+    //Uniquely identify each button in gameengine, to map to a specific button
+    button_id++;
+    unsigned int id_to_pass = button_id;
+    EventManager::get_instance()->add_event([this, file_path, name, boost_callback, id_to_pass] {
+        gui_main->add_button(file_path, name, boost_callback, id_to_pass);
     });
-     //gui_main->add_button(file_path, name, boost_callback, button_id);
-    //RETURN BUTTON ID FROM GUI MAIN SOMEHOW
     return button_id;
+}
+
+void GameEngine::set_cur_player(unsigned int passing_button_id){
+    std::cout << "GAMEENGINE FOCUSING AGAIN" << std::endl;
+    EventManager::get_instance()->add_event([this, passing_button_id] {
+       gui_main->click_player(passing_button_id);
+    });
+    return;
 }
 
 void GameEngine::register_input_callback(int input_key, PyObject *py_input_callback) {

@@ -108,7 +108,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     bag_window->add(pyguide_button);
 
-    button_index = 0;
+    cur_button_index = 0;
 
     gui_window->add(pause_button);
     gui_window->add(bag_button);
@@ -218,7 +218,7 @@ void GUIMain::close_pause_window(){
     refresh_gui();
 }
 
-void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback, int button_id){
+void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id){
 
     if(buttons.size() == button_max){
         cycle_button = std::make_shared<Button>(ButtonType::Single);
@@ -262,15 +262,23 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     std::shared_ptr<Button> new_button;
     new_button = std::make_shared<Button>(ButtonType::Single);
     buttons.push_back(new_button);
+
     new_button->set_picture(file_path);
     new_button->set_text(name);
     //Map button_id to cur_button_index in array
     //Create function to map button_id to cur_button_index so can call set_button_index(cur_button_index)
-    int cur_button_index = (int) (buttons.size() - 1);
-    new_button->set_on_click([this, cur_button_index, callback] () {callback();this->set_button_index(cur_button_index);});
-    //HIGHLIGHT BUTTON WHEN CLICKED
+    unsigned int new_button_index = (int) (buttons.size() - 1);
+    new_button->set_on_click([this, new_button_index, callback] () {callback();this->set_button_index(new_button_index);});
     new_button->set_width(button_width);
     new_button->set_height(button_height);
+
+    //Push to index elemenet 'id'
+    if (button_id > (button_indexs.size() - 1)){
+        button_indexs.resize(button_id+1, 0);
+    }
+    button_indexs[button_id] = new_button_index;
+
+    std::cout << "Got button id " << button_id << " and cur_button_index" << cur_button_index << std::endl;
 
     //make space for previous buttons
     float org_x_location = right_x_offset;
@@ -330,28 +338,37 @@ void GUIMain::config_gui()
     button_max = j["scales"]["button_max"];
 }
 
-void GUIMain::set_button_index(int value){
-    button_index = value;
+void GUIMain::set_button_index(unsigned int value){
+    cur_button_index = value;
     update_selected();
 }
 
 void GUIMain::click_next_player(){
-    std::cout << "Button index is " << std::to_string(button_index) << std::endl;
+    std::cout << "Button index is " << std::to_string(cur_button_index) << std::endl;
     bool selected_on_cur_cycle = false;
-    if ((button_index < display_button_start+button_max) && (button_index >= display_button_start)) selected_on_cur_cycle = true;
-    button_index = button_index + 1;
-    if (button_index >= buttons.size()){
-        button_index = 0;
+    if ((cur_button_index < display_button_start+button_max) && (cur_button_index >= display_button_start)) selected_on_cur_cycle = true;
+    cur_button_index = cur_button_index + 1;
+    if (cur_button_index >= buttons.size()){
+        cur_button_index = 0;
     }
-    if (selected_on_cur_cycle && ((button_index >= display_button_start+button_max) || (button_index < display_button_start))) cycle_button->call_on_click();
+    if (selected_on_cur_cycle && ((cur_button_index >= display_button_start+button_max) || (cur_button_index < display_button_start))) cycle_button->call_on_click();
     //Call cycle_button->call_on_click(); if you want to cycle
     update_selected();
-    buttons[button_index]->call_on_click();
+    buttons[cur_button_index]->call_on_click();
+}
+
+void GUIMain::click_player(unsigned int button_id){
+    unsigned int click_button_index = button_indexs[button_id];
+    std::cout << "Clicking on player due to focus" << std::endl;
+    std::cout << "Button id is " << std::to_string(button_id) << std::endl;
+    std::cout << "Button index is " << std::to_string(click_button_index) << std::endl;
+    set_button_index(click_button_index);
+    return;
 }
 
 void GUIMain::update_selected(){
     for (unsigned int i=0;i<buttons.size();i++){
-        if (button_index == i){
+        if (cur_button_index == i){
             buttons[i]->set_text("SELECTED");
             refresh_gui();
         }
