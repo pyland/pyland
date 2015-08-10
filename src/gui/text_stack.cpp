@@ -99,4 +99,5 @@ void TextStack::clear() {
     stack_iterator = message_stack.end();
 
     update_flags();
+
 }

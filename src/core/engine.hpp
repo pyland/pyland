@@ -165,7 +165,8 @@ public:
     static GUIMain* get_gui() { return gui_main; }
 
     static void add_dialogue(std::string text);
-    static void open_notification_bar();
+    static void add_text(std::string text);
+    static void open_notification_bar(std::function<void ()> func);
 
     /// trigger qt mainwindow functions
     static void print_terminal(std::string text, bool error);
