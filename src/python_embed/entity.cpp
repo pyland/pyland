@@ -134,6 +134,8 @@ std::string Entity::get_sprite() {
     return this->sprite_location;
 }
 
+
+//THE TWO METHODS BELOW NEED TO BE REALLY OPTIMISED TO USE THE CACHE!!!!!!! (LOOK AT MapObject::set_tile)
 void Entity::set_sprite(std::string sprite_location) {
     this->sprite_location = sprite_location; //TODO: Make this method safe, make it so that if the sprite location doesn't exist the game gracefully handles it.
     int id = this->id;
@@ -144,9 +146,19 @@ void Entity::set_sprite(std::string sprite_location) {
         object->set_tile(std::make_pair(0, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/0.png"));
     });
     return;
-
-    //display 0.png
 }
+
+void Entity::set_animation_frame(int frame_number) {
+    this->current_frame = frame_number;
+    auto sprite_location = this->sprite_location;
+    int id = this->id;
+    std::string file_location = this->file_location;
+
+    auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+    object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+    return;
+}
+
 
 void Entity::start_animating() {
     if(!this->animating) {
@@ -160,7 +172,6 @@ void Entity::pause_animating() {
 }
 
 void Entity::animate(int current_frame) {
-#if 0	
     if (this->animating) {
         //auto num_frame = get_number_of_animation_frames();
         auto num_frame = 4;
@@ -175,7 +186,6 @@ void Entity::animate(int current_frame) {
             });
         });
     }
-#endif 
 }
 
 
@@ -195,23 +205,6 @@ int Entity::get_number_of_animation_frames() {
     });
     return num_frames;
 
-}
-
-void Entity::set_animation_frame(int frame_number) {
-    this->current_frame = frame_number;
-    auto sprite_location = this->sprite_location;
-    int id = this->id;
-    std::string file_location = this->file_location;
-
-    auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-    object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
-
-    /* EventManager *em = EventManager::get_instance();
-     em->add_event([id, sprite_location, file_location, frame_number] () { //put changing the player tile on the event queue
-         auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-         object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
-     });*/
-    return;
 }
 
 std::string Entity::get_instructions() {
