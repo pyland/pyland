@@ -42,6 +42,7 @@ engine.open_dialogue_box(coconut_one.focus)
 croc_one.follow_path("north, east, east, north, east, south, south, south, west, west, west, north", True)
 croc_two.rand_explore()
 croc_three.rand_explore()
+croc_four.rand_explore()
 
 engine.print_terminal(player_one.get_position(), False)
 

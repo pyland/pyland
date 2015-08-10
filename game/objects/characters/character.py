@@ -145,7 +145,8 @@ class Character(GameObject):
         face_x()
         self.start_animating()
         def callbacktwo():  # Have create a wrapper callback function which makes sure that the animation stops before anything else is run
-            self.stop_animating()
+            if not self.is_moving():
+                self.stop_animating()
             callback()
         parent_move_x(callbacktwo)
         return

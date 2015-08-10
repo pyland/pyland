@@ -53,7 +53,7 @@ private:
     float notification_text_height;
     float notification_text_x;
     float notification_text_y;
-	unsigned int notification_text_buffer;
+    unsigned int notification_text_buffer;
 
     float notification_button_width;
     float notification_button_height;
@@ -69,7 +69,7 @@ private:
     float py_help_item_height;
     float py_help_item_x;
     float py_help_item_y;
-	float py_help_item_spacing;
+    float py_help_item_spacing;
 
     float py_help_text_width;
     float py_help_text_height;
