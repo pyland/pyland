@@ -10,14 +10,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/vec2.hpp>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 #include "dispatcher.hpp"
 #include "fml.hpp"
