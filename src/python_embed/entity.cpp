@@ -149,8 +149,10 @@ void Entity::set_sprite(std::string sprite_location) {
 }
 
 void Entity::start_animating() {
-    this->animating = true;
-    this->animate(this->current_frame);
+    if(!this->animating) {
+        this->animating = true;
+        this->animate(this->current_frame);
+    }
 }
 
 void Entity::pause_animating() {
@@ -161,20 +163,16 @@ void Entity::animate(int current_frame) {
     if (this->animating) {
         //auto num_frame = get_number_of_animation_frames();
         auto num_frame = 4;
-        EventManager::get_instance()->add_timed_event(
-            GameTime::duration(.05),
-        [current_frame, num_frame, this] (float completion) {
-            if (completion == 1.00) {
-                //EventManager::get_instance()->add_event([this, current_frame] () { this->set_animation_frame(current_frame); });
-                this->set_animation_frame(current_frame);
-                EventManager::get_instance()->add_event([this, current_frame, num_frame]() {
-                    int next_frame = (current_frame + 1) % num_frame;
+        EventManager::get_instance()->add_event([this, current_frame, num_frame]() {
+            this->set_animation_frame(current_frame);
+            int next_frame = (current_frame + 1) % num_frame;
+            EventManager::get_instance()->add_timed_event(GameTime::duration(.05), [next_frame, this] (float completion) {
+                if (completion == 1.00) {
                     this->animate(next_frame);
-                });
-            }
-            return true;
-        }
-        );
+                }
+                return true;
+            });
+        });
     }
 }
 
