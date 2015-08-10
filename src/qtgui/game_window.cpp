@@ -184,7 +184,7 @@ GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *
         create_apih_from_wrapper();
     }
     app = new QApplication(argc,argv);
-    app->setStyle("gtk");
+    app->setStyle("cleanlooks");
     app->setAttribute(Qt::AA_NativeWindows, true);
 
     mainWin = new MainWindow(exGame);
