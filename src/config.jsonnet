@@ -4,7 +4,8 @@
 	"files": {
 		"game_folder": "../game",
 		//"level_location": "/test_world/test_level/test_one",
-		"level_location": "/test_world/yingischallenged/main",
+		//"level_location": "/test_world/yingischallenged/main",
+		"level_location": "/intro",
 		"full_level_location" : self.game_folder + "/levels" + self.level_location,
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",

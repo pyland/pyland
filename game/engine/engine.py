@@ -2,6 +2,7 @@ import os
 import sys
 import importlib
 import sqlite3
+import json
 
 class Engine:
     """ This class is a python wrapper for all the engine features that are exposed to the game.
@@ -42,7 +43,7 @@ class Engine:
         #Database
         #--------
         self.all_languages = ["english", "français", "nederlands", "hindi", "pyrate"]
-        self.dblocation = os.path.dirname(os.path.realpath(__file__)) + "/database.db"
+        self.dblocation = os.path.dirname(os.path.realpath(__file__)) + "/../database.db"
         self.language = "english"
         self.conn = sqlite3.connect(self.dblocation)
 
@@ -129,6 +130,14 @@ class Engine:
     def get_tile_type(self, position):
         x, y = position
         return self.__cpp_engine.get_tile_type(x, y)
+
+    def open_dialogue_box(self, callback = lambda: None):
+        self.__cpp_engine.open_dialogue_box(callback)
+
+    def get_config():
+        result = self.__cpp_engine.get_config()
+        return json.loads(result)
+        
 
     def __snake_to_camelcase(self, snake_string):
         """ converts snake_case to CamelCase 

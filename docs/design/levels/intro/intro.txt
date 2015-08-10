@@ -6,8 +6,7 @@ Game screen is completely white....
 Snake appears,
 "Oh 'ello, I haven't seen you around here before. I'm Monty and I'm going to introduce you to Pyland. I'm the 4th wall breaking snake so I can help you in ways some of the lesser able inhabitants here can't.",
 "Oh, how rude of me, I almost forgot I don't even know your name! You're going to have to tell me your name through the text-editor, it's a bit of a boring name I know, but I didn't pick it the designers of this game did!",
-"So you ssssee the big white box below me? That is just what you'll
-need. Give it a click and replace 'YourName' with, well, your name of course!.",
+"So you see the big white box below me? That is just what you'll need. Give it a click and replace 'YourName' with, well, your name of course!.",
 read-in what is printed to get name.
 "Well hello %player_name%, you are called %player_name% right?", //at this point insert ssss'es into playerssss name (maybe have a method called snakify :P)
 yesss/no optionssss given, if yessss is presssssed, repeat from earlier step,

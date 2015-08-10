@@ -12,7 +12,7 @@ class Config : public nlohmann::json {
         static bool created;
     public:
         typedef nlohmann::json json;
-        static nlohmann::json get_instance();
+        static json get_instance();
 };
 
 #endif

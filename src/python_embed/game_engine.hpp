@@ -88,12 +88,29 @@ class GameEngine {
         ///
         void open_dialogue_box(PyObject *callback);
 
+        ///
+        /// Register a callback against a given input
+        ///
         void register_input_callback(int input_key, PyObject *input_callback);
 
+        ///
+        /// Play a given song from the music folder
+        ///
         void play_music(std::string song_name);
 
+        ///
+        /// Print a given string to the terminal
+        ///
         void print_terminal(std::string text, bool error);
 
+        ///
+        /// Returns a raw string of the json config
+        ///
+        std::string get_config();
+
+        ///
+        /// Set the UI colours.
+        ///
         void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
 
         void set_running();
