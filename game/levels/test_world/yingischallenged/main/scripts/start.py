@@ -1,6 +1,6 @@
 """ Load in saved states """
 
-player_two.focus()
+player_one.focus()
 player_one.set_character_name("Benjo")
 player_two.set_character_name("Bob")
 

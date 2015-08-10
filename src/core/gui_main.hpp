@@ -116,6 +116,8 @@ public:
     //callback is added to the event manager when the button is pressed
     void add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id);
 
+    void cycle();
+
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();
 

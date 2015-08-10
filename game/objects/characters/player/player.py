@@ -68,7 +68,7 @@ class Player(Character):
 
         #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
 
-        __focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
+        self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
 
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
@@ -99,7 +99,9 @@ class Player(Character):
             engine.set_running()
         else:
             engine.set_finished()
-        #engine.select_button(button_id);
+        #Update the currently focused player in the player heads at the top
+        engine.print_terminal("focusing on player")
+        engine.set_cur_player(self.__focus_button_id)
         return
 
 

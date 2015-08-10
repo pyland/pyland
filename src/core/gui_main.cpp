@@ -229,30 +229,7 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
         cycle_button->set_x_offset(right_x_offset - float(button_max + 1) * horizontal_button_spacing);
         cycle_button->set_y_offset(top_y_offset);
 
-        cycle_button->set_on_click( [&] () {
-
-            //remove previous set of buttons
-            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
-            {
-                gui_window->remove(buttons[display_button_start + i]->get_id());
-            }
-
-            //update the button index of buttons to be displayed
-            if(display_button_start + button_max >= buttons.size()){
-                display_button_start = 0;
-            }
-            else{
-                display_button_start += button_max;
-            }
-
-            //display new buttons
-            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
-            {
-                gui_window->add(buttons[display_button_start + i]);
-            }
-
-            refresh_gui();
-        });
+        cycle_button->set_on_click([&] () {cycle();});
 
         gui_window->add(cycle_button);
 
@@ -291,10 +268,39 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
 
     if((buttons.size() - 1) % button_max == 0 && buttons.size() != 1)
     {
-        cycle_button->call_on_click();
+        //cycle_button->call_on_click();
+        cycle();
     }
 
     refresh_gui();
+}
+
+void GUIMain::cycle()
+{
+    std::cout << "Clicking cycle buton now " << std::endl;
+            //remove previous set of buttons
+            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
+            {
+                gui_window->remove(buttons[display_button_start + i]->get_id());
+            }
+
+            //update the button index of buttons to be displayed
+            if(display_button_start + button_max >= buttons.size()){
+                display_button_start = 0;
+            }
+            else{
+                display_button_start += button_max;
+            }
+
+            std::cout << "Display button start now " << display_button_start << std::endl;
+
+            //display new buttons
+            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
+            {
+                gui_window->add(buttons[display_button_start + i]);
+            }
+
+            refresh_gui();
 }
 
 void GUIMain::refresh_gui()
@@ -344,14 +350,24 @@ void GUIMain::set_button_index(unsigned int value){
 }
 
 void GUIMain::click_next_player(){
-    std::cout << "Button index is " << std::to_string(cur_button_index) << std::endl;
     bool selected_on_cur_cycle = false;
+
+    std::cout << "CLICKNEXT Button index is " << std::to_string(cur_button_index) << std::endl;
+    std::cout << "CLICKNEXT Display start is " << std::to_string(display_button_start) << std::endl;
+
+    //int prev_start = display_button_start;
+
     if ((cur_button_index < display_button_start+button_max) && (cur_button_index >= display_button_start)) selected_on_cur_cycle = true;
+
     cur_button_index = cur_button_index + 1;
     if (cur_button_index >= buttons.size()){
         cur_button_index = 0;
     }
-    if (selected_on_cur_cycle && ((cur_button_index >= display_button_start+button_max) || (cur_button_index < display_button_start))) cycle_button->call_on_click();
+    if (selected_on_cur_cycle && ((cur_button_index >= display_button_start+button_max) || (cur_button_index < display_button_start)))
+    {
+        std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$ CYCLING " << std::endl;
+        cycle();//cycle_button->call_on_click();
+    }
     //Call cycle_button->call_on_click(); if you want to cycle
     update_selected();
     buttons[cur_button_index]->call_on_click();
@@ -362,14 +378,33 @@ void GUIMain::click_player(unsigned int button_id){
     std::cout << "Clicking on player due to focus" << std::endl;
     std::cout << "Button id is " << std::to_string(button_id) << std::endl;
     std::cout << "Button index is " << std::to_string(click_button_index) << std::endl;
+    std::cout << "Display start is " << std::to_string(display_button_start) << std::endl;
+    std::cout << "Button max is " << std::to_string(button_max) << std::endl;
+
+
     set_button_index(click_button_index);
+    //Only try next set of sprite heads button a finite number of times, to prevent infinite loops
+    for (unsigned int attempts = 0;attempts<buttons.size();attempts++){
+        if (!((click_button_index < display_button_start+button_max) && (click_button_index >= display_button_start))){
+            std::cout << "Click_button_index is " << std::to_string(click_button_index) << std::endl;
+            std::cout << "Display button start is " << std::to_string(display_button_start) << std::endl;
+            //cycle_button->call_on_click();
+            cycle();
+        }
+        else{
+            break;
+        }
+    }
     return;
 }
 
 void GUIMain::update_selected(){
+    std::cout << "Start is " << std::to_string(display_button_start) << std::endl;
     for (unsigned int i=0;i<buttons.size();i++){
         if (cur_button_index == i){
             buttons[i]->set_text("SELECTED");
+            buttons[i]->set_text("SELECTED");
+            std::cout << "Selected at index " << std::to_string(i) << std::endl;
             refresh_gui();
         }
         else{
