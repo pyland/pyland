@@ -160,6 +160,7 @@ void Entity::pause_animating() {
 }
 
 void Entity::animate(int current_frame) {
+#if 0	
     if (this->animating) {
         //auto num_frame = get_number_of_animation_frames();
         auto num_frame = 4;
@@ -174,6 +175,7 @@ void Entity::animate(int current_frame) {
             });
         });
     }
+#endif 
 }
 
 
