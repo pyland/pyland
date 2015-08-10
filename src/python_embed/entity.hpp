@@ -128,7 +128,7 @@ class Entity {
         /// Make the object start animating, cycles through all the numbered png's in the sprite folder set
         ///
         ///
-        void start_animating();
+        void start_animating(int current_frame);
 
         ///
         /// Make the object pause on the current frame of animation
