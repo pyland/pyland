@@ -78,7 +78,9 @@ private:
     //created by GameEngine
     std::deque<std::shared_ptr<Button>> buttons;
     //Store each button index at the 'id'th element, so can map directly
-    //from button id to index (so can get the button from buttons)
+    //from button id to index (so can get the button from buttons).
+    //This is because the ids are passed through an event queue (and not directly), using the
+    //id directly as an index can't be assumed
     std::deque<unsigned int> button_indexs;
     //The index for the currently highlighted player
     unsigned int cur_button_index;
@@ -129,6 +131,9 @@ public:
 
     //Simulate clicking on the player button with the given button_id
     void click_player(unsigned int button_id);
+
+    //Update the text for the button of given id
+    void update_button_text(std::string name, unsigned int button_id);
 
     //Update GUI buttons to reflect currently selected sprite
     void update_selected();

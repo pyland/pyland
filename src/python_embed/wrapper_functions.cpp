@@ -52,6 +52,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("add_object",        &GameEngine::add_object)
         .def("add_button",        &GameEngine::add_button)
         .def("set_cur_player",    &GameEngine::set_cur_player)
+        .def("update_player_name",&GameEngine::update_player_name)
         .def("get_level_location",&GameEngine::get_level_location)
         .def("print_debug",       &GameEngine::print_debug)
         .def("change_level",      &GameEngine::change_level)

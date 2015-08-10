@@ -73,6 +73,8 @@ class GameEngine {
 
         void set_cur_player(unsigned int passing_button_id);
 
+        void update_player_name(std::string name, unsigned int passing_button_id);
+
         void register_input_callback(int input_key, PyObject *input_callback);
 
         void play_music(std::string song_name);

@@ -350,23 +350,9 @@ void GUIMain::set_button_index(unsigned int value){
 }
 
 void GUIMain::click_next_player(){
-    bool selected_on_cur_cycle = false;
-
-    std::cout << "CLICKNEXT Button index is " << std::to_string(cur_button_index) << std::endl;
-    std::cout << "CLICKNEXT Display start is " << std::to_string(display_button_start) << std::endl;
-
-    //int prev_start = display_button_start;
-
-    if ((cur_button_index < display_button_start+button_max) && (cur_button_index >= display_button_start)) selected_on_cur_cycle = true;
-
     cur_button_index = cur_button_index + 1;
     if (cur_button_index >= buttons.size()){
         cur_button_index = 0;
-    }
-    if (selected_on_cur_cycle && ((cur_button_index >= display_button_start+button_max) || (cur_button_index < display_button_start)))
-    {
-        std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$ CYCLING " << std::endl;
-        cycle();//cycle_button->call_on_click();
     }
     //Call cycle_button->call_on_click(); if you want to cycle
     update_selected();
@@ -396,6 +382,11 @@ void GUIMain::click_player(unsigned int button_id){
         }
     }
     return;
+}
+
+void GUIMain::update_button_text(std::string name, unsigned int button_id){
+    unsigned int update_button_index = button_indexs[button_id];
+    buttons[update_button_index]->set_text(name);
 }
 
 void GUIMain::update_selected(){

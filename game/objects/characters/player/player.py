@@ -104,6 +104,14 @@ class Player(Character):
         engine.set_cur_player(self.__focus_button_id)
         return
 
+    def set_character_name(self, character_name):
+        """Override set_character_name from character to
+        update the text for the players button
+        """
+        self.__character_name = character_name
+        engine = self.get_engine()
+        engine.update_player_name(character_name,self.__focus_button_id)
+
 
 
     def test_display(self):

@@ -63,9 +63,15 @@ unsigned int GameEngine::add_button(std::string file_path, std::string name, PyO
 }
 
 void GameEngine::set_cur_player(unsigned int passing_button_id){
-    std::cout << "GAMEENGINE FOCUSING AGAIN" << std::endl;
     EventManager::get_instance()->add_event([this, passing_button_id] {
        gui_main->click_player(passing_button_id);
+    });
+    return;
+}
+
+void GameEngine::update_player_name(std::string name, unsigned int passing_button_id) {
+    EventManager::get_instance()->add_event([this, name, passing_button_id] {
+       gui_main->update_button_text(name, passing_button_id);
     });
     return;
 }
