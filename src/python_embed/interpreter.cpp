@@ -14,7 +14,6 @@
 #include "interpreter_context.hpp"
 #include "locks.hpp"
 #include "make_unique.hpp"
-#include "thread_killer.hpp"
 
 namespace py = boost::python;
 
@@ -28,7 +27,7 @@ Interpreter::Interpreter(boost::filesystem::path function_wrappers):
     //     This can be dangerous!
     interpreter_context(initialize_python()) {
 
-        thread_killer = std::make_unique<ThreadKiller>(entitythreads);
+        //thread_killer = std::make_unique<ThreadKiller>(entitythreads);
         LOG(INFO) << "Interpreter: Spawned Kill thread";
 
         // All Python errors should result in a Python traceback
@@ -82,7 +81,7 @@ LockableEntityThread Interpreter::register_entities(std::list<Entity> &entities,
 
 Interpreter::~Interpreter() {
     // Join killer
-    thread_killer->finish();
+    //thread_killer->finish();
     LOG(INFO) << "Finished kill thread";
 
     // Exorcise daemons
