@@ -108,8 +108,10 @@ private:
     QTextEdit *terminalDisplay;
     QSplitter *splitter;
     QPushButton *buttonRun;
-    bool running;
+    //indicates whether a script is running or not
+    bool script_running;
     QPushButton *buttonSpeed;
+    //whether the script setting fast or slow
     bool fast;
     QWidget *mainWidget;
     QTabWidget *textWidget;

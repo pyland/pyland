@@ -114,6 +114,7 @@ typedef struct SDL_Window SDL_Window;
 
 MainWindow::MainWindow(GameMain *exGame):
     colourPalette(palette())
+
 {
     LOG(INFO) << "Constructing MainWindow..." << std::endl;
 
@@ -735,7 +736,7 @@ void MainWindow::clickRun()
 //If zero the currently open script is run
 void MainWindow::runCode(int script)
 {
-    if (running)
+    if (script_running)
     {
         setRunning(false);
         updateSpeed();
@@ -813,7 +814,7 @@ void MainWindow::toggleSpeed()
 //Otherwise keep the game at normal speed
 void MainWindow::updateSpeed()
 {
-    if (fast && running)
+    if (fast && script_running)
     {
         auto now(std::chrono::steady_clock::now());
         auto time_passed = now - game->get_start_time();
@@ -903,9 +904,9 @@ void MainWindow::createStatusBar()
 //and from engine.cpp update_status, when the script terminates
 void MainWindow::setRunning(bool option)
 {
-    running = option;
+    script_running = option;
 
-    if (running)
+    if (script_running)
     {
         buttonRun->setText("Halt");
     }

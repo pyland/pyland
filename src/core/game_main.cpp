@@ -329,7 +329,6 @@ void GameMain::game_loop(bool showMouse)
 {
     if (!challenge_data->game_window->check_close() && challenge_data->run_challenge)
     {
-        //callbackstate.man_move(glm::ivec2( 0, 1));
         last_clock = std::chrono::steady_clock::now();
 
         VLOG(3) << "} SB | IM {";

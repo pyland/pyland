@@ -13,6 +13,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     gui_manager(),
     map_viewer(embedWindow, &gui_manager),
     em(EventManager::get_instance()),
+    bar_open(false),
     bag_open(false),
     pyguide_open(false),
     display_button_start(0)
@@ -71,7 +72,7 @@ void GUIMain::create_pyguide(){
 		unsigned int beg_name = help.find(":");
 
 		if(beg_name == std::string::npos){
-			LOG(INFO) << "$$$$$$$$ ERROR: Pycommand " << i << " in the config file does not follow the format required";
+			LOG(INFO) << "ERROR: Pycommand " << i << " in the config file does not follow the format required";
 			return;
 		}
 		else{
@@ -200,10 +201,12 @@ void GUIMain::create_notification_bar(){
 
 void GUIMain::open_notification_bar(){
     notification_bar->open();
+    bar_open = true;
 }
 
 void GUIMain::close_notification_bar(){
     notification_bar->close();
+    bar_open = false;
 }
 
 void GUIMain::add_message(std::string text){
@@ -247,6 +250,7 @@ void GUIMain::close_pyguide(){
 
 void GUIMain::open_bag(){
 
+	close_notification_bar();
     bag_window->set_visible(true);
 
     close_pyguide();
@@ -279,27 +283,27 @@ void GUIMain::close_bag(){
         bag_items[i]->set_clickable(false);
     }
 
+	if(bar_open){
+		open_notification_bar();
+	}
+
     refresh_gui();
     LOG(INFO) << "Bag closed";
 }
 
 void GUIMain::open_pause_window(){
 
+	close_notification_bar();
 	close_bag();
     gui_window->set_visible(true);
 
     const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
-
     typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
 
     for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
-        if(i->second == pause_button){
-            continue;
-        }
-        else{
-            i->second->set_visible(false);
-            i->second->set_clickable(false);
-        }
+		i->second->set_visible(false);
+		i->second->set_clickable(false);
+
         bag_open = false;
         pyguide_open = false;
     }
@@ -329,6 +333,10 @@ void GUIMain::close_pause_window(){
             i->second->set_clickable(true);
         }
     }
+
+	if(bar_open){
+		open_notification_bar();
+	}
 
     refresh_gui();
 }
