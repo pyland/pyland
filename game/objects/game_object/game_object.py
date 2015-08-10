@@ -85,7 +85,7 @@ class GameObject:
 
     def start_animating(self):
         #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
-        self.__entity.start_animating(0)
+        self.__entity.start_animating()
         return
 
     def stop_animating(self):

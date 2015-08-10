@@ -31,6 +31,12 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
     this->sprite_location = "";
     LOG(INFO) << "invalid: constructor " << this->id;
 
+    this->animating = false;
+
+    this->current_frame = 0;
+
+
+
 }
 
 //A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!!
@@ -43,12 +49,12 @@ void Entity::wait(double gametime, PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     EventManager::get_instance()->add_timed_event(
         GameTime::duration(gametime),
-        [boost_callback] (float completion) {
-            if (completion == 1.0) {
-                EventManager::get_instance()->add_event(boost_callback);
-            }
-            return true;
+    [boost_callback] (float completion) {
+        if (completion == 1.0) {
+            EventManager::get_instance()->add_event(boost_callback);
         }
+        return true;
+    }
     );
 }
 
@@ -142,27 +148,38 @@ void Entity::set_sprite(std::string sprite_location) {
     //display 0.png
 }
 
-void Entity::start_animating(int currentFrame = 0) {
-    auto num_frame = get_number_of_animation_frames();
-    EventManager::get_instance()->add_timed_event(
-        GameTime::duration(.05),
-        [currentFrame, num_frame, this] (float completion) {
-            if(completion == 1.00) {
-                EventManager::get_instance()->add_event([this, currentFrame] () { this->set_animation_frame(currentFrame); });
-                EventManager::get_instance()->add_event([this, currentFrame, num_frame]() {
-                    int next_frame = (currentFrame+1)%num_frame;
-                    this->start_animating(next_frame);
-                });
-            }
-            return true;
-        }
-    );
+void Entity::start_animating() {
+    if(!this->animating) {
+        this->animating = true;
+        this->animate(this->current_frame);
+    }
 }
 
 void Entity::pause_animating() {
-    //stub TODO: write this
-    return;
+    this->animating = false;
 }
+
+void Entity::animate(int current_frame) {
+#if 0	
+    if (this->animating) {
+        //auto num_frame = get_number_of_animation_frames();
+        auto num_frame = 4;
+        EventManager::get_instance()->add_event([this, current_frame, num_frame]() {
+            this->set_animation_frame(current_frame);
+            int next_frame = (current_frame + 1) % num_frame;
+            EventManager::get_instance()->add_timed_event(GameTime::duration(.05), [next_frame, this] (float completion) {
+                if (completion == 1.00) {
+                    this->animate(next_frame);
+                }
+                return true;
+            });
+        });
+    }
+#endif 
+}
+
+
+
 
 int Entity::get_number_of_animation_frames() {
     Config::json j = Config::get_instance();
@@ -181,14 +198,19 @@ int Entity::get_number_of_animation_frames() {
 }
 
 void Entity::set_animation_frame(int frame_number) {
+    this->current_frame = frame_number;
     auto sprite_location = this->sprite_location;
     int id = this->id;
     std::string file_location = this->file_location;
-    EventManager *em = EventManager::get_instance();
-    em->add_event([id, sprite_location, file_location, frame_number] () { //put changing the player tile on the event queue
-        auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-        object->set_tile(std::make_pair(0, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
-    });
+
+    auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+    object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+
+    /* EventManager *em = EventManager::get_instance();
+     em->add_event([id, sprite_location, file_location, frame_number] () { //put changing the player tile on the event queue
+         auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+         object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+     });*/
     return;
 }
 

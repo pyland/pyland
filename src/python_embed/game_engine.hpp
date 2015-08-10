@@ -81,7 +81,7 @@ class GameEngine {
         ///
         void add_dialogue(std::string text);
 
-		void add_text(std::string text);
+        void add_text(std::string text);
 
         ///
         /// To open the dialogue box on the screen
