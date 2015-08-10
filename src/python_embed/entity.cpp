@@ -157,7 +157,7 @@ void Entity::pause_animating() {
 }
 
 int Entity::get_number_of_animation_frames() {
-    nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
 
     std::string config_location = j["files"]["object_location"];
     std::string full_file_location = config_location + "/" + file_location + "/sprites/" + this->sprite_location;

@@ -237,12 +237,22 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     });
 }
 
+int Engine::get_tile_type(int x, int y) {
+    return map_viewer->get_map()->get_tile_type(x, y);
+}
+
 void Engine::add_dialogue(std::string text) {
-    gui_main->add_message(text);
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main, text] {
+        _gui_main->add_message(text);
+    });
 }
 
 void Engine::open_notification_bar(){
-	gui_main->open_notification_bar();
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main] {
+        _gui_main->open_notification_bar();
+    });
 }
 
 void Engine::print_terminal(std::string text, bool error) {
@@ -283,5 +293,8 @@ TextFont Engine::get_game_font() {
 }
 
 Typeface Engine::get_game_typeface() {
-    return Typeface("../fonts/Ubuntu-R.ttf");
+    Config::json j;
+    j = Config::get_instance();
+    std::string typeface_location = j["files"]["dialogue_font"];
+    return Typeface(typeface_location);
 }

@@ -2,24 +2,21 @@
 
 #include "audio_engine.hpp"
 #include "button.hpp"
+#include "challenge.hpp"
 #include "config.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
 #include "game_engine.hpp"
 #include "gui_main.hpp"
+#include "map_loader.hpp"
+#include "map.hpp"
 #include "text_font.hpp"
 
 
-/*
-boost::python::object GameEngine::addObject(std::string name, std::string class_location, int x, int y) {
-    use the challenge instance to make and object and load it into the challenge
-    wrap the object an entity instance
-    grab the class from the class location
-    create a new instance of that class and use it to wrap the entity instance
-    return that intance, that instance will also be located at the coordinates given in-game
+GameEngine::GameEngine(GUIMain *_gui_main, Challenge *_challenge){
+    gui_main = _gui_main;
+    challenge = _challenge;
 }
-*/
-
 
 void GameEngine::change_level(std::string level_location) {
     //TODO: run the finish.py script of a level.
@@ -27,19 +24,19 @@ void GameEngine::change_level(std::string level_location) {
     return;
 }
 
+int GameEngine::get_tile_type(int x, int y) {
+    return Engine::get_tile_type(x, y);
+}
 
-boost::python::object GameEngine::add_object(std::string name, std::string class_location, int x, int y) {
-    LOG(INFO) << "Creating an instance of " << class_location << " at (" << x << ", " << y << ") called " << name;
-    //use the challenge instance to make and object and load it into the challenge
-    //wrap the object an entity instance
-    //grab the class from the class location
-    //create a new instance of that class and use it to wrap the entity instance
-    //return that intance, that instance will also be located at the coordinates given in-game
-    return boost::python::list();
+
+boost::python::object GameEngine::create_object(std::string object_file_location, std::string object_name, int x, int y) {
+    LOG(INFO) << "Creating an instance of " << object_file_location << " at (" << x << ", " << y << ") called " << object_name;
+    Entity *entity = challenge->create_entity(object_name, object_file_location, "", glm::ivec2(x, y)); //For some reason this freezes the game when called from here.
+    return boost::python::api::object(boost::ref(*entity));
 }
 
 std::string GameEngine::get_level_location() {
-    nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
     std::string map_name = j["files"]["level_location"];
     //return "test_world/test_level/test_one";
     return map_name;
@@ -50,23 +47,16 @@ void GameEngine::print_debug(std::string debug_message) {
 }
 
 void GameEngine::add_dialogue(std::string text) {
-	LOG(INFO) << "Adding@ " << text;
-
-    EventManager::get_instance()->add_event([this, text] {
-        Engine::add_dialogue(text);
-    });
+    LOG(INFO) << "Adding@ " << text;
+    Engine::add_dialogue(text);
 }
 
 void GameEngine::open_dialogue_box() {
-	LOG(INFO) << "Opening notification bar";
-
-    EventManager::get_instance()->add_event([this] {
-        Engine::open_notification_bar();
-    });
+    LOG(INFO) << "Opening notification bar";
+    Engine::open_notification_bar();
 }
 
 void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
-
     //TODO: Find a way of avoiding this hack
     LOG(INFO) << "Adding a new button: " << name;
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
@@ -74,7 +64,6 @@ void GameEngine::add_button(std::string file_path, std::string name, PyObject* c
     EventManager::get_instance()->add_event([this, file_path, name, boost_callback] {
         gui_main->add_button(file_path, name, boost_callback);
     });
-
 }
 
 void GameEngine::register_input_callback(int input_key, PyObject *py_input_callback) {
@@ -124,6 +113,5 @@ int GameEngine::get_run_script(){
 bool GameEngine::is_solid(int x, int y) {
     return !Engine::walkable(glm::ivec2(x, y)); //TODO: Make syntax of Engine match this!
 }
-
 
 

@@ -26,8 +26,8 @@ private:
     Lifeline text_box;
 
     void move_text(Direction direction);
-	TextBoxType type;
-	int buffer_size;
+    TextBoxType type;
+    int buffer_size;
 
 public:
 
@@ -45,10 +45,10 @@ public:
     ///
     void add_message(std::string text_to_display);
 
-	///
-	/// Add text of arbitrary length
-	/// the functioin breaks it down into many messages
-	void add_text(std::string text_to_display);
+    ///
+    /// Add text of arbitrary length
+    /// the functioin breaks it down into many messages
+    void add_text(std::string text_to_display);
 
     void set_text(std::string _text);
     std::shared_ptr<Text> get_text();
@@ -59,13 +59,13 @@ public:
     void move_buttons(float x_offset, float y_offset, float spacing = 0.0f);
     void traverse_text(Direction direction);
 
-	void set_buffer_size(int _size){buffer_size = _size;}
+    void set_buffer_size(int _size){buffer_size = _size;}
 
 
-	void open();
-	void close();
+    void open();
+    void close();
 
-	void hide_buttons();
+    void hide_buttons();
     ///
     ///Methods to be defined when inheriting properties from ComponentGroup
     ///

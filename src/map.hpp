@@ -237,6 +237,8 @@ public:
     ///
     bool is_walkable(int x_pos, int y_pos);
 
+    int get_tile_type(int x, int y);
+
     ///
     /// TODO: Heidi: Document this class
     /// Collision detection for generated elements

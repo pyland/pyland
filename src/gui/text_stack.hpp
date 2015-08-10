@@ -23,14 +23,14 @@ private:
 
     bool _can_forward;
     bool _can_backward;
-	bool _reached_end;
+    bool _reached_end;
 
 public:
     TextStack();
 
-	bool can_forward() {return _can_forward;}
+    bool can_forward() {return _can_forward;}
     bool can_backward() {return _can_backward;}
-	bool reached_end() {return _reached_end;}
+    bool reached_end() {return _reached_end;}
     ///
     /// add new appends a new message string to the TextStack
     /// @param new_message

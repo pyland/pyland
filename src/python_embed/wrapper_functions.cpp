@@ -48,16 +48,17 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("get_position",      &Entity::get_position);
 
     py::class_<GameEngine, boost::noncopyable>("GameEngine", py::no_init)
-        .def("add_object",        &GameEngine::add_object)
+        .def("create_object",     &GameEngine::create_object)
         .def("add_button",        &GameEngine::add_button)
         .def("get_level_location",&GameEngine::get_level_location)
         .def("print_debug",       &GameEngine::print_debug)
         .def("add_dialogue",      &GameEngine::add_dialogue)
         .def("open_dialogue_box", &GameEngine::open_dialogue_box)
         .def("change_level",      &GameEngine::change_level)
+        .def("get_tile_type",     &GameEngine::get_tile_type)
         .def("play_music",        &GameEngine::play_music)
-        .def("register_input_callback", &GameEngine::register_input_callback)
-        .def("print_terminal",    &GameEngine::print_terminal)
+        .def("register_input_callback",   &GameEngine::register_input_callback)
+        .def("print_terminal",                &GameEngine::print_terminal)
         .def("get_objects_at",    &GameEngine::get_objects_at)
         .def("set_ui_colours",    &GameEngine::set_ui_colours)
         .def("set_running",       &GameEngine::set_running)
@@ -65,11 +66,14 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("trigger_run",       &GameEngine::trigger_run)
         .def("get_run_script",    &GameEngine::get_run_script)
         .def("is_solid"      ,    &GameEngine::is_solid)
-        .add_static_property("INPUT_UP", &GameEngine::INPUT_UP) //Add constants for different inputs.
-        .add_static_property("INPUT_RIGHT", &GameEngine::INPUT_RIGHT)
-        .add_static_property("INPUT_DOWN", &GameEngine::INPUT_DOWN)
-        .add_static_property("INPUT_LEFT", &GameEngine::INPUT_LEFT)
-        .add_static_property("INPUT_RUN", &GameEngine::INPUT_RUN)
-        .add_static_property("INPUT_HALT", &GameEngine::INPUT_HALT)
+        .add_static_property("INPUT_UP",  &GameEngine::INPUT_UP) //Add constants for different inputs.
+        .add_static_property("INPUT_RIGHT",   &GameEngine::INPUT_RIGHT)
+        .add_static_property("INPUT_DOWN",    &GameEngine::INPUT_DOWN)
+        .add_static_property("INPUT_LEFT",    &GameEngine::INPUT_LEFT)
+        .add_static_property("INPUT_RUN",     &GameEngine::INPUT_RUN)
+        .add_static_property("INPUT_HALT",    &GameEngine::INPUT_HALT)
+        .add_static_property("TILE_TYPE_STANDARD",   &GameEngine::TILE_TYPE_STANDARD)
+        .add_static_property("TILE_TYPE_SOLID",   &GameEngine::TILE_TYPE_SOLID)
+        .add_static_property("TILE_TYPE_WATER",   &GameEngine::TILE_TYPE_WATER)
         .add_static_property("THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING", &GameEngine::THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING);
 }

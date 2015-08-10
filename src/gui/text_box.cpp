@@ -15,87 +15,87 @@
 
 TextBox::TextBox(TextBoxType _type) {
 
-	type = _type;
-	buffer_size = 100;
+    type = _type;
+    buffer_size = 100;
     TextFont buttonfont = Engine::get_game_font();
 
     //build forwards button
     forward_button = std::make_shared<Button>(ButtonType::Single);
     forward_button->set_visible(text_stack.can_forward());
-	forward_button->set_alignment(ButtonAlignment::BottomLeft);
+    forward_button->set_alignment(ButtonAlignment::BottomLeft);
 
-	backward_button = std::make_shared<Button>(ButtonType::Single);
+    backward_button = std::make_shared<Button>(ButtonType::Single);
     backward_button->set_visible(text_stack.can_backward());
-	backward_button->set_alignment(ButtonAlignment::BottomLeft);
+    backward_button->set_alignment(ButtonAlignment::BottomLeft);
 
-	if(type == TextBoxType::Forward){
-		forward_button->move_text(0.0f, 0.0f);
-		forward_button->set_picture("gui/status/running");
+    if(type == TextBoxType::Forward){
+        forward_button->move_text(0.0f, 0.0f);
+        forward_button->set_picture("gui/status/running");
 
-		forward_button->set_on_click([&] () {
-			LOG(INFO) << "forward button pressed";
+        forward_button->set_on_click([&] () {
+            LOG(INFO) << "forward button pressed";
 
-			if(text_stack.can_forward()){
-				traverse_text(Direction::NEXT);
+            if(text_stack.can_forward()){
+                traverse_text(Direction::NEXT);
 
-				if(!text_stack.can_forward()){
-					forward_button->set_picture("gui/status/failed");
-				}
-				Engine::get_gui()->refresh_gui();
-			}
-			else{
-				close();
-			}
-		});
+                if(!text_stack.can_forward()){
+                    forward_button->set_picture("gui/status/failed");
+                }
+                Engine::get_gui()->refresh_gui();
+            }
+            else{
+                close();
+            }
+        });
 
-		this->add(forward_button);
+        this->add(forward_button);
     }
     else if(type == TextBoxType::Both){
-		forward_button->move_text(0.0f, 0.0f);
-		forward_button->set_picture("gui/status/running");
+        forward_button->move_text(0.0f, 0.0f);
+        forward_button->set_picture("gui/status/running");
 
-		forward_button->set_on_click([&] () {
-			LOG(INFO) << "forward button pressed";
+        forward_button->set_on_click([&] () {
+            LOG(INFO) << "forward button pressed";
 
-			if(text_stack.can_forward()){
-				traverse_text(Direction::NEXT);
+            if(text_stack.can_forward()){
+                traverse_text(Direction::NEXT);
 
-				if(!text_stack.can_forward()){
-					forward_button->set_picture("gui/status/failed");
-				}
-				else if(text_stack.can_forward()){
-					forward_button->set_picture("gui/status/running");
-				}
-				Engine::get_gui()->refresh_gui();
-			}
-		});
+                if(!text_stack.can_forward()){
+                    forward_button->set_picture("gui/status/failed");
+                }
+                else if(text_stack.can_forward()){
+                    forward_button->set_picture("gui/status/running");
+                }
+                Engine::get_gui()->refresh_gui();
+            }
+        });
 
-		backward_button->move_text(0.0f, 0.0f);
-		backward_button->set_picture("gui/status/running");
+        backward_button->move_text(0.0f, 0.0f);
+        backward_button->set_picture("gui/status/running");
 
-		backward_button->set_on_click([&] () {
-			LOG(INFO) << "backward button pressed";
+        backward_button->set_on_click([&] () {
+            LOG(INFO) << "backward button pressed";
 
-			if(text_stack.can_backward()){
-				traverse_text(Direction::PREVIOUS);
+            if(text_stack.can_backward()){
+                traverse_text(Direction::PREVIOUS);
 
-				if(!text_stack.can_backward()){
-					backward_button->set_picture("gui/status/failed");
-				}
-				else if(text_stack.can_backward()){
-					backward_button->set_picture("gui/status/running");
-				}
-				Engine::get_gui()->refresh_gui();
-			}
-		});
+                if(!text_stack.can_backward()){
+                    backward_button->set_picture("gui/status/failed");
+                }
+                else if(text_stack.can_backward()){
+                    backward_button->set_picture("gui/status/running");
+                }
+                Engine::get_gui()->refresh_gui();
+            }
+        });
 
-		this->add(forward_button);
-		this->add(backward_button);
+        this->add(forward_button);
+        this->add(backward_button);
     }
 
     // text object for notifications
     text = std::make_shared<GUIText>();
-	text->set_width(1.0f);
+    text->set_width(1.0f);
     text->set_height(1.0f);
     text->set_x_offset(0.0f);
     text->set_y_offset(0.0f);
@@ -104,49 +104,49 @@ TextBox::TextBox(TextBoxType _type) {
     get_text()->set_bloom_radius(6);
 
     add(text);
-	Engine::get_gui()->refresh_gui();
+    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::open(){
 
-	this->set_visible(true);
-	forward_button->set_visible(true);
+    this->set_visible(true);
+    forward_button->set_visible(true);
 
-	if(type == TextBoxType::Forward){
-		forward_button->set_visible(true);
+    if(type == TextBoxType::Forward){
+        forward_button->set_visible(true);
 
-		if(!text_stack.can_forward()){
-			forward_button->set_picture("gui/status/failed");
-		}
-	}
-	else if(type == TextBoxType::Both){
-		forward_button->set_visible(true);
-		backward_button->set_visible(true);
+        if(!text_stack.can_forward()){
+            forward_button->set_picture("gui/status/failed");
+        }
+    }
+    else if(type == TextBoxType::Both){
+        forward_button->set_visible(true);
+        backward_button->set_visible(true);
 
-		if(!text_stack.can_forward()){
-			forward_button->set_picture("gui/status/failed");
-		}
-		if(!text_stack.can_backward()){
-			backward_button->set_picture("gui/status/failed");
-		}
-	}
+        if(!text_stack.can_forward()){
+            forward_button->set_picture("gui/status/failed");
+        }
+        if(!text_stack.can_backward()){
+            backward_button->set_picture("gui/status/failed");
+        }
+    }
 
-	this->set_text(text_stack.present());
-	Engine::get_gui()->refresh_gui();
+    this->set_text(text_stack.present());
+    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::close(){
 
-	if(type == TextBoxType::Forward){
-		forward_button->set_visible(false);
-	}
-	else if(type == TextBoxType::Both){
-		forward_button->set_visible(false);
-		backward_button->set_visible(false);
-	}
+    if(type == TextBoxType::Forward){
+        forward_button->set_visible(false);
+    }
+    else if(type == TextBoxType::Both){
+        forward_button->set_visible(false);
+        backward_button->set_visible(false);
+    }
 
-	this->set_visible(false);
-	Engine::get_gui()->refresh_gui();
+    this->set_visible(false);
+    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::traverse_text(Direction direction) {
@@ -164,30 +164,30 @@ void TextBox::add_message(std::string text_to_display) {
 
 void TextBox::resize_buttons(float width, float height){
 
-	if(type == TextBoxType::Forward){
-		forward_button->set_width(width);
-		forward_button->set_height(height);
-	}
-	else if(type == TextBoxType::Both){
-		forward_button->set_width(width);
-		forward_button->set_height(height);
-		backward_button->set_width(width);
-		backward_button->set_height(height);
-	}
+    if(type == TextBoxType::Forward){
+        forward_button->set_width(width);
+        forward_button->set_height(height);
+    }
+    else if(type == TextBoxType::Both){
+        forward_button->set_width(width);
+        forward_button->set_height(height);
+        backward_button->set_width(width);
+        backward_button->set_height(height);
+    }
 }
 
 void TextBox::move_buttons(float x_offset, float y_offset, float spacing /* = 0.0f */){
 
-	if(type == TextBoxType::Forward){
-		forward_button->set_x_offset(x_offset);
-		forward_button->set_y_offset(y_offset);
-	}
-	else if(type == TextBoxType::Both){
-		forward_button->set_x_offset(x_offset);
-		forward_button->set_y_offset(y_offset);
-		backward_button->set_x_offset(x_offset - spacing);
-		backward_button->set_y_offset(y_offset);
-	}
+    if(type == TextBoxType::Forward){
+        forward_button->set_x_offset(x_offset);
+        forward_button->set_y_offset(y_offset);
+    }
+    else if(type == TextBoxType::Both){
+        forward_button->set_x_offset(x_offset);
+        forward_button->set_y_offset(y_offset);
+        backward_button->set_x_offset(x_offset - spacing);
+        backward_button->set_y_offset(y_offset);
+    }
 }
 
 void TextBox::clear_text() {
@@ -252,41 +252,41 @@ std::vector<std::pair<GLfloat*, int>> TextBox::generate_this_vertex_data() {
     int num_floats_per_tile = 12;
     int offset = 0;
 
-	std::tuple<float,float,float,float> background_bounds = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
+    std::tuple<float,float,float,float> background_bounds = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
 
-	std::tuple<float,float,float,float> corner_top_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
-	std::tuple<float,float,float,float> corner_top_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
-	std::tuple<float,float,float,float> corner_bottom_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(element_height_pixels), 0.0f);
-	std::tuple<float,float,float,float> corner_bottom_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(element_height_pixels), 0.0f);
-	std::tuple<float,float,float,float> edge_top_bounds = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
-	std::tuple<float,float,float,float> edge_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
-	std::tuple<float,float,float,float> edge_bottom_bounds = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(element_height_pixels), 0.0f);
-	std::tuple<float,float,float,float> edge_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
+    std::tuple<float,float,float,float> corner_top_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
+    std::tuple<float,float,float,float> corner_top_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels), float(height_pixels) - element_height_pixels);
+    std::tuple<float,float,float,float> corner_bottom_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(element_height_pixels), 0.0f);
+    std::tuple<float,float,float,float> corner_bottom_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(element_height_pixels), 0.0f);
+    std::tuple<float,float,float,float> edge_top_bounds = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
+    std::tuple<float,float,float,float> edge_right_bounds = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
+    std::tuple<float,float,float,float> edge_bottom_bounds = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(element_height_pixels), 0.0f);
+    std::tuple<float,float,float,float> edge_left_bounds = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
 
 
-	//get total number of floats
-	total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(corner_top_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(corner_top_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(corner_bottom_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(corner_bottom_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(edge_top_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(edge_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    //get total number of floats
+    total_floats += calculate_num_tile_elements(background_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(corner_top_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(corner_top_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(corner_bottom_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(corner_bottom_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_top_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_right_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_bottom_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_left_bounds, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-	vertex_data = new GLfloat[total_floats];
+    vertex_data = new GLfloat[total_floats];
 
-	//Generate the vertex coordinates for each element
-	offset = generate_tile_element_vertex_coords(vertex_data, 0, background_bounds, element_width_pixels, element_height_pixels);
-	offset = generate_vertex_coords_element(vertex_data, offset, corner_top_left_bounds);
-	offset = generate_vertex_coords_element(vertex_data, offset, corner_top_right_bounds);
-	offset = generate_vertex_coords_element(vertex_data, offset, corner_bottom_right_bounds);
-	offset = generate_vertex_coords_element(vertex_data, offset, corner_bottom_left_bounds);
-	offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_top_bounds, element_width_pixels, element_height_pixels);
-	offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_right_bounds, element_width_pixels, element_height_pixels);
-	offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_bottom_bounds, element_width_pixels, element_height_pixels);
-	offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_left_bounds, element_width_pixels, element_height_pixels);
+    //Generate the vertex coordinates for each element
+    offset = generate_tile_element_vertex_coords(vertex_data, 0, background_bounds, element_width_pixels, element_height_pixels);
+    offset = generate_vertex_coords_element(vertex_data, offset, corner_top_left_bounds);
+    offset = generate_vertex_coords_element(vertex_data, offset, corner_top_right_bounds);
+    offset = generate_vertex_coords_element(vertex_data, offset, corner_bottom_right_bounds);
+    offset = generate_vertex_coords_element(vertex_data, offset, corner_bottom_left_bounds);
+    offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_top_bounds, element_width_pixels, element_height_pixels);
+    offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_right_bounds, element_width_pixels, element_height_pixels);
+    offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_bottom_bounds, element_width_pixels, element_height_pixels);
+    offset = generate_tile_element_vertex_coords(vertex_data, offset, edge_left_bounds, element_width_pixels, element_height_pixels);
 
     size_vertex_data = offset;
 
@@ -451,42 +451,42 @@ std::vector<std::pair<GLfloat*, int>> TextBox::generate_this_texture_data() {
     int total_floats = 0;
     int offset = 0;
 
-	std::tuple<float,float,float,float> background_bounds_vertex = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
-	std::tuple<float,float,float,float> edge_top_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
-	std::tuple<float,float,float,float> edge_right_bounds_vertex = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
-	std::tuple<float,float,float,float> edge_bottom_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(element_height_pixels), 0.0f);
-	std::tuple<float,float,float,float> edge_left_bounds_vertex = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
+    std::tuple<float,float,float,float> background_bounds_vertex = std::make_tuple(element_width_pixels, background_right, background_top, element_height_pixels);
+    std::tuple<float,float,float,float> edge_top_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(height_pixels), float(height_pixels)  - element_height_pixels);
+    std::tuple<float,float,float,float> edge_right_bounds_vertex = std::make_tuple(float(width_pixels) - element_width_pixels, float(width_pixels), float(height_pixels) - element_height_pixels,  element_height_pixels);
+    std::tuple<float,float,float,float> edge_bottom_bounds_vertex = std::make_tuple(element_width_pixels, float(width_pixels) - element_width_pixels, float(element_height_pixels), 0.0f);
+    std::tuple<float,float,float,float> edge_left_bounds_vertex = std::make_tuple(0.0f, float(element_width_pixels), float(height_pixels) - element_height_pixels, element_height_pixels);
 
-	//Load data for texture coordinate bouds
-	std::tuple<float,float,float,float> background_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/background/1"));
-	std::tuple<float,float,float,float> corner_top_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/corner/topleft"));
-	std::tuple<float,float,float,float> corner_top_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/corner/topright"));
-	std::tuple<float,float,float,float> corner_bottom_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/corner/bottomright"));
-	std::tuple<float,float,float,float> corner_bottom_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/corner/bottomleft"));
-	std::tuple<float,float,float,float> edge_top_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/edge/top"));
-	std::tuple<float,float,float,float> edge_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/edge/right"));
-	std::tuple<float,float,float,float> edge_bottom_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/edge/bottom"));
-	std::tuple<float,float,float,float> edge_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/edge/left"));
+    //Load data for texture coordinate bouds
+    std::tuple<float,float,float,float> background_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/background/1"));
+    std::tuple<float,float,float,float> corner_top_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/corner/topleft"));
+    std::tuple<float,float,float,float> corner_top_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/corner/topright"));
+    std::tuple<float,float,float,float> corner_bottom_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/corner/bottomright"));
+    std::tuple<float,float,float,float> corner_bottom_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/corner/bottomleft"));
+    std::tuple<float,float,float,float> edge_top_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/edge/top"));
+    std::tuple<float,float,float,float> edge_right_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/edge/right"));
+    std::tuple<float,float,float,float> edge_bottom_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/edge/bottom"));
+    std::tuple<float,float,float,float> edge_left_bounds = texture_atlas->index_to_coords(texture_atlas->get_name_index("gui/scroll/edge/left"));
 
-	//get total number of floats
-	total_floats += calculate_num_tile_elements(background_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += num_floats_per_tile * 4 ; // 4 corners
-	total_floats += calculate_num_tile_elements(edge_top_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(edge_right_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
-	total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    //get total number of floats
+    total_floats += calculate_num_tile_elements(background_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += num_floats_per_tile * 4 ; // 4 corners
+    total_floats += calculate_num_tile_elements(edge_top_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_right_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
+    total_floats += calculate_num_tile_elements(edge_left_bounds_vertex, element_width_pixels, element_height_pixels) * num_floats_per_tile;
 
-	texture_data = new GLfloat[total_floats];
+    texture_data = new GLfloat[total_floats];
 
-	offset = generate_tile_element_texture_coords(texture_data, 0, background_bounds_vertex, element_width_pixels, element_height_pixels, background_bounds);
-	offset =  generate_texture_coords_element(texture_data, offset, corner_top_left_bounds);
-	offset =  generate_texture_coords_element(texture_data, offset, corner_top_right_bounds);
-	offset =  generate_texture_coords_element(texture_data, offset, corner_bottom_right_bounds);
-	offset =  generate_texture_coords_element(texture_data, offset, corner_bottom_left_bounds);
-	offset =   generate_tile_element_texture_coords(texture_data, offset, edge_top_bounds_vertex, element_width_pixels, element_height_pixels, edge_top_bounds);
-	offset =   generate_tile_element_texture_coords(texture_data, offset, edge_right_bounds_vertex, element_width_pixels, element_height_pixels, edge_right_bounds);
-	offset =   generate_tile_element_texture_coords(texture_data, offset, edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels, edge_bottom_bounds);
-	offset =   generate_tile_element_texture_coords(texture_data, offset, edge_left_bounds_vertex, element_width_pixels, element_height_pixels, edge_left_bounds);
+    offset = generate_tile_element_texture_coords(texture_data, 0, background_bounds_vertex, element_width_pixels, element_height_pixels, background_bounds);
+    offset =  generate_texture_coords_element(texture_data, offset, corner_top_left_bounds);
+    offset =  generate_texture_coords_element(texture_data, offset, corner_top_right_bounds);
+    offset =  generate_texture_coords_element(texture_data, offset, corner_bottom_right_bounds);
+    offset =  generate_texture_coords_element(texture_data, offset, corner_bottom_left_bounds);
+    offset =   generate_tile_element_texture_coords(texture_data, offset, edge_top_bounds_vertex, element_width_pixels, element_height_pixels, edge_top_bounds);
+    offset =   generate_tile_element_texture_coords(texture_data, offset, edge_right_bounds_vertex, element_width_pixels, element_height_pixels, edge_right_bounds);
+    offset =   generate_tile_element_texture_coords(texture_data, offset, edge_bottom_bounds_vertex, element_width_pixels, element_height_pixels, edge_bottom_bounds);
+    offset =   generate_tile_element_texture_coords(texture_data, offset, edge_left_bounds_vertex, element_width_pixels, element_height_pixels, edge_left_bounds);
 
     size_texture_data = offset;
 

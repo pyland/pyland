@@ -21,19 +21,19 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <layer name="TL1b" width="41" height="21">
+ <layer name="TL1a" width="41" height="21">
   <data encoding="base64" compression="zlib">
    eJztw0ENAAAMA6GTWv8qpmI/SFg1VVVVXx7pVkLw
   </data>
  </layer>
- <layer name="waterLayer" width="41" height="21">
+ <layer name="TL1b" width="41" height="21">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2DwAjkglgFiaSQsg0TLEBDHpgabPC5zxIlwowTFvqQMSFJJDS0BMWE0FNw4FOJ6oN04Go7UAcMlHAc6Xw8FNw6FuB4KbhyNa+qAoVBfE2O/Gs1dgR9gC0cAPzMGpw==
   </data>
  </layer>
  <layer name="SpecialLayer" width="41" height="21">
   <data encoding="base64" compression="zlib">
-   eJyzYWJgsBnFIxKDgDWUHkiAz322TLixNR45aqrB5U4YgJkxUGDUjdQBo26kDiDWjQMJiHHjQJeN1sMkHEfdSBgMFzeO5hnCYLjE9agbCQNsbgQAVHVBkg==
+   eJyzYWJgsBnFIxKDgDWUHkiAz322TLixNR45aqrB5U4YQFYzEIBYNw5kXI+6kTpgOLlxIAExbhzostF6mITjqBsJg+HixtE8QxgMl7gedSNhgM2NAOfOQVU=
   </data>
  </layer>
  <layer name="Tl1a" width="41" height="21">
@@ -41,12 +41,12 @@
    eJzNVdkKxDAI9F8L27z1oC89Pn4rKIgYNXtlB8Qcmk4yJp0AYL5tJZuovwTtRRj35yBXxun5qZKPfiNbaWz7Q9tvu4g79g/qoz+FP40xHSfbl5i/jFg5p9fimJ08a7xRXG8U8sxL1tPRi5QDrXlvPIyxVo6DMkRx5i1jLgPkwNz4bmcwqHZkxcjXnDMcM3eFv5XdfwZFeQvMj+9MBh5Hq568+ZZzBMhr7e25NZ45jlDnK89xT36zpZZa1oo4os3BejUdI31r51gUt8w59nwf5ZukIc/R+8fI3NZ6jNZDeHUj+UVafwtRXb+j9afeSVyH/zvW3clqrfGK3rWc6G730HpU/egd87S29h29M1ZeJgehuTNe1fqXYH5PqIt8Ng==
   </data>
  </layer>
- <layer name="Bridge" width="41" height="21">
+ <layer name="Bridge" width="41" height="21" visible="0">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2BogqtEqLlGJXNGwSgYBSMLXBlg+y8PsP2jYBSQCgY6zQ50nh0Fo4AQAABaPwXP
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="0" height="0">
+ <objectgroup name="Object Layer 1" width="0" height="0" visible="0">
   <object name="portal/exit_portal" gid="293" x="2432" y="320" width="64" height="64"/>
   <object name="coconut/coconut_two" gid="287" x="128" y="768" width="64" height="64"/>
   <object name="coconut/coconut_three" gid="287" x="704" y="256" width="64" height="64"/>
@@ -66,6 +66,9 @@
   <object name="characters/player/player_nine" gid="286" x="1152" y="1152" width="64" height="64"/>
   <object name="characters/player/player_ten" gid="286" x="1024" y="1024" width="64" height="64"/>
   <object name="characters/player/player_eleven" gid="286" x="832" y="896" width="64" height="64"/>
-  <object name="characters/enemies/crocodile/croc_one" gid="296" x="896" y="640"/>
+  <object name="characters/enemies/crocodile/croc_two" gid="296" x="640" y="576"/>
+  <object name="characters/player/player_20" gid="286" x="1280" y="512"/>
+  <object name="characters/enemies/crocodile/croc_one" gid="296" x="896" y="384"/>
+  <object name="characters/enemies/crocodile/croc_three" gid="296" x="768" y="640"/>
  </objectgroup>
 </map>

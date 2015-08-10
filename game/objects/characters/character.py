@@ -190,7 +190,8 @@ class Character(GameObject):
         return #parse sprite_location to get facing
 
     def change_state(self, state):
-        if(isinstance(state, str)):
-            self.__state = state
+        sprite_location = self.get_sprite()
+        sprite_location = sprite_location[sprite_location.rfind("/"): ]
+        self.set_sprite(state + sprite_location)
         return
     

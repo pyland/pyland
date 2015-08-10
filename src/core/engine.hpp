@@ -27,7 +27,7 @@ private:
 
     static GameWindow* game_window;
 
-	static GUIMain *gui_main;
+    static GUIMain *gui_main;
 
     static MainWindow* main_window;
 
@@ -121,22 +121,6 @@ public:
     static bool walkable(glm::ivec2 location);
 
     ///
-    /// Get all the objects that are within the search range
-    /// @param id the id of the object
-    /// @param search range the radius of the circle to search
-    /// @return a vector of (name, x, y) tuples
-    ///
-    //static std::vector<std::tuple<std::string, int, int>> look(int id, int search_range); TODO BLEH TO BE REMOVED AND PYTHONED
-
-    ///
-    /// Cuts down a vine or cuttable object
-    /// @param id the id of the object
-    /// @param location the (x,y_ position to cut
-    /// @return if the operation succeeded
-    ///
-    //static bool cut(int id, glm::ivec2 location); TODO BLEH TO BE REMOVED AND PYTHONED
-
-    ///
     /// Change the tile in the map in the given layer at the provided position
     /// @param tile the x,y position of the tile to change
     /// @param layer the layer of the tile to change
@@ -175,8 +159,10 @@ public:
     ///
     static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
 
-	static void set_gui(GUIMain * _gui_main) { Engine::gui_main = _gui_main; }
-	static GUIMain* get_gui() { return gui_main; }
+    static int get_tile_type(int x, int y);
+
+    static void set_gui(GUIMain * _gui_main) { Engine::gui_main = _gui_main; }
+    static GUIMain* get_gui() { return gui_main; }
 
     static void add_dialogue(std::string text);
     static void open_notification_bar();

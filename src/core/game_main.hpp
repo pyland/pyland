@@ -43,8 +43,6 @@ private:
     Lifeline map_resize_lifeline;
     Lifeline stop_callback;
     Lifeline restart_callback;
-    Lifeline editor_callback;
-    Lifeline back_callback;
     Lifeline fast_start_ease_callback;
     Lifeline fast_ease_callback;
     Lifeline fast_finish_ease_callback;
