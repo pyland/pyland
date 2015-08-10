@@ -42,6 +42,9 @@ private:
 
     float menu_x_offset;
     float menu_y_offset;
+    float menu_width;
+    float menu_height;
+    float menu_spacing;
 
     float notification_width;
     float notification_height;
@@ -50,23 +53,29 @@ private:
     float notification_text_height;
     float notification_text_x;
     float notification_text_y;
+	unsigned int notification_text_buffer;
 
     float notification_button_width;
     float notification_button_height;
     float notification_button_x;
     float notification_button_y;
 
-    float py_apis_num;
-
     float py_help_width;
     float py_help_height;
     float py_help_x;
     float py_help_y;
 
+    float py_help_item_width;
+    float py_help_item_height;
+    float py_help_item_x;
+    float py_help_item_y;
+	float py_help_item_spacing;
+
     float py_help_text_width;
     float py_help_text_height;
     float py_help_text_x;
     float py_help_text_y;
+    unsigned int py_help_text_buffer;
 
     float py_help_button_width;
     float py_help_button_height;
@@ -81,6 +90,8 @@ private:
     float vertical_button_spacing;
 
     unsigned int button_max;
+
+    unsigned int py_apis_num;
     ///****************Config variables end
 
     GameWindow * embedWindow;
@@ -114,6 +125,7 @@ private:
     std::shared_ptr<Board> pyguide_window;
     std::shared_ptr<TextBox> py_help;
     std::deque<std::shared_ptr<Button>> pyguide_commands;
+    std::deque<std::string> pyguide_explanations;
     void open_pyguide();
     void close_pyguide();
 
@@ -157,6 +169,7 @@ public:
 
     //To add a message to the notification bar
     void add_message(std::string text);
+    void add_text(std::string text);
 
     void open_notification_bar();
     void close_notification_bar();

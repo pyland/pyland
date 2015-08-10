@@ -51,9 +51,15 @@ void GameEngine::add_dialogue(std::string text) {
     Engine::add_dialogue(text);
 }
 
-void GameEngine::open_dialogue_box() {
+void GameEngine::add_text(std::string text) {
+    LOG(INFO) << "Adding@ " << text;
+    Engine::add_text(text);
+}
+
+void GameEngine::open_dialogue_box(PyObject *callback) {
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     LOG(INFO) << "Opening notification bar";
-    Engine::open_notification_bar();
+    Engine::open_notification_bar(boost_callback);
 }
 
 void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {

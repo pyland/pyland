@@ -1,4 +1,5 @@
 #include <functional>
+#include <cctype>
 #include <glog/logging.h>
 #include <ostream>
 #include <utility>
@@ -66,6 +67,13 @@ TextBox::TextBox(TextBoxType _type) {
                 else if(text_stack.can_forward()){
                     forward_button->set_picture("gui/status/running");
                 }
+
+                if(!text_stack.can_backward()){
+                    backward_button->set_picture("gui/status/failed");
+                }
+                else if(text_stack.can_backward()){
+                    backward_button->set_picture("gui/status/running");
+                }
                 Engine::get_gui()->refresh_gui();
             }
         });
@@ -85,6 +93,14 @@ TextBox::TextBox(TextBoxType _type) {
                 else if(text_stack.can_backward()){
                     backward_button->set_picture("gui/status/running");
                 }
+
+                if(!text_stack.can_forward()){
+                    forward_button->set_picture("gui/status/failed");
+                }
+                else if(text_stack.can_forward()){
+                    forward_button->set_picture("gui/status/running");
+                }
+
                 Engine::get_gui()->refresh_gui();
             }
         });
@@ -188,6 +204,25 @@ void TextBox::move_buttons(float x_offset, float y_offset, float spacing /* = 0.
         backward_button->set_x_offset(x_offset - spacing);
         backward_button->set_y_offset(y_offset);
     }
+}
+
+void TextBox::add_text(std::string text){
+
+	for(unsigned int i=0; i <text.length(); i += buffer_size){
+		std::string part = text.substr(i, buffer_size);
+
+		if(i+buffer_size >= text.length()){
+			part = part; //end of text
+		}
+		else if(isalnum(text[i]) && isalnum(text[i+1])){
+			part = part + "-";
+		}
+		else{
+			part = part + "...";
+		}
+
+		this->add_message(part);
+	}
 }
 
 void TextBox::clear_text() {
