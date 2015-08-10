@@ -261,7 +261,7 @@ void Engine::open_notification_bar(std::function<void ()> func){
         _gui_main->open_notification_bar();
     });
     EventManager::get_instance()->add_event([func] {
-		func();
+        func();
     });
 }
 

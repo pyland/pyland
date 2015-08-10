@@ -208,21 +208,21 @@ void TextBox::move_buttons(float x_offset, float y_offset, float spacing /* = 0.
 
 void TextBox::add_text(std::string text){
 
-	for(unsigned int i=0; i <text.length(); i += buffer_size){
-		std::string part = text.substr(i, buffer_size);
+    for(unsigned int i=0; i <text.length(); i += buffer_size){
+        std::string part = text.substr(i, buffer_size);
 
-		if(i+buffer_size >= text.length()){
-			part = part; //end of text
-		}
-		else if(isalnum(text[i]) && isalnum(text[i+1])){
-			part = part + "-";
-		}
-		else{
-			part = part + "...";
-		}
+        if(i+buffer_size >= text.length()){
+            part = part; //end of text
+        }
+        else if(isalnum(text[i]) && isalnum(text[i+1])){
+            part = part + "-";
+        }
+        else{
+            part = part + "...";
+        }
 
-		this->add_message(part);
-	}
+        this->add_message(part);
+    }
 }
 
 void TextBox::clear_text() {
