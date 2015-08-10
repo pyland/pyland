@@ -71,24 +71,46 @@ class GameEngine {
         /// Returns the button_id associated with the python player
         unsigned int add_button(std::string file_path, std::string name, PyObject* callback);
 
+        ///
+        /// Updates the player focus buttons with the newly
+        /// focused player (associated with it's button id)
         void set_cur_player(unsigned int passing_button_id);
 
+        ///
+        /// Updates the player focus buttons with the newly
+        /// changed player name (associated with it's button id)
         void update_player_name(std::string name, unsigned int passing_button_id);
 
         void register_input_callback(int input_key, PyObject *input_callback);
 
         void play_music(std::string song_name);
 
+        ///
+        /// Print text to the QT terminal widget
+        /// If error is True the text is red
+        /// If error is False the text is black
         void print_terminal(std::string text, bool error);
 
+        ///
+        /// Update the QT interface with new colours
+        /// (preferrably two shades of the same colour)
         void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
 
+        ///
+        /// Updates the QT running button to reflect
+        /// whether the current player is running a script
         void set_running();
-
         void set_finished();
 
+        ///
+        /// Run the currently active script
+        /// (called when enter is pressed)
         void trigger_run();
 
+        ///
+        /// Get the index of the script to run for the player
+        /// (this may be the currently open script
+        /// or another script if a key binding was used)
         int get_run_script();
 
         bool is_solid(int x, int y);

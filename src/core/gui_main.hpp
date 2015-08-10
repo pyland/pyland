@@ -118,24 +118,27 @@ public:
     //callback is added to the event manager when the button is pressed
     void add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id);
 
+    //Cycle onto the next 'button_max' player focus buttons
     void cycle();
 
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();
 
-    //Update the currently selected player button index
+    //Update the currently selected player focus button index
     void set_button_index(unsigned int value);
 
-    //Simulate clicking on the next player button
+    //Simulate clicking on the next player focus button
+    //(for when the user is tabbing through them)
     void click_next_player();
 
     //Simulate clicking on the player button with the given button_id
+    //(for when the focus is changed to a player in python code)
     void click_player(unsigned int button_id);
 
     //Update the text for the button of given id
     void update_button_text(std::string name, unsigned int button_id);
 
-    //Update GUI buttons to reflect currently selected sprite
+    //Update GUI buttons to distinguish the currently selected sprite from the others
     void update_selected();
 
 };

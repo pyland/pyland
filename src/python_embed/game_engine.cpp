@@ -113,6 +113,7 @@ void GameEngine::set_finished(){
 }
 
 void GameEngine::trigger_run(){
+    //Passing 0 as the script causes it to run the currently open script
     Engine::trigger_run(0);
 }
 
