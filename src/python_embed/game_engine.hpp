@@ -81,10 +81,12 @@ class GameEngine {
         ///
         void add_dialogue(std::string text);
 
+		void add_text(std::string text);
+
         ///
         /// To open the dialogue box on the screen
         ///
-        void open_dialogue_box();
+        void open_dialogue_box(PyObject *callback);
 
         void register_input_callback(int input_key, PyObject *input_callback);
 

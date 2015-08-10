@@ -248,10 +248,20 @@ void Engine::add_dialogue(std::string text) {
     });
 }
 
-void Engine::open_notification_bar(){
+void Engine::add_text(std::string text) {
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main, text] {
+        _gui_main->add_text(text);
+    });
+}
+
+void Engine::open_notification_bar(std::function<void ()> func){
     auto _gui_main = gui_main;
     EventManager::get_instance()->add_event([_gui_main] {
         _gui_main->open_notification_bar();
+    });
+    EventManager::get_instance()->add_event([func] {
+		func();
     });
 }
 

@@ -27,7 +27,7 @@ private:
 
     void move_text(Direction direction);
     TextBoxType type;
-    int buffer_size;
+    unsigned int buffer_size;
 
 public:
 
@@ -59,7 +59,7 @@ public:
     void move_buttons(float x_offset, float y_offset, float spacing = 0.0f);
     void traverse_text(Direction direction);
 
-    void set_buffer_size(int _size){buffer_size = _size;}
+    void set_buffer_size(unsigned int _size){buffer_size = _size;}
 
 
     void open();

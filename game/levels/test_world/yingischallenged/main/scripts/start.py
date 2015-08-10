@@ -37,11 +37,7 @@ engine.add_button("gui/head/monkey", player_one.get_character_name(), player_one
 engine.add_button("gui/head/monkey", player_two.get_character_name(), player_two.focus)
 
 engine.add_dialogue(engine.getDialogue("welcome"))
-engine.set_language("français")
-engine.add_dialogue(engine.getDialogue("welcome"))
-engine.set_language("hindi")
-engine.add_dialogue(engine.getDialogue("welcome"))
-engine.open_dialogue_box()
+engine.open_dialogue_box(coconut_one.focus)
 
 croc_one.follow_path("north, east, east, north, east, south, south, south, west, west, west, north", True)
 croc_two.rand_explore()
