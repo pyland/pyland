@@ -10,14 +10,7 @@
 #include <tuple>
 #include <utility>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 #include "cacheable_resource.hpp"
 #include "config.hpp"
