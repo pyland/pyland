@@ -31,6 +31,8 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
     this->sprite_location = "";
     LOG(INFO) << "invalid: constructor " << this->id;
 
+    this->animating = false;
+
 }
 
 //A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!!
@@ -43,12 +45,12 @@ void Entity::wait(double gametime, PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     EventManager::get_instance()->add_timed_event(
         GameTime::duration(gametime),
-        [boost_callback] (float completion) {
-            if (completion == 1.0) {
-                EventManager::get_instance()->add_event(boost_callback);
-            }
-            return true;
+    [boost_callback] (float completion) {
+        if (completion == 1.0) {
+            EventManager::get_instance()->add_event(boost_callback);
         }
+        return true;
+    }
     );
 }
 
@@ -142,27 +144,36 @@ void Entity::set_sprite(std::string sprite_location) {
     //display 0.png
 }
 
-void Entity::start_animating(int currentFrame = 0) {
-    auto num_frame = get_number_of_animation_frames();
-    EventManager::get_instance()->add_timed_event(
-        GameTime::duration(.05),
-        [currentFrame, num_frame, this] (float completion) {
-            if(completion == 1.00) {
-                EventManager::get_instance()->add_event([this, currentFrame] () { this->set_animation_frame(currentFrame); });
-                EventManager::get_instance()->add_event([this, currentFrame, num_frame]() {
-                    int next_frame = (currentFrame+1)%num_frame;
-                    this->start_animating(next_frame);
+void Entity::start_animating() {
+    this->animating = true;
+    this->animate(0);
+}
+
+void Entity::pause_animating() {
+    this->animating = false;
+}
+
+void Entity::animate(int current_frame) {
+    if (this->animating) {
+        auto num_frame = get_number_of_animation_frames();
+        EventManager::get_instance()->add_timed_event(
+            GameTime::duration(.05),
+        [current_frame, num_frame, this] (float completion) {
+            if (completion == 1.00) {
+                EventManager::get_instance()->add_event([this, current_frame] () { this->set_animation_frame(current_frame); });
+                EventManager::get_instance()->add_event([this, current_frame, num_frame]() {
+                    int next_frame = (current_frame + 1) % num_frame;
+                    this->animate(next_frame);
                 });
             }
             return true;
         }
-    );
+        );
+    }
 }
 
-void Entity::pause_animating() {
-    //stub TODO: write this
-    return;
-}
+
+
 
 int Entity::get_number_of_animation_frames() {
     Config::json j = Config::get_instance();
