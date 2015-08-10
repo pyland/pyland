@@ -303,6 +303,10 @@ void GUIMain::open_pause_window(){
     typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
 
     for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+		if(i->second == pause_button){
+            continue;
+        }
+
 		i->second->set_visible(false);
 		i->second->set_clickable(false);
 
