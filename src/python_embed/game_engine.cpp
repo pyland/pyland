@@ -53,7 +53,9 @@ unsigned int GameEngine::add_button(std::string file_path, std::string name, PyO
     //TODO: Find a way of avoiding this hack
     LOG(INFO) << "Adding a new button: " << name;
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
-    //Uniquely identify each button in gameengine, to map to a specific button
+    //Uniquely identify each button to it's associated with the python player.
+    //This identifier is mapped to the deque index (in gui_main) at which the player's focus button
+    //is stored
     button_id++;
     unsigned int id_to_pass = button_id;
     EventManager::get_instance()->add_event([this, file_path, name, boost_callback, id_to_pass] {

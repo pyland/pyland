@@ -113,12 +113,13 @@ public:
         return &map_viewer;
     }
 
-    //To add a button to the screen- is called from game engine
-    //file path is the location of the image in gui.png, and name is the name to be displayed on screen
+    //Add a player focus button to the screen (called from game engine)
+    //file path is the location of the image in gui.png, and name is the text to be displayed with the button
     //callback is added to the event manager when the button is pressed
     void add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id);
 
-    //Cycle onto the next 'button_max' player focus buttons
+    //Cycle onto the next set of 'button_max' player focus buttons
+    //This can only occur when there are more than 'button_max' players
     void cycle();
 
     //This is used to render the components to the screen after any changes have made to the gui
@@ -127,8 +128,8 @@ public:
     //Update the currently selected player focus button index
     void set_button_index(unsigned int value);
 
-    //Simulate clicking on the next player focus button
-    //(for when the user is tabbing through them)
+    //Simulate clicking on the next player's focus button
+    //(for when the user is tabbing through players)
     void click_next_player();
 
     //Simulate clicking on the player button with the given button_id
@@ -136,6 +137,7 @@ public:
     void click_player(unsigned int button_id);
 
     //Update the text for the button of given id
+    //(for when a player's name is changed in python)
     void update_button_text(std::string name, unsigned int button_id);
 
     //Update GUI buttons to distinguish the currently selected sprite from the others

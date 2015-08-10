@@ -125,65 +125,13 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     LOG(INFO) << "Constructed GUIMain.";
 }
 
-void GUIMain::open_pyguide()
+GUIMain::~GUIMain()
 {
+    LOG(INFO) << "Destructing GUIMain...";
 
-    close_bag();
-    pyguide_window->set_visible(true);
+    buttons.clear();
 
-    refresh_gui();
-    LOG(INFO) << "PyGuide opened";
-}
-
-void GUIMain::close_pyguide()
-{
-
-    pyguide_window->set_visible(false);
-
-    refresh_gui();
-    LOG(INFO) << "PyGuide closed";
-}
-
-void GUIMain::open_bag()
-{
-
-    bag_window->set_visible(true);
-
-    close_pyguide();
-    pyguide_open = false;
-
-    pyguide_button->set_visible(true);
-    pyguide_button->set_clickable(true);
-
-    for(unsigned int i=0; i!=bag_items.size(); i++)
-    {
-        bag_items[i]->set_visible(true);
-        bag_items[i]->set_clickable(true);
-    }
-
-    refresh_gui();
-    LOG(INFO) << "Bag opened";
-}
-
-void GUIMain::close_bag()
-{
-
-    bag_window->set_visible(false);
-
-    close_pyguide();
-    pyguide_open = false;
-
-    pyguide_button->set_visible(false);
-    pyguide_button->set_clickable(false);
-
-    for(unsigned int i=0; i!=bag_items.size(); i++)
-    {
-        bag_items[i]->set_visible(false);
-        bag_items[i]->set_clickable(false);
-    }
-
-    refresh_gui();
-    LOG(INFO) << "Bag closed";
+    LOG(INFO) << "Destructed GUIMain.";
 }
 
 void GUIMain::open_pause_window()
@@ -238,6 +186,67 @@ void GUIMain::close_pause_window()
     }
 
     refresh_gui();
+}
+
+void GUIMain::open_bag()
+{
+
+    bag_window->set_visible(true);
+
+    close_pyguide();
+    pyguide_open = false;
+
+    pyguide_button->set_visible(true);
+    pyguide_button->set_clickable(true);
+
+    for(unsigned int i=0; i!=bag_items.size(); i++)
+    {
+        bag_items[i]->set_visible(true);
+        bag_items[i]->set_clickable(true);
+    }
+
+    refresh_gui();
+    LOG(INFO) << "Bag opened";
+}
+
+void GUIMain::close_bag()
+{
+
+    bag_window->set_visible(false);
+
+    close_pyguide();
+    pyguide_open = false;
+
+    pyguide_button->set_visible(false);
+    pyguide_button->set_clickable(false);
+
+    for(unsigned int i=0; i!=bag_items.size(); i++)
+    {
+        bag_items[i]->set_visible(false);
+        bag_items[i]->set_clickable(false);
+    }
+
+    refresh_gui();
+    LOG(INFO) << "Bag closed";
+}
+
+void GUIMain::open_pyguide()
+{
+
+    close_bag();
+    pyguide_window->set_visible(true);
+
+    refresh_gui();
+    LOG(INFO) << "PyGuide opened";
+}
+
+void GUIMain::close_pyguide()
+{
+
+    pyguide_window->set_visible(false);
+
+    refresh_gui();
+    LOG(INFO) << "PyGuide closed";
 }
 
 void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id)
@@ -335,15 +344,6 @@ void GUIMain::refresh_gui()
     gui_manager.parse_components();
 }
 
-GUIMain::~GUIMain()
-{
-    LOG(INFO) << "Destructing GUIMain...";
-
-    buttons.clear();
-
-    LOG(INFO) << "Destructed GUIMain.";
-}
-
 void GUIMain::config_gui()
 {
     nlohmann::json j = Config::get_instance();
@@ -390,9 +390,12 @@ void GUIMain::click_next_player()
 
 void GUIMain::click_player(unsigned int button_id)
 {
+    //Get the index at which the player's button is stored (in buttons)
+    //using the button's identifier
     unsigned int click_button_index = button_indexs[button_id];
     set_button_index(click_button_index);
-    //Only try next set of sprite heads button a finite number of times, to prevent infinite loops
+    //Cycle through the pages of sprite buttons until the current player is present
+    //(only try cycling a finite number of attempts, to prevent infinite loops)
     for (unsigned int attempts = 0; attempts<buttons.size(); attempts++)
     {
         if (!((click_button_index < display_button_start+button_max) && (click_button_index >= display_button_start)))

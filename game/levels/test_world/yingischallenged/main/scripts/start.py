@@ -4,6 +4,7 @@ player_one.focus()
 player_one.set_character_name("Benjo")
 player_two.set_character_name("Bob")
 
+engine.set_ui_colours(165,215,73,160,210,65)
 
 coconut_one.set_weight(1)
 coconut_two.set_weight(2)

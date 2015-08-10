@@ -253,7 +253,6 @@ void Engine::print_terminal(std::string text, bool error) {
 
 //Focuses on the next player that has a focus button for it
 void Engine::focus_next() {
-    std::cout << "Focusing next" << std::endl;
     game_main->focus_next();
     return;
 }
