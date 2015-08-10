@@ -32,6 +32,8 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
     LOG(INFO) << "invalid: constructor " << this->id;
 
     this->animating = false;
+    
+
 
 }
 
@@ -155,12 +157,14 @@ void Entity::pause_animating() {
 
 void Entity::animate(int current_frame) {
     if (this->animating) {
-        auto num_frame = get_number_of_animation_frames();
+        //auto num_frame = get_number_of_animation_frames();
+        auto num_frame = 4;
         EventManager::get_instance()->add_timed_event(
             GameTime::duration(.05),
         [current_frame, num_frame, this] (float completion) {
             if (completion == 1.00) {
-                EventManager::get_instance()->add_event([this, current_frame] () { this->set_animation_frame(current_frame); });
+                //EventManager::get_instance()->add_event([this, current_frame] () { this->set_animation_frame(current_frame); });
+                this->set_animation_frame(current_frame);
                 EventManager::get_instance()->add_event([this, current_frame, num_frame]() {
                     int next_frame = (current_frame + 1) % num_frame;
                     this->animate(next_frame);
@@ -195,11 +199,15 @@ void Entity::set_animation_frame(int frame_number) {
     auto sprite_location = this->sprite_location;
     int id = this->id;
     std::string file_location = this->file_location;
-    EventManager *em = EventManager::get_instance();
-    em->add_event([id, sprite_location, file_location, frame_number] () { //put changing the player tile on the event queue
-        auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-        object->set_tile(std::make_pair(0, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
-    });
+
+    auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+    object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+
+    /* EventManager *em = EventManager::get_instance();
+     em->add_event([id, sprite_location, file_location, frame_number] () { //put changing the player tile on the event queue
+         auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+         object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+     });*/
     return;
 }
 
