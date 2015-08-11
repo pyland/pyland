@@ -120,7 +120,8 @@ public:
     /// @param dy move in x by dy tiles
     /// @param func the callback to be called once the movement operation is complete (get's put on the event queue)
     ///
-    static void move_object(int id, glm::ivec2 move_by, std::function<void ()> func);
+
+    static void move_object(int id, glm::ivec2 move_by, double duration, std::function<void ()> func);
     static void move_object(int id, glm::ivec2 move_by);
 
     ///

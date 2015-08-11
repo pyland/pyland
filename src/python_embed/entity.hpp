@@ -89,7 +89,7 @@ class Entity {
         /// @return
         ///     Whether move was successful.
         ///
-        void move(int x, int y, PyObject *callback);
+        void move_by(int x, int y, double duration, PyObject *callback);
 
         void move_east(PyObject *callback);
         void move_south(PyObject *callback);

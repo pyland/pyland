@@ -48,7 +48,7 @@ float Engine::global_scale(1.0f);
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
-    Engine::move_object(id, move_by, [] () {});
+    Engine::move_object(id, move_by, 0.3,  [] () {});
 }
 
 // Undefined for diagonals, but will return within correct half
@@ -93,7 +93,7 @@ std::string to_direction(glm::ivec2 direction) {
 }
 
 //TODO: This needs to work with renderable objects
-void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func) {
+void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::function<void ()> func) {
     auto object(ObjectManager::get_instance().get_object<MapObject>(id));
 
     if (!object || object->is_moving()) {
@@ -125,7 +125,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func
 
     // Motion
     EventManager::get_instance()->add_timed_event(
-        GameTime::duration(0.3),
+        GameTime::duration(duration),
         [direction, move_by, location, target, id, func] (float completion) mutable {
             auto object = ObjectManager::get_instance().get_object<MapObject>(id);
             if (!object) { return false; }

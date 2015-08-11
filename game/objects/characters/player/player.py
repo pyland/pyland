@@ -176,22 +176,45 @@ class Player(Character):
     """
     def __input_move_north(self, callback = lambda: None):
         if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
-            self.move_north(callback)
+            def callback_wrap():
+                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+                callback()
+            self.move_north(callback_wrap)
         return
 
     def __input_move_east(self, callback = lambda: None):
         if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
-            self.move_east(callback)
+            def callback_wrap():
+                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+                callback()
+            self.move_east(callback_wrap)
         return
 
     def __input_move_south(self, callback = lambda: None):
         if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
-            self.move_south(callback)
+            def callback_wrap():
+                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+                callback()
+            self.move_south(callback_wrap)
         return
 
     def __input_move_west(self, callback = lambda: None):
         if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
-            self.move_west(callback)
+            def callback_wrap():
+                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+                callback()
+            self.move_west(callback_wrap)
+        return
+
+    def __trigger_walk_on(self):
+        """ Triggers the walked-on functions for objects, objects which have a walked_on method will have those methods
+        automatically called when they are walked on """
+        engine = self.get_engine()
+        position = self.get_position()
+        game_objects = engine.get_objects_at(position)
+        for game_object in game_objects:
+            if(hasattr(game_object, "player_walked_on")):
+                game_object.player_walked_on(self)
         return
 
     def set_running_script_status(self, status):

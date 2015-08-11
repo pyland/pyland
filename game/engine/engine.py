@@ -14,7 +14,9 @@ class Engine:
     #A dictonary of all the game objects in the level (maps from object_id to object)
     __game_objects = dict()
 
-    def getDialogue(self, identifier):
+    def get_dialogue(self, identifier, escapes = dict()):
+        """ Get the piece of dialoge from the database requested
+        """
         result = self.conn.execute("SELECT english, français, nederlands, hindi, pyrate FROM dialogue WHERE identifier=?;", (identifier, ))
         row = result.fetchone()
         dialogue = "invalid dialogue identifier" #TODO: Make it so that game complains much more about this in debug mode!!!!
@@ -30,6 +32,9 @@ class Engine:
                 dialogue = hindi
             if(self.language == "pyrate"):
                 dialogue = pyrate
+
+        for escape in escapes:
+            dialogue = dialogue.replace("%" + escape + "%", escapes[escape])
         return dialogue
     
     def __init__(self, cpp_engine):
@@ -139,6 +144,10 @@ class Engine:
         result = self.__cpp_engine.get_config()
         return json.loads(result)
         
+    def set_ui_colours(self, colour_one, colour_two):
+        r1, g1, b1 = colour_one
+        r2, g2, b2, = colour_two
+        self.__cpp_engine.set_ui_colours(r1, g1, b1, r2, g2, b2)
 
     def __snake_to_camelcase(self, snake_string):
         """ converts snake_case to CamelCase 

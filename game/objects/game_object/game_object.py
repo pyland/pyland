@@ -142,6 +142,16 @@ class GameObject:
         #TODO: implement stub
         return
 
+    def move_by(self, move_amount, time = 0.0, callback = lambda: None):
+        x, y = move_amount
+        self.__entity.move_by(x, y, time, callback)
+
+    def move_to(self, target_position, time = 0.0, callback = lambda: None):
+        xt, yt = target_position
+        xp, yp = self.get_position()
+        self.__entity.move_by(xt - xp, yt - yp, time, callback)
+
+
     def move_north(self, callback = lambda: None):
         """ Smoothly slides this object north by one tile.
 

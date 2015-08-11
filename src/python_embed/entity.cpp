@@ -58,28 +58,28 @@ void Entity::wait(double gametime, PyObject *callback) {
     );
 }
 
-void Entity::move(int x, int y, PyObject *callback) {
+void Entity::move_by(int x, int y, double duration, PyObject *callback) {
     ++call_number;
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     auto id = this->id;
-    Engine::move_object(id, glm::ivec2(x, y), boost_callback);
+    Engine::move_object(id, glm::ivec2(x, y), duration, boost_callback);
     return;
 }
 
 void Entity::move_east(PyObject *callback) {
-    return (move(1, 0, callback));
+    return (move_by(1, 0, 0.3, callback));
 }
 
 void Entity::move_west(PyObject *callback) {
-    return (move(-1, 0, callback));
+    return (move_by(-1, 0, 0.3, callback));
 }
 
 void Entity::move_north(PyObject *callback) {
-    return (move(0, 1, callback));
+    return (move_by(0, 1, 0.3, callback));
 }
 
 void Entity::move_south(PyObject *callback) {
-    return (move(0, -1, callback));
+    return (move_by(0, -1, 0.3, callback));
 }
 
 bool Entity::is_moving() {

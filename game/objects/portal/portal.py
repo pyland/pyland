@@ -25,6 +25,16 @@ As the GameObject is in the base objects folder.
 """
 """
 class Portal(GameObject):
+    __target = (0, 0)
 
-    def __init__(self):
-        super().__init__()
+    def set_target(self, target):
+        """ Set the target for the portal, it can be either another portal or a tuple of integers """
+        if(isinstance(target, Portal)):
+            self.__target = target.get_position()
+        else:
+            self.__target = target
+
+    def player_walked_on(self, player_object):
+        self.get_engine().print_terminal("I've just been walked on by: " + player_object.get_character_name())
+        position = self.__target
+        player_object.move_to(position)

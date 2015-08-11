@@ -11,8 +11,8 @@ read-in what is printed to get name.
 "Well hello %player_name%, you are called %player_name% right?", //at this point insert ssss'es into playerssss name (maybe have a method called snakify :P)
 yesss/no optionssss given, if yessss is presssssed, repeat from earlier step,
 elssse continue.
-"Brilliant %player_name%, you have jusssst written a program! That is abssssolutey
-ssssspifing! You are well onto your way to becoming a massster like me! ",
+"Brilliant %player_name%, you have just written a program! That is absolutey
+spiffing! You are well onto your way to becoming a massster like me! ",
 "Now you see the little white box next to the text-box you just wrote your program
 in? That is called the console-output, and everything you 'print' will be shown
 in there! It will be a really helpful tool as you progress throughout Pyland!",

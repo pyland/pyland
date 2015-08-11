@@ -4,13 +4,18 @@ import os
 sys.path.insert(1, "../game/components")
 from scoped_interpreter import ScopedInterpreter
  
-camera.focus();
+camera.focus()
+c1 = (50, 50, 50)
+c2 = (110, 110, 110)
+engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
-engine.add_dialogue(engine.getDialogue("intro_coming_now"))
-engine.add_dialogue(engine.getDialogue("intro_im_monty_the_snake"))
-engine.add_dialogue(engine.getDialogue("intro_monty_doesnt_know_name"))
-engine.add_dialogue(engine.getDialogue("intro_monty_text_editor"))
-engine.add_dialogue(engine.getDialogue("intro_big_white_box"))
+engine.add_dialogue(engine.get_dialogue("intro_coming_now"))
+engine.add_dialogue(engine.get_dialogue("intro_im_monty_the_snake"))
+engine.add_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"))
+engine.add_dialogue(engine.get_dialogue("intro_monty_text_editor"))
+engine.add_dialogue(engine.get_dialogue("intro_big_white_box"))
+engine.add_dialogue(engine.get_dialogue("intro_monty_hello_player", {"player_name": "Alex"}))
+engine.add_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": "Alex"}))
 engine.open_dialogue_box() #Give callback here?
 
 #engine.print_terminal(player_one.get_position(), False)
