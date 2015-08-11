@@ -162,7 +162,7 @@ void Entity::set_animation_frame(int frame_number) {
 
 void Entity::start_animating() {
     if(!this->animating) {
-        this->animating = true;
+        this->animating = false;
         this->animate(this->current_frame);
     }
 }

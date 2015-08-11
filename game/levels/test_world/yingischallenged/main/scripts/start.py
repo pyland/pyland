@@ -22,7 +22,7 @@ engine.print_terminal(coconut_one.get_weight(), False)
 #player_9000.move_south(None)
 #engine.print_debug("bobobobobobo")
 
-engine.play_music("calm")
+engine.play_music("beach")
 engine.get_objects_at((7, 2))
 engine.get_objects_at((4, 4))
 engine.get_objects_at((5, 4))

@@ -40,12 +40,6 @@ class Engine:
         cpp_engine : C++GameEngine
             Represents an instance of the C++ engein. All of whom's properties are inherited by Engine
         """
-        #Database
-        #--------
-        self.all_languages = ["english", "français", "nederlands", "hindi", "pyrate"]
-        self.dblocation = os.path.dirname(os.path.realpath(__file__)) + "/../database.db"
-        self.language = "english"
-        self.conn = sqlite3.connect(self.dblocation)
 
         self.__cpp_engine = cpp_engine
         #Use some magic trickery to give the Engine class all the methods of the C++GameEngine with their functionality
@@ -53,6 +47,13 @@ class Engine:
         for engine_property in engine_properties:                                           #loop over all the engine properties
             if not hasattr(self, engine_property):                                          #only add the property if the engine doesn't have something by that name
                 setattr(self, engine_property, getattr(self.__cpp_engine, engine_property)) #set the all the properties of Engine to match cpp_engine.
+        
+        #Database
+        #--------
+        self.all_languages = ["english", "français", "nederlands", "hindi", "pyrate"]
+        self.dblocation = os.path.dirname(os.path.realpath(__file__)) + "/../database.db"
+        self.language = self.get_config()['game_settings']['language']
+        self.conn = sqlite3.connect(self.dblocation)
               
     def __del__(self):
         self.conn.close()
@@ -134,7 +135,7 @@ class Engine:
     def open_dialogue_box(self, callback = lambda: None):
         self.__cpp_engine.open_dialogue_box(callback)
 
-    def get_config():
+    def get_config(self):
         result = self.__cpp_engine.get_config()
         return json.loads(result)
         

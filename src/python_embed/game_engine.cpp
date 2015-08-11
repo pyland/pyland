@@ -86,7 +86,7 @@ void GameEngine::print_terminal(std::string text, bool error) {
     Engine::print_terminal(text, error);
 }
 
-std::string get_config() {
+std::string GameEngine::get_config() {
     Config::json j = Config::get_instance();
     return j.dump();
 }

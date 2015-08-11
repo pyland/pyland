@@ -53,6 +53,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("get_level_location",&GameEngine::get_level_location)
         .def("print_debug",       &GameEngine::print_debug)
         .def("add_dialogue",      &GameEngine::add_dialogue)
+        .def("get_config",        &GameEngine::get_config)
         .def("add_text",          &GameEngine::add_text)
         .def("open_dialogue_box", &GameEngine::open_dialogue_box)
         .def("change_level",      &GameEngine::change_level)
