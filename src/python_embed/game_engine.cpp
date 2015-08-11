@@ -106,6 +106,11 @@ void GameEngine::print_terminal(std::string text, bool error) {
     Engine::print_terminal(text, error);
 }
 
+std::string GameEngine::get_config() {
+    Config::json j = Config::get_instance();
+    return j.dump();
+}
+
 boost::python::list GameEngine::get_objects_at(int x, int y) {
     std::vector<int> object_ids = Engine::get_objects_at(glm::ivec2(x, y));
     boost::python::list python_list;

@@ -103,11 +103,21 @@ class GameEngine {
         ///
         void open_dialogue_box(PyObject *callback);
 
+        ///
+        /// Register a callback against a given input
+        ///
         void register_input_callback(int input_key, PyObject *input_callback);
 
+        ///
+        /// Play a given song from the music folder
+        ///
         void play_music(std::string song_name);
 
         ///
+        /// Returns a raw string of the json config
+        ///
+        std::string get_config();
+
         /// Print text to the QT terminal widget
         /// If error is True the text is red
         /// If error is False the text is black

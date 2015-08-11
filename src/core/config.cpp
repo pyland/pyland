@@ -22,7 +22,7 @@ std::string exec(const char* cmd) {
     return result;
 }
 
-nlohmann::json Config::j;
+Config::json Config::j;
 bool Config::created = false;
 
 int bob(int argc, const char *fn)
@@ -48,7 +48,7 @@ int bob(int argc, const char *fn)
     return EXIT_SUCCESS;
 }
 
-nlohmann::json Config::get_instance() {
+Config::json Config::get_instance() {
     /*
     int error;
     char *output;
@@ -69,7 +69,7 @@ nlohmann::json Config::get_instance() {
     */
     if(!created) {
         std::string output = exec("jsonnet/jsonnet config.jsonnet");
-        Config::j = nlohmann::json::parse(output);
+        Config::j = Config::json::parse(output);
         Config::created = true;
     }
 

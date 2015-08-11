@@ -122,8 +122,7 @@ void EventManager::process_events(InterpreterContext &interpreter_context) {
             try {
                 func();
             } catch(boost::python::error_already_set &) { //catch any python erros
-                std::string msg = lock::get_python_error_message(); //get python error message
-                LOG(INFO) << msg;  //log it and continue running
+                PyErr_Print(); //If there is a python error on the event queue, print it and let the game continue. TODO: create a proper handler for this
             }
         }
         else {
