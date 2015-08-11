@@ -11,7 +11,7 @@
 #include <list>
 #include "entitythread.hpp"
 #include "interpreter_context.hpp"
-#include "thread_killer.hpp"
+//#include "thread_killer.hpp"
 #include "locks.hpp"
 
 class GameEngine;
@@ -121,7 +121,7 @@ class Interpreter {
         /// The thread that kills EntityThreads when they
         /// have not called a wrapped API sufficiently recently.
         ///
-        std::unique_ptr<ThreadKiller> thread_killer;
+        //std::unique_ptr<ThreadKiller> thread_killer;
 
         ///
         /// The spawed threads, mainly for usage by kill_thread.

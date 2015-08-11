@@ -10,19 +10,7 @@
 #include <utility>
 #include <vector>
 
-extern "C" {
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#ifdef __APPLE__
-#include <OpenGl/gl.h>
-#else
-#include <GL/gl.h>
-#endif
-#endif
-}
+#include "open_gl.hpp"
 
 #include "cacheable_resource.hpp"
 #include "image.hpp"

@@ -57,7 +57,7 @@ GameMain::GameMain(int &argc, char **argv):
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
 
-    nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
     /// CREATE GLOBAL OBJECTS
 
     //Create the input manager
@@ -100,15 +100,6 @@ GameMain::GameMain(int &argc, char **argv):
     {
         gui.get_map_viewer()->resize();
     });
-
-
-    back_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("ESCAPE")},
-    [&] (KeyboardInputEvent)
-    {
-        Engine::get_challenge()->event_finish.trigger();;
-    }
-    ));
 
     up_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
@@ -315,14 +306,12 @@ GameMain::GameMain(int &argc, char **argv):
                           &interpreter,
                           gui.get_gui_manager(),
                           &embedWindow,
-                          input_manager,
-                          gui.get_notification_bar()
-                          //0
+                          input_manager
                         ));
     challenge_data->run_challenge = true;
     challenge = pick_challenge(challenge_data);
     Engine::set_challenge(challenge);
-    challenge->start();
+    //challenge->start();
 
     last_clock = (std::chrono::steady_clock::now());
     gui.refresh_gui();
@@ -408,11 +397,9 @@ void GameMain::game_loop(bool showMouse)
         challenge_data->run_challenge = true;
         challenge = pick_challenge(challenge_data);
         Engine::set_challenge(challenge);
-        challenge->start();
         callbackstate.stop();
         //Update tool bar here
         //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
-
     }
     return;
 }
@@ -421,7 +408,7 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
 
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
-    nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
     std::string map_name = j["files"]["full_level_location"];
     challenge_data->map_name = map_name + "/layout.tmx";
     challenge = new Challenge(challenge_data, &gui);

@@ -27,16 +27,7 @@
 #include "renderable_component.hpp"
 #include "shader.hpp"
 
-extern "C" {
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-}
+#include "open_gl.hpp"
 
 
 MapViewer::MapViewer(GameWindow *window, GUIManager *gui_manager):

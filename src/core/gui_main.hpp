@@ -16,6 +16,9 @@
 /// The entire GUI, which consists of all the components in it.
 /// Created by GameMain and contained in it
 ///
+
+typedef Button Board;
+
 class GUIMain {
 
 private:
@@ -33,9 +36,52 @@ private:
 
     float title_x_offset;
     float title_y_offset;
+    float pyguide_title_x_offset;
+    float pyguide_title_y_offset;
+
 
     float menu_x_offset;
     float menu_y_offset;
+    float menu_width;
+    float menu_height;
+    float menu_spacing;
+
+    float notification_width;
+    float notification_height;
+
+    float notification_text_width;
+    float notification_text_height;
+    float notification_text_x;
+    float notification_text_y;
+    unsigned int notification_text_buffer;
+
+    float notification_button_width;
+    float notification_button_height;
+    float notification_button_x;
+    float notification_button_y;
+
+    float py_help_width;
+    float py_help_height;
+    float py_help_x;
+    float py_help_y;
+
+    float py_help_item_width;
+    float py_help_item_height;
+    float py_help_item_x;
+    float py_help_item_y;
+    float py_help_item_spacing;
+
+    float py_help_text_width;
+    float py_help_text_height;
+    float py_help_text_x;
+    float py_help_text_y;
+    unsigned int py_help_text_buffer;
+
+    float py_help_button_width;
+    float py_help_button_height;
+    float py_help_button_x;
+    float py_help_button_y;
+    float py_help_button_spacing;
 
     float button_width;
     float button_height;
@@ -44,6 +90,8 @@ private:
     float vertical_button_spacing;
 
     unsigned int button_max;
+
+    unsigned int py_apis_num;
     ///****************Config variables end
 
     GameWindow * embedWindow;
@@ -52,25 +100,32 @@ private:
     EventManager *em;
 
     std::shared_ptr<GUIWindow> gui_window;
+
+    void create_notification_bar();
     std::shared_ptr<TextBox> notification_bar;
 
+    void create_pause_menu();
     //The button to pause the game
     std::shared_ptr<Button> pause_button;
     void open_pause_window();
     void close_pause_window();
 
+    void create_bag();
+
     bool bag_open; //whether or not the bag is open
     std::shared_ptr<Button> bag_button;
-    std::shared_ptr<Button> bag_window;
+    std::shared_ptr<Board> bag_window;
+    std::shared_ptr<Button> pyguide_button;
     std::deque<std::shared_ptr<Button>> bag_items;
     void open_bag();
     void close_bag();
 
+    void create_pyguide();
     bool pyguide_open; //whether or not the PyGuide is open
-    std::shared_ptr<Button> pyguide_button;
-    std::shared_ptr<Button> pyguide_window;
+    std::shared_ptr<Board> pyguide_window;
     std::shared_ptr<TextBox> py_help;
     std::deque<std::shared_ptr<Button>> pyguide_commands;
+    std::deque<std::string> pyguide_explanations;
     void open_pyguide();
     void close_pyguide();
 
@@ -121,6 +176,15 @@ public:
     //Cycle onto the next set of 'button_max' player focus buttons
     //This can only occur when there are more than 'button_max' players
     void cycle();
+
+
+    //To add a message to the notification bar
+    void add_message(std::string text);
+    void add_text(std::string text);
+
+    void open_notification_bar();
+    void close_notification_bar();
+
 
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();

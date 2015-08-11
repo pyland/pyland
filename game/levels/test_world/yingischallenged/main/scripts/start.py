@@ -18,7 +18,13 @@ coconut_one.set_solidity(False);
 
 engine.print_terminal(coconut_one.get_weight(), False)
 
-engine.play_music("heroic")
+#player_9000 = engine.create_object("characters/enemies/crocodile", "player_9000", (10, 10))
+
+#player_9000 = engine.create_object("characters/player", "player_9000", (10, 10))
+#player_9000.move_south(None)
+#engine.print_debug("bobobobobobo")
+
+engine.play_music("calm")
 engine.get_objects_at((7, 2))
 engine.get_objects_at((4, 4))
 engine.get_objects_at((5, 4))
@@ -29,23 +35,25 @@ engine.get_objects_at((8, 4))
 engine.get_objects_at((9, 4))
 engine.get_objects_at(player_one.get_position())
 
-#engine.add_button("gui/head/monkey", player_one.get_character_name(), player_one.focus)
-#engine.add_button("gui/head/monkey", player_two.get_character_name(), player_two.focus)
-"""
-engine.add_button("gui/head/monkey", "Rock1", coconut_one.focus)
-engine.add_button("gui/head/monkey", "Rock2", coconut_two.focus)
-engine.add_button("gui/head/monkey", "Rock3", coconut_three.focus)
-engine.add_button("gui/head/monkey", "Rock4", coconut_four.focus)
-engine.add_button("gui/head/monkey", "Rock5", coconut_five.focus)
-engine.add_button("gui/head/monkey", "Rock6", coconut_six.focus)
-engine.add_button("gui/head/monkey", "Rock7", coconut_seven.focus)
-engine.add_button("gui/head/monkey", "Portal", exit_portal.focus)
-"""
+engine.add_button("gui/head/monkey", player_one.get_character_name(), player_one.focus)
+engine.add_button("gui/head/monkey", player_two.get_character_name(), player_two.focus)
 
-croc_one.follow_path("north, east, east, east, south, south, west, west, west, north", True)
+engine.add_dialogue(engine.getDialogue("welcome"))
+engine.open_dialogue_box(coconut_one.focus)
+
+croc_one.follow_path("north, east, east, north, east, south, south, south, west, west, west, north", True)
+croc_two.rand_explore()
+croc_three.rand_explore()
+croc_four.rand_explore()
 
 engine.print_terminal(player_one.get_position(), False)
 
-engine.print_terminal(game.getDialogue("welcome"))
 
 #engine.print_terminal(engine.getDialogue("welcome"))
+
+
+engine.print_terminal(engine.get_tile_type((2,16)))
+engine.print_terminal(engine.get_tile_type((3,16)))
+engine.print_terminal(engine.get_tile_type((4,16)))
+engine.print_terminal(engine.get_tile_type((5,16)))
+

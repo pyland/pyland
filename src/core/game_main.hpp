@@ -43,14 +43,13 @@ private:
     Lifeline map_resize_lifeline;
     Lifeline stop_callback;
     Lifeline restart_callback;
-    Lifeline editor_callback;
-    Lifeline back_callback;
     Lifeline fast_start_ease_callback;
     Lifeline fast_ease_callback;
     Lifeline fast_finish_ease_callback;
     Lifeline up_callback;
     Lifeline down_callback;
     Lifeline right_callback;
+
     Lifeline left_callback;
     Lifeline run_callback;
     Lifeline speed_callback;
@@ -93,6 +92,7 @@ public:
 
     GameWindow* getGameWindow();
     CallbackState getCallbackState();
+
     std::chrono::steady_clock::time_point get_start_time();
     void focus_next();
 

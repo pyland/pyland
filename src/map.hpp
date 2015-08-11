@@ -10,14 +10,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/vec2.hpp>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 #include "dispatcher.hpp"
 #include "fml.hpp"
@@ -236,6 +229,8 @@ public:
     /// Is this location walkable
     ///
     bool is_walkable(int x_pos, int y_pos);
+
+    int get_tile_type(int x, int y);
 
     ///
     /// TODO: Heidi: Document this class
