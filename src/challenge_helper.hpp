@@ -17,7 +17,6 @@
 #include <string>
 #include <utility>
 
-#include "animation_frames.hpp"
 #include "challenge.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
@@ -50,8 +49,6 @@ namespace ChallengeHelper {
     int make_object(Challenge *challenge,
                     std::string name,
                     Walkability walkability,
-                    std::string object_file_location,
-                    std::string sprite_file_location,
                     glm::ivec2 position);
 
     ///

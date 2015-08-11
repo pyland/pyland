@@ -42,7 +42,7 @@ Challenge::Challenge(ChallengeData* _challenge_data, GUIMain * _gui_main) :
         //TODO: The names of variables need to be refactored to make sense, and this code needs to be cleaned up as there is a bit too much inderection atm!
         for(auto properties : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
             //Create the entity, it automatically gets added to the entity_list
-            create_entity(properties.first, properties.second.object_file_location, properties.second.sprite_file_location, properties.second.position);
+            create_entity(properties.first, properties.second.sprite_file_location, properties.second.position);
         }
 
         //create a new GameEngine instance for the python api, we need to review if this is the best place to create it
@@ -72,10 +72,9 @@ Challenge::~Challenge() {
 
 int Challenge::make_object(glm::vec2 position,
                            std::string name,
-                           Walkability walkability,
-                           AnimationFrames frames) {
+                           Walkability walkability) {
 
-    auto new_object(std::shared_ptr<MapObject>(new MapObject(position, name, walkability, frames)));
+    auto new_object(std::shared_ptr<MapObject>(new MapObject(position, name, walkability)));
     ObjectManager::get_instance().add_object(new_object);
 
     auto new_object_id(new_object->get_id());
@@ -91,24 +90,18 @@ py::object Challenge::read_message(int) const {
     return py::object();
 }
 
-Entity *Challenge::create_entity(std::string object_name, std::string object_file_location, std::string sprite_file_location, glm::ivec2 position) {
+Entity *Challenge::create_entity(std::string object_name, std::string file_location, glm::ivec2 position) {
     int map_object_id = ChallengeHelper::make_object(
         this,
         object_name, //the tmx name of the object being reconstructed from it's parts. TODO: Handle this more neatly  (in game_engine.cpp as well)
         Walkability::WALKABLE,	//wether the object can be walked through
-        object_file_location,
-        sprite_file_location,
         position
     );
     //Push the map_object on the Challenge's internal list of map_objects
     map_object_ids.push_back(map_object_id);
     //Create the entity which will be passed to python for each map_object
-    auto *entity(new Entity(position, object_name, object_file_location, map_object_id));
+    Entity *entity(new Entity(position, object_name, file_location, map_object_id));
 
     entity_list.push_front(*entity); //put all the entities in the entity list!!!
     return entity;
 }
-
-
-
-

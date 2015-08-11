@@ -98,7 +98,7 @@ int Map::get_tile_type(int x, int y) {
             return layer->get_tile(x, y).second;
         }
     }
-    return -1; 
+    return -1;
 }
 
 
@@ -279,7 +279,7 @@ void Map::generate_data() {
         }
 
         // Set this data in the renderable component for the layer
-        RenderableComponent* renderable_component = layer->get_renderable_component();
+        std::shared_ptr<RenderableComponent> renderable_component = layer->get_renderable_component();
         renderable_component->set_texture_coords_data(layer_tex_coords, tex_data_size, false);
         renderable_component->set_vertex_data(layer_vert_coords, vert_data_size, false);
         renderable_component->set_num_vertices_render(num_tiles*num_tile_vertices);
@@ -633,7 +633,7 @@ void Map::update_tile(int x_pos, int y_pos, const std::string layer_name, const 
 
         // Update the buffer
         // Just update that tile directly
-        RenderableComponent *renderable_component(layer->get_renderable_component());
+        std::shared_ptr<RenderableComponent> renderable_component(layer->get_renderable_component());
         renderable_component->update_texture_buffer(
             sizeof(GLfloat) * tile_offset * num_tile_vertices * num_tile_dimensions,
             data_size,
@@ -691,7 +691,7 @@ void Map::update_tile(int x_pos, int y_pos, const std::string layer_name, const 
 
         // TODO: small buffer
         // Get the data
-        RenderableComponent* layer_renderable_component(layer->get_renderable_component());
+        std::shared_ptr<RenderableComponent> layer_renderable_component(layer->get_renderable_component());
 
         GLfloat* layer_texture_data(layer_renderable_component->get_texture_coords_data());
         GLfloat* layer_vertex_data (layer_renderable_component->get_vertex_data());

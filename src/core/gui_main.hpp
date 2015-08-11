@@ -117,7 +117,6 @@ private:
 	std::shared_ptr<Button> sound_button;
 
     void create_bag();
-
     bool bag_open; //whether or not the bag is open
     std::shared_ptr<Button> bag_button;
     std::shared_ptr<Board> bag_window;

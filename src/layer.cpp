@@ -8,6 +8,12 @@ Layer::Layer(int width_tiles, int height_tiles, std::string name) :
     layer(std::make_shared<std::vector<std::pair<std::shared_ptr<TileSet>, int>>>()),
     packing(Packing::DENSE),
     location_texture_vbo_offset_map() {
+
+    renderable_component = std::make_shared<RenderableComponent>();
+}
+
+std::shared_ptr<RenderableComponent> Layer::get_renderable_component(){
+	return renderable_component;
 }
 
 void Layer::add_tile(std::shared_ptr<TileSet> tileset, int tile_id) {
@@ -16,7 +22,7 @@ void Layer::add_tile(std::shared_ptr<TileSet> tileset, int tile_id) {
     layer->push_back(std::make_pair(tileset, tile_id));
     // Temporary single-tileset hack.
     if (tileset) {
-        renderable_component.set_texture(tileset->get_atlas());
+        renderable_component->set_texture(tileset->get_atlas());
     }
 }
 

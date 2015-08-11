@@ -7,45 +7,43 @@
 #include <stdexcept>
 #include <tuple>
 
-#include "animation_frames.hpp"
 #include "cacheable_resource.hpp"
 #include "engine.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
 #include "object_manager.hpp"
 #include "shader.hpp"
+#include "sprite_manager.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
 
 #include "open_gl.hpp"
 
-// WTF
 MapObject::MapObject(glm::vec2 position,
                      std::string name,
-                     Walkability walkability,
-                     AnimationFrames frames):
+                     Walkability walkability):
     Object(name),
     render_above_sprite(false),
     walkability(walkability),
-    position(position),
-    frames(frames)
+    position(position)
     {
 
         VLOG(2) << "New map object: " << name;
 
         regenerate_blockers();
 
-        init_shaders();
-        // Hack hack hack
-        load_textures(frames.get_frame()); //frames.get_frame should return the full path_name of the frame wanted!
-        //load_textures(std::make_pair(1, "../game/objects/characters/player/sprites/main.png")); TODO: BLEH cleanup
-        generate_tex_data(frames.get_frame());
-        generate_vertex_data();
+        generate_tex_data("../game/objects/0.png");
+        generate_vertex_data("../game/objects/0.png");
 
         LOG(INFO) << "MapObject initialized";
 }
 MapObject::~MapObject() {
     LOG(INFO) << "MapObject destructed";
+}
+
+std::shared_ptr<RenderableComponent> MapObject::get_renderable_component(){
+	LOG(INFO) << "$$$$ Not meant to be called";
+	return std::make_shared<RenderableComponent>();
 }
 
 void MapObject::set_walkability(Walkability walkability) {
@@ -88,12 +86,12 @@ void MapObject::regenerate_blockers() {
         }
 
         default: {
-            throw std::runtime_error("WTF do I do now?");
+            throw std::runtime_error("WTF do I do now?"); //LOOOOOOOL What is this code bruh
         }
     }
 }
 
-void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
+void MapObject::generate_tex_data(std::string tile) {
     // holds the texture data
     // need 12 float for the 2D texture coordinates
     int num_floats = 12;
@@ -108,7 +106,7 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
     }
 
     std::tuple<float,float,float,float> bounds(
-        renderable_component.get_texture()->index_to_coords(tile.first)
+		SpriteManager::get_component(tile)->get_texture()->index_to_coords(0)
     );
 
     // bottom left
@@ -135,7 +133,7 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
     map_object_tex_data[10] = std::get<1>(bounds);
     map_object_tex_data[11] = std::get<2>(bounds);
 
-    renderable_component.set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
+	SpriteManager::get_component(tile)->set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
 }
 
 void MapObject::set_position(glm::vec2 position) {
@@ -144,12 +142,12 @@ void MapObject::set_position(glm::vec2 position) {
     regenerate_blockers();
 }
 
-void MapObject::set_tile(std::pair<int, std::string> tile) {
+void MapObject::set_tile(std::string tile) {
     load_textures(tile);
     generate_tex_data(tile);
 }
 
-void MapObject::generate_vertex_data() {
+void MapObject::generate_vertex_data(std::string tile) {
     //holds the map object's vertex data
     int num_dimensions(2);
     int num_floats(num_dimensions * 6); // GL's Triangles
@@ -187,8 +185,8 @@ void MapObject::generate_vertex_data() {
     map_object_vert_data[10] = 1;
     map_object_vert_data[11] = 0;
 
-    renderable_component.set_vertex_data(map_object_vert_data, sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
+    SpriteManager::get_component(tile)->set_vertex_data(map_object_vert_data, sizeof(GLfloat)*num_floats, false);
+    SpriteManager::get_component(tile)->set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
 }
 
 void MapObject::set_state_on_moving_start(glm::ivec2) {
@@ -208,25 +206,10 @@ void MapObject::set_state_on_moving_finish() {
     positions.insert(position);
 }
 
-// TODO: rewrite
-void MapObject::load_textures(std::pair<int, std::string> tile) {
-    renderable_component.set_texture(TextureAtlas::get_shared(tile.second)); //tile.second is the location of the sprite you wish to load in from the file-system.
+void MapObject::load_textures(std::string tile) {
+    SpriteManager::get_component(tile)->set_texture(TextureAtlas::get_shared(tile)); //tile is the location of the sprite you wish to load in from the file-system.
 }
 
-bool MapObject::init_shaders() {
-    std::shared_ptr<Shader> shader;
-    try {
-        shader = Shader::get_shared("tile_shader");
-    }
-    catch (std::exception e) {
-        LOG(ERROR) << "Failed to create the shader";
-        return false;
-    }
-
-    //Set the shader
-    renderable_component.set_shader(shader);
-    return true;
-}
 
 OrderedHashSet<glm::vec2> const &MapObject::get_positions() {
     return positions;

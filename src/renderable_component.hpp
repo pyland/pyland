@@ -205,7 +205,6 @@ public:
     ///
     std::shared_ptr<TextureAtlas> get_texture() { return texture_atlas; }
 
-
     ///
     /// Get the width of the component
     /// @return The width of the component

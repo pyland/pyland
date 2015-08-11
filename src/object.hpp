@@ -28,11 +28,6 @@ private:
 protected:
 
     ///
-    /// The object's renderable component
-    ///
-    RenderableComponent renderable_component;
-
-    ///
     /// The name of the object
     ///
     std::string name;
@@ -72,7 +67,7 @@ public:
     /// Get the renderable component
     /// @return the renderable component for this object
     ///
-    RenderableComponent* get_renderable_component() { return &renderable_component; }
+    virtual std::shared_ptr<RenderableComponent>  get_renderable_component() = 0;
 
     ///
     /// Determine if the object can be rendered

@@ -31,7 +31,7 @@ int GameEngine::get_tile_type(int x, int y) {
 
 boost::python::object GameEngine::create_object(std::string object_file_location, std::string object_name, int x, int y) {
     LOG(INFO) << "Creating an instance of " << object_file_location << " at (" << x << ", " << y << ") called " << object_name;
-    Entity *entity = challenge->create_entity(object_name, object_file_location, "", glm::ivec2(x, y)); //For some reason this freezes the game when called from here.
+    Entity *entity = challenge->create_entity(object_name, object_file_location, glm::ivec2(x, y)); //For some reason this freezes the game when called from here. does it still do that?
     return boost::python::api::object(boost::ref(*entity));
 }
 
