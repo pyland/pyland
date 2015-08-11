@@ -9,8 +9,8 @@
 
 #include <glm/vec2.hpp>
 #include <string>
+#include <iostream>
 
-#include<iostream>
 namespace py = boost::python;
 
 ///
@@ -22,7 +22,10 @@ class Entity {
         /// Starting postiton for this entity, used to reset location when entity dies.
         ///
         glm::vec2 start;
+        std::string sprite_location;
+        int current_frame;
 
+        bool animating;
 
     public:
         ///
@@ -30,7 +33,7 @@ class Entity {
         /// code.
         ///
         std::string name;
-        
+
         ///
         /// Where the object is in the filesystem relative to game/objects, (where it's python code and sprites are stored!!!!!
         ///
@@ -48,6 +51,11 @@ class Entity {
         uint64_t call_number;
 
         void callback_test(PyObject *callback);
+
+        ///
+        /// Call the callback after a given number of in-game time-units
+        ///
+        void wait(double gametime, PyObject *callback);
 
         ///
         /// Construct Entity with a given place, name and id.
@@ -87,7 +95,13 @@ class Entity {
         void move_south(PyObject *callback);
         void move_north(PyObject *callback);
         void move_west(PyObject *callback);
-        
+
+
+        ///
+        /// @return
+        ///     True if the entity is moving, false otherwise.
+        bool is_moving();
+
         ///
         /// @return
         ///     The name of the entity, this name is also used as the instance name of the entity in python. :)
@@ -124,6 +138,8 @@ class Entity {
         ///
         void pause_animating();
 
+        void animate(int current_frame);
+
         ///
         /// @return
         /// 	The number of animation frames the object has in their set sprite folder
@@ -137,28 +153,30 @@ class Entity {
         void set_animation_frame(int frame_number);
 
         ///
-        /// Checks if player can move by the vector given.
+        /// Set the solidity of the Entity. (This is whether or not other solid MapObjects can got 'through' it)
         ///
-        /// @param by
-        ///     position representing movement in the axes.
-        ///     TODO: replace so as to not require vector displacements.
+        /// @param solidity
+        ///     Whether you want the object to be solid (true) or not solid (false)
         ///
-        /// @return
-        ///     Whether the area is walkable.
-        ///
-        bool walkable(int x, int y);
+        void set_solidity(bool solidity);
 
         ///
-        /// Prints to standard output the name and position of entity.
+        /// Return the solidity of the object
         ///
-        /// TODO: rename this method, it's a silly name!
+        /// @return
+        ///     True if object is solid, false otherwise
         ///
-        void monologue();
+        bool is_solid();
 
         ///
         /// Centre the camera on this object. Snaps instantly
         ///
         void focus();
+
+        ///
+        /// Returns if the object is the camera focus
+        ///
+        bool is_focus();
 
         ///
         /// Look for any objects in a range. Returns an array of
@@ -185,9 +203,20 @@ class Entity {
         py::list get_retrace_steps();
         py::object read_message();
 
-        //Get the id of the entity
+        ///
+        /// Get the id of the Entity. (The id being what is used to look up instances of the MapObject)
+        /// 
+        /// @return
+        ///     The id of the MapObject the Entity is associated with.
+        /// 
         int get_id();
 
+        ///
+        /// Get the position of the Entity on the map as a python tuple.
+        /// 
+        /// @return
+        ///     The position of the Entity
+        /// 
         py::tuple get_position();
 };
 

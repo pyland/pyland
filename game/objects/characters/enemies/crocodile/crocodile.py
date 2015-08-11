@@ -49,24 +49,45 @@ class Crocodile(Character):
     def follow_path(self, path, repeat = False):
         if(path.strip() == ""): #if path is empty terminate
             return
+        
+        engine = self.get_engine()
+        x, y = self.get_position()
 
         comma_location = path.find(",") # Find the first comma in the path
         if(comma_location == -1):  # No commas in the path! On last word!
             comma_location = len(path)
 
+        old_path = path #store the old_path
+        
         instruction = path[ 0 : comma_location].strip() #get instruction and remove whitespace
         path = path[comma_location + 1: ].strip() #remove the instruction from the path itself
         if(repeat):
-            path = path + ", " + instruction #add instruction back to the path
+            path = path + ", " + instruction #add instruction back to the path, at the end if to be repeated
         if(instruction == "north"):
-            return self.move_north(lambda: self.follow_path(path, repeat))
+            if engine.is_solid((x, y+1)): #if position isn't walkable, then wait
+                self.face_north()
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
+            else:
+                return self.move_north(lambda: self.follow_path(path, repeat))
         elif(instruction == "east"):
-            self.move_east(lambda: self.follow_path(path, repeat))
+            if engine.is_solid((x+1, y)): #if the position you are trying to move to is taken, wait
+                self.face_east()
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
+            else:
+                return self.move_east(lambda: self.follow_path(path, repeat))
             return
         elif(instruction == "south"):
-            return self.move_south(lambda: self.follow_path(path, repeat))
+            if engine.is_solid((x, y-1)):
+                self.face_south()
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
+            else:
+                return self.move_south(lambda: self.follow_path(path, repeat))
         elif(instruction == "west"):
-            return self.move_west(lambda: self.follow_path(path, repeat))
+            if engine.is_solid((x-1, y)):
+                self.face_west()
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
+            else:
+                return self.move_west(lambda: self.follow_path(path, repeat))
         else:
             pass #TODO: handle invalid path!!!!!
             print(instruction)
@@ -77,20 +98,75 @@ class Crocodile(Character):
     """ The Crocodile follows a random path forever!
     """
     def rand_explore(self):
-        rand = random.randint(1, 4)
+        rand = random.randint(1, 5)
         if rand==1:
-            return self.move_north(lambda: self.rand_explore())
+            return self.move_north(self.rand_explore)
         elif rand==2:
-            return self.move_south(lambda: self.rand_explore())
+            return self.move_south(self.rand_explore)
         elif rand==3:
-            return self.move_east(lambda: self.rand_explore())
+            return self.move_east(self.rand_explore)
         elif rand==4:
-            return self.move_west(lambda: self.rand_explore())
+            return self.move_west(self.rand_explore)
+        elif rand==5:
+            return self.wait(0.3, self.rand_explore)
+
+
+
+    def __check_swim_state(self, callback):
+        """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
+
+        It is called as a callback once the crocodile has finished moving as that gives the smoothest change-over.
+        """
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")
+        return callback()
+
+    """ Overriding movement methods so that crocodiles swim in water :) """
+    def move_north(self, callback):
+        super().move_north(lambda: self.__check_swim_state(callback))
+        engine = self.get_engine()
+        x, y = self.get_position()
+         #if the crocodile is about to move to a land position, show land sprite before movement begins (gives best results)
+        if(engine.get_tile_type((x, y+1)) == engine.TILE_TYPE_STANDARD):
+            self.wait(0.1, lambda: self.change_state("main")) #delay there so that crocs that go over water change sprite for a flash.
+    
+    def move_east(self, callback):
+        super().move_east(lambda: self.__check_swim_state(callback))
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x+1, y)) == engine.TILE_TYPE_STANDARD):
+            self.wait(0.1, lambda: self.change_state("main"))
+
+    def move_south(self, callback):
+        super().move_south(lambda: self.__check_swim_state(callback))
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x, y-1)) == engine.TILE_TYPE_STANDARD):
+            self.wait(0.1, lambda: self.change_state("main"))
+
+    def move_west(self, callback):
+        super().move_west(lambda: self.__check_swim_state(callback))
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x-1, y)) == engine.TILE_TYPE_STANDARD):
+            self.wait(0.1, lambda: self.change_state("main"))
 
     """ private:
     Put the private methods you wish to use here.
     """
 
+    def __check_swim_state(self, callback):
+        """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
+
+        It is called as a callback once the crocodile has finished moving as that gives the smoothest change-over.
+        """
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")
+        return callback()
 
 
 

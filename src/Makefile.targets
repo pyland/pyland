@@ -130,7 +130,7 @@ $(CORE_OBJS): %.o : %.cpp | dependencies/core
 		$(CPPFLAGS)        $(CXXFLAGS)             \
 		$(WARNINGS)	     $(QT_INCFLAGS)        \
 		$(QT_CXXFLAGS) $(QT_DEFINES)               \
-		$(QT_INCPATH)			           \
+		$(QT_INCPATH)      $(JSON_INC_FLAGS)	   \
 
 $(GUI_OBJS): %.o : %.cpp | dependencies/gui
 	@echo "${bold}[ Compiling gui object file ${yellow}$*.o${normal}${bold} from ${yellow}$*.cpp${normal}${bold} ]${normal}"
@@ -252,11 +252,11 @@ clean:
 
 	@-$(RM) $(HEADER_DEPENDS)
 
-	@-$(RM) *~ core *.core
-	@-$(RM) moc_mainwindow.cpp	
+	@-$(RM) *~core *.core
+	@-$(RM) qtgui/moc_mainwindow.cpp	
 
 	@-for directory in dependencies/* dependencies; do \
-	  if [ -d $${directory} ]; then ${RMDIR} $${directory}; fi; \
+		if [ -d $${directory} ]; then ${RMDIR} $${directory}; fi; \
 	done
 
 	@echo "${bold}${red}Made clean${normal}"

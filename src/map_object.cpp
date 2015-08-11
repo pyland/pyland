@@ -17,14 +17,7 @@
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 // WTF
 MapObject::MapObject(glm::vec2 position,
@@ -58,6 +51,10 @@ MapObject::~MapObject() {
 void MapObject::set_walkability(Walkability walkability) {
     this->walkability = walkability;
     regenerate_blockers();
+}
+
+Walkability MapObject::get_walkability() {
+    return this->walkability;
 }
 
 void MapObject::regenerate_blockers() {

@@ -4,13 +4,14 @@
 #include <string>
 #include <glog/logging.h>
 
-#include "json-parser/json.hpp"
+#include <json.hpp>
 
 class Config : public nlohmann::json {
     private:
         static nlohmann::json j;
         static bool created;
     public:
+        typedef nlohmann::json json;
         static nlohmann::json get_instance();
 };
 

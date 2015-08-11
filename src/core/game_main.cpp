@@ -57,14 +57,14 @@ GameMain::GameMain(int &argc, char **argv):
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
 
-	nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
     /// CREATE GLOBAL OBJECTS
 
     //Create the input manager
     input_manager = embedWindow.get_input_manager();
 
-	//The GUI resize function
-
+    //The GUI resize function
+    original_window_size = embedWindow.get_size();
     gui_resize_func = [&] (GameWindow* game_window)
     {
         LOG(INFO) << "GUI resizing";
@@ -74,7 +74,24 @@ GameMain::GameMain(int &argc, char **argv):
         gui.get_gui_window()->set_width_pixels(window_size.first);
         gui.get_gui_window()->set_height_pixels(window_size.second);
         gui.refresh_gui();
+
+        original_window_size = window_size;
     };
+
+    //Register InputHandler callbacks
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TOGGLE_SPEED, Engine::trigger_speed);
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_RETURN, [] () {Engine::trigger_run(0); } );
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_ONE, [] () {Engine::trigger_run(1); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TWO, [] () {Engine::trigger_run(2); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_THREE, [] () {Engine::trigger_run(3); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_FOUR, [] () {Engine::trigger_run(4); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_FIVE, [] () {Engine::trigger_run(5); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SIX, [] () {Engine::trigger_run(6); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SEVEN, [] () {Engine::trigger_run(7); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_EIGHT, [] () {Engine::trigger_run(8); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_NINE, [] () {Engine::trigger_run(9); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SWITCH, Engine::focus_next);
+
     gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
 
     //The callbacks
@@ -83,22 +100,6 @@ GameMain::GameMain(int &argc, char **argv):
     {
         gui.get_map_viewer()->resize();
     });
-
-    restart_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("R")},
-    [&] (KeyboardInputEvent)
-    {
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
-    }
-    ));
-
-    back_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("ESCAPE")},
-    [&] (KeyboardInputEvent)
-    {
-        Engine::get_challenge()->event_finish.trigger();;
-    }
-    ));
 
     up_callback = input_manager->register_keyboard_handler(filter(
     {KEY_HELD, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Up", "W"})},
@@ -132,11 +133,99 @@ GameMain::GameMain(int &argc, char **argv):
     }
     ));
 
-    monologue_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("M")},
+    run_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("Return")},
     [&] (KeyboardInputEvent)
     {
-        callbackstate.monologue();
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RETURN);
+    }
+    ));
+
+    speed_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("Space")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_TOGGLE_SPEED);
+    }
+    ));
+
+    switch_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("Tab")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_SWITCH);
+    }
+    ));
+
+    script1_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("1")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_ONE);
+    }
+    ));
+
+    script2_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("2")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_TWO);
+    }
+    ));
+
+    script3_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("3")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_THREE);
+    }
+    ));
+
+    script4_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("4")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_FOUR);
+    }
+    ));
+
+    script5_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("5")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_FIVE);
+    }
+    ));
+
+    script6_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("6")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_SIX);
+    }
+    ));
+
+    script7_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("7")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_SEVEN);
+    }
+    ));
+
+    script8_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("8")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_EIGHT);
+    }
+    ));
+
+    script9_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("9")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
     }
     ));
 
@@ -146,45 +235,6 @@ GameMain::GameMain(int &argc, char **argv):
     {
         gui.get_gui_manager()->mouse_callback_function(event);
     }));
-
-    zoom_in_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_HELD, KEY("=")},
-    [&] (KeyboardInputEvent)
-    {
-        Engine::set_global_scale(Engine::get_global_scale() * 1.01f);
-    }
-    ));
-
-    zoom_out_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_HELD, KEY("-")},
-    [&] (KeyboardInputEvent)
-    {
-        Engine::set_global_scale(Engine::get_global_scale() / 1.01f);
-    }
-    ));
-
-    zoom_zero_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, MODIFIER({"Left Ctrl", "Right Ctrl"}), KEY("0")},
-    [&] (KeyboardInputEvent)
-    {
-        Engine::set_global_scale(1.0f);
-    }
-    ));
-
-    help_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, MODIFIER({"Left Shift", "Right Shift"}), KEY("/")},
-    [&] (KeyboardInputEvent)
-    {
-        auto id(Engine::get_map_viewer()->get_map_focus_object());
-        auto active_player(ObjectManager::get_instance().get_object<MapObject>(id));
-
-        Engine::print_dialogue(
-            active_player->get_name(),
-            "placeholder string"
-                //active_player->get_instructions() TODO: BLEH remove this!
-        );
-    }
-    ));
 
     for (unsigned int i=0; i<10; ++i)
     {
@@ -248,20 +298,20 @@ GameMain::GameMain(int &argc, char **argv):
     run_game = true;
     cursor = new MouseCursor(&embedWindow);
 
+    Engine::set_game_main(this);
+
     //Setup challenge
     challenge_data = (new ChallengeData(
                           "",
                           &interpreter,
                           gui.get_gui_manager(),
                           &embedWindow,
-                          input_manager,
-                          gui.get_notification_bar()
-                          //0
+                          input_manager
                         ));
     challenge_data->run_challenge = true;
     challenge = pick_challenge(challenge_data);
     Engine::set_challenge(challenge);
-    challenge->start();
+    //challenge->start();
 
     last_clock = (std::chrono::steady_clock::now());
     gui.refresh_gui();
@@ -310,8 +360,6 @@ void GameMain::game_loop(bool showMouse)
         VLOG(3) << "} EM | RM {";
         Engine::get_map_viewer()->render();
         VLOG(3) << "} RM | TD {";
-        //Engine::text_displayer(); TODO: work out what this did and if neccesary
-        challenge_data->notification_bar->text_displayer();
 
         // This is not an input event, because the map can move with
         // the mouse staying still.
@@ -349,11 +397,9 @@ void GameMain::game_loop(bool showMouse)
         challenge_data->run_challenge = true;
         challenge = pick_challenge(challenge_data);
         Engine::set_challenge(challenge);
-        challenge->start();
         callbackstate.stop();
         //Update tool bar here
         //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
-
     }
     return;
 }
@@ -362,7 +408,7 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
 
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
-    nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
     std::string map_name = j["files"]["full_level_location"];
     challenge_data->map_name = map_name + "/layout.tmx";
     challenge = new Challenge(challenge_data, &gui);
@@ -381,4 +427,9 @@ CallbackState GameMain::getCallbackState(){
 
 std::chrono::steady_clock::time_point GameMain::get_start_time(){
     return start_time;
+}
+
+//Switch the focus to the next playable object
+void GameMain::focus_next(){
+    gui.click_next_player();
 }

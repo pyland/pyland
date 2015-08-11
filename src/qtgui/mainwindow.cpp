@@ -241,7 +241,7 @@ MainWindow::MainWindow(GameMain *exGame):
 
     mainWidget->setAutoFillBackground(true);
 
-    mainWidget->setMinimumSize(600,420);
+    mainWidget->setMinimumSize(1080,756);
 
     this->setContextMenuPolicy(Qt::NoContextMenu);
     this->setCentralWidget(mainWidget);
@@ -271,6 +271,7 @@ MainWindow::MainWindow(GameMain *exGame):
     int width = (gameWidget->width());
     int height = gameWidget->height();
     anyOutput = false;
+    executeIndex = 1;
 
     SDL_SetWindowSize(embedWindow, width, height);
     glViewport(0, 0, width, height);
@@ -278,8 +279,8 @@ MainWindow::MainWindow(GameMain *exGame):
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
 
-    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-    connect(buttonSpeed,SIGNAL(released()),this,SLOT (toggleSpeed()));
+    connect(buttonRun,SIGNAL(released()),this,SLOT (clickRun()));
+    connect(buttonSpeed,SIGNAL(released()),this,SLOT (clickSpeed()));
     connect(buttonClear,SIGNAL(released()),this,SLOT (clearTerminal()));
 
     this->showMaximized();
@@ -443,8 +444,6 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     //Connect buttons to functions
     connect(buttonIn[i],SIGNAL(released()),this,SLOT (zoomFontIn()));
     connect(buttonOut[i],SIGNAL(released()),this,SLOT (zoomFontOut()));
-    //connect(ws->horizontalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
-    //connect(ws->verticalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
 
 }
 
@@ -489,7 +488,9 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     switch (keyEvent->key())
     {
     case Qt::Key_Enter:
-        return SDL_SCANCODE_KP_ENTER;
+        return SDL_SCANCODE_RETURN;
+    case Qt::Key_Return:
+        return SDL_SCANCODE_RETURN;
     case Qt::Key_Left:
         return SDL_SCANCODE_LEFT;
     case Qt::Key_Right:
@@ -501,7 +502,7 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     case Qt::Key_Escape:
         return SDL_SCANCODE_ESCAPE;
     case Qt::Key_Tab:
-        return SDL_SCANCODE_KP_TAB;
+        return SDL_SCANCODE_TAB;
     case Qt::Key_Backspace:
         return SDL_SCANCODE_BACKSPACE;
     case Qt::Key_Insert:
@@ -563,8 +564,32 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     case Qt::Key_Menu:
         return SDL_SCANCODE_MENU;
     default:
-        //Remaining keys can be mapped directly
-        return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+        switch (keyEvent->nativeScanCode())
+        {
+        //Map keypad numbers to standard numbers for executing scripts
+        //Numlock must be on
+        case 87:
+            return SDL_SCANCODE_1;
+        case 88:
+            return SDL_SCANCODE_2;
+        case 89:
+            return SDL_SCANCODE_3;
+        case 83:
+            return SDL_SCANCODE_4;
+        case 84:
+            return SDL_SCANCODE_5;
+        case 85:
+            return SDL_SCANCODE_6;
+        case 79:
+            return SDL_SCANCODE_7;
+        case 80:
+            return SDL_SCANCODE_8;
+        case 81:
+            return SDL_SCANCODE_9;
+        default:
+            //Remaining keys can be mapped directly
+            return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+        }
     }
 }
 
@@ -698,9 +723,16 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void MainWindow::runCode()
+void MainWindow::clickRun()
 {
+    //Run the currently open script
+    runCode(0);
+}
 
+//Script defines the current script to execute
+//If zero the currently open script is run
+void MainWindow::runCode(int script)
+{
     if (running)
     {
         setRunning(false);
@@ -709,10 +741,22 @@ void MainWindow::runCode()
         //game->getCallbackState().stop();
         //TODO, create hooks into script-runner to stop the correct script.
     }
-    else{
-        QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+    else
+    {
+        int index;
+        QsciScintilla *ws;
 
-        int index = (textWidget->currentIndex())+ 1;
+        if (script == 0)
+        {
+            index = getCurrentScript();
+            ws = (QsciScintilla*)textWidget->currentWidget();
+        }
+        else
+        {
+            index = script;
+            ws = (QsciScintilla*)textWidget->widget(script-1);  //Subtract one since first widget is at qt index 0
+
+        }
 
         //read in the player scripts (as defined in the config file)
         std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
@@ -722,28 +766,42 @@ void MainWindow::runCode()
         //Also save as 'Current Script.py' as temporary measure before new input manager
         //This python script is always run in bootstrapper.py (in start)
         ofstream fout(path.c_str(), ios::out|ios::trunc);
-        ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
+        //ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
 
-        if(!(fout.good() && foutcopy.good()))
+        if(!(fout.good()))// && foutcopy.good()))
         {
             LOG(INFO) << "Output file is bad" << endl;
             return;
         }
 
         fout << ws->text().toStdString();
-        foutcopy << ws->text().toStdString();
+        //foutcopy << ws->text().toStdString();
 
         fout.close();
-        foutcopy.close();
+        //foutcopy.close();
 
         setRunning(true);
         updateSpeed();
+        if (script == 0)
+        {
+            executeIndex = getCurrentScript();
+        }
+        else
+        {
+            executeIndex = script;
+        }
         InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
     }
     setGameFocus();
 }
 
-void MainWindow::toggleSpeed(){
+void MainWindow::clickSpeed()
+{
+    toggleSpeed();
+}
+
+void MainWindow::toggleSpeed()
+{
     setFast(!fast);
     updateSpeed();
     setGameFocus();
@@ -751,8 +809,10 @@ void MainWindow::toggleSpeed(){
 
 //If a script is being run and the speed is set to fast, update the game speed
 //Otherwise keep the game at normal speed
-void MainWindow::updateSpeed(){
-    if (fast && running){
+void MainWindow::updateSpeed()
+{
+    if (fast && running)
+    {
         auto now(std::chrono::steady_clock::now());
         auto time_passed = now - game->get_start_time();
 
@@ -771,13 +831,16 @@ void MainWindow::updateSpeed(){
 
         EventManager::get_instance()->time.set_game_seconds_per_real_second(eased);
     }
-    else{
+    else
+    {
         EventManager::get_instance()->time.set_game_seconds_per_real_second(1.0);
     }
 }
 
-void MainWindow::pushTerminalText(std::string text, bool error){
-    if (error){
+void MainWindow::pushTerminalText(std::string text, bool error)
+{
+    if (error)
+    {
         terminalDisplay->setTextColor(QColor("red"));
     }
     QString qtext = QString::fromStdString(text+"\n");
@@ -868,20 +931,20 @@ void MainWindow::setFast(bool option)
 
 }
 
-void MainWindow::setAnyOutput(bool option){
+void MainWindow::setAnyOutput(bool option)
+{
     anyOutput = option;
 }
 
-void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2){
+void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2)
+{
 
     textInfoWidget->setStyleSheet(("background-color: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
-                                  "border: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
-                                  "font: 17pt;").c_str());
-
+                                   "border: 5px rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
+                                   "font: 17pt;").c_str());
 
     colourPalette.setColor(QPalette::Background,QColor(r1,g1,b1));
     colourPalette.setColor(QPalette::Button,QColor(r2,g2,b2));
-
     mainWidget->setPalette(colourPalette);
 }
 
@@ -890,14 +953,30 @@ SDL_Window* MainWindow::getSDLWindow()
     return embedWindow;
 }
 
-int MainWindow::getGameWidgetWidth(){
+int MainWindow::getGameWidgetWidth()
+{
     return gameWidget->width();
 }
 
-int MainWindow::getGameWidgetHeight(){
+int MainWindow::getGameWidgetHeight()
+{
     return gameWidget->height();
 }
 
-bool MainWindow::getAnyOutput(){
+bool MainWindow::getAnyOutput()
+{
     return anyOutput;
+}
+
+//Get the currently open script tab number
+int MainWindow::getCurrentScript()
+{
+    return (textWidget->currentIndex())+ 1;
+}
+
+//Get the number of the script that is to be run
+//This may be different to the open one (due to keybindings)
+int MainWindow::getExecuteScript()
+{
+    return executeIndex;
 }

@@ -7,16 +7,6 @@
 #include <vector>
 #include <memory>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-
 Button::Button(ButtonType _type) {
     type = _type;
     alignment = ButtonAlignment::TopRight;
@@ -41,6 +31,12 @@ Button::Button(ButtonType _type) {
         set_width(0.5f);
         set_height(0.5f);
     }
+    else if(type == ButtonType::NoPicture){
+        set_width(0.5f);
+        set_height(0.5f);
+        button_text->set_x_offset(0.2f);
+        button_text->set_y_offset(0.5f);
+    }
 
 }
 
@@ -54,7 +50,7 @@ Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<voi
     button_text->set_width(1.0f);
     button_text->set_height(1.0f);
     button_text->set_x_offset(0.3f);
-    button_text->set_y_offset(0.3f);
+    button_text->set_y_offset(0.1f);
     button_text->set_text(_text);
     get_text()->set_bloom_radius(4);
 
@@ -62,13 +58,13 @@ Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<voi
 }
 
 void Button::resize_text(float width, float height){
-	button_text->set_width(width);
-	button_text->set_height(height);
+    button_text->set_width(width);
+    button_text->set_height(height);
 }
 
 void Button::move_text(float x_offset, float y_offset){
-	button_text->set_x_offset(x_offset);
-	button_text->set_y_offset(y_offset);
+    button_text->set_x_offset(x_offset);
+    button_text->set_y_offset(y_offset);
 }
 
 void Button::set_alignment(ButtonAlignment _alignment){
@@ -84,8 +80,6 @@ void Button::set_picture(std::string _name){
 }
 
 void Button::set_text(std::string text) {
-    //TODO DEBUG
-    Typeface buttontype = Engine::get_game_typeface();
     TextFont buttonfont = Engine::get_game_font();
 
     std::shared_ptr<Text> new_text = std::make_shared<Text>(Engine::get_game_window(), buttonfont, true);
@@ -187,7 +181,7 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {
 
     }
     else{
-		//it is of type NoPicture, do nothing
+        //it is of type NoPicture, do nothing
     }
     size_vertex_data = offset;
 
@@ -403,13 +397,14 @@ std::vector<std::pair<GLfloat*, int>> Button::generate_this_texture_data() {
         offset =  generate_texture_coords_element(texture_data, 0, background_bounds);
     }
     else{
-		//it is of type NoPicture, do nothing
+        //it is of type NoPicture, do nothing
     }
     size_texture_data = offset;
 
     texture_coords.push_back(std::make_pair(texture_data, total_floats));
     return texture_coords;
 }
+
 int Button::generate_vertex_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds) {
     //bottom left
     data[offset]  = std::get<0>(bounds);

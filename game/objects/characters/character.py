@@ -2,7 +2,7 @@ import operator
 import os
 """
 In Python comments,
-could define some standard which the C++ code can use to determine things about it handles 
+could define some standard which the C++ code can use to determine things about it handles
 the python code
 """
 
@@ -68,15 +68,25 @@ game_map = Map()
 
 class Character(GameObject):
 
+    __character_name = ""
+
     def initialise(self):
         super().initialise
+        self.set_solidity(True)
         self.set_sprite("main/north")
-    
+        self.__character_name = self.get_name()
+
+    def get_character_name(self):
+        return self.__character_name
+
+    def set_character_name(self, character_name):
+        self.__character_name = character_name
+
     """ Change the sprite folder to "north" """
     def face_north(self):
         self.__face("north")
         return
-    
+
     """ Change the sprite folder to "east" """
     def face_east(self):
         self.__face("east")
@@ -96,8 +106,9 @@ class Character(GameObject):
     simply changes the last part of the sprite folder as relevant
     """
     def __face(self, direction):
+        engine = self.get_engine()
         sprite_location = self.get_sprite()
-        sprite_location = sprite_location[0 : sprite_location.rfind("/")] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
+        sprite_location = sprite_location[0 : sprite_location.rfind("/") + 1] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
         self.set_sprite(sprite_location + direction) #sprites are now looked for in direction folder :)
         return
 
@@ -124,7 +135,7 @@ class Character(GameObject):
         sprite_location = self.get_sprite()  # The direction is related to where the sprite is stored, so extract the information from there
         sprite_location = sprite_location[sprite_location.rfind("/") : ] # Slice all the characters before the last "/" from the string
         return (sprite_location == direction)
-    
+
     """ Moves the character in the given direction by one tile and animates them
     face_x -- the function to make the character face in the correct direction
     parent_move_x -- the parent move function, calls the engine api but doesn't start the animation
@@ -134,11 +145,12 @@ class Character(GameObject):
         face_x()
         self.start_animating()
         def callbacktwo():  # Have create a wrapper callback function which makes sure that the animation stops before anything else is run
-            self.stop_animating()
+            if not self.is_moving():
+                self.stop_animating()
             callback()
         parent_move_x(callbacktwo)
         return
-    
+
     """ Moves the character North by one tile and makes them face in that direction
     callback -- the function that you would like to call after the movement is complete
     """
@@ -148,7 +160,7 @@ class Character(GameObject):
             self.__move_x(self.face_north, super().move_north, callback)
         return
 
-    """ Move character in direction by one tile. 
+    """ Move character in direction by one tile.
     Overides general object implementation
     """
     def move_east(self, callback = lambda: None):
@@ -156,8 +168,8 @@ class Character(GameObject):
         if(len(game_map.solid_objects_at((x + 1, y))) == 0): #check that the relevant location is free
             self.__move_x(self.face_east, super().move_east, callback)
         return
-    
-    """ Move character in direction by one tile. 
+
+    """ Move character in direction by one tile.
     Overides general object implementation
     """
     def move_south(self, callback = lambda: None):
@@ -166,7 +178,7 @@ class Character(GameObject):
             self.__move_x(self.face_south, super().move_south, callback)
         return
 
-    """ Move character in direction by one tile. 
+    """ Move character in direction by one tile.
     Overides general object implementation
     """
     def move_west(self, callback = lambda: None):
@@ -179,7 +191,8 @@ class Character(GameObject):
         return #parse sprite_location to get facing
 
     def change_state(self, state):
-        if(isinstance(state, str)):
-            self.__state = state
+        sprite_location = self.get_sprite()
+        sprite_location = sprite_location[sprite_location.rfind("/"): ]
+        self.set_sprite(state + sprite_location)
         return
-    
+

@@ -7,25 +7,32 @@
 
 #include <glm/vec2.hpp>
 #include <string>
+#include <memory>
 #include <vector>
 
 #include "challenge.hpp"
 #include "game_window.hpp"
+#include "gui_main.hpp"
 #include "text_font.hpp"
 #include "typeface.hpp"
 
 class MainWindow;
+class GameMain;
 class MapViewer;
-class NotificationBar;
+class TextBox;
 
 // Class wrapping the API calls into a static public class
 class Engine {
 private:
     static MapViewer *map_viewer;
 
-    static NotificationBar* notification_bar;
+    static std::shared_ptr<TextBox> notification_bar;
+
+    static GameMain* game_main;
 
     static GameWindow* game_window;
+
+    static GUIMain *gui_main;
 
     static MainWindow* main_window;
 
@@ -67,6 +74,12 @@ public:
     static int get_tile_size() { return tile_size; }
 
     static float get_actual_tile_size() { return float(tile_size) * global_scale; }
+
+    ///
+    /// Set the game main instance (for access to game loop and gui)
+    /// @param _game_main the game main instance
+    ///
+    static void set_game_main(GameMain* _game_main) { game_main = _game_main; }
 
     ///
     /// Set the game window
@@ -119,22 +132,6 @@ public:
     static bool walkable(glm::ivec2 location);
 
     ///
-    /// Get all the objects that are within the search range
-    /// @param id the id of the object
-    /// @param search range the radius of the circle to search
-    /// @return a vector of (name, x, y) tuples
-    ///
-    //static std::vector<std::tuple<std::string, int, int>> look(int id, int search_range); TODO BLEH TO BE REMOVED AND PYTHONED
-
-    ///
-    /// Cuts down a vine or cuttable object
-    /// @param id the id of the object
-    /// @param location the (x,y_ position to cut
-    /// @return if the operation succeeded
-    ///
-    //static bool cut(int id, glm::ivec2 location); TODO BLEH TO BE REMOVED AND PYTHONED
-
-    ///
     /// Change the tile in the map in the given layer at the provided position
     /// @param tile the x,y position of the tile to change
     /// @param layer the layer of the tile to change
@@ -158,6 +155,12 @@ public:
     static std::vector<int> get_objects_at(glm::vec2 location);
 
     ///
+    /// Get the instance of the QT mainwindow
+    ///
+    ///
+    static MainWindow* get_main_window();
+
+    ///
     /// Get whether a sprite with a certain id is at this tile
     ///
     static bool is_object_at(glm::ivec2 location, int object_id);
@@ -167,13 +170,25 @@ public:
     ///
     static bool is_objects_at(glm::ivec2 location, std::vector<int> object_id);
 
-    static void set_notification_bar(NotificationBar *notification_bar) { Engine::notification_bar = notification_bar; }
+    static int get_tile_type(int x, int y);
 
-    static NotificationBar* get_notification_bar() { return Engine::notification_bar; }
-    static void print_dialogue(std::string name, std::string text);
+    static void set_gui(GUIMain * _gui_main) { Engine::gui_main = _gui_main; }
+    static GUIMain* get_gui() { return gui_main; }
+
+    static void add_dialogue(std::string text);
+    static void add_text(std::string text);
+    static void open_notification_bar(std::function<void ()> func);
+
+    /// trigger qt mainwindow functions
     static void print_terminal(std::string text, bool error);
+    static void focus_next();
     static void set_any_output(bool option);
     static void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
+    static void set_running();
+    static void set_finished();
+    static void trigger_run(int script);
+    static void trigger_speed();
+    static int get_run_script();
 
     /// global access to game font
     static TextFont get_game_font();

@@ -4,14 +4,7 @@
 #include <utility>
 #include <vector>
 
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
+#include "open_gl.hpp"
 
 #include "component_group.hpp"
 

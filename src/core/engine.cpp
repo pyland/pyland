@@ -23,23 +23,28 @@
 #include "dispatcher.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
+#include "game_main.hpp"
 #include "game_time.hpp"
 #include "mainwindow.h"
 #include "map.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
-#include "notification_bar.hpp"
 #include "object_manager.hpp"
 #include "text.hpp"
+#include "text_box.hpp"
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
-NotificationBar *Engine::notification_bar(nullptr);
+
+std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
+GameMain* Engine::game_main(nullptr);
+
 GameWindow* Engine::game_window(nullptr);
+MainWindow* Engine::main_window(nullptr);
+GUIMain* Engine::gui_main(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
-MainWindow* Engine::main_window(nullptr);
 
 void Engine::move_object(int id, glm::ivec2 move_by) {
     // TODO: Make sure std::promise garbage collects correctly
@@ -133,9 +138,6 @@ void Engine::move_object(int id, glm::ivec2 move_by, std::function<void ()> func
 
             object->set_position(tweened_position);
 
-            //object->set_tile(object->frames.get_frame(direction + "/walking", completion)); This is what animated the object :) TODO: make it so that python can control this
-            object->set_tile(object->frames.get_frame());
-
             if (completion == 1.0) {
                 object->set_state_on_moving_finish();
 
@@ -221,6 +223,10 @@ std::vector<int> Engine::get_objects_at(glm::vec2 location) {
     return location_filter_objects(location, map_viewer->get_map()->get_objects());
 }
 
+MainWindow* Engine::get_main_window(){
+    return main_window;
+}
+
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
     auto objects(get_objects_at(location));
@@ -236,15 +242,47 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     });
 }
 
-void Engine::print_dialogue(std::string name, std::string text) {
-    std::string text_to_display = name + " : " + text;
-    notification_bar->add_notification(text_to_display);
+int Engine::get_tile_type(int x, int y) {
+    return map_viewer->get_map()->get_tile_type(x, y);
 }
 
+void Engine::add_dialogue(std::string text) {
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main, text] {
+        _gui_main->add_message(text);
+    });
+}
+
+void Engine::add_text(std::string text) {
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main, text] {
+        _gui_main->add_text(text);
+    });
+}
+
+void Engine::open_notification_bar(std::function<void ()> func){
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main] {
+        _gui_main->open_notification_bar();
+    });
+    EventManager::get_instance()->add_event([func] {
+        func();
+    });
+}
+
+//Print to the QT terminal widget
 void Engine::print_terminal(std::string text, bool error) {
     main_window->setAnyOutput(true);
     main_window->pushTerminalText(text,error);
 }
+
+
+//Focuses on the next player that has a focus button for it
+void Engine::focus_next() {
+    game_main->focus_next();
+    return;
+}
+
 
 void Engine::set_any_output(bool option){
     main_window->setAnyOutput(option);
@@ -254,10 +292,33 @@ void Engine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
     main_window->setColourScheme(r1,b1,g1,r2,b2,g2);
 }
 
+void Engine::set_running(){
+    main_window->setRunning(true);
+}
+
+void Engine::set_finished(){
+    main_window->setRunning(false);
+}
+
+void Engine::trigger_run(int script){
+    main_window->runCode(script);
+}
+
+void Engine::trigger_speed(){
+    main_window->toggleSpeed();
+}
+
+int Engine::get_run_script(){
+    return main_window->getExecuteScript();
+}
+
 TextFont Engine::get_game_font() {
     return TextFont(get_game_typeface(), 19);
 }
 
 Typeface Engine::get_game_typeface() {
-    return Typeface("../fonts/Ubuntu-R.ttf");
+    Config::json j;
+    j = Config::get_instance();
+    std::string typeface_location = j["files"]["dialogue_font"];
+    return Typeface(typeface_location);
 }

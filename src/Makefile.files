@@ -23,8 +23,6 @@ BASE_OBJS = \
 	map_viewer.o           \
 	mouse_cursor.o         \
 	challenge.o            \
-	notification_bar.o     \
-	notification_stack.o   \
 	object.o               \
 	object_manager.o       \
 	renderable_component.o \
@@ -50,6 +48,8 @@ GUI_OBJS = \
 	gui/component.o	             \
 	gui/component_group.o        \
 	gui/gui_text.o               \
+	gui/text_box.o	     \
+	gui/text_stack.o         \
 	gui/gui_window.o             \
 	gui/gui_manager.o            \
 
@@ -69,29 +69,14 @@ PYTHON_OBJS = \
 	python_embed/interpreter_context.o \
 	python_embed/locks.o               \
 	python_embed/entitythread.o        \
-	python_embed/thread_killer.o       \
 	python_embed/game_engine.o         \
+#	python_embed/thread_killer.o       \
 
 QT_OBJS = \
 	qtgui/game_window.o      \
 	qtgui/mainwindow.o       \
 	qtgui/moc_mainwindow.o   \
 	qtgui/parsingfunctions.o \
-
-# For precompiling
-PYTHON_HEADER = \
-	python_embed/python_embed_headers.hpp
-
-
-PYTHON_SHARED_OBJS = \
-	python_embed/wrapper_functions.so
-
-PYTHON_SHARED_OBJS_DEPENDS = \
-	python_embed/entity.o
-
-
-TEST_OBJS = \
-	test/test_fml.o \
 
 HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}            \
@@ -108,4 +93,20 @@ HEADER_DEPENDS_ROOT = \
 	${TEST_OBJS:.o=.d}            \
 
 HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
+
+# For precompiling
+PYTHON_HEADER = \
+	python_embed/python_embed_headers.hpp
+
+
+PYTHON_SHARED_OBJS = \
+	python_embed/wrapper_functions.so
+
+PYTHON_SHARED_OBJS_DEPENDS = \
+	python_embed/entity.o
+
+
+TEST_OBJS = \
+	test/test_fml.o \
+
 

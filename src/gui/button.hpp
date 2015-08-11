@@ -12,14 +12,7 @@
 #include <utility>
 #include <vector>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 enum class ButtonType{
     Board,
@@ -54,8 +47,8 @@ public:
     void set_text(std::shared_ptr<Text> );
     void set_text(std::string);
 
-	void resize_text(float width, float height);
-	void move_text(float x_offset, float y_offset);
+    void resize_text(float width, float height);
+    void move_text(float x_offset, float y_offset);
 
     int generate_vertex_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds);
     int generate_texture_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds);

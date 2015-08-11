@@ -9,7 +9,7 @@ import scriptrunner
 
 """
 In Python comments,
-could define some standard which the C++ code can use to determine things about it handles 
+could define some standard which the C++ code can use to determine things about it handles
 the python code
 """
 
@@ -40,26 +40,37 @@ class Player(Character):
     __running_script = False
     __thread_id = 0
     __bag = None
-    
+    __focus_button_id = 0
+
     def initialise(self):
         """ An initialiser function.
-        
+
         This function is called once all the neccesary set-up of the object has completed
         run when the object is created in-engine
         """
-        super().initialise
+        super().initialise()
         engine = self.get_engine()
+
+        def focus_func(func):
+            """ Wraps functions so that they are only run if the player is the focus """
+            return lambda: func() if self.is_focus() else None
 
         #register input callbacks to make character playable
         #register callbacks for running player scripts
-        engine.register_input_callback(engine.INPUT_RUN, self.run_script)
-        engine.register_input_callback(engine.INPUT_HALT, self.halt_script)
-        
+        engine.register_input_callback(engine.INPUT_RUN, focus_func(self.run_script))
+        engine.register_input_callback(engine.INPUT_HALT, focus_func(self.halt_script))
+
         #register callbacks for character movement
-        engine.register_input_callback(engine.INPUT_UP, self.move_north)
-        engine.register_input_callback(engine.INPUT_RIGHT, self.move_east)
-        engine.register_input_callback(engine.INPUT_DOWN, self.move_south)
-        engine.register_input_callback(engine.INPUT_LEFT, self.move_west)
+        engine.register_input_callback(engine.INPUT_UP, focus_func(self.__input_move_north))
+        engine.register_input_callback(engine.INPUT_RIGHT, focus_func(self.__input_move_east))
+        engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.__input_move_south))
+        engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.__input_move_west))
+
+        #Make clicks be registered as callbacks
+        #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
+
+        #Get the correct image to the chosen for the sprite
+        self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
 
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
@@ -79,10 +90,41 @@ class Player(Character):
     Put the regular public methods you wish to use here.
     """
 
+    def focus(self):
+        """Override focus method for generic game_object, to update running button
+        and update focused player button above
+        """
+        #self.__entity.focus()
+        super().focus();
+        engine = self.get_engine()
+        if (self.__running_script):
+            engine.set_running()
+        else:
+            engine.set_finished()
+        #Update the currently focused player in the player heads at the top
+        engine.set_cur_player(self.__focus_button_id)
+        return
+
+    def set_character_name(self, character_name):
+        """Override set_character_name from character to
+        update the player focus button with the new name
+        """
+        self.__character_name = character_name
+        engine = self.get_engine()
+        engine.update_player_name(character_name,self.__focus_button_id)
+
+    def test_display(self):
+        engine = self.get_engine()
+        x, y = self.get_position()
+        game_objects = engine.get_objects_at((x, y+1))
+        for game_object in game_objects:
+            if isinstance(game_object, Bagable):
+                engine.print_terminal("Object is bagable")
+            engine.print_terminal(game_object.get_name())
 
     def pick_up_objects(self):
         """ Pick up and put all bagable objects in front of the player in the player's bag.
-        
+
         """
         engine = self.get_engine()
         #object_list = engine.get_objects_at(location_in_fron_of_player)
@@ -115,8 +157,9 @@ class Player(Character):
             The callback function you wish to run after the script has finished runnning.
         """
         if not(self.__running_script): #only run script if one currently isn't running.
+            engine = self.get_engine()
             self.__running_script = True # running script TODO: make this system a lot more robust
-            scriptrunner.start(self, "current")
+            scriptrunner.start(self, engine.get_run_script())
         return
 
     def halt_script(self):
@@ -125,13 +168,35 @@ class Player(Character):
         Works by sending the thread the script is running in an Exception, which the thread catches and appropriately handles and
         stops running.
         """
-        if(self.__running_script):
+        if self.__running_script:
             thread_id = self.__thread_id #TODO: Make this process safer, look at temp.py and add appropriate guards around the next line to check for valid results etc.
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
 
+    """ Override character move methods to prevent movement if script is running
+    """
+    def __input_move_north(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            self.move_north(callback)
+        return
+
+    def __input_move_east(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            self.move_east(callback)
+        return
+
+    def __input_move_south(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            self.move_south(callback)
+        return
+
+    def __input_move_west(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            self.move_west(callback)
+        return
+
     def set_running_script_status(self, status):
         """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
-        
+
         Simply prevents to scripts with player inputs from running simultaneously.
         """
         self.__running_script = status
@@ -147,15 +212,15 @@ class Player(Character):
     """ private:
     Put the private methods you wish to use here.
     """
-    
+
     """ This method takes the movement input of the player character and returns the appropriate
     function for moving them in the direction required
     face_x -- self.face_north/east/south/west() as appropriately required to get them to face in that direction
     """
     #def __handle_movement_input(self, is_facing_x, face_x, move_x):
     #	def handle_input:
-    #		if(not(self.moving())):  #can't register input if the character is in the middle of moving
-    #			if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first  
+    #		if(not(self.is_moving())):  #can't register input if the character is in the middle of moving
+    #			if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first
     #				move_x()
     #			else:
     #				face_x()

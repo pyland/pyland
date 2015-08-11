@@ -43,20 +43,27 @@ private:
     Lifeline map_resize_lifeline;
     Lifeline stop_callback;
     Lifeline restart_callback;
-    Lifeline editor_callback;
-    Lifeline back_callback;
     Lifeline fast_start_ease_callback;
     Lifeline fast_ease_callback;
     Lifeline fast_finish_ease_callback;
     Lifeline up_callback;
     Lifeline down_callback;
     Lifeline right_callback;
+
     Lifeline left_callback;
-    Lifeline monologue_callback;
+    Lifeline run_callback;
+    Lifeline speed_callback;
+    Lifeline switch_callback;
+    Lifeline script1_callback;
+    Lifeline script2_callback;
+    Lifeline script3_callback;
+    Lifeline script4_callback;
+    Lifeline script5_callback;
+    Lifeline script6_callback;
+    Lifeline script7_callback;
+    Lifeline script8_callback;
+    Lifeline script9_callback;
     Lifeline mouse_button_lifeline;
-    Lifeline zoom_in_callback;
-    Lifeline zoom_out_callback;
-    Lifeline zoom_zero_callback;
     Lifeline help_callback;
     Lifeline switch_char;
     Lifeline text_lifeline_char;
@@ -85,7 +92,9 @@ public:
 
     GameWindow* getGameWindow();
     CallbackState getCallbackState();
+
     std::chrono::steady_clock::time_point get_start_time();
+    void focus_next();
 
 };
 
