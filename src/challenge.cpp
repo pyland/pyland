@@ -42,7 +42,7 @@ Challenge::Challenge(ChallengeData* _challenge_data, GUIMain * _gui_main) :
         //TODO: The names of variables need to be refactored to make sense, and this code needs to be cleaned up as there is a bit too much inderection atm!
         for(auto properties : map->locations) { //look at map_loader.hpp for the format of this struct (MapObjectProperties)
             //Create the entity, it automatically gets added to the entity_list
-            create_entity(properties.first, properties.second.sprite_file_location, properties.second.position);
+            create_entity(properties.first, properties.second.object_file_location, properties.second.position);
         }
 
         //create a new GameEngine instance for the python api, we need to review if this is the best place to create it
