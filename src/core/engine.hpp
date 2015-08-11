@@ -17,6 +17,7 @@
 #include "typeface.hpp"
 
 class MainWindow;
+class GameMain;
 class MapViewer;
 class TextBox;
 
@@ -24,6 +25,10 @@ class TextBox;
 class Engine {
 private:
     static MapViewer *map_viewer;
+
+    static std::shared_ptr<TextBox> notification_bar;
+
+    static GameMain* game_main;
 
     static GameWindow* game_window;
 
@@ -69,6 +74,12 @@ public:
     static int get_tile_size() { return tile_size; }
 
     static float get_actual_tile_size() { return float(tile_size) * global_scale; }
+
+    ///
+    /// Set the game main instance (for access to game loop and gui)
+    /// @param _game_main the game main instance
+    ///
+    static void set_game_main(GameMain* _game_main) { game_main = _game_main; }
 
     ///
     /// Set the game window
@@ -170,6 +181,7 @@ public:
 
     /// trigger qt mainwindow functions
     static void print_terminal(std::string text, bool error);
+    static void focus_next();
     static void set_any_output(bool option);
     static void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
     static void set_running();

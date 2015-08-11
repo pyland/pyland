@@ -25,6 +25,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     Engine::set_gui(this);
     //Create the game embedWindow to present to the users
     embedWindow->use_context();
+
     Engine::set_game_window(embedWindow);
 
     Engine::set_map_viewer(&map_viewer);
@@ -41,6 +42,15 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
 
     LOG(INFO) << "Constructed GUIMain.";
+}
+
+GUIMain::~GUIMain()
+{
+    LOG(INFO) << "Destructing GUIMain...";
+
+    buttons.clear();
+
+    LOG(INFO) << "Destructed GUIMain.";
 }
 
 void GUIMain::create_pyguide(){
@@ -117,14 +127,17 @@ void GUIMain::create_pause_menu(){
     pause_button->set_height(button_height);
     pause_button->set_x_offset(left_x_offset);
     pause_button->set_y_offset(top_y_offset);
-    pause_button->set_on_click( [&] () {
+    pause_button->set_on_click( [&] ()
+    {
 
-        if(em->is_paused() == false){
+        if(em->is_paused() == false)
+        {
             em->pause();
             LOG(INFO) << "PAUSED";
             open_pause_window();
         }
-        else{
+        else
+        {
             em->resume();
             LOG(INFO) << "RESUMED";
             close_pause_window();
@@ -144,13 +157,16 @@ void GUIMain::create_bag(){
     bag_button->set_x_offset(right_x_offset);
     bag_button->set_y_offset(top_y_offset);
 
-    bag_button->set_on_click( [&] () {
+    bag_button->set_on_click( [&] ()
+    {
 
-        if(bag_open == false){
+        if(bag_open == false)
+        {
             bag_open = true;
             open_bag();
         }
-        else{
+        else
+        {
             bag_open = false;
             close_bag();
         }
@@ -171,7 +187,8 @@ void GUIMain::create_bag(){
     pyguide_button->set_y_offset(menu_y_offset);
     pyguide_button->set_visible(false);
 
-    pyguide_button->set_on_click( [&] () {
+    pyguide_button->set_on_click( [&] ()
+    {
         pyguide_open = true;
         open_pyguide();
     });
@@ -212,75 +229,6 @@ void GUIMain::add_message(std::string text){
 
 void GUIMain::add_text(std::string text){
     notification_bar->add_text(text);
-}
-
-void GUIMain::open_pyguide(){
-
-    close_bag();
-    pyguide_window->set_visible(true);
-    py_help->set_visible(true);
-
-    for(unsigned int i=0; i<py_apis_num; i++){
-        pyguide_commands[i]->set_visible(true);
-        pyguide_commands[i]->set_clickable(true);
-    }
-
-    py_help->open();
-    refresh_gui();
-    LOG(INFO) << "PyGuide opened";
-}
-
-void GUIMain::close_pyguide(){
-
-    pyguide_window->set_visible(false);
-    py_help->set_visible(false);
-
-    for(unsigned int i=0; i<py_apis_num; i++){
-        pyguide_commands[i]->set_visible(false);
-        pyguide_commands[i]->set_clickable(false);
-    }
-
-    py_help->close();
-    refresh_gui();
-    LOG(INFO) << "PyGuide closed";
-}
-
-void GUIMain::open_bag(){
-
-    bag_window->set_visible(true);
-
-    close_pyguide();
-    pyguide_open = false;
-
-    pyguide_button->set_visible(true);
-    pyguide_button->set_clickable(true);
-
-    for(unsigned int i=0; i!=bag_items.size(); i++){
-        bag_items[i]->set_visible(true);
-        bag_items[i]->set_clickable(true);
-    }
-
-    refresh_gui();
-    LOG(INFO) << "Bag opened";
-}
-
-void GUIMain::close_bag(){
-
-    bag_window->set_visible(false);
-
-    close_pyguide();
-    pyguide_open = false;
-
-    pyguide_button->set_visible(false);
-    pyguide_button->set_clickable(false);
-
-    for(unsigned int i=0; i!=bag_items.size(); i++){
-        bag_items[i]->set_visible(false);
-        bag_items[i]->set_clickable(false);
-    }
-
-    refresh_gui();
-    LOG(INFO) << "Bag closed";
 }
 
 void GUIMain::open_pause_window(){
@@ -333,9 +281,83 @@ void GUIMain::close_pause_window(){
     refresh_gui();
 }
 
-void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback){
+void GUIMain::open_bag()
+{
 
-    if(buttons.size() == button_max){
+    bag_window->set_visible(true);
+
+    close_pyguide();
+    pyguide_open = false;
+
+    pyguide_button->set_visible(true);
+    pyguide_button->set_clickable(true);
+
+    for(unsigned int i=0; i!=bag_items.size(); i++)
+    {
+        bag_items[i]->set_visible(true);
+        bag_items[i]->set_clickable(true);
+    }
+
+    refresh_gui();
+    LOG(INFO) << "Bag opened";
+}
+
+void GUIMain::close_bag()
+{
+
+    bag_window->set_visible(false);
+
+    close_pyguide();
+    pyguide_open = false;
+
+    pyguide_button->set_visible(false);
+    pyguide_button->set_clickable(false);
+
+    for(unsigned int i=0; i!=bag_items.size(); i++)
+    {
+        bag_items[i]->set_visible(false);
+        bag_items[i]->set_clickable(false);
+    }
+
+    refresh_gui();
+    LOG(INFO) << "Bag closed";
+}
+
+void GUIMain::open_pyguide()
+{
+    close_bag();
+    pyguide_window->set_visible(true);
+    py_help->set_visible(true);
+
+    for(unsigned int i=0; i<py_apis_num; i++){
+        pyguide_commands[i]->set_visible(true);
+        pyguide_commands[i]->set_clickable(true);
+    }
+
+    py_help->open();
+    refresh_gui();
+    LOG(INFO) << "PyGuide opened";
+}
+
+void GUIMain::close_pyguide()
+{
+    pyguide_window->set_visible(false);
+    py_help->set_visible(false);
+
+    for(unsigned int i=0; i<py_apis_num; i++){
+        pyguide_commands[i]->set_visible(false);
+        pyguide_commands[i]->set_clickable(false);
+    }
+
+    py_help->close();
+    refresh_gui();
+    LOG(INFO) << "PyGuide closed";
+}
+
+void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id)
+{
+    if(buttons.size() == button_max)
+    {
         cycle_button = std::make_shared<Button>(ButtonType::Single);
         cycle_button->set_picture("gui/game/buttons/cycle");
         cycle_button->set_text("Cycle");
@@ -344,29 +366,9 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
         cycle_button->set_x_offset(right_x_offset - float(button_max + 1) * horizontal_button_spacing);
         cycle_button->set_y_offset(top_y_offset);
 
-        cycle_button->set_on_click( [&] () {
-
-            //remove previous set of buttons
-            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
-            {
-                gui_window->remove(buttons[display_button_start + i]->get_id());
-            }
-
-            //update the button index of buttons to be displayed
-            if(display_button_start + button_max >= buttons.size()){
-                display_button_start = 0;
-            }
-            else{
-                display_button_start += button_max;
-            }
-
-            //display new buttons
-            for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
-            {
-                gui_window->add(buttons[display_button_start + i]);
-            }
-
-            refresh_gui();
+        cycle_button->set_on_click([&] ()
+        {
+            cycle();
         });
 
         gui_window->add(cycle_button);
@@ -377,11 +379,25 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     std::shared_ptr<Button> new_button;
     new_button = std::make_shared<Button>(ButtonType::Single);
     buttons.push_back(new_button);
+
     new_button->set_picture(file_path);
     new_button->set_text(name);
-    new_button->set_on_click(callback);
+
+    unsigned int new_button_index = (int) (buttons.size() - 1);
+    new_button->set_on_click([this, new_button_index, callback] ()
+    {
+        callback();
+        this->set_button_index(new_button_index);
+    });
     new_button->set_width(button_width);
     new_button->set_height(button_height);
+
+    //Push to index element 'id'
+    if (button_id > (button_indexs.size() - 1))
+    {
+        button_indexs.resize(button_id+1, 0);
+    }
+    button_indexs[button_id] = new_button_index;
 
     //make space for previous buttons
     float org_x_location = right_x_offset;
@@ -394,7 +410,35 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
 
     if((buttons.size() - 1) % button_max == 0 && buttons.size() != 1)
     {
-        cycle_button->call_on_click();
+        //cycle_button->call_on_click();
+        cycle();
+    }
+
+    refresh_gui();
+}
+
+void GUIMain::cycle()
+{
+    //remove previous set of buttons
+    for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
+    {
+        gui_window->remove(buttons[display_button_start + i]->get_id());
+    }
+
+    //update the button index of buttons to be displayed
+    if(display_button_start + button_max >= buttons.size())
+    {
+        display_button_start = 0;
+    }
+    else
+    {
+        display_button_start += button_max;
+    }
+
+    //display new buttons
+    for(unsigned int i=0; i<button_max && display_button_start + i < buttons.size(); i++)
+    {
+        gui_window->add(buttons[display_button_start + i]);
     }
 
     refresh_gui();
@@ -403,15 +447,6 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
 void GUIMain::refresh_gui()
 {
     gui_manager.parse_components();
-}
-
-GUIMain::~GUIMain()
-{
-    LOG(INFO) << "Destructing GUIMain...";
-
-    buttons.clear();
-
-    LOG(INFO) << "Destructed GUIMain.";
 }
 
 void GUIMain::config_gui()
@@ -483,5 +518,69 @@ void GUIMain::config_gui()
     button_max = j["scales"]["button_max"];
 
     py_apis_num = j["pyguide_apis"]["number"];
+}
+
+void GUIMain::set_button_index(unsigned int value)
+{
+    cur_button_index = value;
+    update_selected();
+}
+
+void GUIMain::click_next_player()
+{
+    cur_button_index = cur_button_index + 1;
+    if (cur_button_index >= buttons.size())
+    {
+        cur_button_index = 0;
+    }
+    update_selected();
+    buttons[cur_button_index]->call_on_click();
+}
+
+void GUIMain::click_player(unsigned int button_id)
+{
+    //Get the index at which the player's button is stored (in buttons)
+    //using the button's identifier
+    unsigned int click_button_index = button_indexs[button_id];
+    set_button_index(click_button_index);
+    //Cycle through the pages of sprite buttons until the current player is present
+    //(only try cycling a finite number of attempts, to prevent infinite loops)
+    for (unsigned int attempts = 0; attempts<buttons.size(); attempts++)
+    {
+        if (!((click_button_index < display_button_start+button_max) && (click_button_index >= display_button_start)))
+        {
+            cycle();
+        }
+        else
+        {
+            break;
+        }
+    }
+    return;
+}
+
+void GUIMain::update_button_text(std::string name, unsigned int button_id)
+{
+    unsigned int update_button_index = button_indexs[button_id];
+    buttons[update_button_index]->set_text(name);
+}
+
+void GUIMain::update_selected()
+{
+    //Will highlight the selected player opposed to changing the text
+    for (unsigned int i=0; i<buttons.size(); i++)
+    {
+        if (cur_button_index == i)
+        {
+            buttons[i]->set_text("SELECTED");
+            refresh_gui();
+        }
+        else
+        {
+            buttons[i]->set_text("NOT SELECTED");
+            refresh_gui();
+        }
+    }
+
 }
 

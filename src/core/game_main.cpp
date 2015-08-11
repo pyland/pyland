@@ -90,6 +90,7 @@ GameMain::GameMain(int &argc, char **argv):
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SEVEN, [] () {Engine::trigger_run(7); });
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_EIGHT, [] () {Engine::trigger_run(8); });
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_NINE, [] () {Engine::trigger_run(9); });
+    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SWITCH, Engine::focus_next);
 
     gui_resize_lifeline = embedWindow.register_resize_handler(gui_resize_func);
 
@@ -145,6 +146,14 @@ GameMain::GameMain(int &argc, char **argv):
     [&] (KeyboardInputEvent)
     {
         InputHandler::get_instance()->run_list(InputHandler::INPUT_TOGGLE_SPEED);
+    }
+    ));
+
+    switch_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("Tab")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_SWITCH);
     }
     ));
 
@@ -289,6 +298,8 @@ GameMain::GameMain(int &argc, char **argv):
     run_game = true;
     cursor = new MouseCursor(&embedWindow);
 
+    Engine::set_game_main(this);
+
     //Setup challenge
     challenge_data = (new ChallengeData(
                           "",
@@ -416,4 +427,9 @@ CallbackState GameMain::getCallbackState(){
 
 std::chrono::steady_clock::time_point GameMain::get_start_time(){
     return start_time;
+}
+
+//Switch the focus to the next playable object
+void GameMain::focus_next(){
+    gui.click_next_player();
 }

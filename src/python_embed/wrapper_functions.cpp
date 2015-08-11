@@ -50,6 +50,8 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
     py::class_<GameEngine, boost::noncopyable>("GameEngine", py::no_init)
         .def("create_object",     &GameEngine::create_object)
         .def("add_button",        &GameEngine::add_button)
+        .def("set_cur_player",    &GameEngine::set_cur_player)
+        .def("update_player_name",&GameEngine::update_player_name)
         .def("get_level_location",&GameEngine::get_level_location)
         .def("print_debug",       &GameEngine::print_debug)
         .def("add_dialogue",      &GameEngine::add_dialogue)

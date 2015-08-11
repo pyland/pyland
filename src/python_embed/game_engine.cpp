@@ -16,6 +16,7 @@
 GameEngine::GameEngine(GUIMain *_gui_main, Challenge *_challenge){
     gui_main = _gui_main;
     challenge = _challenge;
+    button_id = 0;
 }
 
 void GameEngine::change_level(std::string level_location) {
@@ -62,14 +63,33 @@ void GameEngine::open_dialogue_box(PyObject *callback) {
     Engine::open_notification_bar(boost_callback);
 }
 
-void GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
+unsigned int GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
     //TODO: Find a way of avoiding this hack
     LOG(INFO) << "Adding a new button: " << name;
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
-
-    EventManager::get_instance()->add_event([this, file_path, name, boost_callback] {
-        gui_main->add_button(file_path, name, boost_callback);
+    //Uniquely identify each button to it's associated with the python player.
+    //This identifier is mapped to the deque index (in gui_main) at which the player's focus button
+    //is stored
+    button_id++;
+    unsigned int id_to_pass = button_id;
+    EventManager::get_instance()->add_event([this, file_path, name, boost_callback, id_to_pass] {
+        gui_main->add_button(file_path, name, boost_callback, id_to_pass);
     });
+    return button_id;
+}
+
+void GameEngine::set_cur_player(unsigned int passing_button_id){
+    EventManager::get_instance()->add_event([this, passing_button_id] {
+       gui_main->click_player(passing_button_id);
+    });
+    return;
+}
+
+void GameEngine::update_player_name(std::string name, unsigned int passing_button_id) {
+    EventManager::get_instance()->add_event([this, name, passing_button_id] {
+       gui_main->update_button_text(name, passing_button_id);
+    });
+    return;
 }
 
 void GameEngine::register_input_callback(int input_key, PyObject *py_input_callback) {
@@ -114,6 +134,7 @@ void GameEngine::set_finished(){
 }
 
 void GameEngine::trigger_run(){
+    //Passing 0 as the script causes it to run the currently open script
     Engine::trigger_run(0);
 }
 

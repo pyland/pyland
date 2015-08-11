@@ -444,8 +444,6 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     //Connect buttons to functions
     connect(buttonIn[i],SIGNAL(released()),this,SLOT (zoomFontIn()));
     connect(buttonOut[i],SIGNAL(released()),this,SLOT (zoomFontOut()));
-    //connect(ws->horizontalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
-    //connect(ws->verticalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
 
 }
 
@@ -504,7 +502,7 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     case Qt::Key_Escape:
         return SDL_SCANCODE_ESCAPE;
     case Qt::Key_Tab:
-        return SDL_SCANCODE_KP_TAB;
+        return SDL_SCANCODE_TAB;
     case Qt::Key_Backspace:
         return SDL_SCANCODE_BACKSPACE;
     case Qt::Key_Insert:
@@ -942,13 +940,11 @@ void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2)
 {
 
     textInfoWidget->setStyleSheet(("background-color: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
-                                   "border: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
+                                   "border: 5px rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
                                    "font: 17pt;").c_str());
-
 
     colourPalette.setColor(QPalette::Background,QColor(r1,g1,b1));
     colourPalette.setColor(QPalette::Button,QColor(r2,g2,b2));
-
     mainWidget->setPalette(colourPalette);
 }
 

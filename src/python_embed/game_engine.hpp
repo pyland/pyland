@@ -16,7 +16,8 @@ class GUIMain;
 class GameEngine {
 
     private:
-        GUIMain *gui_main;
+        GUIMain * gui_main;
+        unsigned int button_id;
         Challenge *challenge;
 
     public:
@@ -29,10 +30,14 @@ class GameEngine {
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
 
+        GameEngine(GUIMain * _gui_main){
+            gui_main = _gui_main;
+            button_id = 0;
+        }
+
         static int TILE_TYPE_STANDARD() { return 0; }
         static int TILE_TYPE_SOLID() { return 1; }
         static int TILE_TYPE_WATER() { return 2; }
-
 
         static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
@@ -73,8 +78,18 @@ class GameEngine {
 
         ///
         /// To add a button to the challenge
+        /// Returns the button_id associated with the python player
+        unsigned int add_button(std::string file_path, std::string name, PyObject* callback);
+
         ///
-        void add_button(std::string file_path, std::string name, PyObject* callback);
+        /// Updates the player focus buttons with the newly
+        /// focused player (associated with it's button id)
+        void set_cur_player(unsigned int passing_button_id);
+
+        ///
+        /// Updates the player focus buttons with the newly
+        /// changed player name (associated with it's button id)
+        void update_player_name(std::string name, unsigned int passing_button_id);
 
         ///
         /// To add a dialogue to the screen
@@ -99,26 +114,35 @@ class GameEngine {
         void play_music(std::string song_name);
 
         ///
-        /// Print a given string to the terminal
-        ///
-        void print_terminal(std::string text, bool error);
-
-        ///
         /// Returns a raw string of the json config
         ///
         std::string get_config();
 
+        /// Print text to the QT terminal widget
+        /// If error is True the text is red
+        /// If error is False the text is black
+        void print_terminal(std::string text, bool error);
+
         ///
-        /// Set the UI colours.
-        ///
+        /// Update the QT interface with new colours
+        /// (preferrably two shades of the same colour)
         void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
 
+        ///
+        /// Updates the QT running button to reflect
+        /// whether the current player is running a script
         void set_running();
-
         void set_finished();
 
+        ///
+        /// Run the currently active script
+        /// (called when enter is pressed)
         void trigger_run();
 
+        ///
+        /// Get the index of the script to run for the player
+        /// (this may be the currently open script
+        /// or another script if a key binding was used)
         int get_run_script();
 
         bool is_solid(int x, int y);

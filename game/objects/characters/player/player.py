@@ -40,6 +40,7 @@ class Player(Character):
     __running_script = False
     __thread_id = 0
     __bag = None
+    __focus_button_id = 0
 
     def initialise(self):
         """ An initialiser function.
@@ -65,7 +66,11 @@ class Player(Character):
         engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.__input_move_south))
         engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.__input_move_west))
 
-        engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
+        #Make clicks be registered as callbacks
+        #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
+
+        #Get the correct image to the chosen for the sprite
+        self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
 
     """ game engine features (public)
     These are methods which the game engine will execute at the commented moments.
@@ -87,6 +92,7 @@ class Player(Character):
 
     def focus(self):
         """Override focus method for generic game_object, to update running button
+        and update focused player button above
         """
         #self.__entity.focus()
         super().focus();
@@ -95,10 +101,17 @@ class Player(Character):
             engine.set_running()
         else:
             engine.set_finished()
-
+        #Update the currently focused player in the player heads at the top
+        engine.set_cur_player(self.__focus_button_id)
         return
 
-
+    def set_character_name(self, character_name):
+        """Override set_character_name from character to
+        update the player focus button with the new name
+        """
+        self.__character_name = character_name
+        engine = self.get_engine()
+        engine.update_player_name(character_name,self.__focus_button_id)
 
     def test_display(self):
         engine = self.get_engine()

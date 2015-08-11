@@ -132,6 +132,13 @@ private:
     //The gameplay buttons for the gui displayed on the screen
     //created by GameEngine
     std::deque<std::shared_ptr<Button>> buttons;
+    //Store each button index at the 'id'th element, so can map directly
+    //from button id to index (so can get the button from buttons).
+    //This is because the ids are passed through an event queue (and not directly), using the
+    //id directly as an index can't be assumed
+    std::deque<unsigned int> button_indexs;
+    //The index for the currently highlighted player
+    unsigned int cur_button_index;
     //While cycling through sprites, this is the index of the first button on the visible page
     unsigned int display_button_start;
     //A button used to cycle through the sprite heads
@@ -161,10 +168,14 @@ public:
         return &map_viewer;
     }
 
-    //To add a button to the screen- is called from game engine
-    //file path is the location of the image in gui.png, and name is the name to be displayed on screen
+    //Add a player focus button to the screen (called from game engine)
+    //file path is the location of the image in gui.png, and name is the text to be displayed with the button
     //callback is added to the event manager when the button is pressed
-    void add_button(std::string file_path, std::string name, std::function<void (void)> callback);
+    void add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id);
+
+    //Cycle onto the next set of 'button_max' player focus buttons
+    //This can only occur when there are more than 'button_max' players
+    void cycle();
 
 
     //To add a message to the notification bar
@@ -177,5 +188,24 @@ public:
 
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();
+
+    //Update the currently selected player focus button index
+    void set_button_index(unsigned int value);
+
+    //Simulate clicking on the next player's focus button
+    //(for when the user is tabbing through players)
+    void click_next_player();
+
+    //Simulate clicking on the player button with the given button_id
+    //(for when the focus is changed to a player in python code)
+    void click_player(unsigned int button_id);
+
+    //Update the text for the button of given id
+    //(for when a player's name is changed in python)
+    void update_button_text(std::string name, unsigned int button_id);
+
+    //Update GUI buttons to distinguish the currently selected sprite from the others
+    void update_selected();
+
 };
 #endif
