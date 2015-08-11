@@ -11,6 +11,9 @@ std::unordered_map<std::string, std::shared_ptr<RenderableComponent>> SpriteMana
 std::shared_ptr<RenderableComponent> SpriteManager::get_component(std::string filepath){
 
 	if(sprite_map.count(filepath) == 0){
+
+		LOG(INFO) << "!!!!!!!!!Creating " << filepath;
+
 		std::shared_ptr<RenderableComponent> new_component = std::make_shared<RenderableComponent>();
 		new_component->set_texture(TextureAtlas::get_shared(filepath));
 		sprite_map[filepath] = new_component;

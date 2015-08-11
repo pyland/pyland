@@ -33,7 +33,6 @@ MapObject::MapObject(glm::vec2 position,
         VLOG(2) << "New map object: " << name;
 
         regenerate_blockers();
-
         generate_tex_data();
         generate_vertex_data();
 
@@ -147,6 +146,7 @@ void MapObject::set_tile(std::string _tile) {
 	tile = _tile;
     load_textures();
     generate_tex_data();
+    generate_vertex_data();
 }
 
 void MapObject::generate_vertex_data() {
