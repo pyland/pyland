@@ -23,17 +23,19 @@ MapObject::MapObject(glm::vec2 position,
                      std::string name,
                      Walkability walkability):
     Object(name),
+    tile("../game/objects/0.png"),
     render_above_sprite(false),
     walkability(walkability),
     position(position)
+
     {
 
         VLOG(2) << "New map object: " << name;
 
         regenerate_blockers();
 
-        generate_tex_data("../game/objects/0.png");
-        generate_vertex_data("../game/objects/0.png");
+        generate_tex_data();
+        generate_vertex_data();
 
         LOG(INFO) << "MapObject initialized";
 }
@@ -42,8 +44,7 @@ MapObject::~MapObject() {
 }
 
 std::shared_ptr<RenderableComponent> MapObject::get_renderable_component(){
-	LOG(INFO) << "$$$$ Not meant to be called";
-	return std::make_shared<RenderableComponent>();
+	return SpriteManager::get_component(tile);
 }
 
 void MapObject::set_walkability(Walkability walkability) {
@@ -91,7 +92,7 @@ void MapObject::regenerate_blockers() {
     }
 }
 
-void MapObject::generate_tex_data(std::string tile) {
+void MapObject::generate_tex_data() {
     // holds the texture data
     // need 12 float for the 2D texture coordinates
     int num_floats = 12;
@@ -142,12 +143,13 @@ void MapObject::set_position(glm::vec2 position) {
     regenerate_blockers();
 }
 
-void MapObject::set_tile(std::string tile) {
-    load_textures(tile);
-    generate_tex_data(tile);
+void MapObject::set_tile(std::string _tile) {
+	tile = _tile;
+    load_textures();
+    generate_tex_data();
 }
 
-void MapObject::generate_vertex_data(std::string tile) {
+void MapObject::generate_vertex_data() {
     //holds the map object's vertex data
     int num_dimensions(2);
     int num_floats(num_dimensions * 6); // GL's Triangles
@@ -206,7 +208,7 @@ void MapObject::set_state_on_moving_finish() {
     positions.insert(position);
 }
 
-void MapObject::load_textures(std::string tile) {
+void MapObject::load_textures() {
     SpriteManager::get_component(tile)->set_texture(TextureAtlas::get_shared(tile)); //tile is the location of the sprite you wish to load in from the file-system.
 }
 

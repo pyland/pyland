@@ -49,6 +49,11 @@ using OrderedHashSet = boost::multi_index_container<
 class MapObject : public Object {
 protected:
 
+	///
+	///The location of the image to be displayed for this object
+	///
+	std::string tile;
+
     ///
     /// The focus icon, to move with sprite and hide, depending on if mapobject is in focus;
     ///
@@ -161,7 +166,7 @@ public:
     ///
     /// Generate the texture coordinate data for the object
     ///
-    virtual void generate_tex_data(std::string tile);
+    virtual void generate_tex_data();
 
     ///
     /// Change the tile of the sprite to that of the given name
@@ -171,12 +176,12 @@ public:
     ///
     /// Generate the vertex data for the object
     ///
-    virtual void generate_vertex_data(std::string tile);
+    virtual void generate_vertex_data();
 
     ///
     /// Load the textures that are being used by the object
     ///
-    virtual void load_textures(std::string tile);
+    virtual void load_textures();
 
     ///
     /// Set the object's moving status
