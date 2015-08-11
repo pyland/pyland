@@ -157,6 +157,14 @@ GameMain::GameMain(int &argc, char **argv):
     }
     ));
 
+    switch_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("T")},
+    [&] (KeyboardInputEvent)
+    {
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_TALK);
+    }
+    ));
+
     script1_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("1")},
     [&] (KeyboardInputEvent)

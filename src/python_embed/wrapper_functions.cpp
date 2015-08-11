@@ -76,6 +76,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .add_static_property("INPUT_LEFT",    &GameEngine::INPUT_LEFT)
         .add_static_property("INPUT_RUN",     &GameEngine::INPUT_RUN)
         .add_static_property("INPUT_HALT",    &GameEngine::INPUT_HALT)
+        .add_static_property("INPUT_TALK",    &GameEngine::INPUT_TALK)
         .add_static_property("TILE_TYPE_STANDARD",   &GameEngine::TILE_TYPE_STANDARD)
         .add_static_property("TILE_TYPE_SOLID",   &GameEngine::TILE_TYPE_SOLID)
         .add_static_property("TILE_TYPE_WATER",   &GameEngine::TILE_TYPE_WATER)

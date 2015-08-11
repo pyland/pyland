@@ -66,6 +66,9 @@ class Player(Character):
         engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.__input_move_south))
         engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.__input_move_west))
 
+        #register callback for talking to characters
+        engine.register_input_callback(engine.INPUT_TALK, focus_func(self.__trigger_talk_to))
+
         #Make clicks be registered as callbacks
         #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
 
@@ -172,6 +175,25 @@ class Player(Character):
             thread_id = self.__thread_id #TODO: Make this process safer, look at temp.py and add appropriate guards around the next line to check for valid results etc.
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
 
+    def set_running_script_status(self, status):
+        """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
+
+        Simply prevents to scripts with player inputs from running simultaneously.
+        """
+        self.__running_script = status
+        return
+
+    def set_thread_id(self, thread_id):
+        self.__thread_id = thread_id
+        return
+
+    def get_thread_id(self):
+        return thread_id
+
+    """ private:
+    Put the private methods you wish to use here.
+    """
+
     """ Override character move methods to prevent movement if script is running
     """
     def __input_move_north(self, callback = lambda: None):
@@ -206,9 +228,19 @@ class Player(Character):
             self.move_west(callback_wrap)
         return
 
+    def __trigger_talk_to(self):
+        engine = self.get_engine()
+        engine.add_dialogue("hahahah")
+        engine.open_dialogue_box()
+        if(self.is_facing_north()):
+            engine.add_dialogue("hahahah")
+        
+
     def __trigger_walk_on(self):
-        """ Triggers the walked-on functions for objects, objects which have a walked_on method will have those methods
-        automatically called when they are walked on """
+        """ Triggers the walked-on functions for objects, objects which have a walked_on method will have those methods automatically called when they are walked on.
+
+        Everytime the player finishes, walking, this is called. The player looks at all objects they are standing on and triggers their player_walked_one method if they have one.
+        """
         engine = self.get_engine()
         position = self.get_position()
         game_objects = engine.get_objects_at(position)
@@ -216,25 +248,6 @@ class Player(Character):
             if(hasattr(game_object, "player_walked_on")):
                 game_object.player_walked_on(self)
         return
-
-    def set_running_script_status(self, status):
-        """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
-
-        Simply prevents to scripts with player inputs from running simultaneously.
-        """
-        self.__running_script = status
-        return
-
-    def set_thread_id(self, thread_id):
-        self.__thread_id = thread_id
-        return
-
-    def get_thread_id(self):
-        return thread_id
-
-    """ private:
-    Put the private methods you wish to use here.
-    """
 
     """ This method takes the movement input of the player character and returns the appropriate
     function for moving them in the direction required
