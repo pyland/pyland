@@ -35,10 +35,13 @@
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
+
 std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
 GameMain* Engine::game_main(nullptr);
+
 GameWindow* Engine::game_window(nullptr);
 MainWindow* Engine::main_window(nullptr);
+GUIMain* Engine::gui_main(nullptr);
 Challenge* Engine::challenge(nullptr);
 int Engine::tile_size(64);
 float Engine::global_scale(1.0f);
@@ -239,9 +242,32 @@ bool Engine::is_objects_at(glm::ivec2 location, std::vector<int> object_ids) {
     });
 }
 
-void Engine::print_dialogue(std::string name, std::string text) {
-    std::string text_to_display = name + " : " + text;
-    notification_bar->add_message(text_to_display);
+int Engine::get_tile_type(int x, int y) {
+    return map_viewer->get_map()->get_tile_type(x, y);
+}
+
+void Engine::add_dialogue(std::string text) {
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main, text] {
+        _gui_main->add_message(text);
+    });
+}
+
+void Engine::add_text(std::string text) {
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main, text] {
+        _gui_main->add_text(text);
+    });
+}
+
+void Engine::open_notification_bar(std::function<void ()> func){
+    auto _gui_main = gui_main;
+    EventManager::get_instance()->add_event([_gui_main] {
+        _gui_main->open_notification_bar();
+    });
+    EventManager::get_instance()->add_event([func] {
+        func();
+    });
 }
 
 //Print to the QT terminal widget
@@ -291,5 +317,8 @@ TextFont Engine::get_game_font() {
 }
 
 Typeface Engine::get_game_typeface() {
-    return Typeface("../fonts/Ubuntu-R.ttf");
+    Config::json j;
+    j = Config::get_instance();
+    std::string typeface_location = j["files"]["dialogue_font"];
+    return Typeface(typeface_location);
 }

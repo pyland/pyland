@@ -23,7 +23,6 @@ public:
     GUIManager* gui_manager;
     GameWindow* game_window;
     InputManager *input_manager;
-    std::shared_ptr<TextBox> notification_bar;
 
     //next_challenge - should be a string
     bool run_challenge;
@@ -33,8 +32,7 @@ public:
                   Interpreter *_interpreter,
                   GUIManager *_gui_manager,
                   GameWindow *_game_window,
-                  InputManager *_input_manager,
-                  std::shared_ptr<TextBox> _notification_bar
+                  InputManager *_input_manager
                   //int next_challenge
                   ):
 
@@ -44,7 +42,6 @@ public:
         gui_manager(_gui_manager),
         game_window(_game_window),
         input_manager(_input_manager),
-        notification_bar(_notification_bar),
         //next_challenge(next_challenge),
         run_challenge(true)
     {}

@@ -7,6 +7,7 @@
 
 #include "input_handler.hpp"
 
+class Challenge;
 class GUIMain;
 ///
 /// This class is used as the python interface for general game-engine functionality.
@@ -17,6 +18,7 @@ class GameEngine {
     private:
         GUIMain * gui_main;
         unsigned int button_id;
+        Challenge *challenge;
 
     public:
 
@@ -27,19 +29,25 @@ class GameEngine {
 
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
-        static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
         GameEngine(GUIMain * _gui_main){
             gui_main = _gui_main;
             button_id = 0;
         }
 
+        static int TILE_TYPE_STANDARD() { return 0; }
+        static int TILE_TYPE_SOLID() { return 1; }
+        static int TILE_TYPE_WATER() { return 2; }
+
+        static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
+
+        GameEngine(GUIMain *_gui_main, Challenge *_challenge);
         ///
         /// Add an object to the game map at the given position.
         /// The name is used to give the object a name and the class_location string is
         /// used to find the correct Python class to wrap the object.
         ///
-        boost::python::object add_object(std::string name, std::string class_location, int x, int y);
+        boost::python::object create_object(std::string object_file_location, std::string object_name, int x, int y);
 
         ///
         /// Returns a list of python objects at the location given.
@@ -54,6 +62,8 @@ class GameEngine {
         ///
         ///
         void change_level(std::string level_location);
+
+        int get_tile_type(int x, int y);
 
         ///
         /// Get the location of the level data in the file system relative to the game/levels folder.
@@ -80,6 +90,18 @@ class GameEngine {
         /// Updates the player focus buttons with the newly
         /// changed player name (associated with it's button id)
         void update_player_name(std::string name, unsigned int passing_button_id);
+
+        ///
+        /// To add a dialogue to the screen
+        ///
+        void add_dialogue(std::string text);
+
+        void add_text(std::string text);
+
+        ///
+        /// To open the dialogue box on the screen
+        ///
+        void open_dialogue_box(PyObject *callback);
 
         void register_input_callback(int input_key, PyObject *input_callback);
 

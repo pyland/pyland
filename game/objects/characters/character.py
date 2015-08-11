@@ -145,7 +145,8 @@ class Character(GameObject):
         face_x()
         self.start_animating()
         def callbacktwo():  # Have create a wrapper callback function which makes sure that the animation stops before anything else is run
-            self.stop_animating()
+            if not self.is_moving():
+                self.stop_animating()
             callback()
         parent_move_x(callbacktwo)
         return
@@ -190,7 +191,8 @@ class Character(GameObject):
         return #parse sprite_location to get facing
 
     def change_state(self, state):
-        if(isinstance(state, str)):
-            self.__state = state
+        sprite_location = self.get_sprite()
+        sprite_location = sprite_location[sprite_location.rfind("/"): ]
+        self.set_sprite(state + sprite_location)
         return
 

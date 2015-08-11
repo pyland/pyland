@@ -23,7 +23,9 @@ class Entity {
         ///
         glm::vec2 start;
         std::string sprite_location;
-        bool animating = false;
+        int current_frame;
+
+        bool animating;
 
     public:
         ///
@@ -135,6 +137,8 @@ class Entity {
         ///
         ///
         void pause_animating();
+
+        void animate(int current_frame);
 
         ///
         /// @return

@@ -7,8 +7,6 @@ import threading
 import traceback
 import importlib
 
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)))
-import game
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/engine')
 from engine import Engine
 
@@ -48,7 +46,6 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
     for game_object in game_objects:
         imbued_locals[game_object.get_name()] = game_object
 
-    imbued_locals["game"] = game #TODO: merge game and engine into a single cohesive class!!! (if needed?)
     imbued_locals["engine"] = engine
 
     class ScopedInterpreter(code.InteractiveInterpreter):
@@ -91,35 +88,6 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
 
     return ScopedInterpreter
 
-""" converts snake_case to CamelCase """
-def snake_to_camelcase(snake_string):
-    components = snake_string.split('_')
-    result = ""
-    for component in components:
-        result += component.title() #title automatically capitalises the first letter of a string! :D
-    return result
-
-""" Imports the correct files and class for each entity, and then wraps them in the correct game object class that has been written in python.
-the base of which is in game/objects/game_object/game_object.py (GameObject)
-
-TODO: add a class check to make sure the objects are of the correct class!, have a degrade gracefully,
-if a child class is poorly defined, throw a warning and then try and create an object as their parent until GameObject is reached,
-if GameObject isn't suitable throw and error and say that somthing is seriously wrong!!!!
-"""
-def wrap_entity_in_game_object(entity, engine):
-    #Grabs the object's location in the file system (original data comes from the map's tmx file, eg. characters/enemies/crocodile
-    entity_location = entity.get_location()
-    #Imports the correct module based on that path name
-    sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + "/objects/" + entity_location)  # Go to the correct folder
-    module_name = entity_location[entity_location.rfind("/") + 1: ] # Then get the name of the file itself (same name as the folder it's in, so can be extracted from the path name, eg crocodile/crocodile.py)
-    module = importlib.import_module(module_name) # Import the module as module
-
-    #Get the class from the module, will be the same as it's file but in UpperCamelCase eg. SuperCrocodile in super_crocodile.py
-    wrapper_class = getattr(module, snake_to_camelcase(module_name))
-    game_object = wrapper_class()  # create the object
-    game_object.set_entity(entity, engine)  # initialise it and wrap the entity instance in it
-    return game_object
-
 def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
     while waiting: #TODO: Work out why this waiting thing is here and in EntityThread: Ask Alex!!!
         # Smallest reasonable wait while
@@ -140,10 +108,9 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
     """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
 
     for entity in entities:
-        game_object = wrap_entity_in_game_object(entity, engine)
+        game_object = engine.wrap_entity_in_game_object(entity)
         game_object.initialise() #run the initialisation script on the object if anything needs to be initialised
         game_objects.append(game_object)
-        engine.register_game_object(game_object)
         engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
         engine.print_debug("whose name is {}".format(game_object.get_name()))
 

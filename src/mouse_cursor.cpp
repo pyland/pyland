@@ -1,18 +1,5 @@
 #include <memory>
 
-
-extern "C" {
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-}
-
-
 #include "mouse_cursor.hpp"
 
 #include "game_window.hpp"

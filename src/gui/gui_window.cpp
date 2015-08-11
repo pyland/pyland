@@ -4,14 +4,6 @@
 
 #include <tuple>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
 std::vector<std::pair<GLfloat*, int>> GUIWindow::generate_this_vertex_data() {
     delete []vertex_data;
     vertex_data = nullptr;

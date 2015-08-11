@@ -6,7 +6,7 @@ import contextlib
 import time
 import threading
 
-#sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../components')
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../components')
 from scoped_interpreter import ScopedInterpreter
 
 """ This file contains all the implementation details of how player scripts are interpreted and run.
@@ -63,7 +63,7 @@ def start(player_object, script_name):
     imbued_locals["test_display"] = player_object.test_display
 
     #Instantiate the scoped intepreter
-    scoped_interpreter = ScopedInterpreter(imbued_locals, player_object.get_engine().print_terminal) #create an instance of it
+    scoped_interpreter = ScopedInterpreter(imbued_locals, lambda x: player_object.get_engine().print_terminal(x, True)) #create an instance of it
     #script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/Script " + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
     script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/"+str(script_name)+".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
 

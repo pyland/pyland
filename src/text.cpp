@@ -25,19 +25,6 @@
 
 #include <glog/logging.h>
 
-extern "C" {
-#include <SDL2/SDL_ttf.h>
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-}
-
 #include "callback.hpp"
 #include "game_window.hpp"
 #include "image.hpp"

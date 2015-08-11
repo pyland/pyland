@@ -30,6 +30,13 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
 
     this->sprite_location = "";
     LOG(INFO) << "invalid: constructor " << this->id;
+
+    this->animating = false;
+
+    this->current_frame = 0;
+
+
+
 }
 
 //A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!!
@@ -42,12 +49,12 @@ void Entity::wait(double gametime, PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     EventManager::get_instance()->add_timed_event(
         GameTime::duration(gametime),
-        [boost_callback] (float completion) mutable {
-            if (completion == 1.0) {
-                EventManager::get_instance()->add_event(boost_callback);
-            }
-            return true;
+    [boost_callback] (float completion) {
+        if (completion == 1.0) {
+            EventManager::get_instance()->add_event(boost_callback);
         }
+        return true;
+    }
     );
 }
 
@@ -83,7 +90,7 @@ bool Entity::is_moving() {
 void Entity::set_solidity(bool solidity) {
     auto id = this->id;
     Walkability w;
-    if(solidity) w = Walkability::BLOCKED;
+    if (solidity) w = Walkability::BLOCKED;
     else w = Walkability::WALKABLE;
     EventManager::get_instance()->add_event([w, id] () {
         auto object(ObjectManager::get_instance().get_object<MapObject>(id));
@@ -94,7 +101,7 @@ void Entity::set_solidity(bool solidity) {
 bool Entity::is_solid() {
     auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
     Walkability w = object->get_walkability();
-    if(w == Walkability::BLOCKED) {
+    if (w == Walkability::BLOCKED) {
         return true;
     } else {
         return false;
@@ -142,43 +149,68 @@ void Entity::set_sprite(std::string sprite_location) {
 }
 
 void Entity::start_animating() {
-    EventManager *em = EventManager::get_instance();
-    int id = this->id;
-    bool *animating = &(this->animating);
-    em->add_event([id, animating] () {
-        auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-    });
-    return;
+    if(!this->animating) {
+        this->animating = true;
+        this->animate(this->current_frame);
+    }
 }
 
 void Entity::pause_animating() {
-    //stub TODO: write this
-    return;
+    this->animating = false;
 }
 
+void Entity::animate(int current_frame) {
+#if 0	
+    if (this->animating) {
+        //auto num_frame = get_number_of_animation_frames();
+        auto num_frame = 4;
+        EventManager::get_instance()->add_event([this, current_frame, num_frame]() {
+            this->set_animation_frame(current_frame);
+            int next_frame = (current_frame + 1) % num_frame;
+            EventManager::get_instance()->add_timed_event(GameTime::duration(.05), [next_frame, this] (float completion) {
+                if (completion == 1.00) {
+                    this->animate(next_frame);
+                }
+                return true;
+            });
+        });
+    }
+#endif 
+}
+
+
+
+
 int Entity::get_number_of_animation_frames() {
-    nlohmann::json j = Config::get_instance();
+    Config::json j = Config::get_instance();
 
     std::string config_location = j["files"]["object_location"];
     std::string full_file_location = config_location + "/" + file_location + "/sprites/" + this->sprite_location;
-    //std::cout << file_location << std::endl;
     std::cout << full_file_location << std::endl;
 
-
-
-
     int num_frames = (int) std::count_if(boost::filesystem::directory_iterator(full_file_location),
-                         boost::filesystem::directory_iterator(), 
-                         [](const boost::filesystem::directory_entry& e) { 
-                              return e.path().extension() == ".png";
-                         });
+                                         boost::filesystem::directory_iterator(),
+    [](const boost::filesystem::directory_entry & e) {
+        return e.path().extension() == ".png";
+    });
     return num_frames;
 
 }
 
 void Entity::set_animation_frame(int frame_number) {
-    //stub TODO: write this
-    ++frame_number;
+    this->current_frame = frame_number;
+    auto sprite_location = this->sprite_location;
+    int id = this->id;
+    std::string file_location = this->file_location;
+
+    auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+    object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+
+    /* EventManager *em = EventManager::get_instance();
+     em->add_event([id, sprite_location, file_location, frame_number] () { //put changing the player tile on the event queue
+         auto object = ObjectManager::get_instance().get_object<MapObject>(id);
+         object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+     });*/
     return;
 }
 
@@ -202,10 +234,9 @@ void Entity::py_print_debug(std::string text) {
     LOG(INFO) << text;
 }
 
-void Entity::py_print_dialogue(std::string text) {
-    auto name = this->name;
-    Engine::print_dialogue(name, text);
-}
+//void Entity::py_print_dialogue(std::string text) {
+//    Engine::print_dialogue(text);
+//}
 
 void Entity::__set_game_speed(float game_seconds_per_real_second) {
     EventManager::get_instance()->time.set_game_seconds_per_real_second(game_seconds_per_real_second);
