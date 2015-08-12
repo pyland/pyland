@@ -66,7 +66,7 @@
 		"notification_text_height": 0.40, 
 		"notification_text_x": 0.03,
 		"notification_text_y": 0.70,
-		"notification_text_buffer": 80,
+		"notification_text_buffer": 500,
 
 		//the parameters for notification button (next, back etc)
 		"notification_button_width": 0.50,

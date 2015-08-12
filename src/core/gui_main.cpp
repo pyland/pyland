@@ -83,15 +83,15 @@ void GUIMain::create_pause_menu(){
 
     gui_window->add(pause_button);
 
-	exit_button = std::make_shared<Button>(ButtonType::NoPicture);
-	exit_button->set_text("Exit Pyland");
-	exit_button->set_alignment(ButtonAlignment::BottomLeft);
+    exit_button = std::make_shared<Button>(ButtonType::NoPicture);
+    exit_button->set_text("Exit Pyland");
+    exit_button->set_alignment(ButtonAlignment::BottomLeft);
     exit_button->set_on_click( [] () {
-	});
+    });
     exit_button->set_clickable(false);
     exit_button->set_visible(false);
     exit_button->set_width(menu_width);
-	exit_button->set_height(menu_height);
+    exit_button->set_height(menu_height);
     exit_button->set_x_offset(menu_x_offset);
     exit_button->set_y_offset(menu_y_offset);
 
@@ -239,10 +239,10 @@ void GUIMain::create_pyguide(){
 
 void GUIMain::open_pause_window(){
 
-	pause_button->set_x_offset(close_x_offset);
-	pause_button->set_y_offset(close_y_offset);
-	pause_button->set_picture("gui/highlight/goal");
-	pause_button->set_text("Resume");
+    pause_button->set_x_offset(close_x_offset);
+    pause_button->set_y_offset(close_y_offset);
+    pause_button->set_picture("gui/highlight/goal");
+    pause_button->set_text("Resume");
 
     pause_open = true;
     gui_window->set_visible(true);
@@ -270,10 +270,10 @@ void GUIMain::open_pause_window(){
 
 void GUIMain::close_pause_window(){
 
-	pause_button->set_x_offset(left_x_offset);
-	pause_button->set_y_offset(top_y_offset);
-	pause_button->set_picture("gui/game/pause");
-	pause_button->set_text("");
+    pause_button->set_x_offset(left_x_offset);
+    pause_button->set_y_offset(top_y_offset);
+    pause_button->set_picture("gui/game/pause");
+    pause_button->set_text("");
 
     pause_open = false;
 
@@ -300,7 +300,7 @@ void GUIMain::close_pause_window(){
         }
     }
 
-	exit_button->set_visible(false);
+    exit_button->set_visible(false);
     exit_button->set_clickable(false);
 
     refresh_gui();
@@ -333,7 +333,7 @@ void GUIMain::open_bag()
     bag_open = true;
     bag_window->set_visible(true);
 
-	bag_button->set_text("Close");
+    bag_button->set_text("Close");
 
     pyguide_button->set_visible(true);
     pyguide_button->set_clickable(true);
@@ -354,7 +354,7 @@ void GUIMain::close_bag()
     bag_window->set_visible(false);
 
     close_pyguide();
-	bag_button->set_text("Bag");
+    bag_button->set_text("Bag");
 
     pyguide_button->set_visible(false);
     pyguide_button->set_clickable(false);
@@ -578,8 +578,8 @@ void GUIMain::config_gui()
     bottom_y_offset = j["scales"]["bottom_y_offset"];
     top_y_offset = j["scales"]["top_y_offset"];
 
-	close_x_offset = j["scales"]["close_x_offset"];
-	close_y_offset = j["scales"]["close_y_offset"];
+    close_x_offset = j["scales"]["close_x_offset"];
+    close_y_offset = j["scales"]["close_y_offset"];
 
     title_x_offset = j["scales"]["title_x_offset"];
     title_y_offset = j["scales"]["title_y_offset"];

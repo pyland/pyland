@@ -13,7 +13,7 @@ engine.play_music("calm")
 
 dialogue_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_coming_now"), callback),
-    lambda callback: camera.move_by((0, -11), 3, callback),
+    lambda callback: camera.move_by((0, -11), 2.2, callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_text_editor"), callback),
@@ -22,6 +22,12 @@ dialogue_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": "Alex"}), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_console_output"), callback),
 ]
+
+def get_player_name(callback):
+    engine.register_input_callback(engine.INPUT_RUN, focus_func(self.run_script))
+    player_api = {
+        "print" : lambda text: engine.print_terminal(text)
+    }
 
 engine.run_callback_list_sequence(dialogue_sequence)
 
