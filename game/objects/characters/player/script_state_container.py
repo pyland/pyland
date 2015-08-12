@@ -39,3 +39,16 @@ class ScriptStateContainer:
         if self.is_running_script():
             thread_id = self.get_thread_id()
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
+
+    def run_script(self, script_api, engine):
+        """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the script_api to the script that is run.
+
+        Parameters
+        ----------
+        script_api : dict
+            A dictionary from object names to their instances #TODO: explain this a bit more clearly
+        """
+        if not(self.is_running_script()): #only run script if one currently isn't running.
+            self.set_running_script_status(True)
+            scriptrunner.start(script_api, engine.get_run_script(), self, engine)
+        return

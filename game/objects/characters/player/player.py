@@ -115,14 +115,6 @@ class Player(Character, ScriptStateContainer):
         engine = self.get_engine()
         engine.update_player_name(character_name,self.__focus_button_id)
 
-    #override ScriptStateContainer
-    def get_script_name(self):
-        return self.get_character_name()
-
-    #override ScriptStateContainer
-    def set_script_name(self):
-        self.set_character_name(self)
-
     def test_display_bag(self):
         engine = self.get_engine()
         x, y = self.get_position()
@@ -150,21 +142,13 @@ class Player(Character, ScriptStateContainer):
         #return result
         return "coconut_one : weight: 5"
 
+    """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
+
     def run_script(self):
         """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
 
         Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
         The callback is run after the script has finished running.
-
-        TODO: work out if the callback should know if the script failed or not.
-        (Or if callback is even needed)
-
-        Parameters
-        ----------
-        script_name : str
-            The name of the script you wish to running, in the player_scripts folder in the root of the game.
-        callback : function
-            The callback function you wish to run after the script has finished runnning.
         """
         if not(self.is_running_script()): #only run script if one currently isn't running.
             engine = self.get_engine()
@@ -192,6 +176,16 @@ class Player(Character, ScriptStateContainer):
 
             scriptrunner.start(script_api, engine.get_run_script(), self, engine)
         return
+
+    #override ScriptStateContainer
+    def get_script_name(self):
+        return self.get_character_name()
+
+    #override ScriptStateContainer
+    def set_script_name(self):
+        self.set_character_name(self)
+
+    """ ---- / All Code todo with running player scripts ---- """
 
     """ private:
     Put the private methods you wish to use here.
