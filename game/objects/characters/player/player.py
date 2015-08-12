@@ -26,6 +26,8 @@ sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../charact
 from character import Character
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../properties/bagable')
 from bagable import Bagable
+from script_state_container import ScriptStateContainer
+
 """
 As the Character is in the characters folder.
 """
@@ -100,7 +102,7 @@ class Player(Character):
         #self.__entity.focus()
         super().focus();
         engine = self.get_engine()
-        if (self.__running_script):
+        if (self.is_running_script()):
             engine.set_running()
         else:
             engine.set_finished()
@@ -112,9 +114,12 @@ class Player(Character):
         """Override set_character_name from character to
         update the player focus button with the new name
         """
-        self.__character_name = character_name
+        super().set_character_name(character_name)
         engine = self.get_engine()
         engine.update_player_name(character_name,self.__focus_button_id)
+
+    def get_script_name(self):
+        return self.get_character_name()
 
     def test_display_bag(self):
         engine = self.get_engine()
@@ -159,9 +164,9 @@ class Player(Character):
         callback : function
             The callback function you wish to run after the script has finished runnning.
         """
-        if not(self.__running_script): #only run script if one currently isn't running.
+        if not(self.is_running_script()): #only run script if one currently isn't running.
             engine = self.get_engine()
-            self.__running_script = True
+            self.set_running_script_status(True)
     
             #script_api is a python dictionary of python objects (variables, methods, class instances etc.)
             #available to the player. :)
@@ -183,7 +188,7 @@ class Player(Character):
 
             script_api["test_display_bag"] = self.test_display_bag
 
-            scriptrunner.start(script_api, engine.get_run_script(), self)
+            scriptrunner.start(script_api, engine.get_run_script(), self, engine)
         return
 
     def halt_script(self):
@@ -192,8 +197,8 @@ class Player(Character):
         Works by sending the thread the script is running in an Exception, which the thread catches and appropriately handles and
         stops running.
         """
-        if self.__running_script:
-            thread_id = self.__thread_id #TODO: Make this process safer, look at temp.py and add appropriate guards around the next line to check for valid results etc.
+        if self.is_running_script():
+            thread_id = self.get_thread_id()
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
 
     def set_running_script_status(self, status):
@@ -204,12 +209,17 @@ class Player(Character):
         self.__running_script = status
         return
 
+    def is_running_script(self):
+        return self.__running_script
+
     def set_thread_id(self, thread_id):
+        """ The player stores a copy of it's own id so that scripts can be halted by the C-API """
         self.__thread_id = thread_id
         return
 
     def get_thread_id(self):
-        return thread_id
+        """ The player stores a copy of it's own id so that scripts can be halted by the C-API """
+        return self.__thread_id
 
     """ private:
     Put the private methods you wish to use here.
@@ -218,7 +228,7 @@ class Player(Character):
     """ Override character move methods to prevent movement if script is running
     """
     def __input_move_north(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
+        if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
@@ -229,7 +239,7 @@ class Player(Character):
         return
 
     def __input_move_east(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
+        if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
@@ -240,7 +250,7 @@ class Player(Character):
         return
 
     def __input_move_south(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
+        if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
@@ -251,7 +261,7 @@ class Player(Character):
         return
 
     def __input_move_west(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
+        if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()

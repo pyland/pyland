@@ -15,7 +15,7 @@ from scoped_interpreter import ScopedInterpreter
 class HaltScriptException(Exception):
     pass
 
-def start(script_api, script_name, player_object):
+def start(script_api, script_name, script_state_container, engine):
     """ This function runs the script provided in the argument in a seperate thread.
 
     The script has access to a set of API's defined in script_api that allow
@@ -25,12 +25,11 @@ def start(script_api, script_name, player_object):
 
     Parameters
     ----------
-    player_object : Player
-        This is the instance of the player_object which is interacted with using the script.
+    script_state_container : ScriptStateContainer
+        This is the instance of the script_state_container which is interacted with using the script.
     script_name : str
         The name of the script that you wish to run. The game looks in the script folder for it.
     """
-    engine = player_object.get_engine()
 
     #All the stuff to define new print stuff, this essentially means that stuff will  only be printed to the screen if the player has typed in something
     printed_flag = [False]
@@ -59,19 +58,17 @@ def start(script_api, script_name, player_object):
         try:
             scoped_interpreter.runcode(script, HaltScriptException) #Run the script
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
-            player_object.get_engine().print_terminal("Halted Script", True)
-            player_object.get_engine().set_finished()
+            engine.print_terminal("Halted Script", True)
             printed_flag[0] = True
-        finally: #perform neccesary cleanup
+        finally:
             if printed_flag[0]:
-                player_object.get_engine().print_terminal("---" + player_object.get_character_name() + "'s script has ended---", False)
-            player_object.set_running_script_status(False)
-            player_object.get_engine().set_finished()
-            #TODO: Make it so that the halt button becomes the run button again.
+                engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has ended---", False)
+            script_state_container.set_running_script_status(False)
+            engine.set_finished()
 
-    thread = threading.Thread(target = thread_target, name = player_object.get_name() + "_script_thread")
+    thread = threading.Thread(target = thread_target)
     thread.start()
-    player_object.set_thread_id(thread.ident)
+    script_state_container.set_thread_id(thread.ident) #Save the player's thread id so that scripts can be halted
     return
 
 def make_blocking(async_function):
