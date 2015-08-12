@@ -274,22 +274,25 @@ void GUIMain::close_pause_window(){
     refresh_gui();
 }
 
-void GUIMain::open_notification_bar(){
+void GUIMain::open_notification_bar(std::function<void ()> func){
     bar_open = true;
 
-    em->pause();
     LOG(INFO) << "Notification Bar open";
 
+	notification_func = func;
     notification_bar->open();
 }
 
 void GUIMain::close_notification_bar(){
     bar_open = false;
 
-    em->resume();
     LOG(INFO) << "Notification Bar closed";
 
     notification_bar->close();
+
+	em->add_event([this] {
+        notification_func();
+    });
 }
 
 
@@ -325,10 +328,6 @@ void GUIMain::close_bag()
     {
         bag_items[i]->set_visible(false);
         bag_items[i]->set_clickable(false);
-    }
-
-    if(bar_open){
-        open_notification_bar();
     }
 
     refresh_gui();

@@ -47,19 +47,16 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
-void GameEngine::add_dialogue(std::string text) {
-    LOG(INFO) << "Adding@ " << text;
-    Engine::add_dialogue(text);
-}
-
-void GameEngine::add_text(std::string text) {
-    LOG(INFO) << "Adding@ " << text;
-    Engine::add_text(text);
-}
-
-void GameEngine::open_dialogue_box(PyObject *callback) {
+void GameEngine::show_dialogue(std::string text, PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
-    LOG(INFO) << "Opening notification bar";
+
+	if(Engine::is_bar_open()){
+		LOG(INFO) << "Replacing the old notification bar with the new one";
+		Engine::close_notification_bar();
+	}
+
+	LOG(INFO) << "Adding " << text << "to the notification bar";
+    Engine::add_text(text);
     Engine::open_notification_bar(boost_callback);
 }
 

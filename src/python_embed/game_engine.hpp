@@ -93,16 +93,9 @@ class GameEngine {
         void update_player_name(std::string name, unsigned int passing_button_id);
 
         ///
-        /// To add a dialogue to the screen
+        /// To add a dialogue to the notificaton bar
         ///
-        void add_dialogue(std::string text);
-
-        void add_text(std::string text);
-
-        ///
-        /// To open the dialogue box on the screen
-        ///
-        void open_dialogue_box(PyObject *callback);
+        void show_dialogue(std::string text, PyObject *callback);
 
         ///
         /// Register a callback against a given input

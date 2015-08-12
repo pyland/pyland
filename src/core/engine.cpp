@@ -247,27 +247,37 @@ int Engine::get_tile_type(int x, int y) {
 }
 
 void Engine::add_dialogue(std::string text) {
-    auto _gui_main = gui_main;
-    EventManager::get_instance()->add_event([_gui_main, text] {
-        _gui_main->add_message(text);
+
+    EventManager::get_instance()->add_event([text] {
+        gui_main->add_message(text);
     });
 }
 
 void Engine::add_text(std::string text) {
-    auto _gui_main = gui_main;
-    EventManager::get_instance()->add_event([_gui_main, text] {
-        _gui_main->add_text(text);
+
+    EventManager::get_instance()->add_event([text] {
+        gui_main->add_text(text);
     });
 }
 
 void Engine::open_notification_bar(std::function<void ()> func){
-    auto _gui_main = gui_main;
-    EventManager::get_instance()->add_event([_gui_main] {
-        _gui_main->open_notification_bar();
-    });
+
     EventManager::get_instance()->add_event([func] {
-        func();
+        gui_main->open_notification_bar(func);
     });
+
+}
+
+void Engine::close_notification_bar(){
+
+    EventManager::get_instance()->add_event([] {
+        gui_main->close_notification_bar();
+    });
+
+}
+
+bool Engine::is_bar_open(){
+	return (gui_main->is_bar_open());
 }
 
 //Print to the QT terminal widget
