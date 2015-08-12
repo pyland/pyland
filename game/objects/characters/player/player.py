@@ -1,7 +1,6 @@
 #Python modules
 import operator
 import os
-import ctypes #for sending exceptions to python threads!!!
 
 #Custom modules
 import scriptrunner
@@ -37,10 +36,8 @@ As the Character is in the characters folder.
 The auto-generated comment produced by the script should also mention where to get a list of the api
 and which built-in variables exist already.
 """
-class Player(Character):
+class Player(Character, ScriptStateContainer):
 
-    __running_script = False
-    __thread_id = 0
     __bag = None
     __focus_button_id = 0
 
@@ -118,8 +115,13 @@ class Player(Character):
         engine = self.get_engine()
         engine.update_player_name(character_name,self.__focus_button_id)
 
+    #override ScriptStateContainer
     def get_script_name(self):
         return self.get_character_name()
+
+    #override ScriptStateContainer
+    def set_script_name(self):
+        self.set_character_name(self)
 
     def test_display_bag(self):
         engine = self.get_engine()
@@ -190,36 +192,6 @@ class Player(Character):
 
             scriptrunner.start(script_api, engine.get_run_script(), self, engine)
         return
-
-    def halt_script(self):
-        """ Halts the player script that is running.
-
-        Works by sending the thread the script is running in an Exception, which the thread catches and appropriately handles and
-        stops running.
-        """
-        if self.is_running_script():
-            thread_id = self.get_thread_id()
-            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
-
-    def set_running_script_status(self, status):
-        """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
-
-        Simply prevents to scripts with player inputs from running simultaneously.
-        """
-        self.__running_script = status
-        return
-
-    def is_running_script(self):
-        return self.__running_script
-
-    def set_thread_id(self, thread_id):
-        """ The player stores a copy of it's own id so that scripts can be halted by the C-API """
-        self.__thread_id = thread_id
-        return
-
-    def get_thread_id(self):
-        """ The player stores a copy of it's own id so that scripts can be halted by the C-API """
-        return self.__thread_id
 
     """ private:
     Put the private methods you wish to use here.

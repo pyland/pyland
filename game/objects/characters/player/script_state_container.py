@@ -1,5 +1,6 @@
 
-
+import ctypes #for sending exceptions to python threads!!!
+import scriptrunner
 
 class ScriptStateContainer:
     __script_name = "script_state_container"
@@ -14,6 +15,9 @@ class ScriptStateContainer:
         self.__running_script = status
         return
 
+    def is_running_script(self):
+        return self.__running_script
+
     def get_script_name(self):
         return self.__script_name
 
@@ -25,3 +29,13 @@ class ScriptStateContainer:
 
     def get_thread_id(self):
         return self.__thread_id
+
+    def halt_script(self):
+        """ Halts the player script that is running.
+
+        Works by sending the thread the script is running in an Exception, which the thread catches and appropriately handles and
+        stops running.
+        """
+        if self.is_running_script():
+            thread_id = self.get_thread_id()
+            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
