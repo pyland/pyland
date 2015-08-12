@@ -27,6 +27,10 @@ As the GameObject is in the base objects folder.
 class Portal(GameObject):
     __target = (0, 0)
 
+    def initialise(self):
+        self.set_sprite("")
+        self.set_visible(True)
+
     def set_target(self, target):
         """ Set the target for the portal, it can be either another portal or a tuple of integers """
         if(isinstance(target, Portal)):

@@ -16,6 +16,7 @@ engine.add_dialogue(engine.get_dialogue("intro_monty_text_editor"))
 engine.add_dialogue(engine.get_dialogue("intro_big_white_box"))
 engine.add_dialogue(engine.get_dialogue("intro_monty_hello_player", {"player_name": "Alex"}))
 engine.add_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": "Alex"}))
+engine.add_dialogue(engine.get_dialogue("intro_console_output"))
 engine.open_dialogue_box() #Give callback here?
 
 #engine.print_terminal(player_one.get_position(), False)

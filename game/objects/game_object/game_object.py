@@ -40,7 +40,6 @@ class GameObject:
             The C++ GameEngine instance, provides some usefule API.
         """
         self.__entity = entity
-        self.set_sprite("")
         self.set_visible(False)
         self.set_solidity(False)
         self.__engine = engine
