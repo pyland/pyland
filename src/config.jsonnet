@@ -40,6 +40,10 @@
 		"bottom_y_offset": 0.00,
 		"top_y_offset": 0.87,				
 
+		//for placing the close button once the pause window is open
+		"close_x_offset": 0.10,
+		"close_y_offset": 0.75,
+
 		//for placing the title of a menu
 		"title_x_offset": 0.50,
 		"title_y_offset": 0.90,
@@ -49,9 +53,9 @@
 		//for placing an item on the menu
 		"menu_x_offset": 0.03,
 		"menu_y_offset": 0.75,
-		"menu_height": 1.0,
 		"menu_width": 1.0,
-		"menu_spacing": 1.0,	
+		"menu_height": 1.0,
+		"menu_spacing": 0.15,	
 		
 		//the sizes of the notification box
 		"notification_width": 1.00,
