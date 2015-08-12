@@ -4,4 +4,4 @@ you complete the game! Read the helpful messages
 in the game and they will tell you what to do! :)
 """
 while True:
-  move_south()
+  move_north()

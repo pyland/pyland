@@ -258,7 +258,7 @@ public:
     ///
     /// Attempt to load the name-index mappings from a file.
     ///
-    void load_names(const std::string filename, bool isfml = true);
+    void load_names(const std::string filename);
 
     ///
     /// Get the mapping of an index to a name.
