@@ -399,28 +399,28 @@ std::tuple<float,float,float,float> TextureAtlas::index_to_coords(int index) {
 
 void TextureAtlas::load_names(const std::string filename) {
 
-	bool is_fml = (filename == "../resources/tiles/gui") || (filename == "../resources/cursor");
-	//bool is_fml = true;
+    bool is_fml = (filename == "../resources/tiles/gui") || (filename == "../resources/cursor");
+    //bool is_fml = true;
 
     if(is_fml){
 
-		LOG(INFO) << "Using fml file for " << filename;
+        LOG(INFO) << "Using fml file for " << filename;
 
-		std::ifstream file(filename + ".fml");
+        std::ifstream file(filename + ".fml");
 
-		if (file.fail()) {
-			throw TextureAtlas::LoadException("File \"" + filename + ".fml\" could not be opened.");
-		}
+        if (file.fail()) {
+            throw TextureAtlas::LoadException("File \"" + filename + ".fml\" could not be opened.");
+        }
 
-		fml::from_stream(file, names_to_indices);
+        fml::from_stream(file, names_to_indices);
 
-		for (const std::pair<std::string,int> &mapping : names_to_indices) {
-			indices_to_names[mapping.second] = mapping.first;
-		}
+        for (const std::pair<std::string,int> &mapping : names_to_indices) {
+            indices_to_names[mapping.second] = mapping.first;
+        }
     }
     else{
-		names_to_indices[filename] = 0;
-		indices_to_names[0] = filename;
+        names_to_indices[filename] = 0;
+        indices_to_names[0] = filename;
     }
 
 }

@@ -3,6 +3,7 @@ import sys
 import importlib
 import sqlite3
 import json
+import threading
 
 class Engine:
     """ This class is a python wrapper for all the engine features that are exposed to the game.
@@ -13,11 +14,18 @@ class Engine:
     __cpp_engine = None
     #A dictonary of all the game objects in the level (maps from object_id to object)
     __game_objects = dict()
+    #Represents the connections to the sqlite database
+    conn = dict()
 
     def get_dialogue(self, identifier, escapes = dict()):
-        """ Get the piece of dialoge from the database requested
+        """ Get the piece of dialoge requested form the database.
+
+        The escapes argument is a dictionary from escape keys to replacements to allow parts of the result to be dynamically replaced.
         """
-        result = self.conn.execute("SELECT english, français, nederlands, hindi, pyrate FROM dialogue WHERE identifier=?;", (identifier, ))
+        if not(threading.current_thread() in self.conn):
+            self.conn[threading.current_thread()] = sqlite3.connect(self.dblocation)
+        result = self.conn[threading.current_thread()].execute("SELECT english, français, nederlands, hindi, pyrate FROM dialogue WHERE identifier=?;", (identifier, ))
+            
         row = result.fetchone()
         dialogue = "invalid dialogue identifier" #TODO: Make it so that game complains much more about this in debug mode!!!!
         if(row != None):
@@ -58,10 +66,11 @@ class Engine:
         self.all_languages = ["english", "français", "nederlands", "hindi", "pyrate"]
         self.dblocation = os.path.dirname(os.path.realpath(__file__)) + "/../database.db"
         self.language = self.get_config()['game_settings']['language']
-        self.conn = sqlite3.connect(self.dblocation)
+        self.conn[threading.current_thread()] = sqlite3.connect(self.dblocation)
               
     def __del__(self):
-        self.conn.close()
+        for key in self.conn:
+            self.conn[key].close()
 
     def set_language(self, language_to_set):
         if(language_to_set in self.all_languages):

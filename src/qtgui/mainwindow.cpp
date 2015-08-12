@@ -830,7 +830,7 @@ void MainWindow::updateSpeed()
                         + 5.0f * completion * completion * completion
                     ));
 
-        EventManager::get_instance()->time.set_game_seconds_per_real_second(eased);
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(2.5);
     }
     else
     {

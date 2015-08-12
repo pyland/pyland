@@ -49,10 +49,10 @@ using OrderedHashSet = boost::multi_index_container<
 class MapObject : public Object {
 protected:
 
-	///
-	///The location of the image to be displayed for this object
-	///
-	std::string tile;
+    ///
+    ///The location of the image to be displayed for this object
+    ///
+    std::string tile;
 
     ///
     /// The focus icon, to move with sprite and hide, depending on if mapobject is in focus;

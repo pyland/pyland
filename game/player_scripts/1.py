@@ -5,3 +5,6 @@ in the game and they will tell you what to do! :)
 """
 while True:
   move_north()
+  move_east()
+  move_south()
+  move_west()

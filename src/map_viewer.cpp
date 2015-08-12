@@ -105,7 +105,7 @@ void MapViewer::render_map() {
             continue;
         }
 
-		std::shared_ptr<RenderableComponent> layer_render_component(layer->get_renderable_component());
+        std::shared_ptr<RenderableComponent> layer_render_component(layer->get_renderable_component());
         Shader *layer_shader(layer_render_component->get_shader().get());
 
         //Set the matrices

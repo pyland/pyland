@@ -13,7 +13,7 @@ Layer::Layer(int width_tiles, int height_tiles, std::string name) :
 }
 
 std::shared_ptr<RenderableComponent> Layer::get_renderable_component(){
-	return renderable_component;
+    return renderable_component;
 }
 
 void Layer::add_tile(std::shared_ptr<TileSet> tileset, int tile_id) {

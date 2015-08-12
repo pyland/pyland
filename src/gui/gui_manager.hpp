@@ -68,7 +68,7 @@ public:
     GUIManager();
     virtual ~GUIManager();
 
-	std::shared_ptr<RenderableComponent> renderable_component;
+    std::shared_ptr<RenderableComponent> renderable_component;
 
     ///
     /// Callback function to handle mouse events
