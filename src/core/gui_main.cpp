@@ -14,8 +14,8 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     map_viewer(embedWindow, &gui_manager),
     em(EventManager::get_instance()),
     bar_open(false),
+    pause_open(false),
     bag_open(false),
-    pyguide_open(false),
     display_button_start(0)
 
 {
@@ -36,8 +36,8 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     gui_manager.set_root(gui_window);
 
-    create_notification_bar();
     create_pause_menu();
+    create_notification_bar();
     create_bag();
     create_pyguide();
 
@@ -54,6 +54,110 @@ GUIMain::~GUIMain()
     LOG(INFO) << "Destructed GUIMain.";
 }
 
+void GUIMain::create_pause_menu(){
+
+    pause_button = std::make_shared<Button>(ButtonType::Single);
+    pause_button->set_picture("gui/game/pause");
+    pause_button->set_alignment(ButtonAlignment::TopLeft);
+    pause_button->set_width(button_width);
+    pause_button->set_height(button_height);
+    pause_button->set_x_offset(left_x_offset);
+    pause_button->set_y_offset(top_y_offset);
+    pause_button->set_on_click( [&] ()
+    {
+        if(bag_open || bar_open){
+            return;
+        }
+
+        if(pause_open == false)
+        {
+            em->pause();
+            LOG(INFO) << "PAUSED";
+            open_pause_window();
+        }
+        else
+        {
+            em->resume();
+            LOG(INFO) << "RESUMED";
+            close_pause_window();
+        }
+    });
+    gui_window->add(pause_button);
+}
+
+void GUIMain::create_notification_bar(){
+
+    notification_bar = std::make_shared<TextBox>(TextBoxType::Bar);
+    notification_bar->set_width(notification_width);
+    notification_bar->set_height(notification_height);
+    notification_bar->set_x_offset(left_x_offset);
+    notification_bar->set_y_offset(bottom_y_offset);
+    notification_bar->move_text(notification_text_x, notification_text_y);
+    notification_bar->resize_text(notification_text_width, notification_text_height);
+    notification_bar->resize_buttons(notification_button_width, notification_button_height);
+    notification_bar->move_buttons(notification_button_x, notification_button_y);
+    notification_bar->set_visible(false);
+    notification_bar->set_buffer_size(notification_text_buffer);
+
+    gui_window->add(notification_bar);
+}
+
+void GUIMain::create_bag(){
+
+    bag_button = std::make_shared<Button>(ButtonType::Single);
+    bag_button->set_picture("gui/game/bag");
+    bag_button->set_text("Bag");
+    bag_button->set_alignment(ButtonAlignment::TopRight);
+    bag_button->set_width(button_width);
+    bag_button->set_height(button_height);
+    bag_button->set_x_offset(right_x_offset);
+    bag_button->set_y_offset(top_y_offset);
+
+    bag_button->set_on_click( [&] ()
+    {
+        if(bar_open || pause_open){
+            return;
+        }
+
+        if(bag_open == false)
+        {
+            em->pause();
+            LOG(INFO) << "BAG OPEN";
+            open_bag();
+        }
+        else
+        {
+            em->resume();
+            LOG(INFO) << "BAG CLOSED";
+            close_bag();
+        }
+    });
+
+    bag_window = std::make_shared<Board>(ButtonType::Board);
+    bag_window->set_text("Bag");
+    bag_window->set_clickable(false);
+    bag_window->set_visible(false);
+    bag_window->move_text(title_x_offset, title_y_offset);
+
+    pyguide_button = std::make_shared<Button>(ButtonType::NoPicture);
+    pyguide_button->set_text("PyGuide");
+    pyguide_button->set_alignment(ButtonAlignment::BottomLeft);
+    pyguide_button->set_width(button_width);
+    pyguide_button->set_height(button_height);
+    pyguide_button->set_x_offset(menu_x_offset);
+    pyguide_button->set_y_offset(menu_y_offset);
+    pyguide_button->set_visible(false);
+
+    pyguide_button->set_on_click( [&] ()
+    {
+        open_pyguide();
+    });
+
+    bag_window->add(pyguide_button);
+    gui_window->add(bag_button);
+    gui_window->add(bag_window);
+}
+
 void GUIMain::create_pyguide(){
 
     nlohmann::json j = Config::get_instance();
@@ -64,7 +168,7 @@ void GUIMain::create_pyguide(){
     pyguide_window->set_visible(false);
     pyguide_window->move_text(pyguide_title_x_offset, pyguide_title_y_offset);
 
-    py_help = std::make_shared<TextBox>(TextBoxType::Both);
+    py_help = std::make_shared<TextBox>(TextBoxType::Display);
     py_help->set_width(py_help_width);
     py_help->set_height(py_help_height);
     py_help->set_x_offset(py_help_x);
@@ -120,124 +224,9 @@ void GUIMain::create_pyguide(){
     gui_window->add(pyguide_window);
 }
 
-void GUIMain::create_pause_menu(){
-
-    pause_button = std::make_shared<Button>(ButtonType::Single);
-    pause_button->set_picture("gui/game/pause");
-    pause_button->set_alignment(ButtonAlignment::TopLeft);
-    pause_button->set_width(button_width);
-    pause_button->set_height(button_height);
-    pause_button->set_x_offset(left_x_offset);
-    pause_button->set_y_offset(top_y_offset);
-    pause_button->set_on_click( [&] ()
-    {
-
-        if(em->is_paused() == false)
-        {
-            em->pause();
-            LOG(INFO) << "PAUSED";
-            open_pause_window();
-        }
-        else
-        {
-            em->resume();
-            LOG(INFO) << "RESUMED";
-            close_pause_window();
-        }
-    });
-    gui_window->add(pause_button);
-}
-
-void GUIMain::create_bag(){
-
-    bag_button = std::make_shared<Button>(ButtonType::Single);
-    bag_button->set_picture("gui/game/bag");
-    bag_button->set_text("Bag");
-    bag_button->set_alignment(ButtonAlignment::TopRight);
-    bag_button->set_width(button_width);
-    bag_button->set_height(button_height);
-    bag_button->set_x_offset(right_x_offset);
-    bag_button->set_y_offset(top_y_offset);
-
-    bag_button->set_on_click( [&] ()
-    {
-
-        if(bag_open == false)
-        {
-            bag_open = true;
-            open_bag();
-        }
-        else
-        {
-            bag_open = false;
-            close_bag();
-        }
-    });
-
-    bag_window = std::make_shared<Board>(ButtonType::Board);
-    bag_window->set_text("Bag");
-    bag_window->set_clickable(false);
-    bag_window->set_visible(false);
-    bag_window->move_text(title_x_offset, title_y_offset);
-
-    pyguide_button = std::make_shared<Button>(ButtonType::NoPicture);
-    pyguide_button->set_text("PyGuide");
-    pyguide_button->set_alignment(ButtonAlignment::BottomLeft);
-    pyguide_button->set_width(button_width);
-    pyguide_button->set_height(button_height);
-    pyguide_button->set_x_offset(menu_x_offset);
-    pyguide_button->set_y_offset(menu_y_offset);
-    pyguide_button->set_visible(false);
-
-    pyguide_button->set_on_click( [&] ()
-    {
-        pyguide_open = true;
-        open_pyguide();
-    });
-
-    bag_window->add(pyguide_button);
-    gui_window->add(bag_button);
-    gui_window->add(bag_window);
-}
-
-void GUIMain::create_notification_bar(){
-
-    notification_bar = std::make_shared<TextBox>(TextBoxType::Forward);
-    notification_bar->set_width(notification_width);
-    notification_bar->set_height(notification_height);
-    notification_bar->set_x_offset(left_x_offset);
-    notification_bar->set_y_offset(bottom_y_offset);
-    notification_bar->move_text(notification_text_x, notification_text_y);
-    notification_bar->resize_text(notification_text_width, notification_text_height);
-    notification_bar->resize_buttons(notification_button_width, notification_button_height);
-    notification_bar->move_buttons(notification_button_x, notification_button_y);
-    notification_bar->set_visible(false);
-    notification_bar->set_buffer_size(notification_text_buffer);
-
-    gui_window->add(notification_bar);
-}
-
-void GUIMain::open_notification_bar(){
-    notification_bar->open();
-    bar_open = true;
-}
-
-void GUIMain::close_notification_bar(){
-    notification_bar->close();
-    bar_open = false;
-}
-
-void GUIMain::add_message(std::string text){
-    notification_bar->add_message(text);
-}
-
-void GUIMain::add_text(std::string text){
-    notification_bar->add_text(text);
-}
-
 void GUIMain::open_pause_window(){
 
-    close_bag();
+    pause_open = true;
     gui_window->set_visible(true);
 
     const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
@@ -252,14 +241,14 @@ void GUIMain::open_pause_window(){
             i->second->set_visible(false);
             i->second->set_clickable(false);
         }
-        bag_open = false;
-        pyguide_open = false;
     }
 
     refresh_gui();
 }
 
 void GUIMain::close_pause_window(){
+
+    pause_open = false;
     gui_window->set_visible(false);
 
     const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
@@ -285,14 +274,29 @@ void GUIMain::close_pause_window(){
     refresh_gui();
 }
 
+void GUIMain::open_notification_bar(){
+    bar_open = true;
+
+    em->pause();
+    LOG(INFO) << "Notification Bar open";
+
+    notification_bar->open();
+}
+
+void GUIMain::close_notification_bar(){
+    bar_open = false;
+
+    em->resume();
+    LOG(INFO) << "Notification Bar closed";
+
+    notification_bar->close();
+}
+
+
 void GUIMain::open_bag()
 {
-
-    close_notification_bar();
+    bag_open = true;
     bag_window->set_visible(true);
-
-    close_pyguide();
-    pyguide_open = false;
 
     pyguide_button->set_visible(true);
     pyguide_button->set_clickable(true);
@@ -309,11 +313,10 @@ void GUIMain::open_bag()
 
 void GUIMain::close_bag()
 {
-
+    bag_open = false;
     bag_window->set_visible(false);
 
     close_pyguide();
-    pyguide_open = false;
 
     pyguide_button->set_visible(false);
     pyguide_button->set_clickable(false);
@@ -335,6 +338,8 @@ void GUIMain::close_bag()
 void GUIMain::open_pyguide()
 {
     close_bag();
+    bag_open = true; //because the pyguide is now open
+
     pyguide_window->set_visible(true);
     py_help->set_visible(true);
 
@@ -350,17 +355,27 @@ void GUIMain::open_pyguide()
 
 void GUIMain::close_pyguide()
 {
+    bag_open = false;
+
     pyguide_window->set_visible(false);
     py_help->set_visible(false);
+    py_help->close();
 
     for(unsigned int i=0; i<py_apis_num; i++){
         pyguide_commands[i]->set_visible(false);
         pyguide_commands[i]->set_clickable(false);
     }
 
-    py_help->close();
     refresh_gui();
     LOG(INFO) << "PyGuide closed";
+}
+
+void GUIMain::add_message(std::string text){
+    notification_bar->add_message(text);
+}
+
+void GUIMain::add_text(std::string text){
+    notification_bar->add_text(text);
 }
 
 void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id)
@@ -452,10 +467,70 @@ void GUIMain::cycle()
     refresh_gui();
 }
 
-void GUIMain::refresh_gui()
+void GUIMain::set_button_index(unsigned int value)
 {
-    gui_manager.parse_components();
+    cur_button_index = value;
+    update_selected();
 }
+
+void GUIMain::click_next_player()
+{
+    cur_button_index = cur_button_index + 1;
+    if (cur_button_index >= buttons.size())
+    {
+        cur_button_index = 0;
+    }
+    update_selected();
+    buttons[cur_button_index]->call_on_click();
+}
+
+void GUIMain::click_player(unsigned int button_id)
+{
+    //Get the index at which the player's button is stored (in buttons)
+    //using the button's identifier
+    unsigned int click_button_index = button_indexs[button_id];
+    set_button_index(click_button_index);
+    //Cycle through the pages of sprite buttons until the current player is present
+    //(only try cycling a finite number of attempts, to prevent infinite loops)
+    for (unsigned int attempts = 0; attempts<buttons.size(); attempts++)
+    {
+        if (!((click_button_index < display_button_start+button_max) && (click_button_index >= display_button_start)))
+        {
+            cycle();
+        }
+        else
+        {
+            break;
+        }
+    }
+    return;
+}
+
+void GUIMain::update_button_text(std::string name, unsigned int button_id)
+{
+    unsigned int update_button_index = button_indexs[button_id];
+    buttons[update_button_index]->set_text(name);
+}
+
+void GUIMain::update_selected()
+{
+    //Will highlight the selected player opposed to changing the text
+    for (unsigned int i=0; i<buttons.size(); i++)
+    {
+        if (cur_button_index == i)
+        {
+            buttons[i]->set_text("SELECTED");
+            refresh_gui();
+        }
+        else
+        {
+            buttons[i]->set_text("NOT SELECTED");
+            refresh_gui();
+        }
+    }
+
+}
+
 
 void GUIMain::config_gui()
 {
@@ -528,67 +603,8 @@ void GUIMain::config_gui()
     py_apis_num = j["pyguide_apis"]["number"];
 }
 
-void GUIMain::set_button_index(unsigned int value)
+
+void GUIMain::refresh_gui()
 {
-    cur_button_index = value;
-    update_selected();
+    gui_manager.parse_components();
 }
-
-void GUIMain::click_next_player()
-{
-    cur_button_index = cur_button_index + 1;
-    if (cur_button_index >= buttons.size())
-    {
-        cur_button_index = 0;
-    }
-    update_selected();
-    buttons[cur_button_index]->call_on_click();
-}
-
-void GUIMain::click_player(unsigned int button_id)
-{
-    //Get the index at which the player's button is stored (in buttons)
-    //using the button's identifier
-    unsigned int click_button_index = button_indexs[button_id];
-    set_button_index(click_button_index);
-    //Cycle through the pages of sprite buttons until the current player is present
-    //(only try cycling a finite number of attempts, to prevent infinite loops)
-    for (unsigned int attempts = 0; attempts<buttons.size(); attempts++)
-    {
-        if (!((click_button_index < display_button_start+button_max) && (click_button_index >= display_button_start)))
-        {
-            cycle();
-        }
-        else
-        {
-            break;
-        }
-    }
-    return;
-}
-
-void GUIMain::update_button_text(std::string name, unsigned int button_id)
-{
-    unsigned int update_button_index = button_indexs[button_id];
-    buttons[update_button_index]->set_text(name);
-}
-
-void GUIMain::update_selected()
-{
-    //Will highlight the selected player opposed to changing the text
-    for (unsigned int i=0; i<buttons.size(); i++)
-    {
-        if (cur_button_index == i)
-        {
-            buttons[i]->set_text("SELECTED");
-            refresh_gui();
-        }
-        else
-        {
-            buttons[i]->set_text("NOT SELECTED");
-            refresh_gui();
-        }
-    }
-
-}
-

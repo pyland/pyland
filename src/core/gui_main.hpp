@@ -106,8 +106,8 @@ private:
     std::shared_ptr<TextBox> notification_bar;
 
     void create_pause_menu();
-    //The button to pause the game
-    std::shared_ptr<Button> pause_button;
+    bool pause_open; //whether or not the pause window is open
+    std::shared_ptr<Button> pause_button; //The button to pause the game
     void open_pause_window();
     void close_pause_window();
 
@@ -126,7 +126,6 @@ private:
     void close_bag();
 
     void create_pyguide();
-    bool pyguide_open; //whether or not the PyGuide is open
     std::shared_ptr<Board> pyguide_window;
     std::shared_ptr<TextBox> py_help;
     std::deque<std::shared_ptr<Button>> pyguide_commands;
