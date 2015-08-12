@@ -15,10 +15,10 @@ from scoped_interpreter import ScopedInterpreter
 class HaltScriptException(Exception):
     pass
 
-def start(player_object, script_name):
+def start(script_api, script_name, player_object):
     """ This function runs the script provided in the argument in a seperate thread.
 
-    The script has access to a set of API's defined in imbued_locals that allow
+    The script has access to a set of API's defined in script_api that allow
     it to control the player object provided.
 
     the callback is run after the script has finished running.
@@ -30,42 +30,21 @@ def start(player_object, script_name):
     script_name : str
         The name of the script that you wish to run. The game looks in the script folder for it.
     """
+    engine = player_object.get_engine()
 
-
-    #Imbued_locals is a python dictionary of python objects (variables, methods, class instances etc.)
-    #available to the player. :)
-    #eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
-    #will be refering to what blob is known as here.
-    #Here the list of game_objects is being looped through, and their names are being mapped to each instance :)
-    imbued_locals = {}
-
-    # Provide all the movement functions to the player, but make them blocking.
-    imbued_locals["move_north"] = make_blocking(player_object.move_north)
-    imbued_locals["move_east"] = make_blocking(player_object.move_east)
-    imbued_locals["move_south"] = make_blocking(player_object.move_south)
-    imbued_locals["move_west"] = make_blocking(player_object.move_west)
-
-
-    #All the stuff to define new print stuff
+    #All the stuff to define new print stuff, this essentially means that stuff will  only be printed to the screen if the player has typed in something
     printed_flag = [False]
     def user_print(text):
         """ A simple mthod to print text to the game console for the user, overrides the python default print method """
         printed_flag[0] = True
-        player_object.get_engine().print_terminal(text, False) #autoconvert print to strings (do not need to convert within the game)
+        engine.print_terminal(text, False) #autoconvert print to strings (do not need to convert within the game)
 
     #Replace print statement in player script so that all their output goes to the terminal.
-    imbued_locals["print"] = user_print
-    imbued_locals["print_bag_items"] = lambda: user_print(player_object.bag_items_string())
-
-    #the method to get the position of the player
-    imbued_locals["get_position"] = player_object.get_position
-
-    imbued_locals["test_display"] = player_object.test_display
+    script_api["print"] = user_print
 
     #Instantiate the scoped intepreter
-    scoped_interpreter = ScopedInterpreter(imbued_locals, lambda x: player_object.get_engine().print_terminal(x, True)) #create an instance of it
-    #script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/Script " + script_name + ".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
-    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/"+str(script_name)+".py"; #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
+    scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: engine.print_terminal(error_output, True)) #create an instance of it
+    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/"+str(script_name)+".py" #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
 
     #open and read the script
     with open(script_filename, encoding="utf8") as script_file:

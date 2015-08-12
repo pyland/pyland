@@ -116,7 +116,7 @@ class Player(Character):
         engine = self.get_engine()
         engine.update_player_name(character_name,self.__focus_button_id)
 
-    def test_display(self):
+    def test_display_bag(self):
         engine = self.get_engine()
         x, y = self.get_position()
         game_objects = engine.get_objects_at((x, y+1))
@@ -161,8 +161,29 @@ class Player(Character):
         """
         if not(self.__running_script): #only run script if one currently isn't running.
             engine = self.get_engine()
-            self.__running_script = True # running script TODO: make this system a lot more robust
-            scriptrunner.start(self, engine.get_run_script())
+            self.__running_script = True
+    
+            #script_api is a python dictionary of python objects (variables, methods, class instances etc.)
+            #available to the player. :)
+            #eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
+            #will be refering to what blob is known as here.
+            #Here the list of game_objects is being looped through, and their names are being mapped to each instance :)
+            script_api = {}
+
+            # Provide all the movement functions to the player, but make them blocking.
+            script_api["move_north"] = scriptrunner.make_blocking(self.move_north)
+            script_api["move_east"] = scriptrunner.make_blocking(self.move_east)
+            script_api["move_south"] = scriptrunner.make_blocking(self.move_south)
+            script_api["move_west"] = scriptrunner.make_blocking(self.move_west)
+
+            script_api["print_bag_items"] = lambda: user_print(self.bag_items_string())
+
+            #the method to get the position of the player
+            script_api["get_position"] = self.get_position
+
+            script_api["test_display_bag"] = self.test_display_bag
+
+            scriptrunner.start(script_api, engine.get_run_script(), self)
         return
 
     def halt_script(self):
