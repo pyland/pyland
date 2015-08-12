@@ -3,12 +3,13 @@ import os
 
 sys.path.insert(1, "../game/components")
 from scoped_interpreter import ScopedInterpreter
- 
+
 camera.focus()
 c1 = (50, 50, 50)
 c2 = (110, 110, 110)
 engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
+
 
 dialogue_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_coming_now"), callback),
@@ -23,6 +24,7 @@ dialogue_sequence = [
 ]
 
 engine.run_callback_list_sequence(dialogue_sequence)
+
 
 #engine.print_terminal(player_one.get_position(), False)
 #camera.move_to_position(position, time)

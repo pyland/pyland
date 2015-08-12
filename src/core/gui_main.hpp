@@ -34,11 +34,13 @@ private:
     float bottom_y_offset;
     float top_y_offset;
 
+	float close_x_offset;
+	float close_y_offset;
+
     float title_x_offset;
     float title_y_offset;
     float pyguide_title_x_offset;
     float pyguide_title_y_offset;
-
 
     float menu_x_offset;
     float menu_y_offset;
@@ -112,7 +114,6 @@ private:
     void open_pause_window();
     void close_pause_window();
 
-    std::shared_ptr<Button> resume_button;
     std::shared_ptr<Button> exit_button;
     std::shared_ptr<Button> music_button;
     std::shared_ptr<Button> sound_button;
@@ -140,7 +141,7 @@ private:
     //Store each button index at the 'id'th element, so can map directly
     //from button id to index (so can get the button from buttons).
     //This is because the ids are passed through an event queue (and not directly), using the
-    //id directly as an index can't be assumed
+    //id directly because an index can't be assumed
     std::deque<unsigned int> button_indexs;
     //The index for the currently highlighted player
     unsigned int cur_button_index;
