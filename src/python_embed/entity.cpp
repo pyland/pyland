@@ -155,14 +155,14 @@ void Entity::set_animation_frame(int frame_number) {
     std::string file_location = this->file_location;
 
     auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-    object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+    object->set_tile("../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png");
     return;
 }
 
 
 void Entity::start_animating() {
     if(!this->animating) {
-        this->animating = false;  //TODO: change to True when animations caches
+        this->animating = true;
         this->animate(this->current_frame);
     }
 }
