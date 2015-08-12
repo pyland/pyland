@@ -53,8 +53,8 @@
 		//for placing an item on the menu
 		"menu_x_offset": 0.03,
 		"menu_y_offset": 0.75,
-		"menu_width": 1.0,
-		"menu_height": 1.0,
+		"menu_width": 0.08,
+		"menu_height": 0.12,
 		"menu_spacing": 0.15,	
 		
 		//the sizes of the notification box

@@ -86,10 +86,10 @@ void GUIMain::create_pause_menu(){
 	exit_button = std::make_shared<Button>(ButtonType::NoPicture);
 	exit_button->set_text("Exit Pyland");
 	exit_button->set_alignment(ButtonAlignment::BottomLeft);
-    exit_button->set_visible(false);
     exit_button->set_on_click( [] () {
 	});
     exit_button->set_clickable(false);
+    exit_button->set_visible(false);
     exit_button->set_width(menu_width);
 	exit_button->set_height(menu_height);
     exit_button->set_x_offset(menu_x_offset);
@@ -247,8 +247,6 @@ void GUIMain::open_pause_window(){
     pause_open = true;
     gui_window->set_visible(true);
 
-    exit_button->set_visible(true);
-    exit_button->set_clickable(true);
 
     const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
 
@@ -264,6 +262,9 @@ void GUIMain::open_pause_window(){
         }
     }
 
+    exit_button->set_visible(true);
+    exit_button->set_clickable(true);
+
     refresh_gui();
 }
 
@@ -275,16 +276,15 @@ void GUIMain::close_pause_window(){
 	pause_button->set_text("");
 
     pause_open = false;
-    gui_window->set_visible(false);
 
-	exit_button->set_visible(false);
-    exit_button->set_clickable(false);
+    gui_window->set_visible(false);
 
     const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
 
     typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
 
     for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+
         if(i->second == bag_window){
             continue;
         }
@@ -299,6 +299,9 @@ void GUIMain::close_pause_window(){
             i->second->set_clickable(true);
         }
     }
+
+	exit_button->set_visible(false);
+    exit_button->set_clickable(false);
 
     refresh_gui();
 }
