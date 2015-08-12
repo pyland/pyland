@@ -41,8 +41,8 @@
 		"top_y_offset": 0.87,				
 
 		//for placing the close button once the pause window is open
-		"close_x_offset": 0.10,
-		"close_y_offset": 0.75,
+		"close_x_offset": 0.05,
+		"close_y_offset": 0.80,
 
 		//for placing the title of a menu
 		"title_x_offset": 0.50,
@@ -51,8 +51,8 @@
 		"pyguide_title_y_offset": 0.9,
 
 		//for placing an item on the menu
-		"menu_x_offset": 0.03,
-		"menu_y_offset": 0.75,
+		"menu_x_offset": 0.09,
+		"menu_y_offset": 0.60,
 		"menu_width": 0.08,
 		"menu_height": 0.12,
 		"menu_spacing": 0.15,	

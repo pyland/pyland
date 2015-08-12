@@ -373,6 +373,7 @@ void GUIMain::open_pyguide()
 {
     close_bag();
     bag_open = true; //because the pyguide is now open
+	bag_button->set_text("Close");
 
     pyguide_window->set_visible(true);
     py_help->set_visible(true);
@@ -390,6 +391,7 @@ void GUIMain::open_pyguide()
 void GUIMain::close_pyguide()
 {
     bag_open = false;
+	bag_button->set_text("Bag");
 
     pyguide_window->set_visible(false);
     py_help->set_visible(false);
