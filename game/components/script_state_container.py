@@ -52,3 +52,4 @@ class ScriptStateContainer:
             self.set_running_script_status(True)
             scriptrunner.start(script_api, engine.get_run_script(), self, engine)
         return
+

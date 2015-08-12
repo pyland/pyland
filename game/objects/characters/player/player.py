@@ -8,22 +8,9 @@ sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../comp
 import scriptrunner
 from script_state_container import ScriptStateContainer
 
-"""
-In Python comments,
-could define some standard which the C++ code can use to determine things about it handles
-the python code
-"""
-
-"""
-eg. We could be able to write:
-"""
-#__ import_object characters/Character
-"""
-The game code, at runtime, could recognise the "#__"
-and replace it with:
-"""
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../characters')
 from character import Character
+
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../properties/bagable')
 from bagable import Bagable
 

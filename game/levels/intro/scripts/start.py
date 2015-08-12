@@ -1,29 +1,27 @@
 import sys
 import os
 
-sys.path.insert(1, "../game/components")
-from scoped_interpreter import ScopedInterpreter
+sys.path.insert(1, engine.get_config()['files']['components_location'])
+from script_state_container import ScriptStateContainer
 
 config = engine.get_config()
 
 camera.focus()
-c1 = (50, 50, 50)
-c2 = (110, 110, 110)
+c1 = (210, 210, 210)
+c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
 
 def get_player_name(callback):
-    player_api = {
+    script_api = {
         "print" : lambda text: engine.print_terminal(text)
     }
-    scoped_interpreter = ScopedInterpreter(player_api, lambda error_output: engine.print_terminal(error_output, True))
-    script_filename = os.path.dirname(config['files']['player_scripts'] + "/1.py")
-    #open and read the script
-    with open(script_filename, encoding="utf8") as script_file:
-                script = script_file.read()
 
-
-    #engine.register_input_callback(engine.INPUT_RUN, focus_func(""))
+    stc = ScriptStateContainer()
+    
+    stc.set_script_name("GetName")
+    engine.register_input_callback(engine.INPUT_RUN, lambda: stc.run_script(script_api, engine))
+    engine.register_input_callback(engine.INPUT_HALT, stc.halt_script)
 
 
 
@@ -33,6 +31,7 @@ dialogue_sequence = [
     lambda callback: camera.wait(0.2, callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"), callback),
+    lambda callback: get_player_name(callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_text_editor"), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_big_white_box"), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_hello_player", {"player_name": "Alex"}), callback),
