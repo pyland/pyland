@@ -153,6 +153,10 @@ class Crocodile(Character):
         if(engine.get_tile_type((x-1, y)) == engine.TILE_TYPE_STANDARD):
             self.wait(0.1, lambda: self.change_state("main"))
 
+    def player_action(self, player_object):
+        engine = self.get_engine()
+        engine.print_terminal("Hello Joe")
+
     """ private:
     Put the private methods you wish to use here.
     """

@@ -22,15 +22,12 @@
 int ChallengeHelper::make_object(Challenge *challenge,
                                  std::string name,
                                  Walkability walkability,
-                                 std::string object_file_location,
-                                 std::string sprite_file_location,
                                  glm::ivec2 position) {
     LOG(INFO) << "creating object at " << name << " (" << position.x << ", " << position.y << ")";
     return challenge->make_object(
         position,
         name,
-        walkability,
-        AnimationFrames(object_file_location, sprite_file_location)
+        walkability
     );
 }
 

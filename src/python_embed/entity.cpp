@@ -58,28 +58,28 @@ void Entity::wait(double gametime, PyObject *callback) {
     );
 }
 
-void Entity::move(int x, int y, PyObject *callback) {
+void Entity::move_by(int x, int y, double duration, PyObject *callback) {
     ++call_number;
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     auto id = this->id;
-    Engine::move_object(id, glm::ivec2(x, y), boost_callback);
+    Engine::move_object(id, glm::ivec2(x, y), duration, boost_callback);
     return;
 }
 
 void Entity::move_east(PyObject *callback) {
-    return (move(1, 0, callback));
+    return (move_by(1, 0, 0.3, callback));
 }
 
 void Entity::move_west(PyObject *callback) {
-    return (move(-1, 0, callback));
+    return (move_by(-1, 0, 0.3, callback));
 }
 
 void Entity::move_north(PyObject *callback) {
-    return (move(0, 1, callback));
+    return (move_by(0, 1, 0.3, callback));
 }
 
 void Entity::move_south(PyObject *callback) {
-    return (move(0, -1, callback));
+    return (move_by(0, -1, 0.3, callback));
 }
 
 bool Entity::is_moving() {
@@ -143,7 +143,7 @@ void Entity::set_sprite(std::string sprite_location) {
     EventManager *em = EventManager::get_instance();
     em->add_event([id, sprite_location, file_location] () { //put changing the player tile on the event queue
         auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-        object->set_tile(std::make_pair(0, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/0.png"));
+        object->set_tile("../game/objects/" + file_location + "/sprites/" + sprite_location + "/0.png");
     });
     return;
 }
@@ -155,14 +155,14 @@ void Entity::set_animation_frame(int frame_number) {
     std::string file_location = this->file_location;
 
     auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-    object->set_tile(std::make_pair(1, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png"));
+    object->set_tile("../game/objects/" + file_location + "/sprites/" + sprite_location + "/" + std::to_string(frame_number) + ".png");
     return;
 }
 
 
 void Entity::start_animating() {
     if(!this->animating) {
-        this->animating = false;  //TODO: change to True when animations caches
+        this->animating = true;
         this->animate(this->current_frame);
     }
 }
@@ -187,8 +187,6 @@ void Entity::animate(int current_frame) {
         });
     }
 }
-
-
 
 
 int Entity::get_number_of_animation_frames() {

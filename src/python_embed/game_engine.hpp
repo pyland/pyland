@@ -29,6 +29,7 @@ class GameEngine {
 
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
+        static int INPUT_TALK() { return InputHandler::INPUT_TALK; }
 
         GameEngine(GUIMain * _gui_main){
             gui_main = _gui_main;

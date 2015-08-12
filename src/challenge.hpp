@@ -8,7 +8,6 @@
 #include <string>
 #include <vector>
 
-#include "animation_frames.hpp"
 #include "dispatcher.hpp"
 #include "lifeline.hpp"
 #include "walkability.hpp"
@@ -64,15 +63,14 @@ public:
     ///
     int make_object(glm::vec2 position,
                     std::string name,
-                    Walkability walkability,
-                    AnimationFrames frames);
+                    Walkability walkability);
 
     virtual boost::python::object read_message(int id) const;
 
     ///
     /// Create an entity and return a pointer to it. (Also correctly sets it up in the challenge, map etc.) Used by Challenge and GameEngine
     ///
-    Entity *create_entity(std::string name, std::string object_file_location, std::string sprite_file_location, glm::ivec2 position);
+    Entity *create_entity(std::string name, std::string filename, glm::ivec2 position);
 };
 
 #endif

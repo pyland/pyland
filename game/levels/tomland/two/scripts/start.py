@@ -35,11 +35,10 @@ engine.get_objects_at((8, 4))
 engine.get_objects_at((9, 4))
 engine.get_objects_at(player_one.get_position())
 
-#engine.change_map(map_name)
-#call finish.py
+engine.add_button("gui/head/monkey", player_one.get_character_name(), player_one.focus)
+engine.add_button("gui/head/monkey", player_two.get_character_name(), player_two.focus)
 
-engine.add_dialogue(engine.get_dialogue("welcome"))
-
+engine.add_dialogue(engine.getDialogue("welcome"))
 #engine.open_dialogue_box(coconut_one.focus)
 
 croc_one.follow_path("north, east, east, north, east, south, south, south, west, west, west, north", True)
@@ -47,12 +46,14 @@ croc_two.rand_explore()
 croc_three.rand_explore()
 croc_four.rand_explore()
 
-#engine.print_terminal(player_one.get_position(), False)
+engine.print_terminal(player_one.get_position(), False)
+
 
 #engine.print_terminal(engine.getDialogue("welcome"))
 
-#engine.print_terminal(engine.get_tile_type((2,16)))
-#engine.print_terminal(engine.get_tile_type((3,16)))
-#engine.print_terminal(engine.get_tile_type((4,16)))
-#engine.print_terminal(engine.get_tile_type((5,16)))
+
+engine.print_terminal(engine.get_tile_type((2,16)))
+engine.print_terminal(engine.get_tile_type((3,16)))
+engine.print_terminal(engine.get_tile_type((4,16)))
+engine.print_terminal(engine.get_tile_type((5,16)))
 

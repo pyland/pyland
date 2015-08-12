@@ -15,11 +15,7 @@
 #include "cacheable_resource.hpp"
 #include "image.hpp"
 
-
-
 class Texture;
-
-
 
 ///
 /// A texture atlas is used to hold the texture data for one or more
@@ -27,7 +23,7 @@ class Texture;
 ///
 /// The individual addressable textures stored within the atlas are
 /// refered to as units where simple using 'texture' may confuse. These
-/// units may be addressed using indexes or coordinates.
+/// units may be addressed using indices or coordinates.
 ///
 class TextureAtlas : public CacheableResource<TextureAtlas> {
 private:
@@ -94,13 +90,13 @@ private:
     int index_offset;
 
     ///
-    /// A mapping of texture names to texture indexes.
+    /// A mapping of texture names to texture indices.
     ///
-    std::map<std::string, int> names_to_indexes;
+    std::map<std::string, int> names_to_indices;
     ///
-    /// A vector mapping texture indexes to texture names.
+    /// A vector mapping texture indices to texture names.
     ///
-    std::vector<std::string> indexes_to_names;
+    std::vector<std::string> indices_to_names;
 
     ///
     /// Get a commonly used texture.
@@ -168,7 +164,7 @@ public:
     ///
     /// This can be used to create tilesets with a common gl texture.
     /// After being merged, no guarentees can be made about the
-    /// consistencies of mappings from indexes to bounds which were made
+    /// consistencies of mappings from indices to bounds which were made
     /// before and after merging. The positioning of individual textures
     /// relative to each other may be changed.
     ///
@@ -179,7 +175,7 @@ public:
 
     ///
     /// Map of all known tile names to their tileset's name,
-    /// pre-generated from the job files.   
+    /// pre-generated from the job files.
     ///
     static std::map<std::string, std::string> const &names_to_tilesets();
 
@@ -281,9 +277,9 @@ public:
     int get_name_index(const std::string name);
 
     ///
-    /// Get the map of texture names to texture indexes.
+    /// Get the map of texture names to texture indices.
     ///
-    std::map<std::string, int> const &get_names_to_indexes();
+    std::map<std::string, int> const &get_names_to_indices();
 };
 
 

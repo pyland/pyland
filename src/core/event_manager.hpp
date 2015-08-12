@@ -57,7 +57,7 @@ private:
 
     ///
     /// Whether the game is paused or not.
-    /// When true, the event manager loop halts.
+    /// When true, the game is paused (slowed to speed zero)
     ///
     bool paused;
 

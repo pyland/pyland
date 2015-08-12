@@ -105,7 +105,7 @@ void MapViewer::render_map() {
             continue;
         }
 
-        RenderableComponent *layer_render_component(layer->get_renderable_component());
+		std::shared_ptr<RenderableComponent> layer_render_component(layer->get_renderable_component());
         Shader *layer_shader(layer_render_component->get_shader().get());
 
         //Set the matrices
@@ -162,7 +162,7 @@ void MapViewer::render_objects() {
                 continue;
             }
 
-            RenderableComponent* object_render_component = object->get_renderable_component();
+            std::shared_ptr<RenderableComponent> object_render_component = object->get_renderable_component();
 
             //Move object to the required position
             glm::vec3 translator(
@@ -204,81 +204,13 @@ void MapViewer::render_objects() {
     }
 }
 
-/* Goint to handle render orde in a different way TODO BLEH
-void MapViewer::render_objects(bool above_object) {
-    //Calculate the projection matrix
-    std::pair<int, int> size = window->get_size();
-    glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
-    //Draw the objects
-    const std::vector<int>& objects = map->get_map_objects();
-    ObjectManager& object_manager = ObjectManager::get_instance();
-    for(auto it = objects.begin(); it != objects.end(); ++it) {
-        if(*it != 0) {
-            std::shared_ptr<MapMapObject> object = object_manager.get_object<MapMapObject>(*it);
-
-            if(!object)
-                continue;
-
-            //If we can't render the object
-            if(!object->is_renderable())
-                continue;
-
-            if(above_object ^ object->render_above_objects())
-                continue;
-
-            RenderableComponent* object_render_component = object->get_renderable_component();
-
-            //Move object to the required position
-            glm::vec3 translator(
-                object->get_position().x - get_display_x(),
-                object->get_position().y - get_display_y(),
-                0.0f
-            );
-
-            glm::mat4 model(glm::mat4(1.0f));
-            model = glm::scale    (model, glm::vec3(Engine::get_actual_tile_size()));
-            model = glm::translate(model, translator);
-
-            object_render_component->set_modelview_matrix(model);
-            object_render_component->set_projection_matrix(projection_matrix);
-
-            object_render_component->bind_shader();
-
-            Shader* shader = object_render_component->get_shader().get();
-            if(shader == nullptr) {
-                LOG(ERROR) << "MapViewer::render_map: Shader (object_render_component->get_shader()) should not be null";
-                return;
-            }
-
-            // TODO: I don't want to actually expose the shader, put these into wrappers in the shader object
-            GLuint mat_projection(glGetUniformLocation(shader->get_program(), "mat_projection"));
-            glUniformMatrix4fv(mat_projection, 1, GL_FALSE,
-                               glm::value_ptr(object_render_component->get_projection_matrix()));
-
-            GLuint mat_modelview(glGetUniformLocation(shader->get_program(), "mat_modelview"));
-            glUniformMatrix4fv(mat_modelview, 1, GL_FALSE,
-                               glm::value_ptr(object_render_component->get_modelview_matrix()));
-
-            object_render_component->bind_vbos();
-            object_render_component->bind_textures();
-
-            glDrawArrays(GL_TRIANGLES, 0, object_render_component->get_num_vertices_render());
-
-            object_render_component->release_textures();
-            object_render_component->release_vbos();
-            object_render_component->release_shader();
-        }
-    }
-} */
-
-
 void MapViewer::render_gui() {
     //Calculate the projection matrix
     std::pair<int, int> size = window->get_size();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
 
     //TODO: Hacky method, clean it up
-    RenderableComponent* gui_render_component = gui_manager->get_renderable_component();
+    std::shared_ptr<RenderableComponent> gui_render_component = gui_manager->get_renderable_component();
 
     //Move gui_manager to the required position
     glm::mat4 model2 = glm::mat4(1.0f);

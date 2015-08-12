@@ -10,7 +10,6 @@ TEST_EXECUTABLE_OBJ = test/test.o
 #
 
 BASE_OBJS = \
-	animation_frames.o     \
 	challenge_helper.o     \
 	graphics_context.o     \
 	image.o                \
@@ -27,6 +26,7 @@ BASE_OBJS = \
 	object_manager.o       \
 	renderable_component.o \
 	shader.o               \
+	sprite_manager.o       \
 	text.o                 \
 	text_font.o            \
 	texture.o              \

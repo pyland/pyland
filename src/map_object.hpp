@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-#include "animation_frames.hpp"
 #include "map.hpp"
 #include "object.hpp"
 #include "walkability.hpp"
@@ -49,6 +48,11 @@ using OrderedHashSet = boost::multi_index_container<
 ///
 class MapObject : public Object {
 protected:
+
+	///
+	///The location of the image to be displayed for this object
+	///
+	std::string tile;
 
     ///
     /// The focus icon, to move with sprite and hide, depending on if mapobject is in focus;
@@ -126,8 +130,7 @@ public:
     ///
     MapObject(glm::vec2 position,
               std::string name,
-              Walkability walkability,
-              AnimationFrames walk_frames);
+              Walkability walkability);
 
 
     virtual ~MapObject();
@@ -163,12 +166,12 @@ public:
     ///
     /// Generate the texture coordinate data for the object
     ///
-    virtual void generate_tex_data(std::pair<int, std::string> tile);
+    virtual void generate_tex_data();
 
     ///
     /// Change the tile of the sprite to that of the given name
     ///
-    virtual void set_tile(std::pair<int, std::string> tile);
+    virtual void set_tile(std::string tile);
 
     ///
     /// Generate the vertex data for the object
@@ -178,12 +181,7 @@ public:
     ///
     /// Load the textures that are being used by the object
     ///
-    virtual void load_textures(std::pair<int, std::string> tile);
-
-    ///
-    /// Initialise the shaders that are being used by the object
-    ///
-    virtual bool init_shaders();
+    virtual void load_textures();
 
     ///
     /// Set the object's moving status
@@ -213,11 +211,6 @@ public:
     virtual bool is_moving() { return moving; }
 
     ///
-    /// Walking frames to animate movement.
-    ///created
-    AnimationFrames frames;
-
-    ///
     /// An ordered container of positions that the map object has been on,
     /// as recorded by set_state_on_moving_finish().
     ///
@@ -241,7 +234,9 @@ public:
     ///
     Challenge const *get_challenge();
 
-    void set_focus(bool _is_focus); //TODO BLEH COMMENT THIS AFTER WORKING OUT WHAT IT DOES 
+    void set_focus(bool _is_focus); //TODO BLEH COMMENT THIS AFTER WORKING OUT WHAT IT DOES
+
+    std::shared_ptr<RenderableComponent>  get_renderable_component() override;
 };
 
 #endif

@@ -66,6 +66,9 @@ class Player(Character):
         engine.register_input_callback(engine.INPUT_DOWN, focus_func(self.__input_move_south))
         engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.__input_move_west))
 
+        #register callback for talking to characters
+        engine.register_input_callback(engine.INPUT_TALK, focus_func(self.__trigger_action))
+
         #Make clicks be registered as callbacks
         #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
 
@@ -172,28 +175,6 @@ class Player(Character):
             thread_id = self.__thread_id #TODO: Make this process safer, look at temp.py and add appropriate guards around the next line to check for valid results etc.
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(scriptrunner.HaltScriptException))
 
-    """ Override character move methods to prevent movement if script is running
-    """
-    def __input_move_north(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
-            self.move_north(callback)
-        return
-
-    def __input_move_east(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
-            self.move_east(callback)
-        return
-
-    def __input_move_south(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
-            self.move_south(callback)
-        return
-
-    def __input_move_west(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
-            self.move_west(callback)
-        return
-
     def set_running_script_status(self, status):
         """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
 
@@ -212,6 +193,83 @@ class Player(Character):
     """ private:
     Put the private methods you wish to use here.
     """
+
+    """ Override character move methods to prevent movement if script is running
+    """
+    def __input_move_north(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            def callback_wrap():
+                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+                callback()
+            if self.is_facing_north():
+                self.move_north(callback_wrap)
+            else:
+                self.wait(0.07, lambda: self.face_north() if not self.is_moving() else lambda: None)
+        return
+
+    def __input_move_east(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            def callback_wrap():
+                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+                callback()
+            if self.is_facing_east():
+                self.move_east(callback_wrap)
+            else:
+                self.wait(0.07, lambda: self.face_east() if not self.is_moving() else lambda: None)
+        return
+
+    def __input_move_south(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            def callback_wrap():
+                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+                callback()
+            if self.is_facing_south():
+                self.move_south(callback_wrap)
+            else:
+                self.wait(0.07, lambda: self.face_south() if not self.is_moving() else lambda: None)
+        return
+
+    def __input_move_west(self, callback = lambda: None):
+        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+            def callback_wrap():
+                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+                callback()
+            if self.is_facing_west():
+                self.move_west(callback_wrap)
+            else:
+                self.wait(0.07, lambda: self.face_west() if not self.is_moving() else lambda: None)
+        return
+
+    def __trigger_action(self):
+        engine = self.get_engine()
+        x, y = self.get_position()
+        if self.is_facing_north():
+            y += 1
+        elif self.is_facing_east():
+            x += 1
+        elif self.is_facing_south():
+            y += -1
+        elif self.is_facing_west():
+            x += -1
+
+        game_objects = engine.get_objects_at((x, y))
+        for game_object in game_objects:
+            if(hasattr(game_object, "player_action")):
+                game_object.player_action(self)
+        
+
+    def __trigger_walk_on(self):
+        """ Triggers the walked-on functions for objects, objects which have a walked_on method will have those methods automatically called when they are walked on.
+
+        Everytime the player finishes, walking, this is called. The player looks at all objects they are standing on and triggers their player_walked_one method if they have one.
+        """
+        engine = self.get_engine()
+        position = self.get_position()
+        game_objects = engine.get_objects_at(position)
+        for game_object in game_objects:
+            if(hasattr(game_object, "player_walked_on")):
+                game_object.player_walked_on(self)
+        return
 
     """ This method takes the movement input of the player character and returns the appropriate
     function for moving them in the direction required

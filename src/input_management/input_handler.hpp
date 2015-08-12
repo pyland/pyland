@@ -43,6 +43,7 @@ public:
     static const int INPUT_HALT = 112;
     static const int INPUT_TOGGLE_SPEED = 113;
     static const int INPUT_SWITCH = 114;
+    static const int INPUT_TALK = 115;
 
     static int constexpr INPUT_KEYBOARD(char raw_key); //TODO: Work out if this is needed.
 

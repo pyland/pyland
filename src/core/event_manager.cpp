@@ -38,10 +38,12 @@ bool EventManager::is_paused(){
 }
 
 void EventManager::pause(){
+    time.set_game_seconds_per_real_second(0.0);
     paused = true;
 }
 
 void EventManager::resume(){
+time.set_game_seconds_per_real_second(1.0);
     paused = false;
 }
 

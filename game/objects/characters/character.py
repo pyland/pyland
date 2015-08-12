@@ -114,26 +114,26 @@ class Character(GameObject):
 
     """ Says if the character is facing north """
     def is_facing_north(self):
-        return __is_facing("north")
+        return self.__is_facing("north")
 
     """ Says if the character is facing east """
     def is_facing_east(self):
-        return __is_facing("east")
+        return self.__is_facing("east")
 
     """ Says if the character is facing south """
     def is_facing_south(self):
-        return __is_facing("south")
+        return self.__is_facing("south")
 
     """ Says if the character is facing west """
     def is_facing_west(self):
-        return __is_facing("west")
+        return self.__is_facing("west")
 
     """ Checks to see if the character is facing in the direction given
     direction -- a string specifing the direction, either 'north', 'east', 'south' or 'west'
     """
     def __is_facing(self, direction):
         sprite_location = self.get_sprite()  # The direction is related to where the sprite is stored, so extract the information from there
-        sprite_location = sprite_location[sprite_location.rfind("/") : ] # Slice all the characters before the last "/" from the string
+        sprite_location = sprite_location[sprite_location.rfind("/") + 1 : ] # Slice all the characters before the last "/" from the string
         return (sprite_location == direction)
 
     """ Moves the character in the given direction by one tile and animates them
@@ -186,9 +186,6 @@ class Character(GameObject):
         if(len(game_map.solid_objects_at((x - 1, y))) == 0): #check that the relevant location is free
             self.__move_x(self.face_west, super().move_west, callback)
         return
-
-    def get_facing(self):
-        return #parse sprite_location to get facing
 
     def change_state(self, state):
         sprite_location = self.get_sprite()
