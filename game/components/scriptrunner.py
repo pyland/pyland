@@ -6,7 +6,6 @@ import contextlib
 import time
 import threading
 
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../components')
 from scoped_interpreter import ScopedInterpreter
 
 """ This file contains all the implementation details of how player scripts are interpreted and run.

@@ -1,10 +1,12 @@
 #Python modules
 import operator
 import os
+import sys
 
 #Custom modules
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../components')
 import scriptrunner
-
+from script_state_container import ScriptStateContainer
 
 """
 In Python comments,
@@ -20,12 +22,10 @@ eg. We could be able to write:
 The game code, at runtime, could recognise the "#__"
 and replace it with:
 """
-import sys
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../characters')
 from character import Character
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../properties/bagable')
 from bagable import Bagable
-from script_state_container import ScriptStateContainer
 
 """
 As the Character is in the characters folder.
