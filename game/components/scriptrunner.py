@@ -37,8 +37,9 @@ def start(script_api, script_name, script_state_container, engine):
         printed_flag[0] = True
         engine.print_terminal(text, False) #autoconvert print to strings (do not need to convert within the game)
 
-    #Replace print statement in player script so that all their output goes to the terminal.
-    script_api["print"] = user_print
+    #Replace print statement in player script so that all their output goes to the terminal. (unless it has already been overidden)
+    if not "print" in script_api:
+        script_api["print"] = user_print
 
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: engine.print_terminal(error_output, True)) #create an instance of it

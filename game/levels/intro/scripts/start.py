@@ -1,5 +1,4 @@
 import sys
-import os
 
 sys.path.insert(1, engine.get_config()['files']['components_location'])
 from script_state_container import ScriptStateContainer
@@ -12,9 +11,26 @@ c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
 
+""" Some quick and hacky methods I wrote to grab the player's name from the terminal"""
+player_name = "???"
+
+name_parsed = False
+
+def name_parser(name, callback):
+    global name_parsed
+    global player_name
+    name = str(name)
+    engine.print_terminal(name)
+    if(name_parsed):
+        pass #TODO: handle this
+    else:
+        name_parsed = True
+        player_name = name
+        callback()
+
 def get_player_name(callback):
     script_api = {
-        "print" : lambda text: engine.print_terminal(text)
+        "print" : lambda text: name_parser(text, callback)
     }
 
     stc = ScriptStateContainer()
@@ -31,25 +47,17 @@ dialogue_sequence = [
     lambda callback: camera.wait(0.2, callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"), callback),
-    lambda callback: get_player_name(callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_text_editor"), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_big_white_box"), callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_hello_player", {"player_name": "Alex"}), callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": "Alex"}), callback),
+    lambda callback: get_player_name(callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_confirm_player_name", {"player_name": player_name}), callback), #TODO, give option for dictionary of callback response
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": player_name}), callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_console_output"), callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_go_enjoy_pyland", {"player_name": player_name}), callback)
+    #TODO: save the player's name in a new save file for them :)
+    #TODO: change the level to the intro level
 ]
 
 
 engine.run_callback_list_sequence(dialogue_sequence)
-
-
-#engine.print_terminal(player_one.get_position(), False)
-#camera.move_to_position(position, time)
-
-def get_name(name):
-    engine.print_terminal(name)
-
-imbued_locals_name = {"print" : get_name}
-
-#camera.wait(2, lambda: engine.print_terminal("h"))
 
