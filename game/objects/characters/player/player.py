@@ -197,7 +197,7 @@ class Player(Character):
     """ Override character move methods to prevent movement if script is running
     """
     def __input_move_north(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+        if (not self.__running_script) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
@@ -208,7 +208,7 @@ class Player(Character):
         return
 
     def __input_move_east(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+        if (not self.__running_script) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
@@ -219,7 +219,7 @@ class Player(Character):
         return
 
     def __input_move_south(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+        if (not self.__running_script) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
@@ -230,7 +230,7 @@ class Player(Character):
         return
 
     def __input_move_west(self, callback = lambda: None):
-        if (not self.__running_script) and (not self.is_moving()): #Check that a script isn't running
+        if (not self.__running_script) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
