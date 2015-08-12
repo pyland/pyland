@@ -101,6 +101,7 @@ private:
 
     std::shared_ptr<GUIWindow> gui_window;
 
+    bool bar_open; //whether or not the notification bar is open
     void create_notification_bar();
     std::shared_ptr<TextBox> notification_bar;
 
@@ -110,8 +111,12 @@ private:
     void open_pause_window();
     void close_pause_window();
 
-    void create_bag();
+    std::shared_ptr<Button> resume_button;
+    std::shared_ptr<Button> exit_button;
+    std::shared_ptr<Button> music_button;
+    std::shared_ptr<Button> sound_button;
 
+    void create_bag();
     bool bag_open; //whether or not the bag is open
     std::shared_ptr<Button> bag_button;
     std::shared_ptr<Board> bag_window;

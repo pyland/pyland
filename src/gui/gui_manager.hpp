@@ -68,6 +68,8 @@ public:
     GUIManager();
     virtual ~GUIManager();
 
+	std::shared_ptr<RenderableComponent> renderable_component;
+
     ///
     /// Callback function to handle mouse events
     /// @param event the mouse event to be handled
@@ -113,6 +115,8 @@ public:
     /// Render the text
     ///
     void render_text();
+
+    std::shared_ptr<RenderableComponent>  get_renderable_component() override;
 };
 
 #endif

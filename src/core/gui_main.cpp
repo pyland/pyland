@@ -13,6 +13,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     gui_manager(),
     map_viewer(embedWindow, &gui_manager),
     em(EventManager::get_instance()),
+    bar_open(false),
     bag_open(false),
     pyguide_open(false),
     display_button_start(0)
@@ -81,12 +82,13 @@ void GUIMain::create_pyguide(){
         unsigned int beg_name = help.find(":");
 
         if(beg_name == std::string::npos){
-            LOG(INFO) << "$$$$$$$$ ERROR: Pycommand " << i << " in the config file does not follow the format required";
+            LOG(INFO) << "ERROR: Pycommand " << i << " in the config file does not follow the format required";
             return;
         }
         else{
             std::string name = help.substr(0, beg_name);
             std::string explanation = help.substr(beg_name+1, std::string::npos);
+
 
             std::shared_ptr<Button> py_command = std::make_shared<Button>(ButtonType::NoPicture);
             py_command->set_text(name);
@@ -217,10 +219,12 @@ void GUIMain::create_notification_bar(){
 
 void GUIMain::open_notification_bar(){
     notification_bar->open();
+    bar_open = true;
 }
 
 void GUIMain::close_notification_bar(){
     notification_bar->close();
+    bar_open = false;
 }
 
 void GUIMain::add_message(std::string text){
@@ -284,6 +288,7 @@ void GUIMain::close_pause_window(){
 void GUIMain::open_bag()
 {
 
+    close_notification_bar();
     bag_window->set_visible(true);
 
     close_pyguide();
@@ -317,6 +322,10 @@ void GUIMain::close_bag()
     {
         bag_items[i]->set_visible(false);
         bag_items[i]->set_clickable(false);
+    }
+
+    if(bar_open){
+        open_notification_bar();
     }
 
     refresh_gui();

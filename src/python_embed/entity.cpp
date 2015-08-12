@@ -143,7 +143,7 @@ void Entity::set_sprite(std::string sprite_location) {
     EventManager *em = EventManager::get_instance();
     em->add_event([id, sprite_location, file_location] () { //put changing the player tile on the event queue
         auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-        object->set_tile(std::make_pair(0, "../game/objects/" + file_location + "/sprites/" + sprite_location + "/0.png"));
+        object->set_tile("../game/objects/" + file_location + "/sprites/" + sprite_location + "/0.png");
     });
     return;
 }
@@ -187,8 +187,6 @@ void Entity::animate(int current_frame) {
         });
     }
 }
-
-
 
 
 int Entity::get_number_of_animation_frames() {

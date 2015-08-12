@@ -22,7 +22,6 @@ InputHandler *InputHandler::get_instance() {
 void InputHandler::run_list(int input_key) {
     function_list *fl = grab_list(input_key);
     for (function_list::const_iterator iterator = fl->begin(); iterator != fl->end(); ++iterator) {
-        if(input_key == INPUT_HALT) LOG(INFO) << "hehe";
         EventManager::get_instance()->add_event(*iterator);
     }
     return;
