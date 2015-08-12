@@ -277,7 +277,7 @@ void Engine::close_notification_bar(){
 }
 
 bool Engine::is_bar_open(){
-	return (gui_main->is_bar_open());
+    return (gui_main->is_bar_open());
 }
 
 //Print to the QT terminal widget

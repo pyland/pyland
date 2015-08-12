@@ -50,12 +50,12 @@ void GameEngine::print_debug(std::string debug_message) {
 void GameEngine::show_dialogue(std::string text, PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
-	if(Engine::is_bar_open()){
-		LOG(INFO) << "Replacing the old notification bar with the new one";
-		Engine::close_notification_bar();
-	}
+    if(Engine::is_bar_open()){
+        LOG(INFO) << "Replacing the old notification bar with the new one";
+        Engine::close_notification_bar();
+    }
 
-	LOG(INFO) << "Adding " << text << "to the notification bar";
+    LOG(INFO) << "Adding " << text << "to the notification bar";
     Engine::add_text(text);
     Engine::open_notification_bar(boost_callback);
 }

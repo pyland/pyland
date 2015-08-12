@@ -308,7 +308,7 @@ void GUIMain::open_notification_bar(std::function<void ()> func){
 
     LOG(INFO) << "Notification Bar open";
 
-	notification_func = func;
+    notification_func = func;
     notification_bar->open();
 }
 
@@ -319,7 +319,7 @@ void GUIMain::close_notification_bar(){
 
     notification_bar->close();
 
-	em->add_event([this] {
+    em->add_event([this] {
         notification_func();
     });
 }
