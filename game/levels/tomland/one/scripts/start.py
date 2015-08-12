@@ -18,7 +18,7 @@ engine.get_objects_at((9, 4))
 engine.get_objects_at(player_one.get_position())
 
 engine.add_dialogue(engine.get_dialogue("welcome"))
-#engine.open_dialogue_box(coconut_one.focus)
+engine.open_dialogue_box()
 
 croc_one.follow_path("north, east, east, north, east, south, south, south, west, west, west, north", True)
 croc_two.rand_explore()
