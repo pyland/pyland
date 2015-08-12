@@ -4,6 +4,7 @@ import importlib
 import sqlite3
 import json
 import threading
+import collections
 
 class Engine:
     """ This class is a python wrapper for all the engine features that are exposed to the game.
@@ -196,4 +197,20 @@ class Engine:
         game_object.set_entity(entity, self)  # initialise it and wrap the entity instance in it
         self.__game_objects[game_object.get_id()] = game_object #Store the object and associate with it's id in the engine's dictionary
         return game_object
+
+    def show_dialogue(self, dialogue, callback = lambda: None):
+        self.__cpp_engine.show_dialogue(dialogue, callback)
+
+    def run_callback_list_sequence(self, callback_list_sequence, callback = lambda: None):
+        """ Run the given list of functions, passing the rest of the list as an argument to the first function so that they are run in sequence.
+        """
+        if not isinstance(callback_list_sequence, collections.deque): #Convert the list to a deque if it isn't already one
+            callback_list_sequence = collections.deque(callback_list_sequence)
+        
+        if callback_list_sequence:	 #check if it's still got elements
+            function = callback_list_sequence.popleft() 
+            function(lambda: self.run_callback_list_sequence(callback_list_sequence, callback))
+        else:
+            callback()
+        return
 
