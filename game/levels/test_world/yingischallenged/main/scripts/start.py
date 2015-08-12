@@ -47,14 +47,12 @@ croc_two.rand_explore()
 croc_three.rand_explore()
 croc_four.rand_explore()
 
-engine.print_terminal(player_one.get_position(), False)
-
+#engine.print_terminal(player_one.get_position(), False)
 
 #engine.print_terminal(engine.getDialogue("welcome"))
 
-
-engine.print_terminal(engine.get_tile_type((2,16)))
-engine.print_terminal(engine.get_tile_type((3,16)))
-engine.print_terminal(engine.get_tile_type((4,16)))
-engine.print_terminal(engine.get_tile_type((5,16)))
+#engine.print_terminal(engine.get_tile_type((2,16)))
+#engine.print_terminal(engine.get_tile_type((3,16)))
+#engine.print_terminal(engine.get_tile_type((4,16)))
+#engine.print_terminal(engine.get_tile_type((5,16)))
 

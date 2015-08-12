@@ -410,7 +410,6 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
 
     if((buttons.size() - 1) % button_max == 0 && buttons.size() != 1)
     {
-        //cycle_button->call_on_click();
         cycle();
     }
 
