@@ -42,7 +42,7 @@ def start(script_api, script_name, script_state_container, engine):
 
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: engine.print_terminal(error_output, True)) #create an instance of it
-    script_filename = os.path.dirname(os.path.realpath(__file__)) + "/../../../player_scripts/"+str(script_name)+".py" #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
+    script_filename = engine.get_config()['files']['player_scripts'] + "/"+str(script_name)+".py" #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
 
     #open and read the script
     with open(script_filename, encoding="utf8") as script_file:
