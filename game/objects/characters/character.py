@@ -133,7 +133,7 @@ class Character(GameObject):
     """
     def __is_facing(self, direction):
         sprite_location = self.get_sprite()  # The direction is related to where the sprite is stored, so extract the information from there
-        sprite_location = sprite_location[sprite_location.rfind("/") : ] # Slice all the characters before the last "/" from the string
+        sprite_location = sprite_location[sprite_location.rfind("/") + 1 : ] # Slice all the characters before the last "/" from the string
         return (sprite_location == direction)
 
     """ Moves the character in the given direction by one tile and animates them

@@ -67,7 +67,7 @@ class Player(Character):
         engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.__input_move_west))
 
         #register callback for talking to characters
-        engine.register_input_callback(engine.INPUT_TALK, focus_func(self.__trigger_talk_to))
+        engine.register_input_callback(engine.INPUT_TALK, focus_func(self.__trigger_action))
 
         #Make clicks be registered as callbacks
         #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
@@ -201,7 +201,10 @@ class Player(Character):
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
-            self.move_north(callback_wrap)
+            if self.is_facing_north():
+                self.move_north(callback_wrap)
+            else:
+                self.wait(0.07, lambda: self.face_north() if not self.is_moving() else lambda: None)
         return
 
     def __input_move_east(self, callback = lambda: None):
@@ -209,7 +212,10 @@ class Player(Character):
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
-            self.move_east(callback_wrap)
+            if self.is_facing_east():
+                self.move_east(callback_wrap)
+            else:
+                self.wait(0.07, lambda: self.face_east() if not self.is_moving() else lambda: None)
         return
 
     def __input_move_south(self, callback = lambda: None):
@@ -217,7 +223,10 @@ class Player(Character):
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
-            self.move_south(callback_wrap)
+            if self.is_facing_south():
+                self.move_south(callback_wrap)
+            else:
+                self.wait(0.07, lambda: self.face_south() if not self.is_moving() else lambda: None)
         return
 
     def __input_move_west(self, callback = lambda: None):
@@ -225,15 +234,28 @@ class Player(Character):
             def callback_wrap():
                 self.__trigger_walk_on() #call walk-on triggers on objects player walks on
                 callback()
-            self.move_west(callback_wrap)
+            if self.is_facing_west():
+                self.move_west(callback_wrap)
+            else:
+                self.wait(0.07, lambda: self.face_west() if not self.is_moving() else lambda: None)
         return
 
-    def __trigger_talk_to(self):
+    def __trigger_action(self):
         engine = self.get_engine()
-        engine.add_dialogue("hahahah")
-        engine.open_dialogue_box()
-        if(self.is_facing_north()):
-            engine.add_dialogue("hahahah")
+        x, y = self.get_position()
+        if self.is_facing_north():
+            y += 1
+        elif self.is_facing_east():
+            x += 1
+        elif self.is_facing_south():
+            y += -1
+        elif self.is_facing_west():
+            x += -1
+
+        game_objects = engine.get_objects_at((x, y))
+        for game_object in game_objects:
+            if(hasattr(game_object, "player_action")):
+                game_object.player_action(self)
         
 
     def __trigger_walk_on(self):
