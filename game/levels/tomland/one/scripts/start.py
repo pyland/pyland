@@ -27,6 +27,8 @@ croc_four.rand_explore()
 
 
 def croc_one_dialogue(self):
+    self.set_busy(True)
+    player_one.set_busy(True)
     engine.add_dialogue(engine.get_dialogue("welcome"))
     engine.open_dialogue_box()
 

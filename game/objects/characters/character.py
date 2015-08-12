@@ -59,17 +59,14 @@ The filename represents the frames of animation of the character when they are m
 This benifits of this class is that it provides very simple methods for movement + animation.
 However, it doesn't check if the tiles that are being moved to are empty or not. TODO: Talk about maybe changing this?
 """
-class Map:
-    def solid_objects_at(self, position):
-        (x, y) = position
-        return []
-
-game_map = Map()
 
 class Character(GameObject):
 
     __character_name = ""
+    
+    __busy = False #A business flag used in some circumstances to check if the character is already occupied with something else to make sure certain things don't clash
 
+    
     def initialise(self):
         super().initialise
         self.set_solidity(True)
@@ -81,6 +78,12 @@ class Character(GameObject):
 
     def set_character_name(self, character_name):
         self.__character_name = character_name
+
+    def set_busy(self, busy):
+        self.__busy = busy
+
+    def is_busy(self):
+        return self.__busy
 
     """ Change the sprite folder to "north" """
     def face_north(self):
@@ -136,19 +139,22 @@ class Character(GameObject):
         sprite_location = sprite_location[sprite_location.rfind("/") + 1 : ] # Slice all the characters before the last "/" from the string
         return (sprite_location == direction)
 
-    """ Moves the character in the given direction by one tile and animates them
+    """ Moves the character in the given direction by one tile and animates them.
+
+    They will only move and animate if they are not busy.
     face_x -- the function to make the character face in the correct direction
     parent_move_x -- the parent move function, calls the engine api but doesn't start the animation
     callback -- the function that you would like to call after the movement is complete
     """
     def __move_x(self, face_x, parent_move_x, callback):
-        face_x()
-        self.start_animating()
-        def callbacktwo():  # Have create a wrapper callback function which makes sure that the animation stops before anything else is run
-            if not self.is_moving():
-                self.stop_animating()
-            callback()
-        parent_move_x(callbacktwo)
+        if not(self.is_busy()):
+            face_x()
+            self.start_animating()
+            def callbacktwo():  # Have create a wrapper callback function which makes sure that the animation stops before anything else is run
+                if not self.is_moving():
+                    self.stop_animating()
+                callback()
+            parent_move_x(callbacktwo)
         return
 
     """ Moves the character North by one tile and makes them face in that direction
@@ -156,8 +162,7 @@ class Character(GameObject):
     """
     def move_north(self, callback = lambda: None):
         x, y = self.get_position()
-        if(len(game_map.solid_objects_at((x, y + 1))) == 0): #check that the relevant location is free
-            self.__move_x(self.face_north, super().move_north, callback)
+        self.__move_x(self.face_north, super().move_north, callback)
         return
 
     """ Move character in direction by one tile.
@@ -165,8 +170,7 @@ class Character(GameObject):
     """
     def move_east(self, callback = lambda: None):
         x, y = self.get_position()
-        if(len(game_map.solid_objects_at((x + 1, y))) == 0): #check that the relevant location is free
-            self.__move_x(self.face_east, super().move_east, callback)
+        self.__move_x(self.face_east, super().move_east, callback)
         return
 
     """ Move character in direction by one tile.
@@ -174,8 +178,7 @@ class Character(GameObject):
     """
     def move_south(self, callback = lambda: None):
         x, y = self.get_position()
-        if(len(game_map.solid_objects_at((x, y - 1))) == 0): #check that the relevant location is free
-            self.__move_x(self.face_south, super().move_south, callback)
+        self.__move_x(self.face_south, super().move_south, callback)
         return
 
     """ Move character in direction by one tile.
@@ -183,8 +186,7 @@ class Character(GameObject):
     """
     def move_west(self, callback = lambda: None):
         x, y = self.get_position()
-        if(len(game_map.solid_objects_at((x - 1, y))) == 0): #check that the relevant location is free
-            self.__move_x(self.face_west, super().move_west, callback)
+        self.__move_x(self.face_west, super().move_west, callback)
         return
 
     def change_state(self, state):

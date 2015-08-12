@@ -39,7 +39,7 @@
  <objectgroup name="Object Layer 1" width="24" height="21">
   <object name="characters/player/player_one" gid="286" x="256" y="448" width="64" height="64"/>
   <object name="characters/enemies/crocodile/croc_two" gid="296" x="640" y="576" width="64" height="64"/>
-  <object name="characters/enemies/crocodile/croc_one" gid="296" x="896" y="384" width="64" height="64"/>
+  <object name="characters/enemies/crocodile/croc_one" gid="296" x="896" y="320" width="64" height="64"/>
   <object name="characters/enemies/crocodile/croc_three" gid="296" x="768" y="640" width="64" height="64"/>
   <object name="characters/enemies/crocodile/croc_four" gid="296" x="960" y="576" width="64" height="64"/>
   <object name="portal/teleportal1" gid="293" x="1152" y="1088" width="64" height="64"/>
