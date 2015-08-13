@@ -158,7 +158,7 @@ MainWindow::MainWindow(GameMain *exGame):
 
     terminalDisplay = new QTextEdit;
     terminalDisplay->setReadOnly(true);
-    terminalDisplay->setLineWrapMode(QTextEdit::NoWrap);
+    terminalDisplay->setLineWrapMode(QTextEdit::NoWrap);\
     terminalDisplay->document()->setMaximumBlockCount(1000);
     terminalDisplay->zoomIn(1);
     terminalDisplay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -462,10 +462,10 @@ void MainWindow::createToolBar()
     textTotems = new QLabel("");
 
     //Use the required variables
-    textWorld->setText("World: 1");
-    textLevel->setText("Level: 1");
-    textCoins->setText("Coins: 0");
-    textTotems->setText("Totems: 0/5");
+    //textWorld->setText("World: 1");
+    //textLevel->setText("Level: 1");
+    //textCoins->setText("Coins: 0");
+    //textTotems->setText("Totems: 0/5");
 
     textLayout->addWidget(textWorld);
     textLayout->addWidget(textLevel);
@@ -850,16 +850,6 @@ void MainWindow::pushTerminalText(std::string text, bool error)
     terminalDisplay->setTextColor(QColor("black"));
 }
 
-void MainWindow::updateToolBar()
-{
-    //Use the require variables
-    textWorld->setText("World: 1");
-    textLevel->setText("Level: 1");
-    textCoins->setText("Coins: 0");
-    textTotems->setText("Totems: 0/5");
-}
-
-
 void MainWindow::zoomFontIn()
 {
     ((QsciScintilla*)textWidget->currentWidget())->zoomIn(3);
@@ -877,6 +867,67 @@ void MainWindow::setGameFocus()
 {
     gameWidget->setFocus();
 }
+
+void MainWindow::setWorld(std::string text){
+    QString qtext = QString::fromStdString("World: "+text);
+    textWorld->setText(qtext);
+}
+
+void MainWindow::setLevel(std::string text){
+    QString qtext = QString::fromStdString("Level: "+text);
+    textLevel->setText(qtext);
+}
+
+void MainWindow::setCoins(int value){
+    QString qtext = QString::fromStdString("Coins: "+std::to_string(value));
+    textCoins->setText(qtext);
+}
+
+
+void MainWindow::setCurTotems(int value,bool show){
+  //Update the number of totems collected on the current level
+  if (show){
+      textTotems->show();
+      QString qtext = QString::fromStdString("Totems: "+std::to_string(value)+"/5");
+      textTotems->setText(qtext);
+  }
+  else
+  {
+      textTotems->hide();
+  }
+}
+
+void MainWindow::insertToTextEditor(std::string text)
+{
+    QsciScintilla *ws;
+    ws = (QsciScintilla*)textWidget->currentWidget();
+
+    QString qtext = QString::fromStdString(text+"\n");
+
+    QString priorText = ws->text();
+
+    clearTextEditor();
+    ws->insert(qtext);
+    ws->insert(priorText);
+}
+
+void MainWindow::clearTextEditor()
+{
+    QsciScintilla *ws;
+    ws = (QsciScintilla*)textWidget->currentWidget();
+
+    ws->clear();
+}
+
+std::string MainWindow::getEditorText()
+{
+    QsciScintilla *ws;
+    ws = (QsciScintilla*)textWidget->currentWidget();
+
+    return ws->text().toStdString();
+}
+
+
 
 void MainWindow::clearTerminal()
 {

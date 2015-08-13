@@ -142,7 +142,7 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
                 object->set_state_on_moving_finish();
 
                 // TODO: Make this only focus if the object
-                // is the main object.
+             #include <thread>   // is the main object.
                 if (Engine::map_viewer) {
                     Engine::map_viewer->refocus_map();
                 }
@@ -182,6 +182,14 @@ bool Engine::walkable(glm::ivec2 location) {
     }
 
     return true;
+}
+
+void Engine::change_map(std::string map_location){
+    //std::thread *first = new std::thread([map_location]() {
+    //    game_main->run_game = false;
+    //    game_main->change_challenge(map_location);
+    //});
+    game_main->run_game = false;
 }
 
 void Engine::change_tile(glm::ivec2 tile, std::string layer_name, std::string tile_name) {
@@ -269,6 +277,39 @@ void Engine::open_notification_bar(std::function<void ()> func){
         func();
     });
 }
+
+void Engine::update_world(std::string text){
+  main_window->setWorld(text);
+}
+
+void Engine::update_level(std::string text){
+  main_window->setLevel(text);
+}
+
+void Engine::update_coins(int value){
+  main_window->setCoins(value);
+}
+
+
+void Engine::update_totems(int value,bool show){
+  main_window->setCurTotems(value, show);
+}
+
+void Engine::insert_to_scripter(std::string text)
+{
+    main_window->insertToTextEditor(text);
+}
+
+void Engine::clear_scripter()
+{
+    main_window->clearTextEditor();
+}
+
+std::string Engine::get_script()
+{
+    return main_window->getEditorText();
+}
+
 
 //Print to the QT terminal widget
 void Engine::print_terminal(std::string text, bool error) {

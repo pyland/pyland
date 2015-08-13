@@ -55,7 +55,13 @@ public:
 
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
-    void updateToolBar();
+    void setWorld(std::string text);
+    void setLevel(std::string text);
+    void setCoins(int value);
+    void setCurTotems(int value,bool show);
+    void insertToTextEditor(std::string text);
+    void clearTextEditor();
+    std::string getEditorText();
     void runCode(int script);
     void toggleSpeed();
     void setRunning(bool option);
