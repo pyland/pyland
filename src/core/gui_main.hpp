@@ -34,8 +34,8 @@ private:
     float bottom_y_offset;
     float top_y_offset;
 
-	float close_x_offset;
-	float close_y_offset;
+    float close_x_offset;
+    float close_y_offset;
 
     float title_x_offset;
     float title_y_offset;

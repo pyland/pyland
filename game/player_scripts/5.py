@@ -1,2 +1,3 @@
-while(True):
-  move_north()
+print("hhh")
+print("la")
+print("lu")

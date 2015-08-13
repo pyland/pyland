@@ -45,7 +45,7 @@ TextBox::TextBox(TextBoxType _type) {
                 Engine::get_gui()->refresh_gui();
             }
             else{
-				clear_text();
+                clear_text();
                 Engine::close_notification_bar();
             }
         });

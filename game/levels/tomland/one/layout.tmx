@@ -44,5 +44,6 @@
   <object name="characters/enemies/crocodile/croc_four" gid="296" x="960" y="576" width="64" height="64"/>
   <object name="portal/teleportal1" gid="293" x="1152" y="1088" width="64" height="64"/>
   <object name="portal/teleportal2" gid="293" x="128" y="192" width="64" height="64"/>
+  <object name="characters/player/player_two" gid="286" x="762" y="668" width="64" height="64"/>
  </objectgroup>
 </map>

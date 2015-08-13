@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="45" height="15" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="45" height="16" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="intro" tilewidth="64" tileheight="64">
   <image source="../../tiles/intro.png" width="320" height="1216"/>
  </tileset>
- <layer name="Background" width="45" height="15">
+ <layer name="Background" width="45" height="16">
   <data encoding="base64" compression="zlib">
-   eJztw0ENAAAMA6Grf9OTsQ8krJqqqj48+CcCpA==
+   eJztwwENAAAMw6DOv+lbuABIWDVVVfX1AOPBAtE=
   </data>
  </layer>
- <layer name="Monty" width="45" height="15">
+ <layer name="Monty" width="45" height="16">
   <data encoding="base64" compression="zlib">
-   eJztzsEJACAQxMBDBRXU/st1WzhB9pOB/BMBAHhRVFXNPZLQ1VDTPZKw1FbHPQLgiws/CwBJ
+   eJztzsEJACAQxMBDBRXU/st1WzgQ9mEG8k8EAAB4qaiqmnskoauhpnskYamtjnsE37nacABJ
   </data>
  </layer>
- <objectgroup name="Camera" width="45" height="15">
-  <object name="camera/camera" gid="14" x="1408" y="576"/>
+ <objectgroup name="Camera" width="45" height="16">
+  <object name="camera/camera" gid="14" x="1408" y="64"/>
  </objectgroup>
 </map>

@@ -1,10 +1,1 @@
-"""
-This is where you will run python scripts to help
-you complete the game! Read the helpful messages
-in the game and they will tell you what to do! :)
-"""
-while True:
-  move_north()
-  move_east()
-  move_south()
-  move_west()
+print("YourName")

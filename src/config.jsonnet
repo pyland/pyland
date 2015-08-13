@@ -12,12 +12,14 @@
 		"game_folder": "../game",
 		//"level_location": "/test_world/test_level/test_one",
 		//"level_location": "/test_world/yingischallenged/main",
-		"level_location": "/intro",
+		//"level_location": "/intro",
 		//"level_location": "/tomland/one",
+		"level_location": "/menu",
 		"full_level_location" : self.game_folder + "/levels" + self.level_location,
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
 		"font_location": self.game_folder + "/fonts",
+		"components_location": self.game_folder + "/components",
 		"dialogue_font": self.font_location + "/Ubuntu-R.ttf"
 		
 	},
@@ -66,7 +68,7 @@
 		"notification_text_height": 0.40, 
 		"notification_text_x": 0.03,
 		"notification_text_y": 0.70,
-		"notification_text_buffer": 80,
+		"notification_text_buffer": 500,
 
 		//the parameters for notification button (next, back etc)
 		"notification_button_width": 0.50,
