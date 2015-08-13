@@ -141,6 +141,11 @@ class GameEngine {
 
         bool is_solid(int x, int y);
 
+        ///
+        /// Force the config file to be loaded in again, useful for if you have changed any settings in it.
+        ///
+        void refresh_config();
+
 };
 
 #endif

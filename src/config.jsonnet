@@ -1,10 +1,7 @@
 //This is the config file for the game, it is a jsonnet file for ease of use.
 {
-	"game_settings": {
-		//"language": "pyrate"
-		"language": "english"
-	},
-
+	"game_save": import "../game/save.json",
+	"game_settings": self.game_save.settings, //Import the game settings from the game json file. (Which python can directly read an write to)
 	"special_methods": {
 		"walk_on" : "b" //TODO explain this!!!!
 	},
@@ -20,7 +17,8 @@
 		"object_location": self.game_folder + "/objects",
 		"font_location": self.game_folder + "/fonts",
 		"components_location": self.game_folder + "/components",
-		"dialogue_font": self.font_location + "/Ubuntu-R.ttf"
+		"dialogue_font": self.font_location + "/Ubuntu-R.ttf",
+		"game_save_location": self.game_folder + "/save.json"
 		
 	},
 

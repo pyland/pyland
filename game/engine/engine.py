@@ -18,6 +18,8 @@ class Engine:
     #Represents the connections to the sqlite database
     conn = dict()
 
+    __settings = None
+
     def get_dialogue(self, identifier, escapes = dict()):
         """ Get the piece of dialoge requested form the database.
 
@@ -151,8 +153,34 @@ class Engine:
         self.__cpp_engine.open_dialogue_box(callback)
 
     def get_config(self):
+        """ Return the config.jsonnet file parsed as a python json object """
         result = self.__cpp_engine.get_config()
         return json.loads(result)
+
+    def get_settings(self):
+        "Return the settings from the save.json file as a python json object """
+        if not self.__settings:
+            settings_string = ""
+            with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
+                settings_string = save_file.read()
+            self.__settings = json.loads(settings_string)["settings"]
+        return self.__settings
+
+    def save_settings(self, settings):
+        """save the game settings""" #TODO: add resiliency!!!!
+        self.__settings = settings
+        save_file_string = ""
+        with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
+            save_file_string = save_file.read()
+
+        save_json = json.loads(save_file_string)
+        save_json["settings"] = settings
+
+        with open(self.get_config()['files']['game_save_location'], 'w', encoding="utf8") as save_file:
+            json.dump(save_json, save_file, indent=4, separators=(',', ': '))
+
+        self.refresh_config()
+        return
         
     def set_ui_colours(self, colour_one, colour_two):
         r1, g1, b1 = colour_one
