@@ -1,3 +1,1 @@
-howdy
-partner
-print(<Your name here>)
+print("BOB")

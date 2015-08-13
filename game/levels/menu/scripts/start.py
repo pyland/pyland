@@ -6,6 +6,7 @@ sys.path.insert(1, config['files']['components_location'])
 from script_state_container import ScriptStateContainer
 
 camera.focus()
+engine.clear_scripter()
 c1 = (210, 210, 210)
 c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)

@@ -11,6 +11,8 @@ c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
 
+engine.clear_scripter()
+
 """ Some quick and hacky methods I wrote to grab the player's name from the terminal"""
 player_name = "???"
 
@@ -29,6 +31,8 @@ def name_parser(name, callback):
         callback()
 
 def get_player_name(callback):
+    engine.clear_scripter()
+    engine.insert_to_scripter("print(\"YourName\")")
     script_api = {
         "print" : lambda text: name_parser(text, callback)
     }
@@ -57,7 +61,6 @@ dialogue_sequence = [
     #TODO: save the player's name in a new save file for them :)
     #TODO: change the level to the intro level
 ]
-
 
 engine.run_callback_list_sequence(dialogue_sequence)
 
