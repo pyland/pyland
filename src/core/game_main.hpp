@@ -54,6 +54,7 @@ private:
     Lifeline run_callback;
     Lifeline speed_callback;
     Lifeline switch_callback;
+    Lifeline action_callback;
     Lifeline script1_callback;
     Lifeline script2_callback;
     Lifeline script3_callback;
@@ -74,8 +75,7 @@ private:
     Text tile_identifier_text;
     std::function<void (GameWindow*)> func_char;
 
-    //Variable to run/stop the game
-    bool run_game;
+
 
     //Data for the present challenge
     ChallengeData *challenge_data;
@@ -84,11 +84,16 @@ private:
 
 
 public:
+
+    //Variable to run/stop the game
+    bool run_game;
+
     GameMain(int &argc, char **argv);
     ~GameMain();
 
     void game_loop(bool showMouse);
     Challenge* pick_challenge(ChallengeData* challenge_data);
+    void change_challenge(std::string map_location);
 
     GameWindow* getGameWindow();
     CallbackState getCallbackState();

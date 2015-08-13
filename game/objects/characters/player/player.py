@@ -53,7 +53,7 @@ class Player(Character, ScriptStateContainer):
         engine.register_input_callback(engine.INPUT_LEFT, focus_func(self.__input_move_west))
 
         #register callback for talking to characters
-        engine.register_input_callback(engine.INPUT_TALK, focus_func(self.__trigger_action))
+        engine.register_input_callback(engine.INPUT_ACTION, focus_func(self.__trigger_action))
 
         #Make clicks be registered as callbacks
         #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
@@ -240,7 +240,7 @@ class Player(Character, ScriptStateContainer):
         for game_object in game_objects:
             if(hasattr(game_object, "player_action")):
                 game_object.player_action(self)
-        
+
 
     def __trigger_walk_on(self):
         """ Triggers the walked-on functions for objects, objects which have a walked_on method will have those methods automatically called when they are walked on.

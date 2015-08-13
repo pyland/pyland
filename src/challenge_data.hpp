@@ -19,6 +19,7 @@ class TextBox;
 class ChallengeData {
 public:
     std::string map_name;
+    std::string level_location;
     Interpreter* interpreter;
     GUIManager* gui_manager;
     GameWindow* game_window;

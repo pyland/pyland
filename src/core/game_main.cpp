@@ -134,7 +134,7 @@ GameMain::GameMain(int &argc, char **argv):
     ));
 
     run_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("Return")},
+    {KEY_PRESS, KEY("Space")},
     [&] (KeyboardInputEvent)
     {
         InputHandler::get_instance()->run_list(InputHandler::INPUT_RETURN);
@@ -142,7 +142,7 @@ GameMain::GameMain(int &argc, char **argv):
     ));
 
     speed_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("Space")},
+    {KEY_PRESS, KEY({"Left Shift", "Right Shift"})},
     [&] (KeyboardInputEvent)
     {
         InputHandler::get_instance()->run_list(InputHandler::INPUT_TOGGLE_SPEED);
@@ -157,11 +157,11 @@ GameMain::GameMain(int &argc, char **argv):
     }
     ));
 
-    switch_callback = input_manager->register_keyboard_handler(filter(
-    {KEY_PRESS, KEY("T")},
+    action_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, KEY("Return")},
     [&] (KeyboardInputEvent)
     {
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_TALK);
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_ACTION);
     }
     ));
 
@@ -274,12 +274,13 @@ GameMain::GameMain(int &argc, char **argv):
         }
         else if (sprites.size() == 1)
         {
-            callbackstate.register_number_id(sprites[0]);
+            //InputHandler::get_instance()->run_list(InputHandler::INPUT_CLICK);
+            //callbackstate.register_number_id(sprites[0]);
         }
         else
         {
             LOG(WARNING) << "Not sure sprite object to switch to";
-            callbackstate.register_number_id(sprites[0]);
+            //callbackstate.register_number_id(sprites[0]);
         }
     }
     ));
@@ -324,6 +325,13 @@ GameMain::GameMain(int &argc, char **argv):
     last_clock = (std::chrono::steady_clock::now());
     gui.refresh_gui();
 
+    //test_world/yingischallenged/main
+    //change_challenge("intro");
+
+    //change_challenge("test_world/yingischallenged/intro");
+
+    run_game = true;
+
     //Run the challenge - returns after challenge completes
     embedWindow.execute_app();
 
@@ -346,8 +354,10 @@ GameMain::~GameMain()
 
 void GameMain::game_loop(bool showMouse)
 {
-    if (!challenge_data->game_window->check_close() && challenge_data->run_challenge)
+    if (!challenge_data->game_window->check_close() && challenge_data->run_challenge && run_game)
     {
+        //std::cout << "running game loop" << std::endl;
+
         last_clock = std::chrono::steady_clock::now();
 
         VLOG(3) << "} SB | IM {";
@@ -365,6 +375,7 @@ void GameMain::game_loop(bool showMouse)
         );
 
         VLOG(3) << "} EM | RM {";
+        //std::cout << "calling render" << std::endl;
         Engine::get_map_viewer()->render();
         VLOG(3) << "} RM | TD {";
 
@@ -394,19 +405,23 @@ void GameMain::game_loop(bool showMouse)
 
         VLOG(3) << "} TD | SB {";
         challenge_data->game_window->swap_buffers();
-    }
-    else
-    {
-        em->flush_and_disable(interpreter.interpreter_context);
-        delete challenge;
-        em->reenable();
-
-        challenge_data->run_challenge = true;
-        challenge = pick_challenge(challenge_data);
-        Engine::set_challenge(challenge);
-        callbackstate.stop();
+    //}
+    //else
+    //{
+//        em->flush_and_disable(interpreter.interpreter_context);
+//        delete challenge;
+//        em->reenable();
+//
+//        challenge_data->run_challenge = true;
+//        challenge = pick_challenge(challenge_data);
+//        Engine::set_challenge(challenge);
+//        callbackstate.stop();
         //Update tool bar here
         //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
+       // std::cout << "running game loop" << std::endl;
+    }
+    else{
+        std::cout << "not running game loop" << std::endl;
     }
     return;
 }
@@ -416,11 +431,79 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
     Config::json j = Config::get_instance();
-    std::string map_name = j["files"]["full_level_location"];
-    challenge_data->map_name = map_name + "/layout.tmx";
+    std::string challenge_name = j["files"]["full_level_location"];
+    std::string level_folder = j["files"]["level_folder"];
+    challenge_data->map_name = level_folder + challenge_name + "/layout.tmx";
+    challenge_data->level_location = challenge_name;
     challenge = new Challenge(challenge_data, &gui);
 
     return challenge;
+}
+
+void GameMain::change_challenge(std::string map_location) {
+
+    run_game = false;
+
+    std::cout << "Changing map to" << map_location << std::endl;
+
+    //changing_challenge = true;
+
+    //challenge->event_finish.trigger(0);
+
+    std::cout << "Got 0.1" << std::endl;
+
+    challenge_data->run_challenge = false;
+
+    std::cout << "Got 0.2" << std::endl;
+
+    //em->flush_and_disable(interpreter.interpreter_context);
+
+    std::cout << "Got 0.3" << std::endl;
+
+    delete challenge;
+
+    std::cout << "Got 0.4" << std::endl;
+
+    //em->reenable();
+
+    std::cout << "Got 1" << std::endl;
+
+    //challenge_data->run_challenge = true;
+
+    std::cout << "Got 2" << std::endl;
+
+    Challenge *challenge(nullptr);
+
+    std::cout << "Got 3" << std::endl;
+
+    Config::json j = Config::get_instance();
+
+    std::cout << "Got 3.1" << std::endl;
+
+    std::string level_folder = j["files"]["level_folder"];
+
+    std::cout << "Got 3.2" << std::endl;
+
+    challenge_data->map_name = level_folder + map_location + "/layout.tmx";
+    challenge_data->level_location = map_location;
+
+    std::cout << "Got 3.3" << std::endl;
+
+    challenge = new Challenge(challenge_data, &gui);
+
+    std::cout << "Got 3.4" << std::endl;
+
+    Engine::set_challenge(challenge);
+
+
+
+    callbackstate.stop();
+
+    challenge_data->run_challenge = true;
+
+    std::cout << "Got 4" << std::endl;
+
+    //changing_challenge = false;
 }
 
 GameWindow* GameMain::getGameWindow()

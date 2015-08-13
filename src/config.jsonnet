@@ -7,21 +7,21 @@
 	},
 	"files": {
 		"game_folder": "../game",
+		"level_folder": self.game_folder+"/levels/",
 		//"level_location": "/test_world/test_level/test_one",
 		//"level_location": "/test_world/yingischallenged/main",
 		//"level_location": "/intro",
 		//"level_location": "/tomland/one",
-		//"level_location": "/menu",
+		"level_location": "/menu",
 		//"level_location": "/world_one/level_one/main",
-		"level_location": "/world_one/level_one/main",
-		"full_level_location" : self.game_folder + "/levels" + self.level_location,
+		//"level_location": "/test_world/yingischallenged/main",
+		"full_level_location" :  self.level_location,
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
 		"font_location": self.game_folder + "/fonts",
 		"components_location": self.game_folder + "/components",
 		"dialogue_font": self.font_location + "/Ubuntu-R.ttf",
 		"game_save_location": self.game_folder + "/save.json"
-		
 	},
 
 	//define layer properties

@@ -116,4 +116,4 @@ def select():
 #registering the input callbacks...
 engine.register_input_callback(engine.INPUT_UP, navigate_up)
 engine.register_input_callback(engine.INPUT_DOWN, navigate_down)
-engine.register_input_callback(engine.INPUT_TALK, select) ##TODO, change this to a better key!
+engine.register_input_callback(engine.INPUT_ACTION, select) ##TODO, change this to a better key!

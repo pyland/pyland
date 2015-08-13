@@ -61,6 +61,8 @@ public:
     ///
     static void set_global_scale(float global_scale) { Engine::global_scale = global_scale; }
 
+
+
     ///
     /// Set the tile size to be used by the engine
     /// @param _tile_size the tile size
@@ -133,6 +135,12 @@ public:
     static bool walkable(glm::ivec2 location);
 
     ///
+    /// Change the map to the map specified by the given locatuib
+    /// @param location of the .tmx map file
+    ///
+    static void change_map(std::string map_location);
+
+    ///
     /// Change the tile in the map in the given layer at the provided position
     /// @param tile the x,y position of the tile to change
     /// @param layer the layer of the tile to change
@@ -183,6 +191,14 @@ public:
     static bool is_bar_open();
 
     /// trigger qt mainwindow functions
+    static void update_world(std::string text);
+    static void update_level(std::string text);
+    static void update_coins(int value);
+    static void update_totems(int value,bool show);
+
+    static void insert_to_scripter(std::string text);
+    static void clear_scripter();
+    static std::string get_script();
     static void print_terminal(std::string text, bool error);
     static void focus_next();
     static void set_any_output(bool option);

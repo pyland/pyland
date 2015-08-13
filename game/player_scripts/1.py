@@ -1,13 +1,3 @@
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
-move_east()
+howdy
+partner
+print(<Your name here>)

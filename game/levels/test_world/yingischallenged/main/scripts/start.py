@@ -1,10 +1,26 @@
 """ Load in saved states """
 
 player_one.focus()
-player_one.set_character_name("Benjo")
+player_one.set_character_name("Benji")
 player_two.set_character_name("Bob")
 
-engine.set_ui_colours(165,215,73,160,210,65)
+#engine.set_ui_colours(165,215,73,160,210,65)
+#engine.print_terminal("Switching level")
+#engine.change_map("test_world/yingischallenged/main_2")
+
+print(engine.print_terminal(engine.get_script()))
+
+engine.clear_scripter()
+engine.insert_to_scripter("howdy")
+engine.insert_to_scripter("partner")
+engine.insert_to_scripter("print(<Your name here>)")
+
+engine.update_world("Jungle")
+engine.update_level("Third")
+engine.update_coins(42)
+engine.update_totems(3,False)
+
+print(engine.print_terminal(engine.get_script()))
 
 coconut_one.set_weight(1)
 coconut_two.set_weight(2)
@@ -38,7 +54,7 @@ engine.get_objects_at(player_one.get_position())
 #engine.change_map(map_name)
 #call finish.py
 
-engine.add_dialogue(engine.get_dialogue("welcome"))
+engine.show_dialogue(engine.get_dialogue("welcome"))
 
 #engine.open_dialogue_box(coconut_one.focus)
 
