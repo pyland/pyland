@@ -178,7 +178,7 @@ void Entity::animate(int current_frame) {
         EventManager::get_instance()->add_event([this, current_frame, num_frame]() {
             this->set_animation_frame(current_frame);
             int next_frame = (current_frame + 1) % num_frame;
-            EventManager::get_instance()->add_timed_event(GameTime::duration(.05), [next_frame, this] (float completion) {
+            EventManager::get_instance()->add_timed_event(GameTime::duration(.06), [next_frame, this] (float completion) {
                 if (completion == 1.00) {
                     this->animate(next_frame);
                 }

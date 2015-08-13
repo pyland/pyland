@@ -1,1 +1,6 @@
-print("BOB")
+move_east()
+move_east()
+move_east()
+move_east()
+move_south()
+move_north()
