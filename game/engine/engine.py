@@ -242,3 +242,11 @@ class Engine:
             callback()
         return
 
+    def clear_scripter(self, callback = lambda: None):
+        self.__cpp_engine.clear_scripter()
+        callback()
+
+    def insert_to_scripter(self, text, callback = lambda: None):
+        self.__cpp_engine.insert_to_scripter(text)
+        callback()
+

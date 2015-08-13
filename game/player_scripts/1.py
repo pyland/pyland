@@ -1,6 +1,2 @@
-move_east()
-move_east()
-move_east()
-move_east()
-move_south()
-move_north()
+while True:
+  move_east()

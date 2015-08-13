@@ -3,34 +3,34 @@ player_one.focus()
 engine.play_music("beach")
 
 
+engine.clear_scripter()
 
+player_one.face_east()
 
 dialogue_sequence = [
     lambda callback: player_one.set_busy(True, callback = callback),
-
     lambda callback: engine.show_dialogue("Welcome to level two!", callback),
     lambda callback: engine.show_dialogue("Walk to the first checkpoint over there!", callback),
     lambda callback: player_one.set_busy(False, callback = callback)
-
 ]
 
 
 dialogue_checkpoint_one = [
     lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: engine.show_dialogue("Great! But we can also walk by writing code.", callback),
-    lambda callback: engine.show_dialogue("Type move_east() in the codeblock and press run to see what happens!", callback),
+    lambda callback: engine.show_dialogue("A script will appear in the PySripter, press 'run' to see what happens once it has!", callback),
     lambda callback: engine.show_dialogue("I'll meet you at the next checkpoint!", callback),
-    lambda callback: player_one.set_busy(False, callback = callback)
-
+    lambda callback: player_one.set_busy(False, callback = callback),
+    lambda callback: engine.clear_scripter(callback = callback),
+    lambda callback: engine.insert_to_scripter("move_east()", callback = callback)
 ]
 
 dialogue_checkpoint_two = [
     lambda callback: player_one.set_busy(True, callback = callback),
-    lambda callback: engine.show_dialogue("Try typing move_east() into the codeblock many times. Make sure they are on separate lines!", callback),
-    lambda callback: engine.show_dialogue("Toggle the speed option to fast and run the code!", callback),
+    lambda callback: engine.show_dialogue("Try typing move_east() into the codeblock many times. Make sure they are on separate lines! So you can run a big block at once!", callback),
+    lambda callback: engine.show_dialogue("If you press on the \"speed\" button in the very bottom right-hand corner of the screen, you will be able to run your code super-fast.", callback),
     lambda callback: engine.show_dialogue("I'll meet you at the end!", callback),
     lambda callback: player_one.set_busy(False, callback = callback)
-
 ]
 
 dialogue_checkpoint_end = [
