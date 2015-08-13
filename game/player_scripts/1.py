@@ -1,3 +1,6 @@
-howdy
-partner
-print(<Your name here>)
+move_east()
+move_east()
+move_east()
+move_east()
+move_south()
+move_north()
