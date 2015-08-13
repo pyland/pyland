@@ -62,6 +62,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("register_input_callback",   &GameEngine::register_input_callback)
         .def("print_terminal",    &GameEngine::print_terminal)
         .def("get_objects_at",    &GameEngine::get_objects_at)
+        .def("refresh_config",    &GameEngine::refresh_config)
         .def("set_ui_colours",    &GameEngine::set_ui_colours)
         .def("set_running",       &GameEngine::set_running)
         .def("set_finished",      &GameEngine::set_finished)
