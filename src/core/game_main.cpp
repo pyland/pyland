@@ -233,6 +233,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("9")},
     [&] (KeyboardInputEvent)
     {
+        change_challenge("test_world/yingischallenged/intro");
         InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
     }
     ));

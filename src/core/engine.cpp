@@ -186,10 +186,12 @@ bool Engine::walkable(glm::ivec2 location) {
 
 void Engine::change_map(std::string map_location){
     //std::thread *first = new std::thread([map_location]() {
-    //    game_main->run_game = false;
-    //    game_main->change_challenge(map_location);
+        //kill python thread
+        game_main->run_game = false;
+        game_main->change_challenge(map_location);
+        game_main->run_game = true;
     //});
-    game_main->run_game = false;
+    //game_main->run_game = false;
 }
 
 void Engine::change_tile(glm::ivec2 tile, std::string layer_name, std::string tile_name) {
