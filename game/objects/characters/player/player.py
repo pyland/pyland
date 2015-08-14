@@ -25,7 +25,7 @@ and which built-in variables exist already.
 """
 class Player(Character, ScriptStateContainer):
 
-    __bag = None
+    __bag = []
     __focus_button_id = 0
 
     def initialise(self):
@@ -101,33 +101,6 @@ class Player(Character, ScriptStateContainer):
         super().set_character_name(character_name)
         engine = self.get_engine()
         engine.update_player_name(character_name,self.__focus_button_id)
-
-    def test_display_bag(self):
-        engine = self.get_engine()
-        x, y = self.get_position()
-        game_objects = engine.get_objects_at((x, y+1))
-        for game_object in game_objects:
-            if isinstance(game_object, Bagable):
-                engine.print_terminal("Object is bagable")
-            engine.print_terminal(game_object.get_name())
-
-    def pick_up_objects(self):
-        """ Pick up and put all bagable objects in front of the player in the player's bag.
-
-        """
-        engine = self.get_engine()
-        #object_list = engine.get_objects_at(location_in_fron_of_player)
-        #for(object in object_list):
-        #	if(type(object) == Bagable):
-        #		bag.insert(object)
-        return
-
-    def bag_items_string(self):
-        #result = ""
-        #for(item in bag)
-        #	result += item.name + " : " + item.property + "\n"
-        #return result
-        return "coconut_one : weight: 5"
 
     """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
 
@@ -255,18 +228,8 @@ class Player(Character, ScriptStateContainer):
                 game_object.player_walked_on(self)
         return
 
-    """ This method takes the movement input of the player character and returns the appropriate
-    function for moving them in the direction required
-    face_x -- self.face_north/east/south/west() as appropriately required to get them to face in that direction
-    """
-    #def __handle_movement_input(self, is_facing_x, face_x, move_x):
-    #	def handle_input:
-    #		if(not(self.is_moving())):  #can't register input if the character is in the middle of moving
-    #			if(is_facing_x()): #if facing in x direction, get them to move in that direction, else face in that direction first
-    #				move_x()
-    #			else:
-    #				face_x()
-    #	return handle_input
+    def add_to_bag(self, bag_item):
+        pass
 
 
 
