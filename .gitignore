@@ -25,6 +25,7 @@
 \#*\#
 
 #save files
+*.save
 
 # project specific
 src/qtgui/moc_mainwindow.cpp
