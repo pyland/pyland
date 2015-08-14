@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <layer name="ground" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMBKGr+v1LLMdAwVVTVVVVVVVVVVXV5w8Sd7Ny
+  </data>
+ </layer>
+ <layer name="path/trees" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztWY1SwyAM5pl9wdWfuqnTvZL2PE5M818CVPvd5boBI/maQAJL6X/iLlBaIkpfLx4PX/JkkCvR/grmbQWvvrPQ3oOHJ+7PyO9h+8ig7D146HRG7act4yrSty3X+TLXsp/O6XtPzE8oWPss9J9AX35+BPGIwoVo39v6uCA6onhEAOPBtY8KicfhD58t3hp7JH9kHY8OnXnsPfjeyx9enZQve/qj5ruL9oc1B9TMK7V5UKBy8hY9kTzymRXWTLBGKj/Dc+tMjJuA3VgdzPnPwoMCVbNKfXleLq622KXVJ707rg+Oe0m//XZL69q4lMnJg+IGbS1tXiDFOZzDa8MWcLZq84BnPWxZH1obNH3aOVpBw8MaVz15cHG1Jx5/Ja5qr/NIWGsha/7Ysl9Z9i5NPud4SPDmjxIWHkvehXdNb8g8+fN7WtdS2D3YKa3rMMvd2GTkwdU93H4lobU/pLMGHK+1r9YZxsPDMl5Cy/1qgZWHdZ3vnUer+5EjrnQYncdz+jmTc4LloAh4eXj1RMHDIyoHWKCpCUcVyANDzTu3CGA8sHu3W7L9z8m1S/+Dauaj7vEoXnsBxmOvUuITZHOjzw==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="50" height="50">
+  <object name="message_flag/message_one" gid="287" x="1664" y="704"/>
+  <object name="characters/player/player_one" gid="286" x="256" y="704"/>
+  <object name="checkpoint/checkpoint_one" gid="302" x="1600" y="704"/>
+  <object name="message_flag/message_two" gid="287" x="2048" y="704"/>
+  <object name="message_flag/message_four" gid="287" x="1792" y="2240"/>
+  <object name="message_flag/message_five" gid="287" x="1152" y="2240"/>
+  <object name="message_flag/message_six" gid="287" x="1152" y="1472"/>
+  <object name="message_flag/message_seven" gid="287" x="704" y="1472"/>
+  <object name="checkpoint/end" gid="302" x="2816" y="3072"/>
+  <object name="message_flag/message_three" gid="287" x="2048" y="1600"/>
+  <object name="message_flag/message_eight" gid="287" x="384" y="3072"/>
+  <object name="characters/npcs/generic/gary" gid="291" x="2624" y="1600"/>
+  <object name="characters/npcs/generic/ash" gid="291" x="64" y="3072"/>
+ </objectgroup>
+ <layer name="SpecialLayer" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztll0OwyAMg9HOtcNy1L1NU0VSbBx+1ljKQ1Ga+KsIpZRn6v0qNSpmc5xUd3a/5OD7jex7b30iBizLb3J09QyJq9/ofXXtOVPJ0ay1TAfOhzk3Ko4ItTiM9TrFEKnkCPFC37F342B7/hNH6/w6jcOp6fYQ1Ifu3k7A9y41h7Ke0ye070qOuwDrQ/lAXXdfqX0x89Hw25yXEYnOltp6tjiMGlIPihq/zyxH55lHz8dMjlFfqJLDXk8OXqs4Rma99/9h+UHuU4rwOHpYkXy1UI89OcnBi+G425er5oPhAPOtPPc9tZLj+2zlue+ppeDonQ+FX8CX24/1kxxc/SdxRP0DUN9efdV9LiKQ772rkmMvnbT/kfn4ANE/Zdo=
+  </data>
+ </layer>
+</map>

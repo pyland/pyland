@@ -13,7 +13,7 @@
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
 		//"level_location": "/intro",
-		"level_location": "/world_one/level_one/main",
+		"level_location": "/world_one/level_three/main",
 		//"level_location": "/world_one/level_two/main",
 		//"level_location": "/world_one/coconut/main",
 		"full_level_location" :  self.level_location,
