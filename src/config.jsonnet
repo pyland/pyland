@@ -107,7 +107,7 @@
 		"py_help_button_spacing": 0.70,
 
 		//the parameters for the buttons used to scroll through pages in the pyguide/bag
-		"menu_move_width": 0.15,
+		"menu_move_width": 0.04,
 		"menu_move_height": 0.15,
 		"menu_move_x": 0.40,
 		"menu_move_y": 0.15,
@@ -134,7 +134,7 @@
 	// "index": "pyguide api: description"
 	
 	"pyguide_apis": {
-		"number": 9,
+		"number": 11,
 		"0": "move_east(): This moves the present character towards the right by one step.",
 		"1": "print(args): THIS prints the argument args to the terminal",
 		"2": "blah1: blah bklah asjdassd 3",
@@ -143,6 +143,8 @@
 		"5": "blah4: blah bklah asjdassd jkl",
 		"6": "blah5: blah bklah asjdassd fgjk",
 		"7": "blah6: blah bklah asjdassd fghjk",
-		"8": "blah7: blah bklah asjdassd asdfghjkl;",	
+		"8": "blah7: blah bklah asjdassd asdfghjkl;",
+		"9": "fsdhfs: dlkdfjslkfjsdlk",
+		"10": "fsdhfjsd: sfjsdklfjsdlfjs"	
 	}
 }

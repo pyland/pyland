@@ -205,8 +205,39 @@ void GUIMain::create_pyguide(){
 	pyguide_next_button->set_y_offset(menu_move_y);
 	pyguide_next_button->set_clickable(false);
 	pyguide_next_button->set_visible(false);
+
 	pyguide_next_button->set_on_click( [this] () {
-		Engine::print_terminal("Next button clicked", true);
+		py_help->clear_text();
+
+		if(pyguide_page.second == 1){
+			//do nothing, there's only one page
+			return;
+		}
+
+		//remove previous buttons
+		for(unsigned int i=(pyguide_page.first-1)*menu_max;
+						 i<(pyguide_page.first)*menu_max && i<py_apis_num;
+						 i++){
+			pyguide_window->remove(pyguide_commands[i]->get_id());
+		}
+
+		if(pyguide_page.first == pyguide_page.second){
+			//we have to wind over to the first page
+			pyguide_page.first = 1;
+		}
+		else{
+			++pyguide_page.first;
+		}
+
+		//add new buttons
+		for(unsigned int i=(pyguide_page.first-1)*menu_max;
+						 i<(pyguide_page.first)*menu_max && i<py_apis_num;
+						 i++){
+			pyguide_window->add(pyguide_commands[i]);
+		}
+
+		pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
+		refresh_gui();
 	});
 	pyguide_window->add(pyguide_next_button);
 
@@ -221,8 +252,39 @@ void GUIMain::create_pyguide(){
 	pyguide_back_button->set_y_offset(menu_move_y);
 	pyguide_back_button->set_clickable(false);
 	pyguide_back_button->set_visible(false);
+
 	pyguide_back_button->set_on_click([this] () {
-		Engine::print_terminal("Back button clicked", true);
+		py_help->clear_text();
+
+		if(pyguide_page.second == 1){
+			//do nothing, there's only one page
+			return;
+		}
+
+		//remove previous buttons
+		for(unsigned int i=(pyguide_page.first-1)*menu_max;
+						 i<(pyguide_page.first)*menu_max && i<py_apis_num;
+						 i++){
+			pyguide_window->remove(pyguide_commands[i]->get_id());
+		}
+
+		if(pyguide_page.first == 1){
+			//we have to wind over to the last page
+			pyguide_page.first = pyguide_page.second;
+		}
+		else{
+			--pyguide_page.first;
+		}
+
+		//add new buttons
+		for(unsigned int i=(pyguide_page.first-1)*menu_max;
+						 i<(pyguide_page.first)*menu_max && i<py_apis_num;
+						 i++){
+			pyguide_window->add(pyguide_commands[i]);
+		}
+
+		pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
+		refresh_gui();
 	});
 	pyguide_window->add(pyguide_back_button);
 
@@ -262,7 +324,6 @@ void GUIMain::create_pyguide(){
             pyguide_explanations.push_back(explanation);
 
             py_command->set_alignment(ButtonAlignment::BottomLeft);
-            py_command->set_visible(false);
 
             py_command->set_on_click( [this, explanation] () {
                 py_help->clear_text();
@@ -270,10 +331,7 @@ void GUIMain::create_pyguide(){
                 py_help->open();
             });
 
-            py_command->set_clickable(false);
-
             pyguide_commands.push_back(py_command);
-            pyguide_window->add(py_command);
 
 			pyguide_commands[i]->move_text(py_help_item_text_x, py_help_item_text_y);
             pyguide_commands[i]->set_width(py_help_item_width);
@@ -281,6 +339,8 @@ void GUIMain::create_pyguide(){
             pyguide_commands[i]->set_x_offset(py_help_item_x);
             pyguide_commands[i]->set_y_offset(py_help_item_y - float(i % menu_max)*py_help_item_spacing);
 
+			py_command->set_clickable(true);
+			py_command->set_visible(true);
         }
     }
 
@@ -438,9 +498,10 @@ void GUIMain::open_pyguide()
     pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
 	pyguide_page_display->set_visible(true);
 
-    for(unsigned int i=0; i<py_apis_num; i++){
-        pyguide_commands[i]->set_visible(true);
-        pyguide_commands[i]->set_clickable(true);
+    for(unsigned int i=(pyguide_page.first-1)*menu_max;
+						 i<(pyguide_page.first)*menu_max && i<py_apis_num;
+						 i++){
+		pyguide_window->add(pyguide_commands[i]);
     }
 
     refresh_gui();
@@ -462,9 +523,10 @@ void GUIMain::close_pyguide()
     pyguide_back_button->set_clickable(false);
 	pyguide_page_display->set_visible(false);
 
-    for(unsigned int i=0; i<py_apis_num; i++){
-        pyguide_commands[i]->set_visible(false);
-        pyguide_commands[i]->set_clickable(false);
+    for(unsigned int i=(pyguide_page.first-1)*menu_max;
+						 i<(pyguide_page.first)*menu_max && i<py_apis_num;
+						 i++){
+		pyguide_window->remove(pyguide_commands[i]->get_id());
     }
 
     refresh_gui();
