@@ -42,12 +42,9 @@ class LockableEntityThread : public lock::Lockable<std::shared_ptr<EntityThread>
 };
 
 ///
-/// Container that abstracts the daemon threads for
-/// the game's entities.
+/// This class is used to initialise and run the start function in bootstrapper.py which is the entry point for running all the python code
+/// in a given level
 ///
-/// @warning
-///     This needs to be, but is not, thread safe in many places.
-/// TODO: Rename this class and it's methods appropriately now that the thread has a list of entities, not just a single entity!!!!
 class EntityThread {
     private:
         ///
