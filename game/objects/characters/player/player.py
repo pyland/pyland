@@ -127,12 +127,8 @@ class Player(Character, ScriptStateContainer):
             script_api["move_south"] = scriptrunner.make_blocking(self.move_south)
             script_api["move_west"] = scriptrunner.make_blocking(self.move_west)
 
-            script_api["print_bag_items"] = lambda: user_print(self.bag_items_string())
-
             #the method to get the position of the player
             script_api["get_position"] = self.get_position
-
-            script_api["test_display_bag"] = self.test_display_bag
 
             scriptrunner.start(script_api, engine.get_run_script(), self, engine)
         return
