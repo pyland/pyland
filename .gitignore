@@ -44,4 +44,3 @@ test/text/main
 *callgrind.out*
 src/test/test.bin
 *.DS_Store
-game/player_scripts/*.py
