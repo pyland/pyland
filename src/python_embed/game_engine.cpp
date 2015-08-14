@@ -3,6 +3,7 @@
 #include "audio_engine.hpp"
 #include "button.hpp"
 #include "challenge.hpp"
+#include "challenge_data.hpp"
 #include "config.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
@@ -19,9 +20,12 @@ GameEngine::GameEngine(GUIMain *_gui_main, Challenge *_challenge){
     button_id = 0;
 }
 
-void GameEngine::change_level(std::string level_location) {
+
+void GameEngine::change_map(std::string map_location) {
     //TODO: run the finish.py script of a level.
-    LOG(INFO) << "Changing level to " << level_location;
+    //challenge
+    Engine::change_map(map_location);
+    LOG(INFO) << "Changing level to " << map_location;
     return;
 }
 
@@ -37,9 +41,11 @@ boost::python::object GameEngine::create_object(std::string object_file_location
 }
 
 std::string GameEngine::get_level_location() {
-    Config::json j = Config::get_instance();
-    std::string map_name = j["files"]["level_location"];
+    //Config::json j = Config::get_instance();
+    //std::string map_name = j["files"]["level_location"];
     //return "test_world/test_level/test_one";
+    std::string map_name = challenge->challenge_data->level_location;//"test_world/test_level/test_one";//challenge->challenge_data->map_name;
+    std::cout << "Map is " << challenge->challenge_data->level_location << std::endl;
     return map_name;
 }
 
@@ -47,7 +53,8 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
-void GameEngine::show_dialogue(std::string text, PyObject *callback) {
+void GameEngine::show_dialogue(std::string text, PyObject *options, PyObject *callback) {
+    boost::python::dict   boost_options(boost::python::handle<>(boost::python::borrowed(options)));
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
     if(Engine::is_bar_open()){
@@ -99,6 +106,38 @@ void GameEngine::play_music(std::string song_name) {
     AudioEngine::get_instance()->play_music("../game/music/" + song_name + ".ogg");
 }
 
+void GameEngine::update_world(std::string text){
+  Engine::update_world(text);
+}
+
+void GameEngine::update_level(std::string text){
+  Engine::update_level(text);
+}
+
+void GameEngine::update_coins(int value){
+  Engine::update_coins(value);
+}
+
+
+void GameEngine::update_totems(int value, bool show){
+   Engine::update_totems(value, show);
+}
+
+void GameEngine::insert_to_scripter(std::string text)
+{
+    Engine::insert_to_scripter(text);
+}
+
+void GameEngine::clear_scripter()
+{
+    Engine::clear_scripter();
+}
+
+std::string GameEngine::get_script()
+{
+    return Engine::get_script();
+}
+
 void GameEngine::print_terminal(std::string text, bool error) {
     Engine::print_terminal(text, error);
 }
@@ -141,6 +180,10 @@ int GameEngine::get_run_script(){
 
 bool GameEngine::is_solid(int x, int y) {
     return !Engine::walkable(glm::ivec2(x, y)); //TODO: Make syntax of Engine match this!
+}
+
+void GameEngine::refresh_config() {
+    Config::refresh_config();
 }
 
 

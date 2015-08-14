@@ -29,7 +29,7 @@ class GameEngine {
 
         static int INPUT_RUN() { return InputHandler::INPUT_RUN; }
         static int INPUT_HALT() { return InputHandler::INPUT_HALT; }
-        static int INPUT_TALK() { return InputHandler::INPUT_TALK; }
+        static int INPUT_ACTION() { return InputHandler::INPUT_ACTION; }
 
         GameEngine(GUIMain * _gui_main){
             gui_main = _gui_main;
@@ -39,8 +39,6 @@ class GameEngine {
         static int TILE_TYPE_STANDARD() { return 0; }
         static int TILE_TYPE_SOLID() { return 1; }
         static int TILE_TYPE_WATER() { return 2; }
-
-        static int THE_AWNSER_TO_LIFE_THE_UNIVERSE_AND_EVERYTHING() { return 42; }
 
         GameEngine(GUIMain *_gui_main, Challenge *_challenge);
         ///
@@ -62,7 +60,7 @@ class GameEngine {
         /// loads in the new level and objects.
         ///
         ///
-        void change_level(std::string level_location);
+        void change_map(std::string level_location);
 
         int get_tile_type(int x, int y);
 
@@ -95,7 +93,7 @@ class GameEngine {
         ///
         /// To add a dialogue to the notificaton bar
         ///
-        void show_dialogue(std::string text, PyObject *callback);
+        void show_dialogue(std::string text, PyObject *options, PyObject *callback);
 
         ///
         /// Register a callback against a given input
@@ -111,6 +109,29 @@ class GameEngine {
         /// Returns a raw string of the json config
         ///
         std::string get_config();
+
+        /// Update the info bar with the current
+        /// world/level/coins/totems
+        ///
+        void update_world(std::string text);
+        void update_level(std::string text);
+        void update_coins(int value);
+        void update_totems(int value, bool show);
+
+        /// Insert text to the current QsciScintilla
+        /// text edtior
+        ///
+        void insert_to_scripter(std::string text);
+
+        /// Clear all the text in the current QsciScintilla
+        /// text edtior
+        ///
+        void clear_scripter();
+
+        /// Get the text in the current QsciScintilla
+        /// text edtior
+        ///
+        std::string get_script();
 
         /// Print text to the QT terminal widget
         /// If error is True the text is red
@@ -140,6 +161,11 @@ class GameEngine {
         int get_run_script();
 
         bool is_solid(int x, int y);
+
+        ///
+        /// Force the config file to be loaded in again, useful for if you have changed any settings in it.
+        ///
+        void refresh_config();
 
 };
 

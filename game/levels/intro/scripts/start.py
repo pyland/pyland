@@ -11,6 +11,8 @@ c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
 
+engine.clear_scripter()
+
 """ Some quick and hacky methods I wrote to grab the player's name from the terminal"""
 player_name = "???"
 
@@ -29,6 +31,8 @@ def name_parser(name, callback):
         callback()
 
 def get_player_name(callback):
+    engine.clear_scripter()
+    engine.insert_to_scripter("print(\"YourName\")")
     script_api = {
         "print" : lambda text: name_parser(text, callback)
     }
@@ -42,22 +46,21 @@ def get_player_name(callback):
 
 
 dialogue_sequence = [
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_coming_now"), callback),
-    lambda callback: camera.move_by((0, -11), 2.2, callback),
-    lambda callback: camera.wait(0.2, callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"), callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_text_editor"), callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_big_white_box"), callback),
-    lambda callback: get_player_name(callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_confirm_player_name", {"player_name": player_name}), callback), #TODO, give option for dictionary of callback response
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": player_name}), callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_console_output"), callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_go_enjoy_pyland", {"player_name": player_name}), callback)
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_coming_now"), callback = callback),
+    lambda callback: camera.move_by((0, -11), 2.2, callback = callback),
+    lambda callback: camera.wait(0.2, callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_text_editor"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_big_white_box"), callback = callback),
+    lambda callback: get_player_name(callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_confirm_player_name", {"player_name": player_name}), callback = callback), #TODO, give option for dictionary of callback response
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": player_name}), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_console_output"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_go_enjoy_pyland", {"player_name": player_name}), callback = callback)
     #TODO: save the player's name in a new save file for them :)
     #TODO: change the level to the intro level
 ]
-
 
 engine.run_callback_list_sequence(dialogue_sequence)
 

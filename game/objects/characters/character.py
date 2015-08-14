@@ -79,8 +79,9 @@ class Character(GameObject):
     def set_character_name(self, character_name):
         self.__character_name = character_name
 
-    def set_busy(self, busy):
+    def set_busy(self, busy, callback = lambda: None):
         self.__busy = busy
+        callback()
 
     def is_busy(self):
         return self.__busy

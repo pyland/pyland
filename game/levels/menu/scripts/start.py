@@ -6,6 +6,7 @@ sys.path.insert(1, config['files']['components_location'])
 from script_state_container import ScriptStateContainer
 
 camera.focus()
+engine.clear_scripter()
 c1 = (210, 210, 210)
 c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
@@ -68,6 +69,9 @@ pyrate = MenuState((51, 8))         #the option to change the language to pyrate
 language_back = MenuState((51, 6))  #the "back" option in the language menu
 
 
+#Load in game settings
+settings = engine.get_settings()
+
 #Setting up how all the menu states interact with each other
 start_game.down_destination = options
 start_game.select = lambda: engine.print_terminal("TODO: Start the game!!!")
@@ -81,12 +85,17 @@ language.select_destination = english
 options_back.up_destination = language
 options_back.select_destination = options
 
+def save_language(language):
+    settings["language"] = language
+    engine.save_settings(settings)
+    engine.print_terminal("saved :" + language)
+
 english.down_destination = pyrate
-english.select = lambda: engine.print_terminal("TODO: Select english as the language!!!")
+english.select = lambda: save_language("english")
 
 pyrate.up_destination = english
 pyrate.down_destination = language_back
-pyrate.select = lambda: engine.print_terminal("TODO: Select pyrate as the language!!!")
+pyrate.select = lambda: save_language("pyrate")
 
 language_back.up_destination = pyrate
 language_back.select_destination = language
@@ -108,4 +117,4 @@ def select():
 #registering the input callbacks...
 engine.register_input_callback(engine.INPUT_UP, navigate_up)
 engine.register_input_callback(engine.INPUT_DOWN, navigate_down)
-engine.register_input_callback(engine.INPUT_TALK, select) ##TODO, change this to a better key!
+engine.register_input_callback(engine.INPUT_ACTION, select) ##TODO, change this to a better key!

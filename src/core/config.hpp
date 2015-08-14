@@ -13,6 +13,7 @@ class Config : public nlohmann::json {
     public:
         typedef nlohmann::json json;
         static json get_instance();
+        static void refresh_config();
 };
 
 #endif

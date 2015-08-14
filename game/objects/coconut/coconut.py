@@ -36,3 +36,13 @@ class Coconut(GameObject, Bagable):
     def get_weight(self):
         return self.weight
 
+    """ IMPLEMENT THIS IN BAGABLE """
+    def player_action(self, player_object):
+        #add self to player's bag
+        #make self non-solid 
+        #make self invisible
+        return
+
+    def drop_from_bag():
+        #make
+        return
