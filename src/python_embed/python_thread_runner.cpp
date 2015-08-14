@@ -15,7 +15,7 @@
 #include <thread>
 
 #include "entity.hpp"
-#include "entitythread.hpp"
+#include "python_thread_runner.hpp"
 #include "event_manager.hpp"
 #include "interpreter_context.hpp"
 #include "lifeline.hpp"
@@ -28,14 +28,14 @@
 
 namespace py = boost::python;
 
-LockableEntityThread::LockableEntityThread():
-    lock::Lockable<std::shared_ptr<EntityThread>>() {}
+LockablePythonThreadRunner::LockablePythonThreadRunner():
+    lock::Lockable<std::shared_ptr<PythonThreadRunner>>() {}
 
-LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value):
-    lock::Lockable<std::shared_ptr<EntityThread>>(value) {}
+LockablePythonThreadRunner::LockablePythonThreadRunner(std::shared_ptr<PythonThreadRunner> value):
+    lock::Lockable<std::shared_ptr<PythonThreadRunner>>(value) {}
 
-LockableEntityThread::LockableEntityThread(std::shared_ptr<EntityThread> value, std::shared_ptr<std::mutex> lock):
-    lock::Lockable<std::shared_ptr<EntityThread>>(value, lock) {}
+LockablePythonThreadRunner::LockablePythonThreadRunner(std::shared_ptr<PythonThreadRunner> value, std::shared_ptr<std::mutex> lock):
+    lock::Lockable<std::shared_ptr<PythonThreadRunner>>(value, lock) {}
 
 ///
 /// A thread function running a player's daemon.
@@ -67,7 +67,7 @@ void run_entities(std::atomic<bool> &on_finish,
                 std::promise<long> thread_id_promise,
                 boost::filesystem::path bootstrapper_file,
                 InterpreterContext interpreter_context,
-                std::map<EntityThread::Signal, PyObject *> signal_to_exception) {
+                std::map<PythonThreadRunner::Signal, PyObject *> signal_to_exception) {
 
     LOG(INFO) << "run_entity: Starting";
     Lifeline alert_on_finish([&] () { on_finish = true; });
@@ -112,9 +112,9 @@ void run_entities(std::atomic<bool> &on_finish,
             bootstrapper_module->attr("start")(
                 *entities_object,
                 game_engine_object,
-                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::RESTART])),
-                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::STOP])),
-                py::api::object(py::borrowed<>(signal_to_exception[EntityThread::Signal::KILL])),
+                py::api::object(py::borrowed<>(signal_to_exception[PythonThreadRunner::Signal::RESTART])),
+                py::api::object(py::borrowed<>(signal_to_exception[PythonThreadRunner::Signal::STOP])),
+                py::api::object(py::borrowed<>(signal_to_exception[PythonThreadRunner::Signal::KILL])),
                 waiting
             );
         }
@@ -129,16 +129,16 @@ void run_entities(std::atomic<bool> &on_finish,
                 throw std::runtime_error("Unknown Python error");
             }
 
-            if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::RESTART], type)) {
+            if (PyErr_GivenExceptionMatches(signal_to_exception[PythonThreadRunner::Signal::RESTART], type)) {
                 waiting = false;
                 continue;
             }
-            else if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::STOP], type)) {
+            else if (PyErr_GivenExceptionMatches(signal_to_exception[PythonThreadRunner::Signal::STOP], type)) {
                 // Just wait.
                 waiting = true;
                 continue;
             }
-            else if (PyErr_GivenExceptionMatches(signal_to_exception[EntityThread::Signal::KILL], type)) {
+            else if (PyErr_GivenExceptionMatches(signal_to_exception[PythonThreadRunner::Signal::KILL], type)) {
                 // We are done.
                 LOG(INFO) << "Thread is killed";
                 return;
@@ -157,7 +157,7 @@ void run_entities(std::atomic<bool> &on_finish,
 
 //TODO: This was based on a version which created a thread for each entity in the level, now it takes a list of entities and creates a thread for them,
 //This needs to be renamed or maybe refactored appropriately
-EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities, GameEngine &game_engine):
+PythonThreadRunner::PythonThreadRunner(InterpreterContext interpreter_context, std::list<Entity> &entities, GameEngine &game_engine):
     entities(entities),
     previous_call_number(entities.front().call_number), //TODO: Work out what this did!!!!!!
     interpreter_context(interpreter_context),
@@ -168,13 +168,13 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Ent
 
     signal_to_exception({
         {
-            EntityThread::Signal::RESTART,
+            PythonThreadRunner::Signal::RESTART,
             make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_RESTART")
         }, {
-            EntityThread::Signal::STOP,
+            PythonThreadRunner::Signal::STOP,
             make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_STOP")
         }, {
-            EntityThread::Signal::KILL,
+            PythonThreadRunner::Signal::KILL,
             make_base_async_exception(Py_BaseAsyncException, "__main__.BaseAsyncException_KILL")
         }
     })
@@ -194,7 +194,7 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Ent
             // For implementation justifications, see
             // http://stackoverflow.com/questions/24477791
             {
-                lock::GIL lock_gil(interpreter_context, "EntityThread::EntityThread");
+                lock::GIL lock_gil(interpreter_context, "PythonThreadRunner::PythonThreadRunner");
                 entity_object->append(boost::ref(entity));
             };
         }
@@ -214,7 +214,7 @@ EntityThread::EntityThread(InterpreterContext interpreter_context, std::list<Ent
         );
 }
 
-long EntityThread::get_thread_id() {
+long PythonThreadRunner::get_thread_id() {
     if (thread_id_future.valid()) {
         thread_id = thread_id_future.get();
     }
@@ -223,36 +223,36 @@ long EntityThread::get_thread_id() {
 }
 
 
-PyObject *EntityThread::make_base_async_exception(PyObject *base, const char *name) {
-    lock::GIL lock_gil(interpreter_context, "EntityThread::make_base_async_exception");
+PyObject *PythonThreadRunner::make_base_async_exception(PyObject *base, const char *name) {
+    lock::GIL lock_gil(interpreter_context, "PythonThreadRunner::make_base_async_exception");
 
     return PyErr_NewException(name, base, nullptr);
 }
 
-void EntityThread::halt_soft(Signal signal) {
+void PythonThreadRunner::halt_soft(Signal signal) {
     auto thread_id = get_thread_id();
 
-    lock::GIL lock_gil(interpreter_context, "EntityThread::halt_soft");
+    lock::GIL lock_gil(interpreter_context, "PythonThreadRunner::halt_soft");
 
     PyThreadState_SetAsyncExc(thread_id, signal_to_exception[signal]);
 }
 
-void EntityThread::halt_hard() {
+void PythonThreadRunner::halt_hard() {
     // TODO: everything!!!
     throw std::runtime_error("hard halting not implemented");
 
-    lock::GIL lock_gil(interpreter_context, "EntityThread::halt_hard");
+    lock::GIL lock_gil(interpreter_context, "PythonThreadRunner::halt_hard");
 }
 
-bool EntityThread::is_dirty() {
+bool PythonThreadRunner::is_dirty() {
     return previous_call_number != entities.front().call_number; //TODO: Work out what this did!!!!!!
 }
 
-void EntityThread::clean() {
+void PythonThreadRunner::clean() {
     previous_call_number = entities.front().call_number;//TODO: Work out what this did!!!!!!
 }
 
-void EntityThread::finish() {
+void PythonThreadRunner::finish() {
     // TODO: implement nagging
     while (true) {
         halt_soft(Signal::KILL);
@@ -265,11 +265,11 @@ void EntityThread::finish() {
     thread.join();
 }
 
-EntityThread::~EntityThread() {
+PythonThreadRunner::~PythonThreadRunner() {
     finish();
-    LOG(INFO) << "EntityThread destroyed";
+    LOG(INFO) << "PythonThreadRunner destroyed";
 
-    lock::GIL lock_gil(interpreter_context, "EntityThread::~EntityThread");
+    lock::GIL lock_gil(interpreter_context, "PythonThreadRunner::~PythonThreadRunner");
 
     if (!entity_object.unique()) {
         throw std::runtime_error("multiple references to entity_object on destruction"); //TODO: WORK OUT WHAT THIS DID!

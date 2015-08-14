@@ -64,13 +64,13 @@ INPUT_OBJS = \
 	input_management/mouse_state.o          \
 
 PYTHON_OBJS = \
-	python_embed/entity.o              \
-	python_embed/interpreter.o         \
-	python_embed/interpreter_context.o \
-	python_embed/locks.o               \
-	python_embed/entitythread.o        \
-	python_embed/game_engine.o         \
-#	python_embed/thread_killer.o       \
+	python_embed/entity.o               \
+	python_embed/interpreter.o          \
+	python_embed/interpreter_context.o  \
+	python_embed/locks.o                \
+	python_embed/python_thread_runner.o \
+	python_embed/game_engine.o          \
+#	python_embed/thread_killer.o        \
 
 QT_OBJS = \
 	qtgui/game_window.o      \

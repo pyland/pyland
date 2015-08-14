@@ -13,7 +13,7 @@
 #include "challenge.hpp"
 #include "challenge_data.hpp"
 #include "engine.hpp"
-#include "entitythread.hpp"
+#include "python_thread_runner.hpp"
 #include "interpreter.hpp"
 #include "make_unique.hpp"
 #include "map.hpp"
@@ -49,8 +49,8 @@ Challenge::Challenge(ChallengeData* _challenge_data, GUIMain * _gui_main) :
         game_engine = new GameEngine(_gui_main, this);
 
         //The intepreter creates a new python thread which is the main thread for the running level, the list of all objects in the level are passed to it which are then exposed to the python code
-        daemon = std::make_unique<LockableEntityThread>(challenge_data->interpreter->register_entities(entity_list, *game_engine));
-        daemon->value->halt_soft(EntityThread::Signal::RESTART);
+        daemon = std::make_unique<LockablePythonThreadRunner>(challenge_data->interpreter->register_entities(entity_list, *game_engine));
+        daemon->value->halt_soft(PythonThreadRunner::Signal::RESTART);
 }
 
 Challenge::~Challenge() {

@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 #include <list>
-#include "entitythread.hpp"
+#include "python_thread_runner.hpp"
 #include "interpreter_context.hpp"
 //#include "thread_killer.hpp"
 #include "locks.hpp"
@@ -73,7 +73,7 @@ class Interpreter {
         ///     When the thread is discarded, it will be destroyed. This is
         ///     a blocking operation. 
         ///
-        LockableEntityThread register_entities(std::list<Entity> &entities, GameEngine &game_engine);
+        LockablePythonThreadRunner register_entities(std::list<Entity> &entities, GameEngine &game_engine);
 
         ///
         /// The main thread of the spawned interpreter.
@@ -118,7 +118,7 @@ class Interpreter {
         static std::atomic_flag initialized;
 
         ///
-        /// The thread that kills EntityThreads when they
+        /// The thread that kills PythonThreadRunners when they
         /// have not called a wrapped API sufficiently recently.
         ///
         //std::unique_ptr<ThreadKiller> thread_killer;
@@ -131,7 +131,7 @@ class Interpreter {
         ///
         /// @see thread_killer
         ///
-        EntityThreads entitythreads;
+        PythonThreadRunners entitythreads;
 
         ///
         /// Internal API to start CPython. Called on creation.

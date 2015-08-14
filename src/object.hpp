@@ -7,7 +7,7 @@
 #include "renderable_component.hpp"
 
 
-class LockableEntityThread;
+class LockablePythonThreadRunner;
 
 ///
 /// The class to hold an object's information so that the Engine can
@@ -84,7 +84,7 @@ public:
     ///
     /// The Python thread for running scripts in.
     ///
-    std::unique_ptr<LockableEntityThread> daemon;
+    std::unique_ptr<LockablePythonThreadRunner> daemon;
 };
 
 #endif
