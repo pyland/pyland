@@ -24,6 +24,9 @@
 # Emacs auto-generated files
 \#*\#
 
+#save files
+*.save
+
 # project specific
 src/qtgui/moc_mainwindow.cpp
 src/jsonnet/jsonnet

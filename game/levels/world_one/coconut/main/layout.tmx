@@ -56,5 +56,7 @@
   <object name="coconut/coconut_one" gid="287" x="128" y="1088" width="64" height="64"/>
   <object name="characters/player/player_one" gid="286" x="1280" y="1088"/>
   <object name="characters/npcs/generic/coconut_man" gid="291" x="1280" y="768"/>
+  <object gid="291" x="-22" y="-30"/>
+  <object gid="291" x="1486" y="708"/>
  </objectgroup>
 </map>
