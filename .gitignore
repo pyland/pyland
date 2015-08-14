@@ -33,6 +33,7 @@ src/jsonnet/jsonnet
 game/.idea
 src/Pyland.*
 src/python_embed/interpreter
+game/player_scripts/*.py
 *main.bin
 *__pycache__/
 src/dependencies
