@@ -1,2 +1,1 @@
-while True:
-  move_east()
+print("YourName")

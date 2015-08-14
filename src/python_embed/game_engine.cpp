@@ -53,7 +53,8 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
-void GameEngine::show_dialogue(std::string text, PyObject *callback) {
+void GameEngine::show_dialogue(std::string text, PyObject *options, PyObject *callback) {
+    boost::python::dict   boost_options(boost::python::handle<>(boost::python::borrowed(options)));
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
     if(Engine::is_bar_open()){

@@ -93,7 +93,7 @@ class GameEngine {
         ///
         /// To add a dialogue to the notificaton bar
         ///
-        void show_dialogue(std::string text, PyObject *callback);
+        void show_dialogue(std::string text, PyObject *options, PyObject *callback);
 
         ///
         /// Register a callback against a given input
