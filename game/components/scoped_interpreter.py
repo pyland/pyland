@@ -5,22 +5,36 @@ import contextlib
 import traceback
 
 class ScopedInterpreter(code.InteractiveInterpreter):
-    """ Creates and defines a class called ScopedIntepreter which is used to run the player-code """
-
-    error_output = print #This variable determines where errors are output
-
-    """ Creates a scoped intepreter which can be used to run some code which is provided as the argument to runcode()
-    imbued_locals -- A dictionary from strings to objects, each object will be available to the code being run in the interpreter under the name given by their dictionary key
-    output_reader -- A function which takes a string as an argument, any output from the scoped code will be passed to here: TODO: work out if this is what it actually does!
+    """ Creates and defines a class called ScopedIntepreter which is used to run the player-code
+    
+    By creating an instance of this class, and using it to run any code the player writes. The functions, objects and values
+    the player has access to can be tightly controlled. The script_api is a dictionary from names to the values the player
+    has access to.
     """
-    def __init__(self, imbued_locals, error_output = print):
-        super().__init__(imbued_locals)
+
+    def __init__(self, script_api, error_output = print):
+        """ Creates a scoped intepreter which can be used to run some code which is provided as the argument to runcode()
+
+        Parameters
+        ----------
+        script_api : dict from string to object
+            A dictionary from strings to objects, each object will be available to the code being run in the interpreter under the name given by their dictionary key
+        error_output : string -> void
+            A function which takes a string as it's argument. All error messages comming from the scripts run in the scoped intepreter will be passed to this method
+        """
+        super().__init__(script_api)
         self.error_output = error_output
 
     def runcode(self, code, HaltScriptException):
-        #"""TODO: work out how to catch exceptions safely and handle them with python,
-        #then we can query the database to print output and errors messages cleanly to the user!"""
-        #TODO: work out what the hell contextlib.closing does, don't forget to change bootstrapper.py based on that!
+        """ Run the code that is passed as an argument to ScopedInterpreter. 
+
+        Parameters
+        ----------
+        code : str
+            A string of the code you wish to run
+        HaltScriptException : Exception
+            An instance of the exception class you wish to use to halt the executing script asynchronously
+        """
         with contextlib.closing(sys.stdout):
             # Emulate super().runcode(code), but don't catch
             # RESTART, STOP or KILL because those should
@@ -33,6 +47,6 @@ class ScopedInterpreter(code.InteractiveInterpreter):
             except HaltScriptException as He:
                 raise He
             except Exception as e:
-                #Print out any errors caught in the code to the game terminal
+                #Print out any errors caught in the code to error_output
                 self.error_output(traceback.format_exc()) 
 
