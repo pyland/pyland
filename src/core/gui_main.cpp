@@ -14,6 +14,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     map_viewer(embedWindow, &gui_manager),
     em(EventManager::get_instance()),
     bar_open(false),
+	callback_options(false),
     pause_open(false),
     bag_open(false),
     display_button_start(0)
@@ -418,12 +419,36 @@ void GUIMain::close_pause_window(){
 }
 
 void GUIMain::open_notification_bar(std::function<void ()> func){
+
     bar_open = true;
+	callback_options = false;
 
     LOG(INFO) << "Notification Bar open";
 
     notification_func = func;
     notification_bar->open();
+}
+
+void GUIMain::open_notification_bar_with_options(std::map<std::string, std::function<void ()>> options){
+
+	bar_open = true;
+	callback_options = true;
+
+    LOG(INFO) << "Notification Bar open";
+
+    notification_bar->open();
+
+	typedef std::map<std::string, std::function<void()>>::const_iterator it_type;
+
+    for(it_type i = options.begin(); i != options.end(); ++i){
+
+    }
+}
+
+void GUIMain::proceed_notification_bar(){
+
+	notification_bar->proceed();
+
 }
 
 void GUIMain::close_notification_bar(){
@@ -433,9 +458,14 @@ void GUIMain::close_notification_bar(){
 
     notification_bar->close();
 
-    em->add_event([this] {
-        notification_func();
-    });
+	if(callback_options){
+
+	}
+	else{
+		em->add_event([this] {
+			notification_func();
+		});
+    }
 }
 
 

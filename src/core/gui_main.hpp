@@ -115,6 +115,7 @@ private:
     std::shared_ptr<GUIWindow> gui_window;
 
     bool bar_open; //whether or not the notification bar is open
+    bool callback_options; //whether or not there are options at the end of the notification bar
     void create_notification_bar();
     std::function<void ()> notification_func; // the function to be called after the bar is closed
     std::shared_ptr<TextBox> notification_bar;
@@ -205,6 +206,8 @@ public:
 
     //To open and close the notification bar, func is the callback function to be called after the user finished reading the notification
     void open_notification_bar(std::function<void ()> func);
+    void open_notification_bar_with_options(std::map<std::string, std::function<void ()>> options);
+    void proceed_notification_bar();
     void close_notification_bar();
 
     //get whether or not the bar is open -required if show_dialogue is run consecutively

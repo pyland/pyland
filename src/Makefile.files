@@ -70,7 +70,6 @@ PYTHON_OBJS = \
 	python_embed/locks.o               \
 	python_embed/entitythread.o        \
 	python_embed/game_engine.o         \
-#	python_embed/thread_killer.o       \
 
 QT_OBJS = \
 	qtgui/game_window.o      \
