@@ -53,18 +53,42 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
-void GameEngine::show_dialogue(std::string text, PyObject *options, PyObject *callback) {
-    boost::python::dict   boost_options(boost::python::handle<>(boost::python::borrowed(options)));
-    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+void GameEngine::show_dialogue(std::string text, PyObject *callback) {
 
     if(Engine::is_bar_open()){
         LOG(INFO) << "Replacing the old notification bar with the new one";
         Engine::close_notification_bar();
     }
 
-    LOG(INFO) << "Adding " << text << "to the notification bar";
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
+    LOG(INFO) << "Adding " << text << "to the notification bar with a regular callback";
     Engine::add_text(text);
     Engine::open_notification_bar(boost_callback);
+}
+
+void GameEngine::show_dialogue_with_options(std::string text, PyObject *_boost_options){
+
+    if(Engine::is_bar_open()){
+        LOG(INFO) << "Replacing the old notification bar with the new one";
+        Engine::close_notification_bar();
+    }
+
+    boost::python::dict boost_options(boost::python::handle<>(boost::python::borrowed(_boost_options)));
+
+    std::map<std::string, std::function<void ()> > options;
+    boost::python::list option_names = boost_options.keys();
+
+    for(int i=0; i<len(option_names); i++){
+        boost::python::extract<std::string> extracted_option_name(option_names[i]);
+        boost::python::object extracted_callback = boost_options[option_names[i]];
+
+        options[extracted_option_name] = extracted_callback;
+    }
+
+    LOG(INFO) << "Adding " << text << "to the notification bar with options";
+    Engine::add_text(text);
+    Engine::open_notification_bar_with_options(options);
 }
 
 unsigned int GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {

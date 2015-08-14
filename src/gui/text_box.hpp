@@ -61,6 +61,7 @@ public:
 
     void set_buffer_size(unsigned int _size){buffer_size = _size;}
 
+    void proceed();
 
     void open();
     void close();

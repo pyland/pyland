@@ -55,6 +55,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("get_level_location",&GameEngine::get_level_location)
         .def("print_debug",       &GameEngine::print_debug)
         .def("show_dialogue",     &GameEngine::show_dialogue)
+        .def("show_dialogue_with_options",     &GameEngine::show_dialogue_with_options)
         .def("get_config",        &GameEngine::get_config)
         .def("change_map",        &GameEngine::change_map)
         .def("get_tile_type",     &GameEngine::get_tile_type)

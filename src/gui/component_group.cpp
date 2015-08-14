@@ -161,9 +161,16 @@ void ComponentGroup::add(std::shared_ptr<Component> component) {
     component->set_width_pixels((int)((float)width_pixels*component->get_width()));
     component->set_height_pixels((int)((float)height_pixels*component->get_height()));
     component->set_x_offset_pixels((int)((float)width_pixels*component->get_x_offset()));
-    component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));                }
+    component->set_y_offset_pixels((int)((float)height_pixels*component->get_y_offset()));
+}
 
 void ComponentGroup::remove(int component_id) {
+
+    if(components.count(component_id) == 0){
+        //it doesn't exist, cannot be removed, leave it
+        return;
+    }
+
     std::shared_ptr<Component> component = components[component_id];
     component->set_parent(nullptr);
     components.erase(component_id);

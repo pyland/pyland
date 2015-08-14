@@ -22,9 +22,6 @@ croc_two.rand_explore()
 croc_three.rand_explore()
 croc_four.rand_explore()
 
-engine.show_dialogue("Look at the terminal!", lambda: engine.print_terminal("This is the terminal"))
-engine.show_dialogue("2Look at the terminal!", lambda: engine.print_terminal("2This is the terminal"))
-
 def croc_one_dialogue(self):
     self.set_busy(True)
     player_one.set_busy(True)

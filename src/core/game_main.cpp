@@ -161,6 +161,9 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("Return")},
     [&] (KeyboardInputEvent)
     {
+        if(Engine::is_bar_open()){
+            gui.proceed_notification_bar();
+        }
         InputHandler::get_instance()->run_list(InputHandler::INPUT_ACTION);
     }
     ));
