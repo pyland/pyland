@@ -4,7 +4,9 @@ player_one.focus()
 player_one.set_character_name("Benji")
 player_two.set_character_name("Bob")
 
-#engine.set_ui_colours(165,215,73,160,210,65)
+c1 = (255, 255, 255)
+c2 = (245, 245, 245)
+engine.set_ui_colours(c1, c2)
 #engine.print_terminal("Switching level")
 #engine.change_map("test_world/yingischallenged/main_2")
 
