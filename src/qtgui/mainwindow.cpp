@@ -202,6 +202,8 @@ MainWindow::MainWindow(GameMain *exGame):
         initWorkspace(workspaces[ws], ws);
     }
 
+    setTabs(1);
+
     // Setup draggable splitter for script embedWindow and terminal
     splitter = new QSplitter(Qt::Horizontal);
 
@@ -719,14 +721,138 @@ void MainWindow::timerHandler()
     game->game_loop(gameWidget->underMouse());
 }
 
+//Show the entire scripter panel
+void MainWindow::showScripterPanel()
+{
+    splitter->show();
+}
+
+//Hide the entire scripter panel
+void MainWindow::hideScripterPanel()
+{
+    splitter->hide();
+}
+
+//Allow the player to use the entire scripter panel
+void MainWindow::enableScripterPanel()
+{
+    splitter->setEnabled(true);
+}
+
+//Prevent the player from using the entire scripter panel
+void MainWindow::disableScripterPanel()
+{
+    splitter->setEnabled(false);
+}
+
+//Allow the player to edit scripts
+void MainWindow::enableScripter()
+{
+    textWidget->setEnabled(true);
+}
+
+//Prevent the player from editing scripts
+void MainWindow::disableScripter()
+{
+    textWidget->setEnabled(false);
+}
+
+void MainWindow::setTabs(int num){
+    //textWidget->currentWidget()->hide();
+    //textWidget->removeTab(9);
+
+    std::cout << "num is " << std::to_string(num) << std::endl;
+
+    currentTabs = num;
+
+    std::cout << "sEG? " << std::to_string(num) << std::endl;
+
+    textWidget->clear();
+     std::cout << "seg2? " << std::to_string(num) << std::endl;
+//    int initialCount = textWidget->count();
+//    for(int ws = 0; ws < workspace_max; ws++)
+//    {
+//        std::cout << "ws is " << std::to_string(ws) << std::endl;
+//        std::cout << "count is " << std::to_string(textWidget->count()) << std::endl;
+//        if ((num-1) < ws){
+//            std::cout << "case one " << std::endl;
+//            //if (initialCount >= (ws+1)){
+//               // std::cout << "case two " << std::endl;
+//                //textWidget->removeTab(ws);
+//            //}
+//        }
+//        else{
+//            std::cout << "case three " << std::endl;
+//            //if (initialCount < (ws+1)){
+//                std::cout << "case four " << std::endl;
+//                QString w = QString("%1").arg(QString::number(ws + 1));
+//                textWidget->addTab(workspaces[ws],w);
+//            //}
+//        }
+//    }
+
+//    if (num == 1){
+//        //splitter->removeWidget(textWidget);
+//        //splitter->removeWidget(terminal);
+//
+//        textWidget->hide();
+//
+//        splitter->insertWidget(1,workspaces[0]);
+//
+//        splitter->refresh();
+//        //splitter->addWidget(terminal);
+//    }
+
+    if ((num < 1 ) || (num > workspace_max)){
+        LOG(INFO) << "May only set between 1 and workspace_max ("<< std::to_string(workspace_max) << ") tabs" << std::endl;
+        return;
+    }
+
+    for(int ws = 0; ws < num; ws++)
+    {
+        QString w = QString("%1").arg(QString::number(ws + 1));
+        textWidget->addTab(workspaces[ws],w);
+    }
+
+//    textWidget->removeTab(0);
+//    textWidget->removeTab(1);
+//    textWidget->removeTab(2);
+//    textWidget->removeTab(3);
+//    textWidget->removeTab(4);
+//    textWidget->removeTab(5);
+//    textWidget->removeTab(6);
+//    textWidget->removeTab(7);
+//    textWidget->removeTab(8);
+//    textWidget->removeTab(9);
+
+    //textWidget->clear();
+
+    std::cout << "Got ehre " << std::endl;
+    //textWidget->removeTab(7);
+    //textWidget->removeTab(6);
+
+    //textWidgetLayout->addWidget(workspaces[0]);
+
+
+
+    //If one, put QSciScintilla there, otherwise put tabs
+
+    //for(int ws = 0; ws < workspace_max; ws++)
+    //{
+
+    //}
+}
+
+//When the QT window is closed
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
 }
 
+//Called when the run button is clicked
+//Run the currently open script
 void MainWindow::clickRun()
 {
-    //Run the currently open script
     runCode(0);
 }
 
@@ -754,9 +880,14 @@ void MainWindow::runCode(int script)
         }
         else
         {
-            index = script;
-            ws = (QsciScintilla*)textWidget->widget(script-1);  //Subtract one since first widget is at qt index 0
-
+            if (script <= currentTabs){
+                index = script;
+                ws = (QsciScintilla*)textWidget->widget(script-1);  //Subtract one since first widget is at qt index 0
+            }
+            else{
+                LOG(INFO) << "Script "<< std::to_string(script) << " is not available to be run" << std::endl;
+                return;
+            }
         }
 
         //read in the player scripts (as defined in the config file)
@@ -796,11 +927,13 @@ void MainWindow::runCode(int script)
     setGameFocus();
 }
 
+//Called when the speed button is clicked
 void MainWindow::clickSpeed()
 {
     toggleSpeed();
 }
 
+//Toggle the speed setting
 void MainWindow::toggleSpeed()
 {
     setFast(!fast);
@@ -838,6 +971,8 @@ void MainWindow::updateSpeed()
     }
 }
 
+//Output text to the terminal
+//If error is set the text is read, otherwise it is black
 void MainWindow::pushTerminalText(std::string text, bool error)
 {
     if (error)
@@ -850,12 +985,14 @@ void MainWindow::pushTerminalText(std::string text, bool error)
     terminalDisplay->setTextColor(QColor("black"));
 }
 
+//Increase the font size of the current script
 void MainWindow::zoomFontIn()
 {
     ((QsciScintilla*)textWidget->currentWidget())->zoomIn(3);
     setGameFocus();
 }
 
+//Decrease the font size of the current script
 void MainWindow::zoomFontOut()
 {
     ((QsciScintilla*)textWidget->currentWidget())->zoomOut(3);
@@ -868,22 +1005,25 @@ void MainWindow::setGameFocus()
     gameWidget->setFocus();
 }
 
+//Update the world text in the tool bar
 void MainWindow::setWorld(std::string text){
     QString qtext = QString::fromStdString("World: "+text);
     textWorld->setText(qtext);
 }
 
+//Update the level text in the tool bar
 void MainWindow::setLevel(std::string text){
     QString qtext = QString::fromStdString("Level: "+text);
     textLevel->setText(qtext);
 }
 
+//Update the coin text in the tool bar
 void MainWindow::setCoins(int value){
     QString qtext = QString::fromStdString("Coins: "+std::to_string(value));
     textCoins->setText(qtext);
 }
 
-
+//Update the totem text in the tool bar
 void MainWindow::setCurTotems(int value,bool show){
   //Update the number of totems collected on the current level
   if (show){
@@ -897,12 +1037,13 @@ void MainWindow::setCurTotems(int value,bool show){
   }
 }
 
+//Insert text to the end of the currently open text editor tab
 void MainWindow::insertToTextEditor(std::string text)
 {
     QsciScintilla *ws;
     ws = (QsciScintilla*)textWidget->currentWidget();
 
-    QString qtext = QString::fromStdString(text+"\n");
+    QString qtext = QString::fromStdString(text);
 
     QString priorText = ws->text();
 
@@ -911,6 +1052,7 @@ void MainWindow::insertToTextEditor(std::string text)
     ws->insert(priorText);
 }
 
+//Clear the text in the currently open text editor tab
 void MainWindow::clearTextEditor()
 {
     QsciScintilla *ws;
@@ -919,6 +1061,7 @@ void MainWindow::clearTextEditor()
     ws->clear();
 }
 
+//Get the text from the currently open text editor tab
 std::string MainWindow::getEditorText()
 {
     QsciScintilla *ws;
@@ -927,28 +1070,13 @@ std::string MainWindow::getEditorText()
     return ws->text().toStdString();
 }
 
-
-
+//Clear the text from the terminal
 void MainWindow::clearTerminal()
 {
     terminalDisplay->clear();
 }
 
-bool MainWindow::saveAs()
-{
-    return false;
-}
-
-void MainWindow::documentWasModified()
-{
-    setWindowModified(textEdit->isModified());
-}
-
-void MainWindow::createStatusBar()
-{
-    statusBar()->showMessage(tr("Ready"));
-}
-
+//Update the run button when it has been clicked
 //This gets called when clicking on the Run/Halt button
 //and from engine.cpp update_status, when the script terminates
 void MainWindow::setRunning(bool option)
@@ -968,6 +1096,7 @@ void MainWindow::setRunning(bool option)
 
 }
 
+//Update the fast button when it has been clicked
 void MainWindow::setFast(bool option)
 {
     fast = option;
@@ -983,11 +1112,14 @@ void MainWindow::setFast(bool option)
 
 }
 
+//Specify whether there has been any output to the terminal
+//during the current script execution
 void MainWindow::setAnyOutput(bool option)
 {
     anyOutput = option;
 }
 
+//Set the colours of the QT interface
 void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2)
 {
 
@@ -1005,16 +1137,22 @@ SDL_Window* MainWindow::getSDLWindow()
     return embedWindow;
 }
 
+//Get the current width of the QT game widget
+//so the SDL window can be displayed with the correct size
 int MainWindow::getGameWidgetWidth()
 {
     return gameWidget->width();
 }
 
+//Get the current height of the QT game widget
+//so the SDL window can be displayed with the correct size
 int MainWindow::getGameWidgetHeight()
 {
     return gameWidget->height();
 }
 
+//Find out if any text has been output to the terminal
+//during the current script execution
 bool MainWindow::getAnyOutput()
 {
     return anyOutput;

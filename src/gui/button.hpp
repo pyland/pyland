@@ -46,6 +46,7 @@ public:
 
     void set_text(std::shared_ptr<Text> );
     void set_text(std::string);
+    void set_text_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
     void resize_text(float width, float height);
     void move_text(float x_offset, float y_offset);

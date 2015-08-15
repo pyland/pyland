@@ -25,7 +25,7 @@
 
 #include <glog/logging.h>
 
-#include "callback.hpp"
+#include "callback.hpp"f
 #include "game_window.hpp"
 #include "image.hpp"
 #include "shader.hpp"
@@ -174,12 +174,12 @@ void Text::render() {
     int border;
     TTF_SizeUTF8(font.font, " ", &border, NULL);
     border *= 2;
-    
+
     // If they are still zero, don't continue.
     if (available_width <= 0) {
         throw Text::RenderException("No available width for rendering text.");
     }
-    
+
     // int available_height = height - glow_radius * 2;
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
@@ -333,7 +333,7 @@ void Text::render() {
     int line_count = line_number;
 
     int used_height = line_count * line_height + 2 * glow_radius;
-    
+
     used_width += glow_radius * 2 + border;
 
     image = Image(used_width, (used_height < height) ? used_height : height, true);
@@ -533,7 +533,7 @@ void Text::apply_newson_bloom() {
                     for (++seed_y; seed_y < height && image[seed_y][x].a == 0; ++seed_y);
                     seed_y_prev = y;
                 }
-            
+
                 int r(0);
                 if (seed_y_prev != -1) {
                     // Calculate radius from distance from last seed.
@@ -898,9 +898,9 @@ void Text::resize(int w, int h) {
         e << "Invalid dimensions to resize (" << w << ", " << h << ")";
         throw Text::RenderException(e.str());
     }
-    
+
     ratio_size = false;
-    
+
     if (width != w || height != h) {
         width = w;
         height = h;
