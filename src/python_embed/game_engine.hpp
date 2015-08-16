@@ -117,6 +117,18 @@ class GameEngine {
         ///
         std::string get_config();
 
+        ///
+        /// Change the settings of the PyScripter
+        ///
+        void show_py_scripter();
+        void hide_py_scripter();
+        void enable_py_scripter();
+        void disable_py_scripter();
+        void enable_script_editing();
+        void disable_script_editing();
+        void set_py_tabs(int val);
+
+        ///
         /// Update the info bar with the current
         /// world/level/coins/totems
         ///

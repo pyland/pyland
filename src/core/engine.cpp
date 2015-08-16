@@ -280,6 +280,55 @@ void Engine::open_notification_bar(std::function<void ()> func){
     });
 }
 
+void Engine::show_py_scripter(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->showScripterPanel();
+    });
+}
+
+void Engine::hide_py_scripter(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->hideScripterPanel();
+    });
+}
+
+void Engine::enable_py_scripter(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->enableScripterPanel();
+    });
+}
+
+void Engine::disable_py_scripter(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->disableScripterPanel();
+    });
+}
+
+void Engine::enable_script_editing(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->enableScripter();
+    });
+}
+
+void Engine::disable_script_editing(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->disableScripter();
+    });
+}
+
+void Engine::set_py_tabs(int val){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, val] {
+        _main_window->setTabs(val);
+    });
+}
+
 void Engine::update_world(std::string text){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, text] {

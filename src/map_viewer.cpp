@@ -72,7 +72,6 @@ void MapViewer::resize() {
 }
 
 void MapViewer::render() {
-    std::cout << "rendering" << std::endl;
     CHECK_NOTNULL(map);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

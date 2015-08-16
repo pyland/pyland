@@ -622,8 +622,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     QKeyEvent *keyEvent = NULL;
     QMouseEvent *mouseEvent = NULL;
-    //QFocusEvent *focusEvent = NULL;
-    //QResizeEvent *resizeEvent = NULL;
     //Check if QT event is a keyboard or mouse event, and push it to SDL
     if (event->type() == 6)//QEvent::KeyPress)
     {
@@ -757,51 +755,12 @@ void MainWindow::disableScripter()
     textWidget->setEnabled(false);
 }
 
+//Set the number of scripting tabs
 void MainWindow::setTabs(int num){
-    //textWidget->currentWidget()->hide();
-    //textWidget->removeTab(9);
-
-    std::cout << "num is " << std::to_string(num) << std::endl;
-
     currentTabs = num;
 
-    std::cout << "sEG? " << std::to_string(num) << std::endl;
-
     textWidget->clear();
-     std::cout << "seg2? " << std::to_string(num) << std::endl;
-//    int initialCount = textWidget->count();
-//    for(int ws = 0; ws < workspace_max; ws++)
-//    {
-//        std::cout << "ws is " << std::to_string(ws) << std::endl;
-//        std::cout << "count is " << std::to_string(textWidget->count()) << std::endl;
-//        if ((num-1) < ws){
-//            std::cout << "case one " << std::endl;
-//            //if (initialCount >= (ws+1)){
-//               // std::cout << "case two " << std::endl;
-//                //textWidget->removeTab(ws);
-//            //}
-//        }
-//        else{
-//            std::cout << "case three " << std::endl;
-//            //if (initialCount < (ws+1)){
-//                std::cout << "case four " << std::endl;
-//                QString w = QString("%1").arg(QString::number(ws + 1));
-//                textWidget->addTab(workspaces[ws],w);
-//            //}
-//        }
-//    }
 
-//    if (num == 1){
-//        //splitter->removeWidget(textWidget);
-//        //splitter->removeWidget(terminal);
-//
-//        textWidget->hide();
-//
-//        splitter->insertWidget(1,workspaces[0]);
-//
-//        splitter->refresh();
-//        //splitter->addWidget(terminal);
-//    }
 
     if ((num < 1 ) || (num > workspace_max)){
         LOG(INFO) << "May only set between 1 and workspace_max ("<< std::to_string(workspace_max) << ") tabs" << std::endl;
@@ -813,34 +772,6 @@ void MainWindow::setTabs(int num){
         QString w = QString("%1").arg(QString::number(ws + 1));
         textWidget->addTab(workspaces[ws],w);
     }
-
-//    textWidget->removeTab(0);
-//    textWidget->removeTab(1);
-//    textWidget->removeTab(2);
-//    textWidget->removeTab(3);
-//    textWidget->removeTab(4);
-//    textWidget->removeTab(5);
-//    textWidget->removeTab(6);
-//    textWidget->removeTab(7);
-//    textWidget->removeTab(8);
-//    textWidget->removeTab(9);
-
-    //textWidget->clear();
-
-    std::cout << "Got ehre " << std::endl;
-    //textWidget->removeTab(7);
-    //textWidget->removeTab(6);
-
-    //textWidgetLayout->addWidget(workspaces[0]);
-
-
-
-    //If one, put QSciScintilla there, otherwise put tabs
-
-    //for(int ws = 0; ws < workspace_max; ws++)
-    //{
-
-    //}
 }
 
 //When the QT window is closed
