@@ -16,7 +16,7 @@
 class ChallengeData;
 class Entity;
 class Map;
-class LockableEntityThread;
+class LockablePythonThreadRunner;
 class GameEngine;
 class GUIMain;
 
@@ -32,7 +32,7 @@ private:
     ///
     /// The Python thread for running scripts in.
     ///
-    std::unique_ptr<LockableEntityThread> daemon;
+    std::unique_ptr<LockablePythonThreadRunner> daemon;
 
     ///
     /// The instance of a GameEngine object, this is actually used as the interface betwixt C++ and python code.

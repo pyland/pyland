@@ -152,6 +152,10 @@ void TextBox::open(){
     Engine::get_gui()->refresh_gui();
 }
 
+void TextBox::proceed(){
+    forward_button->call_on_click();
+}
+
 void TextBox::close(){
 
     if(type == TextBoxType::Bar){

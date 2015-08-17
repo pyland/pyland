@@ -1,5 +1,5 @@
-#ifndef ENTITYTHREAD_H
-#define ENTITYTHREAD_H
+#ifndef PYTHONTHREADRUNNER_H
+#define PYTHONTHREADRUNNER_H
 
 #include "python_embed_headers.hpp"
 
@@ -15,21 +15,21 @@
 
 class Interpreter;
 class GameEngine;
-class EntityThread;
+class PythonThreadRunner;
 
 
-using EntityThreads = lock::Lockable<std::vector<std::weak_ptr<EntityThread>>>;
+using PythonThreadRunners = lock::Lockable<std::vector<std::weak_ptr<PythonThreadRunner>>>;
 
 ///
-/// A lock::Lockable<std::shared_ptr<EntityThread>>
+/// A lock::Lockable<std::shared_ptr<PythonThreadRunner>>
 /// with additional public event dispatchers.
 ///
-class LockableEntityThread : public lock::Lockable<std::shared_ptr<EntityThread>> {
+class LockablePythonThreadRunner : public lock::Lockable<std::shared_ptr<PythonThreadRunner>> {
     public:
-        //using lock::Lockable<std::shared_ptr<EntityThread>>::Lockable;
-        LockableEntityThread();
-        LockableEntityThread(std::shared_ptr<EntityThread> value);
-        LockableEntityThread(std::shared_ptr<EntityThread> value, std::shared_ptr<std::mutex> lock);
+        //using lock::Lockable<std::shared_ptr<PythonThreadRunner>>::Lockable;
+        LockablePythonThreadRunner();
+        LockablePythonThreadRunner(std::shared_ptr<PythonThreadRunner> value);
+        LockablePythonThreadRunner(std::shared_ptr<PythonThreadRunner> value, std::shared_ptr<std::mutex> lock);
 
         // TODO: Rearchitechture
         Dispatcher<> event_run;
@@ -42,13 +42,10 @@ class LockableEntityThread : public lock::Lockable<std::shared_ptr<EntityThread>
 };
 
 ///
-/// Container that abstracts the daemon threads for
-/// the game's entities.
+/// This class is used to initialise and run the start function in bootstrapper.py which is the entry point for running all the python code
+/// in a given level
 ///
-/// @warning
-///     This needs to be, but is not, thread safe in many places.
-/// TODO: Rename this class and it's methods appropriately now that the thread has a list of entities, not just a single entity!!!!
-class EntityThread {
+class PythonThreadRunner {
     private:
         ///
         /// Private shortcut to making exceptions which can
@@ -75,7 +72,7 @@ class EntityThread {
         std::list<Entity> entities;
 
         ///
-        /// Thread spawned by this EntityThread.
+        /// Thread spawned by this PythonThreadRunner.
         ///
         std::thread thread;
 
@@ -152,7 +149,7 @@ class EntityThread {
         };
 
         ///
-        /// Construct a EntityThread from an list of Entity objects.
+        /// Construct a PythonThreadRunner from an list of Entity objects.
         ///
         /// Spawns a new thread.
         /// It works by wrapping each entity in a python object and then putting all those objects in a python list.
@@ -164,7 +161,7 @@ class EntityThread {
         /// @param entities
         ///     The list of entites to construct the daemon for.
         ///
-        EntityThread(InterpreterContext interpreter_context, std::list<Entity> &entities, GameEngine &game_engine);
+        PythonThreadRunner(InterpreterContext interpreter_context, std::list<Entity> &entities, GameEngine &game_engine);
 
         ///
         /// Close the thread and shut down neatly.
@@ -172,7 +169,7 @@ class EntityThread {
         /// If the thread is not finished, it is killed. This does
         /// not return until the thread is joined.
         ///
-        ~EntityThread();
+        ~PythonThreadRunner();
 
         ///
         /// Get the ID of the thread according to CPython.

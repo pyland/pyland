@@ -9,7 +9,7 @@
 
 #include "challenge.hpp"        //Included for getting id_type
 #include "engine.hpp"
-#include "entitythread.hpp"
+#include "python_thread_runner.hpp"
 #include "map_viewer.hpp"
 #include "map_object.hpp"
 #include "object_manager.hpp"
@@ -53,7 +53,7 @@ public:
 
         if (!active_player) { return; }
 
-        active_player->daemon->value->halt_soft(EntityThread::Signal::RESTART);
+        active_player->daemon->value->halt_soft(PythonThreadRunner::Signal::RESTART);
     }
 
     void stop() {
@@ -63,7 +63,7 @@ public:
 
         if (!active_player) { return; }
 
-        active_player->daemon->value->halt_soft(EntityThread::Signal::STOP);
+        active_player->daemon->value->halt_soft(PythonThreadRunner::Signal::STOP);
     }
 
     void kill() {
@@ -73,7 +73,7 @@ public:
 
         if (!active_player) { return; }
 
-        active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
+        active_player->daemon->value->halt_soft(PythonThreadRunner::Signal::KILL);
     }
 
     void man_move(glm::vec2 direction) {

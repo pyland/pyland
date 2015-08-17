@@ -8,8 +8,7 @@ import threading
 
 from scoped_interpreter import ScopedInterpreter
 
-""" This file contains all the implementation details of how player scripts are interpreted and run.
-"""
+""" This file contains all the implementation details of how player scripts are interpreted and run. """
 
 class HaltScriptException(Exception):
     pass
@@ -30,8 +29,8 @@ def start(script_api, script_name, script_state_container, engine):
         The name of the script that you wish to run. The game looks in the script folder for it.
     """
 
-    #All the stuff to define new print stuff, this essentially means that stuff will  only be printed to the screen if the player has typed in something
-    printed_flag = [False]
+    """ How printing is handled """
+    printed_flag = [False]  #This flag used to determine if the player has printed something, because if nothing has been printed there is no point in inserting the "----" in the terminal.
     def user_print(text):
         """ A simple mthod to print text to the game console for the user, overrides the python default print method """
         printed_flag[0] = True

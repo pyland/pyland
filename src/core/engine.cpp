@@ -276,6 +276,14 @@ void Engine::open_notification_bar(std::function<void ()> func){
 
 }
 
+void Engine::open_notification_bar_with_options(std::map<std::string, std::function<void ()>> options){
+
+    EventManager::get_instance()->add_event([options] {
+        gui_main->open_notification_bar_with_options(options);
+    });
+
+}
+
 void Engine::close_notification_bar(){
 
     EventManager::get_instance()->add_event([] {

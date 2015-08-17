@@ -47,6 +47,7 @@ private:
     float menu_width;
     float menu_height;
     float menu_spacing;
+    unsigned int menu_max;
 
     float notification_width;
     float notification_height;
@@ -72,6 +73,8 @@ private:
     float py_help_item_x;
     float py_help_item_y;
     float py_help_item_spacing;
+    float py_help_item_text_x;
+    float py_help_item_text_y;
 
     float py_help_text_width;
     float py_help_text_height;
@@ -84,6 +87,14 @@ private:
     float py_help_button_x;
     float py_help_button_y;
     float py_help_button_spacing;
+
+    float menu_move_width;
+    float menu_move_height;
+    float menu_move_x;
+    float menu_move_y;
+    float menu_move_spacing;
+    float menu_page_display_x;
+    float menu_page_display_y;
 
     float button_width;
     float button_height;
@@ -104,6 +115,7 @@ private:
     std::shared_ptr<GUIWindow> gui_window;
 
     bool bar_open; //whether or not the notification bar is open
+    bool callback_options; //whether or not there are options at the end of the notification bar
     void create_notification_bar();
     std::function<void ()> notification_func; // the function to be called after the bar is closed
     std::shared_ptr<TextBox> notification_bar;
@@ -130,8 +142,12 @@ private:
     void create_pyguide();
     std::shared_ptr<Board> pyguide_window;
     std::shared_ptr<TextBox> py_help;
-    std::deque<std::shared_ptr<Button>> pyguide_commands;
     std::deque<std::string> pyguide_explanations;
+    std::deque<std::shared_ptr<Button>> pyguide_commands;
+    std::shared_ptr<Button> pyguide_next_button;
+    std::shared_ptr<Button> pyguide_back_button;
+    std::shared_ptr<Board> pyguide_page_display;
+    std::pair<unsigned int, unsigned int> pyguide_page; //page first out of second
     void open_pyguide();
     void close_pyguide();
 
@@ -142,7 +158,7 @@ private:
     //from button id to index (so can get the button from buttons).
     //This is because the ids are passed through an event queue (and not directly), using the
     //id directly because an index can't be assumed
-    std::deque<unsigned int> button_indexs;
+    std::deque<unsigned int> button_indices;
     //The index for the currently highlighted player
     unsigned int cur_button_index;
     //While cycling through sprites, this is the index of the first button on the visible page
@@ -190,6 +206,8 @@ public:
 
     //To open and close the notification bar, func is the callback function to be called after the user finished reading the notification
     void open_notification_bar(std::function<void ()> func);
+    void open_notification_bar_with_options(std::map<std::string, std::function<void ()>> options);
+    void proceed_notification_bar();
     void close_notification_bar();
 
     //get whether or not the bar is open -required if show_dialogue is run consecutively
