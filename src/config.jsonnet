@@ -17,7 +17,7 @@
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
 		//"level_location": "/world_one/level_one/main",
-		"full_level_location" :  self.level_location,
+		"full_level_location" : "/test_world/yingischallenged/main",
 		"world_location": "/test_world/yingischallenged/",
 		//"level_location": "/test_world/yingischallenged/main",
 		//"full_level_location" : "/test_world/yingischallenged/main",

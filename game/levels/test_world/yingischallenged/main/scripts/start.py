@@ -7,6 +7,8 @@ player_two.set_character_name("Bob")
 c1 = (255, 255, 255)
 c2 = (245, 245, 245)
 engine.set_ui_colours(c1, c2)
+engine.set_py_tabs(3)
+engine.disable_py_scripter()
 #engine.print_terminal("Switching level")
 #engine.change_map("test_world/yingischallenged/main_2")
 
