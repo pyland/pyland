@@ -79,6 +79,18 @@
 		"notification_button_x": 0.90,
 		"notification_button_y": 0.35,
 
+		//the parameters for the option box which is to be displayed after the box is closed
+		"option_max": 2,
+		"option_width": 0.6,
+		"option_height": 0.30,
+		"option_x": 0.20,
+		"option_y": 0.20,
+		"option_button_width": 0.20,
+		"option_button_height": 0.20,
+		"option_button_x": 0.80,
+		"option_button_y": 0.40,
+		"option_button_spacing": 0.30,
+		
 		//the parameters for the py help text box 
 		"py_help_width": 0.50,
 		"py_help_height": 0.90, 

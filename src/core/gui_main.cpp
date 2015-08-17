@@ -15,6 +15,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     em(EventManager::get_instance()),
     bar_open(false),
     callback_options(false),
+    option_start(0),
     pause_open(false),
     bag_open(false),
     display_button_start(0)
@@ -34,6 +35,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     gui_window = std::make_shared<GUIWindow>();
     gui_window->set_visible(false);
+    gui_window->set_clickable(false);
 
     gui_manager.set_root(gui_window);
 
@@ -64,6 +66,9 @@ void GUIMain::create_pause_menu(){
     pause_button->set_height(button_height);
     pause_button->set_x_offset(left_x_offset);
     pause_button->set_y_offset(top_y_offset);
+    pause_button->set_visible(true);
+    pause_button->set_clickable(true);
+
     pause_button->set_on_click( [&] (){
 
         if(bag_open || bar_open){
@@ -113,6 +118,15 @@ void GUIMain::create_notification_bar(){
     notification_bar->set_visible(false);
     notification_bar->set_buffer_size(notification_text_buffer);
 
+	options_box = std::make_shared<Board>(ButtonType::Board);
+	options_box->set_width(option_width);
+	options_box->set_height(option_height);
+	options_box->set_x_offset(option_x);
+	options_box->set_y_offset(option_y);
+	options_box->set_clickable(false);
+	options_box->set_visible(false);
+
+	gui_window->add(options_box);
     gui_window->add(notification_bar);
 }
 
@@ -126,6 +140,8 @@ void GUIMain::create_bag(){
     bag_button->set_height(button_height);
     bag_button->set_x_offset(right_x_offset);
     bag_button->set_y_offset(top_y_offset);
+	bag_button->set_visible(true);
+    bag_button->set_clickable(true);
 
     bag_button->set_on_click( [&] ()
     {
@@ -406,6 +422,9 @@ void GUIMain::close_pause_window(){
         else if(i->second == notification_bar){
             continue;
         }
+        else if(i->second == options_box){
+            continue;
+        }
         else{
             i->second->set_visible(true);
             i->second->set_clickable(true);
@@ -419,53 +438,74 @@ void GUIMain::close_pause_window(){
 }
 
 void GUIMain::open_notification_bar(std::function<void ()> func){
-
     bar_open = true;
     callback_options = false;
-
-    LOG(INFO) << "Notification Bar open";
-
     notification_func = func;
     notification_bar->open();
+    LOG(INFO) << "Notification Bar open";
 }
 
-void GUIMain::open_notification_bar_with_options(std::map<std::string, std::function<void ()>> options){
-
+void GUIMain::open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options){
     bar_open = true;
     callback_options = true;
-
-    LOG(INFO) << "Notification Bar open";
-
+	notification_options = options;
     notification_bar->open();
-
-    typedef std::map<std::string, std::function<void()>>::const_iterator it_type;
-
-    for(it_type i = options.begin(); i != options.end(); ++i){
-
-    }
+	LOG(INFO) << "Notification Bar open";
 }
 
 void GUIMain::proceed_notification_bar(){
-
     notification_bar->proceed();
-
 }
 
 void GUIMain::close_notification_bar(){
     bar_open = false;
 
-    LOG(INFO) << "Notification Bar closed";
-
-    notification_bar->close();
-
     if(callback_options){
+		options_box->set_visible(true);
+
+		for(int i=0; i<=1; i++){
+			std::shared_ptr<Button> option_button = std::make_shared<Button>(ButtonType::Single);
+			option_button->set_alignment(ButtonAlignment::BottomLeft);
+			option_button->set_width(option_button_width);
+			option_button->set_height(option_button_height);
+			option_button->set_x_offset(option_button_x - float(i)*option_button_spacing);
+			option_button->set_y_offset(option_button_y);
+			option_button->set_text(notification_options[i].first);
+			option_button->move_text(0.0f, 0.0f);
+
+			option_button->set_on_click([&] (){
+				LOG(INFO) << "£££££££££££££ CALLED";
+				notification_bar->close();
+				options_box->set_visible(false);
+				option_button->set_visible(false);
+				option_button->set_clickable(false);
+				refresh_gui();
+				LOG(INFO) << "£££FINISHED BRO";
+
+				em->add_event([this, i] {
+					notification_options[i].second();
+				});
+				LOG(INFO) << "£££FINISHED BROSEPHINE";
+
+			});
+			option_button->set_visible(true);
+			option_button->set_clickable(true);
+
+			option_buttons.push_back(option_button);
+			options_box->add(option_buttons[i]);
+
+		}
+		refresh_gui();
 
     }
     else{
+		notification_bar->close();
         em->add_event([this] {
             notification_func();
         });
     }
+
+    LOG(INFO) << "Notification Bar closed";
 }
 
 
@@ -765,6 +805,17 @@ void GUIMain::config_gui()
     notification_button_height = j["scales"]["notification_button_height"];
     notification_button_x = j["scales"]["notification_button_x"];
     notification_button_y = j["scales"]["notification_button_y"];
+
+	option_max = j["scales"]["option_max"];
+	option_width = j["scales"]["option_width"];
+	option_height = j["scales"]["option_height"];
+	option_x = j["scales"]["option_x"];
+	option_y = j["scales"]["option_y"];
+	option_button_width = j["scales"]["option_button_width"];
+	option_button_height = j["scales"]["option_button_height"];
+	option_button_x = j["scales"]["option_button_x"];
+	option_button_y = j["scales"]["option_button_y"];
+	option_button_spacing = j["scales"]["option_button_spacing"];
 
     py_help_width = j["scales"]["py_help_width"];
     py_help_height = j["scales"]["py_help_height"];

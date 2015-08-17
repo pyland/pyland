@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <deque>
+#include <utility>
 
 #include "button.hpp"
 #include "config.hpp"
@@ -63,6 +64,17 @@ private:
     float notification_button_x;
     float notification_button_y;
 
+	unsigned int option_max;
+	float option_width;
+	float option_height;
+	float option_x;
+	float option_y;
+	float option_button_width;
+	float option_button_height;
+	float option_button_x;
+	float option_button_y;
+	float option_button_spacing;
+
     float py_help_width;
     float py_help_height;
     float py_help_x;
@@ -117,7 +129,15 @@ private:
     bool bar_open; //whether or not the notification bar is open
     bool callback_options; //whether or not there are options at the end of the notification bar
     void create_notification_bar();
-    std::function<void ()> notification_func; // the function to be called after the bar is closed
+	std::function<void ()> notification_func; // the function to be called after the bar is closed
+    std::deque<std::pair<std::string, std::function<void ()> > > notification_options;
+
+	unsigned int option_start;
+	std::shared_ptr<Board> options_box;
+	std::deque<std::shared_ptr<Button>> option_buttons;
+	std::shared_ptr<Button> next_option;
+	std::shared_ptr<Button> prev_option;
+
     std::shared_ptr<TextBox> notification_bar;
 
     void create_pause_menu();
@@ -206,7 +226,7 @@ public:
 
     //To open and close the notification bar, func is the callback function to be called after the user finished reading the notification
     void open_notification_bar(std::function<void ()> func);
-    void open_notification_bar_with_options(std::map<std::string, std::function<void ()>> options);
+    void open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options);
     void proceed_notification_bar();
     void close_notification_bar();
 
