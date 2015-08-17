@@ -401,26 +401,10 @@ void GameMain::game_loop(bool showMouse)
         #ifdef USE_GLES
             //Display when mouse is over the SDL widget
             if (showMouse) {cursor->display();};
-        #else
-            ++showMouse; //TODO: find a nicer way to avoid unused variable warnings in desktop compiler :P
         #endif
 
         VLOG(3) << "} TD | SB {";
         challenge_data->game_window->swap_buffers();
-    //}
-    //else
-    //{
-//        em->flush_and_disable(interpreter.interpreter_context);
-//        delete challenge;
-//        em->reenable();
-//
-//        challenge_data->run_challenge = true;
-//        challenge = pick_challenge(challenge_data);
-//        Engine::set_challenge(challenge);
-//        callbackstate.stop();
-        //Update tool bar here
-        //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
-       // std::cout << "running game loop" << std::endl;
     }
     else{
         std::cout << "not running game loop" << std::endl;
