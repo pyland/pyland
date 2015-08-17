@@ -126,7 +126,7 @@ Text::~Text() {
 void Text::render() {
     int width = this->width;
     int height = this->height;
-    std::pair<int,int> window_size = window->get_size();
+    std::pair<int,int> window_size = window->get_window_size();
     // Automatic sizing if dimension is 0.
     if (width == 0) {
         switch (alignment_h) {
@@ -919,7 +919,7 @@ void Text::resize_ratio(float w, float h) {
     height_ratio = h;
 
     int iw, ih;
-    std::pair<int,int> window_size = window->get_size();
+    std::pair<int,int> window_size = window->get_window_size();
     iw = (int)(w * (float)window_size.first);
     ih = (int)(h * (float)window_size.second);
     if (width != iw || height != ih) {
@@ -947,7 +947,7 @@ void Text::move_ratio(float x, float y) {
     y_ratio = y;
 
     int ix, iy;
-    std::pair<int,int> window_size = window->get_size();
+    std::pair<int,int> window_size = window->get_window_size();
     ix = (int)(x * (float)window_size.first);
     iy = (int)(y * (float)window_size.second);
     if (this->x != ix || this->y != iy) {

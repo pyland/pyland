@@ -315,7 +315,9 @@ public:
     /// Returns the dimensions of the renderable area (excluding window
     /// borders).
     ///
-    std::pair<int, int> get_size();
+    std::pair<int, int> get_resolution();
+
+    std::pair<int, int> get_window_size();
 
     ///
     /// Switches the active opengl context to the one for this window.
