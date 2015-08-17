@@ -102,6 +102,9 @@ private:
     ///
     int window_height;
 
+    int horizontal_resolution;
+    int vertical_resolution;
+
     ///
     /// SDL window and EGL surface displacement from XServer left edge.
     ///
