@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="9" height="9" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+  <image source="../../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
  <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+  <image source="../../../../../tiles/jungle.png" width="320" height="1216"/>
  </tileset>
  <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+  <image source="../../../../../tiles/paths.png" width="320" height="1216"/>
  </tileset>
  <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+  <image source="../../../../../tiles/objects.png" width="320" height="1216"/>
  </tileset>
  <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+  <image source="../../../../../tiles/sand.png" width="320" height="1216"/>
  </tileset>
  <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+  <image source="../../../../../tiles/walls.png" width="320" height="1216"/>
  </tileset>
  <layer name="TL1a" width="9" height="9">
   <data encoding="base64" compression="zlib">
@@ -39,8 +39,14 @@
   </data>
  </layer>
  <objectgroup name="OL1" width="0" height="0">
-  <object name="test/testone" gid="286" x="64" y="320"/>
-  <object name="characters/enemies/crocodile/croc1" gid="296" x="128" y="128"/>
+  <object name="characters/player/player" gid="286" x="64" y="320" width="64" height="64"/>
+  <object name="characters/enemies/crocodile/croc1" gid="296" x="64" y="128" width="64" height="64"/>
+  <object name="characters/robot/rob1" gid="301" x="64" y="448" width="64" height="64"/>
+  <object name="collectables/coin/coin1" gid="287" x="448" y="512"/>
+  <object name="portal/portal1" gid="292" x="448" y="128"/>
+  <object name="layer_changer/lc1" gid="302" x="128" y="384"/>
+  <object name="layer_changer/lc2" gid="302" x="256" y="384"/>
+  <object name="characters/npcs/hatman/npc1" gid="291" x="384" y="256"/>
  </objectgroup>
  <layer name="TL2" width="9" height="9">
   <data encoding="base64" compression="zlib">
