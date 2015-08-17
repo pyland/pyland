@@ -78,9 +78,8 @@ GameMain::GameMain(int &argc, char **argv):
         original_window_size = window_size;
     };
 
-    //Register InputHandler callbacks
+    //Register InputHandler callbacks TODO: Move this out to Python as neccesary!
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TOGGLE_SPEED, Engine::trigger_speed);
-    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_RETURN, [] () {Engine::trigger_run(0); } );
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_ONE, [] () {Engine::trigger_run(1); });
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TWO, [] () {Engine::trigger_run(2); });
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_THREE, [] () {Engine::trigger_run(3); });
@@ -137,7 +136,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("Space")},
     [&] (KeyboardInputEvent)
     {
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_RETURN);
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN);
     }
     ));
 

@@ -33,7 +33,7 @@
  </layer>
  <layer name="SpecialLayer" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJyzYWJgsBnkGAZoaTY6oJc9yHYRYy81AT3swGfXULSHHn4YSEAr/9ErXdMr7+Czix52DMX4oUZZSS07KLGTlvUBNcymJgYAD8o3tQ==
+   eJyzYWJgsBnkGAZoaTY6oJc9yHYRYy81AT3swGcXLnX0sIcUe/GlweEGaOU/eqVrSu0gxS0DmUeHYvxQo6yklh2U2EnL+oAaZlMTAwCXljit
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
