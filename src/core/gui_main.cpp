@@ -585,7 +585,7 @@ void GUIMain::update_selected()
         }
         else
         {
-            buttons[i]->set_text_colour(255, 255, 255, 150);
+            buttons[i]->set_text_colour(255, 255, 255, 0);
             refresh_gui();
         }
     }

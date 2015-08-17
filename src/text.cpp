@@ -25,14 +25,12 @@
 
 #include <glog/logging.h>
 
-#include "callback.hpp"f
+#include "callback.hpp"
 #include "game_window.hpp"
 #include "image.hpp"
 #include "shader.hpp"
 #include "text.hpp"
 #include "text_font.hpp"
-
-
 
 #define SHADER_VARIABLE_POSITION "position"
 #define SHADER_VARIABLE_TEXTURE  "texture_coord"

@@ -735,24 +735,27 @@ void MainWindow::hideScripterPanel()
 void MainWindow::enableScripterPanel()
 {
     splitter->setEnabled(true);
-}
+    lexer->setPaper(QColor(255,255,255));}
 
 //Prevent the player from using the entire scripter panel
 void MainWindow::disableScripterPanel()
 {
     splitter->setEnabled(false);
+    lexer->setPaper(QColor(225,223,224));
 }
 
 //Allow the player to edit scripts
 void MainWindow::enableScripter()
 {
     textWidget->setEnabled(true);
+    lexer->setPaper(QColor(255,255,255));
 }
 
 //Prevent the player from editing scripts
 void MainWindow::disableScripter()
 {
     textWidget->setEnabled(false);
+    lexer->setPaper(QColor(225,223,224));
 }
 
 //Set the number of scripting tabs
