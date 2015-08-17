@@ -448,6 +448,7 @@ void GUIMain::open_notification_bar(std::function<void ()> func){
 void GUIMain::open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options){
     bar_open = true;
     callback_options = true;
+    notification_options.clear();
 	notification_options = options;
     notification_bar->open();
 	LOG(INFO) << "Notification Bar open";
@@ -473,19 +474,20 @@ void GUIMain::close_notification_bar(){
 			option_button->set_text(notification_options[i].first);
 			option_button->move_text(0.0f, 0.0f);
 
-			option_button->set_on_click([&] (){
-				LOG(INFO) << "£££££££££££££ CALLED";
+			option_button->set_on_click([this, i] (){
 				notification_bar->close();
 				options_box->set_visible(false);
-				option_button->set_visible(false);
-				option_button->set_clickable(false);
+				for(int i=0; i<=1; i++){
+					option_buttons[i]->set_visible(false);
+					option_buttons[i]->set_clickable(false);
+				}
 				refresh_gui();
-				LOG(INFO) << "£££FINISHED BRO";
 
 				em->add_event([this, i] {
 					notification_options[i].second();
 				});
-				LOG(INFO) << "£££FINISHED BROSEPHINE";
+
+				option_buttons.clear();
 
 			});
 			option_button->set_visible(true);
