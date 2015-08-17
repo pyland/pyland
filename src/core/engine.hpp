@@ -192,6 +192,13 @@ public:
     static bool is_bar_open();
 
     /// trigger qt mainwindow functions
+    static void show_py_scripter();
+    static void hide_py_scripter();
+    static void enable_py_scripter();
+    static void disable_py_scripter();
+    static void enable_script_editing();
+    static void disable_script_editing();
+    static void set_py_tabs(int val);
     static void update_world(std::string text);
     static void update_level(std::string text);
     static void update_coins(int value);

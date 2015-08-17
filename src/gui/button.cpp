@@ -1,7 +1,9 @@
 #include "button.hpp"
+#include "gui_text.hpp"
 #include "engine.hpp"
 #include "texture_atlas.hpp"
 #include <iostream>
+#include "text.hpp"
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -95,6 +97,10 @@ void Button::set_text(std::shared_ptr<Text> _text) {
 
     button_text->set_text(_text);
     get_text()->set_bloom_radius(4);
+}
+
+void Button::set_text_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    return button_text->get_text()->set_colour(r, g, b, a);
 }
 
 std::vector<std::pair<GLfloat*, int>> Button::generate_this_vertex_data() {

@@ -28,7 +28,6 @@ public:
     static const int INPUT_RIGHT = 11;
     static const int INPUT_DOWN = 12;
     static const int INPUT_LEFT = 13;
-    static const int INPUT_RETURN = 14;
     static const int INPUT_ONE = 1;
     static const int INPUT_TWO = 2;
     static const int INPUT_THREE = 3;

@@ -76,9 +76,7 @@ void MapViewer::render() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     render_map();
-    //render_objects(false); TODO: BLEH render order!
     render_objects();
-    //render_objects(true);
     render_gui();
 }
 
