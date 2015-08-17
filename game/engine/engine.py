@@ -3,21 +3,32 @@ import sys
 import importlib
 import sqlite3
 import json
+import threading
+import collections
 
 class Engine:
     """ This class is a python wrapper for all the engine features that are exposed to the game.
-    
+
     As some features are implemented in python and some in C++, this consolidates both.
     """
     #Represents the cplusplus engine
     __cpp_engine = None
     #A dictonary of all the game objects in the level (maps from object_id to object)
     __game_objects = dict()
+    #Represents the connections to the sqlite database
+    conn = dict()
+
+    __settings = None
 
     def get_dialogue(self, identifier, escapes = dict()):
-        """ Get the piece of dialoge from the database requested
+        """ Get the piece of dialoge requested form the database.
+
+        The escapes argument is a dictionary from escape keys to replacements to allow parts of the result to be dynamically replaced.
         """
-        result = self.conn.execute("SELECT english, français, nederlands, hindi, pyrate FROM dialogue WHERE identifier=?;", (identifier, ))
+        if not(threading.current_thread() in self.conn):
+            self.conn[threading.current_thread()] = sqlite3.connect(self.dblocation)
+        result = self.conn[threading.current_thread()].execute("SELECT english, français, nederlands, hindi, pyrate FROM dialogue WHERE identifier=?;", (identifier, ))
+
         row = result.fetchone()
         dialogue = "invalid dialogue identifier" #TODO: Make it so that game complains much more about this in debug mode!!!!
         if(row != None):
@@ -36,10 +47,10 @@ class Engine:
         for escape in escapes:
             dialogue = dialogue.replace("%" + escape + "%", escapes[escape])
         return dialogue
-    
+
     def __init__(self, cpp_engine):
         """ On initialisation, the cplusplus engine is passed to this class to enable it to access the api of the game.
-     
+
         Parameters
         ----------
         cpp_engine : C++GameEngine
@@ -52,16 +63,17 @@ class Engine:
         for engine_property in engine_properties:                                           #loop over all the engine properties
             if not hasattr(self, engine_property):                                          #only add the property if the engine doesn't have something by that name
                 setattr(self, engine_property, getattr(self.__cpp_engine, engine_property)) #set the all the properties of Engine to match cpp_engine.
-        
+
         #Database
         #--------
         self.all_languages = ["english", "français", "nederlands", "hindi", "pyrate"]
         self.dblocation = os.path.dirname(os.path.realpath(__file__)) + "/../database.db"
         self.language = self.get_config()['game_settings']['language']
-        self.conn = sqlite3.connect(self.dblocation)
-              
+        self.conn[threading.current_thread()] = sqlite3.connect(self.dblocation)
+
     def __del__(self):
-        self.conn.close()
+        for key in self.conn:
+            self.conn[key].close()
 
     def set_language(self, language_to_set):
         if(language_to_set in self.all_languages):
@@ -73,7 +85,7 @@ class Engine:
         return self.language
 
     def register_game_object(self, game_object):
-        """ Register a game object. 
+        """ Register a game object.
 
         Parmeters
         ---------
@@ -84,7 +96,7 @@ class Engine:
 
     def get_objects_at(self, position):
         """ Returns a list of all the objects at a given position
-        
+
         Overrides the get_objects_at method inherited from cpp engine, as that version returns a list of object ids and this returns
         the actual instances.
 
@@ -103,13 +115,13 @@ class Engine:
         object_ids = self.__cpp_engine.get_objects_at(x, y) #get a list of the ids of all the objects at the given position from the game engine
         for object_id in object_ids:                        #iterate over all the object_ids and grab the object associated with each one.
             game_objects.append(self.__game_objects[object_id])
-        
+
         #return a list of the objects at the given position
         return game_objects
 
     def is_solid(self, position):
-        """ Returns if a given position "is solid" (true if it can't be walked on, false otherwise) 
-        
+        """ Returns if a given position "is solid" (true if it can't be walked on, false otherwise)
+
         The Goald if this little wrapper is to make it so that a tuple is accepted.
         """
         x, y = position                                     #Extract the position x and y coordinates
@@ -117,7 +129,7 @@ class Engine:
 
     def print_terminal(self, message, highlighted = False):
         """ print the given message to in-game terminal
-        
+
         Parameters
         ----------
         message
@@ -141,18 +153,44 @@ class Engine:
         self.__cpp_engine.open_dialogue_box(callback)
 
     def get_config(self):
+        """ Return the config.jsonnet file parsed as a python json object """
         result = self.__cpp_engine.get_config()
         return json.loads(result)
-        
+
+    def get_settings(self):
+        "Return the settings from the save.json file as a python json object """
+        if not self.__settings:
+            settings_string = ""
+            with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
+                settings_string = save_file.read()
+            self.__settings = json.loads(settings_string)["settings"]
+        return self.__settings
+
+    def save_settings(self, settings):
+        """save the game settings""" #TODO: add resiliency!!!!
+        self.__settings = settings
+        save_file_string = ""
+        with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
+            save_file_string = save_file.read()
+
+        save_json = json.loads(save_file_string)
+        save_json["settings"] = settings
+
+        with open(self.get_config()['files']['game_save_location'], 'w', encoding="utf8") as save_file:
+            json.dump(save_json, save_file, indent=4, separators=(',', ': '))
+
+        self.refresh_config()
+        return
+
     def set_ui_colours(self, colour_one, colour_two):
         r1, g1, b1 = colour_one
         r2, g2, b2, = colour_two
         self.__cpp_engine.set_ui_colours(r1, g1, b1, r2, g2, b2)
 
     def __snake_to_camelcase(self, snake_string):
-        """ converts snake_case to CamelCase 
+        """ converts snake_case to CamelCase
 
-        eg "name_name_name" -> "NameNameName"		
+        eg "name_name_name" -> "NameNameName"
         """
         components = snake_string.split('_')
         result = ""
@@ -187,4 +225,28 @@ class Engine:
         game_object.set_entity(entity, self)  # initialise it and wrap the entity instance in it
         self.__game_objects[game_object.get_id()] = game_object #Store the object and associate with it's id in the engine's dictionary
         return game_object
+
+    def show_dialogue(self, dialogue, callback = lambda: None):
+        self.__cpp_engine.show_dialogue(dialogue, callback)
+
+    def run_callback_list_sequence(self, callback_list_sequence, callback = lambda: None):
+        """ Run the given list of functions, passing the rest of the list as an argument to the first function so that they are run in sequence.
+        """
+        if not isinstance(callback_list_sequence, collections.deque): #Convert the list to a deque if it isn't already one
+            callback_list_sequence = collections.deque(callback_list_sequence)
+
+        if callback_list_sequence:	 #check if it's still got elements
+            function = callback_list_sequence.popleft()
+            function(lambda: self.run_callback_list_sequence(callback_list_sequence, callback))
+        else:
+            callback()
+        return
+
+    def clear_scripter(self, callback = lambda: None):
+        self.__cpp_engine.clear_scripter()
+        callback()
+
+    def insert_to_scripter(self, text, callback = lambda: None):
+        self.__cpp_engine.insert_to_scripter(text)
+        callback()
 

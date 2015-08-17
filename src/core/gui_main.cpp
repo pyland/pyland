@@ -14,8 +14,9 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     map_viewer(embedWindow, &gui_manager),
     em(EventManager::get_instance()),
     bar_open(false),
+    callback_options(false),
+    pause_open(false),
     bag_open(false),
-    pyguide_open(false),
     display_button_start(0)
 
 {
@@ -36,8 +37,8 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     gui_manager.set_root(gui_window);
 
-    create_notification_bar();
     create_pause_menu();
+    create_notification_bar();
     create_bag();
     create_pyguide();
 
@@ -54,72 +55,6 @@ GUIMain::~GUIMain()
     LOG(INFO) << "Destructed GUIMain.";
 }
 
-void GUIMain::create_pyguide(){
-
-    nlohmann::json j = Config::get_instance();
-
-    pyguide_window = std::make_shared<Board>(ButtonType::Board);
-    pyguide_window->set_text("PyGuide");
-    pyguide_window->set_clickable(false);
-    pyguide_window->set_visible(false);
-    pyguide_window->move_text(pyguide_title_x_offset, pyguide_title_y_offset);
-
-    py_help = std::make_shared<TextBox>(TextBoxType::Both);
-    py_help->set_width(py_help_width);
-    py_help->set_height(py_help_height);
-    py_help->set_x_offset(py_help_x);
-    py_help->set_y_offset(py_help_y);
-    py_help->set_visible(false);
-
-    py_help->move_text(py_help_text_x, py_help_text_y);
-    py_help->resize_text(py_help_text_width, py_help_text_height);
-    py_help->move_buttons(py_help_button_x, py_help_button_y, py_help_button_spacing);
-    py_help->resize_buttons(py_help_button_width, py_help_button_height);
-    py_help->set_buffer_size(py_help_text_buffer);
-
-    for(unsigned int i=0; i<py_apis_num; i++){
-        std::string help = j["pyguide_apis"][std::to_string(i)];
-        unsigned int beg_name = help.find(":");
-
-        if(beg_name == std::string::npos){
-            LOG(INFO) << "ERROR: Pycommand " << i << " in the config file does not follow the format required";
-            return;
-        }
-        else{
-            std::string name = help.substr(0, beg_name);
-            std::string explanation = help.substr(beg_name+1, std::string::npos);
-
-
-            std::shared_ptr<Button> py_command = std::make_shared<Button>(ButtonType::NoPicture);
-            py_command->set_text(name);
-            pyguide_explanations.push_back(explanation);
-
-            py_command->set_alignment(ButtonAlignment::BottomLeft);
-            py_command->set_visible(false);
-
-            py_command->set_on_click( [this, explanation] () {
-                py_help->clear_text();
-                py_help->add_text(explanation);
-                py_help->open();
-            });
-
-            py_command->set_clickable(false);
-
-            pyguide_commands.push_back(py_command);
-            pyguide_window->add(py_command);
-
-            pyguide_commands[i]->set_width(py_help_item_width);
-            pyguide_commands[i]->set_height(py_help_item_height);
-            pyguide_commands[i]->set_x_offset(py_help_item_x);
-            pyguide_commands[i]->set_y_offset(py_help_item_y - float(i)*py_help_item_spacing);
-
-        }
-    }
-
-    pyguide_window->add(py_help);
-    gui_window->add(pyguide_window);
-}
-
 void GUIMain::create_pause_menu(){
 
     pause_button = std::make_shared<Button>(ButtonType::Single);
@@ -129,23 +64,56 @@ void GUIMain::create_pause_menu(){
     pause_button->set_height(button_height);
     pause_button->set_x_offset(left_x_offset);
     pause_button->set_y_offset(top_y_offset);
-    pause_button->set_on_click( [&] ()
-    {
+    pause_button->set_on_click( [&] (){
 
-        if(em->is_paused() == false)
-        {
+        if(bag_open || bar_open){
+            return;
+        }
+
+        if(pause_open == false){
             em->pause();
             LOG(INFO) << "PAUSED";
             open_pause_window();
         }
-        else
-        {
+        else{
             em->resume();
             LOG(INFO) << "RESUMED";
             close_pause_window();
         }
     });
+
     gui_window->add(pause_button);
+
+    exit_button = std::make_shared<Button>(ButtonType::NoPicture);
+    exit_button->set_text("Exit Pyland");
+    exit_button->set_alignment(ButtonAlignment::BottomLeft);
+    exit_button->set_on_click( [] () {
+    });
+    exit_button->set_clickable(false);
+    exit_button->set_visible(false);
+    exit_button->set_width(menu_width);
+    exit_button->set_height(menu_height);
+    exit_button->set_x_offset(menu_x_offset);
+    exit_button->set_y_offset(menu_y_offset);
+
+    gui_window->add(exit_button);
+}
+
+void GUIMain::create_notification_bar(){
+
+    notification_bar = std::make_shared<TextBox>(TextBoxType::Bar);
+    notification_bar->set_width(notification_width);
+    notification_bar->set_height(notification_height);
+    notification_bar->set_x_offset(left_x_offset);
+    notification_bar->set_y_offset(bottom_y_offset);
+    notification_bar->move_text(notification_text_x, notification_text_y);
+    notification_bar->resize_text(notification_text_width, notification_text_height);
+    notification_bar->resize_buttons(notification_button_width, notification_button_height);
+    notification_bar->move_buttons(notification_button_x, notification_button_y);
+    notification_bar->set_visible(false);
+    notification_bar->set_buffer_size(notification_text_buffer);
+
+    gui_window->add(notification_bar);
 }
 
 void GUIMain::create_bag(){
@@ -161,15 +129,20 @@ void GUIMain::create_bag(){
 
     bag_button->set_on_click( [&] ()
     {
+        if(bar_open || pause_open){
+            return;
+        }
 
         if(bag_open == false)
         {
-            bag_open = true;
+            em->pause();
+            LOG(INFO) << "BAG OPEN";
             open_bag();
         }
         else
         {
-            bag_open = false;
+            em->resume();
+            LOG(INFO) << "BAG CLOSED";
             close_bag();
         }
     });
@@ -191,7 +164,6 @@ void GUIMain::create_bag(){
 
     pyguide_button->set_on_click( [&] ()
     {
-        pyguide_open = true;
         open_pyguide();
     });
 
@@ -200,45 +172,193 @@ void GUIMain::create_bag(){
     gui_window->add(bag_window);
 }
 
-void GUIMain::create_notification_bar(){
+void GUIMain::create_pyguide(){
 
-    notification_bar = std::make_shared<TextBox>(TextBoxType::Forward);
-    notification_bar->set_width(notification_width);
-    notification_bar->set_height(notification_height);
-    notification_bar->set_x_offset(left_x_offset);
-    notification_bar->set_y_offset(bottom_y_offset);
-    notification_bar->move_text(notification_text_x, notification_text_y);
-    notification_bar->resize_text(notification_text_width, notification_text_height);
-    notification_bar->resize_buttons(notification_button_width, notification_button_height);
-    notification_bar->move_buttons(notification_button_x, notification_button_y);
-    notification_bar->set_visible(false);
-    notification_bar->set_buffer_size(notification_text_buffer);
+    nlohmann::json j = Config::get_instance();
 
-    gui_window->add(notification_bar);
-}
+    pyguide_window = std::make_shared<Board>(ButtonType::Board);
+    pyguide_window->set_text("PyGuide");
+    pyguide_window->set_clickable(false);
+    pyguide_window->set_visible(false);
+    pyguide_window->move_text(pyguide_title_x_offset, pyguide_title_y_offset);
 
-void GUIMain::open_notification_bar(){
-    notification_bar->open();
-    bar_open = true;
-}
+    py_help = std::make_shared<TextBox>(TextBoxType::Display);
+    py_help->set_width(py_help_width);
+    py_help->set_height(py_help_height);
+    py_help->set_x_offset(py_help_x);
+    py_help->set_y_offset(py_help_y);
+    py_help->set_visible(false);
 
-void GUIMain::close_notification_bar(){
-    notification_bar->close();
-    bar_open = false;
-}
+    py_help->move_text(py_help_text_x, py_help_text_y);
+    py_help->resize_text(py_help_text_width, py_help_text_height);
+    py_help->move_buttons(py_help_button_x, py_help_button_y, py_help_button_spacing);
+    py_help->resize_buttons(py_help_button_width, py_help_button_height);
+    py_help->set_buffer_size(py_help_text_buffer);
 
-void GUIMain::add_message(std::string text){
-    notification_bar->add_message(text);
-}
+    pyguide_next_button = std::make_shared<Button>(ButtonType::Single);
+    pyguide_next_button->set_alignment(ButtonAlignment::BottomLeft);
+    pyguide_next_button->move_text(0.0, 0.0);
+    pyguide_next_button->set_picture("gui/game/buttons/cycle");
+    pyguide_next_button->set_text("Next");
+    pyguide_next_button->set_width(menu_move_width);
+    pyguide_next_button->set_height(menu_move_height);
+    pyguide_next_button->set_x_offset(menu_move_x);
+    pyguide_next_button->set_y_offset(menu_move_y);
+    pyguide_next_button->set_clickable(false);
+    pyguide_next_button->set_visible(false);
 
-void GUIMain::add_text(std::string text){
-    notification_bar->add_text(text);
+    pyguide_next_button->set_on_click( [this] () {
+        py_help->clear_text();
+
+        if(pyguide_page.second == 1){
+            //do nothing, there's only one page
+            return;
+        }
+
+        //remove previous buttons
+        for(unsigned int i=(pyguide_page.first-1)*menu_max;
+                         i<(pyguide_page.first)*menu_max && i<py_apis_num;
+                         i++){
+            pyguide_window->remove(pyguide_commands[i]->get_id());
+        }
+
+        if(pyguide_page.first == pyguide_page.second){
+            //we have to wind over to the first page
+            pyguide_page.first = 1;
+        }
+        else{
+            ++pyguide_page.first;
+        }
+
+        //add new buttons
+        for(unsigned int i=(pyguide_page.first-1)*menu_max;
+                         i<(pyguide_page.first)*menu_max && i<py_apis_num;
+                         i++){
+            pyguide_window->add(pyguide_commands[i]);
+        }
+
+        pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
+        refresh_gui();
+    });
+    pyguide_window->add(pyguide_next_button);
+
+    pyguide_back_button = std::make_shared<Button>(ButtonType::Single);
+    pyguide_back_button->set_alignment(ButtonAlignment::BottomLeft);
+    pyguide_back_button->move_text(0.0, 0.0);
+    pyguide_back_button->set_picture("gui/game/buttons/cycle");
+    pyguide_back_button->set_text("Back");
+    pyguide_back_button->set_width(menu_move_width);
+    pyguide_back_button->set_height(menu_move_height);
+    pyguide_back_button->set_x_offset(menu_move_x - menu_move_spacing);
+    pyguide_back_button->set_y_offset(menu_move_y);
+    pyguide_back_button->set_clickable(false);
+    pyguide_back_button->set_visible(false);
+
+    pyguide_back_button->set_on_click([this] () {
+        py_help->clear_text();
+
+        if(pyguide_page.second == 1){
+            //do nothing, there's only one page
+            return;
+        }
+
+        //remove previous buttons
+        for(unsigned int i=(pyguide_page.first-1)*menu_max;
+                         i<(pyguide_page.first)*menu_max && i<py_apis_num;
+                         i++){
+            pyguide_window->remove(pyguide_commands[i]->get_id());
+        }
+
+        if(pyguide_page.first == 1){
+            //we have to wind over to the last page
+            pyguide_page.first = pyguide_page.second;
+        }
+        else{
+            --pyguide_page.first;
+        }
+
+        //add new buttons
+        for(unsigned int i=(pyguide_page.first-1)*menu_max;
+                         i<(pyguide_page.first)*menu_max && i<py_apis_num;
+                         i++){
+            pyguide_window->add(pyguide_commands[i]);
+        }
+
+        pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
+        refresh_gui();
+    });
+    pyguide_window->add(pyguide_back_button);
+
+    pyguide_page_display = std::make_shared<Board>(ButtonType::NoPicture);
+    pyguide_page_display->set_text("Page");
+    pyguide_page_display->set_alignment(ButtonAlignment::BottomLeft);
+    pyguide_page_display->set_width(menu_move_width);
+    pyguide_page_display->set_height(menu_move_height);
+    pyguide_page_display->set_x_offset(menu_page_display_x);
+    pyguide_page_display->set_y_offset(menu_page_display_y);
+    pyguide_page_display->set_visible(false);
+    pyguide_back_button->set_clickable(false);
+    pyguide_window->add(pyguide_page_display);
+
+    pyguide_page.first = 1;
+    pyguide_page.second = (py_apis_num/menu_max) + 1;
+
+    if(py_apis_num % menu_max == 0) {
+        pyguide_page.second--; //Because if the buttons fit in exactly, we don't want to create a new page
+    }
+
+    for(unsigned int i=0; i<py_apis_num; i++){
+        std::string help = j["pyguide_apis"][std::to_string(i)];
+        unsigned int beg_name = help.find(":");
+
+        if(beg_name == std::string::npos){
+            LOG(INFO) << "ERROR: Pycommand " << i << " in the config file does not follow the format required";
+            return;
+        }
+        else{
+            std::string name = help.substr(0, beg_name);
+            std::string explanation = help.substr(beg_name+1, std::string::npos);
+
+
+            std::shared_ptr<Button> py_command = std::make_shared<Button>(ButtonType::NoPicture);
+            py_command->set_text(name);
+            pyguide_explanations.push_back(explanation);
+
+            py_command->set_alignment(ButtonAlignment::BottomLeft);
+
+            py_command->set_on_click( [this, explanation] () {
+                py_help->clear_text();
+                py_help->add_text(explanation);
+                py_help->open();
+            });
+
+            pyguide_commands.push_back(py_command);
+
+            pyguide_commands[i]->move_text(py_help_item_text_x, py_help_item_text_y);
+            pyguide_commands[i]->set_width(py_help_item_width);
+            pyguide_commands[i]->set_height(py_help_item_height);
+            pyguide_commands[i]->set_x_offset(py_help_item_x);
+            pyguide_commands[i]->set_y_offset(py_help_item_y - float(i % menu_max)*py_help_item_spacing);
+
+            py_command->set_clickable(true);
+            py_command->set_visible(true);
+        }
+    }
+
+    pyguide_window->add(py_help);
+    gui_window->add(pyguide_window);
 }
 
 void GUIMain::open_pause_window(){
 
-    close_bag();
+    pause_button->set_x_offset(close_x_offset);
+    pause_button->set_y_offset(close_y_offset);
+    pause_button->set_picture("gui/highlight/goal");
+    pause_button->set_text("Resume");
+
+    pause_open = true;
     gui_window->set_visible(true);
+
 
     const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
 
@@ -252,14 +372,23 @@ void GUIMain::open_pause_window(){
             i->second->set_visible(false);
             i->second->set_clickable(false);
         }
-        bag_open = false;
-        pyguide_open = false;
     }
+
+    exit_button->set_visible(true);
+    exit_button->set_clickable(true);
 
     refresh_gui();
 }
 
 void GUIMain::close_pause_window(){
+
+    pause_button->set_x_offset(left_x_offset);
+    pause_button->set_y_offset(top_y_offset);
+    pause_button->set_picture("gui/game/pause");
+    pause_button->set_text("");
+
+    pause_open = false;
+
     gui_window->set_visible(false);
 
     const std::map<int, std::shared_ptr<Component>>* gui_components = gui_window->get_components();
@@ -267,6 +396,7 @@ void GUIMain::close_pause_window(){
     typedef std::map<int, std::shared_ptr<Component>>::const_iterator it_type;
 
     for(it_type i = gui_components->begin(); i !=gui_components->end(); ++i){
+
         if(i->second == bag_window){
             continue;
         }
@@ -282,17 +412,69 @@ void GUIMain::close_pause_window(){
         }
     }
 
+    exit_button->set_visible(false);
+    exit_button->set_clickable(false);
+
     refresh_gui();
 }
 
+void GUIMain::open_notification_bar(std::function<void ()> func){
+
+    bar_open = true;
+    callback_options = false;
+
+    LOG(INFO) << "Notification Bar open";
+
+    notification_func = func;
+    notification_bar->open();
+}
+
+void GUIMain::open_notification_bar_with_options(std::map<std::string, std::function<void ()>> options){
+
+    bar_open = true;
+    callback_options = true;
+
+    LOG(INFO) << "Notification Bar open";
+
+    notification_bar->open();
+
+    typedef std::map<std::string, std::function<void()>>::const_iterator it_type;
+
+    for(it_type i = options.begin(); i != options.end(); ++i){
+
+    }
+}
+
+void GUIMain::proceed_notification_bar(){
+
+    notification_bar->proceed();
+
+}
+
+void GUIMain::close_notification_bar(){
+    bar_open = false;
+
+    LOG(INFO) << "Notification Bar closed";
+
+    notification_bar->close();
+
+    if(callback_options){
+
+    }
+    else{
+        em->add_event([this] {
+            notification_func();
+        });
+    }
+}
+
+
 void GUIMain::open_bag()
 {
-
-    close_notification_bar();
+    bag_open = true;
     bag_window->set_visible(true);
 
-    close_pyguide();
-    pyguide_open = false;
+    bag_button->set_text("Close");
 
     pyguide_button->set_visible(true);
     pyguide_button->set_clickable(true);
@@ -309,11 +491,11 @@ void GUIMain::open_bag()
 
 void GUIMain::close_bag()
 {
-
+    bag_open = false;
     bag_window->set_visible(false);
 
     close_pyguide();
-    pyguide_open = false;
+    bag_button->set_text("Bag");
 
     pyguide_button->set_visible(false);
     pyguide_button->set_clickable(false);
@@ -324,10 +506,6 @@ void GUIMain::close_bag()
         bag_items[i]->set_clickable(false);
     }
 
-    if(bar_open){
-        open_notification_bar();
-    }
-
     refresh_gui();
     LOG(INFO) << "Bag closed";
 }
@@ -335,32 +513,62 @@ void GUIMain::close_bag()
 void GUIMain::open_pyguide()
 {
     close_bag();
+    bag_open = true; //because the pyguide is now open
+    bag_button->set_text("Close");
+
     pyguide_window->set_visible(true);
     py_help->set_visible(true);
+    py_help->open();
 
-    for(unsigned int i=0; i<py_apis_num; i++){
-        pyguide_commands[i]->set_visible(true);
-        pyguide_commands[i]->set_clickable(true);
+    pyguide_next_button->set_visible(true);
+    pyguide_next_button->set_clickable(true);
+    pyguide_back_button->set_visible(true);
+    pyguide_back_button->set_clickable(true);
+
+    pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
+    pyguide_page_display->set_visible(true);
+
+    for(unsigned int i=(pyguide_page.first-1)*menu_max;
+                         i<(pyguide_page.first)*menu_max && i<py_apis_num;
+                         i++){
+        pyguide_window->add(pyguide_commands[i]);
     }
 
-    py_help->open();
     refresh_gui();
     LOG(INFO) << "PyGuide opened";
 }
 
 void GUIMain::close_pyguide()
 {
+    bag_open = false;
+    bag_button->set_text("Bag");
+
     pyguide_window->set_visible(false);
     py_help->set_visible(false);
+    py_help->close();
 
-    for(unsigned int i=0; i<py_apis_num; i++){
-        pyguide_commands[i]->set_visible(false);
-        pyguide_commands[i]->set_clickable(false);
+    pyguide_next_button->set_visible(false);
+    pyguide_next_button->set_clickable(false);
+    pyguide_back_button->set_visible(false);
+    pyguide_back_button->set_clickable(false);
+    pyguide_page_display->set_visible(false);
+
+    for(unsigned int i=(pyguide_page.first-1)*menu_max;
+                         i<(pyguide_page.first)*menu_max && i<py_apis_num;
+                         i++){
+        pyguide_window->remove(pyguide_commands[i]->get_id());
     }
 
-    py_help->close();
     refresh_gui();
     LOG(INFO) << "PyGuide closed";
+}
+
+void GUIMain::add_message(std::string text){
+    notification_bar->add_message(text);
+}
+
+void GUIMain::add_text(std::string text){
+    notification_bar->add_text(text);
 }
 
 void GUIMain::add_button(std::string file_path, std::string name, std::function<void (void)> callback, unsigned int button_id)
@@ -402,11 +610,11 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     new_button->set_height(button_height);
 
     //Push to index element 'id'
-    if (button_id > (button_indexs.size() - 1))
+    if (button_id > (button_indices.size() - 1))
     {
-        button_indexs.resize(button_id+1, 0);
+        button_indices.resize(button_id+1, 0);
     }
-    button_indexs[button_id] = new_button_index;
+    button_indices[button_id] = new_button_index;
 
     //make space for previous buttons
     float org_x_location = right_x_offset;
@@ -452,10 +660,69 @@ void GUIMain::cycle()
     refresh_gui();
 }
 
-void GUIMain::refresh_gui()
+void GUIMain::set_button_index(unsigned int value)
 {
-    gui_manager.parse_components();
+    cur_button_index = value;
+    update_selected();
 }
+
+void GUIMain::click_next_player()
+{
+    cur_button_index = cur_button_index + 1;
+    if (cur_button_index >= buttons.size())
+    {
+        cur_button_index = 0;
+    }
+    update_selected();
+    buttons[cur_button_index]->call_on_click();
+}
+
+void GUIMain::click_player(unsigned int button_id)
+{
+    //Get the index at which the player's button is stored (in buttons)
+    //using the button's identifier
+    unsigned int click_button_index = button_indices[button_id];
+    set_button_index(click_button_index);
+    //Cycle through the pages of sprite buttons until the current player is present
+    //(only try cycling a finite number of attempts, to prevent infinite loops)
+    for (unsigned int attempts = 0; attempts<buttons.size(); attempts++)
+    {
+        if (!((click_button_index < display_button_start+button_max) && (click_button_index >= display_button_start)))
+        {
+            cycle();
+        }
+        else
+        {
+            break;
+        }
+    }
+    return;
+}
+
+void GUIMain::update_button_text(std::string name, unsigned int button_id)
+{
+    unsigned int update_button_index = button_indices[button_id];
+    buttons[update_button_index]->set_text(name);
+}
+
+void GUIMain::update_selected()
+{
+    //Highlight the selected player
+    for (unsigned int i=0; i<buttons.size(); i++)
+    {
+        if (cur_button_index == i)
+        {
+            buttons[i]->set_text_colour(255, 255, 255, 255);
+            refresh_gui();
+        }
+        else
+        {
+            buttons[i]->set_text_colour(255, 255, 255, 0);
+            refresh_gui();
+        }
+    }
+}
+
 
 void GUIMain::config_gui()
 {
@@ -469,6 +736,9 @@ void GUIMain::config_gui()
     bottom_y_offset = j["scales"]["bottom_y_offset"];
     top_y_offset = j["scales"]["top_y_offset"];
 
+    close_x_offset = j["scales"]["close_x_offset"];
+    close_y_offset = j["scales"]["close_y_offset"];
+
     title_x_offset = j["scales"]["title_x_offset"];
     title_y_offset = j["scales"]["title_y_offset"];
     pyguide_title_x_offset = j["scales"]["pyguide_title_x_offset"];
@@ -479,6 +749,7 @@ void GUIMain::config_gui()
     menu_width = j["scales"]["menu_width"];
     menu_height = j["scales"]["menu_height"];
     menu_spacing = j["scales"]["menu_spacing"];
+    menu_max = j["scales"]["menu_max"];
 
     notification_width = j["scales"]["notification_width"];
     notification_height = j["scales"]["notification_height"];
@@ -504,6 +775,8 @@ void GUIMain::config_gui()
     py_help_item_x = j["scales"]["py_help_item_x"];
     py_help_item_y = j["scales"]["py_help_item_y"];
     py_help_item_spacing = j["scales"]["py_help_item_spacing"];
+    py_help_item_text_x = j["scales"]["py_help_item_text_x"];
+    py_help_item_text_y = j["scales"]["py_help_item_text_y"];
 
     py_help_text_width = j["scales"]["py_help_text_width"];
     py_help_text_height = j["scales"]["py_help_text_height"];
@@ -517,6 +790,14 @@ void GUIMain::config_gui()
     py_help_button_y = j["scales"]["py_help_button_y"];
     py_help_button_spacing = j["scales"]["py_help_button_spacing"];
 
+    menu_move_height = j["scales"]["menu_move_height"];
+    menu_move_width = j["scales"]["menu_move_width"];
+    menu_move_x = j["scales"]["menu_move_x"];
+    menu_move_y = j["scales"]["menu_move_y"];
+    menu_move_spacing = j["scales"]["menu_move_spacing"];
+    menu_page_display_x = j["scales"]["menu_page_display_x"];
+    menu_page_display_y = j["scales"]["menu_page_display_y"];
+
     button_width = j["scales"]["button_width"];
     button_height = j["scales"]["button_height"];
 
@@ -528,67 +809,7 @@ void GUIMain::config_gui()
     py_apis_num = j["pyguide_apis"]["number"];
 }
 
-void GUIMain::set_button_index(unsigned int value)
+void GUIMain::refresh_gui()
 {
-    cur_button_index = value;
-    update_selected();
+    gui_manager.parse_components();
 }
-
-void GUIMain::click_next_player()
-{
-    cur_button_index = cur_button_index + 1;
-    if (cur_button_index >= buttons.size())
-    {
-        cur_button_index = 0;
-    }
-    update_selected();
-    buttons[cur_button_index]->call_on_click();
-}
-
-void GUIMain::click_player(unsigned int button_id)
-{
-    //Get the index at which the player's button is stored (in buttons)
-    //using the button's identifier
-    unsigned int click_button_index = button_indexs[button_id];
-    set_button_index(click_button_index);
-    //Cycle through the pages of sprite buttons until the current player is present
-    //(only try cycling a finite number of attempts, to prevent infinite loops)
-    for (unsigned int attempts = 0; attempts<buttons.size(); attempts++)
-    {
-        if (!((click_button_index < display_button_start+button_max) && (click_button_index >= display_button_start)))
-        {
-            cycle();
-        }
-        else
-        {
-            break;
-        }
-    }
-    return;
-}
-
-void GUIMain::update_button_text(std::string name, unsigned int button_id)
-{
-    unsigned int update_button_index = button_indexs[button_id];
-    buttons[update_button_index]->set_text(name);
-}
-
-void GUIMain::update_selected()
-{
-    //Highlight the selected player
-    for (unsigned int i=0; i<buttons.size(); i++)
-    {
-        if (cur_button_index == i)
-        {
-            buttons[i]->set_text_colour(255, 255, 255, 255);
-            refresh_gui();
-        }
-        else
-        {
-            buttons[i]->set_text_colour(255, 255, 255, 0);
-            refresh_gui();
-        }
-    }
-
-}
-

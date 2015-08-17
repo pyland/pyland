@@ -35,7 +35,7 @@ public:
 
 private:
 
-	///
+    ///
     /// The object's renderable component
     ///
     std::shared_ptr<RenderableComponent> renderable_component;

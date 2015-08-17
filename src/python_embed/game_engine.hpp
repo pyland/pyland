@@ -91,16 +91,11 @@ class GameEngine {
         void update_player_name(std::string name, unsigned int passing_button_id);
 
         ///
-        /// To add a dialogue to the screen
+        /// To add a dialogue to the notificaton bar
+        /// options is a python dictionary of strings to callbacks
         ///
-        void add_dialogue(std::string text);
-
-        void add_text(std::string text);
-
-        ///
-        /// To open the dialogue box on the screen
-        ///
-        void open_dialogue_box(PyObject *callback);
+        void show_dialogue(std::string text, PyObject *callback);
+        void show_dialogue_with_options(std::string text, PyObject *options);
 
         ///
         /// Register a callback against a given input
@@ -180,6 +175,11 @@ class GameEngine {
         int get_run_script();
 
         bool is_solid(int x, int y);
+
+        ///
+        /// Force the config file to be loaded in again, useful for if you have changed any settings in it.
+        ///
+        void refresh_config();
 
 };
 

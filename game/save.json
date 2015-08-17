@@ -1,5 +1,7 @@
 {
-	"players": {
-
-	}
+    "player_saves": {},
+    "settings": {
+        "language": "english",
+        "check": "wahahah"
+    }
 }

@@ -13,16 +13,14 @@ class GameObject:
     """
 
     __name = ""
-    __entity = None
-    __engine = None
+    __entity = None  #An instance of Entity.hpp/cpp
+    __engine = None  #An instanece of GameEngine.hpp/cpp
 
     def __init__(self):
         pass
 
     def initialise(self):
-        """
-            Yay!!!!
-        """
+        """ This method can be overidden by child classes, it is used intead of __init__ so that instances of the classes can be guarenteed to have __entity and __engine set """
         pass
 
     def set_entity(self, entity, engine):
@@ -40,7 +38,6 @@ class GameObject:
             The C++ GameEngine instance, provides some usefule API.
         """
         self.__entity = entity
-        self.set_sprite("")
         self.set_visible(False)
         self.set_solidity(False)
         self.__engine = engine
@@ -48,15 +45,13 @@ class GameObject:
     def get_engine(self):
         return self.__engine
 
-    def test(self, text):
-        self.__entity.print_dialogue(text)
-        return
-
     def callback_test(self, callback):
+        """ This method can be used to test a callback, all it does is take a callback and put it onto the event queue to be run by the game the next frame """
         self.__entity.callback_test(callback)
         return
 
     def wait(self, time, callback):
+        """ Calls the callback after a certain amount of time """
         self.__entity.wait(time, callback)
         return
 
@@ -136,17 +131,40 @@ class GameObject:
 
         Parameters
         ----------
-        position : tuple of int
+        position : 2 tuple of int
             The position you wish to move the object to.
         """
         #TODO: implement stub
         return
 
     def move_by(self, move_amount, time = 0.0, callback = lambda: None):
+        """ Moves the object by the given amount in the game 
+
+        Parameters
+        ----------
+        move_amount : 2 tuple of int
+            The amount you wish to move the object by
+        time : double
+            The amount of time the movent should take
+        callback : function
+            The callback that you wish to run once the movement is complete
+        """
         x, y = move_amount
         self.__entity.move_by(x, y, time, callback)
 
     def move_to(self, target_position, time = 0.0, callback = lambda: None):
+        """ Moves the object to the given target position in the game 
+
+        Parameters
+        ----------
+        target_position : 2 tuple of int
+            The position you wish to move the object to
+        time : double
+            The amount of time the movent should take
+        callback : function
+            The callback that you wish to run once the movement is complete
+
+        """
         xt, yt = target_position
         xp, yp = self.get_position()
         self.__entity.move_by(xt - xp, yt - yp, time, callback)
@@ -202,6 +220,7 @@ class GameObject:
         return
 
     def get_id(self):
+        """ Return the entity id of the object, used for certain back-end features (such as retrieving objects at any given position """
         return self.__entity.get_id()
 
 

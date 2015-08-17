@@ -29,7 +29,7 @@ TextBox::TextBox(TextBoxType _type) {
     backward_button->set_visible(text_stack.can_backward());
     backward_button->set_alignment(ButtonAlignment::BottomLeft);
 
-    if(type == TextBoxType::Forward){
+    if(type == TextBoxType::Bar){
         forward_button->move_text(0.0f, 0.0f);
         forward_button->set_picture("gui/status/running");
 
@@ -45,13 +45,14 @@ TextBox::TextBox(TextBoxType _type) {
                 Engine::get_gui()->refresh_gui();
             }
             else{
-                close();
+                clear_text();
+                Engine::close_notification_bar();
             }
         });
 
         this->add(forward_button);
     }
-    else if(type == TextBoxType::Both){
+    else if(type == TextBoxType::Display){
         forward_button->move_text(0.0f, 0.0f);
         forward_button->set_picture("gui/status/running");
 
@@ -128,14 +129,14 @@ void TextBox::open(){
     this->set_visible(true);
     forward_button->set_visible(true);
 
-    if(type == TextBoxType::Forward){
+    if(type == TextBoxType::Bar){
         forward_button->set_visible(true);
 
         if(!text_stack.can_forward()){
             forward_button->set_picture("gui/status/failed");
         }
     }
-    else if(type == TextBoxType::Both){
+    else if(type == TextBoxType::Display){
         forward_button->set_visible(true);
         backward_button->set_visible(true);
 
@@ -151,12 +152,16 @@ void TextBox::open(){
     Engine::get_gui()->refresh_gui();
 }
 
+void TextBox::proceed(){
+    forward_button->call_on_click();
+}
+
 void TextBox::close(){
 
-    if(type == TextBoxType::Forward){
+    if(type == TextBoxType::Bar){
         forward_button->set_visible(false);
     }
-    else if(type == TextBoxType::Both){
+    else if(type == TextBoxType::Display){
         forward_button->set_visible(false);
         backward_button->set_visible(false);
     }
@@ -180,11 +185,11 @@ void TextBox::add_message(std::string text_to_display) {
 
 void TextBox::resize_buttons(float width, float height){
 
-    if(type == TextBoxType::Forward){
+    if(type == TextBoxType::Bar){
         forward_button->set_width(width);
         forward_button->set_height(height);
     }
-    else if(type == TextBoxType::Both){
+    else if(type == TextBoxType::Display){
         forward_button->set_width(width);
         forward_button->set_height(height);
         backward_button->set_width(width);
@@ -194,11 +199,11 @@ void TextBox::resize_buttons(float width, float height){
 
 void TextBox::move_buttons(float x_offset, float y_offset, float spacing /* = 0.0f */){
 
-    if(type == TextBoxType::Forward){
+    if(type == TextBoxType::Bar){
         forward_button->set_x_offset(x_offset);
         forward_button->set_y_offset(y_offset);
     }
-    else if(type == TextBoxType::Both){
+    else if(type == TextBoxType::Display){
         forward_button->set_x_offset(x_offset);
         forward_button->set_y_offset(y_offset);
         backward_button->set_x_offset(x_offset - spacing);

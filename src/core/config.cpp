@@ -88,3 +88,8 @@ Config::json Config::get_instance() {
     */
     return Config::j;
 }
+
+
+void Config::refresh_config() {
+    created = false;
+}

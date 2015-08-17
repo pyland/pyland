@@ -36,7 +36,7 @@ void GUIManager::parse_components() {
 }
 
 std::shared_ptr<RenderableComponent> GUIManager::get_renderable_component(){
-	return renderable_component;
+    return renderable_component;
 }
 
 void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
@@ -140,7 +140,7 @@ bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x
 
 GUIManager::GUIManager() {
 
-	renderable_component = std::make_shared<RenderableComponent>();
+    renderable_component = std::make_shared<RenderableComponent>();
 
 }
 

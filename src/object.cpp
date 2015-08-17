@@ -2,7 +2,7 @@
 #include <string>
 
 #include "object.hpp"
-#include "entitythread.hpp"
+#include "python_thread_runner.hpp"
 #include "object_manager.hpp"
 
 Object::Object(): Object("") {}

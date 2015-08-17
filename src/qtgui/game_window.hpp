@@ -102,6 +102,9 @@ private:
     ///
     int window_height;
 
+    int horizontal_resolution;
+    int vertical_resolution;
+
     ///
     /// SDL window and EGL surface displacement from XServer left edge.
     ///
@@ -270,11 +273,7 @@ public:
     ///
     /// Creates an SDL window and initializes OpenGL|ES.
     ///
-    /// @param width The width of the window. 0 uses current resolution.
-    /// @param height The height of the window. 0 uses current resolution.
-    /// @param fullscreen Whether to use fullscreen.
-    ///
-    GameWindow(int width, int height, int &argc, char **argv, GameMain *exGame = nullptr) ;
+    GameWindow(int &argc, char **argv, GameMain *exGame = nullptr) ;
 
     ///
     /// Shuts down and cleans up both SDL and EGL.
@@ -404,9 +403,6 @@ public:
     /// @return A lifeline which keeps the callback active.
     ///
     Lifeline register_resize_handler(std::function<void(GameWindow*)> func);
-
-    int get_game_window_height();
-    int get_game_window_width();
 };
 
 #endif

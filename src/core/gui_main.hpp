@@ -34,17 +34,20 @@ private:
     float bottom_y_offset;
     float top_y_offset;
 
+    float close_x_offset;
+    float close_y_offset;
+
     float title_x_offset;
     float title_y_offset;
     float pyguide_title_x_offset;
     float pyguide_title_y_offset;
-
 
     float menu_x_offset;
     float menu_y_offset;
     float menu_width;
     float menu_height;
     float menu_spacing;
+    unsigned int menu_max;
 
     float notification_width;
     float notification_height;
@@ -70,6 +73,8 @@ private:
     float py_help_item_x;
     float py_help_item_y;
     float py_help_item_spacing;
+    float py_help_item_text_x;
+    float py_help_item_text_y;
 
     float py_help_text_width;
     float py_help_text_height;
@@ -82,6 +87,14 @@ private:
     float py_help_button_x;
     float py_help_button_y;
     float py_help_button_spacing;
+
+    float menu_move_width;
+    float menu_move_height;
+    float menu_move_x;
+    float menu_move_y;
+    float menu_move_spacing;
+    float menu_page_display_x;
+    float menu_page_display_y;
 
     float button_width;
     float button_height;
@@ -102,16 +115,17 @@ private:
     std::shared_ptr<GUIWindow> gui_window;
 
     bool bar_open; //whether or not the notification bar is open
+    bool callback_options; //whether or not there are options at the end of the notification bar
     void create_notification_bar();
+    std::function<void ()> notification_func; // the function to be called after the bar is closed
     std::shared_ptr<TextBox> notification_bar;
 
     void create_pause_menu();
-    //The button to pause the game
-    std::shared_ptr<Button> pause_button;
+    bool pause_open; //whether or not the pause window is open
+    std::shared_ptr<Button> pause_button; //The button to pause the game
     void open_pause_window();
     void close_pause_window();
 
-    std::shared_ptr<Button> resume_button;
     std::shared_ptr<Button> exit_button;
     std::shared_ptr<Button> music_button;
     std::shared_ptr<Button> sound_button;
@@ -126,11 +140,14 @@ private:
     void close_bag();
 
     void create_pyguide();
-    bool pyguide_open; //whether or not the PyGuide is open
     std::shared_ptr<Board> pyguide_window;
     std::shared_ptr<TextBox> py_help;
-    std::deque<std::shared_ptr<Button>> pyguide_commands;
     std::deque<std::string> pyguide_explanations;
+    std::deque<std::shared_ptr<Button>> pyguide_commands;
+    std::shared_ptr<Button> pyguide_next_button;
+    std::shared_ptr<Button> pyguide_back_button;
+    std::shared_ptr<Board> pyguide_page_display;
+    std::pair<unsigned int, unsigned int> pyguide_page; //page first out of second
     void open_pyguide();
     void close_pyguide();
 
@@ -140,8 +157,8 @@ private:
     //Store each button index at the 'id'th element, so can map directly
     //from button id to index (so can get the button from buttons).
     //This is because the ids are passed through an event queue (and not directly), using the
-    //id directly as an index can't be assumed
-    std::deque<unsigned int> button_indexs;
+    //id directly because an index can't be assumed
+    std::deque<unsigned int> button_indices;
     //The index for the currently highlighted player
     unsigned int cur_button_index;
     //While cycling through sprites, this is the index of the first button on the visible page
@@ -187,9 +204,14 @@ public:
     void add_message(std::string text);
     void add_text(std::string text);
 
-    void open_notification_bar();
+    //To open and close the notification bar, func is the callback function to be called after the user finished reading the notification
+    void open_notification_bar(std::function<void ()> func);
+    void open_notification_bar_with_options(std::map<std::string, std::function<void ()>> options);
+    void proceed_notification_bar();
     void close_notification_bar();
 
+    //get whether or not the bar is open -required if show_dialogue is run consecutively
+    bool is_bar_open() {return bar_open;}
 
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();

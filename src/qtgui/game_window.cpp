@@ -154,9 +154,7 @@ static std::pair<int, int> query_overscan(int left, int top) {
 }
 #endif
 
-GameWindow::GameWindow(int width, int height, int &argc, char **argv, GameMain *exGame):
-    window_width(width),
-    window_height(height),
+GameWindow::GameWindow(int &argc, char **argv, GameMain *exGame):
     window_x(0),
     window_y(0),
     visible(false),
@@ -393,10 +391,6 @@ void GameWindow::init_surface() {
                           &y,
                           &child);
 #endif
-    // SDL_GetWindowPosition(window, &x, &y);
-    //SDL_GetWindowSize(window, &w, &h);
-    //w = curGameInit->getGameWidth();
-    //h = curGameInit->getGameHeight();
     w = mainWin->getGameWidgetWidth();
     h = mainWin->getGameWidgetHeight();
 #ifdef USE_GL
@@ -404,14 +398,6 @@ void GameWindow::init_surface() {
     x = y = 0;
 #endif
     init_surface(x, y, w, h);
-}
-
-int GameWindow::get_game_window_height(){
-    return mainWin->getGameWidgetHeight();
-}
-
-int GameWindow::get_game_window_width(){
-    return mainWin->getGameWidgetWidth();
 }
 
 void GameWindow::init_surface(int x, int y, int w, int h) {
@@ -526,6 +512,8 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     window_y = y;
     window_width = w;
     window_height = h;
+    horizontal_resolution = 1280;
+    vertical_resolution = 720;
 }
 
 

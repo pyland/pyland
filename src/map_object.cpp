@@ -43,7 +43,7 @@ MapObject::~MapObject() {
 }
 
 std::shared_ptr<RenderableComponent> MapObject::get_renderable_component(){
-	return SpriteManager::get_component(tile);
+    return SpriteManager::get_component(tile);
 }
 
 void MapObject::set_walkability(Walkability walkability) {
@@ -106,7 +106,7 @@ void MapObject::generate_tex_data() {
     }
 
     std::tuple<float,float,float,float> bounds(
-		SpriteManager::get_component(tile)->get_texture()->index_to_coords(0)
+        SpriteManager::get_component(tile)->get_texture()->index_to_coords(0)
     );
 
     // bottom left
@@ -133,7 +133,7 @@ void MapObject::generate_tex_data() {
     map_object_tex_data[10] = std::get<1>(bounds);
     map_object_tex_data[11] = std::get<2>(bounds);
 
-	SpriteManager::get_component(tile)->set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
+    SpriteManager::get_component(tile)->set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
 }
 
 void MapObject::set_position(glm::vec2 position) {
@@ -143,7 +143,7 @@ void MapObject::set_position(glm::vec2 position) {
 }
 
 void MapObject::set_tile(std::string _tile) {
-	tile = _tile;
+    tile = _tile;
     load_textures();
     generate_tex_data();
     generate_vertex_data();

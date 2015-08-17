@@ -187,6 +187,9 @@ public:
     static void add_dialogue(std::string text);
     static void add_text(std::string text);
     static void open_notification_bar(std::function<void ()> func);
+    static void open_notification_bar_with_options(std::map<std::string, std::function<void ()> > _options);
+    static void close_notification_bar();
+    static bool is_bar_open();
 
     /// trigger qt mainwindow functions
     static void show_py_scripter();

@@ -9,10 +9,10 @@
 class SpriteManager{
 
 private:
-	static std::unordered_map<std::string, std::shared_ptr<RenderableComponent>> sprite_map;
+    static std::unordered_map<std::string, std::shared_ptr<RenderableComponent>> sprite_map;
 
 public:
-	static std::shared_ptr<RenderableComponent> get_component(std::string filepath);
+    static std::shared_ptr<RenderableComponent> get_component(std::string filepath);
 
 };
 

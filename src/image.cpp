@@ -112,7 +112,7 @@ void Image::load_file(const char* filename) {
     // A surface with a known format to blit the loaded image on to.
     SDL_Surface* compatible;
 
-	/*
+    /*
     if ((IMG_Init(IMG_INIT_JPG) & IMG_INIT_JPG) == 0) {
         LOG(WARNING) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
     }
@@ -126,7 +126,7 @@ void Image::load_file(const char* filename) {
     if ((IMG_Init(IMG_INIT_TIF) & IMG_INIT_TIF) == 0) {
         LOG(WARNING) << "Warning: Failure initialising image subsystem: " << IMG_GetError();
     }
-	*/
+    */
     loaded = IMG_Load(filename);
 
     if (loaded == nullptr) {

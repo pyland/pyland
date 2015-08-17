@@ -12,7 +12,7 @@
 class Text;
 
 enum class Direction {NEXT, PREVIOUS};
-enum class TextBoxType {Forward, Backward, Both};
+enum class TextBoxType {Bar, Display};
 
 class TextBox: public ComponentGroup
 {
@@ -61,6 +61,7 @@ public:
 
     void set_buffer_size(unsigned int _size){buffer_size = _size;}
 
+    void proceed();
 
     void open();
     void close();
