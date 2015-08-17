@@ -45,7 +45,7 @@ std::string GameEngine::get_level_location() {
     //std::string map_name = j["files"]["level_location"];
     //return "test_world/test_level/test_one";
     std::string map_name = challenge->challenge_data->level_location;//"test_world/test_level/test_one";//challenge->challenge_data->map_name;
-    std::cout << "Map is " << challenge->challenge_data->level_location << std::endl;
+    LOG(INFO) << "Getting map " << std::endl;
     return map_name;
 }
 
@@ -128,6 +128,35 @@ void GameEngine::register_input_callback(int input_key, PyObject *py_input_callb
 
 void GameEngine::play_music(std::string song_name) {
     AudioEngine::get_instance()->play_music("../game/music/" + song_name + ".ogg");
+}
+
+
+void GameEngine::show_py_scripter(){
+    Engine::show_py_scripter();
+}
+
+void GameEngine::hide_py_scripter(){
+    Engine::hide_py_scripter();
+}
+
+void GameEngine::enable_py_scripter(){
+    Engine::enable_py_scripter();
+}
+
+void GameEngine::disable_py_scripter(){
+    Engine::disable_py_scripter();
+}
+
+void GameEngine::enable_script_editing(){
+    Engine::enable_script_editing();
+}
+
+void GameEngine::disable_script_editing(){
+    Engine::disable_script_editing();
+}
+
+void GameEngine::set_py_tabs(int val){
+    Engine::set_py_tabs(val);
 }
 
 void GameEngine::update_world(std::string text){

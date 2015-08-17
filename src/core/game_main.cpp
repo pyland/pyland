@@ -236,7 +236,8 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("9")},
     [&] (KeyboardInputEvent)
     {
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
+        change_challenge("intro");
+        //InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
     }
     ));
 

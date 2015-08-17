@@ -17,7 +17,12 @@
 		//"level_location": "/menu",
 		//"level_location": "/world_one/level_one/main",
 		"full_level_location" :  self.level_location,
-
+		"world_location": "/test_world/yingischallenged/",
+		//"level_location": "/test_world/yingischallenged/main",
+		//"full_level_location" : "/test_world/yingischallenged/main",
+		//"full_level_location" : "/intro",
+		//"full_level_location" : self.game_folder + "/levels" + self.level_location,
+		"full_world_location" : self.game_folder + "/levels" + self.world_location,
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
 		"font_location": self.game_folder + "/fonts",

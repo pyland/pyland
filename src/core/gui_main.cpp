@@ -707,21 +707,20 @@ void GUIMain::update_button_text(std::string name, unsigned int button_id)
 
 void GUIMain::update_selected()
 {
-    //Will highlight the selected player opposed to changing the text
+    //Highlight the selected player
     for (unsigned int i=0; i<buttons.size(); i++)
     {
         if (cur_button_index == i)
         {
-            buttons[i]->set_text("SELECTED");
+            buttons[i]->set_text_colour(255, 255, 255, 255);
             refresh_gui();
         }
         else
         {
-            buttons[i]->set_text("NOT SELECTED");
+            buttons[i]->set_text_colour(255, 255, 255, 0);
             refresh_gui();
         }
     }
-
 }
 
 
@@ -809,7 +808,6 @@ void GUIMain::config_gui()
 
     py_apis_num = j["pyguide_apis"]["number"];
 }
-
 
 void GUIMain::refresh_gui()
 {
