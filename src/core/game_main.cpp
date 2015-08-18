@@ -418,7 +418,7 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
     Config::json j = Config::get_instance();
-    std::string challenge_name = j["files"]["full_level_location"];
+    std::string challenge_name = j["files"]["level_location"];
     std::string level_folder = j["files"]["level_folder"];
     challenge_data->map_name = level_folder + challenge_name + "/layout.tmx";
     challenge_data->level_location = challenge_name;
