@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="9" height="9" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="26" height="20" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -18,43 +18,25 @@
  <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/walls.png" width="320" height="1216"/>
  </tileset>
- <layer name="TL1a" width="9" height="9">
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <layer name="Ground" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJxLYGBgSBjFFGEAd+EeYQ==
+   eJxLYGBgSBjFo3gUj+JRPIpH8ShGwgDsl8MB
   </data>
  </layer>
- <layer name="TL1b" width="9" height="9">
+ <layer name="Decor" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYCAMZIBYGkqL41GXDaUliTBTggg1xJhDLbtwqeEAYnYoLYzGZ4diADrDAbg=
+   eJy1Ve0KwCAI7DHG2PNV+9P7/1yDBSKeH7UOZLDM87SypZSObo1Z/b5FWJMss71V8Hl5bmc8agOUa/BVxn11O0EciRtB2s81RbRooD5SPb1xorByrZu4Rh0lFCWGJ5/ZmnHeDNZ29mMV2XYx/Xfp89wPb/7aOZi5g6jXFnj88VZ68pzlWO0P1UrzQ2+cdlej+hDHn2cuOltmOFEMrquA/9G5g+aBNpu9c1vSQPN9AFmFZ0M=
   </data>
  </layer>
- <layer name="WL1" width="9" height="9">
+ <layer name="SpecialLayer" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFlAIAAUQAAQ==
+   eJyzYWJgsBnkGAZoaTY6oJc9yHYRYy81AT3swGcXLnX0sIcUe/GlweEGaOU/eqVrSu0gxS0DmUeHYvxQo6yklh2U2EnL+oAaZlMTAwCXljit
   </data>
  </layer>
- <layer name="CL1" width="9" height="9">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFlAIAAUQAAQ==
-  </data>
- </layer>
- <objectgroup name="OL1" width="0" height="0">
-  <object name="test/testone" gid="286" x="64" y="320"/>
-  <object name="characters/enemies/crocodile/croc1" gid="296" x="128" y="128"/>
+ <objectgroup name="Object Layer 1" width="26" height="20">
+  <object name="characters/player/player_one" gid="286" x="832" y="640"/>
  </objectgroup>
- <layer name="TL2" width="9" height="9">
-  <data encoding="base64" compression="zlib">
-   eJxjYBja4MpAOwAIAG6UANU=
-  </data>
- </layer>
- <layer name="CL2" width="9" height="9">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFlAIAAUQAAQ==
-  </data>
- </layer>
- <layer name="OL2" width="9" height="9">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFlAIAAUQAAQ==
-  </data>
- </layer>
 </map>
