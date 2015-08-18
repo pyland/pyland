@@ -14,7 +14,7 @@
 		//"level_location": "/world_one_old/level_one/main",
 		//"level_location": "/world_one_old/level_two/main",
 		"level_location" : "/world_1/level_1/rossumberg",
-		"full_level_location" : "/world_1/level_7/village",
+		"full_level_location" : "/world_1/level_7/town_hall",
 		"world_location": "/old/test_world/yingischallenged/",
 		"full_world_location" : self.game_folder + "/levels" + self.world_location,
 		"player_scripts": self.game_folder + "/player_scripts",

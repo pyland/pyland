@@ -7,6 +7,13 @@ engine.clear_scripter()
 player.face_east()
 myla.face_east()
 
+def nervous():
+    snake1.face_north(lambda: snake1.wait(2.0, lambda: callback = lambda: snake1.face_south(callback = nervous)))
+
+nervous()
+
+#snake1.face_north(lambda: snake1.wait(2.0, callback = snake1.face_south))
+
 player.set_busy(True)
 
 dialogue_sequence = [
@@ -20,6 +27,7 @@ dialogue_sequence = [
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
+    lambda callback: myla.wait(0.5, callback),
     lambda callback: engine.show_dialogue("Lets go in.", callback = callback),
     #lambda callback: camera.wait(0.2, callback = callback),
     #lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback = callback),
