@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="45" height="16" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="intro" tilewidth="64" tileheight="64">
+  <image source="../../../tiles/intro.png" width="320" height="1216"/>
+ </tileset>
+ <layer name="Background" width="45" height="16">
+  <data encoding="base64" compression="zlib">
+   eJztwwENAAAMw6DOv+lbuABIWDVVVfX1AOPBAtE=
+  </data>
+ </layer>
+ <layer name="Monty" width="45" height="16">
+  <data encoding="base64" compression="zlib">
+   eJztzsEJACAQxMBDBRXU/st1WzgQ9mEG8k8EAAB4qaiqmnskoauhpnskYamtjnsE37nacABJ
+  </data>
+ </layer>
+ <objectgroup name="Camera" width="45" height="16">
+  <object name="camera/camera" gid="14" x="1408" y="64"/>
+ </objectgroup>
+</map>

@@ -399,7 +399,7 @@ std::tuple<float,float,float,float> TextureAtlas::index_to_coords(int index) {
 
 void TextureAtlas::load_names(const std::string filename) {
 
-    bool is_fml = (filename == "../resources/tiles/gui") || (filename == "../resources/cursor");
+    bool is_fml = (filename == "../game/gui/gui") || (filename == "../game/gui/cursor");
     //bool is_fml = true;
 
     if(is_fml){

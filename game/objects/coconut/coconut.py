@@ -15,7 +15,7 @@ The game code, at runtime, could recognise the "#__"
 and replace it with:
 """
 import sys
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../game_object')
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/..')
 from game_object import GameObject
 
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../properties/bagable')
