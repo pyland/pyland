@@ -1,4 +1,5 @@
 #include <glog/logging.h>
+#include <deque>
 
 #include "audio_engine.hpp"
 #include "button.hpp"
@@ -12,7 +13,6 @@
 #include "map_loader.hpp"
 #include "map.hpp"
 #include "text_font.hpp"
-
 
 GameEngine::GameEngine(GUIMain *_gui_main, Challenge *_challenge){
     gui_main = _gui_main;
@@ -76,14 +76,20 @@ void GameEngine::show_dialogue_with_options(std::string text, PyObject *_boost_o
 
     boost::python::dict boost_options(boost::python::handle<>(boost::python::borrowed(_boost_options)));
 
-    std::map<std::string, std::function<void ()> > options;
+    std::deque<std::pair<std::string, std::function<void ()> > > options;
     boost::python::list option_names = boost_options.keys();
 
     for(int i=0; i<len(option_names); i++){
         boost::python::extract<std::string> extracted_option_name(option_names[i]);
         boost::python::object extracted_callback = boost_options[option_names[i]];
 
-        options[extracted_option_name] = extracted_callback;
+        //boost::python::extract is dodgy, so we need to have these intermediate variables for
+        //implicit type casting
+        std::string cpp_option_name = extracted_option_name;
+
+        auto test = [extracted_callback] () { extracted_callback(); };
+
+        options.push_back(std::make_pair(cpp_option_name, test));
     }
 
     LOG(INFO) << "Adding " << text << "to the notification bar with options";
