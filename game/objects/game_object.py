@@ -58,6 +58,9 @@ class GameObject:
     def get_name(self):
         return self.__entity.get_name()
 
+    def get_file_location(self):
+        return self.__entity.get_location()
+
     def set_sprite(self, sprite_location): #all sprites are relative to sprites/sprite_location/0.png , when objects are animated the engine automatically cycles through the numbered sprites in the folder
         self.__entity.set_sprite(sprite_location)
         return
