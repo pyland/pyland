@@ -244,7 +244,7 @@ MainWindow::MainWindow(GameMain *exGame):
 
     mainWidget->setAutoFillBackground(true);
 
-    mainWidget->setMinimumSize(1080,756);
+    mainWidget->setMinimumSize(int(1080.0f*0.6),int(756.0f*0.6));
 
     this->setContextMenuPolicy(Qt::NoContextMenu);
     this->setCentralWidget(mainWidget);
