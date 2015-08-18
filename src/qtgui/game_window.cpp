@@ -391,10 +391,6 @@ void GameWindow::init_surface() {
                           &y,
                           &child);
 #endif
-    // SDL_GetWindowPosition(window, &x, &y);
-    //SDL_GetWindowSize(window, &w, &h);
-    //w = curGameInit->getGameWidth();
-    //h = curGameInit->getGameHeight();
     w = mainWin->getGameWidgetWidth();
     h = mainWin->getGameWidgetHeight();
 #ifdef USE_GL
@@ -516,6 +512,8 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     window_y = y;
     window_width = w;
     window_height = h;
+    horizontal_resolution = 1280;
+    vertical_resolution = 720;
 }
 
 

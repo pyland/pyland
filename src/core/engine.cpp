@@ -186,10 +186,12 @@ bool Engine::walkable(glm::ivec2 location) {
 
 void Engine::change_map(std::string map_location){
     //std::thread *first = new std::thread([map_location]() {
-    //    game_main->run_game = false;
-    //    game_main->change_challenge(map_location);
+        //kill python thread
+        game_main->run_game = false;
+        game_main->change_challenge(map_location);
+        game_main->run_game = true;
     //});
-    game_main->run_game = false;
+    //game_main->run_game = false;
 }
 
 void Engine::change_tile(glm::ivec2 tile, std::string layer_name, std::string tile_name) {
@@ -296,31 +298,98 @@ bool Engine::is_bar_open(){
     return (gui_main->is_bar_open());
 }
 
+void Engine::show_py_scripter(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->showScripterPanel();
+    });
+}
+
+void Engine::hide_py_scripter(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->hideScripterPanel();
+    });
+}
+
+void Engine::enable_py_scripter(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->enableScripterPanel();
+    });
+}
+
+void Engine::disable_py_scripter(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->disableScripterPanel();
+    });
+}
+
+void Engine::enable_script_editing(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->enableScripter();
+    });
+}
+
+void Engine::disable_script_editing(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->disableScripter();
+    });
+}
+
+void Engine::set_py_tabs(int val){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, val] {
+        _main_window->setTabs(val);
+    });
+}
+
 void Engine::update_world(std::string text){
-  main_window->setWorld(text);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, text] {
+         _main_window->setWorld(text);
+    });
 }
 
 void Engine::update_level(std::string text){
-  main_window->setLevel(text);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, text] {
+          _main_window->setLevel(text);
+    });
 }
 
 void Engine::update_coins(int value){
-  main_window->setCoins(value);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, value] {
+          _main_window->setCoins(value);
+    });
 }
 
 
 void Engine::update_totems(int value,bool show){
-  main_window->setCurTotems(value, show);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, value, show] {
+          _main_window->setCurTotems(value, show);
+    });
 }
 
 void Engine::insert_to_scripter(std::string text)
 {
-    main_window->insertToTextEditor(text);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, text] {
+        _main_window->insertToTextEditor(text);
+    });
 }
 
 void Engine::clear_scripter()
 {
-    main_window->clearTextEditor();
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->clearTextEditor();
+    });
 }
 
 std::string Engine::get_script()
@@ -331,40 +400,65 @@ std::string Engine::get_script()
 
 //Print to the QT terminal widget
 void Engine::print_terminal(std::string text, bool error) {
-    main_window->setAnyOutput(true);
-    main_window->pushTerminalText(text,error);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, text, error] {
+        _main_window->setAnyOutput(true);
+        _main_window->pushTerminalText(text, error);
+    });
+
 }
 
 
 //Focuses on the next player that has a focus button for it
 void Engine::focus_next() {
-    game_main->focus_next();
-    return;
+    auto _game_main = game_main;
+    EventManager::get_instance()->add_event([_game_main] {
+        _game_main->focus_next();
+    });
 }
 
 
 void Engine::set_any_output(bool option){
-    main_window->setAnyOutput(option);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, option] {
+        _main_window->setAnyOutput(option);
+    });
 }
 
 void Engine::set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2){
-    main_window->setColourScheme(r1,b1,g1,r2,b2,g2);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, r1, b1, g1, r2, b2, g2] {
+        _main_window->setColourScheme(r1,b1,g1,r2,b2,g2);
+    });
 }
 
 void Engine::set_running(){
-    main_window->setRunning(true);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->setRunning(true);
+    });
 }
 
 void Engine::set_finished(){
-    main_window->setRunning(false);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->setRunning(false);
+    });
 }
 
 void Engine::trigger_run(int script){
-    main_window->runCode(script);
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window, script] {
+        _main_window->runCode(script);
+    });
+
 }
 
 void Engine::trigger_speed(){
-    main_window->toggleSpeed();
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->toggleSpeed();
+    });
 }
 
 int Engine::get_run_script(){
