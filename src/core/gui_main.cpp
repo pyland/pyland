@@ -845,8 +845,8 @@ void GUIMain::config_gui()
 	option_button_height = j["scales"]["option_button_height"];
 	option_button_x = j["scales"]["option_button_x"];
 	option_button_y = j["scales"]["option_button_y"];
-	option_button_x = j["scales"]["option_button_text_x"];
-	option_button_y = j["scales"]["option_button_text_y"];
+	option_button_text_x = j["scales"]["option_button_text_x"];
+	option_button_text_y = j["scales"]["option_button_text_y"];
 	option_button_spacing = j["scales"]["option_button_spacing"];
 
     py_help_width = j["scales"]["py_help_width"];
