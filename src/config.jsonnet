@@ -9,7 +9,7 @@
 		"game_folder": "../game",
 		"level_folder": self.game_folder+"/levels",
 		"level_location" : "/world_1/level_1/rossumberg",
-		"full_level_location" : "/world_1/level_1/rossumberg",
+		"full_level_location" : "/world_1/level_7/village",
 		"world_location": "/old/test_world/yingischallenged/",
 		"full_world_location" : self.game_folder + "/levels" + self.world_location,
 		"player_scripts": self.game_folder + "/player_scripts",

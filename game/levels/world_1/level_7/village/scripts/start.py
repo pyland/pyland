@@ -1,11 +1,29 @@
-player_one.focus()
+player.focus()
 
 engine.play_music("beach")
 
 
 engine.clear_scripter()
 
-player_one.face_east()
+player.face_east()
+myla.face_east()
+
+dialogue_sequence = [
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_coming_now"), callback = callback),
+    lambda callback: myla.face_north(),
+    lambda callback: camera.wait(0.2, callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_text_editor"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_big_white_box"), callback = callback),
+    lambda callback: get_player_name(callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_confirm_player_name", {"player_name": player_name}), callback = callback), #TODO, give option for dictionary of callback response
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": player_name}), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_console_output"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_go_enjoy_pyland", {"player_name": player_name}), callback = callback)
+]
+
+engine.run_callback_list_sequence(dialogue_sequence)
 
 dialogue_sequence = [
     lambda callback: player_one.set_busy(True, callback = callback),
