@@ -55,9 +55,13 @@
 		"pyguide_title_x_offset": 0.25,
 		"pyguide_title_y_offset": 0.9,
 
+		//for pause options
+		"pause_x_offset": 0.10,
+		"pause_y_offset": 0.60,
+
 		//for placing an item on the menu
-		"menu_x_offset": 0.02,
-		"menu_y_offset": 0.72,
+		"menu_x_offset": 0.05,
+		"menu_y_offset": 0.70,
 		"menu_width": 0.08,
 		"menu_height": 0.12,
 		"menu_spacing": 0.15,	
@@ -80,6 +84,20 @@
 		"notification_button_x": 0.90,
 		"notification_button_y": 0.35,
 
+		//the parameters for the option box which is to be displayed after the box is closed
+		"option_max": 2,
+		"option_width": 0.4,
+		"option_height": 0.30,
+		"option_x": 0.60,
+		"option_y": 0.20,
+		"option_button_width": 0.20,
+		"option_button_height": 0.40,
+		"option_button_x": 0.70,
+		"option_button_y": 0.40,
+		"option_button_text_x": 7.30,
+		"option_button_text_y": 2.10,
+		"option_button_spacing": 0.50,
+		
 		//the parameters for the py help text box 
 		"py_help_width": 0.50,
 		"py_help_height": 0.90, 
