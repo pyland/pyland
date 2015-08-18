@@ -2,7 +2,7 @@
 
 import sys
 config = engine.get_config()
-sys.path.insert(1, config['files']['components_location'])
+sys.path.insert(1, config['files']['script_running_location'])
 from script_state_container import ScriptStateContainer
 
 camera.focus()

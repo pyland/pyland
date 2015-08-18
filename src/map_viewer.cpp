@@ -59,7 +59,7 @@ MapViewer::~MapViewer() {
 
 void MapViewer::resize() {
     LOG(INFO) << "Map resizing";
-    std::pair<int, int> size(window->get_size());
+    std::pair<int, int> size(window->get_window_size());
 
     // Set the viewable fragments
     glScissor(0, 0, size.first, size.second);
@@ -84,7 +84,7 @@ void MapViewer::render_map() {
     // Focus onto the player
     refocus_map();
     // Calculate the projection and modelview matrix for the map
-    std::pair<int, int> size(window->get_size());
+    std::pair<int, int> size(window->get_resolution());
     glm::mat4 projection_matrix(glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f));
 
     glm::mat4 model(glm::mat4(1.0f));
@@ -143,7 +143,7 @@ void MapViewer::render_map() {
 
 void MapViewer::render_objects() {
     //Calculate the projection matrix
-    std::pair<int, int> size = window->get_size();
+    std::pair<int, int> size = window->get_resolution();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
     //Draw the objects
     const std::vector<int>& objects = map->get_objects();
@@ -204,7 +204,7 @@ void MapViewer::render_objects() {
 
 void MapViewer::render_gui() {
     //Calculate the projection matrix
-    std::pair<int, int> size = window->get_size();
+    std::pair<int, int> size = window->get_resolution();
     glm::mat4 projection_matrix = glm::ortho(0.0f, float(size.first), 0.0f, float(size.second), 0.0f, 1.0f);
 
     //TODO: Hacky method, clean it up
@@ -414,11 +414,11 @@ glm::ivec2 MapViewer::tile_to_pixel(glm::vec2 tile_location) {
 }
 
 float MapViewer::get_display_width() {
-    return float(window->get_size().first) / Engine::get_actual_tile_size();
+    return float(window->get_resolution().first) / Engine::get_actual_tile_size();
 }
 
 float MapViewer::get_display_height() {
-    return float(window->get_size().second) / Engine::get_actual_tile_size();
+    return float(window->get_resolution().second) / Engine::get_actual_tile_size();
 }
 
 float MapViewer::get_display_x() {

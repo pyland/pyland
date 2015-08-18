@@ -43,8 +43,8 @@ private:
     float pyguide_title_x_offset;
     float pyguide_title_y_offset;
 
-	float pause_x_offset;
-	float pause_y_offset;
+    float pause_x_offset;
+    float pause_y_offset;
 
     float menu_x_offset;
     float menu_y_offset;
@@ -67,18 +67,18 @@ private:
     float notification_button_x;
     float notification_button_y;
 
-	unsigned int option_max;
-	float option_width;
-	float option_height;
-	float option_x;
-	float option_y;
-	float option_button_width;
-	float option_button_height;
-	float option_button_x;
-	float option_button_y;
-	float option_button_text_x;
-	float option_button_text_y;
-	float option_button_spacing;
+    unsigned int option_max;
+    float option_width;
+    float option_height;
+    float option_x;
+    float option_y;
+    float option_button_width;
+    float option_button_height;
+    float option_button_x;
+    float option_button_y;
+    float option_button_text_x;
+    float option_button_text_y;
+    float option_button_spacing;
 
     float py_help_width;
     float py_help_height;
@@ -134,14 +134,14 @@ private:
     bool bar_open; //whether or not the notification bar is open
     bool callback_options; //whether or not there are options at the end of the notification bar
     void create_notification_bar();
-	std::function<void ()> notification_func; // the function to be called after the bar is closed
+    std::function<void ()> notification_func; // the function to be called after the bar is closed
     std::deque<std::pair<std::string, std::function<void ()> > > notification_options;
 
-	unsigned int option_start;
-	std::shared_ptr<Board> options_box;
-	std::deque<std::shared_ptr<Button>> option_buttons;
-	std::shared_ptr<Button> next_option;
-	std::shared_ptr<Button> prev_option;
+    unsigned int option_start;
+    std::shared_ptr<Board> options_box;
+    std::deque<std::shared_ptr<Button>> option_buttons;
+    std::shared_ptr<Button> next_option;
+    std::shared_ptr<Button> prev_option;
 
     std::shared_ptr<TextBox> notification_bar;
 
