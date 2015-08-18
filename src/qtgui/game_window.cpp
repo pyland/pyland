@@ -512,8 +512,8 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     window_y = y;
     window_width = w;
     window_height = h;
-    horizontal_resolution = 800;
-    vertical_resolution = 600;
+    horizontal_resolution = w; //In theory we will be able to set this to arbitrary resolutions and the game will be able to handle it, but a lot needs to be xided TODO: fix this!
+    vertical_resolution = h;
 }
 
 
