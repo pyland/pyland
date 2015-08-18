@@ -64,12 +64,12 @@ GameMain::GameMain(int &argc, char **argv):
     input_manager = embedWindow.get_input_manager();
 
     //The GUI resize function
-    original_window_size = embedWindow.get_size();
+    original_window_size = embedWindow.get_resolution();
     gui_resize_func = [&] (GameWindow* game_window)
     {
         LOG(INFO) << "GUI resizing";
 
-        auto window_size = (*game_window).get_size();
+        auto window_size = (*game_window).get_resolution();
 
         gui.get_gui_window()->set_width_pixels(window_size.first);
         gui.get_gui_window()->set_height_pixels(window_size.second);
@@ -418,7 +418,7 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
     Config::json j = Config::get_instance();
-    std::string challenge_name = j["files"]["full_level_location"];
+    std::string challenge_name = j["files"]["level_location"];
     std::string level_folder = j["files"]["level_folder"];
     challenge_data->map_name = level_folder + challenge_name + "/layout.tmx";
     challenge_data->level_location = challenge_name;
