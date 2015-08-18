@@ -250,7 +250,7 @@ void GUIManager::render_text() {
 
 void GUIManager::load_textures() {
     //Set the texture data in the rederable component
-    renderable_component->set_texture(TextureAtlas::get_shared("../resources/tiles/gui.png"));
+    renderable_component->set_texture(TextureAtlas::get_shared("../game/gui/gui.png"));
 }
 
 bool GUIManager::init_shaders() {

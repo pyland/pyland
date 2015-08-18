@@ -4,7 +4,7 @@ import os
 import sys
 
 #Custom modules
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../components')
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../script_running')
 import scriptrunner
 from script_state_container import ScriptStateContainer
 
