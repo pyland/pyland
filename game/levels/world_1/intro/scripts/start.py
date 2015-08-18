@@ -44,7 +44,7 @@ def get_player_name(callback):
     engine.register_input_callback(engine.INPUT_HALT, stc.halt_script)
 
 
-
+"""
 dialogue_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_coming_now"), callback = callback),
     lambda callback: camera.move_by((0, -11), 2.2, callback = callback),
@@ -60,6 +60,11 @@ dialogue_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue("intro_go_enjoy_pyland", {"player_name": player_name}), callback = callback)
     #TODO: save the player's name in a new save file for them :)
     #TODO: change the level to the intro level
+] """
+
+level_name = "world_1/intro"
+dialogue_sequence = [
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "monty_coming_now"), callback = callback),
 ]
 
 engine.run_callback_list_sequence(dialogue_sequence)

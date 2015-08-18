@@ -20,24 +20,24 @@ class Engine:
 
     __settings = None
 
-    def get_dialogue(self, identifier, escapes = dict()):
+    def get_dialogue(self, level_name, identifier, escapes = dict()):
         """ Get the piece of dialoge requested form the database.
 
         The escapes argument is a dictionary from escape keys to replacements to allow parts of the result to be dynamically replaced.
         """
         if not(threading.current_thread() in self.conn):
             self.conn[threading.current_thread()] = sqlite3.connect(self.dblocation)
-        result = self.conn[threading.current_thread()].execute("SELECT english, français, nederlands, hindi, pyrate FROM dialogue WHERE identifier=?;", (identifier, ))
+        result = self.conn[threading.current_thread()].execute("SELECT english, french, dutch, hindi, pyrate FROM dialogue WHERE level=? AND identifier=?;", (level_name, identifier))
 
         row = result.fetchone()
         dialogue = "invalid dialogue identifier" #TODO: Make it so that game complains much more about this in debug mode!!!!
         if(row != None):
-            english, français, nederlands, hindi, pyrate = row
+            english, french, dutch, hindi, pyrate = row
             if(self.language == "english"):
                 dialogue = english
-            if(self.language == "français"):
+            if(self.language == "french"):
                 dialogue = français
-            if(self.language == "nederlands"):
+            if(self.language == "dutch"):
                 dialogue = nederlands
             if(self.language == "hindi"):
                 dialogue = hindi
