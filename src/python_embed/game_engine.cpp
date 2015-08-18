@@ -132,6 +132,11 @@ void GameEngine::register_input_callback(int input_key, PyObject *py_input_callb
     return;
 }
 
+void GameEngine::flush_input_callback_list(int input_key) {
+    InputHandler::get_instance()->flush_list(input_key);
+    return;
+}
+
 void GameEngine::play_music(std::string song_name) {
     AudioEngine::get_instance()->play_music("../game/music/" + song_name + ".ogg");
 }

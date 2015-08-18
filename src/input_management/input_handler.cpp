@@ -27,8 +27,9 @@ void InputHandler::run_list(int input_key) {
     return;
 }
 
-void InputHandler::flush_list(int key) {
-    ++key; //TODO: fill in method stub
+void InputHandler::flush_list(int input_key) {
+    function_list *fl = grab_list(input_key); //grab the list associated against an input key
+    fl->clear();
 }
 
 void InputHandler::flush_all() {
