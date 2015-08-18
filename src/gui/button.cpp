@@ -40,6 +40,9 @@ Button::Button(ButtonType _type) {
         button_text->set_y_offset(0.5f);
     }
 
+    this->set_visible(false);
+    this->set_clickable(false);
+
 }
 
 Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<void (void)> on_click,
