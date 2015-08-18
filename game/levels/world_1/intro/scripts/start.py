@@ -1,6 +1,6 @@
 import sys
 
-sys.path.insert(1, engine.get_config()['files']['components_location'])
+sys.path.insert(1, engine.get_config()['files']['script_running_location'])
 from script_state_container import ScriptStateContainer
 
 config = engine.get_config()
@@ -38,7 +38,7 @@ def get_player_name(callback):
     }
 
     stc = ScriptStateContainer()
-    
+
     stc.set_script_name("GetName")
     engine.register_input_callback(engine.INPUT_RUN, lambda: stc.run_script(script_api, engine))
     engine.register_input_callback(engine.INPUT_HALT, stc.halt_script)
