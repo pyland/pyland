@@ -9,7 +9,8 @@
 		"game_folder": "../game",
 		"level_folder": self.game_folder+"/levels",
 		"level_location" : "/world_1/level_1/rossumberg",
-		"full_level_location" : "/old/test_world/yingischallenged/main",
+		//"full_level_location" : "/old/test_world/yingischallenged/main",
+		"full_level_location" : "/old/world_one_old/level_one/main",
 		"world_location": "/old/test_world/yingischallenged/",
 		"full_world_location" : self.game_folder + "/levels" + self.world_location,
 		"player_scripts": self.game_folder + "/player_scripts",
@@ -48,9 +49,13 @@
 		"pyguide_title_x_offset": 0.25,
 		"pyguide_title_y_offset": 0.9,
 
+		//for pause options
+		"pause_x_offset": 0.10,
+		"pause_y_offset": 0.60,
+
 		//for placing an item on the menu
-		"menu_x_offset": 0.02,
-		"menu_y_offset": 0.72,
+		"menu_x_offset": 0.05,
+		"menu_y_offset": 0.70,
 		"menu_width": 0.08,
 		"menu_height": 0.12,
 		"menu_spacing": 0.15,	
@@ -75,14 +80,16 @@
 
 		//the parameters for the option box which is to be displayed after the box is closed
 		"option_max": 2,
-		"option_width": 0.6,
+		"option_width": 0.4,
 		"option_height": 0.30,
-		"option_x": 0.20,
+		"option_x": 0.30,
 		"option_y": 0.20,
 		"option_button_width": 0.20,
 		"option_button_height": 0.20,
-		"option_button_x": 0.80,
-		"option_button_y": 0.40,
+		"option_button_x": 0.50,
+		"option_button_y": 0.50,
+		"option_button_text_x": 0.50,
+		"option_button_text_y": 0.50,
 		"option_button_spacing": 0.30,
 		
 		//the parameters for the py help text box 

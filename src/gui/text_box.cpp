@@ -47,7 +47,6 @@ TextBox::TextBox(TextBoxType _type) {
             else{
 				hide_buttons();
                 Engine::close_notification_bar();
-                clear_text();
             }
         });
 

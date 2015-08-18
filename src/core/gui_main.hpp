@@ -43,6 +43,9 @@ private:
     float pyguide_title_x_offset;
     float pyguide_title_y_offset;
 
+	float pause_x_offset;
+	float pause_y_offset;
+
     float menu_x_offset;
     float menu_y_offset;
     float menu_width;
@@ -73,6 +76,8 @@ private:
 	float option_button_height;
 	float option_button_x;
 	float option_button_y;
+	float option_button_text_x;
+	float option_button_text_y;
 	float option_button_spacing;
 
     float py_help_width;
