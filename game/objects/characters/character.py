@@ -87,33 +87,34 @@ class Character(GameObject):
         return self.__busy
 
     """ Change the sprite folder to "north" """
-    def face_north(self):
-        self.__face("north")
+    def face_north(self, callback = lambda: None):
+        self.__face("north", callback)
         return
 
     """ Change the sprite folder to "east" """
-    def face_east(self):
-        self.__face("east")
+    def face_east(self, callback = lambda: None):
+        self.__face("east", callback)
         return
 
     """ Change the sprite folder to "south" """
-    def face_south(self):
-        self.__face("south")
+    def face_south(self, callback = lambda: None):
+        self.__face("south", callback)
         return
 
     """ Change the sprite folder to "west" """
-    def face_west(self):
-        self.__face("west")
+    def face_west(self, callback = lambda: None):
+        self.__face("west", callback)
         return
 
     """ Get the character to "face" the direction specified
     simply changes the last part of the sprite folder as relevant
     """
-    def __face(self, direction):
+    def __face(self, direction, callback):
         engine = self.get_engine()
         sprite_location = self.get_sprite()
         sprite_location = sprite_location[0 : sprite_location.rfind("/") + 1] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
         self.set_sprite(sprite_location + direction) #sprites are now looked for in direction folder :)
+        callback()
         return
 
     """ Says if the character is facing north """
@@ -155,7 +156,7 @@ class Character(GameObject):
                 if not self.is_moving():
                     self.stop_animating()
                 callback()
-            parent_move_x(callbacktwo)
+            parent_move_x(lambda: self.wait(0.03, callbacktwo))
         return
 
     """ Moves the character North by one tile and makes them face in that direction

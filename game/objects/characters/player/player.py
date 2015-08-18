@@ -130,6 +130,7 @@ class Player(Character, ScriptStateContainer):
 
             #the method to get the position of the player
             script_api["get_position"] = self.get_position
+            script_api["get_flag_message"] = self.get_flag_message
 
             scriptrunner.start(script_api, engine.get_run_script(), self, engine)
         return
@@ -138,7 +139,7 @@ class Player(Character, ScriptStateContainer):
     def get_script_name(self):
         return self.get_character_name()
 
-    #override ScriptStateContainer
+    #override ScriptStateContainer---
     def set_script_name(self):
         self.set_character_name(self)
 
@@ -227,6 +228,16 @@ class Player(Character, ScriptStateContainer):
 
     def add_to_bag(self, bag_item):
         pass
+
+    def get_flag_message(self):
+        message = "There is no flag here!"  
+        engine = self.get_engine()
+        position = self.get_position()
+        game_objects = engine.get_objects_at(position)
+        for current_object in game_objects:
+            if(hasattr(current_object, "get_message")):
+                message = current_object.get_message()
+        return message
 
 
 

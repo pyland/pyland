@@ -45,7 +45,7 @@ TextBox::TextBox(TextBoxType _type) {
                 Engine::get_gui()->refresh_gui();
             }
             else{
-                clear_text();
+                hide_buttons();
                 Engine::close_notification_bar();
             }
         });
@@ -127,10 +127,10 @@ TextBox::TextBox(TextBoxType _type) {
 void TextBox::open(){
 
     this->set_visible(true);
-    forward_button->set_visible(true);
 
     if(type == TextBoxType::Bar){
         forward_button->set_visible(true);
+        forward_button->set_clickable(true);
 
         if(!text_stack.can_forward()){
             forward_button->set_picture("gui/status/failed");
@@ -138,7 +138,10 @@ void TextBox::open(){
     }
     else if(type == TextBoxType::Display){
         forward_button->set_visible(true);
+        forward_button->set_clickable(true);
+
         backward_button->set_visible(true);
+        backward_button->set_clickable(true);
 
         if(!text_stack.can_forward()){
             forward_button->set_picture("gui/status/failed");
@@ -158,13 +161,7 @@ void TextBox::proceed(){
 
 void TextBox::close(){
 
-    if(type == TextBoxType::Bar){
-        forward_button->set_visible(false);
-    }
-    else if(type == TextBoxType::Display){
-        forward_button->set_visible(false);
-        backward_button->set_visible(false);
-    }
+    hide_buttons();
 
     this->set_visible(false);
     Engine::get_gui()->refresh_gui();
@@ -208,6 +205,20 @@ void TextBox::move_buttons(float x_offset, float y_offset, float spacing /* = 0.
         forward_button->set_y_offset(y_offset);
         backward_button->set_x_offset(x_offset - spacing);
         backward_button->set_y_offset(y_offset);
+    }
+}
+
+void TextBox::hide_buttons(){
+
+    if(type == TextBoxType::Bar){
+        forward_button->set_visible(false);
+        forward_button->set_clickable(false);
+    }
+    else if(type == TextBoxType::Display){
+        forward_button->set_visible(false);
+        forward_button->set_clickable(false);
+        backward_button->set_visible(false);
+        backward_button->set_clickable(false);
     }
 }
 
