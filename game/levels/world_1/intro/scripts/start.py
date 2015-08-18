@@ -11,28 +11,32 @@ c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
 
-engine.clear_scripter()
 
 """ Some quick and hacky methods I wrote to grab the player's name from the terminal"""
 player_name = "???"
 
 name_parsed = False
 
+engine.clear_scripter()
+engine.set_py_tabs(1)
+engine.disable_py_scripter()
+
 def name_parser(name, callback):
     global name_parsed
     global player_name
     name = str(name)
     engine.print_terminal(name)
-    if(name_parsed):
-        pass #TODO: handle this
-    else:
+    if not name_parsed:
         name_parsed = True
         player_name = name
+        engine.clear_scripter()
+        engine.disable_py_scripter()
         callback()
 
 def get_player_name(callback):
     engine.clear_scripter()
     engine.insert_to_scripter("print(\"YourName\")")
+    engine.enable_py_scripter()
     script_api = {
         "print" : lambda text: name_parser(text, callback)
     }
@@ -63,4 +67,17 @@ dialogue_sequence = [
 ]
 
 engine.run_callback_list_sequence(dialogue_sequence)
+
+"""
+engine.run_callback_list_sequence(
+    dialogue_sequence,
+    lambda: engine.show_dialogue_with_options(
+        engine.get_dialogue(level_name, "confirm_player_name", {"player_name": player_name}),
+        {
+            "Yes": "",
+            "No" : ""
+        }
+    )
+)
+"""
 
