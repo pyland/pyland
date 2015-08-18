@@ -14,6 +14,7 @@ class Generic(Character):
         super().initialise()
 
     def player_action(self, player_object):
+    	
         pass
 
 
