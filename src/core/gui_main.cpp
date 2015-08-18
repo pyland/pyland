@@ -480,6 +480,7 @@ void GUIMain::proceed_notification_bar(){
 
 void GUIMain::close_notification_bar(){
 
+
     if(callback_options){
         options_box->set_visible(true);
         options_box->set_clickable(false);
@@ -521,6 +522,7 @@ void GUIMain::close_notification_bar(){
     else{
         notification_bar->clear_text();
         notification_bar->close();
+        bar_open = false;
         em->add_event([this] {
             notification_func();
         });
