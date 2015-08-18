@@ -1,6 +1,7 @@
 player_one.focus()
 
 engine.play_music("beach")
+engine.set_ui_colours((200,255,200),(215,255,215))
 
 
 croc_one.rand_explore()
