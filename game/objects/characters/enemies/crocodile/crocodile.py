@@ -111,6 +111,8 @@ class Crocodile(Character):
             return self.wait(0.3, self.rand_explore)
 
 
+   
+
 
     def __check_swim_state(self, callback):
         """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
@@ -124,7 +126,7 @@ class Crocodile(Character):
         return callback()
 
     """ Overriding movement methods so that crocodiles swim in water :) """
-    def move_north(self, callback):
+    def move_north(self, callback = lambda: None):
         super().move_north(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
@@ -132,21 +134,21 @@ class Crocodile(Character):
         if(engine.get_tile_type((x, y+1)) == engine.TILE_TYPE_STANDARD):
             self.wait(0.1, lambda: self.change_state("main")) #delay there so that crocs that go over water change sprite for a flash.
     
-    def move_east(self, callback):
+    def move_east(self, callback = lambda: None):
         super().move_east(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
         if(engine.get_tile_type((x+1, y)) == engine.TILE_TYPE_STANDARD):
             self.wait(0.1, lambda: self.change_state("main"))
 
-    def move_south(self, callback):
+    def move_south(self, callback = lambda: None):
         super().move_south(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
         if(engine.get_tile_type((x, y-1)) == engine.TILE_TYPE_STANDARD):
             self.wait(0.1, lambda: self.change_state("main"))
 
-    def move_west(self, callback):
+    def move_west(self, callback = lambda: None):
         super().move_west(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
         x, y = self.get_position()
