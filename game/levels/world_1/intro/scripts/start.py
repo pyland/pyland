@@ -44,27 +44,22 @@ def get_player_name(callback):
     engine.register_input_callback(engine.INPUT_HALT, stc.halt_script)
 
 
-"""
-dialogue_sequence = [
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_coming_now"), callback = callback),
-    lambda callback: camera.move_by((0, -11), 2.2, callback = callback),
-    lambda callback: camera.wait(0.2, callback = callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback = callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"), callback = callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_text_editor"), callback = callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_big_white_box"), callback = callback),
-    lambda callback: get_player_name(callback = callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_confirm_player_name", {"player_name": player_name}), callback = callback), #TODO, give option for dictionary of callback response
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_wrote_first_program", {"player_name": player_name}), callback = callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_console_output"), callback = callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue("intro_go_enjoy_pyland", {"player_name": player_name}), callback = callback)
-    #TODO: save the player's name in a new save file for them :)
-    #TODO: change the level to the intro level
-] """
-
 level_name = "world_1/intro"
 dialogue_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "monty_coming_now"), callback = callback),
+    lambda callback: camera.move_by((0, -11), 2.2, callback = callback),
+    lambda callback: camera.wait(0.2, callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "im_monty_the_snake"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "monty_doesnt_know_name"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "monty_text_editor"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "big_white_box"), callback = callback),
+    lambda callback: get_player_name(callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "confirm_player_name", {"player_name": player_name}), callback = callback), #TODO, give option for dictionary of callback response
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "wrote_first_program", {"player_name": player_name}), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "console_output"), callback = callback),
+    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "go_enjoy_pyland", {"player_name": player_name}), callback = callback)
+    #TODO: save the player's name in a new save file for them :)
+    #TODO: change the level to the intro level
 ]
 
 engine.run_callback_list_sequence(dialogue_sequence)
