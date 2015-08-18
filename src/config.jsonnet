@@ -84,12 +84,12 @@
 		"option_height": 0.30,
 		"option_x": 0.30,
 		"option_y": 0.20,
-		"option_button_width": 0.40,
+		"option_button_width": 0.20,
 		"option_button_height": 0.40,
-		"option_button_x": 0.50,
-		"option_button_y": 0.30,
-		"option_button_text_x": 0.90,
-		"option_button_text_y": 0.90,
+		"option_button_x": 0.70,
+		"option_button_y": 0.40,
+		"option_button_text_x": 3.70,
+		"option_button_text_y": 2.10,
 		"option_button_spacing": 0.50,
 		
 		//the parameters for the py help text box 

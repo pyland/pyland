@@ -83,11 +83,11 @@ void GameEngine::show_dialogue_with_options(std::string text, PyObject *_boost_o
         boost::python::extract<std::string> extracted_option_name(option_names[i]);
         boost::python::object extracted_callback = boost_options[option_names[i]];
 
-		//boost::python::extract is dodgy, so we need to have these intermediate variables for
-		//implicit type casting
-		std::string cpp_option_name = extracted_option_name;
+        //boost::python::extract is dodgy, so we need to have these intermediate variables for
+        //implicit type casting
+        std::string cpp_option_name = extracted_option_name;
 
-		auto test = [extracted_callback] () { extracted_callback(); };
+        auto test = [extracted_callback] () { extracted_callback(); };
 
         options.push_back(std::make_pair(cpp_option_name, test));
     }

@@ -45,7 +45,7 @@ TextBox::TextBox(TextBoxType _type) {
                 Engine::get_gui()->refresh_gui();
             }
             else{
-				hide_buttons();
+                hide_buttons();
                 Engine::close_notification_bar();
             }
         });

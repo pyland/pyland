@@ -30,7 +30,7 @@ end_dialogue = [
 
 player_one.face_south()
 #engine.show_dialogue("Brooo", lambda : player_one.move_south())
-engine.show_dialogue_with_options("Broo", {"b11ro": lambda : player_one.move_south(), "sis" : lambda : engine.print_terminal("j")})
+engine.show_dialogue_with_options("Broo", {"south": lambda : player_one.move_south(), "printj" : lambda : engine.print_terminal("j")})
 
 #engine.run_callback_list_sequence(dialogue_sequence)
 

@@ -40,8 +40,8 @@ Button::Button(ButtonType _type) {
         button_text->set_y_offset(0.5f);
     }
 
-	this->set_visible(false);
-	this->set_clickable(false);
+    this->set_visible(false);
+    this->set_clickable(false);
 
 }
 
