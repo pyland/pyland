@@ -92,13 +92,16 @@ class GameEngine {
 
         ///
         /// To add a dialogue to the notificaton bar
+        /// options is a python dictionary of strings to callbacks
         ///
-        void show_dialogue(std::string text, PyObject *options, PyObject *callback);
+        void show_dialogue(std::string text, PyObject *callback);
+        void show_dialogue_with_options(std::string text, PyObject *options);
 
         ///
         /// Register a callback against a given input
         ///
         void register_input_callback(int input_key, PyObject *input_callback);
+        void flush_input_callback_list(int input_key);
 
         ///
         /// Play a given song from the music folder
@@ -110,6 +113,18 @@ class GameEngine {
         ///
         std::string get_config();
 
+        ///
+        /// Change the settings of the PyScripter
+        ///
+        void show_py_scripter();
+        void hide_py_scripter();
+        void enable_py_scripter();
+        void disable_py_scripter();
+        void enable_script_editing();
+        void disable_script_editing();
+        void set_py_tabs(int val);
+
+        ///
         /// Update the info bar with the current
         /// world/level/coins/totems
         ///

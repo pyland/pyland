@@ -9,7 +9,7 @@
 #include <mutex>
 #include <string>
 
-#include "entitythread.hpp"
+#include "python_thread_runner.hpp"
 #include "interpreter.hpp"
 #include "interpreter_context.hpp"
 #include "locks.hpp"
@@ -41,7 +41,7 @@ Interpreter::Interpreter(boost::filesystem::path function_wrappers):
         }
 
         // Release GIL; thread_killer can start killing now
-        // and EntityThreads can be created without deadlocks
+        // and PythonThreadRunners can be created without deadlocks
         PyEval_ReleaseLock();
         LOG(INFO) << "Interpreter: Interpreter created ";
 }
@@ -66,17 +66,17 @@ PyThreadState *Interpreter::initialize_python() {
     return PyThreadState_Get();
 }
 
-LockableEntityThread Interpreter::register_entities(std::list<Entity> &entities, GameEngine &game_engine) {
+LockablePythonThreadRunner Interpreter::register_entities(std::list<Entity> &entities, GameEngine &game_engine) {
     // Create thread and move to vector.
-    auto new_entity = std::make_shared<EntityThread>(interpreter_context, entities, game_engine);
+    auto new_entity = std::make_shared<PythonThreadRunner>(interpreter_context, entities, game_engine);
 
     std::lock_guard<std::mutex> lock(*entitythreads.lock);
-    entitythreads.value.push_back(std::weak_ptr<EntityThread>(new_entity));
+    entitythreads.value.push_back(std::weak_ptr<PythonThreadRunner>(new_entity));
 
-    // Return the new EntityThread to allow signals to the thread.
-    // This means that EntityThread needs to be thread-safe for
+    // Return the new PythonThreadRunner to allow signals to the thread.
+    // This means that PythonThreadRunner needs to be thread-safe for
     // all approved usages.
-    return LockableEntityThread(new_entity, entitythreads.lock);
+    return LockablePythonThreadRunner(new_entity, entitythreads.lock);
 }
 
 Interpreter::~Interpreter() {

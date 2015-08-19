@@ -31,8 +31,8 @@ class MessageFlag(GameObject):
         self.message = "This flag has no message!"
 
     def get_message(self):
-    	return self.message
+        return self.message
 
     def set_message(self, new_message):
-    	self.message = new_message
+        self.message = new_message
 

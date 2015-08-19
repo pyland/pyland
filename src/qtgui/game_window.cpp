@@ -391,10 +391,6 @@ void GameWindow::init_surface() {
                           &y,
                           &child);
 #endif
-    // SDL_GetWindowPosition(window, &x, &y);
-    //SDL_GetWindowSize(window, &w, &h);
-    //w = curGameInit->getGameWidth();
-    //h = curGameInit->getGameHeight();
     w = mainWin->getGameWidgetWidth();
     h = mainWin->getGameWidgetHeight();
 #ifdef USE_GL
@@ -516,6 +512,8 @@ void GameWindow::init_surface(int x, int y, int w, int h) {
     window_y = y;
     window_width = w;
     window_height = h;
+    horizontal_resolution = w; //In theory we will be able to set this to arbitrary resolutions and the game will be able to handle it, but a lot needs to be xided TODO: fix this!
+    vertical_resolution = h;
 }
 
 
@@ -680,7 +678,11 @@ bool GameWindow::check_close() {
 }
 
 
-std::pair<int, int> GameWindow::get_size() {
+std::pair<int, int> GameWindow::get_resolution() {
+    return std::pair<int, int>(horizontal_resolution, vertical_resolution);
+}
+
+std::pair<int, int> GameWindow::get_window_size() {
     return std::pair<int, int>(window_width, window_height);
 }
 

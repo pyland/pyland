@@ -53,6 +53,15 @@ public:
     MainWindow(GameMain *exGame);
     ~MainWindow();
 
+    void showScripterPanel();
+    void hideScripterPanel();
+    void enableScripterPanel();
+    void disableScripterPanel();
+    void enableScripter();
+    void disableScripter();
+
+    void setTabs(int num);
+
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
     void setWorld(std::string text);
@@ -82,8 +91,6 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    bool saveAs();
-    void documentWasModified();
     void zoomFontIn();
     void zoomFontOut();
     void setGameFocus();
@@ -95,7 +102,6 @@ private slots:
 private:
     void initWorkspace(QsciScintilla* ws, int i);
     void createToolBar();
-    void createStatusBar();
     std::string number_name(int);
     std::string workspaceFilename(QsciScintilla* text);
     QsciScintilla* filenameToWorkspace(std::string filename);
@@ -153,6 +159,8 @@ private:
 
     //Index of the script to be executed
     int executeIndex;
+
+    int currentTabs;
 };
 
 #endif

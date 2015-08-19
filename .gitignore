@@ -33,6 +33,7 @@ src/jsonnet/jsonnet
 game/.idea
 src/Pyland.*
 src/python_embed/interpreter
+game/player_scripts/*.py
 *main.bin
 *__pycache__/
 src/dependencies
@@ -43,3 +44,4 @@ test/text/main
 *callgrind.out*
 src/test/test.bin
 *.DS_Store
+game/database.db

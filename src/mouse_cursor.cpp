@@ -27,7 +27,7 @@ MouseCursor::MouseCursor(GameWindow* window):
             y = event.to.y;
             dirty = true;
         })),
-    atlas(TextureAtlas::get_shared("../resources/cursor.png")),
+    atlas(TextureAtlas::get_shared("../game/gui/cursor.png")),
     shader(Shader::get_shared("cursor_shader")),
     vbo(0),
     x(0),

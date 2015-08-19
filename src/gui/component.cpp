@@ -62,7 +62,6 @@ void Component::set_texture_atlas(std::shared_ptr<TextureAtlas> _texture_atlas) 
     texture_atlas = _texture_atlas;
 }
 void Component::set_on_click(std::function<void (void)> func) {
-    clickable = true;
     on_click_func= func;
 }
 

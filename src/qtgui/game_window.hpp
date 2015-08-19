@@ -102,6 +102,9 @@ private:
     ///
     int window_height;
 
+    int horizontal_resolution;
+    int vertical_resolution;
+
     ///
     /// SDL window and EGL surface displacement from XServer left edge.
     ///
@@ -304,15 +307,19 @@ public:
     bool check_close();
 
     ///
-    /// Get the width and height of the window.
-    ///
-    /// @warning
-    ///     This method is subject to API changes.
+    /// Get the resolution of the game
     ///
     /// Returns the dimensions of the renderable area (excluding window
     /// borders).
     ///
-    std::pair<int, int> get_size();
+    std::pair<int, int> get_resolution();
+
+    ///
+    /// Get the actual size of the displayed game window
+    ///
+    ///
+    ///
+    std::pair<int, int> get_window_size();
 
     ///
     /// Switches the active opengl context to the one for this window.

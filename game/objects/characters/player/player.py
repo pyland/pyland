@@ -4,7 +4,7 @@ import os
 import sys
 
 #Custom modules
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../components')
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../script_running')
 import scriptrunner
 from script_state_container import ScriptStateContainer
 
@@ -59,6 +59,7 @@ class Player(Character, ScriptStateContainer):
         #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
 
         #Get the correct image to the chosen for the sprite
+        engine.print_terminal("Load in this image for the player head: "+"objects/"+super().get_file_location() + "/sprites/head")
         self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
 
     """ game engine features (public)

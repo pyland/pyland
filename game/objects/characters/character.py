@@ -15,7 +15,7 @@ The game code, at runtime, could recognise the "#__"
 and replace it with:
 """
 import sys
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../game_object')
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/..')
 from game_object import GameObject
 """
 As the GameObject is in the base objects folder.
@@ -156,7 +156,7 @@ class Character(GameObject):
                 if not self.is_moving():
                     self.stop_animating()
                 callback()
-            parent_move_x(callbacktwo)
+            parent_move_x(lambda: self.wait(0.03, callbacktwo))
         return
 
     """ Moves the character North by one tile and makes them face in that direction

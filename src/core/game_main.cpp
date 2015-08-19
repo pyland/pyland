@@ -64,12 +64,12 @@ GameMain::GameMain(int &argc, char **argv):
     input_manager = embedWindow.get_input_manager();
 
     //The GUI resize function
-    original_window_size = embedWindow.get_size();
+    original_window_size = embedWindow.get_resolution();
     gui_resize_func = [&] (GameWindow* game_window)
     {
         LOG(INFO) << "GUI resizing";
 
-        auto window_size = (*game_window).get_size();
+        auto window_size = (*game_window).get_resolution();
 
         gui.get_gui_window()->set_width_pixels(window_size.first);
         gui.get_gui_window()->set_height_pixels(window_size.second);
@@ -78,9 +78,8 @@ GameMain::GameMain(int &argc, char **argv):
         original_window_size = window_size;
     };
 
-    //Register InputHandler callbacks
+    //Register InputHandler callbacks TODO: Move this out to Python as neccesary!
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TOGGLE_SPEED, Engine::trigger_speed);
-    InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_RETURN, [] () {Engine::trigger_run(0); } );
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_ONE, [] () {Engine::trigger_run(1); });
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TWO, [] () {Engine::trigger_run(2); });
     InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_THREE, [] () {Engine::trigger_run(3); });
@@ -137,7 +136,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("Space")},
     [&] (KeyboardInputEvent)
     {
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_RETURN);
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN);
     }
     ));
 
@@ -161,6 +160,9 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("Return")},
     [&] (KeyboardInputEvent)
     {
+        if(Engine::is_bar_open()){
+            gui.proceed_notification_bar();
+        }
         InputHandler::get_instance()->run_list(InputHandler::INPUT_ACTION);
     }
     ));
@@ -233,7 +235,8 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("9")},
     [&] (KeyboardInputEvent)
     {
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
+        change_challenge("intro");
+        //InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
     }
     ));
 
@@ -399,26 +402,10 @@ void GameMain::game_loop(bool showMouse)
         #ifdef USE_GLES
             //Display when mouse is over the SDL widget
             if (showMouse) {cursor->display();};
-        #else
-            ++showMouse; //TODO: find a nicer way to avoid unused variable warnings in desktop compiler :P
         #endif
 
         VLOG(3) << "} TD | SB {";
         challenge_data->game_window->swap_buffers();
-    //}
-    //else
-    //{
-//        em->flush_and_disable(interpreter.interpreter_context);
-//        delete challenge;
-//        em->reenable();
-//
-//        challenge_data->run_challenge = true;
-//        challenge = pick_challenge(challenge_data);
-//        Engine::set_challenge(challenge);
-//        callbackstate.stop();
-        //Update tool bar here
-        //embedWindow.get_cur_game_init()->getMainWin()->updateToolBar();
-       // std::cout << "running game loop" << std::endl;
     }
     else{
         std::cout << "not running game loop" << std::endl;
@@ -431,7 +418,7 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     //int next_challenge(challenge_data->next_challenge);
     Challenge *challenge(nullptr);
     Config::json j = Config::get_instance();
-    std::string challenge_name = j["files"]["full_level_location"];
+    std::string challenge_name = j["files"]["level_location"];
     std::string level_folder = j["files"]["level_folder"];
     challenge_data->map_name = level_folder + challenge_name + "/layout.tmx";
     challenge_data->level_location = challenge_name;

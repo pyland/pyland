@@ -32,8 +32,6 @@
 #include "text.hpp"
 #include "text_font.hpp"
 
-
-
 #define SHADER_VARIABLE_POSITION "position"
 #define SHADER_VARIABLE_TEXTURE  "texture_coord"
 #define SHADER_LOCATION_POSITION 0
@@ -128,7 +126,7 @@ Text::~Text() {
 void Text::render() {
     int width = this->width;
     int height = this->height;
-    std::pair<int,int> window_size = window->get_size();
+    std::pair<int,int> window_size = window->get_window_size();
     // Automatic sizing if dimension is 0.
     if (width == 0) {
         switch (alignment_h) {
@@ -174,12 +172,12 @@ void Text::render() {
     int border;
     TTF_SizeUTF8(font.font, " ", &border, NULL);
     border *= 2;
-    
+
     // If they are still zero, don't continue.
     if (available_width <= 0) {
         throw Text::RenderException("No available width for rendering text.");
     }
-    
+
     // int available_height = height - glow_radius * 2;
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
@@ -333,7 +331,7 @@ void Text::render() {
     int line_count = line_number;
 
     int used_height = line_count * line_height + 2 * glow_radius;
-    
+
     used_width += glow_radius * 2 + border;
 
     image = Image(used_width, (used_height < height) ? used_height : height, true);
@@ -533,7 +531,7 @@ void Text::apply_newson_bloom() {
                     for (++seed_y; seed_y < height && image[seed_y][x].a == 0; ++seed_y);
                     seed_y_prev = y;
                 }
-            
+
                 int r(0);
                 if (seed_y_prev != -1) {
                     // Calculate radius from distance from last seed.
@@ -898,9 +896,9 @@ void Text::resize(int w, int h) {
         e << "Invalid dimensions to resize (" << w << ", " << h << ")";
         throw Text::RenderException(e.str());
     }
-    
+
     ratio_size = false;
-    
+
     if (width != w || height != h) {
         width = w;
         height = h;
@@ -921,7 +919,7 @@ void Text::resize_ratio(float w, float h) {
     height_ratio = h;
 
     int iw, ih;
-    std::pair<int,int> window_size = window->get_size();
+    std::pair<int,int> window_size = window->get_window_size();
     iw = (int)(w * (float)window_size.first);
     ih = (int)(h * (float)window_size.second);
     if (width != iw || height != ih) {
@@ -949,7 +947,7 @@ void Text::move_ratio(float x, float y) {
     y_ratio = y;
 
     int ix, iy;
-    std::pair<int,int> window_size = window->get_size();
+    std::pair<int,int> window_size = window->get_window_size();
     ix = (int)(x * (float)window_size.first);
     iy = (int)(y * (float)window_size.second);
     if (this->x != ix || this->y != iy) {

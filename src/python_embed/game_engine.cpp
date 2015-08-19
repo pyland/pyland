@@ -1,4 +1,5 @@
 #include <glog/logging.h>
+#include <deque>
 
 #include "audio_engine.hpp"
 #include "button.hpp"
@@ -12,7 +13,6 @@
 #include "map_loader.hpp"
 #include "map.hpp"
 #include "text_font.hpp"
-
 
 GameEngine::GameEngine(GUIMain *_gui_main, Challenge *_challenge){
     gui_main = _gui_main;
@@ -45,7 +45,7 @@ std::string GameEngine::get_level_location() {
     //std::string map_name = j["files"]["level_location"];
     //return "test_world/test_level/test_one";
     std::string map_name = challenge->challenge_data->level_location;//"test_world/test_level/test_one";//challenge->challenge_data->map_name;
-    std::cout << "Map is " << challenge->challenge_data->level_location << std::endl;
+    LOG(INFO) << "Getting map " << std::endl;
     return map_name;
 }
 
@@ -53,18 +53,48 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
-void GameEngine::show_dialogue(std::string text, PyObject *options, PyObject *callback) {
-    boost::python::dict   boost_options(boost::python::handle<>(boost::python::borrowed(options)));
-    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+void GameEngine::show_dialogue(std::string text, PyObject *callback) {
 
     if(Engine::is_bar_open()){
         LOG(INFO) << "Replacing the old notification bar with the new one";
         Engine::close_notification_bar();
     }
 
-    LOG(INFO) << "Adding " << text << "to the notification bar";
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
+    LOG(INFO) << "Adding " << text << "to the notification bar with a regular callback";
     Engine::add_text(text);
     Engine::open_notification_bar(boost_callback);
+}
+
+void GameEngine::show_dialogue_with_options(std::string text, PyObject *_boost_options){
+
+    if(Engine::is_bar_open()){
+        LOG(INFO) << "Replacing the old notification bar with the new one";
+        Engine::close_notification_bar();
+    }
+
+    boost::python::dict boost_options(boost::python::handle<>(boost::python::borrowed(_boost_options)));
+
+    std::deque<std::pair<std::string, std::function<void ()> > > options;
+    boost::python::list option_names = boost_options.keys();
+
+    for(int i=0; i<len(option_names); i++){
+        boost::python::extract<std::string> extracted_option_name(option_names[i]);
+        boost::python::object extracted_callback = boost_options[option_names[i]];
+
+        //boost::python::extract is dodgy, so we need to have these intermediate variables for
+        //implicit type casting
+        std::string cpp_option_name = extracted_option_name;
+
+        auto test = [extracted_callback] () { extracted_callback(); };
+
+        options.push_back(std::make_pair(cpp_option_name, test));
+    }
+
+    LOG(INFO) << "Adding " << text << "to the notification bar with options";
+    Engine::add_text(text);
+    Engine::open_notification_bar_with_options(options);
 }
 
 unsigned int GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
@@ -102,8 +132,42 @@ void GameEngine::register_input_callback(int input_key, PyObject *py_input_callb
     return;
 }
 
+void GameEngine::flush_input_callback_list(int input_key) {
+    InputHandler::get_instance()->flush_list(input_key);
+    return;
+}
+
 void GameEngine::play_music(std::string song_name) {
     AudioEngine::get_instance()->play_music("../game/music/" + song_name + ".ogg");
+}
+
+
+void GameEngine::show_py_scripter(){
+    Engine::show_py_scripter();
+}
+
+void GameEngine::hide_py_scripter(){
+    Engine::hide_py_scripter();
+}
+
+void GameEngine::enable_py_scripter(){
+    Engine::enable_py_scripter();
+}
+
+void GameEngine::disable_py_scripter(){
+    Engine::disable_py_scripter();
+}
+
+void GameEngine::enable_script_editing(){
+    Engine::enable_script_editing();
+}
+
+void GameEngine::disable_script_editing(){
+    Engine::disable_script_editing();
+}
+
+void GameEngine::set_py_tabs(int val){
+    Engine::set_py_tabs(val);
 }
 
 void GameEngine::update_world(std::string text){
