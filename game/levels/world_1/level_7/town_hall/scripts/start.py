@@ -1,20 +1,25 @@
 player.focus()
 
-engine.play_music("eery")
+#engine.play_music("eery")
 
-engine.clear_scripter()
+#engine.clear_scripter()
+#engine.disable_py_scripter()
+#engine.set_py_tabs(6)
+#engine.set_ui_colours((0,0,0),(10,10,10))
 
 player.face_east()
 myla.face_east()
 
-def nervous():
-    snake1.face_north(lambda: snake1.wait(2.0, lambda: callback = lambda: snake1.face_south(callback = nervous)))
+player.set_busy(False)
 
-nervous()
+#def nervous():
+#    snake1.face_north(lambda: snake1.wait(2.0, lambda: callback = lambda: snake1.face_south(callback = nervous)))
+
+#nervous()
 
 #snake1.face_north(lambda: snake1.wait(2.0, callback = snake1.face_south))
 
-player.set_busy(True)
+#player.set_busy(True)
 
 dialogue_sequence = [
     lambda callback: engine.show_dialogue("How odd. It's strangely quiet here. This is usually a lively snake town.", callback = callback),

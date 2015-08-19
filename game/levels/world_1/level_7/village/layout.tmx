@@ -21,6 +21,9 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
  <layer name="ground" width="25" height="25">
   <data encoding="base64" compression="zlib">
    eJztwwEJAAAMBKHL+v1DLMdAwVVTVfXVA20a70M=
@@ -28,7 +31,7 @@
  </layer>
  <layer name="foreground" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDFZwn5GB4Q4OfI+ROnbcBZqTw4Ad3x1CdqgME3/Qw46HeNLVAyrZMQpGwSigPQAAa3kieg==
+   eJxjYBgFo2AUDFaQSwBTy44cHHgo2aHCODz8QS87aJ2uRsEoGAW0BwBCxBdz
   </data>
  </layer>
  <objectgroup name="Object Layer 1">

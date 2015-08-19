@@ -274,6 +274,7 @@ MainWindow::MainWindow(GameMain *exGame):
     int width = (gameWidget->width());
     int height = gameWidget->height();
     anyOutput = false;
+    scriptEnabled = true;
     executeIndex = 1;
 
     SDL_SetWindowSize(embedWindow, width, height);
@@ -722,24 +723,29 @@ void MainWindow::timerHandler()
 //Show the entire scripter panel
 void MainWindow::showScripterPanel()
 {
+    scriptEnabled = true;
     splitter->show();
 }
 
 //Hide the entire scripter panel
 void MainWindow::hideScripterPanel()
 {
+    scriptEnabled = false;
     splitter->hide();
 }
 
 //Allow the player to use the entire scripter panel
 void MainWindow::enableScripterPanel()
 {
+    scriptEnabled = true;
     splitter->setEnabled(true);
-    lexer->setPaper(QColor(255,255,255));}
+    lexer->setPaper(QColor(255,255,255));
+}
 
 //Prevent the player from using the entire scripter panel
 void MainWindow::disableScripterPanel()
 {
+    scriptEnabled = false;
     splitter->setEnabled(false);
     lexer->setPaper(QColor(225,223,224));
 }
@@ -787,6 +793,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 //Run the currently open script
 void MainWindow::clickRun()
 {
+    std::cout << "Script enabled is " << scriptEnabled << std::endl;
+    if (!scriptEnabled) return;
     runCode(0);
 }
 
@@ -794,12 +802,13 @@ void MainWindow::clickRun()
 //If zero the currently open script is run
 void MainWindow::runCode(int script)
 {
+    std::cout << "Script enabled is " << scriptEnabled << std::endl;
+    if (!scriptEnabled) return;
     if (script_running)
     {
         setRunning(false);
         updateSpeed();
         InputHandler::get_instance()->run_list(InputHandler::INPUT_HALT);
-        //game->getCallbackState().stop();
         //TODO, create hooks into script-runner to stop the correct script.
     }
     else
@@ -870,6 +879,8 @@ void MainWindow::clickSpeed()
 //Toggle the speed setting
 void MainWindow::toggleSpeed()
 {
+    std::cout << "Script enabled is " << scriptEnabled << std::endl;
+    if (!scriptEnabled) return;
     setFast(!fast);
     updateSpeed();
     setGameFocus();
@@ -879,6 +890,7 @@ void MainWindow::toggleSpeed()
 //Otherwise keep the game at normal speed
 void MainWindow::updateSpeed()
 {
+    if (!scriptEnabled) return;
     if (fast && script_running)
     {
         auto now(std::chrono::steady_clock::now());
