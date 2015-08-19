@@ -1,1 +1,1 @@
-print("Tom")
+move_west()

@@ -20,7 +20,7 @@
 		"level_location" : "/world_1/level_5/maze",
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
-		//"level_location": "/world_one/level_one/main",
+		"level_location": "/world_1/level_3/main",
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
 		"font_location": self.game_folder + "/fonts",
