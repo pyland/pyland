@@ -108,7 +108,6 @@ if not level_state["heidi_has_spoken_about_prank"]:
         lambda callback: heidi.follow(player_one, callback = callback)
     ]
 else:
-    engine.print_terminal("hahah")
     heidi.follow(player_one)
 
 """ end of everything too with heidi asking about the prank """
