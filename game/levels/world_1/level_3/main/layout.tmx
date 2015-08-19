@@ -48,25 +48,42 @@
   <object name="characters/enemies/crocodile/croc_eight" gid="296" x="1920" y="768"/>
   <object name="characters/enemies/crocodile/croc_nine" gid="296" x="1856" y="704"/>
   <object name="characters/enemies/crocodile/croc_ten" gid="296" x="1792" y="640"/>
-  <object name="characters/enemies/crocodile/b2_croc_1" gid="296" x="1536" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_2" gid="296" x="1472" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_3" gid="296" x="1408" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_4" gid="296" x="1344" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_5" gid="296" x="1280" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_6" gid="296" x="1216" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_7" gid="296" x="1152" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_8" gid="296" x="1088" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_9" gid="296" x="1024" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_10" gid="296" x="960" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_11" gid="296" x="896" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_12" gid="296" x="832" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_13" gid="296" x="768" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_14" gid="296" x="704" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_15" gid="296" x="640" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_16" gid="296" x="576" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_17" gid="296" x="512" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_18" gid="296" x="448" y="384"/>
-  <object gid="289" x="1536" y="448"/>
+  <object name="characters/enemies/crocodile/b2_croc_0" gid="296" x="1536" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_1" gid="296" x="1472" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_2" gid="296" x="1408" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_3" gid="296" x="1344" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_4" gid="296" x="1280" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_5" gid="296" x="1216" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_6" gid="296" x="1152" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_7" gid="296" x="1088" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_8" gid="296" x="1024" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_9" gid="296" x="960" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_10" gid="296" x="896" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_11" gid="296" x="832" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_12" gid="296" x="768" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_13" gid="296" x="704" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_14" gid="296" x="640" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_15" gid="296" x="576" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_16" gid="296" x="512" y="384"/>
+  <object name="characters/enemies/crocodile/b2_croc_17" gid="296" x="448" y="384"/>
+  <object name="tile_trigger/t0" gid="289" x="1536" y="448"/>
+  <object name="tile_trigger/t1" gid="298" x="1472" y="448"/>
+  <object name="tile_trigger/t2" gid="298" x="1408" y="448"/>
+  <object name="tile_trigger/t3" gid="298" x="1344" y="448"/>
+  <object name="tile_trigger/t4" gid="298" x="1280" y="448"/>
+  <object name="tile_trigger/t5" gid="298" x="1216" y="448"/>
+  <object name="tile_trigger/t6" gid="298" x="1152" y="448"/>
+  <object name="tile_trigger/t7" gid="298" x="1088" y="448"/>
+  <object name="tile_trigger/t8" gid="298" x="1024" y="448"/>
+  <object name="tile_trigger/t9" gid="298" x="960" y="448"/>
+  <object name="tile_trigger/t10" gid="294" x="896" y="448"/>
+  <object name="tile_trigger/t11" gid="294" x="832" y="448"/>
+  <object name="tile_trigger/t12" gid="294" x="768" y="448"/>
+  <object name="tile_trigger/t13" gid="294" x="704" y="448"/>
+  <object name="tile_trigger/t14" gid="294" x="640" y="448"/>
+  <object name="tile_trigger/t15" gid="294" x="576" y="448"/>
+  <object name="tile_trigger/t16" gid="294" x="512" y="448"/>
+  <object name="tile_trigger/t17" gid="294" x="448" y="448"/>
  </objectgroup>
  <layer name="SpecialLayer" width="37" height="20">
   <data encoding="base64" compression="zlib">

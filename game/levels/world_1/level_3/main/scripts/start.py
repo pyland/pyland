@@ -13,6 +13,7 @@ croc_nine,
 croc_ten]
 
 b2_croc = [
+b2_croc_0,
 b2_croc_1,
 b2_croc_2,
 b2_croc_3,
@@ -29,8 +30,28 @@ b2_croc_13,
 b2_croc_14,
 b2_croc_15,
 b2_croc_16,
-b2_croc_17,
-b2_croc_18,
+b2_croc_17
+]
+
+b2_trigger = [
+t0,
+t1,
+t2,
+t3,
+t4,
+t5,
+t6,
+t7,
+t8,
+t9,
+t10,
+t11,
+t12,
+t13,
+t14,
+t15,
+t16,
+t17
 ]
 
 bridge1_x = 25
@@ -78,14 +99,17 @@ def move_right(croc):
 for croc in b1_croc:
     move_left(croc)
 
-def face_south(croc):
-    croc.face_south(lambda: croc.wait(.3, lambda: face_north(croc)))
-
-def face_north(croc):
-    croc.face_north(lambda: croc.wait(.3, lambda: face_south(croc)))
-
-for i in range(len(b2_croc)):
-    if i%2 == 0:
-        face_south(b2_croc[i])
+def croc_toggle(croc):
+    if croc.is_facing_north():
+            croc.face_south()
     else:
-        face_north(b2_croc[i])
+        croc.face_north()
+
+#t1.player_walked_on = lambda player_object: croc_toggle(b2_croc[0])
+
+for i in range(18):
+    b2_trigger[i].player_walked_on = lambda player_object: croc_toggle(b2_croc[i])
+    #engine.print_terminal(i)
+    #b2_trigger[b].player_walked_on = lambda player_object: engine.print_terminal(i)
+
+engine.print_terminal(i)
