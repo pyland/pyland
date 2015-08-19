@@ -2,7 +2,7 @@ import operator
 import os
 """
 In Python comments,
-could define some standard which the C++ code can use to determine things about it handles 
+could define some standard which the C++ code can use to determine things about it handles
 the python code
 """
 
@@ -26,5 +26,5 @@ As the GameObject is in the base objects folder.
 """
 class Boulder(GameObject):
 
-    def __init__(self):
-        super().__init__()
+    def initialise(self):
+        pass
