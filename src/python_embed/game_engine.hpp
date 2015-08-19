@@ -182,6 +182,9 @@ class GameEngine {
         ///
         void refresh_config();
 
+        /// Adds a callback to the event_manager queue
+        void add_event(PyObject *py_callback);
+
 };
 
 #endif
