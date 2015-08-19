@@ -132,6 +132,7 @@ class Player(Character, ScriptStateContainer):
             script_api["get_position"] = self.get_position
             script_api["get_flag_message"] = self.get_flag_message
 
+            script_api["yell"] = self.yell
             scriptrunner.start(script_api, engine.get_run_script(), self, engine)
         return
 
@@ -239,5 +240,5 @@ class Player(Character, ScriptStateContainer):
                 message = current_object.get_message()
         return message
 
-
-
+    def yell(self):
+        pass

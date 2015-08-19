@@ -11,6 +11,5 @@ class TileTrigger(GameObject):
         self.num_walk = 0
 
     def player_walked_on(self, player_object):
-        self.num_walk += 1
         self.get_engine().print_terminal("I've just been walked on by: " + player_object.get_character_name())
         self.get_engine().print_terminal(self.num_walk)
