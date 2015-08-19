@@ -54,7 +54,7 @@ if not level_state["heidi_has_spoken_about_prank"]:
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_south(callback = callback),
         lambda callback: heidi.face_west(callback = callback),
-        lambda callback: engine.show_dialogue("Heidi: %player_name%!!!!", callback = callback),
+        lambda callback: engine.show_dialogue(engine.get_dialogue(current_level, "heidi_shout_player_name", {"player_name": player_name}), callback = callback),
         lambda callback: heidi.move_west(callback = callback),
         lambda callback: heidi.move_west(callback = callback),
         lambda callback: heidi.move_west(callback = callback),
@@ -69,16 +69,16 @@ if not level_state["heidi_has_spoken_about_prank"]:
     engine.run_callback_list_sequence(
         heidi_introduction_sequence,
         lambda: engine.show_dialogue_with_options(
-            "Today is the big day! You did remember right?",
+            engine.get_dialogue(current_level, "heidi_today_is_big_day"),
             {
-                "Yes": lambda: engine.show_dialogue_with_options(
-                    "Ok, so what are what are we doing today then?",
+                engine.get_dialogue("shared", "yes"): lambda: engine.show_dialogue_with_options(
+                    engine.get_dialogue(current_level, "heidi_question_player_about_day"),
                     {
                         "Ummmmm..."  : lambda: engine.run_callback_list_sequence(heidi_explain_prank_sequence, callback = save_heidi_spoken_about_prank),
                         "Ahhhhhhh...": lambda: engine.run_callback_list_sequence(heidi_explain_prank_sequence, callback = save_heidi_spoken_about_prank)
                     }
                 ),
-                "No" : lambda: engine.run_callback_list_sequence(heidi_explain_prank_sequence, callback = save_heidi_spoken_about_prank)
+                engine.get_dialogue("shared", "no") : lambda: engine.run_callback_list_sequence(heidi_explain_prank_sequence, callback = save_heidi_spoken_about_prank)
             }
         )
     )
