@@ -108,9 +108,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
-    // animate walking in-place TODO: It doesn't actually seem to do this, work out what it does!
-    auto MapObject_test(ObjectManager::get_instance().get_object<MapObject>(id));
-    if (!MapObject_test) {
+    // check if object is solid to know if it cares about solidity of other objects
+    if (object->get_walkability() == Walkability::WALKABLE) {
         VLOG(2) << "ignore if walkable or not";
     } else {
         if (!walkable(target)) { target = location; }

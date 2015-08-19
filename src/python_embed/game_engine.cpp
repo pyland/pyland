@@ -250,4 +250,10 @@ void GameEngine::refresh_config() {
     Config::refresh_config();
 }
 
+void GameEngine::add_event(PyObject *py_callback) {
+    boost::python::object callback(boost::python::handle<>(boost::python::borrowed(py_callback)));
+    EventManager::get_instance()->add_event(callback);
+    return;
+}
+
 

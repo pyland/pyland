@@ -85,6 +85,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("trigger_run",       &GameEngine::trigger_run)
         .def("get_run_script",    &GameEngine::get_run_script)
         .def("is_solid"      ,    &GameEngine::is_solid)
+        .def("add_event"      ,    &GameEngine::add_event)
         .add_static_property("INPUT_UP",  &GameEngine::INPUT_UP) //Add constants for different inputs.
         .add_static_property("INPUT_RIGHT",   &GameEngine::INPUT_RIGHT)
         .add_static_property("INPUT_DOWN",    &GameEngine::INPUT_DOWN)

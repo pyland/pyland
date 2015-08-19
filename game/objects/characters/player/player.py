@@ -196,21 +196,23 @@ class Player(Character, ScriptStateContainer):
         return
 
     def __trigger_action(self):
-        engine = self.get_engine()
-        x, y = self.get_position()
-        if self.is_facing_north():
-            y += 1
-        elif self.is_facing_east():
-            x += 1
-        elif self.is_facing_south():
-            y += -1
-        elif self.is_facing_west():
-            x += -1
+        if(not self.is_busy()):
+            engine = self.get_engine()
+            x, y = self.get_position()
+            if self.is_facing_north():
+                y += 1
+            elif self.is_facing_east():
+                x += 1
+            elif self.is_facing_south():
+                y += -1
+            elif self.is_facing_west():
+                x += -1
 
-        game_objects = engine.get_objects_at((x, y))
-        for game_object in game_objects:
-            if(hasattr(game_object, "player_action")):
-                game_object.player_action(self)
+            game_objects = engine.get_objects_at((x, y))
+            for game_object in game_objects:
+                if(hasattr(game_object, "player_action")):
+                    game_object.player_action(self)
+        return
 
 
     def __trigger_walk_on(self):

@@ -42,6 +42,5 @@
  <objectgroup name="Object Layer 1" width="26" height="20">
   <object name="characters/player/player_one" gid="286" x="1152" y="512"/>
   <object name="characters/npcs/heidi/heidi" gid="291" x="1600" y="576"/>
-  <object name="sign/route_sign" gid="288" x="1344" y="512"/>
  </objectgroup>
 </map>

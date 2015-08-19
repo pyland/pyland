@@ -114,7 +114,7 @@ class Character(GameObject):
         sprite_location = self.get_sprite()
         sprite_location = sprite_location[0 : sprite_location.rfind("/") + 1] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
         self.set_sprite(sprite_location + direction) #sprites are now looked for in direction folder :)
-        callback()
+        engine.add_event(callback)
         return
 
     """ Says if the character is facing north """
@@ -196,4 +196,5 @@ class Character(GameObject):
         sprite_location = sprite_location[sprite_location.rfind("/"): ]
         self.set_sprite(state + sprite_location)
         return
+
 
