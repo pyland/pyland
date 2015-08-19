@@ -163,8 +163,9 @@ GameMain::GameMain(int &argc, char **argv):
     {
         if(Engine::is_bar_open()){
             gui.proceed_notification_bar();
+        } else {
+            InputHandler::get_instance()->run_list(InputHandler::INPUT_ACTION);
         }
-        InputHandler::get_instance()->run_list(InputHandler::INPUT_ACTION);
     }
     ));
 
