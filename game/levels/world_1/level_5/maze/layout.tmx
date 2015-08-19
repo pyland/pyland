@@ -31,18 +31,18 @@
  </layer>
  <layer name="Decor" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt00EKgzAQBdAc1QP0/uuuxFRUbNpxYnwfHpSAma9Dp1LKBACw0prs3iNoydFdWe/B9l6ze4yuHJzXiZodPeMu5tS/y+o8cm7kjLuo84S52c687zqRXaJn9GYrvXTK7nEHcyLujLi7R71n4rK97j2f0b8XUflHp1/u4HjPrXdkv8eozmTvuezuT1W+POeancypz7J78bmf7B4s+8jugF30qHTQgSXZPQAAAAAAAAAAAIA2rwbZnSGb/4fvDgAAAAAAAAAAAAAAAAAAAAAAo3gDw8FjFw==
+   eJzt01sKgzAQBdAs1QW4/+/+VJpaFR8dJ+oZONAGTG682JVSOgCAkb2TnfsO9szSXln3YLrX7Bx3VxbW64k6O/qMqxim/l1G65HnRp5xFfU84dxsa+47nsgs0We0ZmpayZSd4wqGidgzYu8WtT4dp/U693xG/lZEzT8yHdmD5Z737pF9j7taM3PPZWd/qrJxnXM6GaZey87Fdz/ZOfj0kZ0BXbSoNJCBz2TnAAAAAAAAAIA9+rfsHPx2oZe2utBHbh9L/zm3C99Gvr7oIkJ/wNQ+2fd5url+iHvPW74T4t57djYAAAAAAAAAAAAAAAAAAAAAALiqF2HOZIs=
   </data>
  </layer>
  <layer name="SpecialLayer" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt07EJAEAIBEGxLvuv6/PPBMHAGdgGDi4CAAAAAAAAAAAAAAAAAAAAAAAAAPhV9oPr/GOH3QEAAAAAAAAAAAAAAAAAAAAAYN4DgqMGiw==
+   eJzt0zEKgDAQRNHgubz/uSyCoCEp1IWxeA+2TTGftAYAAAAAAAAAAAAAAAAAAAAAAHf71o+8sYUuObMWeuSM22uR42/8w7m7FrWuuz692TtkrfpQ6+0/4Rs7AwAAAAAAAAAAAAAAAAAAAABAvQOy3Q4N
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="100" height="100">
   <object name="characters/player/player_one" gid="286" x="64" y="3456"/>
-  <object name="characters/npcs/heidi/heidi" gid="291" x="64" y="3392"/>
-  <object name="checkpoint/checkpoint_one" gid="292" x="640" y="3392"/>
+  <object name="characters/npcs/myla/myla" gid="291" x="64" y="3392"/>
+  <object name="tile_trigger/trigger_one" gid="292" x="640" y="3392"/>
   <object name="boulder/boulder_one" gid="288" x="576" y="3392"/>
  </objectgroup>
 </map>
