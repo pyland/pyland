@@ -34,9 +34,6 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
     this->animating = false;
 
     this->current_frame = 0;
-
-
-
 }
 
 //A dummy function for testing callbacks in python, TODO: once this has been refered to to implement an even-driven callback system, remove this!!!
@@ -87,14 +84,18 @@ bool Entity::is_moving() {
     return object->is_moving();
 }
 
-void Entity::set_solidity(bool solidity) {
+void Entity::set_solidity(bool solidity, PyObject *callback) {
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
     auto id = this->id;
     Walkability w;
     if (solidity) w = Walkability::BLOCKED;
     else w = Walkability::WALKABLE;
-    EventManager::get_instance()->add_event([w, id] () {
+    EventManager::get_instance()->add_event([w, id, boost_callback] () {
         auto object(ObjectManager::get_instance().get_object<MapObject>(id));
         object->set_walkability(w);
+        EventManager::get_instance()->add_event(boost_callback);
     });
 }
 
@@ -136,14 +137,17 @@ std::string Entity::get_sprite() {
 
 
 //THE TWO METHODS BELOW NEED TO BE REALLY OPTIMISED TO USE THE CACHE!!!!!!! (LOOK AT MapObject::set_tile)
-void Entity::set_sprite(std::string sprite_location) {
+void Entity::set_sprite(std::string sprite_location, PyObject *callback) {
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
     this->sprite_location = sprite_location; //TODO: Make this method safe, make it so that if the sprite location doesn't exist the game gracefully handles it.
     int id = this->id;
     std::string file_location = this->file_location;
     EventManager *em = EventManager::get_instance();
-    em->add_event([id, sprite_location, file_location] () { //put changing the player tile on the event queue
+    em->add_event([id, sprite_location, file_location, boost_callback] () { //put changing the player tile on the event queue
         auto object = ObjectManager::get_instance().get_object<MapObject>(id);
         object->set_tile("../game/objects/" + file_location + "/sprites/" + sprite_location + "/0.png");
+        EventManager::get_instance()->add_event(boost_callback);
     });
     return;
 }

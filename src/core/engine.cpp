@@ -270,7 +270,7 @@ void Engine::add_text(std::string text) {
 }
 
 void Engine::open_notification_bar(std::function<void ()> func){
-
+    disable_py_scripter();
     EventManager::get_instance()->add_event([func] {
         gui_main->open_notification_bar(func);
     });
@@ -278,7 +278,7 @@ void Engine::open_notification_bar(std::function<void ()> func){
 }
 
 void Engine::open_notification_bar_with_options(std::deque<std::pair <std::string, std::function<void ()> > > options){
-
+    disable_py_scripter();
     EventManager::get_instance()->add_event([options] {
         gui_main->open_notification_bar_with_options(options);
     });
@@ -289,6 +289,7 @@ void Engine::close_notification_bar(){
 
     EventManager::get_instance()->add_event([] {
         gui_main->close_notification_bar();
+        enable_py_scripter();
     });
 
 }

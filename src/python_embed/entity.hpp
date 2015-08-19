@@ -124,7 +124,7 @@ class Entity {
         /// @param sprite_location
         /// 	Location of the sprite that you want displayed (relative to the oject's sprites folder, (eg main/north))
         ///
-        void set_sprite(std::string sprite_location);
+        void set_sprite(std::string sprite_location, PyObject *callback);
 
         ///
         /// Make the object start animating, cycles through all the numbered png's in the sprite folder set
@@ -158,7 +158,7 @@ class Entity {
         /// @param solidity
         ///     Whether you want the object to be solid (true) or not solid (false)
         ///
-        void set_solidity(bool solidity);
+        void set_solidity(bool solidity, PyObject *callback);
 
         ///
         /// Return the solidity of the object
@@ -205,18 +205,18 @@ class Entity {
 
         ///
         /// Get the id of the Entity. (The id being what is used to look up instances of the MapObject)
-        /// 
+        ///
         /// @return
         ///     The id of the MapObject the Entity is associated with.
-        /// 
+        ///
         int get_id();
 
         ///
         /// Get the position of the Entity on the map as a python tuple.
-        /// 
+        ///
         /// @return
         ///     The position of the Entity
-        /// 
+        ///
         py::tuple get_position();
 };
 
