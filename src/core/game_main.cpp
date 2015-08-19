@@ -49,13 +49,14 @@ GameMain::GameMain(int &argc, char **argv):
 
     embedWindow(argc, argv, this),
     interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
-    gui(&embedWindow),
     callbackstate(),
     em(EventManager::get_instance()),
-    tile_identifier_text(&embedWindow, Engine::get_game_font(), false)
+    tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
+    changing_challenge(false)
 
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
+    gui = new GUIMain(&embedWindow);
 
     Config::json j = Config::get_instance();
     /// CREATE GLOBAL OBJECTS
@@ -69,11 +70,11 @@ GameMain::GameMain(int &argc, char **argv):
     {
         LOG(INFO) << "GUI resizing";
 
-        auto window_size = (*game_window).get_resolution();
+        auto window_size = game_window->get_resolution();
 
-        gui.get_gui_window()->set_width_pixels(window_size.first);
-        gui.get_gui_window()->set_height_pixels(window_size.second);
-        gui.refresh_gui();
+        gui->get_gui_window()->set_width_pixels(window_size.first);
+        gui->get_gui_window()->set_height_pixels(window_size.second);
+        gui->refresh_gui();
 
         original_window_size = window_size;
     };
@@ -98,7 +99,7 @@ GameMain::GameMain(int &argc, char **argv):
     // WARNING: Fragile reference capture
     map_resize_lifeline = embedWindow.register_resize_handler([&] (GameWindow *)
     {
-        gui.get_map_viewer()->resize();
+        gui->get_map_viewer()->resize();
     });
 
     up_callback = input_manager->register_keyboard_handler(filter(
@@ -162,7 +163,7 @@ GameMain::GameMain(int &argc, char **argv):
     [&] (KeyboardInputEvent)
     {
         if(Engine::is_bar_open()){
-            gui.proceed_notification_bar();
+            gui->proceed_notification_bar();
         } else {
             InputHandler::get_instance()->run_list(InputHandler::INPUT_ACTION);
         }
@@ -237,8 +238,7 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("9")},
     [&] (KeyboardInputEvent)
     {
-        change_challenge("intro");
-        //InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_NINE);
     }
     ));
 
@@ -246,7 +246,7 @@ GameMain::GameMain(int &argc, char **argv):
     {MOUSE_RELEASE},
     [&] (MouseInputEvent event)
     {
-        gui.get_gui_manager()->mouse_callback_function(event);
+        gui->get_gui_manager()->mouse_callback_function(event);
     }));
 
     for (unsigned int i=0; i<10; ++i)
@@ -318,7 +318,7 @@ GameMain::GameMain(int &argc, char **argv):
     challenge_data = (new ChallengeData(
                           "",
                           &interpreter,
-                          gui.get_gui_manager(),
+                          gui->get_gui_manager(),
                           &embedWindow,
                           input_manager
                         ));
@@ -328,7 +328,7 @@ GameMain::GameMain(int &argc, char **argv):
     //challenge->start();
 
     last_clock = (std::chrono::steady_clock::now());
-    gui.refresh_gui();
+    gui->refresh_gui();
 
     //test_world/yingischallenged/main
     //change_challenge("intro");
@@ -359,7 +359,47 @@ GameMain::~GameMain()
 
 void GameMain::game_loop(bool showMouse)
 {
-    if (!challenge_data->game_window->check_close() && challenge_data->run_challenge && run_game)
+    if(changing_challenge) {
+        change_challenge(next_challenge);
+        challenge_data->run_challenge = false;
+        em->flush_and_disable(interpreter.interpreter_context);
+        delete challenge;
+        {
+            lock::GIL raii_gil(interpreter.interpreter_context);
+            delete gui;
+            InputHandler::get_instance()->flush_all();
+        }
+        gui = new GUIMain(&embedWindow);
+
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TOGGLE_SPEED, Engine::trigger_speed);
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_CURRENT_SCRIPT, [] () {Engine::trigger_run(0); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_ONE, [] () {Engine::trigger_run(1); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TWO, [] () {Engine::trigger_run(2); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_THREE, [] () {Engine::trigger_run(3); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_FOUR, [] () {Engine::trigger_run(4); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_FIVE, [] () {Engine::trigger_run(5); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SIX, [] () {Engine::trigger_run(6); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SEVEN, [] () {Engine::trigger_run(7); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_EIGHT, [] () {Engine::trigger_run(8); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_NINE, [] () {Engine::trigger_run(9); });
+        InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SWITCH, Engine::focus_next);
+
+        em->reenable();
+        Challenge *challenge(nullptr);
+
+        Config::json j = Config::get_instance();
+        std::string level_folder = j["files"]["level_folder"];
+        challenge_data->map_name = level_folder + next_challenge + "/layout.tmx";
+        challenge_data->level_location = next_challenge;
+        challenge = new Challenge(challenge_data, gui);
+        Engine::set_challenge(challenge);
+        
+        callbackstate.stop();
+        challenge_data->run_challenge = true;
+
+        changing_challenge = false;
+    }
+    else if ((!challenge_data->game_window->check_close()) && challenge_data->run_challenge && run_game)
     {
         //std::cout << "running game loop" << std::endl;
 
@@ -424,75 +464,14 @@ Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
     std::string level_folder = j["files"]["level_folder"];
     challenge_data->map_name = level_folder + challenge_name + "/layout.tmx";
     challenge_data->level_location = challenge_name;
-    challenge = new Challenge(challenge_data, &gui);
+    challenge = new Challenge(challenge_data, gui);
 
     return challenge;
 }
 
 void GameMain::change_challenge(std::string map_location) {
-
-    run_game = false;
-
-    std::cout << "Changing map to" << map_location << std::endl;
-
-    //changing_challenge = true;
-
-    //challenge->event_finish.trigger(0);
-
-    std::cout << "Got 0.1" << std::endl;
-
-    challenge_data->run_challenge = false;
-
-    std::cout << "Got 0.2" << std::endl;
-
-    //em->flush_and_disable(interpreter.interpreter_context);
-
-    std::cout << "Got 0.3" << std::endl;
-
-    delete challenge;
-
-    std::cout << "Got 0.4" << std::endl;
-
-    //em->reenable();
-
-    std::cout << "Got 1" << std::endl;
-
-    //challenge_data->run_challenge = true;
-
-    std::cout << "Got 2" << std::endl;
-
-    Challenge *challenge(nullptr);
-
-    std::cout << "Got 3" << std::endl;
-
-    Config::json j = Config::get_instance();
-
-    std::cout << "Got 3.1" << std::endl;
-
-    std::string level_folder = j["files"]["level_folder"];
-
-    std::cout << "Got 3.2" << std::endl;
-
-    challenge_data->map_name = level_folder + map_location + "/layout.tmx";
-    challenge_data->level_location = map_location;
-
-    std::cout << "Got 3.3" << std::endl;
-
-    challenge = new Challenge(challenge_data, &gui);
-
-    std::cout << "Got 3.4" << std::endl;
-
-    Engine::set_challenge(challenge);
-
-
-
-    callbackstate.stop();
-
-    challenge_data->run_challenge = true;
-
-    std::cout << "Got 4" << std::endl;
-
-    //changing_challenge = false;
+    next_challenge = map_location;
+    changing_challenge = true; //Changing the challenge is handled in the main game loop so look there
 }
 
 GameWindow* GameMain::getGameWindow()
@@ -510,5 +489,5 @@ std::chrono::steady_clock::time_point GameMain::get_start_time(){
 
 //Switch the focus to the next playable object
 void GameMain::focus_next(){
-    gui.click_next_player();
+    gui->click_next_player();
 }

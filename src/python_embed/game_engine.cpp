@@ -22,8 +22,6 @@ GameEngine::GameEngine(GUIMain *_gui_main, Challenge *_challenge){
 
 
 void GameEngine::change_map(std::string map_location) {
-    //TODO: run the finish.py script of a level.
-    //challenge
     Engine::change_map(map_location);
     LOG(INFO) << "Changing level to " << map_location;
     return;
