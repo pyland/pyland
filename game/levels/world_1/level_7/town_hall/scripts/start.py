@@ -48,3 +48,4 @@ dialogue_sequence = [
 
 engine.run_callback_list_sequence(dialogue_sequence)
 
+engine.enable_py_scripter()

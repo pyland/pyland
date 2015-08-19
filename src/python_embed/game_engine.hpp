@@ -101,6 +101,7 @@ class GameEngine {
         /// Register a callback against a given input
         ///
         void register_input_callback(int input_key, PyObject *input_callback);
+        void flush_input_callback_list(int input_key);
 
         ///
         /// Play a given song from the music folder
