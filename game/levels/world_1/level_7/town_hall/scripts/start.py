@@ -1,13 +1,25 @@
 player.focus()
 
-engine.play_music("eery")
+#engine.play_music("eery")
 
-engine.clear_scripter()
+#engine.clear_scripter()
+#engine.disable_py_scripter()
+#engine.set_py_tabs(6)
+#engine.set_ui_colours((0,0,0),(10,10,10))
 
 player.face_east()
 myla.face_east()
 
-player.set_busy(True)
+player.set_busy(False)
+
+#def nervous():
+#    snake1.face_north(lambda: snake1.wait(2.0, lambda: callback = lambda: snake1.face_south(callback = nervous)))
+
+#nervous()
+
+#snake1.face_north(lambda: snake1.wait(2.0, callback = snake1.face_south))
+
+#player.set_busy(True)
 
 dialogue_sequence = [
     lambda callback: engine.show_dialogue("How odd. It's strangely quiet here. This is usually a lively snake town.", callback = callback),
@@ -20,6 +32,7 @@ dialogue_sequence = [
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
+    lambda callback: myla.wait(0.5, callback),
     lambda callback: engine.show_dialogue("Lets go in.", callback = callback),
     #lambda callback: camera.wait(0.2, callback = callback),
     #lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback = callback),
@@ -35,3 +48,4 @@ dialogue_sequence = [
 
 engine.run_callback_list_sequence(dialogue_sequence)
 
+engine.enable_py_scripter()
