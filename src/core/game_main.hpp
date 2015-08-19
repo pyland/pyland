@@ -91,6 +91,9 @@ public:
     //Variable to run/stop the game
     bool run_game;
 
+    //A variable to hold the name of the player currently playing, used to keep track of game saves
+    std::string player_name;
+
     GameMain(int &argc, char **argv);
     ~GameMain();
 

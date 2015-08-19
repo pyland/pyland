@@ -19,6 +19,7 @@ class Engine:
     conn = dict()
 
     __settings = None
+    __game_save = None
 
     def get_dialogue(self, level_name, identifier, escapes = dict()):
         """ Get the piece of dialoge requested form the database.
@@ -182,6 +183,31 @@ class Engine:
         self.refresh_config()
         return
 
+    def get_player_data(self, name):
+        "get the player's save"
+        if not self.__game_save:
+            save_string = ""
+            with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
+                save_string = save_file.read()
+            self.__game_save = json.loads(save_string)["player_saves"][name]
+        return self.__game_save
+
+    def save_player_data(self, name, game_save):
+        """save the player's save""" #TODO: add resiliency!!!!
+        self.__game_save = game_save
+        save_file_string = ""
+        with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
+            save_file_string = save_file.read()
+
+        save_json = json.loads(save_file_string)
+        save_json["player_saves"][name] = game_save
+
+        with open(self.get_config()['files']['game_save_location'], 'w', encoding="utf8") as save_file:
+            json.dump(save_json, save_file, indent=4, separators=(',', ': '))
+
+        self.refresh_config()
+        return
+
     def set_ui_colours(self, colour_one, colour_two):
         r1, g1, b1 = colour_one
         r2, g2, b2, = colour_two
@@ -251,6 +277,6 @@ class Engine:
         callback()
 
     def change_map(self, map_name):
-        self.__cpp_engine.change_map("/world_1/level_1/rossumberg")
+        self.__cpp_engine.change_map(map_name)
         raise
 

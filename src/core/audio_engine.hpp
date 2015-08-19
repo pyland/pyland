@@ -52,6 +52,7 @@ private:
 
     Mix_Music *music; //a pointer to the music object
     bool audio_open;  //if the audio player is currently open.
+    std::string currently_playing;
 
 };
 

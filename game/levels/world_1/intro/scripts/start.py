@@ -69,7 +69,7 @@ def confirm_name():
     engine.show_dialogue_with_options(
         engine.get_dialogue(level_name, "confirm_player_name", {"player_name": player_name}),
         {
-            "Yes": lambda: engine.run_callback_list_sequence(name_confirmed_sequence),
+            "Yes": lambda: engine.run_callback_list_sequence(name_confirmed_sequence, lambda: engine.change_map("/world_1/level_1/player_house")), #change the level once the intro has finished
             "No" : lambda: engine.run_callback_list_sequence(name_wrong_sequence, confirm_name)
         }
     )

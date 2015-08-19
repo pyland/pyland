@@ -1,5 +1,12 @@
 {
-    "player_saves": {},
+    "player_saves": {
+        "moosichu": {
+            "current_level": "/world_1/level_1/rossumberg",
+            "level_states": {
+                "/world_1/level_1/rossumberg": {}
+            }
+        }
+    },
     "settings": {
         "check": "wahahah",
         "language": "english"

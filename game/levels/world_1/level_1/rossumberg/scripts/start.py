@@ -5,8 +5,13 @@ engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in 
 
 engine.disable_py_scripter()
 
-heidi.wait(2.0, lambda: engine.change_map("/world_1/level_1/rossumberg"))
+""" set_up being able to change maps """
+def go_to_house(player_object):
+    engine.change_map("/world_1/level_1/player_house")
 
+exit_to_house.player_walked_on = go_to_house
+
+engine.print_terminal(engine.get_player_name())
 
 """ Heidi introducing herself and walking over to the player """
 heidi_introduction_sequence = [

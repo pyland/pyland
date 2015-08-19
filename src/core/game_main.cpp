@@ -52,7 +52,8 @@ GameMain::GameMain(int &argc, char **argv):
     callbackstate(),
     em(EventManager::get_instance()),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
-    changing_challenge(false)
+    changing_challenge(false),
+    player_name("")
 
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
@@ -371,6 +372,7 @@ void GameMain::game_loop(bool showMouse)
         }
         gui = new GUIMain(&embedWindow);
 
+        //TODO: move this out to python, as this doesn't need to be done here and in the contstructor
         InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TOGGLE_SPEED, Engine::trigger_speed);
         InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_CURRENT_SCRIPT, [] () {Engine::trigger_run(0); });
         InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_ONE, [] () {Engine::trigger_run(1); });
