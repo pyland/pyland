@@ -157,6 +157,10 @@ private:
     //it determine if output separate lines are needed
     bool anyOutput;
 
+    //Specifies whether the Pyscripter can be run/halted/have its speed changed
+    //(to prevent keybindings controlling it when the scripter is disabled)
+    bool scriptEnabled;
+
     //Index of the script to be executed
     int executeIndex;
 
