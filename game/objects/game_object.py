@@ -81,20 +81,24 @@ class GameObject:
     def set_visible(self, visible):
         return
 
-    def start_animating(self):
+    #TODO: Make it so that the callbacks of the following methods get passed into c++ so they are put on the event queue as opposed to being run from Python!
+    def start_animating(self, callback = lambda: None):
         #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
         self.__entity.start_animating()
+        callback()
         return
 
-    def stop_animating(self):
+    def stop_animating(self, callback = lambda: None):
         """ Stops animating the object, reseting it back to the first frame. """
         self.pause_animating()
         self.__entity.set_animation_frame(0) #set animation back to first frame
+        callback()
         return
 
-    def pause_animating(self):
+    def pause_animating(self, callback = lambda: None):
         """ Pauses the animation of the object, displaying the current frame it's on. """
         self.__entity.pause_animating()
+        callback()
         return
 
     def get_number_of_animation_frames(self):

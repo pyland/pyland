@@ -1,1 +1,4 @@
-move_east()
+print("Tom")
+
+while True:
+  move_east()

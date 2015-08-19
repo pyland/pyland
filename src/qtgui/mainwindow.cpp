@@ -244,7 +244,7 @@ MainWindow::MainWindow(GameMain *exGame):
 
     mainWidget->setAutoFillBackground(true);
 
-    mainWidget->setMinimumSize(1080,756);
+    mainWidget->setMinimumSize(int(1080.0f*0.6),int(756.0f*0.6));
 
     this->setContextMenuPolicy(Qt::NoContextMenu);
     this->setCentralWidget(mainWidget);
@@ -793,8 +793,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 //Run the currently open script
 void MainWindow::clickRun()
 {
-    std::cout << "Script enabled is " << scriptEnabled << std::endl;
-    if (!scriptEnabled) return;
     runCode(0);
 }
 
@@ -802,7 +800,6 @@ void MainWindow::clickRun()
 //If zero the currently open script is run
 void MainWindow::runCode(int script)
 {
-    std::cout << "Script enabled is " << scriptEnabled << std::endl;
     if (!scriptEnabled) return;
     if (script_running)
     {
@@ -879,7 +876,6 @@ void MainWindow::clickSpeed()
 //Toggle the speed setting
 void MainWindow::toggleSpeed()
 {
-    std::cout << "Script enabled is " << scriptEnabled << std::endl;
     if (!scriptEnabled) return;
     setFast(!fast);
     updateSpeed();
@@ -890,7 +886,6 @@ void MainWindow::toggleSpeed()
 //Otherwise keep the game at normal speed
 void MainWindow::updateSpeed()
 {
-    if (!scriptEnabled) return;
     if (fast && script_running)
     {
         auto now(std::chrono::steady_clock::now());

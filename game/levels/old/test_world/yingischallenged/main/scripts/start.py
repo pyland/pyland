@@ -8,16 +8,16 @@ c1 = (255, 255, 255)
 c2 = (245, 245, 245)
 engine.set_ui_colours(c1, c2)
 engine.set_py_tabs(3)
-engine.disable_py_scripter()
+#engine.disable_py_scripter()
 #engine.print_terminal("Switching level")
 #engine.change_map("test_world/yingischallenged/main_2")
 
 print(engine.print_terminal(engine.get_script()))
 
 engine.clear_scripter()
-engine.insert_to_scripter("howdy")
-engine.insert_to_scripter("partner")
-engine.insert_to_scripter("print(<Your name here>)")
+#engine.insert_to_scripter("howdy")
+#engine.insert_to_scripter("partner")
+#engine.insert_to_scripter("print(<Your name here>)")
 
 engine.update_world("Jungle")
 engine.update_level("Third")
@@ -36,7 +36,7 @@ coconut_seven.set_weight(64)
 
 coconut_one.set_solidity(False);
 
-engine.print_terminal(coconut_one.get_weight(), False)
+#engine.print_terminal(coconut_one.get_weight(), False)
 
 #player_9000 = engine.create_object("characters/enemies/crocodile", "player_9000", (10, 10))
 
