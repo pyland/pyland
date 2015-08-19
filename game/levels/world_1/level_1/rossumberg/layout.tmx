@@ -31,7 +31,7 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
-  <object name="characters/player/player_one" gid="191" x="1152" y="512"/>
+  <object name="characters/player/player_one" gid="191" x="1152" y="448"/>
   <object name="characters/npcs/heidi/heidi" gid="196" x="1600" y="576"/>
   <object name="sign/route_sign" gid="193" x="1344" y="512"/>
   <object name="tile_trigger/exit_to_house" gid="197" x="1152" y="448"/>
