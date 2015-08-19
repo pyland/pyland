@@ -66,6 +66,7 @@
   <object name="characters/enemies/crocodile/b2_croc_16" gid="296" x="576" y="384"/>
   <object name="characters/enemies/crocodile/b2_croc_17" gid="296" x="512" y="384"/>
   <object name="characters/enemies/crocodile/b2_croc_18" gid="296" x="448" y="384"/>
+  <object gid="289" x="1536" y="448"/>
  </objectgroup>
  <layer name="SpecialLayer" width="37" height="20">
   <data encoding="base64" compression="zlib">

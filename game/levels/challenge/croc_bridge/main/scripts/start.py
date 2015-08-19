@@ -1,6 +1,6 @@
 player_one.focus()
 
-all_croc = [
+b1_croc = [
 croc_one,
 croc_two,
 croc_three,
@@ -11,7 +11,27 @@ croc_seven,
 croc_eight,
 croc_nine,
 croc_ten]
-#croc_eleven]
+
+b2_croc = [
+b2_croc_1,
+b2_croc_2,
+b2_croc_3,
+b2_croc_4,
+b2_croc_5,
+b2_croc_6,
+b2_croc_7,
+b2_croc_8,
+b2_croc_9,
+b2_croc_10,
+b2_croc_11,
+b2_croc_12,
+b2_croc_13,
+b2_croc_14,
+b2_croc_15,
+b2_croc_16,
+b2_croc_17,
+b2_croc_18,
+]
 
 bridge1_x = 25
 
@@ -55,5 +75,17 @@ def move_right(croc):
         croc.move_east(lambda: move_right(croc))
 
 
-for croc in all_croc:
+for croc in b1_croc:
     move_left(croc)
+
+def face_south(croc):
+    croc.face_south(lambda: croc.wait(.3, lambda: face_north(croc)))
+
+def face_north(croc):
+    croc.face_north(lambda: croc.wait(.3, lambda: face_south(croc)))
+
+for i in range(len(b2_croc)):
+    if i%2 == 0:
+        face_south(b2_croc[i])
+    else:
+        face_north(b2_croc[i])
