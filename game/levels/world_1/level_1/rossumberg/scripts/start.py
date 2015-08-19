@@ -97,7 +97,7 @@ if not level_state["heidi_has_spoken_about_prank"]:
         lambda callback: heidi.wait(0.5, callback = callback),
         lambda callback: engine.show_dialogue("Hahahahahahahahahahaha!", callback = callback),
         lambda callback: heidi.start_animating(callback = callback),
-        lambda callback: engine.show_dialogue("MWAHAHAHAHAHAHAHAHAHAHAHAHA!", callback = callback),
+        lambda callback: engine.show_dialogue("MWAHAHAHAHAHAHAHAHAHAHAHAHA!!!", callback = callback),
         lambda callback: heidi.wait(0.5, callback = callback),
         lambda callback: heidi.stop_animating(callback = callback),
         lambda callback: heidi.wait(0.5, callback = callback),
