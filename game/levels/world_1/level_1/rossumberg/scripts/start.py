@@ -58,6 +58,7 @@ heidi_explain_prank_sequence = [
     lambda callback: engine.show_dialogue("Oops, sorry, got a bit carried away there. Anyway, let's head east to the merchant! He has all the stuff we need, then you can go to the bog to get the dirty bog water!", callback = callback),
     lambda callback: player_one.set_busy(False, callback = callback),
     lambda callback: follow_player(heidi, callback = callback)
+    #lambda callback: heidi.follow(player_one, callback = callback)
 ]
 
 
@@ -71,6 +72,7 @@ route_sign.set_message("(east) merchant \n(east) bog")
 
 
 def follow_player(character, callback = lambda: None):
+    """ Basic AI for the argument character to follow the player """
     xP, yP = player_one.get_position()
     xC, yC = character.get_position()
     xD, yD = (xP - xC, yP - yC)
@@ -128,5 +130,3 @@ def follow_player(character, callback = lambda: None):
             character.face_south(callback = lambda: character.wait(0.3, callback = lambda: follow_player(character)))
         else:
             character.wait(0.3, callback = lambda: follow_player(character))
-    
-
