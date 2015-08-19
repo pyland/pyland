@@ -31,12 +31,12 @@
  </layer>
  <layer name="Decor" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt01sKgzAQBdAs1QW4/+/+VJpaFR8dJ+oZONAGTG682JVSOgCAkb2TnfsO9szSXln3YLrX7Bx3VxbW64k6O/qMqxim/l1G65HnRp5xFfU84dxsa+47nsgs0We0ZmpayZSd4wqGidgzYu8WtT4dp/U693xG/lZEzT8yHdmD5Z737pF9j7taM3PPZWd/qrJxnXM6GaZey87Fdz/ZOfj0kZ0BXbSoNJCBz2TnAAAAAAAAAIA9+rfsHPx2oZe2utBHbh9L/zm3C99Gvr7oIkJ/wNQ+2fd5url+iHvPW74T4t57djYAAAAAAAAAAAAAAAAAAAAAALiqF2HOZIs=
+   eJzt2luOgzAMhWEvNQtg/88VDxGZiKA2g+0T+C19Ko3U2HBaNJcWMysAAACd2cqe+wlm6mqvrPPAea7ZczydXay35dXbu8cqarXH1q179vXssYq23tA32zfn25fnLN491JyVykzZc6yglseeHnsrUq+CsFxHr8+YX4VX3THTf/bAdc6ze2Sfx1N9U6PXZc/+VvbjOmIyqdWuZc+Fv/lkz4Ejj+wZQBaKTGAGHJU9BwAAb7R1sud5u21wDPIAeaghDy01AzPyUEAeWrhfaSEPLeShhTy0kIcW8tBCHloi8tjMd/+n2Guzo8hDI4/6nDxys9gr4u8lbR5kMs5jf4y8X9Uenr1W1P+Ptla/fqe+79kc2dclWp9BsaNK84j56zrzPq1qtc/7XmdrXrPf2Wclo+sQcb8ygfOPMvM5ifx51xx7ZLrzM8/vH1rIQwt5aInIA+SxKvLQQh5ayEMLeWghDy3koYU8tJCHFvLQQh5ayEMLeWghDy18pwAAAAAAAAAAAAAAAAAAAAC49gEos2HH
   </data>
  </layer>
  <layer name="SpecialLayer" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt0zEKgDAQRNHgubz/uSyCoCEp1IWxeA+2TTGftAYAAAAAAAAAAAAAAAAAAAAAAHf71o+8sYUuObMWeuSM22uR42/8w7m7FrWuuz692TtkrfpQ6+0/4Rs7AwAAAAAAAAAAAAAAAAAAAABAvQOy3Q4N
+   eJzt2lEKgkAAQEHpXN3/XH1FJmRQ5r50BhbED1GeuyI6TQAAAAAAAAAAAAAAcCzXy/NgrHkDPcbTo0WPFj1a9GjRo0WPFj1a9GjRo0WPFj1a9GjZo8f9uHq/p0eLHi1799Bk3Z495tu6PLz6Rrvcv+VYHn/tPM7izNf+S9/ep9VzP6uR69WZfDJPRj3Pj2TLOe/9o0WPFj1ajr62/xs9WvRo0aNFjxY9WvRo0aNFjxY9WvRo0aNFjxY9WvRo8U8BAAAAAAAAAAAAAKy7AT8NMiM=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="100" height="100">
@@ -44,5 +44,11 @@
   <object name="characters/npcs/myla/myla" gid="291" x="64" y="3392"/>
   <object name="tile_trigger/trigger_one" gid="292" x="640" y="3392"/>
   <object name="boulder/boulder_one" gid="288" x="576" y="3392"/>
+  <object name="sign/sign_one" gid="287" x="1280" y="3328"/>
+  <object name="sign/sign_two" gid="287" x="2816" y="3328"/>
+  <object name="characters/npcs/generic/helper_one" gid="291" x="2944" y="3328"/>
+  <object name="characters/npcs/generic/security_one" gid="301" x="2880" y="3136"/>
+  <object name="characters/npcs/generic/security_two" gid="301" x="3136" y="3264"/>
+  <object name="characters/npcs/generic/security_three" gid="301" x="2880" y="3456"/>
  </objectgroup>
 </map>
