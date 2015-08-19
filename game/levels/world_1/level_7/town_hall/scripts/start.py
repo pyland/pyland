@@ -3,6 +3,7 @@ from random import randint
 player.focus()
 
 engine.play_music("eery")
+engine.update_level("7");
 #engine.disable_py_scripter()
 
 #engine.clear_scripter()
@@ -81,7 +82,7 @@ dialogue_sequence = [
     lambda callback: pace(leader, callback = callback),
 
     lambda callback: player.set_busy(False, callback = callback),
-    lambda callback: engine.enable_py_scripter(callback = callback)
+   # lambda callback: engine.enable_py_scripter(callback = callback)
 ]
 
 player1_sequence = [
