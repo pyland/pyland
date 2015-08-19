@@ -250,3 +250,6 @@ class Engine:
         self.__cpp_engine.insert_to_scripter(text)
         callback()
 
+    def set_py_tabs(self, num, callback = lambda: None):
+        self.__cpp_engine.set_py_tabs(num, callback)
+

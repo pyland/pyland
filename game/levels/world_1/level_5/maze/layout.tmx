@@ -42,8 +42,6 @@
  <objectgroup name="Object Layer 1" width="100" height="100">
   <object name="characters/player/player_one" gid="286" x="64" y="3456"/>
   <object name="characters/npcs/myla/myla" gid="291" x="64" y="3392"/>
-  <object name="tile_trigger/trigger_one" gid="292" x="640" y="3392"/>
-  <object name="boulder/boulder_one" gid="288" x="576" y="3392"/>
   <object name="sign/sign_one" gid="287" x="1280" y="3328"/>
   <object name="sign/sign_two" gid="287" x="2816" y="3328"/>
   <object name="characters/npcs/generic/helper_one" gid="291" x="2944" y="3328"/>
