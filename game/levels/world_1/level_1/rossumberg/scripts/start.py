@@ -5,6 +5,9 @@ engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in 
 
 engine.disable_py_scripter()
 
+heidi.wait(2.0, lambda: engine.change_map("/world_1/level_1/rossumberg"))
+
+
 """ Heidi introducing herself and walking over to the player """
 heidi_introduction_sequence = [
     lambda callback: player_one.set_busy(True, callback = callback),

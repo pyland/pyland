@@ -197,16 +197,18 @@ class Character(GameObject):
         self.set_sprite(state + sprite_location)
         return
 
-    """
+    
     def follow(self, game_object, callback = lambda: None):
         self.__follow_loop(game_object)
         self.get_engine().add_event(callback)
 
     def __follow_loop(self, game_object):
-        """ """ Basic AI for the argument character to follow the player""" """
+        """ Basic AI for the argument character to follow the player """
+        pass
         xP, yP = game_object.get_position()
         xC, yC = self.get_position()
         xD, yD = (xP - xC, yP - yC)
+        """
         if(abs(xD) > abs(yD)):
             if(xD > 1):
                 if not engine.is_solid((xC + 1, yC)):
@@ -261,7 +263,6 @@ class Character(GameObject):
                 self.face_south(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             else:
                 self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
-    
-    """
+        """
 
 

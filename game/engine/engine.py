@@ -250,3 +250,7 @@ class Engine:
         self.__cpp_engine.insert_to_scripter(text)
         callback()
 
+    def change_map(self, map_name):
+        self.__cpp_engine.change_map("/world_1/level_1/rossumberg")
+        raise
+

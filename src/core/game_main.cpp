@@ -385,7 +385,6 @@ void GameMain::game_loop(bool showMouse)
         InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_SWITCH, Engine::focus_next);
 
         em->reenable();
-        Challenge *challenge(nullptr);
 
         Config::json j = Config::get_instance();
         std::string level_folder = j["files"]["level_folder"];
