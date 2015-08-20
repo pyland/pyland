@@ -141,7 +141,7 @@ class GameEngine {
         /// Clear all the text in the current QsciScintilla
         /// text edtior
         ///
-        void clear_scripter();
+        void clear_scripter(PyObject* callback);
 
         /// Get the text in the current QsciScintilla
         /// text edtior

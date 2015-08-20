@@ -218,9 +218,13 @@ void GameEngine::insert_to_scripter(std::string text)
     Engine::insert_to_scripter(text);
 }
 
-void GameEngine::clear_scripter()
+void GameEngine::clear_scripter(PyObject* callback)
 {
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::clear_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
 std::string GameEngine::get_script()
