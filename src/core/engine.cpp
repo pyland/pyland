@@ -445,8 +445,20 @@ void Engine::trigger_run(int script){
     EventManager::get_instance()->add_event([_main_window, script] {
         _main_window->runCode(script);
     });
-
 }
+
+std::string Engine::get_player_name(){
+    return game_main->player_name;
+}
+
+
+void Engine::set_player_name(std::string player_name){
+    auto _game_main = game_main;
+    EventManager::get_instance()->add_event([_game_main, player_name] {
+        _game_main->player_name = player_name;
+    });
+}
+
 
 void Engine::trigger_speed(){
     auto _main_window = main_window;

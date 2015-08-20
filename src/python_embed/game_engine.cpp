@@ -254,4 +254,13 @@ void GameEngine::add_event(PyObject *py_callback) {
     return;
 }
 
+std::string GameEngine::get_player_name() {
+    return Engine::get_player_name();
+}
+
+void GameEngine::set_player_name(std::string player_name) {
+    Engine::set_player_name(player_name);
+}
+
+
 

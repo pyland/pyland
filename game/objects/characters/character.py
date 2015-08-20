@@ -204,11 +204,10 @@ class Character(GameObject):
 
     def __follow_loop(self, game_object):
         """ Basic AI for the argument character to follow the player """
-        pass
+        engine = self.get_engine()
         xP, yP = game_object.get_position()
         xC, yC = self.get_position()
         xD, yD = (xP - xC, yP - yC)
-        """
         if(abs(xD) > abs(yD)):
             if(xD > 1):
                 if not engine.is_solid((xC + 1, yC)):
@@ -247,22 +246,21 @@ class Character(GameObject):
                         self.move_west(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+        
             elif(yD == 1):
                 self.face_north(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             elif(yD < -1):
                 if not engine.is_solid((xC, yC - 1)):
-                    self.move_south(callback = lambda: self.__follow_loop(game_object)))
+                    self.move_south(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(xD > 0):
                         self.move_east(callback = lambda: self.__follow_loop(game_object))
                     elif(xD < 0):
                         self.move_west(callback = lambda: self.__follow_loop(game_object))
                     else:
-                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
             elif(yD == -1):
                 self.face_south(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             else:
                 self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
-        """
-
 
