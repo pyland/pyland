@@ -246,16 +246,20 @@ void Engine::add_text(std::string text) {
     });
 }
 
-void Engine::open_notification_bar(std::function<void ()> func){
-    disable_py_scripter();
+void Engine::open_notification_bar(bool disable_scripting, std::function<void ()> func){
+    if(disable_scripting){
+        disable_py_scripter();
+    }
     EventManager::get_instance()->add_event([func] {
         gui_main->open_notification_bar(func);
     });
 
 }
 
-void Engine::open_notification_bar_with_options(std::deque<std::pair <std::string, std::function<void ()> > > options){
-    disable_py_scripter();
+void Engine::open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair <std::string, std::function<void ()> > > options){
+    if(disable_scripting){
+        disable_py_scripter();
+    }
     EventManager::get_instance()->add_event([options] {
         gui_main->open_notification_bar_with_options(options);
     });

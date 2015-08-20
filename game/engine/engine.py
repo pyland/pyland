@@ -249,8 +249,11 @@ class Engine:
         self.__game_objects[game_object.get_id()] = game_object #Store the object and associate with it's id in the engine's dictionary
         return game_object
 
-    def show_dialogue(self, dialogue, callback = lambda: None):
-        self.__cpp_engine.show_dialogue(dialogue, callback)
+    def show_dialogue(self, dialogue, disable_scripting = True, callback = lambda: None):
+        self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
+
+    def show_dialogue_with_options(self, dialogue, disable_scripting = True, callback = lambda: None):
+        self.__cpp_engine.show_dialogue_with_options(dialogue, disable_scripting, callback)
 
     def run_callback_list_sequence(self, callback_list_sequence, callback = lambda: None):
         """ Run the given list of functions, passing the rest of the list as an argument to the first function so that they are run in sequence.
