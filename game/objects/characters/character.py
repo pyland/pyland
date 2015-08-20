@@ -174,18 +174,21 @@ class Character(GameObject):
         if not(self.is_busy()):
             face_x()
             self.start_animating()
-            def callbacktwo():  # Have create a wrapper callback function which makes sure that the animation stops before anything else is run
-                if not self.is_moving():
-                    self.stop_animating()
-                callback()
-            parent_move_x(lambda: self.wait(0.03, callbacktwo))
+            parent_move_x(lambda: self.__stop_animating_func(callback))
         return
+
+    def __stop_animating_func(self, callback):
+        self.get_engine().add_event(callback)
+        self.wait(0.03, self.__check_stop_animating)
+
+    def __check_stop_animating(self):
+        if not self.is_moving():
+            self.stop_animating()
 
     """ Moves the character North by one tile and makes them face in that direction
     callback -- the function that you would like to call after the movement is complete
     """
     def move_north(self, callback = lambda: None):
-        x, y = self.get_position()
         self.__move_x(self.face_north, super().move_north, callback)
         return
 
@@ -193,7 +196,6 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_east(self, callback = lambda: None):
-        x, y = self.get_position()
         self.__move_x(self.face_east, super().move_east, callback)
         return
 
@@ -201,7 +203,6 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_south(self, callback = lambda: None):
-        x, y = self.get_position()
         self.__move_x(self.face_south, super().move_south, callback)
         return
 
@@ -209,7 +210,6 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_west(self, callback = lambda: None):
-        x, y = self.get_position()
         self.__move_x(self.face_west, super().move_west, callback)
         return
 
