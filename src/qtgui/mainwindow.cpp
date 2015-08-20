@@ -136,6 +136,8 @@ MainWindow::MainWindow(GameMain *exGame):
         textWidget->addTab(workspaces[ws], w);
     }
 
+    external_workspace = new QsciScintilla;
+
     lexer = new QsciLexerPython;
     lexer->setAutoIndentStyle(QsciScintilla::AiMaintain);
 
@@ -200,6 +202,7 @@ MainWindow::MainWindow(GameMain *exGame):
     for(int ws = 0; ws < workspace_max; ws++)
     {
         initWorkspace(workspaces[ws], ws);
+        initWorkspace(external_workspace);
     }
 
     setTabs(1);
@@ -307,6 +310,8 @@ MainWindow::~MainWindow()
         delete zoomLayout[ws];
         delete workspaces[ws];
     }
+
+    delete external_workspace;
 
 
     delete lexer;
@@ -781,6 +786,15 @@ void MainWindow::setTabs(int num){
         QString w = QString("%1").arg(QString::number(ws + 1));
         textWidget->addTab(workspaces[ws],w);
     }
+}
+
+
+void MainWindow::createExternalTab(){
+    textWidget->addTab(external_workspace,"*");
+}
+
+void MainWindow::removeExternalTab(){
+    setTabs(currentTabs);
 }
 
 //When the QT window is closed

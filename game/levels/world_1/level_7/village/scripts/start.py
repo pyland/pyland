@@ -38,6 +38,16 @@ dialogue_sequence = [
     #lambda callback: engine.show_dialogue(engine.get_dialogue("intro_go_enjoy_pyland", {"player_name": player_name}), callback = callback)
 ]
 
+myla_sequence = [
+    lambda callback: myla.stop_turning(callback = callback),
+    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: engine.show_dialogue("The entrance is right here!", callback = callback),
+    lambda callback: myla.start_turning(0.1, 6, callback = callback),
+]
+
+
+myla.player_action = lambda player_object: engine.run_callback_list_sequence(myla_sequence)
+
 engine.run_callback_list_sequence(dialogue_sequence)
 
 def go_to_hall(player_object):

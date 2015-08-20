@@ -273,6 +273,10 @@ class Engine:
         self.__cpp_engine.insert_to_scripter(text)
         self.add_event(callback)
 
+    def enable_py_scripter(self, callback = lambda: None):
+        self.__cpp_engine.enable_py_scripter()
+        self.add_event(callback)
+
     def change_map(self, map_name):
         self.__cpp_engine.change_map(map_name)
         raise

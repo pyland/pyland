@@ -314,7 +314,7 @@ class Character(GameObject):
     def __turning(self, time = 0.5, frequency = 8, callback = lambda: None):
         direction = randint(0,frequency)
         if (self.__finish_turning):
-            finish_turning = False
+            self.__finish_turning = False
         elif direction == 0:
             self.face_north(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
         elif direction == 1:

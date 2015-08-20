@@ -250,29 +250,26 @@ int Engine::get_tile_type(int x, int y) {
 }
 
 void Engine::add_dialogue(std::string text) {
-
     EventManager::get_instance()->add_event([text] {
         gui_main->add_message(text);
     });
 }
 
 void Engine::add_text(std::string text) {
-
     EventManager::get_instance()->add_event([text] {
         gui_main->add_text(text);
     });
 }
 
 void Engine::open_notification_bar(std::function<void ()> func){
-    disable_py_scripter();
+    //disable_py_scripter();
     EventManager::get_instance()->add_event([func] {
         gui_main->open_notification_bar(func);
     });
-
 }
 
 void Engine::open_notification_bar_with_options(std::deque<std::pair <std::string, std::function<void ()> > > options){
-    disable_py_scripter();
+    //disable_py_scripter();
     EventManager::get_instance()->add_event([options] {
         gui_main->open_notification_bar_with_options(options);
     });
@@ -280,12 +277,10 @@ void Engine::open_notification_bar_with_options(std::deque<std::pair <std::strin
 }
 
 void Engine::close_notification_bar(){
-
     EventManager::get_instance()->add_event([] {
         gui_main->close_notification_bar();
         enable_py_scripter();
     });
-
 }
 
 bool Engine::is_bar_open(){
