@@ -266,13 +266,11 @@ void TextBox::set_text(std::shared_ptr<Text> _text) {
 void TextBox::resize_text(float width, float height){
     text->set_width(width);
     text->set_height(height);
-    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::move_text(float x_offset, float y_offset){
     text->set_x_offset(x_offset);
     text->set_y_offset(y_offset);
-    Engine::get_gui()->refresh_gui();
 }
 
 std::vector<std::pair<GLfloat*, int>> TextBox::generate_this_vertex_data() {
