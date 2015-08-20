@@ -121,9 +121,7 @@ void GUIMain::create_notification_bar(){
     notification_bar->set_x_offset(left_x_offset);
     notification_bar->set_y_offset(bottom_y_offset);
     notification_bar->move_text(notification_text_x, notification_text_y);
-    LOG(INFO) << "££££ GOT HERE7";
     notification_bar->resize_text(notification_text_width, notification_text_height);
-    LOG(INFO) << "££££ GOT HERE8";
     notification_bar->resize_buttons(notification_button_width, notification_button_height);
     notification_bar->move_buttons(notification_button_x, notification_button_y);
     notification_bar->set_visible(false);
