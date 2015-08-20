@@ -109,7 +109,6 @@ TextBox::TextBox(TextBoxType _type) {
         this->add(forward_button);
         this->add(backward_button);
     }
-
     // text object for notifications
     text = std::make_shared<GUIText>();
     text->set_width(1.0f);
@@ -118,10 +117,8 @@ TextBox::TextBox(TextBoxType _type) {
     text->set_y_offset(0.0f);
 
     set_text("");
-    get_text()->set_bloom_radius(6);
-
-    add(text);
-    Engine::get_gui()->refresh_gui();
+    text->get_text()->set_bloom_radius(6);
+    this->add(text);
 }
 
 void TextBox::open(){
@@ -254,7 +251,6 @@ void TextBox::set_text(std::string _text) {
     new_text->set_text(_text);
     text->set_text(new_text);
     get_text()->set_bloom_radius(6);
-    Engine::get_gui()->refresh_gui();
 }
 
 std::shared_ptr<Text> TextBox::get_text() {
@@ -265,7 +261,6 @@ void TextBox::set_text(std::shared_ptr<Text> _text) {
 
     text->set_text(_text);
     get_text()->set_bloom_radius(6);
-    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::resize_text(float width, float height){
