@@ -80,13 +80,6 @@ public:
         auto id = Engine::get_map_viewer()->get_map_focus_object();
         Engine::move_object(id, direction);
     }
-
-    void monologue () {
-        auto id = Engine::get_map_viewer()->get_map_focus_object();
-        auto location =  Engine::find_object(id);
-        std::cout << "You are at " << location.x << ", " << location.y << std::endl;
-    }
-
 private:
     std::vector<int> key_to_id;
 };
