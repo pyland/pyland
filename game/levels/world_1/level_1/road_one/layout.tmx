@@ -31,7 +31,12 @@
  </layer>
  <layer name="Decor" width="30" height="50">
   <data encoding="base64" compression="zlib">
-   eJy1WMtuwzAM06fqtDqX/v9xKDBhmkrqlY6A0cQP0ZRkO+5TRJ6NElH1V1KnpG3Dy+Yxsf8o+JjeKTeq76LScAa6M5wFd9SnYZz5F+GrmE8VryN/NdvzJVjvI7Hf5ff+3vrZz9EQfT/x+ZS7QrY+sngYqrh6+L4Zh4Y6FmMDymWGbo4jv9/FlBvxZlpjziNe86XFUt27yrtuho7Ptznt67fI7GZr2vp0gHJ/G2PkjwniuEty+6h94/+OjphzLPaorsuJSifOnmfDq8LnnrWz/gzd3MniygrC5vvgU1o3+u9o3XDHs5KdnQzXgl8Jx6e13fWl/pTjnq0wO8zHcUyGyMV4BTyzOSDOuO9n2jbroqO14poWGzfl+2+t0cbUbieH0VqM/di++uK3c8b2gOmdIbsPHHm/+2S+99wi+Z234o3fiJ05IFvTXDaeC9TFd++b7v2+4u7onOYxAuPp8ncx3a+qe+AWiJe9S8KdzSGb4ySOto7QOA+/hqbcmvCjcRtkGo1fQF1sf6Fz10c8/v8PFMvMFxs+Ziv2QVorXmRn8s2N5lbtc3GuyF78rfyA2pg/kb+qPcKvIcanwVbsU3FYf5Hf/z66ccj0Mh/Gc10En6E25hu2tq84
+   eJy1WEluAzEM01N9aiaX/P9YBKhQVSGpJSkBIzNeRFOS7XEeZvYYFmv0OaTukDbFFdGZx8T+reBDvBtuVN9FpeEa6Fa4FtxZ30nj3L8IX8V8qnhd9lezP98N670J+13+6O+tn+McHdn3E59PuSuo9aHi4ajiGhH7Ko6T6liMHSiXGbo5jvz+LqbciFdpzTmPeN2XHssT3o+96mbo+Hyb07F+C2VXrWnv0wHK/W2MkT8myOPupu2j9o3/OzpyzrHYo7ouJyqdOEeeDe8xPnfVzvozdHNHxZUVhM33wae0bvS/o3XDnc9KdnYy3Bf8h3B8Wtu7vjw/5QrPXpgd5uM8RiFzMV4Dz2wOiDPv+0rbZl10tFZc0+Ljpnz/rTXbmNrt5DBai7kf21ef/H7O+B4wvTOo+8Blr3cf5fvIbabvvBVv/kbszAHZmuay89xBXX6Pvune7yvujs5pHiMwni5/F9P9qroHboF42bsJbjUHNcdJHH0doXERcQ1NuY/gR+M2UBqd30Bdbn+ic9dHPPH/DxRL5YsNH7OV+yCtFS+yM/nmRnOr9rk8V2Qv/1Z+QG3Mn8hf1R4R1xDjO8lW7lNxeH+z3/8+unFQepkP87luhs9QH/MNtiCwgg==
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="30" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt00sOgCAMBFDiubj/uYwLN0ahlPlIdJLuMK+1ULdS6mAdGf0mW9eoPaYbjcNE25mw3d45l8u2e1HueGX3n1nrzvqrutke0G60B5bb8pHmyL93uWw7GpeLtDNh7RPtv2U2lpc1VXMq3wfaitxXZjndO981L9v+khuJw0T5s1nNPe1WD60e2Ttm25moXfV7QnvRHTPdpz7Y9l/Y2gHoAvPj
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="30" height="50">
@@ -40,13 +45,9 @@
   <object name="tile_trigger/exit_to_village_top" gid="292" x="0" y="2496"/>
   <object name="sign/village_sign" gid="288" x="192" y="2496"/>
   <object name="sign/bog_sign" gid="288" x="1408" y="1472"/>
-  <object name="sign/merchant_sign" gid="288" x="640" y="192"/>
+  <object name="sign/merchant_sign" gid="288" x="768" y="128"/>
   <object name="characters/enemies/crocodile/annoying_croc" gid="288" x="1856" y="1600"/>
   <object name="characters/npcs/heidi/heidi" gid="291" x="1792" y="3200"/>
+  <object name="tile_trigger/no_potion" gid="292" x="768" y="1216"/>
  </objectgroup>
- <layer name="SpecialLayer" width="30" height="50">
-  <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20IX6AAAAAAAIDXABdwAAE=
-  </data>
- </layer>
 </map>
