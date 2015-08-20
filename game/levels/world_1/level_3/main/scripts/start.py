@@ -5,9 +5,18 @@ engine.play_music("beach")
 
 intro_dialogue = [
     lambda callback: player_one.set_busy(True, callback = callback),
-    lambda callback: engine.show_dialogue("Myla: The desert is on the other side of the river!", callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: player_one.face_east(callback = callback),
+    lambda callback: engine.show_dialogue("Myla: We need to go west, but the boulder is blocking us!", callback = callback),
     lambda callback: engine.show_dialogue("Careful, those crocodiles will eat you if they see you!", callback = callback),
     lambda callback: engine.show_dialogue("Since there is only one bridge, I'll just jump into your bag", callback =callback),
+    lambda callback: myla.move_to((0,0), 0.0001, callback = callback),
     lambda callback: player_one.set_busy(False, callback =callback)
     ]
 
@@ -55,7 +64,7 @@ def move_left(croc):
                      lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
                     ]))
 
-            else:
+            else: 
                 croc.face_east(lambda: move_right(croc))
         else:
             if player_one.get_position() == (38, y):
@@ -91,9 +100,9 @@ def b2_move(croc):
 
 
             else:
-                croc.face_east(lambda: b2_move(croc))
+                return croc.face_east(lambda: b2_move(croc))
         else:
-            croc.move_west(lambda: b2_move(croc))
+            return croc.move_west(lambda: b2_move(croc))
     elif(croc.is_facing_east()):
         if not engine.get_tile_type((x+1,y)) == engine.TILE_TYPE_WATER:
             if player_one in engine.get_objects_at((x+1,y)):
@@ -103,9 +112,9 @@ def b2_move(croc):
                     ])
 
             else:
-                croc.face_west(lambda: b2_move(croc))
+                return croc.face_west(lambda: b2_move(croc))
         else:
-            croc.move_east(lambda: b2_move(croc))
+            return croc.move_east(lambda: b2_move(croc))
 
 b2_croc = [croc_b2_0,
 croc_b2_1,
@@ -120,6 +129,7 @@ croc_b2_9,
 croc_b2_10,
 croc_b2_11]
 
+
 for croc in b2_croc:
     i = random.randint(1, 2)
     if i == 1:
@@ -127,6 +137,7 @@ for croc in b2_croc:
     else:
         croc.face_east()
     b2_move(croc)
+
 
 def yell():
     x,y = player_one.get_position()
@@ -137,15 +148,19 @@ player_one.yell = yell
 
 myla.face_south()
 
+myla_follow = True
 def follow(char):
-    player_x,player_y = player_one.get_position()
-    char_x, char_y = char.get_position()
+    global myla_follow
 
-    if(char_y < player_y):
-        char.face_north(lambda: char.move_north(lambda: follow(char)))
+    if myla_follow:
+        player_x,player_y = player_one.get_position()
+        char_x, char_y = char.get_position()
 
-    if(char_y > player_y):
-        char.face_south(lambda: char.move_south(lambda: follow(char)))
+        if(char_y < player_y):
+            char.face_north(lambda: char.move_north(lambda: follow(char)))
+
+        if(char_y > player_y):
+            char.face_south(lambda: char.move_south(lambda: follow(char)))
 
 
 first_time_a = True
@@ -157,6 +172,9 @@ def player_walked_on_challenge2a():
         challenge2_dialogue = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("Myla: Good job!", callback = callback),
+        lambda callback: engine.show_dialogue("Your backpack is getting a bit stuffy, let me out!", callback = callback),
+        lambda callback: myla.move_to((17,13), 0.0001, callback = callback),
+        lambda callback: myla.face_east(callback = callback),
         lambda callback: engine.show_dialogue("This bridge doesn't look sturdy enough to support both of us...", callback = callback),
         lambda callback: engine.show_dialogue("I'll just use that bridge over there", callback = callback),
         lambda callback: myla.move_west(callback = callback),
@@ -172,8 +190,6 @@ def player_walked_on_challenge2a():
         lambda callback: engine.clear_scripter(callback = callback),
         lambda callback: engine.insert_to_scripter("yell()", callback = callback),
         lambda callback: engine.show_dialogue("Run it to yell and distract a crocodile if one is about to eat me!", callback = callback),
-        lambda callback: engine.show_dialogue("My throat is hoarse, so you'll have to avoid them by yourself!!", callback = callback),
-
         lambda callback: engine.show_dialogue("I'll follow your lead!", callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback),
         lambda callback: myla.face_south(callback = callback)
@@ -185,12 +201,14 @@ def player_walked_on_challenge2a():
 
 def player_walked_on_challenge2b():
     global first_time_b;
+    global myla_follow
     if first_time_b:
         first_time_b = False
         challenge2_dialogue = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: myla.face_east(callback = callback),
-        lambda callback: engine.show_dialogue("Myla: Good job!", callback = callback),
+        lambda callback: engine.show_dialogue("Myla: You did it!!", callback = callback),
+        lambda callback: player_one.face_west(callback = callback),
         lambda callback: myla.move_east(callback = callback),
         lambda callback: myla.move_east(callback = callback),
         lambda callback: myla.move_east(callback = callback),
@@ -200,15 +218,15 @@ def player_walked_on_challenge2b():
         lambda callback: myla.move_east(callback = callback),
         lambda callback: myla.face_east(callback = callback),
         lambda callback: engine.show_dialogue("My legs are getting tired, let me get into your bag!", callback = callback),
+        lambda callback: myla.move_to((36,14), 0.0001, callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback),
         ]
-
+        myla_follow = False
         engine.run_callback_list_sequence(challenge2_dialogue)
 
 
 
-        
-
+    
 challenge2a.player_walked_on = lambda player_object: player_walked_on_challenge2a()
 challenge2b.player_walked_on = lambda player_object: player_walked_on_challenge2b()
 
