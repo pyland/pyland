@@ -22,8 +22,6 @@ GameEngine::GameEngine(GUIMain *_gui_main, Challenge *_challenge){
 
 
 void GameEngine::change_map(std::string map_location) {
-    //TODO: run the finish.py script of a level.
-    //challenge
     Engine::change_map(map_location);
     LOG(INFO) << "Changing level to " << map_location;
     return;
@@ -249,5 +247,20 @@ bool GameEngine::is_solid(int x, int y) {
 void GameEngine::refresh_config() {
     Config::refresh_config();
 }
+
+void GameEngine::add_event(PyObject *py_callback) {
+    boost::python::object callback(boost::python::handle<>(boost::python::borrowed(py_callback)));
+    EventManager::get_instance()->add_event(callback);
+    return;
+}
+
+std::string GameEngine::get_player_name() {
+    return Engine::get_player_name();
+}
+
+void GameEngine::set_player_name(std::string player_name) {
+    Engine::set_player_name(player_name);
+}
+
 
 

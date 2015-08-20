@@ -29,6 +29,9 @@ def name_parser(name, callback):
     if not name_parsed:
         name_parsed = True
         player_name = name
+        if(engine.save_exists(name)):
+            engine.print_terminal("A save with the name: " + name + " already exists!") #TODO: handle this a lot more cleverly!
+        engine.set_player_name(name)
         engine.disable_py_scripter()
         engine.flush_input_callback_list(engine.INPUT_RUN)
         engine.flush_input_callback_list(engine.INPUT_HALT)
@@ -51,7 +54,7 @@ def get_player_name(callback):
     engine.register_input_callback(engine.INPUT_HALT, stc.halt_script)
 
 
-level_name = "world_1/intro"
+level_name = "/world_1/intro"
 introduction_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "monty_coming_now"), callback = callback),
     lambda callback: camera.move_by((0, -11), 2.2, callback = callback),
@@ -69,7 +72,7 @@ def confirm_name():
     engine.show_dialogue_with_options(
         engine.get_dialogue(level_name, "confirm_player_name", {"player_name": player_name}),
         {
-            "Yes": lambda: engine.run_callback_list_sequence(name_confirmed_sequence),
+            "Yes": lambda: engine.run_callback_list_sequence(name_confirmed_sequence, start_game), #change the level once the intro has finished
             "No" : lambda: engine.run_callback_list_sequence(name_wrong_sequence, confirm_name)
         }
     )
@@ -86,4 +89,13 @@ name_confirmed_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "console_output"), callback = callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "go_enjoy_pyland", {"player_name": player_name}), callback = callback)
 ]
+
+def start_game():
+    """Save the player's game and start the game!"""
+    save_file = {
+        "level_states": {},
+        "current_level": "/world_1/intro"
+    }
+    engine.save_player_data(engine.get_player_name(), save_file)
+    engine.change_map("/world_1/level_1/player_house")
 

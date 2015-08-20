@@ -108,9 +108,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
 
     VLOG(2) << "Trying to walk to " << target.x << " " << target.y;
 
-    // animate walking in-place TODO: It doesn't actually seem to do this, work out what it does!
-    auto MapObject_test(ObjectManager::get_instance().get_object<MapObject>(id));
-    if (!MapObject_test) {
+    // check if object is solid to know if it cares about solidity of other objects
+    if (object->get_walkability() == Walkability::WALKABLE) {
         VLOG(2) << "ignore if walkable or not";
     } else {
         if (!walkable(target)) { target = location; }
@@ -185,13 +184,7 @@ bool Engine::walkable(glm::ivec2 location) {
 }
 
 void Engine::change_map(std::string map_location){
-    //std::thread *first = new std::thread([map_location]() {
-        //kill python thread
-        game_main->run_game = false;
-        game_main->change_challenge(map_location);
-        game_main->run_game = true;
-    //});
-    //game_main->run_game = false;
+    game_main->change_challenge(map_location);
 }
 
 void Engine::change_tile(glm::ivec2 tile, std::string layer_name, std::string tile_name) {
@@ -452,8 +445,20 @@ void Engine::trigger_run(int script){
     EventManager::get_instance()->add_event([_main_window, script] {
         _main_window->runCode(script);
     });
-
 }
+
+std::string Engine::get_player_name(){
+    return game_main->player_name;
+}
+
+
+void Engine::set_player_name(std::string player_name){
+    auto _game_main = game_main;
+    EventManager::get_instance()->add_event([_game_main, player_name] {
+        _game_main->player_name = player_name;
+    });
+}
+
 
 void Engine::trigger_speed(){
     auto _main_window = main_window;

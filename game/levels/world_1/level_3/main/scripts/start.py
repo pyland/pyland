@@ -55,7 +55,7 @@ def move_left(croc):
                      lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
                     ]))
 
-            else:
+            else: 
                 croc.face_east(lambda: move_right(croc))
         else:
             if player_one.get_position() == (38, y):
@@ -74,8 +74,8 @@ def move_right(croc):
         croc.move_east(lambda: move_right(croc))
 
 
-for croc in b1_croc:
-    move_left(croc)
+#for croc in b1_croc:
+#    move_left(croc)
 
 #############################################################################################################################################################
 
@@ -91,9 +91,9 @@ def b2_move(croc):
 
 
             else:
-                croc.face_east(lambda: b2_move(croc))
+                return croc.face_east(lambda: b2_move(croc))
         else:
-            croc.move_west(lambda: b2_move(croc))
+            return croc.move_west(lambda: b2_move(croc))
     elif(croc.is_facing_east()):
         if not engine.get_tile_type((x+1,y)) == engine.TILE_TYPE_WATER:
             if player_one in engine.get_objects_at((x+1,y)):
@@ -103,9 +103,9 @@ def b2_move(croc):
                     ])
 
             else:
-                croc.face_west(lambda: b2_move(croc))
+                return croc.face_west(lambda: b2_move(croc))
         else:
-            croc.move_east(lambda: b2_move(croc))
+            return croc.move_east(lambda: b2_move(croc))
 
 b2_croc = [croc_b2_0,
 croc_b2_1,
@@ -120,6 +120,7 @@ croc_b2_9,
 croc_b2_10,
 croc_b2_11]
 
+
 for croc in b2_croc:
     i = random.randint(1, 2)
     if i == 1:
@@ -127,6 +128,7 @@ for croc in b2_croc:
     else:
         croc.face_east()
     b2_move(croc)
+
 
 def yell():
     x,y = player_one.get_position()
