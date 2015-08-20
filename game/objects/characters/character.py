@@ -124,8 +124,7 @@ class Character(GameObject):
         elif yDiff < 0:
             self.face_south(callback)
         else:
-            callback
-
+            callback()
         return
 
 

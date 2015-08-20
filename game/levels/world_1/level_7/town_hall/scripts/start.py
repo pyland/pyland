@@ -19,6 +19,15 @@ snake5.face_east()
 snake6.face_east()
 snake7.face_east()
 
+snake1.change_state("yellow")
+snake2.change_state("green")
+snake3.change_state("red")
+snake4.change_state("green")
+snake5.change_state("red")
+snake6.change_state("yellow")
+snake7.change_state("orange")
+leader.change_state("blue")
+
 
 def pace(cur_object, callback = lambda: None):
     cur_object.move_north(lambda: cur_object.wait(1.0, lambda: cur_object.move_south(lambda: cur_object.move_south(lambda: cur_object.wait(1.0, lambda: cur_object.move_north(lambda: pace(cur_object)))))))
