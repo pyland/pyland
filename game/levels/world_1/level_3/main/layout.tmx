@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="37" height="20" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="37" height="15" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -21,73 +21,52 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <layer name="land" width="37" height="20">
+ <layer name="land" width="37" height="15">
   <data encoding="base64" compression="zlib">
-   eJzt1kEKgDAMRNE56vT+lxDBgJRIJgpNhH6YVQu+XR0Axt7ez8Zryl2v6FyNwdQUc6XnrSnyZEx325cUk21VHQxPEb08Z0Qvj0XkTJm7q2I1YIrVACdWA5zY4PvzG211+F+oNig7AP0lflE=
+   eJzN1UsKwDAIhOE56uT+lwhdCJIajH2oP8yiNJBv1QL3hpr17J2X6Oy0gW9Mf3memjxPxKTveNOJSZZVB8MuopfniujlkYiYKXI2K1YDllgNMGI1wIgN7tfff6p31v8kc6ut6ybeHT8M
   </data>
  </layer>
- <layer name="water/island" width="37" height="20">
+ <layer name="water/island" width="37" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4B6gH0QYjEsmB+IGYFYAElMFAsWIyAvimYWLjWEzAZhFmgYciPJ41JLyGx0s4h1D7oYHxBzADEvkjwp7sBlFin6CIUbMe5Adzsu/xKyE5/9pIYHrTE5cUROHBBjFy3dQq77aREO5IbXcA0fbOaRWn7QKw2TEq+0jCtiyzZ6pBlsZR05mHEQ4sEIAMFqKCo=
+   eJwTY2BgEEPDokgYxOcHYkYgFsAih09elIAcPozPTSDMAsTJQMyNQy2yPDa9DDjk8LmHkBo+IOYAYl4c6pHlSZEjNdzQw49UPcT6Fz2usMUbOebRAxMbNpSYjS1c6e0WStIQtcOB3PAaruGDzTxS8i0t3EKMOwi5kZZxRaheoGeawVbWkYMZByEejAAATZgnew==
   </data>
  </layer>
- <layer name="Bridge" width="37" height="20">
+ <layer name="Bridge" width="37" height="15">
   <data encoding="base64" compression="zlib">
-   eJztzsEJACAMQ9HiYi7TkXUf6a16CrRShTwIuX4Rov9odYCjx6JG0jKbItT9lDeaPGvqrbpixyYMmzBswrAJw6Y7FjfDIGA=
+   eJxjYMAORHGIkwpS0DC1wRU8GJ88rdx0lUT5FCT66iBxE7qcPRMVHUOEnYTkR91EnPyom4iTH3UTcfKjbiJOfiS5iRigwEgdcwDgjDAG
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="37" height="20">
-  <object name="characters/player/player_one" gid="286" x="1600" y="1280"/>
-  <object name="characters/enemies/crocodile/croc_one" gid="296" x="1728" y="1216"/>
-  <object name="characters/enemies/crocodile/croc_two" gid="296" x="1792" y="1152"/>
-  <object name="characters/enemies/crocodile/croc_three" gid="296" x="1856" y="1088"/>
-  <object name="characters/enemies/crocodile/croc_four" gid="296" x="1920" y="1024"/>
-  <object name="characters/enemies/crocodile/croc_five" gid="296" x="1984" y="960"/>
-  <object name="characters/enemies/crocodile/croc_six" gid="296" x="2048" y="896"/>
-  <object name="characters/enemies/crocodile/croc_seven" gid="296" x="1984" y="832"/>
-  <object name="characters/enemies/crocodile/croc_eight" gid="296" x="1920" y="768"/>
-  <object name="characters/enemies/crocodile/croc_nine" gid="296" x="1856" y="704"/>
-  <object name="characters/enemies/crocodile/croc_ten" gid="296" x="1792" y="640"/>
-  <object name="characters/enemies/crocodile/b2_croc_0" gid="296" x="1536" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_1" gid="296" x="1472" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_2" gid="296" x="1408" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_3" gid="296" x="1344" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_4" gid="296" x="1280" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_5" gid="296" x="1216" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_6" gid="296" x="1152" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_7" gid="296" x="1088" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_8" gid="296" x="1024" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_9" gid="296" x="960" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_10" gid="296" x="896" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_11" gid="296" x="832" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_12" gid="296" x="768" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_13" gid="296" x="704" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_14" gid="296" x="640" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_15" gid="296" x="576" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_16" gid="296" x="512" y="384"/>
-  <object name="characters/enemies/crocodile/b2_croc_17" gid="296" x="448" y="384"/>
-  <object name="tile_trigger/t0" gid="289" x="1536" y="448"/>
-  <object name="tile_trigger/t1" gid="298" x="1472" y="448"/>
-  <object name="tile_trigger/t2" gid="298" x="1408" y="448"/>
-  <object name="tile_trigger/t3" gid="298" x="1344" y="448"/>
-  <object name="tile_trigger/t4" gid="298" x="1280" y="448"/>
-  <object name="tile_trigger/t5" gid="298" x="1216" y="448"/>
-  <object name="tile_trigger/t6" gid="298" x="1152" y="448"/>
-  <object name="tile_trigger/t7" gid="298" x="1088" y="448"/>
-  <object name="tile_trigger/t8" gid="298" x="1024" y="448"/>
-  <object name="tile_trigger/t9" gid="298" x="960" y="448"/>
-  <object name="tile_trigger/t10" gid="294" x="896" y="448"/>
-  <object name="tile_trigger/t11" gid="294" x="832" y="448"/>
-  <object name="tile_trigger/t12" gid="294" x="768" y="448"/>
-  <object name="tile_trigger/t13" gid="294" x="704" y="448"/>
-  <object name="tile_trigger/t14" gid="294" x="640" y="448"/>
-  <object name="tile_trigger/t15" gid="294" x="576" y="448"/>
-  <object name="tile_trigger/t16" gid="294" x="512" y="448"/>
-  <object name="tile_trigger/t17" gid="294" x="448" y="448"/>
+ <objectgroup name="Object Layer 1" width="37" height="15">
+  <object name="characters/player/player_one" gid="286" x="1600" y="960"/>
+  <object name="characters/enemies/crocodile/croc_0" gid="296" x="1728" y="896"/>
+  <object name="characters/enemies/crocodile/croc_1" gid="296" x="1792" y="832"/>
+  <object name="characters/enemies/crocodile/croc_2" gid="296" x="1856" y="768"/>
+  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1920" y="704"/>
+  <object name="characters/enemies/crocodile/croc_4" gid="296" x="1984" y="640"/>
+  <object name="characters/enemies/crocodile/croc_5" gid="296" x="2048" y="576"/>
+  <object name="characters/enemies/crocodile/croc_6" gid="296" x="1984" y="512"/>
+  <object name="characters/enemies/crocodile/croc_7" gid="296" x="1920" y="448"/>
+  <object name="characters/enemies/crocodile/croc_8" gid="296" x="1856" y="384"/>
+  <object name="characters/enemies/crocodile/croc_9" gid="296" x="1792" y="320"/>
+  <object name="characters/enemies/crocodile/croc_b2_0" gid="296" x="896" y="192"/>
+  <object name="characters/npcs/myla/myla" gid="286" x="1088" y="128"/>
+  <object name="tile_trigger/challenge2a" gid="289" x="1152" y="128"/>
+  <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="704" y="256"/>
+  <object name="characters/enemies/crocodile/croc_b2_2" gid="296" x="768" y="320"/>
+  <object name="characters/enemies/crocodile/croc_b2_3" gid="296" x="768" y="384"/>
+  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="704" y="448"/>
+  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="896" y="512"/>
+  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="1024" y="576"/>
+  <object name="characters/enemies/crocodile/croc_b2_7" gid="296" x="960" y="640"/>
+  <object name="characters/enemies/crocodile/croc_b2_8" gid="296" x="1088" y="704"/>
+  <object name="characters/enemies/crocodile/croc_b2_9" gid="296" x="1024" y="768"/>
+  <object name="characters/enemies/crocodile/croc_b2_10" gid="296" x="896" y="832"/>
+  <object name="characters/enemies/crocodile/croc_b2_11" gid="296" x="832" y="896"/>
+  <object name="tile_trigger/challenge2b" gid="290" x="1152" y="960"/>
  </objectgroup>
- <layer name="SpecialLayer" width="37" height="20">
+ <layer name="SpecialLayer" width="37" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFww1YMw2c3bZM2PFVPHIDhQejm6gZd9aDwD/Y/DfQbhh106ibRt008HjUTaNuGkg3DUYAANrzhXU=
+   eJyzZWJgsB2imBJgTUM3kSs/6qZRN426adRNo24addNAu4mawIZK5gEAJCt2Bg==
   </data>
  </layer>
 </map>
