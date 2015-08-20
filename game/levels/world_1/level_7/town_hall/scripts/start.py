@@ -1,6 +1,7 @@
 from random import randint
 
 player.focus()
+engine.update_player_name(engine.get_player_name(), player.get_focus_button_id())
 
 engine.play_music("eery")
 engine.update_level("7");
@@ -19,7 +20,7 @@ snake5.face_east()
 snake6.face_east()
 snake7.face_east()
 
-snake1.change_state("yellow")
+snake1.change_state("orange")
 snake2.change_state("green")
 snake3.change_state("red")
 snake4.change_state("green")
@@ -56,17 +57,31 @@ dialogue_sequence = [
     lambda callback: pace(leader, callback = callback),
 
     lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: myla.follow(player, callback = callback),
    # lambda callback: engine.enable_py_scripter(callback = callback)
 ]
 
 player1_sequence = [
+    lambda callback: player.set_busy(True, callback = callback),
     lambda callback: snake1.stop_turning(callback = callback),
     lambda callback: snake1.turn_to_face(player, callback = callback),
     lambda callback: engine.show_dialogue("I'm scared. I thought the catchers were just a myth.", callback = callback),
     lambda callback: engine.show_dialogue("My PyRunner script is broken. Can you fix it so I move east and get to the desert?", callback = callback),
+    lambda callback: player.set_busy(False, callback = callback),
+]
 
+try_to_leave_sequence = [
+    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: engine.show_dialogue("Myla: Don't leave "+engine.get_player_name()+", they need our help!", callback = callback),
+    lambda callback: myla.stop_follow(callback = callback),
+    lambda callback: myla.move_east(callback = callback),
+    lambda callback: player.move_east(callback = callback)
+    #lambda callback: player.set_busy(False, callback = callback)
+    #lambda callback: myla.follow(player, callback = callback)
 ]
 
 snake1.player_action = lambda player_object: engine.run_callback_list_sequence(player1_sequence) #nake1_player_action
 
 engine.run_callback_list_sequence(dialogue_sequence)
+
+leave_hall.player_walked_on = lambda player_object: engine.run_callback_list_sequence(try_to_leave_sequence)
