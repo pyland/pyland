@@ -185,6 +185,10 @@ class Character(GameObject):
         if not self.is_moving():
             self.stop_animating()
 
+    def move_on_spot(self, callback = lambda: None):
+        self.start_animating()
+        self.move_by((0, 0), time = 0.3, callback = lambda: self.__stop_animating_func(callback))
+
     """ Moves the character North by one tile and makes them face in that direction
     callback -- the function that you would like to call after the movement is complete
     """

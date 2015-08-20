@@ -138,8 +138,6 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
             object->set_game_position(target); //Set the object's game position to be where it will be!
             object->set_render_position(tweened_position);
 
-            LOG(INFO) << "pos" << tweened_position.x << " " << tweened_position.y;
-
             if (completion == 1.0) {
                 object->set_state_on_moving_finish();
 
