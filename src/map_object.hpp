@@ -85,15 +85,14 @@ protected:
     std::vector<Map::Blocker> body_blockers;
 
     ///
-    /// The position of the object
+    /// The position of the object in game_logic
     ///
-    glm::vec2 position;
+    glm::ivec2 game_position;
 
     ///
-    /// An ordered container of positions that the map object has been on,
-    /// as recorded by set_state_on_moving_finish().
+    /// Where the sprite of the object is rendered
     ///
-    OrderedHashSet<glm::vec2> positions;
+    glm::vec2 render_position;
 
     ///
     /// Tiles that the object is blocking, probably
@@ -135,9 +134,13 @@ public:
 
     virtual ~MapObject();
 
-    glm::vec2 get_position() { return position; }
+    glm::ivec2 get_game_position() { return game_position; }
 
-    virtual void set_position(glm::vec2 position);
+    void set_game_position(glm::ivec2 game_position);
+
+    glm::vec2 get_render_position() { return render_position; }
+
+    void set_render_position(glm::vec2 render_position);
 
     ///
     /// manage collisions for spirtes as they move
@@ -209,12 +212,6 @@ public:
     /// @return the object's moving status
     ///
     virtual bool is_moving() { return moving; }
-
-    ///
-    /// An ordered container of positions that the map object has been on,
-    /// as recorded by set_state_on_moving_finish().
-    ///
-    OrderedHashSet<glm::vec2> const &get_positions();
 
     ///
     /// Set the challenge that created or now owns the object.

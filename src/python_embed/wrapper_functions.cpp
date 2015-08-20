@@ -20,7 +20,6 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def_readwrite("name",    &Entity::name)
         .def("__set_game_speed",  &Entity::__set_game_speed)
         .def("get_instructions",  &Entity::get_instructions)
-        .def("get_retrace_steps", &Entity::get_retrace_steps)
         .def("move_by",           &Entity::move_by)
         .def("move_east",         &Entity::move_east)
         .def("move_west",         &Entity::move_west)

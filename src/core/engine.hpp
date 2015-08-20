@@ -150,18 +150,10 @@ public:
     static void change_tile(glm::ivec2 tile, std::string layer_name, std::string tile_name);
 
     ///
-    /// Get the location of the map object or sprite in the map, throws exception if
-    /// there is the object is not on the map
-    /// @id the id of the object
-    /// @return a pair which is the (x, y) tuple of the object position
-    ///
-    static glm::vec2 find_object(int id);
-
-    ///
     /// Get a list of objects at this point, doesn't include sprites
     /// @return a vector of object ids
     ///
-    static std::vector<int> get_objects_at(glm::vec2 location);
+    static std::vector<int> get_objects_at(glm::ivec2 location);
 
     ///
     /// Get the instance of the QT mainwindow

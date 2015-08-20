@@ -262,16 +262,16 @@ class Engine:
             function = callback_list_sequence.popleft()
             function(lambda: self.run_callback_list_sequence(callback_list_sequence, callback))
         else:
-            callback()
+            self.add_event(callback)
         return
 
     def clear_scripter(self, callback = lambda: None):
         self.__cpp_engine.clear_scripter()
-        callback()
+        self.add_event(callback)
 
     def insert_to_scripter(self, text, callback = lambda: None):
         self.__cpp_engine.insert_to_scripter(text)
-        callback()
+        self.add_event(callback)
 
     def change_map(self, map_name):
         self.__cpp_engine.change_map(map_name)

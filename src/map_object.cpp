@@ -26,7 +26,8 @@ MapObject::MapObject(glm::vec2 position,
     tile("../game/objects/0.png"),
     render_above_sprite(false),
     walkability(walkability),
-    position(position)
+    game_position(position),
+    render_position(position)
 
     {
 
@@ -63,23 +64,10 @@ void MapObject::regenerate_blockers() {
         }
 
         case Walkability::BLOCKED: {
-            int x_left(int(position.x));
-            int y_bottom(int(position.y));
-            VLOG(2) << std::fixed << position.y << " " << position.x;
-            // If non-integral, the left or top have a higher
-            // tile number. If integral, they do not.
-            //
-            // The test is done by checking if the truncation
-            // changed the value
-            int x_right(x_left   + (float(x_left)   != position.x));
-            int y_top  (y_bottom + (float(y_bottom) != position.y));
-
+            VLOG(2) << std::fixed << game_position.y << " " << game_position.x;
             auto *map = Engine::get_map_viewer()->get_map();
             body_blockers = {
-                map->block_tile(glm::ivec2(x_left,  y_top)),
-                map->block_tile(glm::ivec2(x_left,  y_bottom)),
-                map->block_tile(glm::ivec2(x_right, y_top)),
-                map->block_tile(glm::ivec2(x_right, y_bottom))
+                map->block_tile(game_position),
             };
 
             break;
@@ -136,10 +124,15 @@ void MapObject::generate_tex_data() {
     SpriteManager::get_component(tile)->set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
 }
 
-void MapObject::set_position(glm::vec2 position) {
-    this->position = position;
+void MapObject::set_game_position(glm::ivec2 position) {
+    this->game_position = position;
     VLOG(2) << std::fixed << position.x << " " << position.y;
     regenerate_blockers();
+}
+
+void MapObject::set_render_position(glm::vec2 position) {
+    this->render_position = position;
+    VLOG(2) << std::fixed << position.x << " " << position.y;
 }
 
 void MapObject::set_tile(std::string _tile) {
@@ -197,24 +190,10 @@ void MapObject::set_state_on_moving_start(glm::ivec2) {
 
 void MapObject::set_state_on_moving_finish() {
     moving = false;
-
-    // Remove all elements from container including and following
-    // any prior occurence of this position, to remove redundant loops.
-    while (positions.find(position) != std::end(positions)) {
-        positions.get<insertion_order>().pop_back();
-    }
-
-    // Insert the position as most recent position
-    positions.insert(position);
 }
 
 void MapObject::load_textures() {
     SpriteManager::get_component(tile)->set_texture(TextureAtlas::get_shared(tile)); //tile is the location of the sprite you wish to load in from the file-system.
-}
-
-
-OrderedHashSet<glm::vec2> const &MapObject::get_positions() {
-    return positions;
 }
 
 void MapObject::set_challenge(Challenge *challenge) {
