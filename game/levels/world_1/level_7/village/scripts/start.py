@@ -14,13 +14,17 @@ dialogue_sequence = [
     lambda callback: myla.face_north(callback = callback),
     lambda callback: engine.show_dialogue("We should see if the minister is the town hall.", callback = callback),
     lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: myla.wait(2.0, callback = callback),
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.move_east(callback = callback),
-    lambda callback: engine.show_dialogue("Lets go in.", callback = callback),
+    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: engine.show_dialogue("Come on then, lets go in!", callback = callback),
+    lambda callback: myla.wait(1.0, callback = callback),
+    lambda callback: myla.start_turning(3.0, 6, callback = callback),
     #lambda callback: camera.wait(0.2, callback = callback),
     #lambda callback: engine.show_dialogue(engine.get_dialogue("intro_im_monty_the_snake"), callback = callback),
     #lambda callback: engine.show_dialogue(engine.get_dialogue("intro_monty_doesnt_know_name"), callback = callback),
@@ -34,4 +38,9 @@ dialogue_sequence = [
 ]
 
 engine.run_callback_list_sequence(dialogue_sequence)
+
+def go_to_hall(player_object):
+    engine.change_map("/world_1/level_7/town_hall")
+
+hall_entrance.player_walked_on = go_to_hall
 

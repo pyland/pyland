@@ -101,8 +101,8 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
         return;
     }
 
-    // Position should be integral at this point
-    glm::vec2 location(object->get_position());
+    // Get the object's game position
+    glm::vec2 location(object->get_game_position());
     auto target(location);
     target += move_by;
 
@@ -135,7 +135,10 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
             // The given formula cannot have this problem when A and B are exactly representable
             glm::vec2 tweened_position(location + completion * (target-location));
 
-            object->set_position(tweened_position);
+            object->set_game_position(target); //Set the object's game position to be where it will be!
+            object->set_render_position(tweened_position);
+
+            LOG(INFO) << "pos" << tweened_position.x << " " << tweened_position.y;
 
             if (completion == 1.0) {
                 object->set_state_on_moving_finish();
@@ -191,38 +194,20 @@ void Engine::change_tile(glm::ivec2 tile, std::string layer_name, std::string ti
     map_viewer->get_map()->update_tile(tile.x, tile.y, layer_name, tile_name);
 }
 
-
-glm::vec2 Engine::find_object(int id) {
-    Map *map = CHECK_NOTNULL(CHECK_NOTNULL(map_viewer)->get_map());
-
-    //Check the object is on the map
-    auto objects = map->get_objects();
-    for(auto object_id : objects) {
-        if(object_id == id) {
-            //MapObject is on the map so now get its location
-            auto object = ObjectManager::get_instance().get_object<MapObject>(id);
-            return object->get_position();
-        }
-    }
-
-    //Not on the map
-    throw std::runtime_error("MapObject is not in the map");
-}
-
-static std::vector<int> location_filter_objects(glm::vec2 location, std::vector<int> objects) {
+static std::vector<int> location_filter_objects(glm::ivec2 location, std::vector<int> objects) {
     auto &object_manager(ObjectManager::get_instance());
 
     std::vector<int> results;
     std::copy_if(std::begin(objects), std::end(objects), std::back_inserter(results),
         [&] (int object_id) {
             auto object(object_manager.get_object<MapObject>(object_id));
-            return object && object->get_position() == location;
+            return object && object->get_game_position() == location;
         }
     );
     return results;
 }
 
-std::vector<int> Engine::get_objects_at(glm::vec2 location) {
+std::vector<int> Engine::get_objects_at(glm::ivec2 location) {
     return location_filter_objects(location, map_viewer->get_map()->get_objects());
 }
 

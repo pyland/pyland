@@ -164,8 +164,8 @@ void MapViewer::render_objects() {
 
             //Move object to the required position
             glm::vec3 translator(
-                object->get_position().x - get_display_x(),
-                object->get_position().y - get_display_y(),
+                object->get_render_position().x - get_display_x(),
+                object->get_render_position().y - get_display_y(),
                 0.0f
             );
 
@@ -334,14 +334,14 @@ void MapViewer::refocus_map() {
     if (object) {
         set_display_x(centre_point_in_range(
             // half-tile offset to take centre of object
-            /* point  */ float(object->get_position().x) + 0.5f,
+            /* point  */ float(object->get_render_position().x) + 0.5f,
             /* length */ float(map->get_width()),
             /* bound  */ get_display_width()
         ));
 
         set_display_y(centre_point_in_range(
             // half-tile offset to take centre of object
-            /* point  */ float(object->get_position().y) + 0.5f,
+            /* point  */ float(object->get_render_position().y) + 0.5f,
             /* length */ float(map->get_height()),
             /* bound  */ get_display_height()
         ));
