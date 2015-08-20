@@ -1,5 +1,6 @@
 import operator
 import os
+from random import randint
 """
 In Python comments,
 could define some standard which the C++ code can use to determine things about it handles
@@ -63,10 +64,11 @@ However, it doesn't check if the tiles that are being moved to are empty or not.
 class Character(GameObject):
 
     __character_name = ""
-    
+
     __busy = False #A business flag used in some circumstances to check if the character is already occupied with something else to make sure certain things don't clash
 
-    
+    __finish_turning = False#A flag to specify whether the character is turning on the spot (to make the game more dynamic)
+
     def initialise(self):
         super().initialise
         self.set_solidity(True)
@@ -105,6 +107,27 @@ class Character(GameObject):
     def face_west(self, callback = lambda: None):
         self.__face("west", callback)
         return
+
+    """ Change the sprite to face towards the given object """
+    def turn_to_face(self, object_towards, callback = lambda: None):
+        xP, yP = object_towards.get_position()
+        xS, yS = self.get_position()
+        xDiff = xP - xS
+        yDiff  = yP - yS
+
+        if xDiff > 0:
+            self.face_east(callback)
+        elif xDiff < 0:
+            self.face_west(callback)
+        elif yDiff > 0:
+            self.face_north(callback)
+        elif yDiff < 0:
+            self.face_south(callback)
+        else:
+            callback
+
+        return
+
 
     """ Get the character to "face" the direction specified
     simply changes the last part of the sprite folder as relevant
@@ -197,7 +220,7 @@ class Character(GameObject):
         self.set_sprite(state + sprite_location)
         return
 
-    
+
     def follow(self, game_object, callback = lambda: None):
         self.__follow_loop(game_object)
         self.get_engine().add_event(callback)
@@ -246,7 +269,7 @@ class Character(GameObject):
                         self.move_west(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
-        
+
             elif(yD == 1):
                 self.face_north(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             elif(yD < -1):
@@ -263,4 +286,37 @@ class Character(GameObject):
                 self.face_south(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             else:
                 self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+
+    #Start the character turning randomly on the spot.
+    #If frequency is 3, then the player with repeatedly face in different directions.
+    #The greater frequency is, the less often the player will turn
+    def start_turning(self, time = 0.5, frequency = 8, callback = lambda: None):
+        if frequency < 3:
+            self.__turning(time, 3, callback = callback)
+        else:
+            self.__turning(time, frequency, callback = callback)
+
+    #Stop the character turning on the spot
+    def stop_turning(self, callback = lambda: None):
+        self.__finish_turning = True
+        callback()
+
+    #Recusively turn the character around
+    def __turning(self, time = 0.5, frequency = 8, callback = lambda: None):
+        direction = randint(0,frequency)
+        if (self.__finish_turning):
+            finish_turning = False
+            callback()
+            return
+        elif direction == 0:
+            self.face_north(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
+        elif direction == 1:
+            self.face_east(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
+        elif direction == 2:
+            self.face_south(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
+        elif direction == 3:
+            self.face_west(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
+        else:
+            self.wait(time, callback = lambda: self.__turning(time, frequency))
+        callback()
 
