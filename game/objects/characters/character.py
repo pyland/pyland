@@ -1,5 +1,6 @@
 import operator
 import os
+from random import randint
 """
 In Python comments,
 could define some standard which the C++ code can use to determine things about it handles
@@ -63,10 +64,11 @@ However, it doesn't check if the tiles that are being moved to are empty or not.
 class Character(GameObject):
 
     __character_name = ""
-    
+
     __busy = False #A business flag used in some circumstances to check if the character is already occupied with something else to make sure certain things don't clash
 
-    
+    __finish_turning = False#A flag to specify whether the character is turning on the spot (to make the game more dynamic)
+
     def initialise(self):
         super().initialise
         self.set_solidity(True)
@@ -106,6 +108,26 @@ class Character(GameObject):
         self.__face("west", callback)
         return
 
+    """ Change the sprite to face towards the given object """
+    def turn_to_face(self, object_towards, callback = lambda: None):
+        xP, yP = object_towards.get_position()
+        xS, yS = self.get_position()
+        xDiff = xP - xS
+        yDiff  = yP - yS
+
+        if xDiff > 0:
+            self.face_east(callback)
+        elif xDiff < 0:
+            self.face_west(callback)
+        elif yDiff > 0:
+            self.face_north(callback)
+        elif yDiff < 0:
+            self.face_south(callback)
+        else:
+            callback()
+        return
+
+
     """ Get the character to "face" the direction specified
     simply changes the last part of the sprite folder as relevant
     """
@@ -114,7 +136,7 @@ class Character(GameObject):
         sprite_location = self.get_sprite()
         sprite_location = sprite_location[0 : sprite_location.rfind("/") + 1] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
         self.set_sprite(sprite_location + direction) #sprites are now looked for in direction folder :)
-        callback()
+        engine.add_event(callback)
         return
 
     """ Says if the character is facing north """
@@ -152,18 +174,21 @@ class Character(GameObject):
         if not(self.is_busy()):
             face_x()
             self.start_animating()
-            def callbacktwo():  # Have create a wrapper callback function which makes sure that the animation stops before anything else is run
-                if not self.is_moving():
-                    self.stop_animating()
-                callback()
-            parent_move_x(lambda: self.wait(0.03, callbacktwo))
+            parent_move_x(lambda: self.__stop_animating_func(callback))
         return
+
+    def __stop_animating_func(self, callback):
+        self.get_engine().add_event(callback)
+        self.wait(0.03, self.__check_stop_animating)
+
+    def __check_stop_animating(self):
+        if not self.is_moving():
+            self.stop_animating()
 
     """ Moves the character North by one tile and makes them face in that direction
     callback -- the function that you would like to call after the movement is complete
     """
     def move_north(self, callback = lambda: None):
-        x, y = self.get_position()
         self.__move_x(self.face_north, super().move_north, callback)
         return
 
@@ -171,7 +196,6 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_east(self, callback = lambda: None):
-        x, y = self.get_position()
         self.__move_x(self.face_east, super().move_east, callback)
         return
 
@@ -179,7 +203,6 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_south(self, callback = lambda: None):
-        x, y = self.get_position()
         self.__move_x(self.face_south, super().move_south, callback)
         return
 
@@ -187,7 +210,6 @@ class Character(GameObject):
     Overides general object implementation
     """
     def move_west(self, callback = lambda: None):
-        x, y = self.get_position()
         self.__move_x(self.face_west, super().move_west, callback)
         return
 
@@ -196,4 +218,104 @@ class Character(GameObject):
         sprite_location = sprite_location[sprite_location.rfind("/"): ]
         self.set_sprite(state + sprite_location)
         return
+
+
+    def follow(self, game_object, callback = lambda: None):
+        self.__follow_loop(game_object)
+        self.get_engine().add_event(callback)
+
+    def __follow_loop(self, game_object):
+        """ Basic AI for the argument character to follow the player """
+        engine = self.get_engine()
+        xP, yP = game_object.get_position()
+        xC, yC = self.get_position()
+        xD, yD = (xP - xC, yP - yC)
+        if(abs(xD) > abs(yD)):
+            if(xD > 1):
+                if not engine.is_solid((xC + 1, yC)):
+                    self.move_east(callback = lambda: self.__follow_loop(game_object))
+                else:
+                    if(yD > 0):
+                        self.move_north(callback = lambda: self.__follow_loop(game_object))
+                    elif(yD < 0):
+                        self.move_south(callback = lambda: self.__follow_loop(game_object))
+                    else:
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+            elif(xD == 1):
+                self.face_east(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+            elif(xD < -1):
+                if not engine.is_solid((xC - 1, yC)):
+                    self.move_west(callback = lambda: self.__follow_loop(game_object))
+                else:
+                    if(yD > 0):
+                        self.move_north(callback = lambda: self.__follow_loop(game_object))
+                    elif(yD < 0):
+                        self.move_south(callback = lambda: self.__follow_loop(game_object))
+                    else:
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+            elif(xD == -1):
+                self.face_west(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+            else:
+                self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+        else:
+            if(yD > 1):
+                if not engine.is_solid((xC, yC + 1)):
+                    self.move_north(callback = lambda: self.__follow_loop(game_object))
+                else:
+                    if(xD > 0):
+                        self.move_east(callback = lambda: self.__follow_loop(game_object))
+                    elif(xD < 0):
+                        self.move_west(callback = lambda: self.__follow_loop(game_object))
+                    else:
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+
+            elif(yD == 1):
+                self.face_north(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+            elif(yD < -1):
+                if not engine.is_solid((xC, yC - 1)):
+                    self.move_south(callback = lambda: self.__follow_loop(game_object))
+                else:
+                    if(xD > 0):
+                        self.move_east(callback = lambda: self.__follow_loop(game_object))
+                    elif(xD < 0):
+                        self.move_west(callback = lambda: self.__follow_loop(game_object))
+                    else:
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+            elif(yD == -1):
+                self.face_south(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+            else:
+                self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+
+    #Start the character turning randomly on the spot.
+    #If frequency is 3, then the player with repeatedly face in different directions.
+    #The greater frequency is, the less often the player will turn
+    def start_turning(self, time = 0.5, frequency = 8, callback = lambda: None):
+        if frequency < 3:
+            self.__turning(time, 3, callback = callback)
+        else:
+            self.__turning(time, frequency, callback = callback)
+
+    #Stop the character turning on the spot
+    def stop_turning(self, callback = lambda: None):
+        self.__finish_turning = True
+        callback()
+
+    #Recusively turn the character around
+    def __turning(self, time = 0.5, frequency = 8, callback = lambda: None):
+        direction = randint(0,frequency)
+        if (self.__finish_turning):
+            finish_turning = False
+            callback()
+            return
+        elif direction == 0:
+            self.face_north(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
+        elif direction == 1:
+            self.face_east(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
+        elif direction == 2:
+            self.face_south(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
+        elif direction == 3:
+            self.face_west(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
+        else:
+            self.wait(time, callback = lambda: self.__turning(time, frequency))
+        callback()
 

@@ -191,6 +191,9 @@ public:
     static void close_notification_bar();
     static bool is_bar_open();
 
+    static std::string get_player_name();
+    static void set_player_name(std::string player_name);
+
     /// trigger qt mainwindow functions
     static void show_py_scripter();
     static void hide_py_scripter();

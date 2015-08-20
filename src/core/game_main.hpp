@@ -30,7 +30,7 @@ private:
     GameWindow embedWindow;
     Interpreter interpreter;
     InputManager* input_manager;
-    GUIMain gui;
+    GUIMain *gui;
     CallbackState callbackstate;
     EventManager *em;
 
@@ -81,12 +81,18 @@ private:
     ChallengeData *challenge_data;
     Challenge* challenge;
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
+    
+    bool changing_challenge;
+    std::string next_challenge;
 
 
 public:
 
     //Variable to run/stop the game
     bool run_game;
+
+    //A variable to hold the name of the player currently playing, used to keep track of game saves
+    std::string player_name;
 
     GameMain(int &argc, char **argv);
     ~GameMain();

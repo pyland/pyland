@@ -13,9 +13,16 @@ engine.set_ui_colours(c1, c2)
 engine.play_music("heroic") #Menus have herioc music always
 
 
+def load_save(save_name):
+    save_data = engine.get_player_data(save_name)
+    engine.set_player_name(save_name)
+    engine.change_map(save_data["current_level"])
+
 #Let the player run python scripts in the menu...
 stc = ScriptStateContainer()
-script_api = {}
+script_api = {
+    "load_save" : load_save
+}
 stc.set_script_name("Menu")
 engine.register_input_callback(engine.INPUT_RUN, lambda: stc.run_script(script_api, engine)) ##TODO: could provide some customer easter egg api's in the menu? :) (cheatcodes?)
 engine.register_input_callback(engine.INPUT_HALT, stc.halt_script)
@@ -74,7 +81,7 @@ settings = engine.get_settings()
 
 #Setting up how all the menu states interact with each other
 start_game.down_destination = options
-start_game.select = lambda: engine.print_terminal("TODO: Start the game!!!")
+start_game.select = lambda: engine.change_map("/world_1/intro")
 
 options.up_destination = start_game
 options.select_destination = language
