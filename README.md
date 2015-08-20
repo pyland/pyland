@@ -28,6 +28,7 @@ sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-es
 sudo apt-get install libts-dev
 sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
 sudo apt-get install libqscintilla2-dev
+sudo apt-get install install sqlite3
 ```
 
 Download and install extra dependancies:
@@ -81,6 +82,7 @@ sudo apt-get install libsdl2-ttf-dev
 sudo apt-get install libgoogle-glog0
 sudo apt-get install libgoogle-glog-dev
 sudo apt-get install libqscintilla2-dev
+sudo apt-get install install sqlite3
 sudo apt-get install libsdl2-mixer-dev 
 ```
 
@@ -103,7 +105,9 @@ For compiling on the Raspberry Pi, use:
 cd pyland/src
 cd jsonnet
 make
-cd..
+cd../../game
+rm database.db
+sqlite3 database.db < database_source.sql
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
 COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
@@ -122,7 +126,9 @@ For compiling on desktop, use:
 cd pyland/src
 cd jsonnet
 make
-cd..
+cd../../game
+rm database.db
+sqlite3 database.db < database_source.sql
 PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.4 LIBBOOST_PYTHON=boost_python-py34 make
 ```
 
