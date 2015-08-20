@@ -38,6 +38,11 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     gui_window->set_clickable(false);
 
     gui_manager.set_root(gui_window);
+    
+    auto window_size = embedWindow->get_resolution();
+    gui_window->set_width_pixels(window_size.first);
+    gui_window->set_height_pixels(window_size.second);
+    refresh_gui();
 
     create_pause_menu();
     create_notification_bar();
@@ -52,7 +57,6 @@ GUIMain::~GUIMain()
 {
     LOG(INFO) << "Destructing GUIMain...";
 
-    /*
     button_indices.clear();
     buttons.clear();
     notification_options.clear();
@@ -60,7 +64,6 @@ GUIMain::~GUIMain()
     bag_items.clear();
     pyguide_explanations.clear();
     pyguide_commands.clear();
-    */
     
     LOG(INFO) << "Destructed GUIMain.";
 }

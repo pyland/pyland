@@ -182,6 +182,13 @@ class GameEngine {
         ///
         void refresh_config();
 
+        /// Adds a callback to the event_manager queue
+        void add_event(PyObject *py_callback);
+
+        ///get the name of the player currently playing, returns empty string if not known yet. Used by Python to keep track of the correct game save
+        std::string get_player_name();
+
+        void set_player_name(std::string player_name);
 };
 
 #endif

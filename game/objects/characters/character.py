@@ -114,7 +114,7 @@ class Character(GameObject):
         sprite_location = self.get_sprite()
         sprite_location = sprite_location[0 : sprite_location.rfind("/") + 1] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
         self.set_sprite(sprite_location + direction) #sprites are now looked for in direction folder :)
-        callback()
+        engine.add_event(callback)
         return
 
     """ Says if the character is facing north """
@@ -196,4 +196,71 @@ class Character(GameObject):
         sprite_location = sprite_location[sprite_location.rfind("/"): ]
         self.set_sprite(state + sprite_location)
         return
+
+    
+    def follow(self, game_object, callback = lambda: None):
+        self.__follow_loop(game_object)
+        self.get_engine().add_event(callback)
+
+    def __follow_loop(self, game_object):
+        """ Basic AI for the argument character to follow the player """
+        engine = self.get_engine()
+        xP, yP = game_object.get_position()
+        xC, yC = self.get_position()
+        xD, yD = (xP - xC, yP - yC)
+        if(abs(xD) > abs(yD)):
+            if(xD > 1):
+                if not engine.is_solid((xC + 1, yC)):
+                    self.move_east(callback = lambda: self.__follow_loop(game_object))
+                else:
+                    if(yD > 0):
+                        self.move_north(callback = lambda: self.__follow_loop(game_object))
+                    elif(yD < 0):
+                        self.move_south(callback = lambda: self.__follow_loop(game_object))
+                    else:
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+            elif(xD == 1):
+                self.face_east(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+            elif(xD < -1):
+                if not engine.is_solid((xC - 1, yC)):
+                    self.move_west(callback = lambda: self.__follow_loop(game_object))
+                else:
+                    if(yD > 0):
+                        self.move_north(callback = lambda: self.__follow_loop(game_object))
+                    elif(yD < 0):
+                        self.move_south(callback = lambda: self.__follow_loop(game_object))
+                    else:
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+            elif(xD == -1):
+                self.face_west(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+            else:
+                self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+        else:
+            if(yD > 1):
+                if not engine.is_solid((xC, yC + 1)):
+                    self.move_north(callback = lambda: self.__follow_loop(game_object))
+                else:
+                    if(xD > 0):
+                        self.move_east(callback = lambda: self.__follow_loop(game_object))
+                    elif(xD < 0):
+                        self.move_west(callback = lambda: self.__follow_loop(game_object))
+                    else:
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+        
+            elif(yD == 1):
+                self.face_north(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+            elif(yD < -1):
+                if not engine.is_solid((xC, yC - 1)):
+                    self.move_south(callback = lambda: self.__follow_loop(game_object))
+                else:
+                    if(xD > 0):
+                        self.move_east(callback = lambda: self.__follow_loop(game_object))
+                    elif(xD < 0):
+                        self.move_west(callback = lambda: self.__follow_loop(game_object))
+                    else:
+                        self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
+            elif(yD == -1):
+                self.face_south(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
+            else:
+                self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
 

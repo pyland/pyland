@@ -104,9 +104,14 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
     """
     engine.print_debug("Started bootstrapper")
     game_objects = list()
-    print(entities)
-    """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
 
+    try:
+        print(entities) #For some reason after changing levels this can throw an I/O error (specifically after a change from the intro level) TODO: sort this out!
+    except:
+        tb = traceback.format_exc()
+        engine.print_debug(tb)
+
+    """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
     for entity in entities:
         game_object = engine.wrap_entity_in_game_object(entity)
         game_object.initialise() #run the initialisation script on the object if anything needs to be initialised
@@ -119,7 +124,7 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
 
     while True:
         try:
-            script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: implement this path stuff in a config (json) file!!!!!
+            script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: grab this stuff form the config
             engine.print_debug("Reading from file: {}".format(script_filename))
             with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()

@@ -45,3 +45,4 @@ test/text/main
 src/test/test.bin
 *.DS_Store
 game/database.db
+game/save.json

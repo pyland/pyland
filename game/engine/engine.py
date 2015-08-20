@@ -18,7 +18,7 @@ class Engine:
     #Represents the connections to the sqlite database
     conn = dict()
 
-    __settings = None
+    __json_data = None
 
     def get_dialogue(self, level_name, identifier, escapes = dict()):
         """ Get the piece of dialoge requested form the database.
@@ -157,30 +157,53 @@ class Engine:
         result = self.__cpp_engine.get_config()
         return json.loads(result)
 
-    def get_settings(self):
-        "Return the settings from the save.json file as a python json object """
-        if not self.__settings:
+    def __get_json_data(self):
+        if not self.__json_data:
             settings_string = ""
             with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
                 settings_string = save_file.read()
-            self.__settings = json.loads(settings_string)["settings"]
-        return self.__settings
+            self.__json_data= json.loads(settings_string)
+        return self.__json_data
 
-    def save_settings(self, settings):
-        """save the game settings""" #TODO: add resiliency!!!!
-        self.__settings = settings
+    def __save_json_data(self):
         save_file_string = ""
         with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
             save_file_string = save_file.read()
 
         save_json = json.loads(save_file_string)
-        save_json["settings"] = settings
+        save_json = self.__json_data
 
         with open(self.get_config()['files']['game_save_location'], 'w', encoding="utf8") as save_file:
             json.dump(save_json, save_file, indent=4, separators=(',', ': '))
-
         self.refresh_config()
         return
+
+    def get_settings(self):
+        "Return the settings from the save.json file as a python json object """
+        return self.__get_json_data()["settings"]
+
+    def save_settings(self, settings):
+        """save the game settings""" #TODO: add resiliency!!!!
+        self.__json_data["settings"] = settings
+        self.__save_json_data()
+        return
+
+    def get_player_data(self, name):
+        "get the player's save"
+        return self.__get_json_data()["player_saves"][name]
+
+    def save_player_data(self, name, game_save):
+        """save the player's save""" #TODO: add resiliency!!!!
+        self.__json_data["player_saves"][name] = game_save
+        self.__save_json_data()
+        return
+
+    def save_exists(self, name):
+        save_data = self.__get_json_data()
+        if name in save_data["player_saves"]:
+            return True
+        else:
+            return False
 
     def set_ui_colours(self, colour_one, colour_two):
         r1, g1, b1 = colour_one
@@ -252,4 +275,8 @@ class Engine:
 
     def set_py_tabs(self, num, callback = lambda: None):
         self.__cpp_engine.set_py_tabs(num, callback)
+
+    def change_map(self, map_name):
+        self.__cpp_engine.change_map(map_name)
+        raise
 

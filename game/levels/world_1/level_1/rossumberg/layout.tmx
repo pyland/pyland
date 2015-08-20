@@ -6,22 +6,13 @@
  <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
  </tileset>
- <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
- </tileset>
- <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+ <tileset firstgid="191" name="objects" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/objects.png" width="320" height="1216"/>
  </tileset>
- <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
- </tileset>
- <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
- </tileset>
- <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+ <tileset firstgid="286" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+ <tileset firstgid="381" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
  <layer name="Ground" width="26" height="20">
@@ -31,16 +22,18 @@
  </layer>
  <layer name="Decor" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJy1VVsKwkAMDD2FiOfbXX96ORV84ONopmAghDzVBoZCN51J0mQzA8AGMQuMz7MrZxqa+HYoPovOPsnHQca1SG8I7R1ia/Bo2pZp38ucKrl4xn20emZ5qhbFOop8hwngiDhNvhbVUbPu8FM8d+R/IZ6BTqVmUrcZZ2v+j1+txS6h/1r5ZeYjG7/Xl9kZpF6V/er1X6RFdyWP84zcN8QFcVX6taph5bTMxMOZCzJeY15H647zZrV6P1ga/+y56m75RtPikHl1431171j7wNvN2b2t5cDjfQOZdnQJ
+   eJy1VVsKwkAMTG8h4vl2158eRwUf+LioKRgIIU+1gaHQTWeSNNnMALBBzALj8+zKmYYmvh2Kz6KzT/JxkHEt0htCe4fYGjyatmXa9zKnSi6ecR+tnlmeqkWxjiLfYQI4Ik6Tr0V11Kw7/BTPHflfiGegU6mZ1G3G2Zr/41drsUvov1Z+mfnIxu/1ZXYGqVdlv3r9F2nRXcnjPCP3DXFBXJV+rWpYOS0z8XDmgozXmNfRuuO8Wa3eD5bGP3uuulu+0bQ4ZF7deF/dO9Y+8HZzdm9rOfB439HQce0=
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJyzYWJgsBnkGAZoaTY6oJc9yHYRYy81AbXtwGcGte1BpmllDy67aWX2YAC08h+90jWxdlDDfnrYQ2rZCGPTyh5KADXKSmrZQYmdtKwPqGE2NTEARSw7lQ==
+   eJyTZ2RgkB/kGAZoaTY6oJc9yHYRYy81AbXtwGcGte1BpmllDy67aWX2YAC08h+90jWxdlDDfnrYQ2rZCGPTyh5KADXKSmrZQYmdtKwPqGE2NTEAJ6oewQ==
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
-  <object name="characters/player/player_one" gid="286" x="1152" y="512"/>
-  <object name="characters/npcs/heidi/heidi" gid="291" x="1600" y="576"/>
+  <object name="characters/player/player_one" gid="191" x="1152" y="448"/>
+  <object name="characters/npcs/heidi/heidi" gid="196" x="1600" y="576"/>
+  <object name="sign/route_sign" gid="193" x="1344" y="512"/>
+  <object name="tile_trigger/exit_to_house" gid="197" x="1152" y="448"/>
  </objectgroup>
 </map>
