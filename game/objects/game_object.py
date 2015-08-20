@@ -61,8 +61,8 @@ class GameObject:
     def get_file_location(self):
         return self.__entity.get_location()
 
-    def set_sprite(self, sprite_location): #all sprites are relative to sprites/sprite_location/0.png , when objects are animated the engine automatically cycles through the numbered sprites in the folder
-        self.__entity.set_sprite(sprite_location)
+    def set_sprite(self, sprite_location, callback = lambda : None): #all sprites are relative to sprites/sprite_location/0.png , when objects are animated the engine automatically cycles through the numbered sprites in the folder
+        self.__entity.set_sprite(sprite_location, callback)
         return
 
     def get_sprite(self):
@@ -71,8 +71,8 @@ class GameObject:
     def is_solid(self):
         return self.__entity.is_solid()
 
-    def set_solidity(self, solidity):
-        self.__entity.set_solidity(solidity)
+    def set_solidity(self, solidity, callback = lambda : None):
+        self.__entity.set_solidity(solidity, callback)
         return
 
     def is_visible(self):
@@ -145,7 +145,7 @@ class GameObject:
         return
 
     def move_by(self, move_amount, time = 0.0, callback = lambda: None):
-        """ Moves the object by the given amount in the game 
+        """ Moves the object by the given amount in the game
 
         Parameters
         ----------
@@ -160,7 +160,7 @@ class GameObject:
         self.__entity.move_by(x, y, time, callback)
 
     def move_to(self, target_position, time = 0.0, callback = lambda: None):
-        """ Moves the object to the given target position in the game 
+        """ Moves the object to the given target position in the game
 
         Parameters
         ----------
