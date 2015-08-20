@@ -49,7 +49,7 @@
   <object name="characters/enemies/crocodile/croc_8" gid="296" x="1856" y="384"/>
   <object name="characters/enemies/crocodile/croc_9" gid="296" x="1792" y="320"/>
   <object name="characters/enemies/crocodile/croc_b2_0" gid="296" x="896" y="192"/>
-  <object name="characters/npcs/myla/myla" gid="286" x="1088" y="128"/>
+  <object name="characters/npcs/myla/myla" gid="286" x="2112" y="960"/>
   <object name="tile_trigger/challenge2a" gid="289" x="1152" y="128"/>
   <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="704" y="256"/>
   <object name="characters/enemies/crocodile/croc_b2_2" gid="296" x="768" y="320"/>

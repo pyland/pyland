@@ -111,8 +111,6 @@ class Crocodile(Character):
             return self.wait(0.3, self.rand_explore)
 
 
-   
-
 
     def __check_swim_state(self, callback):
         """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).

@@ -1,7 +1,7 @@
 #commence set-up
 player_name = engine.get_player_name()
 player_data = engine.get_player_data(player_name)
-current_level = "/world_1/level_1/rossumberg" #TODO: make this an engine function!!!!
+current_level = "/world_1/level_1/rossumberg"
 
 #setting the player starting position before anything else based on which level the player was at previously
 if player_data["current_level"] == "/world_1/level_1/player_house":
