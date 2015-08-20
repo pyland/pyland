@@ -37,13 +37,18 @@ def go_to_house(player_object):
 
 exit_to_house.player_walked_on = go_to_house
 
+def go_to_road(player_object):
+    engine.change_map("/world_1/level_1/road_one")
+
+exit_to_road_top.player_walked_on = go_to_road
+
 def heidi_player_action(player_object):
     player_one.set_busy(True)
     engine.show_dialogue("Remember, the merchant is east.", callback = lambda: player_one.set_busy(False))
 
 heidi.player_action = heidi_player_action
 
-route_sign.set_message("(east) merchant \n(east) bog")
+route_sign.set_message("Rossumberg, where your mum is the village bicycle \n(east) merchant (east) bog")
 
 """ LEVEL EVENTS """
 
