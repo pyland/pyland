@@ -12,7 +12,7 @@
 		//"level_location": "/test_world/yingischallenged/main",
 		//"level_location": "/world_one_old/level_one/main",
 		//"level_location": "/world_one_old/level_two/main",
-		//"level_location": "/start_screen",
+		"level_location": "/start_screen",
 		//"level_location" : "/world_1/intro",
 		//"level_location" : "/world_1/level_1/rossumberg",
 		//"level_location" : "/world_1/level_1/player_house",
@@ -101,7 +101,7 @@
 		"option_button_y": 0.40,
 		"option_button_text_x": 7.30,
 		"option_button_text_y": 2.10,
-		"option_button_spacing": 0.50,
+		"option_button_spacing": 0.45,
 		
 		//the parameters for the py help text box 
 		"py_help_width": 0.50,

@@ -28,6 +28,8 @@ private:
     void move_text(Direction direction);
     TextBoxType type;
     unsigned int buffer_size;
+    void set_text(std::string _text);
+    void set_text(std::shared_ptr<Text> _text);
 
 public:
 
@@ -50,9 +52,7 @@ public:
     /// the functioin breaks it down into many messages
     void add_text(std::string text_to_display);
 
-    void set_text(std::string _text);
     std::shared_ptr<Text> get_text();
-    void set_text(std::shared_ptr<Text> _text);
     void resize_text(float width, float height);
     void move_text(float x_offset, float y_offset);
     void resize_buttons(float width, float height);

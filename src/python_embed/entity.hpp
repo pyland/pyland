@@ -200,7 +200,6 @@ class Entity {
 
         std::string get_instructions();
 
-        py::list get_retrace_steps();
         py::object read_message();
 
         ///
