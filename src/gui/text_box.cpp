@@ -16,6 +16,7 @@
 
 TextBox::TextBox(TextBoxType _type) {
 
+    LOG(INFO) << "££££ GOT HERE1";
     type = _type;
     buffer_size = 100;
     TextFont buttonfont = Engine::get_game_font();
@@ -109,7 +110,7 @@ TextBox::TextBox(TextBoxType _type) {
         this->add(forward_button);
         this->add(backward_button);
     }
-
+    LOG(INFO) << "££££ GOT HERE2";
     // text object for notifications
     text = std::make_shared<GUIText>();
     text->set_width(1.0f);
@@ -117,11 +118,13 @@ TextBox::TextBox(TextBoxType _type) {
     text->set_x_offset(0.0f);
     text->set_y_offset(0.0f);
 
+    LOG(INFO) << "££££ GOT HERE3";
     set_text("");
-    get_text()->set_bloom_radius(6);
-
-    add(text);
-    Engine::get_gui()->refresh_gui();
+    LOG(INFO) << "££££ GOT HERE4";
+    text->get_text()->set_bloom_radius(6);
+    LOG(INFO) << "££££ GOT HERE5";
+    this->add(text);
+    LOG(INFO) << "££££ GOT HERE6";
 }
 
 void TextBox::open(){
@@ -254,7 +257,6 @@ void TextBox::set_text(std::string _text) {
     new_text->set_text(_text);
     text->set_text(new_text);
     get_text()->set_bloom_radius(6);
-    Engine::get_gui()->refresh_gui();
 }
 
 std::shared_ptr<Text> TextBox::get_text() {
@@ -265,7 +267,6 @@ void TextBox::set_text(std::shared_ptr<Text> _text) {
 
     text->set_text(_text);
     get_text()->set_bloom_radius(6);
-    Engine::get_gui()->refresh_gui();
 }
 
 void TextBox::resize_text(float width, float height){
