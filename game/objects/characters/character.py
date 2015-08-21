@@ -73,6 +73,7 @@ class Character(GameObject):
         super().initialise
         self.set_solidity(True)
         self.set_sprite("main/north")
+        self.set_visible(True)
         self.__character_name = self.get_name()
 
     def get_character_name(self):
