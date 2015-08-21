@@ -864,7 +864,9 @@ void MainWindow::runCode(int script)
             boost_callback();
         });
 
-        if (externalDialogue) Engine::close_notification_bar();
+        if (externalDialogue) Engine::close_external_script_help();
+
+        removeExternalTab();
 
         return;
     }
@@ -948,7 +950,9 @@ void MainWindow::toggleSpeed()
             boost_callback();
         });
 
-        if (externalDialogue) Engine::close_notification_bar();
+        if (externalDialogue) Engine::close_external_script_help();
+
+        removeExternalTab();
 
         return;
     }
