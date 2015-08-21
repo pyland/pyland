@@ -26,8 +26,6 @@ class Engine {
 private:
     static MapViewer *map_viewer;
 
-    static std::shared_ptr<TextBox> notification_bar;
-
     static GameMain* game_main;
 
     static GameWindow* game_window;
@@ -182,6 +180,10 @@ public:
     static void open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair<std::string, std::function<void ()> > > _options);
     static void close_notification_bar();
     static bool is_bar_open();
+
+    static void show_external_script_help(std::string text);
+    static void close_external_script_help();
+    static bool is_external_help_open();
 
     static std::string get_player_name();
     static void set_player_name(std::string player_name);

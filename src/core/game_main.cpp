@@ -165,7 +165,11 @@ GameMain::GameMain(int &argc, char **argv):
     {
         if(Engine::is_bar_open()){
             gui->proceed_notification_bar();
-        } else {
+        }
+        else if(Engine::is_external_help_open()){
+            gui->proceed_external_script_help();
+        } 
+        else {
             InputHandler::get_instance()->run_list(InputHandler::INPUT_ACTION);
         }
     }
