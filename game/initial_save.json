@@ -7,9 +7,10 @@
 		"world_1" : {
 			"level_1" : {
 				"starting_map" : "player_house",
-				"previous_map_info" : "",
 				"heidi_state": 0
-			}
+			},
+			"level_2" : {
+				"starting_map" : "start"
 		}
 	}
 }

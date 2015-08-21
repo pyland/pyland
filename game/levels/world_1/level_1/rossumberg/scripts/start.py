@@ -122,7 +122,8 @@ if level_data["heidi_state"] == heidi_state_speaking_about_prank:
         lambda callback: heidi.wait(0.5, callback = callback),
         lambda callback: heidi.face_west(callback = callback),
         lambda callback: heidi.wait(0.5, callback = callback),
-        lambda callback: engine.show_dialogue("Oops, sorry, got a bit carried away there. We need to go and collect the materials I ordered from the merchant east of here. Then finally, we need dirty water from the bog... hehehehehe... ", callback = callback),
+        lambda callback: engine.show_dialogue("Oops, sorry, got a bit carried away there. We need to go and collect the materials I ordered from the merchant east of here.", callback = callback),
+        lambda callback: engine.show_dialogue("Then finally, we need dirty water from the bog... hehehehehe...", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
         lambda callback: heidi.follow(player_one, callback = callback)
     ]
