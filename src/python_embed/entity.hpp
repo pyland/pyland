@@ -130,7 +130,7 @@ class Entity {
         /// Make the object start animating, cycles through all the numbered png's in the sprite folder set
         ///
         ///
-        void start_animating();
+        void start_animating(float speed, bool loop);
 
         ///
         /// Make the object pause on the current frame of animation
@@ -138,7 +138,7 @@ class Entity {
         ///
         void pause_animating();
 
-        void animate(int current_frame);
+        void animate(int current_frame, float speed, bool loop);
 
         ///
         /// @return
@@ -160,6 +160,8 @@ class Entity {
         ///
         void set_solidity(bool solidity, PyObject *callback);
         void set_visibility(bool set_visibility, PyObject *callback);
+
+        bool is_visible();
 
         ///
         /// Return the solidity of the object
