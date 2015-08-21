@@ -3,8 +3,8 @@ croc_0.change_state("swim")
 croc_1.change_state("swim")
 croc_2.change_state("swim")
 croc_3.change_state("swim")
-croc_4.change_state("swim")
-croc_5.change_state("swim")
+croc_4.change_state("swim_dark")
+croc_5.change_state("swim_lite")
 
 croc_0.face_east()
 croc_1.face_east()
@@ -44,7 +44,7 @@ trigger_11,
 trigger_12,
 trigger_13,
 trigger_14,
-trigger_15,
+trigger_15, 
 trigger_16,
 trigger_17,
 trigger_18,
@@ -66,12 +66,10 @@ def player_walked_on_ti():
     for a in [-1, 1]:
         for obj in engine.get_objects_at((x+a,y)):
             if obj in croc:
-                engine.print_terminal("you lose")
-                return
+                return obj.lose(player_one)
         for obj in engine.get_objects_at((x,y+a)):
             if obj in croc:
-                engine.print_terminal("you lose")
-                return
+                return obj.lose(player_one)
 
 for t in triggers:
     t.player_walked_on = lambda player_object: player_walked_on_ti()

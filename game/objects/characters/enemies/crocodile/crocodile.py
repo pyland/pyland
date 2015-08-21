@@ -178,73 +178,68 @@ class Crocodile(Character):
     """
 
 
-    def move_horizontal(self, player_one, times = 100000):
+    def move_horizontal(self, player, times = 100000):
         x,y = self.get_position()
-        player_x, player_y = player_one.get_position()
+        player_x, player_y = player.get_position()
         engine = self.get_engine()
 
         if x == player_x:
-            if player_y == y+1:
-                engine.print_terminal("you lose")
-                return self.face_north()
-            elif player_y == y-1:
-                engine.print_terminal("you lose")
-                return self.face_south()
+            if player_y == y+1 and self.is_facing_north():
+                return self.lose(player)
+
+            elif player_y == y-1 and self.is_facing_south():
+                return self.lose(player)
         elif y == player_y:
-            if player_x == x+1:
-                engine.print_terminal("you lose")
-                return self.face_east()
-            elif player_x == x-1:
-                engine.print_terminal("you lose")
-                return self.face_west()
+            if player_x == x+1 and self.is_facing_east():
+                return self.lose(player)
+            elif player_x == x-1 and self.is_facing_west():
+                return self.lose(player)
+
 
         if times != 0:
             if(self.is_facing_west()):
                 if not engine.get_tile_type((x-1,y)) == engine.TILE_TYPE_WATER or engine.is_solid((x-1,y)):
-                        return self.face_east(lambda: self.move_horizontal(player_one, times-1))
+                        return self.face_east(lambda: self.move_horizontal(player, times-1))
                 else:
-                    return self.move_west(lambda: self.move_horizontal(player_one, times))
+                    return self.move_west(lambda: self.move_horizontal(player, times))
             elif(self.is_facing_east()):
                 if not engine.get_tile_type((x+1,y)) == engine.TILE_TYPE_WATER or engine.is_solid((x+1,y)):
-                        return self.face_west(lambda: self.move_horizontal(player_one, times-1))
+                        return self.face_west(lambda: self.move_horizontal(player, times-1))
                 else:
-                        return self.move_east(lambda: self.move_horizontal(player_one, times))
+                        return self.move_east(lambda: self.move_horizontal(player, times))
         else:
             engine.print_terminal("toggle")
             return self.toggle()
 
-    def move_vertical(self, player_one, times = 100000):
+    def move_vertical(self, player, times = 100000):
         x,y = self.get_position()
-        player_x, player_y = player_one.get_position()
+        player_x, player_y = player.get_position()
         engine = self.get_engine()
 
         if x == player_x:
-            if player_y == y+1:
-                engine.print_terminal("you lose")
-                return self.face_north()
-            elif player_y == y-1:
-                engine.print_terminal("you lose")
-                return self.face_south()
+            if player_y == y+1 and self.is_facing_north():
+                return self.lose(player)
+            elif player_y == y-1 and self.is_facing_south():
+                return self.lose(player)
         elif y == player_y:
-            if player_x == x+1:
-                engine.print_terminal("you lose")
-                return self.face_east()
-            elif player_x == x-1:
-                engine.print_terminal("you lose")
-                return self.face_west()
+            if player_x == x+1 and self.is_facing_east():
+                return self.lose(player)
+            elif player_x == x-1 and self.is_facing_west():
+                return self.lose(player)
+
 
         if times != 0:
             x,y = self.get_position()
             if(self.is_facing_north()):
                 if not engine.get_tile_type((x,y+1)) == engine.TILE_TYPE_WATER or engine.is_solid((x,y+1)):
-                    return self.face_south(lambda: self.move_vertical(player_one, times-1))
+                    return self.face_south(lambda: self.move_vertical(player, times-1))
                 else:
-                    return self.move_north(lambda: self.move_vertical(player_one, times))
+                    return self.move_north(lambda: self.move_vertical(player, times))
             elif(self.is_facing_south()):
                 if not engine.get_tile_type((x,y-1)) == engine.TILE_TYPE_WATER or engine.is_solid((x,y-1)):
-                        return self.face_north(lambda: self.move_vertical(player_one, times-1))
+                        return self.face_north(lambda: self.move_vertical(player, times-1))
                 else:
-                    return self.move_south(lambda: self.move_vertical(player_one, times))
+                    return self.move_south(lambda: self.move_vertical(player, times))
 
         if times == 0:
             return self.toggle()
@@ -258,8 +253,8 @@ class Crocodile(Character):
         """
         engine = self.get_engine()
         x, y = self.get_position()
-        if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
-            self.change_state("swim")
+        '''if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")'''
         return callback()
 
     
@@ -280,6 +275,12 @@ class Crocodile(Character):
                     self.face_north(lambda: self.move_vertical(player, self.oscillate))
                 return
             
+    def lose(self, player):
+        engine = self.get_engine()
+        engine.run_callback_list_sequence([
+        lambda callback: player.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
+        ])
 
 
 

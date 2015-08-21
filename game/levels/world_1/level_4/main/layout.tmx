@@ -28,7 +28,7 @@
  </layer>
  <layer name="water" width="30" height="11">
   <data encoding="base64" compression="zlib">
-   eJxjYBgF9AacQMxOYywGpZEBNxCLQrEYEluUCHFi5JHlcNlLrJliBDAus0i1V4wB1Q347MIXZuT4F5tfCPkP3QxkwAPETHiwGAF5UvBIAwC12Qn0
+   eJxjYBgF9AacQMwBxOxQjMzGJoaNjYtGV4cMuIFYFIrFkNiiRIgTI48sh8teYs0UI4BxmUWqvWIMqG7AZxe+MCPHv9j8Qsh/6GYgAx4gZgRiJiQaGTNiYTNiUYtNHTp/pAEAgG0J0Q==
   </data>
  </layer>
  <layer name="bridge/rock" width="30" height="11">
