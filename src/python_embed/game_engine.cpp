@@ -140,32 +140,60 @@ void GameEngine::play_music(std::string song_name) {
 }
 
 
-void GameEngine::show_py_scripter(){
+void GameEngine::show_py_scripter(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::show_py_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::hide_py_scripter(){
+void GameEngine::hide_py_scripter(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::hide_py_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::enable_py_scripter(){
+void GameEngine::enable_py_scripter(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::enable_py_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::disable_py_scripter(){
+void GameEngine::disable_py_scripter(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::disable_py_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::enable_script_editing(){
+void GameEngine::enable_script_editing(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::enable_script_editing();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::disable_script_editing(){
+void GameEngine::disable_script_editing(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::disable_script_editing();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::set_py_tabs(int val){
+void GameEngine::set_py_tabs(int val, PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::set_py_tabs(val);
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
 void GameEngine::update_world(std::string text){
@@ -190,9 +218,13 @@ void GameEngine::insert_to_scripter(std::string text)
     Engine::insert_to_scripter(text);
 }
 
-void GameEngine::clear_scripter()
+void GameEngine::clear_scripter(PyObject* callback)
 {
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::clear_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
 std::string GameEngine::get_script()

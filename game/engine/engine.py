@@ -266,12 +266,20 @@ class Engine:
         return
 
     def clear_scripter(self, callback = lambda: None):
-        self.__cpp_engine.clear_scripter()
-        self.add_event(callback)
+        self.__cpp_engine.clear_scripter(callback)
+
+    def disable_py_scripter(self, callback = lambda: None):
+        self.__cpp_engine.disable_py_scripter(callback)
+        
+    def enable_py_scripter(self, callback = lambda: None):
+        self.__cpp_engine.enable_py_scripter(callback)
 
     def insert_to_scripter(self, text, callback = lambda: None):
         self.__cpp_engine.insert_to_scripter(text)
         self.add_event(callback)
+
+    def set_py_tabs(self, num, callback = lambda: None):
+        self.__cpp_engine.set_py_tabs(num, callback)
 
     def change_map(self, map_name):
         self.__cpp_engine.change_map(map_name)

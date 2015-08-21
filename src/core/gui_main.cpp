@@ -39,16 +39,10 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
     gui_manager.set_root(gui_window);
     
-    auto window_size = embedWindow->get_resolution();
-    gui_window->set_width_pixels(window_size.first);
-    gui_window->set_height_pixels(window_size.second);
-    refresh_gui();
-
     create_pause_menu();
     create_notification_bar();
     create_bag();
     create_pyguide();
-
 
     LOG(INFO) << "Constructed GUIMain.";
 }

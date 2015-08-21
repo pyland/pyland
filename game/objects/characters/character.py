@@ -185,6 +185,10 @@ class Character(GameObject):
         if not self.is_moving():
             self.stop_animating()
 
+    def move_on_spot(self, callback = lambda: None):
+        self.start_animating()
+        self.move_by((0, 0), time = 0.3, callback = lambda: self.__stop_animating_func(callback))
+
     """ Moves the character North by one tile and makes them face in that direction
     callback -- the function that you would like to call after the movement is complete
     """
@@ -225,19 +229,23 @@ class Character(GameObject):
         self.get_engine().add_event(callback)
 
     def __follow_loop(self, game_object):
-        """ Basic AI for the argument character to follow the player """
+        """ Basic AI for the argument character to follow the player, isn't solid when still so that player doesn't get stuck TODO: find a better compromise!!! """
         engine = self.get_engine()
+        self.set_solidity(False)
         xP, yP = game_object.get_position()
         xC, yC = self.get_position()
         xD, yD = (xP - xC, yP - yC)
         if(abs(xD) > abs(yD)):
             if(xD > 1):
                 if not engine.is_solid((xC + 1, yC)):
+                    self.set_solidity(True)
                     self.move_east(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(yD > 0):
+                        self.set_solidity(True)
                         self.move_north(callback = lambda: self.__follow_loop(game_object))
                     elif(yD < 0):
+                        self.set_solidity(True)
                         self.move_south(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
@@ -245,11 +253,14 @@ class Character(GameObject):
                 self.face_east(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             elif(xD < -1):
                 if not engine.is_solid((xC - 1, yC)):
+                    self.set_solidity(True)
                     self.move_west(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(yD > 0):
+                        self.set_solidity(True)
                         self.move_north(callback = lambda: self.__follow_loop(game_object))
                     elif(yD < 0):
+                        self.set_solidity(True)
                         self.move_south(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
@@ -260,11 +271,14 @@ class Character(GameObject):
         else:
             if(yD > 1):
                 if not engine.is_solid((xC, yC + 1)):
+                    self.set_solidity(True)
                     self.move_north(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(xD > 0):
+                        self.set_solidity(True)
                         self.move_east(callback = lambda: self.__follow_loop(game_object))
                     elif(xD < 0):
+                        self.set_solidity(True)
                         self.move_west(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
@@ -273,11 +287,14 @@ class Character(GameObject):
                 self.face_north(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             elif(yD < -1):
                 if not engine.is_solid((xC, yC - 1)):
+                    self.set_solidity(True)
                     self.move_south(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(xD > 0):
+                        self.set_solidity(True)
                         self.move_east(callback = lambda: self.__follow_loop(game_object))
                     elif(xD < 0):
+                        self.set_solidity(True)
                         self.move_west(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))

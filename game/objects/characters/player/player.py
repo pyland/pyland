@@ -62,20 +62,6 @@ class Player(Character, ScriptStateContainer):
         engine.print_terminal("Load in this image for the player head: "+"objects/"+super().get_file_location() + "/sprites/head")
         self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
 
-    """ game engine features (public)
-    These are methods which the game engine will execute at the commented moments.
-    This will all be autofilled by the creation script with super filled in to help
-    prevent errors when it comes to this.
-    """
-
-    """ This method is run every frame before the graphics are displayed.
-    You can put code here you want to run before every frame.
-    You MUST but super().beforeFrameUpdate() for this to work. Otherwise this may lead
-    to unexpected behaviour. MAY NOT BE NEEDED, may be able to do everything with callbacks!
-    """
-    #def before_frame_update(self):
-        #super().before_frame_update()
-
     """ public:
     Put the regular public methods you wish to use here.
     """
@@ -150,60 +136,86 @@ class Player(Character, ScriptStateContainer):
     Put the private methods you wish to use here.
     """
 
-    """ Override character move methods to prevent movement if script is running
+    """ Override character move methods to trigger player events and stop the player from being walking on water (even when they are scripter)
     """
-    def __input_move_north(self, callback = lambda: None):
+    def move_north(self, callback = lambda: None):
         engine = self.get_engine()
         x,y = self.get_position()
+        def callback_wrap():
+            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+            engine.add_event(callback)
+        if engine.get_tile_type((x,y+1)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
+            super().move_north(callback_wrap)
+        else:
+            self.face_north()
+            self.move_on_spot(callback)
+    
+    def move_east(self, callback = lambda: None):
+        engine = self.get_engine()
+        x,y = self.get_position()
+        def callback_wrap():
+            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+            engine.add_event(callback)
+        if engine.get_tile_type((x+1,y)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
+            super().move_east(callback_wrap)
+        else:
+            self.face_east()
+            self.move_on_spot(callback)
+    
+    def move_south(self, callback = lambda: None):
+        engine = self.get_engine()
+        x,y = self.get_position()
+        def callback_wrap():
+            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+            engine.add_event(callback)
+        if engine.get_tile_type((x,y-1)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
+            super().move_south(callback_wrap)
+        else:
+            self.face_south()
+            self.move_on_spot(callback)
+    
+    def move_west(self, callback = lambda: None):
+        engine = self.get_engine()
+        x,y = self.get_position()
+        def callback_wrap():
+            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
+            engine.add_event(callback)
+        if engine.get_tile_type((x-1,y)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
+            super().move_west(callback_wrap)
+        else:
+            self.face_west()
+            self.move_on_spot(callback)
+        
+        
+
+    def __input_move_north(self):
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
-            def callback_wrap():
-                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-                callback()
             if self.is_facing_north():
-                if engine.get_tile_type((x,y+1)) != engine.TILE_TYPE_WATER:
-                    self.move_north(callback_wrap)
+                self.move_north()
             else:
-                self.wait(0.07, lambda: self.face_north() if not self.is_moving() else lambda: None)
+                self.wait(0.07, lambda: self.face_north() if not self.is_moving() else lambda: None) #this is done to allow the player character to face a different directino when tapped
         return
 
-    def __input_move_east(self, callback = lambda: None):
-        engine = self.get_engine()
-        x,y = self.get_position()
+    def __input_move_east(self):
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
-            def callback_wrap():
-                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-                callback()
             if self.is_facing_east():
-                if engine.get_tile_type((x+1,y)) != engine.TILE_TYPE_WATER:
-                    self.move_east(callback_wrap)
+                self.move_east()
             else:
                 self.wait(0.07, lambda: self.face_east() if not self.is_moving() else lambda: None)
         return
 
     def __input_move_south(self, callback = lambda: None):
-        engine = self.get_engine()
-        x,y = self.get_position()
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
-            def callback_wrap():
-                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-                callback()
             if self.is_facing_south():
-                if engine.get_tile_type((x,y-1)) != engine.TILE_TYPE_WATER:
-                    self.move_south(callback_wrap)
+                self.move_south()
             else:
                 self.wait(0.07, lambda: self.face_south() if not self.is_moving() else lambda: None)
         return
 
     def __input_move_west(self, callback = lambda: None):
-        engine = self.get_engine()
-        x,y = self.get_position()
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
-            def callback_wrap():
-                self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-                callback()
             if self.is_facing_west():
-                if engine.get_tile_type((x-1,y)) != engine.TILE_TYPE_WATER:
-                    self.move_west(callback_wrap)
+                self.move_west()
             else:
                 self.wait(0.07, lambda: self.face_west() if not self.is_moving() else lambda: None)
         return
