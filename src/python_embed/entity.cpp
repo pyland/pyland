@@ -99,7 +99,7 @@ void Entity::set_solidity(bool solidity, PyObject *callback) {
     });
 }
 
-void Entity::set_visibility(bool visibility, PyObject *callback) {
+void Entity::set_visible(bool visibility, PyObject *callback) {
 
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 

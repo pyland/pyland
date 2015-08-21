@@ -1,5 +1,21 @@
 {
-    "player_saves": {},
+    "player_saves": {
+        "YourName": {
+            "totems": {},
+            "coins": 0,
+            "previous_exit": "/world_1/level_1/player_house",
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "previous_map_info": "",
+                        "heidi_state": 1,
+                        "starting_map": "player_house"
+                    }
+                }
+            },
+            "current_map": "/world_1/level_1/rossumberg"
+        }
+    },
     "settings": {
         "language": "pyrate"
     }

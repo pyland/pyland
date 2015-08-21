@@ -159,7 +159,7 @@ class Entity {
         ///     Whether you want the object to be solid (true) or not solid (false)
         ///
         void set_solidity(bool solidity, PyObject *callback);
-        void set_visibility(bool set_visibility, PyObject *callback);
+        void set_visible(bool visibility, PyObject *callback);
 
         bool is_visible();
 
