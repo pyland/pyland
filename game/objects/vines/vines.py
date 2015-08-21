@@ -26,7 +26,7 @@ As the GameObject is in the base objects folder.
 """
 class Vines(GameObject):
 
-    __message = "You need to set the message on this sign!"
+    __message = "Looks like a spiky and poisonous vine! Better avoid it."
 
     def initialise(self):
         self.set_sprite("")
@@ -37,6 +37,7 @@ class Vines(GameObject):
         if(self.get_position() == player_object.get_position()):
             self.die_action()
         self.set_visible(True, callback)
+        self.start_animating(speed = 0.1, loop = False)
 
     def player_action(self, player_object):
         engine = self.get_engine()
