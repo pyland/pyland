@@ -249,8 +249,11 @@ class Engine:
         self.__game_objects[game_object.get_id()] = game_object #Store the object and associate with it's id in the engine's dictionary
         return game_object
 
-    def show_dialogue(self, dialogue, callback = lambda: None):
-        self.__cpp_engine.show_dialogue(dialogue, callback)
+    def show_dialogue(self, dialogue, disable_scripting = True, callback = lambda: None):
+        self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
+
+    def show_dialogue_with_options(self, dialogue, disable_scripting = True, callback = lambda: None):
+        self.__cpp_engine.show_dialogue_with_options(dialogue, disable_scripting, callback)
 
     def run_callback_list_sequence(self, callback_list_sequence, callback = lambda: None):
         """ Run the given list of functions, passing the rest of the list as an argument to the first function so that they are run in sequence.
@@ -265,21 +268,34 @@ class Engine:
             self.add_event(callback)
         return
 
-    def clear_scripter(self, callback = lambda: None):
-        self.__cpp_engine.clear_scripter(callback)
 
     def disable_py_scripter(self, callback = lambda: None):
         self.__cpp_engine.disable_py_scripter(callback)
-        
+
     def enable_py_scripter(self, callback = lambda: None):
         self.__cpp_engine.enable_py_scripter(callback)
+
+    def enable_script_editing(self, callback = lambda: None):
+        self.__cpp_engine.enable_script_editing(callback)
+
+    def disable_script_editing(self, callback = lambda: None):
+        self.__cpp_engine.disable_script_editing(callback)
+
+    def set_py_tabs(self, num, callback = lambda: None):
+        self.__cpp_engine.set_py_tabs(num, callback)
+
+    def show_external_tab(self, num, callback = lambda: None):
+        self.__cpp_engine.show_external_tab(num, callback)
+
+    def hide_external_tab(self, num, callback = lambda: None):
+        self.__cpp_engine.hide_external_tab(num, callback)
 
     def insert_to_scripter(self, text, callback = lambda: None):
         self.__cpp_engine.insert_to_scripter(text)
         self.add_event(callback)
 
-    def set_py_tabs(self, num, callback = lambda: None):
-        self.__cpp_engine.set_py_tabs(num, callback)
+    def clear_scripter(self, callback = lambda: None):
+        self.__cpp_engine.clear_scripter(callback)
 
     def change_map(self, map_name):
         self.__cpp_engine.change_map(map_name)

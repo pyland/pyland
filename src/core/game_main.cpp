@@ -53,7 +53,7 @@ GameMain::GameMain(int &argc, char **argv):
     em(EventManager::get_instance()),
     tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
     changing_challenge(false),
-    player_name("")
+    player_name("???")
 
 {
     LOG(INFO) << "Constructing GameMain..." << endl;
@@ -398,7 +398,7 @@ void GameMain::game_loop(bool showMouse)
         challenge_data->level_location = next_challenge;
         challenge = new Challenge(challenge_data, gui);
         Engine::set_challenge(challenge);
-        
+
         callbackstate.stop();
         challenge_data->run_challenge = true;
 

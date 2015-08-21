@@ -94,8 +94,8 @@ class GameEngine {
         /// To add a dialogue to the notificaton bar
         /// options is a python dictionary of strings to callbacks
         ///
-        void show_dialogue(std::string text, PyObject *callback);
-        void show_dialogue_with_options(std::string text, PyObject *options);
+        void show_dialogue(std::string text, bool disable_scripting, PyObject *callback);
+        void show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *options);
 
         ///
         /// Register a callback against a given input
@@ -123,6 +123,8 @@ class GameEngine {
         void enable_script_editing(PyObject* callback);
         void disable_script_editing(PyObject* callback);
         void set_py_tabs(int val, PyObject* callback);
+        void show_external_tab(PyObject* callback);
+        void hide_external_tab(PyObject* callback);
 
         ///
         /// Update the info bar with the current

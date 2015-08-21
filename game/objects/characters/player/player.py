@@ -59,7 +59,7 @@ class Player(Character, ScriptStateContainer):
         #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
 
         #Get the correct image to the chosen for the sprite
-        engine.print_terminal("Load in this image for the player head: "+"objects/"+super().get_file_location() + "/sprites/head")
+        #####engine.print_terminal("Load in this image for the player head: "+"objects/"+super().get_file_location() + "/sprites/head")
         self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
 
     """ public:
@@ -100,7 +100,7 @@ class Player(Character, ScriptStateContainer):
         if not(self.is_running_script()): #only run script if one currently isn't running.
             engine = self.get_engine()
             self.set_running_script_status(True)
-    
+
             #script_api is a python dictionary of python objects (variables, methods, class instances etc.)
             #available to the player. :)
             #eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
@@ -129,6 +129,9 @@ class Player(Character, ScriptStateContainer):
     #override ScriptStateContainer---
     def set_script_name(self):
         self.set_character_name(self)
+
+    def get_focus_button_id(self):
+        return self.__focus_button_id
 
     """ ---- / All Code todo with running player scripts ---- """
 
@@ -257,7 +260,7 @@ class Player(Character, ScriptStateContainer):
         pass
 
     def get_flag_message(self):
-        message = "There is no flag here!"  
+        message = "There is no flag here!"
         engine = self.get_engine()
         position = self.get_position()
         game_objects = engine.get_objects_at(position)
