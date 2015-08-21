@@ -46,7 +46,7 @@ def go_to_merchant(player_object):
     engine.change_map("/world_1/level_1/merchant")
 
 def go_to_world(player_object):
-    player_data["previous_exit"] = current_map
+    player_data["previous_exit"] = "/" + world_name + "/" + level_name
     engine.save_player_data(player_name, player_data)
     engine.change_map("/world_1")
 

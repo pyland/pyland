@@ -55,12 +55,10 @@ class Player(Character, ScriptStateContainer):
         #register callback for talking to characters
         engine.register_input_callback(engine.INPUT_ACTION, focus_func(self.__trigger_action))
 
-        #Make clicks be registered as callbacks
-        #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
-
         #Get the correct image to the chosen for the sprite
         #####engine.print_terminal("Load in this image for the player head: "+"objects/"+super().get_file_location() + "/sprites/head")
         self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
+        self.set_character_name(engine.get_player_name())
 
     """ public:
     Put the regular public methods you wish to use here.
