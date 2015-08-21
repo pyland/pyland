@@ -29,14 +29,14 @@
    eJztw0ENAAAMA6GTWv8q5mIvSFg1VVVVVVVVVVVVVfXlAWJaGj0=
   </data>
  </layer>
- <layer name="Decor" width="40" height="70">
+ <layer name="Decor" width="40" height="70" visible="0">
   <data encoding="base64" compression="zlib">
-   eJztw6ENAAAIA7CdikLxv+YKBEmbdJKM+nKrHi1VVVVVVVVVVfXsAu0bLA0=
+   eJztljEWgCAMQzmtE/efXR0UCaUk8DL8xScQQiitpZRqjNmSy5jNycy471nME4YGBW9U/Ffzx/BBMrGq9rXGsOoI4hH7TP/2yNZgfdqovRe9OpQ0z96bCu419oBxNllrOjtmNTN6XTTvqvXUNdw8ycroyrt2gf+yvWbrQM6NrcdwMvD2jf1etdavHWOyGPVUhVPvOrvviq4/U2fm3kfmZPTAKj242Y+sd2Gmtuwx6HxRL3r8RHxfVQNdV/q9ypoXfV+/xkS0InNHszOyd3YG2Dk8Wd8NbRprEw==
   </data>
  </layer>
- <layer name="SpecialLayer" width="40" height="70">
+ <layer name="SpecialLayer" width="40" height="70" visible="0">
   <data encoding="base64" compression="zlib">
-   eJztzrEJAAAIwDDxLv+/ywfcFUmgeysj6kiT7Sd//q4EAAAAAAAAAAAA/NDF2DLd
+   eJztlksOgCAMRI3X0sN6VF2SqEjpb2rmJd2Q6EyhLezrsuwMBqNkEFIdzxpnn91ByLunuSXud8R5sxaJBklNRM2+3jdZc2Q0F/Seoj8d6P4sQLsvJL2H4nmUP/jlWwOPjLPx0mTtkGgs3rrSekedp5zhpMWrRiN7rdVDppLHCl6JD0/njnBf9fTbNY/73mI+ofLXXr9yOr4CWd/Sp2fuM/+MPos3zUh9UpeRXs6qpxk9rxnwtDarM7Kfkn2PmoGcK3289kZzv759o/Eq+be2dmZyl+ZjSbb+F9X9nb5368o=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="40" height="70">
