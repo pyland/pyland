@@ -138,6 +138,7 @@ private:
     std::deque<std::pair<std::string, std::function<void ()> > > notification_options;
 
     unsigned int option_start;
+    unsigned int option_selected;
     std::shared_ptr<Board> options_box;
     std::deque<std::shared_ptr<Button>> option_buttons;
     std::shared_ptr<Button> next_option;

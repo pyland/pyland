@@ -168,6 +168,15 @@ void GameEngine::set_py_tabs(int val){
     Engine::set_py_tabs(val);
 }
 
+void GameEngine::show_external_tab(){
+    Engine::show_external_tab();
+}
+
+void GameEngine::hide_external_tab(){
+    Engine::hide_external_tab();
+}
+
+
 void GameEngine::update_world(std::string text){
   Engine::update_world(text);
 }

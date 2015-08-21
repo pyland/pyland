@@ -16,6 +16,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     bar_open(false),
     callback_options(false),
     option_start(0),
+    option_selected(0),
     pause_open(false),
     bag_open(false),
     display_button_start(0)
@@ -38,7 +39,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     gui_window->set_clickable(false);
 
     gui_manager.set_root(gui_window);
-    
+
     auto window_size = embedWindow->get_resolution();
     gui_window->set_width_pixels(window_size.first);
     gui_window->set_height_pixels(window_size.second);
@@ -64,7 +65,7 @@ GUIMain::~GUIMain()
     bag_items.clear();
     pyguide_explanations.clear();
     pyguide_commands.clear();
-    
+
     LOG(INFO) << "Destructed GUIMain.";
 }
 
@@ -499,6 +500,13 @@ void GUIMain::close_notification_bar(){
             option_button->move_text(option_button_text_x, option_button_text_y);
             option_button->set_visible(true);
             option_button->set_clickable(true);
+
+            if (i == option_selected){
+                option_button->set_text_colour(255, 255, 255, 255);
+            }
+            else{
+                option_button->set_text_colour(0, 0, 0, 0);
+            }
 
             option_button->set_on_click([this, i] (){
                 notification_bar->clear_text();

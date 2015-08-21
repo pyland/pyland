@@ -136,8 +136,6 @@ MainWindow::MainWindow(GameMain *exGame):
         textWidget->addTab(workspaces[ws], w);
     }
 
-    external_workspace = new QsciScintilla;
-
     lexer = new QsciLexerPython;
     lexer->setAutoIndentStyle(QsciScintilla::AiMaintain);
 
@@ -202,7 +200,6 @@ MainWindow::MainWindow(GameMain *exGame):
     for(int ws = 0; ws < workspace_max; ws++)
     {
         initWorkspace(workspaces[ws], ws);
-        initWorkspace(external_workspace);
     }
 
     setTabs(1);
@@ -310,9 +307,6 @@ MainWindow::~MainWindow()
         delete zoomLayout[ws];
         delete workspaces[ws];
     }
-
-    delete external_workspace;
-
 
     delete lexer;
     api->clear();
@@ -468,12 +462,6 @@ void MainWindow::createToolBar()
     textLevel = new QLabel("");
     textCoins = new QLabel("");
     textTotems = new QLabel("");
-
-    //Use the required variables
-    //textWorld->setText("World: 1");
-    //textLevel->setText("Level: 1");
-    //textCoins->setText("Coins: 0");
-    //textTotems->setText("Totems: 0/5");
 
     textLayout->addWidget(textWorld);
     textLayout->addWidget(textLevel);
@@ -775,8 +763,8 @@ void MainWindow::setTabs(int num){
 
     textWidget->clear();
 
-
-    if ((num < 1 ) || (num > workspace_max)){
+    //The final workspace is allocated to the external workspace (for editing other character's scripts)
+    if ((num < 1 ) || (num > (workspace_max-1))){
         LOG(INFO) << "May only set between 1 and workspace_max ("<< std::to_string(workspace_max) << ") tabs" << std::endl;
         return;
     }
@@ -790,11 +778,16 @@ void MainWindow::setTabs(int num){
 
 
 void MainWindow::createExternalTab(){
-    textWidget->addTab(external_workspace,"*");
+    textWidget->addTab(workspaces[workspace_max-1],"*");
+    textWidget->setCurrentIndex(workspace_max-1);
+    buttonRun->setText("Give script");
+    buttonSpeed->setText("Cancel");
 }
 
 void MainWindow::removeExternalTab(){
     setTabs(currentTabs);
+    setRunning(script_running);
+    setFast(fast);
 }
 
 //When the QT window is closed

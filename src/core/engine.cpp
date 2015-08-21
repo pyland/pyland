@@ -336,6 +336,20 @@ void Engine::set_py_tabs(int val){
     });
 }
 
+void Engine::show_external_tab(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->createExternalTab();
+    });
+}
+
+void Engine::hide_external_tab(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->removeExternalTab();
+    });
+}
+
 void Engine::update_world(std::string text){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, text] {

@@ -90,6 +90,8 @@ player1_help_sequence = [
     #lambda callback: player.set_busy(False, callback = callback),
     lambda callback: update_snake_stage(snake = 0, stage = 1, callback = callback),
     lambda callback: engine.clear_scripter(callback = callback),
+    lambda callback: engine.show_external_tab(callback = callback),
+
     lambda callback: engine.insert_to_scripter("moe_east()", callback = callback),
     lambda callback: engine.enable_py_scripter(callback = callback),
     lambda callback: engine.show_dialogue("Give it a run when it's working!", callback = callback),

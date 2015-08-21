@@ -123,6 +123,8 @@ class GameEngine {
         void enable_script_editing();
         void disable_script_editing();
         void set_py_tabs(int val);
+        void show_external_tab();
+        void hide_external_tab();
 
         ///
         /// Update the info bar with the current

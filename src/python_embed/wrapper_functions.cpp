@@ -69,6 +69,8 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("enable_script_editing",    &GameEngine::enable_script_editing)
         .def("disable_script_editing",   &GameEngine::disable_script_editing)
         .def("set_py_tabs",      &GameEngine::set_py_tabs)
+        .def("show_external_tab",      &GameEngine::show_external_tab)
+        .def("hide_external_tab",      &GameEngine::hide_external_tab)
         .def("update_world",      &GameEngine::update_world)
         .def("update_level",      &GameEngine::update_level)
         .def("update_coins",      &GameEngine::update_coins)

@@ -112,9 +112,9 @@ private:
 
     QsciScintilla *textEdit;
 
-    static const int workspace_max = 9;
+    static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
-    QsciScintilla *external_workspace;
+    //QsciScintilla *external_workspace;
     QWidget *zoomWidget[workspace_max];
     QHBoxLayout *zoomLayout[workspace_max];
     QPushButton *buttonIn[workspace_max];
