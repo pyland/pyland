@@ -57,7 +57,7 @@ exit_to_road_bottom.player_walked_on = go_to_road_bottom
 
 def heidi_player_action(player_object):
     player_one.set_busy(True)
-    engine.show_dialogue("Remember, the merchant is East.", callback = lambda: player_one.set_busy(False))
+    engine.show_dialogue("Remember " + engine.get_player_name() + ", the merchant is East.", callback = lambda: player_one.set_busy(False))
 
 heidi.player_action = heidi_player_action
 
@@ -122,7 +122,7 @@ if level_data["heidi_state"] == heidi_state_speaking_about_prank:
         lambda callback: heidi.wait(0.5, callback = callback),
         lambda callback: heidi.face_west(callback = callback),
         lambda callback: heidi.wait(0.5, callback = callback),
-        lambda callback: engine.show_dialogue("Oops, sorry, got a bit carried away there. Anyway, let's head east to the merchant! He has all the stuff we need, then you can go to the bog to get the dirty bog water!", callback = callback),
+        lambda callback: engine.show_dialogue("Oops, sorry, got a bit carried away there. We need to go and collect the materials I ordered from the merchant east of here. Then finally, we need dirty water from the bog... hehehehehe... ", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
         lambda callback: heidi.follow(player_one, callback = callback)
     ]

@@ -65,7 +65,7 @@ merchant_sign.set_message("(south) rossumberg (south) bog (north) merchant")
 
 def no_potion_player_action(player_object):
     player_one.set_busy(True)
-    engine.show_dialogue("You aren't going to find any potions here m8.", callback = lambda: player_one.set_busy(False))
+    engine.show_dialogue("The totems are cursed...", callback = lambda: player_one.set_busy(False))
 
 no_potion.player_walked_on = lambda: None
 no_potion.player_action = no_potion_player_action
@@ -131,9 +131,9 @@ if level_data["heidi_state"] == heidi_state_getting_prank_materials:
             lambda callback: heidi.move_south(callback = callback),
             lambda callback: heidi.move_south(callback = callback),
             lambda callback: heidi.set_solidity(False, callback = callback),
-            lambda callback: heidi.move_to((28, 0), callback = callback),
+            lambda callback: heidi.set_visible(False, callback = callback),
             lambda callback: annoying_croc.set_solidity(False, callback = callback),
-            lambda callback: annoying_croc.move_to((28, 0), callback = callback),
+            lambda callback: annoying_croc.set_visible(False, callback = callback),
             lambda callback: player_one.set_busy(False, callback = callback)
         ], save_got_prank_materials)
 
@@ -147,8 +147,10 @@ if level_data["heidi_state"] == heidi_state_getting_prank_materials:
     heidi.set_solidity(False)
     heidi.wait(0.3, callback = lambda: heidi.move_to(player_start_pos, callback = lambda: heidi.follow(player_one)))
 else:
-    annoying_croc.set_solidity(False, callback = lambda: annoying_croc.move_to((28, 0))) #TODO: make these invisible
-    heidi.set_solidity(False, callback = lambda: heidi.move_to((28, 0)))
+    annoying_croc.set_solidity(False)
+    annoying_croc.set_visible(False)
+    heidi.set_solidity(False)
+    heidi.set_visible(False)
 
 # end object set-up
 engine.play_music("heroic")
