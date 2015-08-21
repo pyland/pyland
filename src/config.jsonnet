@@ -13,6 +13,7 @@
 		//"level_location": "/world_one_old/level_one/main",
 		//"level_location": "/world_one_old/level_two/main",
 		"level_location": "/start_screen",
+		//"level_location": "/world_1",
 		//"level_location" : "/world_1/intro",
 		//"level_location" : "/world_1/level_1/rossumberg",
 		//"level_location" : "/world_1/level_1/player_house",
@@ -29,7 +30,8 @@
 		"font_location": self.game_folder + "/fonts",
 		"script_running_location": self.game_folder + "/script_running",
 		"dialogue_font": self.font_location + "/Ubuntu-R.ttf",
-		"game_save_location": self.game_folder + "/save.json"
+		"game_save_location": self.game_folder + "/save.json",
+		"initial_save_location": self.game_folder + "/initial_save.json"
 	},
 
 	//define layer properties

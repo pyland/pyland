@@ -16,7 +16,7 @@ engine.play_music("heroic") #Menus have herioc music always
 def load_save(save_name):
     save_data = engine.get_player_data(save_name)
     engine.set_player_name(save_name)
-    engine.change_map(save_data["current_level"])
+    engine.change_map(save_data["current_map"])
 
 #Let the player run python scripts in the menu...
 stc = ScriptStateContainer()

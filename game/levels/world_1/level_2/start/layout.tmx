@@ -20,22 +20,7 @@
    eJxLYGBgSBjFo3gUj+JRPIpH8ShGwgDsl8MB
   </data>
  </layer>
- <layer name="Decor" width="26" height="20">
-  <data encoding="base64" compression="zlib">
-   eJy1VVsKwkAMTG8h4vl2158eRwUf+LioKRgIIU+1gaHQTWeSNNnMALBBzALj8+zKmYYmvh2Kz6KzT/JxkHEt0htCe4fYGjyatmXa9zKnSi6ecR+tnlmeqkWxjiLfYQI4Ik6Tr0V11Kw7/BTPHflfiGegU6mZ1G3G2Zr/41drsUvov1Z+mfnIxu/1ZXYGqVdlv3r9F2nRXcnjPCP3DXFBXJV+rWpYOS0z8XDmgozXmNfRuuO8Wa3eD5bGP3uuulu+0bQ4ZF7deF/dO9Y+8HZzdm9rOfB439HQce0=
-  </data>
- </layer>
- <layer name="SpecialLayer" width="26" height="20">
-  <data encoding="base64" compression="zlib">
-   eJyTZ2RgkB/kGAZoaTY6oJc9yHYRYy81AbXtwGcGte1BpmllDy67aWX2YAC08h+90jWxdlDDfnrYQ2rZCGPTyh5KADXKSmrZQYmdtKwPqGE2NTEAJ6oewQ==
-  </data>
- </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
-  <object name="characters/player/player_one" gid="191" x="1152" y="448"/>
-  <object name="characters/npcs/heidi/heidi" gid="196" x="0" y="1216"/>
-  <object name="sign/route_sign" gid="193" x="1344" y="512"/>
-  <object name="tile_trigger/exit_to_house" gid="197" x="1152" y="448"/>
-  <object name="tile_trigger/exit_to_road_top" gid="197" x="1600" y="576"/>
-  <object name="tile_trigger/exit_to_road_bottom" gid="197" x="1600" y="640"/>
+  <object name="characters/player/player_one" gid="191" x="0" y="704"/>
  </objectgroup>
 </map>
