@@ -63,7 +63,7 @@ public:
     void disableScripter();
 
     void setTabs(int num);
-    void createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, bool externalDialogue);
+    void createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, std::string dialogue);
     void removeExternalTab();
 
     void updateSpeed();
@@ -117,7 +117,6 @@ private:
     static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
     bool externalWorkspace;
-    bool externalDialogue;
     PyObject* externalConfirmCallback;
     PyObject* externalCancelCallback;
     QWidget *zoomWidget[workspace_max];
@@ -159,6 +158,7 @@ private:
     SDL_Window *embedWindow;
     QTimer *eventTimer;
 
+    //The instance of the game main class (running the main game loop)
     GameMain *game;
 
     //Specifies whether there has been any output during the current code execution,
@@ -172,6 +172,7 @@ private:
     //Index of the script to be executed
     int executeIndex;
 
+    //The current number of tabs that the player has available to them
     int currentTabs;
 };
 

@@ -337,7 +337,7 @@ void Engine::set_py_tabs(int val){
     });
 }
 
-void Engine::show_external_tab(PyObject* confirm_callback, PyObject* cancel_callback, bool external_dialogue){
+void Engine::show_external_tab(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window,confirm_callback, cancel_callback, external_dialogue] {
         _main_window->createExternalTab(confirm_callback, cancel_callback, external_dialogue);

@@ -137,7 +137,6 @@ MainWindow::MainWindow(GameMain *exGame):
     }
 
     externalWorkspace = false;
-    externalDialogue = false;
 
     lexer = new QsciLexerPython;
     lexer->setAutoIndentStyle(QsciScintilla::AiMaintain);
@@ -780,8 +779,9 @@ void MainWindow::setTabs(int num){
 }
 
 
-void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, bool dialogue){
+void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, std::string dialogue = "Click 'Give Script' when you're done!"){
     textWidget->addTab(workspaces[workspace_max-1],"*");
+
     buttonRun->setText("Give script");
     buttonSpeed->setText("Cancel");
     for(int ws = 0; ws < (workspace_max); ws++)
@@ -795,9 +795,11 @@ void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCa
     textWidget->setCurrentWidget(workspaces[workspace_max-1]);
 
     externalWorkspace = true;
-    externalDialogue = dialogue;
     externalConfirmCallback = confirmCallback;
     externalCancelCallback = cancelCallback;
+
+    Engine::show_external_script_help(dialogue);
+    Engine::enable_py_scripter();
 
 }
 
@@ -816,6 +818,7 @@ void MainWindow::removeExternalTab(){
 
     externalWorkspace = false;
 
+    Engine::clear_scripter();
 
     //if (external_dialougue) Engine::close_external_script_help();
 }
@@ -864,7 +867,7 @@ void MainWindow::runCode(int script)
             boost_callback();
         });
 
-        if (externalDialogue) Engine::close_external_script_help();
+        Engine::close_external_script_help();
 
         removeExternalTab();
 
@@ -950,7 +953,7 @@ void MainWindow::toggleSpeed()
             boost_callback();
         });
 
-        if (externalDialogue) Engine::close_external_script_help();
+        Engine::close_external_script_help();
 
         removeExternalTab();
 
@@ -979,11 +982,11 @@ void MainWindow::updateSpeed()
         //
         //     start + (c⁵ - 5·c⁴ + 5·c³) change
         //
-        float eased(1.0f + 511.0f * (
-                        + 1.0f * completion * completion * completion * completion * completion
-                        - 5.0f * completion * completion * completion * completion
-                        + 5.0f * completion * completion * completion
-                    ));
+        //float eased(1.0f + 511.0f * (
+        //                + 1.0f * completion * completion * completion * completion * completion
+        //                - 5.0f * completion * completion * completion * completion
+        //                + 5.0f * completion * completion * completion
+        //            ));
 
         EventManager::get_instance()->time.set_game_seconds_per_real_second(2.5);
     }

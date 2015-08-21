@@ -1,5 +1,27 @@
 {
+    "settings": {
+        "language": "english"
+    },
     "player_saves": {
+        "???": {
+            "level_states": {
+                "/world_1/level_1/road_one": {},
+                "/world_1/level_1/rossumberg": {
+                    "heidi_has_spoken_about_prank": true
+                },
+                "/world_1/level_1/player_house": {}
+            },
+            "current_level": "/world_1/level_1/rossumberg"
+        },
+        "Anindya": {
+            "level_states": {
+                "/world_1/level_1/rossumberg": {
+                    "heidi_has_spoken_about_prank": true
+                },
+                "/world_1/level_1/player_house": {}
+            },
+            "current_level": "/world_1/level_1/rossumberg"
+        },
         "YourName": {
             "level_states": {
                 "/world_1/level_1/rossumberg": {
@@ -18,25 +40,6 @@
             },
             "current_level": "/world_1/level_1/rossumberg"
         },
-        "???": {
-            "level_states": {
-                "/world_1/level_1/road_one": {},
-                "/world_1/level_1/rossumberg": {
-                    "heidi_has_spoken_about_prank": true
-                },
-                "/world_1/level_1/player_house": {}
-            },
-            "current_level": "/world_1/level_1/road_one"
-        },
-        "Anindya": {
-            "level_states": {
-                "/world_1/level_1/rossumberg": {
-                    "heidi_has_spoken_about_prank": true
-                },
-                "/world_1/level_1/player_house": {}
-            },
-            "current_level": "/world_1/level_1/rossumberg"
-        },
         "Tom": {
             "level_states": {
                 "/world_1/level_1/rossumberg": {
@@ -46,8 +49,5 @@
             },
             "current_level": "/world_1/level_1/rossumberg"
         }
-    },
-    "settings": {
-        "language": "english"
     }
 }
