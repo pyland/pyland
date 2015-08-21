@@ -285,3 +285,5 @@ class Engine:
         self.__cpp_engine.change_map(map_name)
         raise
 
+    def get_all_objects(self):
+        return list(self.__game_objects.values())
