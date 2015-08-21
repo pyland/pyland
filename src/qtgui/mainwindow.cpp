@@ -308,7 +308,6 @@ MainWindow::~MainWindow()
         delete workspaces[ws];
     }
 
-
     delete lexer;
     api->clear();
     delete api;
@@ -463,12 +462,6 @@ void MainWindow::createToolBar()
     textLevel = new QLabel("");
     textCoins = new QLabel("");
     textTotems = new QLabel("");
-
-    //Use the required variables
-    //textWorld->setText("World: 1");
-    //textLevel->setText("Level: 1");
-    //textCoins->setText("Coins: 0");
-    //textTotems->setText("Totems: 0/5");
 
     textLayout->addWidget(textWorld);
     textLayout->addWidget(textLevel);
@@ -770,8 +763,8 @@ void MainWindow::setTabs(int num){
 
     textWidget->clear();
 
-
-    if ((num < 1 ) || (num > workspace_max)){
+    //The final workspace is allocated to the external workspace (for editing other character's scripts)
+    if ((num < 1 ) || (num > (workspace_max-1))){
         LOG(INFO) << "May only set between 1 and workspace_max ("<< std::to_string(workspace_max) << ") tabs" << std::endl;
         return;
     }
@@ -780,6 +773,28 @@ void MainWindow::setTabs(int num){
     {
         QString w = QString("%1").arg(QString::number(ws + 1));
         textWidget->addTab(workspaces[ws],w);
+    }
+}
+
+
+void MainWindow::createExternalTab(){
+    textWidget->addTab(workspaces[workspace_max-1],"*");
+    textWidget->setCurrentIndex(workspace_max-1);
+    buttonRun->setText("Give script");
+    buttonSpeed->setText("Cancel");
+    for(int ws = 0; ws < (workspace_max-1); ws++)
+    {
+        textWidget->setTabEnabled(ws,false);
+    }
+}
+
+void MainWindow::removeExternalTab(){
+    setTabs(currentTabs);
+    setRunning(script_running);
+    setFast(fast);
+    for(int ws = 0; ws < (workspace_max-1); ws++)
+    {
+        textWidget->setTabEnabled(ws,true);
     }
 }
 

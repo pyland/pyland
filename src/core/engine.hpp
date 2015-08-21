@@ -178,8 +178,8 @@ public:
 
     static void add_dialogue(std::string text);
     static void add_text(std::string text);
-    static void open_notification_bar(std::function<void ()> func);
-    static void open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > _options);
+    static void open_notification_bar(bool disable_scripting, std::function<void ()> func);
+    static void open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair<std::string, std::function<void ()> > > _options);
     static void close_notification_bar();
     static bool is_bar_open();
 
@@ -194,6 +194,8 @@ public:
     static void enable_script_editing();
     static void disable_script_editing();
     static void set_py_tabs(int val);
+    static void show_external_tab();
+    static void hide_external_tab();
     static void update_world(std::string text);
     static void update_level(std::string text);
     static void update_coins(int value);

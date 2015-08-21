@@ -63,13 +63,19 @@ trigger_29]
 
 def player_walked_on_ti():
     x,y = player_one.get_position()
-    for a in [-1, 1]:
-        for obj in engine.get_objects_at((x+a,y)):
-            if obj in croc:
-                return obj.lose(player_one)
-        for obj in engine.get_objects_at((x,y+a)):
-            if obj in croc:
-                return obj.lose(player_one)
+    
+    for obj in engine.get_objects_at((x+1,y)):
+        if obj in croc:
+            return obj.face_west(lambda: obj.lose(player_one))
+    for obj in engine.get_objects_at((x-1,y)):
+        if obj in croc:
+            return obj.face_east(lambda: obj.lose(player_one))
+    for obj in engine.get_objects_at((x,y+1)):
+        if obj in croc:
+            return obj.face_south(lambda: obj.lose(player_one))
+    for obj in engine.get_objects_at((x,y-1)):
+        if obj in croc:
+            return oambda.face_north(lambda: obj.lose(player_one))
 
 for t in triggers:
     t.player_walked_on = lambda player_object: player_walked_on_ti()

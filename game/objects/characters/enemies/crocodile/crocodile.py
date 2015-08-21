@@ -184,16 +184,15 @@ class Crocodile(Character):
         engine = self.get_engine()
 
         if x == player_x:
-            if player_y == y+1 and self.is_facing_north():
-                return self.lose(player)
-
-            elif player_y == y-1 and self.is_facing_south():
-                return self.lose(player)
+            if player_y == y+1:
+                return self.face_north(lambda: self.lose(player))
+            elif player_y == y-1:
+                return self.face_south(lambda: self.lose(player))
         elif y == player_y:
-            if player_x == x+1 and self.is_facing_east():
-                return self.lose(player)
-            elif player_x == x-1 and self.is_facing_west():
-                return self.lose(player)
+            if player_x == x+1:
+                return self.face_east(lambda: self.lose(player))
+            elif player_x == x-1:
+                return self.face_west(lambda: self.lose(player))
 
 
         if times != 0:
@@ -208,7 +207,6 @@ class Crocodile(Character):
                 else:
                         return self.move_east(lambda: self.move_horizontal(player, times))
         else:
-            engine.print_terminal("toggle")
             return self.toggle()
 
     def move_vertical(self, player, times = 100000):
@@ -217,15 +215,15 @@ class Crocodile(Character):
         engine = self.get_engine()
 
         if x == player_x:
-            if player_y == y+1 and self.is_facing_north():
-                return self.lose(player)
-            elif player_y == y-1 and self.is_facing_south():
-                return self.lose(player)
+            if player_y == y+1:
+                return self.face_north(lambda: self.lose(player))
+            elif player_y == y-1:
+                return self.face_south(lambda: self.lose(player))
         elif y == player_y:
-            if player_x == x+1 and self.is_facing_east():
-                return self.lose(player)
-            elif player_x == x-1 and self.is_facing_west():
-                return self.lose(player)
+            if player_x == x+1:
+                return self.face_east(lambda: self.lose(player))
+            elif player_x == x-1:
+                return self.face_west(lambda: self.lose(player))
 
 
         if times != 0:

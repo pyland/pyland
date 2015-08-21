@@ -1,4 +1,5 @@
 import sys
+import json
 
 sys.path.insert(1, engine.get_config()['files']['script_running_location'])
 from script_state_container import ScriptStateContainer
@@ -92,10 +93,10 @@ name_confirmed_sequence = [
 
 def start_game():
     """Save the player's game and start the game!"""
-    save_file = {
-        "level_states": {},
-        "current_level": "/world_1/intro"
-    }
-    engine.save_player_data(engine.get_player_name(), save_file)
+    save_string = ""
+    with open(engine.get_config()['files']['initial_save_location'], encoding="utf8") as initial_save_file:
+        save_string = initial_save_file.read()
+    json_data = json.loads(save_string)
+    engine.save_player_data(engine.get_player_name(), json_data)
     engine.change_map("/world_1/level_1/player_house")
 

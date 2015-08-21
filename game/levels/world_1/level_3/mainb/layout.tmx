@@ -28,7 +28,7 @@
  </layer>
  <layer name="water/island" width="29" height="15">
   <data encoding="base64" compression="zlib">
-   eJzFlEsKwDAIRA10USj9bOwFe/87dBYtBDGmFoOBt8kYxhEJExGDE+yggOO540qzdO5oFhO4wFL5vEhde0sNzWIDM1grn5bu0TRknl4ti/ov76SXZxYRjPKUs8vKF53Dkze797974Nn7UbMd2YP2V1l1kV5eSgIZ5wZO1x7O
+   eJzFlEsKwDAIRBPoolD62ZgL9v536CxaEDFGE0IDb5NRxrEllFIiUMAJMrjeO2KapVNDs1jADTbm8yF1rTeJXo/nAVawV3q4HtE0ZB5+r9WSqPdmkn01PfJtIr5WJmuu1rxyF8XpOzNvJL9nB1Zer/fMXD379mYemafl45mhdz7trbLqRv4j6RUl/8Af5wGfex7k
   </data>
  </layer>
  <layer name="Bridge" width="29" height="15">
@@ -48,7 +48,6 @@
   <object name="characters/enemies/crocodile/croc_7" gid="296" x="1361" y="444"/>
   <object name="characters/enemies/crocodile/croc_8" gid="296" x="1361" y="380"/>
   <object name="characters/enemies/crocodile/croc_9" gid="296" x="1361" y="316"/>
-  <object name="characters/enemies/crocodile/croc_b2_0" gid="296" x="704" y="192"/>
   <object name="characters/npcs/myla/myla" gid="286" x="1728" y="960"/>
   <object name="tile_trigger/challenge2a" gid="289" x="768" y="128"/>
   <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="704" y="256"/>

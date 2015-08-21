@@ -67,12 +67,15 @@ class Character(GameObject):
 
     __busy = False #A business flag used in some circumstances to check if the character is already occupied with something else to make sure certain things don't clash
 
-    __finish_turning = False#A flag to specify whether the character is turning on the spot (to make the game more dynamic)
+    __finish_turning = False#A flag to specify whether the character is finsihing turning (to make the game more dynamic)
+
+    __finish_following = False#A flag to specify whether the character is finishing another object(to make the game more dynamic)
 
     def initialise(self):
         super().initialise
         self.set_solidity(True)
         self.set_sprite("main/north")
+        self.set_visible(True)
         self.__character_name = self.get_name()
 
     def get_character_name(self):
@@ -228,8 +231,16 @@ class Character(GameObject):
         self.__follow_loop(game_object)
         self.get_engine().add_event(callback)
 
+    #Stop following whichever object the character was set to follow
+    def stop_follow(self, callback = lambda: None):
+        self.__finish_following = True
+        self.get_engine().add_event(callback)
+
     def __follow_loop(self, game_object):
         """ Basic AI for the argument character to follow the player, isn't solid when still so that player doesn't get stuck TODO: find a better compromise!!! """
+        if(self.__finish_following):
+            self.__finish_following = False
+            return
         engine = self.get_engine()
         self.set_solidity(False)
         xP, yP = game_object.get_position()
@@ -315,15 +326,13 @@ class Character(GameObject):
     #Stop the character turning on the spot
     def stop_turning(self, callback = lambda: None):
         self.__finish_turning = True
-        callback()
+        self.get_engine().add_event(callback)
 
     #Recusively turn the character around
     def __turning(self, time = 0.5, frequency = 8, callback = lambda: None):
         direction = randint(0,frequency)
         if (self.__finish_turning):
-            finish_turning = False
-            callback()
-            return
+            self.__finish_turning = False
         elif direction == 0:
             self.face_north(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
         elif direction == 1:
@@ -334,5 +343,5 @@ class Character(GameObject):
             self.face_west(lambda: self.wait(time, callback = lambda: self.__turning(time, frequency)))
         else:
             self.wait(time, callback = lambda: self.__turning(time, frequency))
-        callback()
+        self.get_engine().add_event(callback)
 

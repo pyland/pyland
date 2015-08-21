@@ -44,8 +44,7 @@ for i in range(len(b1_croc)):
     croc.move_horizontal(player_one)
 
 
-b2_croc = [croc_b2_0,
-croc_b2_1,
+b2_croc = [croc_b2_1,
 croc_b2_2,
 croc_b2_3,
 croc_b2_4,
@@ -57,7 +56,7 @@ croc_b2_9,
 croc_b2_10
 ]
 
-for croc in [croc_b2_0, croc_b2_1, croc_b2_2, croc_b2_3, croc_b2_7,croc_b2_8,croc_b2_9,croc_b2_10]:
+for croc in [croc_b2_1, croc_b2_2, croc_b2_3, croc_b2_7,croc_b2_8,croc_b2_9,croc_b2_10]:
     croc.face_east()
     croc.change_state("swim")
 
