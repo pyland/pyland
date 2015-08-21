@@ -12,7 +12,7 @@
 class Text;
 
 enum class Direction {NEXT, PREVIOUS};
-enum class TextBoxType {Bar, Display};
+enum class TextBoxType {Bar, Display, ExternalScriptHelp};
 
 class TextBox: public ComponentGroup
 {

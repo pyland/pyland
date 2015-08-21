@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="64" tileheight="64" nextobjectid="9">
+<map version="1.0" orientation="orthogonal" width="70" height="70" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -24,29 +24,29 @@
  <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="100" height="100">
+ <layer name="Ground" width="70" height="70">
   <data encoding="base64" compression="zlib">
-   eJztwwEJAAAMBKGL+v1TDJZDwVVTVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/AbwHptM=
+   eJztzjENwEAAxLCHWv4oCqEZKnn4s5Q953x7LqzQj6JCP4oK/Sgq9KOo0I+iQj+KCv0oKvSjqNCPokI/igr9KCr0o6jQj6JCP4oK/Sgq9KOo0I+iQj+KCv0oKvSjqNCPokI/igr9KCr0o6jQj6JCP4oK/Sgq9KOo0I+iQj+KCv0oKvSjqNCPokI/igr9KCr0o6jQj6JCP4oK/Sgq9KOo0I+iQj+KZmZmZmZmZmZmZmZmZmbmXy/8cNfO
   </data>
  </layer>
- <layer name="Decor" width="100" height="100">
+ <layer name="Decor" width="70" height="70">
   <data encoding="base64" compression="zlib">
-   eJzt2VFugzAQRdFRt9XNeAHs/7viw8JxgRCH8TzjO9JRiKV4Bl5K2iaZWQIAAKi0VvTcT9BSZ3tFnQf2c42e4+nsZL0sr97ePUaRqzy2at2zr2ePUZQ1Q99oV863Ls9ZvHuo2SuVmaLnGEEujz099lakXgndcj16fcT8Krzqjpm+2QPnObfuEX0eT3Wljl4XPfus7MN19MkkV7kWPRde84meA1se0TOALBSZwAzYKnoOAABmtFSi55ndcnAM8gB5qCEPLTkDM/JQQB5auF9pIQ8t5KGFPLSQhxby0EIeWnrksZjv/k+x1mJbkYdGHvk5ecRmsVaP/5eUefDd13Ee62PP+9Vavz+va/j/Ps1Vr9/p3Qwz5lNnkGyrVDyi/bp+8z7NVT6ve+2teZ2DR58RHF0H7/tV/uxINsf1b/k56fn7rnXoFeGTz80re+0d3z3v3twevUbH34NayENLjzxAHqMiDy3koYU8tJCHFvLQQh5ayEMLeWghDy3koYU8tJCHFvLQwnd2AAAAAAAAAAAAAAAAAAAAwLk/cidiQQ==
+   eJztmFGKwzAMRE2vtZfJAXL/72WhBlfE6cgeJ1l4D4aqgUqTSeK6LeU7m1F7kLO3UwrOeXunfpoUnPPIhVwyIpfzXEohl1bkcp5LrJ8mBee8K3KJe6SR/ZKC2/NRvWqGcvxICqs8kwu5ZDyTyz25sO72cxntoeDyW95eS1O7erf6r7lE/26N5BKfNwWH18oVvwN664vymVorOLzWPlc+R3/8vLR7545cevfo2X59Vt88nH1mdS4xiy30nOm9UmourutWad9HT0fHXOf6lPul5ynjdeZ61LVlK59zex5duYzcN73aqXbdVWeN5JJZ31TPitdR7c2r6vWO5+hsvrN37JvpHzNUWOE563tkxkx/hRWeZ30rM8iFXDIzZr4nFFZ4jvWKGfEcyCV3/EgKqzyTy/W5zO5DFdyej+qnScE5j1zIJSNyIZeMyIVcMiKXfi4z//ddJQAAAAAAAAAAAAAAAAAA8PILl3baiA==
   </data>
  </layer>
- <layer name="SpecialLayer" width="100" height="100">
+ <layer name="SpecialLayer" width="70" height="70">
   <data encoding="base64" compression="zlib">
-   eJzt2VsKgkAAQNFoW7b/dYVE9CKLHnrRc2B+RAS5M6PibgcAAAAAAAAAAAAAAOty2N8OlnXdQI/l6dGiR4seLXq06NGiR4seLXq06NGiR4seLXq0zNHjfF29X9OjRY+WuXv49zVtzh6jYX8aelw8m6f3x385RucWw8Q5W7Lle/+nb+fpkqyPR5X9au0+WSee59/75X7kfbfF92CLHi1z9OB9erTo0aJHix4terTo0aJHix4terTo0aJHix4terTo0eKfHQAAAAAAAAAAAABMOwLk0jT/
+   eJzt14EKgjAUQFHxt+z/vytCoiXXcjjee4N7QAjBXNe21rLEeqzfh3ZtC7t82IXZhdmF2YXZhdmFRXQ57pFm2C9Fdek5X4FdmF2YXVhkF9ddvkflDkd2YVW7ZM+3zPUle1zZ92/fd1v3o2KXs+f2a79+93h5N9k6ronoMsPvI7k63rvPLVPF70t7nwrz6N8Y6fWIz9v7LGZfd0fOk8guPWPNmEfR92+79FyTuS5W7ZLNLswuLHPdrdwp+nf6yvkK7MLswqK6VP2/diZ7X1mVXZhdmF2YXZhdmF2YXdgs+yxJkiRJkiRJkiRJ0lhPHWJGrQ==
   </data>
  </layer>
- <objectgroup name="Object Layer 1">
-  <object id="1" name="characters/player/player_one" gid="286" x="64" y="3456" width="64" height="64"/>
-  <object id="2" name="characters/npcs/myla/myla" gid="291" x="64" y="3392" width="64" height="64"/>
-  <object id="3" name="sign/sign_one" gid="287" x="1280" y="3328" width="64" height="64"/>
-  <object id="4" name="sign/sign_two" gid="287" x="2816" y="3328" width="64" height="64"/>
-  <object id="5" name="characters/npcs/generic/helper_one" gid="291" x="3008" y="3328" width="64" height="64"/>
-  <object id="6" name="characters/npcs/generic/security_one" gid="301" x="2880" y="3136" width="64" height="64"/>
-  <object id="7" name="characters/npcs/generic/security_two" gid="301" x="3136" y="3264" width="64" height="64"/>
-  <object id="8" name="characters/npcs/generic/security_three" gid="301" x="2880" y="3456" width="64" height="64"/>
+ <objectgroup name="Object Layer 1" width="70" height="70">
+  <object name="characters/player/player_one" gid="286" x="640" y="1536" width="64" height="64"/>
+  <object name="characters/npcs/myla/myla" gid="291" x="640" y="1472" width="64" height="64"/>
+  <object name="sign/sign_one" gid="287" x="1856" y="1408" width="64" height="64"/>
+  <object name="sign/sign_two" gid="287" x="3392" y="1408" width="64" height="64"/>
+  <object name="characters/npcs/generic/helper_one" gid="291" x="3584" y="1408" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_one" gid="301" x="3456" y="1216" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_two" gid="301" x="3712" y="1344" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_three" gid="301" x="3456" y="1536" width="64" height="64"/>
  </objectgroup>
 </map>

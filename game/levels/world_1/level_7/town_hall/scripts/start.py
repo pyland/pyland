@@ -87,7 +87,7 @@ player1_sequence = [
 ]
 
 player1_help_sequence = [
-    lambda callback: engine.show_dialogue("Thank you! Here is my script.", disable_scripting = False, callback = callback),
+    lambda callback: engine.show_external_script_help("Thank you! Here is my script.",  callback = callback),
     #lambda callback: player.set_busy(False, callback = callback),
     lambda callback: update_snake_stage(snake = 0, stage = 1, callback = callback),
     lambda callback: engine.show_external_tab(lambda: engine.run_callback_list_sequence(player1_try_script_sequence),lambda: engine.run_callback_list_sequence(player1_cancel_script_sequence), external_dialogue = True, callback = callback),

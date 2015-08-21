@@ -75,6 +75,7 @@ class Character(GameObject):
         super().initialise
         self.set_solidity(True)
         self.set_sprite("main/north")
+        self.set_visible(True)
         self.__character_name = self.get_name()
 
     def get_character_name(self):
@@ -236,22 +237,26 @@ class Character(GameObject):
         self.get_engine().add_event(callback)
 
     def __follow_loop(self, game_object):
-        """ Basic AI for the argument character to follow the player """
+        """ Basic AI for the argument character to follow the player, isn't solid when still so that player doesn't get stuck TODO: find a better compromise!!! """
         if(self.__finish_following):
             self.__finish_following = False
             return
         engine = self.get_engine()
+        self.set_solidity(False)
         xP, yP = game_object.get_position()
         xC, yC = self.get_position()
         xD, yD = (xP - xC, yP - yC)
         if(abs(xD) > abs(yD)):
             if(xD > 1):
                 if not engine.is_solid((xC + 1, yC)):
+                    self.set_solidity(True)
                     self.move_east(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(yD > 0):
+                        self.set_solidity(True)
                         self.move_north(callback = lambda: self.__follow_loop(game_object))
                     elif(yD < 0):
+                        self.set_solidity(True)
                         self.move_south(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
@@ -259,11 +264,14 @@ class Character(GameObject):
                 self.face_east(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             elif(xD < -1):
                 if not engine.is_solid((xC - 1, yC)):
+                    self.set_solidity(True)
                     self.move_west(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(yD > 0):
+                        self.set_solidity(True)
                         self.move_north(callback = lambda: self.__follow_loop(game_object))
                     elif(yD < 0):
+                        self.set_solidity(True)
                         self.move_south(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
@@ -274,11 +282,14 @@ class Character(GameObject):
         else:
             if(yD > 1):
                 if not engine.is_solid((xC, yC + 1)):
+                    self.set_solidity(True)
                     self.move_north(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(xD > 0):
+                        self.set_solidity(True)
                         self.move_east(callback = lambda: self.__follow_loop(game_object))
                     elif(xD < 0):
+                        self.set_solidity(True)
                         self.move_west(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
@@ -287,11 +298,14 @@ class Character(GameObject):
                 self.face_north(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             elif(yD < -1):
                 if not engine.is_solid((xC, yC - 1)):
+                    self.set_solidity(True)
                     self.move_south(callback = lambda: self.__follow_loop(game_object))
                 else:
                     if(xD > 0):
+                        self.set_solidity(True)
                         self.move_east(callback = lambda: self.__follow_loop(game_object))
                     elif(xD < 0):
+                        self.set_solidity(True)
                         self.move_west(callback = lambda: self.__follow_loop(game_object))
                     else:
                         self.wait(0.3, callback = lambda: self.__follow_loop(game_object))

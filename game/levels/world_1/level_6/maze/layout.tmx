@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="40" height="70" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
+ <layer name="Ground" width="40" height="70">
+  <data encoding="base64" compression="zlib">
+   eJztw0ENAAAMA6GTWv8q5mIvSFg1VVVVVVVVVVVVVfXlAWJaGj0=
+  </data>
+ </layer>
+ <layer name="Decor" width="40" height="70">
+  <data encoding="base64" compression="zlib">
+   eJztw6ENAAAIA7CdikLxv+YKBEmbdJKM+nKrHi1VVVVVVVVVVfXsAu0bLA0=
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="40" height="70">
+  <data encoding="base64" compression="zlib">
+   eJztzrEJAAAIwDDxLv+/ywfcFUmgeysj6kiT7Sd//q4EAAAAAAAAAAAA/NDF2DLd
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="40" height="70">
+  <object name="characters/player/player_one" gid="286" x="704" y="704" width="64" height="64"/>
+  <object name="characters/npcs/myla/myla" gid="291" x="576" y="704" width="64" height="64"/>
+  <object name="vines/vines_0_0" gid="101" x="0" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_1" gid="101" x="64" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_2" gid="101" x="128" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_3" gid="101" x="192" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_4" gid="101" x="256" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_5" gid="101" x="320" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_6" gid="101" x="384" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_7" gid="101" x="448" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_8" gid="101" x="512" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_9" gid="101" x="576" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_10" gid="101" x="640" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_11" gid="101" x="704" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_12" gid="101" x="768" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_13" gid="101" x="832" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_14" gid="101" x="896" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_15" gid="101" x="960" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_16" gid="101" x="1024" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_17" gid="101" x="1088" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_18" gid="101" x="1152" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_19" gid="101" x="1216" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_20" gid="101" x="1280" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_21" gid="101" x="1344" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_22" gid="101" x="1408" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_23" gid="101" x="1472" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_24" gid="101" x="1536" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_25" gid="101" x="1600" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_26" gid="101" x="1664" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_27" gid="101" x="1728" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_28" gid="101" x="1792" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_29" gid="101" x="1856" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_30" gid="101" x="1920" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_31" gid="101" x="1984" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_32" gid="101" x="2048" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_33" gid="101" x="2112" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_34" gid="101" x="2176" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_35" gid="101" x="2240" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_36" gid="101" x="2304" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_37" gid="101" x="2368" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_38" gid="101" x="2432" y="448" width="64" height="64"/>
+  <object name="vines/vines_0_39" gid="101" x="2496" y="448" width="64" height="64"/>
+  <object name="vines/vines_1_0" gid="101" x="0" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_1" gid="101" x="64" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_2" gid="101" x="128" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_3" gid="101" x="192" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_4" gid="101" x="256" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_5" gid="101" x="320" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_6" gid="101" x="384" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_7" gid="101" x="448" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_8" gid="101" x="512" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_9" gid="101" x="576" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_10" gid="101" x="640" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_11" gid="101" x="704" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_12" gid="101" x="768" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_13" gid="101" x="832" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_14" gid="101" x="896" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_15" gid="101" x="960" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_16" gid="101" x="1024" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_17" gid="101" x="1088" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_18" gid="101" x="1152" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_19" gid="101" x="1216" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_20" gid="101" x="1280" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_21" gid="101" x="1344" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_22" gid="101" x="1408" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_23" gid="101" x="1472" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_24" gid="101" x="1536" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_25" gid="101" x="1600" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_26" gid="101" x="1664" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_27" gid="101" x="1728" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_28" gid="101" x="1792" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_29" gid="101" x="1856" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_30" gid="101" x="1920" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_31" gid="101" x="1984" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_32" gid="101" x="2048" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_33" gid="101" x="2112" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_34" gid="101" x="2176" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_35" gid="101" x="2240" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_36" gid="101" x="2304" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_37" gid="101" x="2368" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_38" gid="101" x="2432" y="512" width="64" height="64"/>
+  <object name="vines/vines_1_39" gid="101" x="2496" y="512" width="64" height="64"/>
+  <object name="vines/vines_2_0" gid="101" x="0" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_1" gid="101" x="64" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_2" gid="101" x="128" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_3" gid="101" x="192" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_4" gid="101" x="256" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_5" gid="101" x="320" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_6" gid="101" x="384" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_7" gid="101" x="448" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_8" gid="101" x="512" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_9" gid="101" x="576" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_10" gid="101" x="640" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_11" gid="101" x="704" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_12" gid="101" x="768" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_13" gid="101" x="832" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_14" gid="101" x="896" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_15" gid="101" x="960" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_16" gid="101" x="1024" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_17" gid="101" x="1088" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_18" gid="101" x="1152" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_19" gid="101" x="1216" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_20" gid="101" x="1280" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_21" gid="101" x="1344" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_22" gid="101" x="1408" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_23" gid="101" x="1472" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_24" gid="101" x="1536" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_25" gid="101" x="1600" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_26" gid="101" x="1664" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_27" gid="101" x="1728" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_28" gid="101" x="1792" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_29" gid="101" x="1856" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_30" gid="101" x="1920" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_31" gid="101" x="1984" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_32" gid="101" x="2048" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_33" gid="101" x="2112" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_34" gid="101" x="2176" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_35" gid="101" x="2240" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_36" gid="101" x="2304" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_37" gid="101" x="2368" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_38" gid="101" x="2432" y="576" width="64" height="64"/>
+  <object name="vines/vines_2_39" gid="101" x="2496" y="576" width="64" height="64"/>
+  <object name="vines/vines_3_0" gid="101" x="0" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_1" gid="101" x="64" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_2" gid="101" x="128" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_3" gid="101" x="192" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_4" gid="101" x="256" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_5" gid="101" x="320" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_6" gid="101" x="384" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_7" gid="101" x="448" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_8" gid="101" x="512" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_9" gid="101" x="576" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_10" gid="101" x="640" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_11" gid="101" x="704" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_12" gid="101" x="768" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_13" gid="101" x="832" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_14" gid="101" x="896" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_15" gid="101" x="960" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_16" gid="101" x="1024" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_17" gid="101" x="1088" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_18" gid="101" x="1152" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_19" gid="101" x="1216" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_20" gid="101" x="1280" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_21" gid="101" x="1344" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_22" gid="101" x="1408" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_23" gid="101" x="1472" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_24" gid="101" x="1536" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_25" gid="101" x="1600" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_26" gid="101" x="1664" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_27" gid="101" x="1728" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_28" gid="101" x="1792" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_29" gid="101" x="1856" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_30" gid="101" x="1920" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_31" gid="101" x="1984" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_32" gid="101" x="2048" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_33" gid="101" x="2112" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_34" gid="101" x="2176" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_35" gid="101" x="2240" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_36" gid="101" x="2304" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_37" gid="101" x="2368" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_38" gid="101" x="2432" y="640" width="64" height="64"/>
+  <object name="vines/vines_3_39" gid="101" x="2496" y="640" width="64" height="64"/>
+  <object name="vines/vines_4_0" gid="101" x="0" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_1" gid="101" x="64" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_2" gid="101" x="128" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_3" gid="101" x="192" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_4" gid="101" x="256" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_5" gid="101" x="320" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_6" gid="101" x="384" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_7" gid="101" x="448" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_8" gid="101" x="512" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_9" gid="101" x="576" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_10" gid="101" x="640" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_11" gid="101" x="704" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_12" gid="101" x="768" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_13" gid="101" x="832" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_14" gid="101" x="896" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_15" gid="101" x="960" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_16" gid="101" x="1024" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_17" gid="101" x="1088" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_18" gid="101" x="1152" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_19" gid="101" x="1216" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_20" gid="101" x="1280" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_21" gid="101" x="1344" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_22" gid="101" x="1408" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_23" gid="101" x="1472" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_24" gid="101" x="1536" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_25" gid="101" x="1600" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_26" gid="101" x="1664" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_27" gid="101" x="1728" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_28" gid="101" x="1792" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_29" gid="101" x="1856" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_30" gid="101" x="1920" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_31" gid="101" x="1984" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_32" gid="101" x="2048" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_33" gid="101" x="2112" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_34" gid="101" x="2176" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_35" gid="101" x="2240" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_36" gid="101" x="2304" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_37" gid="101" x="2368" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_38" gid="101" x="2432" y="704" width="64" height="64"/>
+  <object name="vines/vines_4_39" gid="101" x="2496" y="704" width="64" height="64"/>
+  <object name="vines/vines_5_0" gid="101" x="0" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_1" gid="101" x="64" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_2" gid="101" x="128" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_3" gid="101" x="192" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_4" gid="101" x="256" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_5" gid="101" x="320" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_6" gid="101" x="384" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_7" gid="101" x="448" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_8" gid="101" x="512" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_9" gid="101" x="576" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_10" gid="101" x="640" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_11" gid="101" x="704" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_12" gid="101" x="768" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_13" gid="101" x="832" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_14" gid="101" x="896" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_15" gid="101" x="960" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_16" gid="101" x="1024" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_17" gid="101" x="1088" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_18" gid="101" x="1152" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_19" gid="101" x="1216" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_20" gid="101" x="1280" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_21" gid="101" x="1344" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_22" gid="101" x="1408" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_23" gid="101" x="1472" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_24" gid="101" x="1536" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_25" gid="101" x="1600" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_26" gid="101" x="1664" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_27" gid="101" x="1728" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_28" gid="101" x="1792" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_29" gid="101" x="1856" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_30" gid="101" x="1920" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_31" gid="101" x="1984" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_32" gid="101" x="2048" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_33" gid="101" x="2112" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_34" gid="101" x="2176" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_35" gid="101" x="2240" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_36" gid="101" x="2304" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_37" gid="101" x="2368" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_38" gid="101" x="2432" y="768" width="64" height="64"/>
+  <object name="vines/vines_5_39" gid="101" x="2496" y="768" width="64" height="64"/>
+  <object name="vines/vines_6_0" gid="101" x="0" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_1" gid="101" x="64" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_2" gid="101" x="128" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_3" gid="101" x="192" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_4" gid="101" x="256" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_5" gid="101" x="320" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_6" gid="101" x="384" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_7" gid="101" x="448" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_8" gid="101" x="512" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_9" gid="101" x="576" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_10" gid="101" x="640" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_11" gid="101" x="704" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_12" gid="101" x="768" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_13" gid="101" x="832" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_14" gid="101" x="896" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_15" gid="101" x="960" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_16" gid="101" x="1024" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_17" gid="101" x="1088" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_18" gid="101" x="1152" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_19" gid="101" x="1216" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_20" gid="101" x="1280" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_21" gid="101" x="1344" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_22" gid="101" x="1408" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_23" gid="101" x="1472" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_24" gid="101" x="1536" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_25" gid="101" x="1600" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_26" gid="101" x="1664" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_27" gid="101" x="1728" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_28" gid="101" x="1792" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_29" gid="101" x="1856" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_30" gid="101" x="1920" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_31" gid="101" x="1984" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_32" gid="101" x="2048" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_33" gid="101" x="2112" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_34" gid="101" x="2176" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_35" gid="101" x="2240" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_36" gid="101" x="2304" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_37" gid="101" x="2368" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_38" gid="101" x="2432" y="832" width="64" height="64"/>
+  <object name="vines/vines_6_39" gid="101" x="2496" y="832" width="64" height="64"/>
+ </objectgroup>
+</map>

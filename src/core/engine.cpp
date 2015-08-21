@@ -35,8 +35,6 @@
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
-
-std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
 GameMain* Engine::game_main(nullptr);
 
 GameWindow* Engine::game_window(nullptr);
@@ -272,6 +270,22 @@ void Engine::close_notification_bar(){
 
 bool Engine::is_bar_open(){
     return (gui_main->is_bar_open());
+}
+
+void Engine::show_external_script_help(std::string text){
+    EventManager::get_instance()->add_event([text] {
+        gui_main->show_external_script_help(text);
+    });
+}
+
+void Engine::close_external_script_help(){
+    EventManager::get_instance()->add_event([] {
+        gui_main->close_external_script_help();
+    });
+}
+
+bool Engine::is_external_help_open(){
+    return (gui_main->is_external_help_open());
 }
 
 void Engine::show_py_scripter(){

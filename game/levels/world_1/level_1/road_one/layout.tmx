@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="26" height="20" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="30" height="50" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -24,23 +24,30 @@
  <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="26" height="20">
+ <layer name="Ground" width="30" height="50">
   <data encoding="base64" compression="zlib">
-   eJxLYGBgSBjFo3gUj+JRPIpH8ShGwgDsl8MB
+   eJztw0ENAAAMA6GTWv8qJmJfSFg1VVVVVVX19QDK+zKf
   </data>
  </layer>
- <layer name="Decor" width="26" height="20">
+ <layer name="Decor" width="30" height="50">
   <data encoding="base64" compression="zlib">
-   eJy1VVsKwkAMDD2FiOfbXX96ORV84ONopmAghDzVBoZCN51J0mQzA8AGMQuMz7MrZxqa+HYoPovOPsnHQca1SG8I7R1ia/Bo2pZp38ucKrl4xn20emZ5qhbFOop8hwngiDhNvhbVUbPu8FM8d+R/IZ6BTqVmUrcZZ2v+j1+txS6h/1r5ZeYjG7/Xl9kZpF6V/er1X6RFdyWP84zcN8QFcVX6taph5bTMxMOZCzJeY15H647zZrV6P1ga/+y56m75RtPikHl1431171j7wNvN2b2t5cDjfQOZdnQJ
+   eJy1WEluAzEM01N9aiaX/P9YBKhQVSGpJSkBIzNeRFOS7XEeZvYYFmv0OaTukDbFFdGZx8T+reBDvBtuVN9FpeEa6Fa4FtxZ30nj3L8IX8V8qnhd9lezP98N670J+13+6O+tn+McHdn3E59PuSuo9aHi4ajiGhH7Ko6T6liMHSiXGbo5jvz+LqbciFdpzTmPeN2XHssT3o+96mbo+Hyb07F+C2VXrWnv0wHK/W2MkT8myOPupu2j9o3/OzpyzrHYo7ouJyqdOEeeDe8xPnfVzvozdHNHxZUVhM33wae0bvS/o3XDnc9KdnYy3Bf8h3B8Wtu7vjw/5QrPXpgd5uM8RiFzMV4Dz2wOiDPv+0rbZl10tFZc0+Ljpnz/rTXbmNrt5DBai7kf21ef/H7O+B4wvTOo+8Blr3cf5fvIbabvvBVv/kbszAHZmuay89xBXX6Pvune7yvujs5pHiMwni5/F9P9qroHboF42bsJbjUHNcdJHH0doXERcQ1NuY/gR+M2UBqd30Bdbn+ic9dHPPH/DxRL5YsNH7OV+yCtFS+yM/nmRnOr9rk8V2Qv/1Z+QG3Mn8hf1R4R1xDjO8lW7lNxeH+z3/8+unFQepkP87luhs9QH/MNtiCwgg==
   </data>
  </layer>
- <layer name="SpecialLayer" width="26" height="20">
+ <layer name="SpecialLayer" width="30" height="50">
   <data encoding="base64" compression="zlib">
-   eJyzYWJgsBnkGAZoaTY6oJc9yHYRYy81AbXtwGcGte1BpmllDy67aWX2YAC08h+90jWxdlDDfnrYQ2rZCGPTyh5KADXKSmrZQYmdtKwPqGE2NTEARSw7lQ==
+   eJzt00sOgCAMBFDiubj/uYwLN0ahlPlIdJLuMK+1ULdS6mAdGf0mW9eoPaYbjcNE25mw3d45l8u2e1HueGX3n1nrzvqrutke0G60B5bb8pHmyL93uWw7GpeLtDNh7RPtv2U2lpc1VXMq3wfaitxXZjndO981L9v+khuJw0T5s1nNPe1WD60e2Ttm25moXfV7QnvRHTPdpz7Y9l/Y2gHoAvPj
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="26" height="20">
-  <object name="characters/player/player_one" gid="286" x="1152" y="512"/>
-  <object name="characters/npcs/heidi/heidi" gid="291" x="1600" y="576"/>
+ <objectgroup name="Object Layer 1" width="30" height="50">
+  <object name="characters/player/player_one" gid="286" x="0" y="2496"/>
+  <object name="tile_trigger/exit_to_village_bottom" gid="292" x="0" y="2560"/>
+  <object name="tile_trigger/exit_to_village_top" gid="292" x="0" y="2496"/>
+  <object name="sign/village_sign" gid="288" x="192" y="2496"/>
+  <object name="sign/bog_sign" gid="288" x="1408" y="1472"/>
+  <object name="sign/merchant_sign" gid="288" x="768" y="128"/>
+  <object name="characters/enemies/crocodile/annoying_croc" gid="288" x="1856" y="1600"/>
+  <object name="characters/npcs/heidi/heidi" gid="291" x="1792" y="3200"/>
+  <object name="tile_trigger/no_potion" gid="292" x="768" y="1216"/>
  </objectgroup>
 </map>

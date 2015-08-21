@@ -65,6 +65,19 @@ void GameEngine::show_dialogue(std::string text, bool disable_scripting, PyObjec
     Engine::open_notification_bar(disable_scripting, boost_callback);
 }
 
+void GameEngine::show_external_script_help(std::string text, PyObject *callback) {
+
+    if(Engine::is_bar_open()){
+        LOG(INFO) << "Replacing the old notification bar with the external_script_help";
+        Engine::close_notification_bar();
+    }
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
+    LOG(INFO) << "Adding " << text << "to the external script help with a regular callback";
+    Engine::show_external_script_help(text);
+}
+
 void GameEngine::show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *_boost_options){
 
     if(Engine::is_bar_open()){

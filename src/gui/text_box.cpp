@@ -52,6 +52,27 @@ TextBox::TextBox(TextBoxType _type) {
 
         this->add(forward_button);
     }
+    if(type == TextBoxType::ExternalScriptHelp){
+        forward_button->move_text(0.0f, 0.0f);
+        forward_button->set_picture("gui/status/running");
+
+        forward_button->set_on_click([&] () {
+            LOG(INFO) << "forward button pressed";
+
+            if(text_stack.can_forward()){
+                traverse_text(Direction::NEXT);
+
+                if(!text_stack.can_forward()){
+                    forward_button->set_picture("gui/status/failed");
+                    forward_button->set_visible(false);
+                    forward_button->set_clickable(false);
+                }
+                Engine::get_gui()->refresh_gui();
+            }
+        });
+
+        this->add(forward_button);
+    }
     else if(type == TextBoxType::Display){
         forward_button->move_text(0.0f, 0.0f);
         forward_button->set_picture("gui/status/running");
@@ -133,6 +154,16 @@ void TextBox::open(){
             forward_button->set_picture("gui/status/failed");
         }
     }
+    if(type == TextBoxType::ExternalScriptHelp){
+        forward_button->set_visible(true);
+        forward_button->set_clickable(true);
+
+        if(!text_stack.can_forward()){
+            forward_button->set_picture("gui/status/failed");
+            forward_button->set_visible(false);
+            forward_button->set_clickable(false);
+        }
+    }
     else if(type == TextBoxType::Display){
         forward_button->set_visible(true);
         forward_button->set_clickable(true);
@@ -179,7 +210,7 @@ void TextBox::add_message(std::string text_to_display) {
 
 void TextBox::resize_buttons(float width, float height){
 
-    if(type == TextBoxType::Bar){
+    if(type == TextBoxType::Bar || type == TextBoxType::ExternalScriptHelp){
         forward_button->set_width(width);
         forward_button->set_height(height);
     }
@@ -193,7 +224,7 @@ void TextBox::resize_buttons(float width, float height){
 
 void TextBox::move_buttons(float x_offset, float y_offset, float spacing /* = 0.0f */){
 
-    if(type == TextBoxType::Bar){
+    if(type == TextBoxType::Bar || type == TextBoxType::ExternalScriptHelp){
         forward_button->set_x_offset(x_offset);
         forward_button->set_y_offset(y_offset);
     }
@@ -207,7 +238,7 @@ void TextBox::move_buttons(float x_offset, float y_offset, float spacing /* = 0.
 
 void TextBox::hide_buttons(){
 
-    if(type == TextBoxType::Bar){
+    if(type == TextBoxType::Bar || type == TextBoxType::ExternalScriptHelp){
         forward_button->set_visible(false);
         forward_button->set_clickable(false);
     }
