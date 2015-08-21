@@ -112,6 +112,15 @@ class Player(Character, ScriptStateContainer):
             script_api["move_south"] = scriptrunner.make_blocking(self.move_south)
             script_api["move_west"] = scriptrunner.make_blocking(self.move_west)
 
+
+            script_api["face_north"] = scriptrunner.make_blocking(self.face_north)
+            script_api["face_east"] = scriptrunner.make_blocking(self.face_east)
+            script_api["face_south"] = scriptrunner.make_blocking(self.face_south)
+            script_api["face_west"] = scriptrunner.make_blocking(self.face_west)
+
+
+            script_api["wait"] = scriptrunner.make_blocking(lambda callback: self.wait(0.3, callback))
+
             #the method to get the position of the player
             script_api["get_position"] = self.get_position
             script_api["get_flag_message"] = self.get_flag_message

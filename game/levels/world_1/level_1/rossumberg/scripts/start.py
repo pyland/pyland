@@ -137,4 +137,4 @@ player_one.focus()
 engine.play_music("calm")
 engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in the config.
 
-engine.disable_py_scripter()
+#engine.disable_py_scripter()
