@@ -13,6 +13,7 @@ class GameObject:
     """
 
     __name = ""
+    __visibility = False
     __entity = None  #An instance of Entity.hpp/cpp
     __engine = None  #An instanece of GameEngine.hpp/cpp
 
@@ -76,9 +77,10 @@ class GameObject:
         return
 
     def is_visible(self):
-        return True #TODO: implement this in entity
+        return self.__visibility
 
     def set_visible(self, visibility, callback = lambda : None):
+        self.__visibility = visibility
         self.__entity.set_visibility(visibility, callback)
         return
 

@@ -33,8 +33,20 @@ class Vines(GameObject):
         self.set_visible(False)
         self.set_solidity(False)
 
+    def grow(self, player_object, callback = lambda : None):
+        if(self.get_position() == player_object.get_position()):
+            self.die_action()
+        self.set_visible(True, callback)
+
     def player_action(self, player_object):
         engine = self.get_engine()
         player_object.set_busy(True)
         engine.show_dialogue(self.__message, callback = lambda: player_object.set_busy(False))
-    
+
+    def player_walked_on(self, player_object):
+        #self.get_engine().print_terminal("Been Walked on")
+        if(self.is_visible()):
+            self.die_action()
+
+    def die_action(self):
+        self.get_engine().print_terminal("Oh no! The vines got you!")

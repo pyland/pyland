@@ -112,6 +112,12 @@ void Entity::set_visibility(bool visibility, PyObject *callback) {
     });
 }
 
+bool Entity::is_visible() {
+    auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
+    return object->is_renderable();
+    
+}
+
 bool Entity::is_solid() {
     auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
     Walkability w = object->get_walkability();

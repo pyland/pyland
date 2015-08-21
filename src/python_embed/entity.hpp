@@ -161,6 +161,8 @@ class Entity {
         void set_solidity(bool solidity, PyObject *callback);
         void set_visibility(bool set_visibility, PyObject *callback);
 
+        bool is_visible();
+
         ///
         /// Return the solidity of the object
         ///
