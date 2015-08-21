@@ -137,6 +137,7 @@ MainWindow::MainWindow(GameMain *exGame):
     }
 
     externalWorkspace = false;
+    externalDialogue = false;
 
     lexer = new QsciLexerPython;
     lexer->setAutoIndentStyle(QsciScintilla::AiMaintain);
@@ -779,7 +780,7 @@ void MainWindow::setTabs(int num){
 }
 
 
-void MainWindow::createExternalTab(){
+void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, bool dialogue){
     textWidget->addTab(workspaces[workspace_max-1],"*");
     buttonRun->setText("Give script");
     buttonSpeed->setText("Cancel");
@@ -790,12 +791,21 @@ void MainWindow::createExternalTab(){
 
     textWidget->setTabEnabled(textWidget->indexOf(workspaces[workspace_max-1]),true);
 
+
     textWidget->setCurrentWidget(workspaces[workspace_max-1]);
 
     externalWorkspace = true;
+    externalDialogue = dialogue;
+    externalConfirmCallback = confirmCallback;
+    externalCancelCallback = cancelCallback;
+
 }
 
 void MainWindow::removeExternalTab(){
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+
+    ws->clear();
+
     setTabs(currentTabs);
     setRunning(script_running);
     setFast(fast);
@@ -805,6 +815,9 @@ void MainWindow::removeExternalTab(){
     }
 
     externalWorkspace = false;
+
+
+    //if (external_dialougue) Engine::close_external_script_help();
 }
 
 //When the QT window is closed
@@ -825,6 +838,33 @@ void MainWindow::clickRun()
 void MainWindow::runCode(int script)
 {
     if (externalWorkspace){
+
+        QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+
+        //read in the player script paths (as defined in the config file)
+        std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
+        std::string path = player_scripts_location + "/10.py";
+
+        //Write out the external script text to 10.py
+        //This python script is always run in bootstrapper.py (in start)
+        ofstream fout(path.c_str(), ios::out|ios::trunc);
+
+        if(!(fout.good()))
+        {
+            LOG(INFO) << "Output file is bad" << endl;
+            return;
+        }
+
+        fout << ws->text().toStdString();
+
+        fout.close();
+
+        boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalConfirmCallback)));
+        EventManager::get_instance()->add_event([boost_callback] {
+            boost_callback();
+        });
+
+        if (externalDialogue) Engine::close_notification_bar();
 
         return;
     }
@@ -859,7 +899,7 @@ void MainWindow::runCode(int script)
             }
         }
 
-        //read in the player scripts (as defined in the config file)
+        //read in the player script paths (as defined in the config file)
         std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
         std::string path = player_scripts_location + "/" + std::to_string(index) + ".py";
 
@@ -867,19 +907,16 @@ void MainWindow::runCode(int script)
         //Also save as 'Current Script.py' as temporary measure before new input manager
         //This python script is always run in bootstrapper.py (in start)
         ofstream fout(path.c_str(), ios::out|ios::trunc);
-        //ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
 
-        if(!(fout.good()))// && foutcopy.good()))
+        if(!(fout.good()))
         {
             LOG(INFO) << "Output file is bad" << endl;
             return;
         }
 
         fout << ws->text().toStdString();
-        //foutcopy << ws->text().toStdString();
 
         fout.close();
-        //foutcopy.close();
 
         setRunning(true);
         updateSpeed();
@@ -906,6 +943,13 @@ void MainWindow::clickSpeed()
 void MainWindow::toggleSpeed()
 {
     if (externalWorkspace){
+        boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalCancelCallback)));
+        EventManager::get_instance()->add_event([boost_callback] {
+            boost_callback();
+        });
+
+        if (externalDialogue) Engine::close_notification_bar();
+
         return;
     }
 
@@ -1029,8 +1073,7 @@ void MainWindow::insertToTextEditor(std::string text)
 //Clear the text in the currently open text editor tab
 void MainWindow::clearTextEditor()
 {
-    QsciScintilla *ws;
-    ws = (QsciScintilla*)textWidget->currentWidget();
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
     ws->clear();
 }

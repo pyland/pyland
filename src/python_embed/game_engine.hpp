@@ -123,7 +123,7 @@ class GameEngine {
         void enable_script_editing(PyObject* callback);
         void disable_script_editing(PyObject* callback);
         void set_py_tabs(int val, PyObject* callback);
-        void show_external_tab(PyObject* callback);
+        void show_external_tab(PyObject* confirm_callback, PyObject* cancel_callback, bool external_dialogue, PyObject* callback);
         void hide_external_tab(PyObject* callback);
 
         ///

@@ -5,6 +5,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <boost/python/object_core.hpp>
+
 #include <glm/vec2.hpp>
 #include <string>
 #include <memory>
@@ -194,7 +196,7 @@ public:
     static void enable_script_editing();
     static void disable_script_editing();
     static void set_py_tabs(int val);
-    static void show_external_tab();
+    static void show_external_tab(PyObject* confirm_callback, PyObject* cancel_callback, bool external_dialogue);
     static void hide_external_tab();
     static void update_world(std::string text);
     static void update_level(std::string text);

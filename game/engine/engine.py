@@ -284,8 +284,8 @@ class Engine:
     def set_py_tabs(self, num, callback = lambda: None):
         self.__cpp_engine.set_py_tabs(num, callback)
 
-    def show_external_tab(self, callback = lambda: None):
-        self.__cpp_engine.show_external_tab(callback)
+    def show_external_tab(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = False, callback = lambda: None):
+        self.__cpp_engine.show_external_tab(confirm_callback, cancel_callback, external_dialogue, callback)
 
     def hide_external_tab(self, callback = lambda: None):
         self.__cpp_engine.hide_external_tab(callback)

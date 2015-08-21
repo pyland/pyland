@@ -15,6 +15,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <boost/python/object_core.hpp>
+
 #include <QMainWindow>
 #include <QDialog>
 #include <QLabel>
@@ -61,7 +63,7 @@ public:
     void disableScripter();
 
     void setTabs(int num);
-    void createExternalTab();
+    void createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, bool externalDialogue);
     void removeExternalTab();
 
     void updateSpeed();
@@ -115,6 +117,9 @@ private:
     static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
     bool externalWorkspace;
+    bool externalDialogue;
+    PyObject* externalConfirmCallback;
+    PyObject* externalCancelCallback;
     QWidget *zoomWidget[workspace_max];
     QHBoxLayout *zoomLayout[workspace_max];
     QPushButton *buttonIn[workspace_max];
