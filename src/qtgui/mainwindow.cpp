@@ -136,6 +136,8 @@ MainWindow::MainWindow(GameMain *exGame):
         textWidget->addTab(workspaces[ws], w);
     }
 
+    externalWorkspace = false;
+
     lexer = new QsciLexerPython;
     lexer->setAutoIndentStyle(QsciScintilla::AiMaintain);
 
@@ -779,23 +781,30 @@ void MainWindow::setTabs(int num){
 
 void MainWindow::createExternalTab(){
     textWidget->addTab(workspaces[workspace_max-1],"*");
-    textWidget->setCurrentIndex(workspace_max-1);
     buttonRun->setText("Give script");
     buttonSpeed->setText("Cancel");
-    for(int ws = 0; ws < (workspace_max-1); ws++)
+    for(int ws = 0; ws < (workspace_max); ws++)
     {
-        textWidget->setTabEnabled(ws,false);
+        textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]),false);
     }
+
+    textWidget->setTabEnabled(textWidget->indexOf(workspaces[workspace_max-1]),true);
+
+    textWidget->setCurrentWidget(workspaces[workspace_max-1]);
+
+    externalWorkspace = true;
 }
 
 void MainWindow::removeExternalTab(){
     setTabs(currentTabs);
     setRunning(script_running);
     setFast(fast);
-    for(int ws = 0; ws < (workspace_max-1); ws++)
+    for(int ws = 0; ws < (workspace_max); ws++)
     {
-        textWidget->setTabEnabled(ws,true);
+        textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]),true);
     }
+
+    externalWorkspace = false;
 }
 
 //When the QT window is closed
@@ -815,6 +824,11 @@ void MainWindow::clickRun()
 //If zero the currently open script is run
 void MainWindow::runCode(int script)
 {
+    if (externalWorkspace){
+
+        return;
+    }
+
     if (!scriptEnabled) return;
     if (script_running)
     {
@@ -891,6 +905,10 @@ void MainWindow::clickSpeed()
 //Toggle the speed setting
 void MainWindow::toggleSpeed()
 {
+    if (externalWorkspace){
+        return;
+    }
+
     if (!scriptEnabled) return;
     setFast(!fast);
     updateSpeed();

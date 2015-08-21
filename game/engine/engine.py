@@ -284,11 +284,11 @@ class Engine:
     def set_py_tabs(self, num, callback = lambda: None):
         self.__cpp_engine.set_py_tabs(num, callback)
 
-    def show_external_tab(self, num, callback = lambda: None):
-        self.__cpp_engine.show_external_tab(num, callback)
+    def show_external_tab(self, callback = lambda: None):
+        self.__cpp_engine.show_external_tab(callback)
 
-    def hide_external_tab(self, num, callback = lambda: None):
-        self.__cpp_engine.hide_external_tab(num, callback)
+    def hide_external_tab(self, callback = lambda: None):
+        self.__cpp_engine.hide_external_tab(callback)
 
     def insert_to_scripter(self, text, callback = lambda: None):
         self.__cpp_engine.insert_to_scripter(text)

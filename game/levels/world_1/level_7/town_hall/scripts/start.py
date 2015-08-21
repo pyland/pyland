@@ -4,7 +4,8 @@ player.focus()
 engine.update_player_name(engine.get_player_name(), player.get_focus_button_id())
 
 engine.play_music("eery")
-engine.update_level("7");
+engine.update_level("7")
+engine.set_py_tabs(3)
 
 player.face_east()
 player.set_busy(True)
@@ -77,7 +78,7 @@ player1_sequence = [
     #lambda callback: engine.show_dialogue("My PyRunner script is broken. Can you fix it so I move east and get to the desert?", callback = callback),
     lambda callback: engine.show_dialogue_with_options(
         "My PyRunner script is broken. Can you fix it so I move east and get to the desert?",
-        {
+        callback = {
             "Yes": lambda: engine.run_callback_list_sequence(player1_help_sequence), #change the level once the intro has finished
             "No" : lambda: engine.run_callback_list_sequence(player1_reject_sequence)
         }
@@ -86,15 +87,16 @@ player1_sequence = [
 ]
 
 player1_help_sequence = [
-    lambda callback: engine.show_dialogue("Thank you! Here is my script.", callback = callback),
+    lambda callback: engine.show_dialogue("Thank you! Here is my script.", disable_scripting = False, callback = callback),
     #lambda callback: player.set_busy(False, callback = callback),
     lambda callback: update_snake_stage(snake = 0, stage = 1, callback = callback),
-    lambda callback: engine.clear_scripter(callback = callback),
     lambda callback: engine.show_external_tab(callback = callback),
-
+    lambda callback: engine.clear_scripter(callback = callback),
     lambda callback: engine.insert_to_scripter("moe_east()", callback = callback),
     lambda callback: engine.enable_py_scripter(callback = callback),
-    lambda callback: engine.show_dialogue("Give it a run when it's working!", callback = callback),
+    lambda callback: engine.show_dialogue("Give it a run when it's working!", disable_scripting = False, callback = callback),
+
+    lambda callback: engine.hide_external_tab(callback = callback),
 ]
 
 player1_reject_sequence = [

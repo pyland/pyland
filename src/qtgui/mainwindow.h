@@ -114,7 +114,7 @@ private:
 
     static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
-    //QsciScintilla *external_workspace;
+    bool externalWorkspace;
     QWidget *zoomWidget[workspace_max];
     QHBoxLayout *zoomLayout[workspace_max];
     QPushButton *buttonIn[workspace_max];
