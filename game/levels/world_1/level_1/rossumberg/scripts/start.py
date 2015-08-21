@@ -6,6 +6,8 @@ current_level = "/world_1/level_1/rossumberg"
 #setting the player starting position before anything else based on which level the player was at previously
 if player_data["current_level"] == "/world_1/level_1/player_house":
     player_one.move_to(exit_to_house.get_position(), callback = player_one.move_south)
+elif player_data["current_level"] == "/world_1/level_1/road_one":
+    player_one.move_to(exit_to_road_top.get_position(), callback = player_one.face_west)
 else: #default level starting position
     player_one.move_to(exit_to_house.get_position(), callback = player_one.move_south)
 
@@ -37,13 +39,19 @@ def go_to_house(player_object):
 
 exit_to_house.player_walked_on = go_to_house
 
+def go_to_road(player_object):
+    engine.change_map("/world_1/level_1/road_one")
+
+exit_to_road_top.player_walked_on = go_to_road
+exit_to_road_bottom.player_walked_on = go_to_road
+
 def heidi_player_action(player_object):
     player_one.set_busy(True)
-    engine.show_dialogue("Remember, the merchant is east.", callback = lambda: player_one.set_busy(False))
+    engine.show_dialogue("Remember, the merchant is East.", callback = lambda: player_one.set_busy(False))
 
 heidi.player_action = heidi_player_action
 
-route_sign.set_message("(east) merchant \n(east) bog")
+route_sign.set_message("Rossumberg, where your mum is the village bicycle \n(east) merchant (east) bog")
 
 """ LEVEL EVENTS """
 
