@@ -50,7 +50,6 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     create_bag();
     create_pyguide();
 
-
     LOG(INFO) << "Constructed GUIMain.";
 }
 

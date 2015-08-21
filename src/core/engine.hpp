@@ -150,18 +150,10 @@ public:
     static void change_tile(glm::ivec2 tile, std::string layer_name, std::string tile_name);
 
     ///
-    /// Get the location of the map object or sprite in the map, throws exception if
-    /// there is the object is not on the map
-    /// @id the id of the object
-    /// @return a pair which is the (x, y) tuple of the object position
-    ///
-    static glm::vec2 find_object(int id);
-
-    ///
     /// Get a list of objects at this point, doesn't include sprites
     /// @return a vector of object ids
     ///
-    static std::vector<int> get_objects_at(glm::vec2 location);
+    static std::vector<int> get_objects_at(glm::ivec2 location);
 
     ///
     /// Get the instance of the QT mainwindow
@@ -186,8 +178,8 @@ public:
 
     static void add_dialogue(std::string text);
     static void add_text(std::string text);
-    static void open_notification_bar(std::function<void ()> func);
-    static void open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > _options);
+    static void open_notification_bar(bool disable_scripting, std::function<void ()> func);
+    static void open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair<std::string, std::function<void ()> > > _options);
     static void close_notification_bar();
     static bool is_bar_open();
 

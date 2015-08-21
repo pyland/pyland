@@ -51,6 +51,7 @@ route_sign.set_message("(east) merchant \n(east) bog")
 if not level_state["heidi_has_spoken_about_prank"]:
     """ Heidi introducing herself and walking over to the player """
     heidi_introduction_sequence = [
+        lambda callback: heidi.move_to(exit_to_road_top.get_position(), callback = callback),
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_south(callback = callback),
         lambda callback: heidi.face_west(callback = callback),

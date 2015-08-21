@@ -95,6 +95,9 @@ int Map::get_tile_type(int x, int y) {
     for(auto it = layer_ids.begin(); it != layer_ids.end(); ++it) {
         std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(*it);
         if(layer->get_name() == Config::get_instance()["layers"]["special_layer_name"]) {
+            if((layer->get_width_tiles() < x) || (layer->get_height_tiles() < y) || (x < 0) || (y < 0)) {
+                return 1; //The edge of the map is solid
+            }
             return layer->get_tile(x, y).second;
         }
     }

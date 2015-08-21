@@ -782,12 +782,20 @@ void MainWindow::createExternalTab(){
     textWidget->setCurrentIndex(workspace_max-1);
     buttonRun->setText("Give script");
     buttonSpeed->setText("Cancel");
+    for(int ws = 0; ws < (workspace_max-1); ws++)
+    {
+        textWidget->setTabEnabled(ws,false);
+    }
 }
 
 void MainWindow::removeExternalTab(){
     setTabs(currentTabs);
     setRunning(script_running);
     setFast(fast);
+    for(int ws = 0; ws < (workspace_max-1); ws++)
+    {
+        textWidget->setTabEnabled(ws,true);
+    }
 }
 
 //When the QT window is closed

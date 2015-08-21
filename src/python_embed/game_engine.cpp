@@ -51,7 +51,7 @@ void GameEngine::print_debug(std::string debug_message) {
     LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
 }
 
-void GameEngine::show_dialogue(std::string text, PyObject *callback) {
+void GameEngine::show_dialogue(std::string text, bool disable_scripting, PyObject *callback) {
 
     if(Engine::is_bar_open()){
         LOG(INFO) << "Replacing the old notification bar with the new one";
@@ -62,10 +62,10 @@ void GameEngine::show_dialogue(std::string text, PyObject *callback) {
 
     LOG(INFO) << "Adding " << text << "to the notification bar with a regular callback";
     Engine::add_text(text);
-    Engine::open_notification_bar(boost_callback);
+    Engine::open_notification_bar(disable_scripting, boost_callback);
 }
 
-void GameEngine::show_dialogue_with_options(std::string text, PyObject *_boost_options){
+void GameEngine::show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *_boost_options){
 
     if(Engine::is_bar_open()){
         LOG(INFO) << "Replacing the old notification bar with the new one";
@@ -92,7 +92,7 @@ void GameEngine::show_dialogue_with_options(std::string text, PyObject *_boost_o
 
     LOG(INFO) << "Adding " << text << "to the notification bar with options";
     Engine::add_text(text);
-    Engine::open_notification_bar_with_options(options);
+    Engine::open_notification_bar_with_options(disable_scripting, options);
 }
 
 unsigned int GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {
@@ -140,40 +140,76 @@ void GameEngine::play_music(std::string song_name) {
 }
 
 
-void GameEngine::show_py_scripter(){
+void GameEngine::show_py_scripter(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::show_py_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::hide_py_scripter(){
+void GameEngine::hide_py_scripter(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::hide_py_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::enable_py_scripter(){
+void GameEngine::enable_py_scripter(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::enable_py_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::disable_py_scripter(){
+void GameEngine::disable_py_scripter(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::disable_py_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::enable_script_editing(){
+void GameEngine::enable_script_editing(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::enable_script_editing();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::disable_script_editing(){
+void GameEngine::disable_script_editing(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::disable_script_editing();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::set_py_tabs(int val){
+void GameEngine::set_py_tabs(int val, PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::set_py_tabs(val);
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::show_external_tab(){
+void GameEngine::show_external_tab(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::show_external_tab();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
-void GameEngine::hide_external_tab(){
+void GameEngine::hide_external_tab(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::hide_external_tab();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
 
@@ -199,9 +235,13 @@ void GameEngine::insert_to_scripter(std::string text)
     Engine::insert_to_scripter(text);
 }
 
-void GameEngine::clear_scripter()
+void GameEngine::clear_scripter(PyObject* callback)
 {
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::clear_scripter();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
 std::string GameEngine::get_script()

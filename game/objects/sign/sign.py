@@ -36,7 +36,7 @@ class Sign(GameObject):
     def player_action(self, player_object):
         engine = self.get_engine()
         player_object.set_busy(True)
-        engine.show_dialogue(self.__message, lambda: player_object.set_busy(False))
+        engine.show_dialogue(self.__message, callback = lambda: player_object.set_busy(False))
     
     def set_message(self, message):
         self.__message = message

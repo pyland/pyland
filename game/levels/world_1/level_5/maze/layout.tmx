@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="64" tileheight="64" nextobjectid="9">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -31,24 +31,22 @@
  </layer>
  <layer name="Decor" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2luOgzAMhWEvNQtg/88VDxGZiKA2g+0T+C19Ko3U2HBaNJcWMysAAACd2cqe+wlm6mqvrPPAea7ZczydXay35dXbu8cqarXH1q179vXssYq23tA32zfn25fnLN491JyVykzZc6yglseeHnsrUq+CsFxHr8+YX4VX3THTf/bAdc6ze2Sfx1N9U6PXZc/+VvbjOmIyqdWuZc+Fv/lkz4Ejj+wZQBaKTGAGHJU9BwAAb7R1sud5u21wDPIAeaghDy01AzPyUEAeWrhfaSEPLeShhTy0kIcW8tBCHloi8tjMd/+n2Guzo8hDI4/6nDxys9gr4u8lbR5kMs5jf4y8X9Uenr1W1P+Ptla/fqe+79kc2dclWp9BsaNK84j56zrzPq1qtc/7XmdrXrPf2Wclo+sQcb8ygfOPMvM5ifx51xx7ZLrzM8/vH1rIQwt5aInIA+SxKvLQQh5ayEMLeWghDy3koYU8tJCHFvLQQh5ayEMLeWghDy18pwAAAAAAAAAAAAAAAAAAAAC49gEos2HH
+   eJzt2VFugzAQRdFRt9XNeAHs/7viw8JxgRCH8TzjO9JRiKV4Bl5K2iaZWQIAAKi0VvTcT9BSZ3tFnQf2c42e4+nsZL0sr97ePUaRqzy2at2zr2ePUZQ1Q99oV863Ls9ZvHuo2SuVmaLnGEEujz099lakXgndcj16fcT8Krzqjpm+2QPnObfuEX0eT3Wljl4XPfus7MN19MkkV7kWPRde84meA1se0TOALBSZwAzYKnoOAABmtFSi55ndcnAM8gB5qCEPLTkDM/JQQB5auF9pIQ8t5KGFPLSQhxby0EIeWnrksZjv/k+x1mJbkYdGHvk5ecRmsVaP/5eUefDd13Ee62PP+9Vavz+va/j/Ps1Vr9/p3Qwz5lNnkGyrVDyi/bp+8z7NVT6ve+2teZ2DR58RHF0H7/tV/uxINsf1b/k56fn7rnXoFeGTz80re+0d3z3v3twevUbH34NayENLjzxAHqMiDy3koYU8tJCHFvLQQh5ayEMLeWghDy3koYU8tJCHFvLQwnd2AAAAAAAAAAAAAAAAAAAAwLk/cidiQQ==
   </data>
  </layer>
  <layer name="SpecialLayer" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2lEKgkAAQEHpXN3/XH1FJmRQ5r50BhbED1GeuyI6TQAAAAAAAAAAAAAAcCzXy/NgrHkDPcbTo0WPFj1a9GjRo0WPFj1a9GjRo0WPFj1a9GjZo8f9uHq/p0eLHi1799Bk3Z495tu6PLz6Rrvcv+VYHn/tPM7izNf+S9/ep9VzP6uR69WZfDJPRj3Pj2TLOe/9o0WPFj1ajr62/xs9WvRo0aNFjxY9WvRo0aNFjxY9WvRo0aNFjxY9WvRo8U8BAAAAAAAAAAAAAKy7AT8NMiM=
+   eJzt2VsKgkAAQNFoW7b/dYVE9CKLHnrRc2B+RAS5M6PibgcAAAAAAAAAAAAAAOty2N8OlnXdQI/l6dGiR4seLXq06NGiR4seLXq06NGiR4seLXq0zNHjfF29X9OjRY+WuXv49zVtzh6jYX8aelw8m6f3x385RucWw8Q5W7Lle/+nb+fpkqyPR5X9au0+WSee59/75X7kfbfF92CLHi1z9OB9erTo0aJHix4terTo0aJHix4terTo0aJHix4terTo0eKfHQAAAAAAAAAAAABMOwLk0jT/
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="100" height="100">
-  <object name="characters/player/player_one" gid="286" x="64" y="3456"/>
-  <object name="characters/npcs/myla/myla" gid="291" x="64" y="3392"/>
-  <object name="tile_trigger/trigger_one" gid="292" x="640" y="3392"/>
-  <object name="boulder/boulder_one" gid="288" x="576" y="3392"/>
-  <object name="sign/sign_one" gid="287" x="1280" y="3328"/>
-  <object name="sign/sign_two" gid="287" x="2816" y="3328"/>
-  <object name="characters/npcs/generic/helper_one" gid="291" x="2944" y="3328"/>
-  <object name="characters/npcs/generic/security_one" gid="301" x="2880" y="3136"/>
-  <object name="characters/npcs/generic/security_two" gid="301" x="3136" y="3264"/>
-  <object name="characters/npcs/generic/security_three" gid="301" x="2880" y="3456"/>
+ <objectgroup name="Object Layer 1">
+  <object id="1" name="characters/player/player_one" gid="286" x="64" y="3456" width="64" height="64"/>
+  <object id="2" name="characters/npcs/myla/myla" gid="291" x="64" y="3392" width="64" height="64"/>
+  <object id="3" name="sign/sign_one" gid="287" x="1280" y="3328" width="64" height="64"/>
+  <object id="4" name="sign/sign_two" gid="287" x="2816" y="3328" width="64" height="64"/>
+  <object id="5" name="characters/npcs/generic/helper_one" gid="291" x="3008" y="3328" width="64" height="64"/>
+  <object id="6" name="characters/npcs/generic/security_one" gid="301" x="2880" y="3136" width="64" height="64"/>
+  <object id="7" name="characters/npcs/generic/security_two" gid="301" x="3136" y="3264" width="64" height="64"/>
+  <object id="8" name="characters/npcs/generic/security_three" gid="301" x="2880" y="3456" width="64" height="64"/>
  </objectgroup>
 </map>

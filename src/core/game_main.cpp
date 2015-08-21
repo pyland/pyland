@@ -371,6 +371,10 @@ void GameMain::game_loop(bool showMouse)
             InputHandler::get_instance()->flush_all();
         }
         gui = new GUIMain(&embedWindow);
+        auto window_size = embedWindow.get_resolution();
+        gui->get_gui_window()->set_width_pixels(window_size.first);
+        gui->get_gui_window()->set_height_pixels(window_size.second);
+        gui->refresh_gui();
 
         //TODO: move this out to python, as this doesn't need to be done here and in the contstructor
         InputHandler::get_instance()->register_input_callback(InputHandler::INPUT_TOGGLE_SPEED, Engine::trigger_speed);
