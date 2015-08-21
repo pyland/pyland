@@ -78,7 +78,8 @@ class GameObject:
     def is_visible(self):
         return True #TODO: implement this in entity
 
-    def set_visible(self, visible):
+    def set_visible(self, visibility, callback = lambda : None):
+        self.__entity.set_visibility(visibility, callback)
         return
 
     #TODO: Make it so that the callbacks of the following methods get passed into c++ so they are put on the event queue as opposed to being run from Python!

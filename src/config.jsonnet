@@ -19,6 +19,7 @@
 		//"level_location" : "/world_1/level_1/road_one",
 		//"level_location" : "/world_1/level_3/main",
 		//"level_location" : "/world_1/level_5/maze",
+		//"level_location" : "/world_1/level_6/maze",
 		//"level_location" : "/world_1/level_7/town_hall",
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",

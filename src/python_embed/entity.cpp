@@ -99,6 +99,19 @@ void Entity::set_solidity(bool solidity, PyObject *callback) {
     });
 }
 
+void Entity::set_visibility(bool visibility, PyObject *callback) {
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
+    auto id = this->id;
+    
+    EventManager::get_instance()->add_event([visibility, id, boost_callback] () {
+        auto object(ObjectManager::get_instance().get_object<MapObject>(id));
+        object->set_renderable(visibility);
+        EventManager::get_instance()->add_event(boost_callback);
+    });
+}
+
 bool Entity::is_solid() {
     auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
     Walkability w = object->get_walkability();
