@@ -61,6 +61,8 @@ public:
     void disableScripter();
 
     void setTabs(int num);
+    void createExternalTab();
+    void removeExternalTab();
 
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
@@ -110,8 +112,9 @@ private:
 
     QsciScintilla *textEdit;
 
-    static const int workspace_max = 9;
+    static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
+    bool externalWorkspace;
     QWidget *zoomWidget[workspace_max];
     QHBoxLayout *zoomLayout[workspace_max];
     QPushButton *buttonIn[workspace_max];

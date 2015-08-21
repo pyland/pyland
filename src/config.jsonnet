@@ -20,7 +20,7 @@
 		//"level_location" : "/world_1/level_7/town_hall",
 		//"level_location" : "/world_1/level_3/main",
 		//"level_location" : "/world_1/level_5/maze",
-		"level_location" : "/world_1/level_6/maze",
+		//"level_location" : "/world_1/level_6/maze",
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
 		//"level_location":"/test",
@@ -101,7 +101,7 @@
 		"option_button_y": 0.40,
 		"option_button_text_x": 7.30,
 		"option_button_text_y": 2.10,
-		"option_button_spacing": 0.45,
+		"option_button_spacing": 0.50,
 		
 		//the parameters for the py help text box 
 		"py_help_width": 0.50,

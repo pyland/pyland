@@ -268,21 +268,34 @@ class Engine:
             self.add_event(callback)
         return
 
-    def clear_scripter(self, callback = lambda: None):
-        self.__cpp_engine.clear_scripter(callback)
 
     def disable_py_scripter(self, callback = lambda: None):
         self.__cpp_engine.disable_py_scripter(callback)
-        
+
     def enable_py_scripter(self, callback = lambda: None):
         self.__cpp_engine.enable_py_scripter(callback)
+
+    def enable_script_editing(self, callback = lambda: None):
+        self.__cpp_engine.enable_script_editing(callback)
+
+    def disable_script_editing(self, callback = lambda: None):
+        self.__cpp_engine.disable_script_editing(callback)
+
+    def set_py_tabs(self, num, callback = lambda: None):
+        self.__cpp_engine.set_py_tabs(num, callback)
+
+    def show_external_tab(self, callback = lambda: None):
+        self.__cpp_engine.show_external_tab(callback)
+
+    def hide_external_tab(self, callback = lambda: None):
+        self.__cpp_engine.hide_external_tab(callback)
 
     def insert_to_scripter(self, text, callback = lambda: None):
         self.__cpp_engine.insert_to_scripter(text)
         self.add_event(callback)
 
-    def set_py_tabs(self, num, callback = lambda: None):
-        self.__cpp_engine.set_py_tabs(num, callback)
+    def clear_scripter(self, callback = lambda: None):
+        self.__cpp_engine.clear_scripter(callback)
 
     def change_map(self, map_name):
         self.__cpp_engine.change_map(map_name)

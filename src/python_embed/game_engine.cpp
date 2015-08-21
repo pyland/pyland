@@ -196,6 +196,23 @@ void GameEngine::set_py_tabs(int val, PyObject* callback){
     });
 }
 
+void GameEngine::show_external_tab(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    Engine::show_external_tab();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
+}
+
+void GameEngine::hide_external_tab(PyObject* callback){
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    Engine::hide_external_tab();
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
+}
+
+
 void GameEngine::update_world(std::string text){
   Engine::update_world(text);
 }

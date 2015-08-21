@@ -233,14 +233,12 @@ int Engine::get_tile_type(int x, int y) {
 }
 
 void Engine::add_dialogue(std::string text) {
-
     EventManager::get_instance()->add_event([text] {
         gui_main->add_message(text);
     });
 }
 
 void Engine::add_text(std::string text) {
-
     EventManager::get_instance()->add_event([text] {
         gui_main->add_text(text);
     });
@@ -253,7 +251,6 @@ void Engine::open_notification_bar(bool disable_scripting, std::function<void ()
     EventManager::get_instance()->add_event([func] {
         gui_main->open_notification_bar(func);
     });
-
 }
 
 void Engine::open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair <std::string, std::function<void ()> > > options){
@@ -267,12 +264,10 @@ void Engine::open_notification_bar_with_options(bool disable_scripting, std::deq
 }
 
 void Engine::close_notification_bar(){
-
     EventManager::get_instance()->add_event([] {
         gui_main->close_notification_bar();
         enable_py_scripter();
     });
-
 }
 
 bool Engine::is_bar_open(){
@@ -325,6 +320,20 @@ void Engine::set_py_tabs(int val){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, val] {
         _main_window->setTabs(val);
+    });
+}
+
+void Engine::show_external_tab(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->createExternalTab();
+    });
+}
+
+void Engine::hide_external_tab(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+        _main_window->removeExternalTab();
     });
 }
 
