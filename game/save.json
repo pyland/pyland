@@ -1,24 +1,6 @@
 {
+    "player_saves": {},
     "settings": {
         "language": "english"
-    },
-    "player_saves": {
-        "YourName": {
-            "totems": {},
-            "coins": 0,
-            "previous_exit": "/world_1",
-            "level_data": {
-                "world_1": {
-                    "level_2": {
-                        "starting_map": "start"
-                    },
-                    "level_1": {
-                        "starting_map": "player_house",
-                        "heidi_state": 2
-                    }
-                }
-            },
-            "current_map": "/world_1/level_2/start"
-        }
     }
 }

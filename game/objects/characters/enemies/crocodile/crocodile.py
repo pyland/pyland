@@ -22,6 +22,7 @@ class Crocodile(Character):
     """
     def __init__(self):
         super().__init__()
+        self.oscillate = 10000000
 
 
     """ game engine features (public)
@@ -95,6 +96,7 @@ class Crocodile(Character):
 
         return
 
+
     """ The Crocodile follows a random path forever!
     """
     def rand_explore(self):
@@ -160,9 +162,87 @@ class Crocodile(Character):
         """
         pass
 
+
+    def toggle(self):
+        if(self.is_facing_north()):
+            return self.face_south()
+        if(self.is_facing_south()):
+            return self.face_north()
+        if(self.is_facing_east()):
+            return self.face_west()
+        if(self.is_facing_west()):
+            return self.face_east()    
+
     """ private:
     Put the private methods you wish to use here.
     """
+
+
+    def move_horizontal(self, player, times = 100000):
+        x,y = self.get_position()
+        player_x, player_y = player.get_position()
+        engine = self.get_engine()
+
+        if x == player_x:
+            if player_y == y+1:
+                return self.face_north(lambda: self.lose(player))
+            elif player_y == y-1:
+                return self.face_south(lambda: self.lose(player))
+        elif y == player_y:
+            if player_x == x+1:
+                return self.face_east(lambda: self.lose(player))
+            elif player_x == x-1:
+                return self.face_west(lambda: self.lose(player))
+
+
+        if times != 0:
+            if(self.is_facing_west()):
+                if not engine.get_tile_type((x-1,y)) == engine.TILE_TYPE_WATER or engine.is_solid((x-1,y)):
+                        return self.face_east(lambda: self.move_horizontal(player, times-1))
+                else:
+                    return self.move_west(lambda: self.move_horizontal(player, times))
+            elif(self.is_facing_east()):
+                if not engine.get_tile_type((x+1,y)) == engine.TILE_TYPE_WATER or engine.is_solid((x+1,y)):
+                        return self.face_west(lambda: self.move_horizontal(player, times-1))
+                else:
+                        return self.move_east(lambda: self.move_horizontal(player, times))
+        else:
+            return self.toggle()
+
+    def move_vertical(self, player, times = 100000):
+        x,y = self.get_position()
+        player_x, player_y = player.get_position()
+        engine = self.get_engine()
+
+        if x == player_x:
+            if player_y == y+1:
+                return self.face_north(lambda: self.lose(player))
+            elif player_y == y-1:
+                return self.face_south(lambda: self.lose(player))
+        elif y == player_y:
+            if player_x == x+1:
+                return self.face_east(lambda: self.lose(player))
+            elif player_x == x-1:
+                return self.face_west(lambda: self.lose(player))
+
+
+        if times != 0:
+            x,y = self.get_position()
+            if(self.is_facing_north()):
+                if not engine.get_tile_type((x,y+1)) == engine.TILE_TYPE_WATER or engine.is_solid((x,y+1)):
+                    return self.face_south(lambda: self.move_vertical(player, times-1))
+                else:
+                    return self.move_north(lambda: self.move_vertical(player, times))
+            elif(self.is_facing_south()):
+                if not engine.get_tile_type((x,y-1)) == engine.TILE_TYPE_WATER or engine.is_solid((x,y-1)):
+                        return self.face_north(lambda: self.move_vertical(player, times-1))
+                else:
+                    return self.move_south(lambda: self.move_vertical(player, times))
+
+        if times == 0:
+            return self.toggle()
+
+
 
     def __check_swim_state(self, callback):
         """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
@@ -171,9 +251,34 @@ class Crocodile(Character):
         """
         engine = self.get_engine()
         x, y = self.get_position()
-        if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
-            self.change_state("swim")
+        '''if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
+            self.change_state("swim")'''
         return callback()
+
+    
+    def yelled_at(self, player):
+        player_x, player_y = player.get_position()
+        self_x, self_y = self.get_position()
+        if not self.is_moving():
+            if player_y == self_y:
+                if player_x < self_x and player.is_facing_east():
+                    self.face_west(lambda: self.move_horizontal(player, self.oscillate))
+                elif player_x > self_x and player.is_facing_west():
+                    self.face_east(lambda: self.move_horizontal(player, self.oscillate))
+                return
+            if player_x == self_x:
+                if player_y < self_y and player.is_facing_north():
+                    self.face_south(lambda: self.move_vertical(player, self.oscillate))
+                elif player_y > self_y and player.is_facing_south():
+                    self.face_north(lambda: self.move_vertical(player, self.oscillate))
+                return
+            
+    def lose(self, player):
+        engine = self.get_engine()
+        engine.run_callback_list_sequence([
+        lambda callback: player.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
+        ])
 
 
 
