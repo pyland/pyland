@@ -81,7 +81,7 @@ def make_blocking(async_function):
         """ This is the blocking version of the async_function that is provided as and argument. """
         lock = threading.Lock()
         lock.acquire()
-        async_function(lock.release) #run the async_function with the callback provided above as its argument
+        async_function(callback = lock.release) #run the async_function with the callback provided above as its argument
         lock.acquire() # Try to a acquire a lock until it is released. It isn't released until the callback releases it.
         lock.release() # release the lock, it isn't needed anymore
         return

@@ -13,6 +13,7 @@
 		//"level_location": "/world_one_old/level_one/main",
 		//"level_location": "/world_one_old/level_two/main",
 		//"level_location": "/start_screen",
+		//"level_location": "/world_1",
 		//"level_location" : "/world_1/intro",
 		//"level_location" : "/world_1/level_1/rossumberg",
 		//"level_location" : "/world_1/level_1/player_house",
@@ -33,7 +34,8 @@
 		"font_location": self.game_folder + "/fonts",
 		"script_running_location": self.game_folder + "/script_running",
 		"dialogue_font": self.font_location + "/Ubuntu-R.ttf",
-		"game_save_location": self.game_folder + "/save.json"
+		"game_save_location": self.game_folder + "/save.json",
+		"initial_save_location": self.game_folder + "/initial_save.json"
 	},
 
 	//define layer properties
@@ -43,16 +45,16 @@
 
 	//define constants for rendering sizes
 	"scales": {
-		
+
 		//multiplying factors for converting between window sizes and gui scales
 		"x_scale": 1.0/660.0,
-		"y_scale": 1.0/285.0,		
+		"y_scale": 1.0/285.0,
 
 		//for placing the buttons on top of the screen
 		"left_x_offset": 0.00,
 		"right_x_offset": 0.91,
 		"bottom_y_offset": 0.00,
-		"top_y_offset": 0.87,				
+		"top_y_offset": 0.87,
 
 		//for placing the close button once the pause window is open
 		"close_x_offset": 0.05,
@@ -73,8 +75,8 @@
 		"menu_y_offset": 0.70,
 		"menu_width": 0.08,
 		"menu_height": 0.12,
-		"menu_spacing": 0.15,	
-		"menu_max": 5,		
+		"menu_spacing": 0.15,
+		"menu_max": 5,
 
 		//the sizes of the notification box
 		"notification_width": 1.00,
@@ -82,14 +84,14 @@
 
 		//the parameters for notification text
 		"notification_text_width": 0.90,
-		"notification_text_height": 0.40, 
+		"notification_text_height": 0.40,
 		"notification_text_x": 0.03,
 		"notification_text_y": 0.70,
 		"notification_text_buffer": 500,
 
 		//the parameters for notification button (next, back etc)
 		"notification_button_width": 0.50,
-		"notification_button_height": 1.00, 
+		"notification_button_height": 1.00,
 		"notification_button_x": 0.90,
 		"notification_button_y": 0.35,
 
@@ -106,16 +108,16 @@
 		"option_button_text_x": 7.30,
 		"option_button_text_y": 2.10,
 		"option_button_spacing": 0.50,
-		
-		//the parameters for the py help text box 
+
+		//the parameters for the py help text box
 		"py_help_width": 0.50,
-		"py_help_height": 0.90, 
+		"py_help_height": 0.90,
 		"py_help_x": 0.45,
 		"py_help_y": 0.05,
 
-		//the parameters for the py guide commands on the menu 
+		//the parameters for the py guide commands on the menu
 		"py_help_item_width": 0.08,
-		"py_help_item_height": 0.12, 
+		"py_help_item_height": 0.12,
 		"py_help_item_x": 0.02,
 		"py_help_item_y": 0.72,
 		"py_help_item_spacing": 0.08,
@@ -124,14 +126,14 @@
 
 		//the parameters for the py help text which explains commands
 		"py_help_text_width": 0.90,
-		"py_help_text_height": 0.50, 
+		"py_help_text_height": 0.50,
 		"py_help_text_x": 0.05,
 		"py_help_text_y": 0.80,
 		"py_help_text_buffer": 500,
 
 		//the parameters for the buttons accompanying the text box
 		"py_help_button_width": 0.10,
-		"py_help_button_height": 0.10, 
+		"py_help_button_height": 0.10,
 		"py_help_button_x": 0.80,
 		"py_help_button_y": 0.15,
 		"py_help_button_spacing": 0.70,
@@ -144,7 +146,7 @@
 		"menu_move_spacing": 0.35,
 		"menu_page_display_x": 0.20,
 		"menu_page_display_y": 0.15,
-		
+
 		//the sizes of the buttons on top of the screen
 		"button_width": 0.08,
 		"button_height": 0.12,
@@ -153,16 +155,16 @@
 		"horizontal_button_spacing": 0.08,
 		"vertical_button_spacing": 0.10,
 
-		//the maximum number of sprite heads displayed on the screen		
+		//the maximum number of sprite heads displayed on the screen
 		"button_max": 5
 	},
 
 	//define the text to be displayed for different PyGuide apis
-	
+
 	// the commands are indexed, so that the guide can read them in by number
 	// while putting them in here, use the following syntax-
 	// "index": "pyguide api: description"
-	
+
 	"pyguide_apis": {
 		"number": 11,
 		"0": "move_east(): This moves the present character towards the right by one step.",
@@ -175,6 +177,6 @@
 		"7": "blah6: blah bklah asjdassd fghjk",
 		"8": "blah7: blah bklah asjdassd asdfghjkl;",
 		"9": "fsdhfs: dlkdfjslkfjsdlk",
-		"10": "fsdhfjsd: sfjsdklfjsdlfjs"	
+		"10": "fsdhfjsd: sfjsdklfjsdlfjs"
 	}
 }

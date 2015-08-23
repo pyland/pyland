@@ -89,77 +89,79 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
     return ScopedInterpreter
 
 def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
-    while waiting: #TODO: Work out why this waiting thing is here and in EntityThread: Ask Alex!!!
-        # Smallest reasonable wait while
-        # allowing fast interrupts.
-        #
-        # Could later be replaced with locking
-        # for proper interrupts.
-        time.sleep(0.05)
-
-    engine = Engine(cpp_engine)	#wrap the cpp engine in the python engine wrapper
-    #engine = DummyEngine(engine)
-    """
-    Run the main bootstrapper loop! It's fun!
-    """
-    engine.print_debug("Started bootstrapper")
-    game_objects = list()
-
     try:
-        print(entities) #For some reason after changing levels this can throw an I/O error (specifically after a change from the intro level) TODO: sort this out!
-    except:
-        tb = traceback.format_exc()
-        engine.print_debug(tb)
+        while waiting: #TODO: Work out why this waiting thing is here and in EntityThread: Ask Alex!!!
+            # Smallest reasonable wait while
+            # allowing fast interrupts.
+            #
+            # Could later be replaced with locking
+            # for proper interrupts.
+            time.sleep(0.05)
 
-    """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
-    for entity in entities:
-        game_object = engine.wrap_entity_in_game_object(entity)
-        game_object.initialise() #run the initialisation script on the object if anything needs to be initialised
-        game_objects.append(game_object)
-        engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
-        engine.print_debug("whose name is {}".format(game_object.get_name()))
+        engine = Engine(cpp_engine)	#wrap the cpp engine in the python engine wrapper
+        #engine = DummyEngine(engine)
+        """
+        Run the main bootstrapper loop! It's fun!
+        """
+        engine.print_debug("Started bootstrapper")
+        game_objects = list()
 
-    ScopedInterpreter = create_execution_scope(game_objects, engine, RESTART, STOP, KILL)
-    scoped_interpreter = ScopedInterpreter()
-
-    while True:
         try:
-            script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: grab this stuff form the config
-            engine.print_debug("Reading from file: {}".format(script_filename))
-            with open(script_filename, encoding="utf8") as script_file:
-                script = script_file.read()
-                engine.print_debug(script)
-
-
-            #entity.update_status("running"), all the update status stuff are from old version of bootstrapper TODO: work out what this should change to
-            scoped_interpreter.runcode(script)
-            #entity.update_status("finished")
-
-        except RESTART:
-            engine.print_debug("restarting")
-
-            waiting = False
-            continue
-
-        except STOP:
-            engine.print_debug("STOPPING")
-            #entity.update_status("stopped")
-            waiting = True
-            continue
-
-        except KILL:
-            engine.print_debug("KILLED")
-            # Printing from Python when the game is dead hangs
-            # everything, so don't do it.
-            # TODO (Joshua): Fix this problem
-            raise
-
-        # For all other errors, output and stop
+            print(entities) #For some reason after changing levels this can throw an I/O error (specifically after a change from the intro level) TODO: sort this out!
         except:
-            waiting = True
-            engine.print_terminal("Test",False);
-            #entity.update_status("failed")
-            engine.print_terminal(str(traceback.format_exc()),True);
+            tb = traceback.format_exc()
+            engine.print_debug(tb)
 
-        else:
-            break
+        """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
+        for entity in entities:
+            game_object = engine.wrap_entity_in_game_object(entity)
+            game_object.initialise() #run the initialisation script on the object if anything needs to be initialised
+            game_objects.append(game_object)
+            engine.print_debug("Converted entity {} to game_object {}".format(entity, game_object))
+            engine.print_debug("whose name is {}".format(game_object.get_name()))
+
+        ScopedInterpreter = create_execution_scope(game_objects, engine, RESTART, STOP, KILL)
+        scoped_interpreter = ScopedInterpreter()
+
+        while True:
+            try:
+                script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: grab this stuff form the config
+                engine.print_debug("Reading from file: {}".format(script_filename))
+                with open(script_filename, encoding="utf8") as script_file:
+                    script = script_file.read()
+                    engine.print_debug(script)
+
+
+                #entity.update_status("running"), all the update status stuff are from old version of bootstrapper TODO: work out what this should change to
+                scoped_interpreter.runcode(script)
+                #entity.update_status("finished")
+
+            except RESTART:
+                engine.print_debug("restarting")
+
+                waiting = False
+                continue
+
+            except STOP:
+                engine.print_debug("STOPPING")
+                #entity.update_status("stopped")
+                waiting = True
+                continue
+
+            except KILL:
+                engine.print_debug("KILLED")
+                # Printing from Python when the game is dead hangs
+                # everything, so don't do it.
+                # TODO (Joshua): Fix this problem
+                raise
+
+            # For all other errors, output and stop
+            except:
+                waiting = True
+                engine.print_terminal(str(traceback.format_exc()),True);
+
+            else:
+                break
+    except:
+        cpp_engine.print_debug(str(traceback.format_exc()))
+        raise

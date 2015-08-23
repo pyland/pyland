@@ -55,12 +55,10 @@ class Player(Character, ScriptStateContainer):
         #register callback for talking to characters
         engine.register_input_callback(engine.INPUT_ACTION, focus_func(self.__trigger_action))
 
-        #Make clicks be registered as callbacks
-        #engine.register_input_callback(engine.INPUT_CLICK, focus_func(self.__focus))
-
         #Get the correct image to the chosen for the sprite
         #####engine.print_terminal("Load in this image for the player head: "+"objects/"+super().get_file_location() + "/sprites/head")
         self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
+        self.set_character_name(engine.get_player_name())
 
     """ public:
     Put the regular public methods you wish to use here.
@@ -113,6 +111,15 @@ class Player(Character, ScriptStateContainer):
             script_api["move_east"] = scriptrunner.make_blocking(self.move_east)
             script_api["move_south"] = scriptrunner.make_blocking(self.move_south)
             script_api["move_west"] = scriptrunner.make_blocking(self.move_west)
+
+
+            script_api["face_north"] = scriptrunner.make_blocking(self.face_north)
+            script_api["face_east"] = scriptrunner.make_blocking(self.face_east)
+            script_api["face_south"] = scriptrunner.make_blocking(self.face_south)
+            script_api["face_west"] = scriptrunner.make_blocking(self.face_west)
+
+
+            script_api["wait"] = scriptrunner.make_blocking(lambda callback: self.wait(0.3, callback))
 
             #the method to get the position of the player
             script_api["get_position"] = self.get_position

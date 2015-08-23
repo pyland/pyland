@@ -11,16 +11,25 @@ vinename = "vines0" + str(i)
 grow_vine = vinename + ".wait(12.5, lambda : vinename.set_visible(True))"
 exec(grow_vine)
 """
+
 height = 7
 width = 20
+
+def vine_die_action():
+    engine.run_callback_list_sequence([
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("Aagh! The vines got you!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback = callback),
+    ])
+
 
 for i in range(height):
     for j in range(width):
         vinename = "vines_" + str(i) + "_" + str(j)
-        #engine.print_terminal(vinename)
-        command = vinename + ".wait(" + str(0.70*i) + ", lambda : " + vinename + ".grow(player_one))"
-        engine.print_terminal(command) 
-        exec(command)
+        command_grow = vinename + ".wait(" + str(0.70*i) + ", lambda : " + vinename + ".grow(player_one))"
+        command_die = vinename + ".die_action = vine_die_action"
+        exec(command_die)
+        exec(command_grow)
 
 """
 vinename = "vines" + str(0) + str(0)
