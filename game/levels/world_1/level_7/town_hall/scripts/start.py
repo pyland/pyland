@@ -3,7 +3,7 @@ from random import randint
 player.focus()
 engine.update_player_name(engine.get_player_name(), player.get_focus_button_id())
 
-engine.play_music("eery")
+engine.play_music("world_1_jungle")
 engine.update_level("7")
 engine.set_py_tabs(9)
 
@@ -78,7 +78,7 @@ player1_sequence = [
     #lambda callback: engine.show_dialogue("My PyRunner script is broken. Can you fix it so I move east and get to the desert?", callback = callback),
     lambda callback: engine.show_dialogue_with_options(
         "My PyRunner script is broken. Can you fix it so I move east and get to the desert?",
-        callback = {
+        options = {
             "Yes": lambda: engine.run_callback_list_sequence(player1_help_sequence),
             "No" : lambda: engine.run_callback_list_sequence(player1_reject_sequence)
         }
@@ -86,14 +86,18 @@ player1_sequence = [
 
 ]
 
+
 player1_help_sequence = [
     lambda callback: engine.show_dialogue("Thank you! Here is my script.",  callback = callback),
     #lambda callback: player.set_busy(False, callback = callback),
     lambda callback: update_snake_stage(snake = 0, stage = 1, callback = callback),
-    lambda callback: engine.show_external_tab(lambda: engine.run_callback_list_sequence(player1_try_script_sequence),lambda: engine.run_callback_list_sequence(player1_cancel_script_sequence), external_dialogue = "Give it a run when it's working!", callback = callback),
-    lambda callback: engine.insert_to_scripter("moe_east()", callback = callback),
+    lambda callback: engine.show_external_script(
+        confirm_callback = lambda: engine.run_callback_list_sequence(player1_try_script_sequence),
+        cancel_callback = lambda: engine.run_callback_list_sequence(player1_cancel_script_sequence),
+        external_dialogue = "Give it a run when it's working!",
+        script_init = lambda: engine.insert_to_scripter("moe_east()")),
     #lambda callback: engine.show_external_script_help("Give it a run when it's working!", callback = callback),
-
+    lambda callback: engine.show_dialogue("Test.",  callback = callback),
    # lambda callback: engine.hide_external_tab(callback = callback),
 ]
 
@@ -104,7 +108,8 @@ player1_reject_sequence = [
 
 
 player1_try_script_sequence = [
-    lambda callback: engine.show_dialogue("Running now my friend", callback = callback),
+    lambda callback: engine.show_dialogue("Thanks for the help", callback = callback),
+    lambda callback: engine.print_terminal(engine.get_external_script()),
 ]
 
 player1_cancel_script_sequence = [
@@ -120,11 +125,11 @@ player1_complete_sequence = [
 try_to_leave_sequence = [
     lambda callback: player.set_busy(True, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Don't leave "+engine.get_player_name()+", they need our help!", callback = callback),
-    lambda callback: myla.stop_follow(callback = callback),
-    lambda callback: myla.move_east(callback = callback),
+    #lambda callback: myla.stop_follow(callback = callback),
+    #lambda callback: myla.move_east(callback = callback),
     lambda callback: player.set_busy(False, callback = callback),
     lambda callback: player.move_east(callback = callback),
-    lambda callback: myla.follow(player, callback = callback)
+    #lambda callback: myla.follow(player, callback = callback)
 ]
 
 myla_sequence = [
@@ -144,6 +149,8 @@ def snake1_action(player_object):
 snake1.player_action = snake1_action  #nake1_player_action
 
 myla.player_action = lambda player_object: engine.run_callback_list_sequence(myla_sequence)
+
+
 
 engine.run_callback_list_sequence(dialogue_sequence)
 

@@ -778,8 +778,11 @@ void MainWindow::setTabs(int num){
     }
 }
 
-
-void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, std::string dialogue = "Click 'Give Script' when you're done!"){
+//Create a new PyScripter tab, for scripts given by other players
+//The 'Run' and 'Speed' buttons get replaced with 'Give Script' and 'Cancel'
+//The results of clicking these buttons is given by the first two python callbacks
+//The scriptInit callback, can be used to pass information to the external script
+void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, PyObject* scriptInit, std::string dialogue = "Click 'Give Script' when you're done!"){
     textWidget->addTab(workspaces[workspace_max-1],"*");
 
     buttonRun->setText("Give script");
@@ -791,22 +794,30 @@ void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCa
 
     textWidget->setTabEnabled(textWidget->indexOf(workspaces[workspace_max-1]),true);
 
-
     textWidget->setCurrentWidget(workspaces[workspace_max-1]);
 
     externalWorkspace = true;
     externalConfirmCallback = confirmCallback;
     externalCancelCallback = cancelCallback;
 
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+
+    ws->clear();
+
     Engine::show_external_script_help(dialogue);
     Engine::enable_py_scripter();
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(scriptInit)));
+    EventManager::get_instance()->add_event([boost_callback] {
+        boost_callback();
+    });
 
 }
 
 void MainWindow::removeExternalTab(){
-    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+   // QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
-    ws->clear();
+    //ws->clear();
 
     setTabs(currentTabs);
     setRunning(script_running);
@@ -818,7 +829,7 @@ void MainWindow::removeExternalTab(){
 
     externalWorkspace = false;
 
-    Engine::clear_scripter();
+    //Engine::clear_scripter();
 
     //if (external_dialougue) Engine::close_external_script_help();
 }
@@ -1091,6 +1102,15 @@ std::string MainWindow::getEditorText()
     QsciScintilla *ws;
     ws = (QsciScintilla*)textWidget->currentWidget();
 
+    return ws->text().toStdString();
+}
+
+//Get the text from external tab (for when the user has just given an NPC a script)
+//It gets cleared every time the external tab is opened, but remains after the tab has been closed
+std::string MainWindow::getExternalText()
+{
+    QsciScintilla *ws;
+    ws = workspaces[workspace_max-1];
     return ws->text().toStdString();
 }
 

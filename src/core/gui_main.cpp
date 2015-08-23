@@ -14,6 +14,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     map_viewer(embedWindow, &gui_manager),
     em(EventManager::get_instance()),
     bar_open(false),
+    bar_options_open(false),
     external_help_open(false),
     callback_options(false),
     option_start(0),
@@ -34,6 +35,8 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     Engine::set_game_window(embedWindow);
 
     Engine::set_map_viewer(&map_viewer);
+
+    option_selected = 0;
 
     gui_window = std::make_shared<GUIWindow>();
     gui_window->set_visible(false);
@@ -491,10 +494,30 @@ void GUIMain::proceed_notification_bar(){
     notification_bar->proceed();
 }
 
+void GUIMain::proceed_notification_bar_with_options(){
+    for(unsigned int i=0; i<=1; i++){
+        if ((option_selected == i)){
+            option_buttons[i]->call_on_click();
+        }
+    }
+}
+
+void GUIMain::toggle_selection_notification_bar_with_options(){
+    option_selected++;
+    if (option_selected > 1) option_selected = 0;
+    for(unsigned int i=0; i<=1; i++){
+        if (i == option_selected){
+            option_buttons[i]->set_text_colour(255, 255, 255, 0);
+        }
+        else{
+            option_buttons[i]->set_text_colour(255, 255, 255, 255);
+        }
+    }
+}
+
 void GUIMain::close_notification_bar(){
-
-
     if(callback_options){
+        bar_options_open = true;
         options_box->set_visible(true);
         options_box->set_clickable(false);
 
@@ -509,13 +532,6 @@ void GUIMain::close_notification_bar(){
             option_button->move_text(option_button_text_x, option_button_text_y);
             option_button->set_visible(true);
             option_button->set_clickable(true);
-
-            if (i == option_selected){
-                option_button->set_text_colour(255, 255, 255, 255);
-            }
-            else{
-                option_button->set_text_colour(0, 0, 0, 0);
-            }
 
             option_button->set_on_click([this, i] (){
                 notification_bar->clear_text();
@@ -532,7 +548,9 @@ void GUIMain::close_notification_bar(){
                 option_buttons.clear();
 
                 refresh_gui();
+                Engine::enable_py_scripter();
                 bar_open = false;
+                bar_options_open = false;
             });
 
             option_buttons.push_back(option_button);

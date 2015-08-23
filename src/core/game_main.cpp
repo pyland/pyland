@@ -135,6 +135,26 @@ GameMain::GameMain(int &argc, char **argv):
     }
     ));
 
+    right_select_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Right", "D"})},
+    [&] (KeyboardInputEvent)
+    {
+        if (Engine::is_bar_with_options_open()){
+            gui->toggle_selection_notification_bar_with_options();
+        }
+    }
+    ));
+
+    left_select_callback = input_manager->register_keyboard_handler(filter(
+    {KEY_PRESS, REJECT(MODIFIER({"Left Shift", "Right Shift"})), KEY({"Left", "A"})},
+    [&] (KeyboardInputEvent)
+    {
+        if (Engine::is_bar_with_options_open()){
+            gui->toggle_selection_notification_bar_with_options();
+        }
+    }
+    ));
+
     run_callback = input_manager->register_keyboard_handler(filter(
     {KEY_PRESS, KEY("Space")},
     [&] (KeyboardInputEvent)
@@ -163,12 +183,15 @@ GameMain::GameMain(int &argc, char **argv):
     {KEY_PRESS, KEY("Return")},
     [&] (KeyboardInputEvent)
     {
-        if(Engine::is_bar_open()){
+        if (Engine::is_bar_with_options_open()){
+            gui->proceed_notification_bar_with_options();
+        }
+        else if(Engine::is_bar_open()){
             gui->proceed_notification_bar();
         }
         else if(Engine::is_external_help_open()){
             gui->proceed_external_script_help();
-        } 
+        }
         else {
             InputHandler::get_instance()->run_list(InputHandler::INPUT_ACTION);
         }

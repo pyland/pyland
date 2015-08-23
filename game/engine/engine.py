@@ -252,8 +252,8 @@ class Engine:
     def show_dialogue(self, dialogue, disable_scripting = True, callback = lambda: None):
         self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
 
-    def show_external_script_help(self, dialogue, callback = lambda: None):
-        self.__cpp_engine.show_external_script_help(dialogue, callback)
+#    def show_external_script_help(self, dialogue, callback = lambda: None):
+#        self.__cpp_engine.show_external_script_help(dialogue, callback)
 
   #  def show_dialogue_with_options(self, dialogue, disable_scripting = True, callback = lambda: None):
    #     self.__cpp_engine.show_dialogue_with_options(dialogue, disable_scripting, callback)
@@ -291,11 +291,11 @@ class Engine:
     def set_py_tabs(self, num, callback = lambda: None):
         self.__cpp_engine.set_py_tabs(num, callback)
 
-    def show_external_tab(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", callback = lambda: None):
-        self.__cpp_engine.show_external_tab(confirm_callback, cancel_callback, external_dialogue, callback)
+    def show_external_script(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", script_init = lambda: None):
+        self.__cpp_engine.show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init)
 
-    def hide_external_tab(self, callback = lambda: None):
-        self.__cpp_engine.hide_external_tab(callback)
+   # def hide_external_tab(self, callback = lambda: None):
+    #    self.__cpp_engine.hide_external_tab(callback)
 
     def insert_to_scripter(self, text, callback = lambda: None):
         self.__cpp_engine.insert_to_scripter(text)

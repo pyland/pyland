@@ -182,6 +182,7 @@ public:
     static void open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair<std::string, std::function<void ()> > > _options);
     static void close_notification_bar();
     static bool is_bar_open();
+    static bool is_bar_with_options_open();
 
     static void show_external_script_help(std::string text);
     static void close_external_script_help();
@@ -198,8 +199,8 @@ public:
     static void enable_script_editing();
     static void disable_script_editing();
     static void set_py_tabs(int val);
-    static void show_external_tab(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue);
-    static void hide_external_tab();
+    static void show_external_script(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue, PyObject* script_init);
+    //static void hide_external_tab();
     static void update_world(std::string text);
     static void update_level(std::string text);
     static void update_coins(int value);
@@ -208,6 +209,7 @@ public:
     static void insert_to_scripter(std::string text);
     static void clear_scripter();
     static std::string get_script();
+    static std::string get_external_script();
     static void print_terminal(std::string text, bool error);
     static void focus_next();
     static void set_any_output(bool option);

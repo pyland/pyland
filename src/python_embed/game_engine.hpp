@@ -124,8 +124,8 @@ class GameEngine {
         void enable_script_editing(PyObject* callback);
         void disable_script_editing(PyObject* callback);
         void set_py_tabs(int val, PyObject* callback);
-        void show_external_tab(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue, PyObject* callback);
-        void hide_external_tab(PyObject* callback);
+        void show_external_script(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue, PyObject* script_init);
+        //void hide_external_tab(PyObject* callback);
 
         ///
         /// Update the info bar with the current
@@ -150,6 +150,11 @@ class GameEngine {
         /// text edtior
         ///
         std::string get_script();
+
+        /// Get the text in the external QsciScintilla
+        /// text edtior tab
+        ///
+        std::string get_external_script();
 
         /// Print text to the QT terminal widget
         /// If error is True the text is red

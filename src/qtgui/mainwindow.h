@@ -63,7 +63,7 @@ public:
     void disableScripter();
 
     void setTabs(int num);
-    void createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, std::string dialogue);
+    void createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, PyObject* scriptInit, std::string dialogue);
     void removeExternalTab();
 
     void updateSpeed();
@@ -75,6 +75,7 @@ public:
     void insertToTextEditor(std::string text);
     void clearTextEditor();
     std::string getEditorText();
+    std::string getExternalText();
     void runCode(int script);
     void toggleSpeed();
     void setRunning(bool option);
