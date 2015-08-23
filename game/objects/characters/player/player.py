@@ -23,7 +23,7 @@ As the Character is in the characters folder.
 The auto-generated comment produced by the script should also mention where to get a list of the api
 and which built-in variables exist already.
 """
-class Player(Character, ScriptStateContainer):
+class Player(Character):
 
     __bag = []
     __focus_button_id = 0
@@ -87,48 +87,6 @@ class Player(Character, ScriptStateContainer):
         engine = self.get_engine()
         engine.update_player_name(character_name,self.__focus_button_id)
 
-    """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
-
-    def run_script(self):
-        """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
-
-        Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
-        The callback is run after the script has finished running.
-        """
-        if not(self.is_running_script()): #only run script if one currently isn't running.
-            engine = self.get_engine()
-            self.set_running_script_status(True)
-
-            #script_api is a python dictionary of python objects (variables, methods, class instances etc.)
-            #available to the player. :)
-            #eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
-            #will be refering to what blob is known as here.
-            #Here the list of game_objects is being looped through, and their names are being mapped to each instance :)
-            script_api = {}
-
-            # Provide all the movement functions to the player, but make them blocking.
-            script_api["move_north"] = scriptrunner.make_blocking(self.move_north)
-            script_api["move_east"] = scriptrunner.make_blocking(self.move_east)
-            script_api["move_south"] = scriptrunner.make_blocking(self.move_south)
-            script_api["move_west"] = scriptrunner.make_blocking(self.move_west)
-
-
-            script_api["face_north"] = scriptrunner.make_blocking(self.face_north)
-            script_api["face_east"] = scriptrunner.make_blocking(self.face_east)
-            script_api["face_south"] = scriptrunner.make_blocking(self.face_south)
-            script_api["face_west"] = scriptrunner.make_blocking(self.face_west)
-
-
-            script_api["wait"] = scriptrunner.make_blocking(lambda callback: self.wait(0.3, callback))
-
-            #the method to get the position of the player
-            script_api["get_position"] = self.get_position
-            script_api["get_flag_message"] = self.get_flag_message
-
-            script_api["yell"] = self.yell
-            scriptrunner.start(script_api, engine.get_run_script(), self, engine)
-        return
-
     #override ScriptStateContainer
     def get_script_name(self):
         return self.get_character_name()
@@ -159,7 +117,7 @@ class Player(Character, ScriptStateContainer):
         else:
             self.face_north()
             self.move_on_spot(callback)
-    
+
     def move_east(self, callback = lambda: None):
         engine = self.get_engine()
         x,y = self.get_position()
@@ -171,7 +129,7 @@ class Player(Character, ScriptStateContainer):
         else:
             self.face_east()
             self.move_on_spot(callback)
-    
+
     def move_south(self, callback = lambda: None):
         engine = self.get_engine()
         x,y = self.get_position()
@@ -183,7 +141,7 @@ class Player(Character, ScriptStateContainer):
         else:
             self.face_south()
             self.move_on_spot(callback)
-    
+
     def move_west(self, callback = lambda: None):
         engine = self.get_engine()
         x,y = self.get_position()
@@ -195,8 +153,8 @@ class Player(Character, ScriptStateContainer):
         else:
             self.face_west()
             self.move_on_spot(callback)
-        
-        
+
+
 
     def __input_move_north(self):
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
@@ -265,17 +223,3 @@ class Player(Character, ScriptStateContainer):
 
     def add_to_bag(self, bag_item):
         pass
-
-    def get_flag_message(self):
-        message = "There is no flag here!"
-        engine = self.get_engine()
-        position = self.get_position()
-        game_objects = engine.get_objects_at(position)
-        for current_object in game_objects:
-            if(hasattr(current_object, "get_message")):
-                message = current_object.get_message()
-        return message
-
-    def yell(self):
-        pass
-

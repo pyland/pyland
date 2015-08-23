@@ -108,11 +108,14 @@ player1_reject_sequence = [
 
 
 player1_try_script_sequence = [
-    lambda callback: engine.show_dialogue("Thanks for the help", callback = callback),
-    lambda callback: engine.print_terminal(engine.get_external_script()),
+    #lambda callback: engine.show_dialogue("Thanks for the help", callback = callback),
+    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: snake1.run_script(script_to_run = 10),
+    #lambda callback: engine.print_terminal(engine.get_external_script()),
 ]
 
 player1_cancel_script_sequence = [
+    lambda callback: player.set_busy(False, callback = callback),
     lambda callback: engine.show_dialogue("You cancelled on me!", callback = callback),
 ]
 
@@ -137,8 +140,6 @@ myla_sequence = [
 ]
 
 def snake1_action(player_object):
-    engine.print_terminal("doing snake 1 action")
-    engine.print_terminal(snake_helped[0])
     if snake_helped[0] == 0:
         engine.run_callback_list_sequence(player1_sequence)
     elif snake_helped[0] == 1:

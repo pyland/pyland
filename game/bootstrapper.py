@@ -131,10 +131,7 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
                     script = script_file.read()
                     engine.print_debug(script)
 
-
-                #entity.update_status("running"), all the update status stuff are from old version of bootstrapper TODO: work out what this should change to
                 scoped_interpreter.runcode(script)
-                #entity.update_status("finished")
 
             except RESTART:
                 engine.print_debug("restarting")
