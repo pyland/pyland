@@ -24,19 +24,19 @@
  <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="26" height="40">
+ <layer name="Ground" width="26" height="40" visible="0">
   <data encoding="base64" compression="zlib">
    eJztwwENAAAMw6BKnX8Vd3AFkLBqqqqqqs8DlhyGEA==
   </data>
  </layer>
  <layer name="Decor" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzdkzkOwCAMBK18i/+44v81PRJxAuuDXWkqECN8dBHpRHgn2uPty/Kgeq0f7kT8Zzca5LHyp+46UXFf2T1oEL28wYPK/Cb7vFnnKNg9qES5vPc02+OVqp7b9yfTs5Nqc9CeNSeet3dPqFI3tIeFAe0a264=
+   eJzdk0sKwCAMREOv1ftk5f3XXQlFsLY6Gad5MDvJw3yKmZVEiYbtifbt8qBm7S/eMP4zi5M8I7703Zso3mt2DzqIWf7Bg6KtGbkH9R8MTyXy5kczy+K5u9D0XAwPMrs9Uah60P1E11X2zKC2B+fRz4rnqe5KVPqG9mTJBZlD4tQ=
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzd0zEOACAIA0Djt+T/73LRxTioaQHbpKuXIFgtxYTKjrfD9qIc5F9H7IO6czPTjPeq4rS6d9Bto+oOKuubKvt26rD+Td1BxcuKulMvh5Wszu/3E+m8JOseMJx5Y8iqzk2lHWlkfwc=
+   eJzd1DEKACAMA0Dpt/T/73JREHFRkramkNUDbWxWShMKe7wdthflIN86Yh/UnZs7zdhXFafa2UGnjqg7qNnPZO+Bl7N6rM7f/AdqDmq8rKieejmsyer83p9I52Wy7gHDmR1DRvXeVNIBflB/RQ==
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="40">
@@ -56,6 +56,26 @@
   <object name="vines/vine3c" gid="101" x="1472" y="1024"/>
   <object name="vines/vine3e" gid="101" x="1408" y="1088"/>
   <object name="vines/vine3f" gid="101" x="1472" y="1088"/>
-  <object name="knife/knife1" gid="302" x="1024" y="1216"/>
+  <object name="knife/knife1" gid="302" x="1472" y="1280"/>
+  <object name="vines/vine4a" gid="101" x="320" y="1344"/>
+  <object name="vines/vine4b" gid="101" x="256" y="1344"/>
+  <object name="vines/vine4c" gid="101" x="192" y="1344"/>
+  <object name="vines/vine4d" gid="101" x="128" y="1344"/>
+  <object name="vines/vine4e" gid="101" x="128" y="1408"/>
+  <object name="vines/vine4f" gid="101" x="192" y="1408"/>
+  <object name="vines/vine4g" gid="101" x="256" y="1408"/>
+  <object name="vines/vine4h" gid="101" x="320" y="1408"/>
+  <object name="vines/vine4i" gid="101" x="320" y="1472"/>
+  <object name="vines/vine4j" gid="101" x="256" y="1472"/>
+  <object name="vines/vine4k" gid="101" x="192" y="1472"/>
+  <object name="vines/vine4l" gid="101" x="128" y="1472"/>
+  <object name="vines/vine4m" gid="101" x="128" y="1536"/>
+  <object name="vines/vine4n" gid="101" x="192" y="1536"/>
+  <object name="vines/vine4o" gid="101" x="192" y="1600"/>
+  <object name="tile_trigger/trigger_knife1" gid="292" x="1472" y="1152"/>
+  <object name="tile_trigger/trigger_knife2a" gid="292" x="1408" y="1280"/>
+  <object name="tile_trigger/trigger_knife2b" gid="292" x="1472" y="1216"/>
+  <object name="vines/vine0b" gid="101" x="1344" y="1280"/>
+  <object name="vines/vine0c" gid="101" x="1344" y="1216"/>
  </objectgroup>
 </map>

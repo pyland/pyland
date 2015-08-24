@@ -331,6 +331,8 @@ class Player(Character, ScriptStateContainer):
                 engine.print_terminal("Swoosh! Ran out of cuts")
             else:
                 engine.print_terminal("Swoosh! This knife now has " + str(self.__cuts_left) + " cut(s) left!")
+        else:
+            engine.print_terminal("Swish? There's nohing to cut. This knife still has " + str(self.__cuts_left) + " cut(s) left!")
 
 
 
