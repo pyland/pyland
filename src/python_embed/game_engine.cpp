@@ -60,7 +60,7 @@ void GameEngine::show_dialogue(std::string text, bool disable_scripting, PyObjec
 
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
-    LOG(INFO) << "Adding " << text << "to the notification bar with a regular callback";
+    LOG(INFO) << "Adding \"" << text << "\"to the notification bar with a regular callback";
     Engine::add_text(text);
     Engine::open_notification_bar(disable_scripting, boost_callback);
 }
@@ -90,7 +90,7 @@ void GameEngine::show_dialogue_with_options(std::string text, bool disable_scrip
         options.push_back(std::make_pair(cpp_option_name, test));
     }
 
-    LOG(INFO) << "Adding " << text << "to the notification bar with options";
+    LOG(INFO) << "Adding \"" << text << "\"to the notification bar with options";
     Engine::add_text(text);
     Engine::open_notification_bar_with_options(disable_scripting, options);
 }
