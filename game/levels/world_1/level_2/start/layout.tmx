@@ -35,5 +35,6 @@
   <object name="sign/bog_sign" gid="193" x="128" y="640"/>
   <object name="pyscripter/pyscripter" gid="192" x="320" y="704"/>
   <object name="tile_trigger/exit_to_world" gid="197" x="0" y="704"/>
+  <object name="player_data/player_data" gid="192" x="0" y="64"/>
  </objectgroup>
 </map>

@@ -2,18 +2,13 @@
 level_name = "level_1"
 world_name = "world_1"
 map_name = "road_one"
-current_map = "/" + world_name + "/" + level_name + "/" + map_name
 
-player_name = engine.get_player_name()
-player_data = engine.get_player_data(player_name)
-player_data["current_map"] = current_map
-level_data = player_data["level_data"][world_name][level_name]
-
-engine.save_player_data(player_name, player_data)
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
 
-
 #defining the possible states of the level
+heidi_state_speaking_about_prank = 0 #not used on this map!
 heidi_state_getting_prank_materials = 1
 heidi_state_got_prank_materials = 2
 #end state definitions
@@ -21,34 +16,26 @@ heidi_state_got_prank_materials = 2
 
 player_start_pos = (0, 0)
 #setting the player's starting position
-if player_data["previous_exit"] == "/world_1/level_1/rossumberg/top":
+if player_data.get_previous_exit() == "/world_1/level_1/rossumberg/top":
     player_start_pos = exit_to_village_top.get_position()
     player_one.move_to(player_start_pos, callback = player_one.move_east)
-elif player_data["previous_exit"] == "/world_1/level_1/rossumberg/bottom":
+elif player_data.get_previous_exit() == "/world_1/level_1/rossumberg/bottom":
     player_start_pos = exit_to_village_bottom.get_position()
     player_one.move_to(player_start_pos, callback = player_one.move_east)
 # end settin the default starting position
 
 #setting up the level's exits
 def go_to_village_top(player_object):
-    player_data["previous_exit"] = current_map + "/top"
-    engine.save_player_data(player_name, player_data)
-    engine.change_map("/world_1/level_1/rossumberg")
+    player_data.save_and_exit("/world_1/level_1/rossumberg", info = "top")
 
 def go_to_village_bottom(player_object):
-    player_data["previous_exit"] = current_map + "/bottom"
-    engine.save_player_data(player_name, player_data)
-    engine.change_map("/world_1/level_1/rossumberg")
+    player_data.save_and_exit("/world_1/level_1/rossumberg", info = "bottom")
 
 def go_to_merchant(player_object):
-    player_data["previous_exit"] = current_map
-    engine.save_player_data(player_name, player_data)
-    engine.change_map("/world_1/level_1/merchant")
+    player_data.save_and_exit("/world_1/level_1/merchant")
 
 def go_to_world(player_object):
-    player_data["previous_exit"] = "/" + world_name + "/" + level_name
-    engine.save_player_data(player_name, player_data)
-    engine.change_map("/world_1")
+    player_data.save_and_exit("/world_1")
 
 exit_to_village_top.player_walked_on = go_to_village_top
 exit_to_village_bottom.player_walked_on = go_to_village_bottom
@@ -91,7 +78,8 @@ merchant_blocker.face_south()
 # end general object set-up
 
 #state-based set-up
-if level_data["heidi_state"] == heidi_state_getting_prank_materials:
+heidi_state = player_data.get_level_state("heidi_state")
+if heidi_state == heidi_state_getting_prank_materials:
     def heidi_player_action(player_object):
         player_one.set_busy(True)
         engine.show_dialogue("The merchant is North of here, let's head there!", callback = lambda: player_one.set_busy(False))
@@ -139,8 +127,8 @@ if level_data["heidi_state"] == heidi_state_getting_prank_materials:
 
     def save_got_prank_materials():
         merchant.player_action = merchant_player_action
-        level_data["heidi_state"] = heidi_state_got_prank_materials
-        engine.save_player_data(player_name, player_data)
+        player_data.set_level_state("heidi_state", heidi_state_got_prank_materials)
+        player_data.save()
 
     merchant.player_action = merchant_player_action_stuff
 
