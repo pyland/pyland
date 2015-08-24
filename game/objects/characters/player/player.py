@@ -23,7 +23,7 @@ As the Character is in the characters folder.
 The auto-generated comment produced by the script should also mention where to get a list of the api
 and which built-in variables exist already.
 """
-class Player(Character, ScriptStateContainer):
+class Player(Character):
 
     __bag = []
     __focus_button_id = 0
@@ -161,7 +161,7 @@ class Player(Character, ScriptStateContainer):
         else:
             self.face_north()
             self.move_on_spot(callback)
-    
+
     def move_east(self, callback = lambda: None):
         engine = self.get_engine()
         x,y = self.get_position()
@@ -173,7 +173,7 @@ class Player(Character, ScriptStateContainer):
         else:
             self.face_east()
             self.move_on_spot(callback)
-    
+
     def move_south(self, callback = lambda: None):
         engine = self.get_engine()
         x,y = self.get_position()
@@ -185,7 +185,7 @@ class Player(Character, ScriptStateContainer):
         else:
             self.face_south()
             self.move_on_spot(callback)
-    
+
     def move_west(self, callback = lambda: None):
         engine = self.get_engine()
         x,y = self.get_position()
@@ -197,8 +197,8 @@ class Player(Character, ScriptStateContainer):
         else:
             self.face_west()
             self.move_on_spot(callback)
-        
-        
+
+
 
     def __input_move_north(self):
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
@@ -333,9 +333,6 @@ class Player(Character, ScriptStateContainer):
                 engine.print_terminal("Swoosh! This knife now has " + str(self.__cuts_left) + " cut(s) left!")
         else:
             engine.print_terminal("Swish? There's nohing to cut. This knife still has " + str(self.__cuts_left) + " cut(s) left!")
-
-
-
 
 
 

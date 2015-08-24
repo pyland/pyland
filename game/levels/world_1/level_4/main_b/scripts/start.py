@@ -1,0 +1,120 @@
+player_one.focus()
+croc_0.change_state("swim")
+croc_1.change_state("swim")
+croc_2.change_state("swim")
+croc_3.change_state("swim")
+croc_4.change_state("swim_dark")
+croc_5.change_state("swim_lite")
+
+croc_0.face_east()
+croc_1.face_east()
+croc_2.face_east()
+
+croc = [
+croc_0,
+croc_1,
+croc_2,
+croc_3,
+croc_4,
+croc_5
+]
+
+croc_4.oscillate = 1
+croc_5.oscillate = 2
+
+croc[0].face_east()
+croc[1].face_east()
+croc[2].face_east()
+croc[3].face_east()
+croc[4].face_south()
+croc[5].face_west()
+
+triggers = [trigger_0,
+trigger_1,
+trigger_2,
+trigger_3,
+trigger_4,
+trigger_5,
+trigger_6,
+trigger_7,
+trigger_8,
+trigger_9,
+trigger_10,
+trigger_11,
+trigger_12,
+trigger_13,
+trigger_14,
+trigger_15, 
+trigger_16,
+trigger_17,
+trigger_18,
+trigger_19,
+trigger_20,
+trigger_21,
+trigger_22,
+trigger_23,
+trigger_24,
+trigger_25,
+trigger_26,
+trigger_27,
+trigger_28,
+trigger_29]
+
+
+def player_walked_on_ti():
+    x,y = player_one.get_position()
+    
+    for obj in engine.get_objects_at((x+1,y)):
+        if obj in croc:
+            return obj.face_west(lambda: obj.lose(player_one))
+    for obj in engine.get_objects_at((x-1,y)):
+        if obj in croc:
+            return obj.face_east(lambda: obj.lose(player_one))
+    for obj in engine.get_objects_at((x,y+1)):
+        if obj in croc:
+            return obj.face_south(lambda: obj.lose(player_one))
+    for obj in engine.get_objects_at((x,y-1)):
+        if obj in croc:
+            return oambda.face_north(lambda: obj.lose(player_one))
+
+for t in triggers:
+    t.player_walked_on = lambda player_object: player_walked_on_ti()
+
+engine.run_callback_list_sequence([
+    lambda callback: player_one.face_east(callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: myla.face_west(callback = callback),
+    lambda callback: engine.show_dialogue("We need to get across the bridge on the left!", callback = callback),
+    lambda callback: engine.show_dialogue("I think I'm going to get back into your bag again...", callback =callback),
+    lambda callback: myla.move_north(callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: myla.move_west(callback = callback),
+    lambda callback: myla.move_south(callback = callback),
+    lambda callback: myla.move_east(callback = callback),
+    lambda callback: myla.set_visible(False, callback = callback),
+    lambda callback: myla.move_to((0,4), 0.0001, callback = callback),
+    lambda callback: player_one.set_busy(False, callback =callback)
+    ])
+
+
+first_time_end = True
+def player_walked_on_end():
+    global first_time_end;
+    if first_time_end:
+        first_time_end = False
+        engine.run_callback_list_sequence([
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("Myla: You did it!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback = callback),
+        lambda callback: player_one.move_north(callback = callback),
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: myla.move_to((9,8), 0.0001, callback = callback),
+        lambda callback: myla.set_visible(True, callback = callback),
+        lambda callback: myla.face_north(callback = callback),
+        lambda callback: engine.show_dialogue("Myla: See you later alligator!", callback = callback),
+        lambda callback: engine.show_dialogue("In a while crocodile!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback =callback),
+        lambda callback: myla.follow(player_one, callback = callback),
+        ])
+
+trigger_end.player_walked_on = lambda player_object: player_walked_on_end()

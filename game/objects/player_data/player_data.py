@@ -40,7 +40,20 @@ class PlayerData(GameObject):
             save_string = initial_save_file.read()
         json_data = json.loads(save_string)
         engine.save_player_data(player_name, json_data)
+        
         return
+
+    def __get_number_pyscripter_tabs(self):
+        return 1
+
+    def __get_number_totems(self):
+        return 1
+
+    def __has_unlocked_pyscripter(self):
+        return False
+
+    def __get_pyscipter_speed(self):
+        return 3.5
 
     def load(self, player_name):
         """ loads in the player data, and correctly set's up all the global states of the game.
@@ -49,6 +62,13 @@ class PlayerData(GameObject):
         engine = self.get_engine()
         self.__player_name = player_name
         self.__player_data = engine.get_player_data(player_name)
+
+        #setup all the player-data (what they have unlocked)
+        if(self.__has_unlocked_pyscripter()):
+            engine.show_py_scripter()
+        else:
+            engine.print_terminal("should be hidden now!")
+            engine.hide_py_scripter()
         return
 
     def save(self, ):
@@ -76,7 +96,19 @@ class PlayerData(GameObject):
         
 
     def get_previous_exit(self):
+        """ Deprecated, todo: make this private and make earlier levels use previous_exit_is """
         return self.__player_data["previous_exit"]
+
+    def previous_exit_is(self, world_name, level_name = None, map_name = None, info = None):
+        """ Check to see where the player perviously exited the game. Can check to see how much matches """
+        check_string = "/" + world_name
+        if(level_name != None):
+            check_string += "/" + level_name
+        if(map_name != None):
+            check_string += "/" + map_name
+        if(info != None):
+            check_string += "/" + info
+        return (check_string in self.get_previous_exit())
 
     def save_and_exit(self, destination, info = None):
         """ Go to the given destination and save the game """

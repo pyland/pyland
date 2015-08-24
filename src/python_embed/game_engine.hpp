@@ -39,6 +39,7 @@ class GameEngine {
         static int TILE_TYPE_STANDARD() { return 0; }
         static int TILE_TYPE_SOLID() { return 1; }
         static int TILE_TYPE_WATER() { return 2; }
+        static int TILE_TYPE_QUICKSAND() { return 3; }
 
         GameEngine(GUIMain *_gui_main, Challenge *_challenge);
         ///
@@ -96,6 +97,7 @@ class GameEngine {
         ///
         void show_dialogue(std::string text, bool disable_scripting, PyObject *callback);
         void show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *options);
+        void show_external_script_help(std::string text, PyObject *callback);
 
         ///
         /// Register a callback against a given input
@@ -123,8 +125,8 @@ class GameEngine {
         void enable_script_editing(PyObject* callback);
         void disable_script_editing(PyObject* callback);
         void set_py_tabs(int val, PyObject* callback);
-        void show_external_tab(PyObject* callback);
-        void hide_external_tab(PyObject* callback);
+        void show_external_script(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue, PyObject* script_init);
+        //void hide_external_tab(PyObject* callback);
 
         ///
         /// Update the info bar with the current
@@ -149,6 +151,11 @@ class GameEngine {
         /// text edtior
         ///
         std::string get_script();
+
+        /// Get the text in the external QsciScintilla
+        /// text edtior tab
+        ///
+        std::string get_external_script();
 
         /// Print text to the QT terminal widget
         /// If error is True the text is red

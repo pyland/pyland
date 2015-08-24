@@ -111,6 +111,7 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
         except:
             tb = traceback.format_exc()
             engine.print_debug(tb)
+            engine.print_debug("Tried to print: " + str(entities))
 
         """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
         for entity in entities:
@@ -131,10 +132,7 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
                     script = script_file.read()
                     engine.print_debug(script)
 
-
-                #entity.update_status("running"), all the update status stuff are from old version of bootstrapper TODO: work out what this should change to
                 scoped_interpreter.runcode(script)
-                #entity.update_status("finished")
 
             except RESTART:
                 engine.print_debug("restarting")

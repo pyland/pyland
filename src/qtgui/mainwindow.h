@@ -15,6 +15,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <boost/python/object_core.hpp>
+
 #include <QMainWindow>
 #include <QDialog>
 #include <QLabel>
@@ -61,7 +63,7 @@ public:
     void disableScripter();
 
     void setTabs(int num);
-    void createExternalTab();
+    void createExternalTab(std::function<void ()> confirmCallback, std::function<void ()> cancelCallback, std::function<void ()> scriptInit, std::string dialogue);
     void removeExternalTab();
 
     void updateSpeed();
@@ -73,6 +75,7 @@ public:
     void insertToTextEditor(std::string text);
     void clearTextEditor();
     std::string getEditorText();
+    std::string getExternalText();
     void runCode(int script);
     void toggleSpeed();
     void setRunning(bool option);
@@ -114,7 +117,9 @@ private:
 
     static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
-    //QsciScintilla *external_workspace;
+    bool externalWorkspace;
+    std::function<void ()> externalConfirmCallback;
+    std::function<void ()> externalCancelCallback;
     QWidget *zoomWidget[workspace_max];
     QHBoxLayout *zoomLayout[workspace_max];
     QPushButton *buttonIn[workspace_max];
@@ -154,6 +159,7 @@ private:
     SDL_Window *embedWindow;
     QTimer *eventTimer;
 
+    //The instance of the game main class (running the main game loop)
     GameMain *game;
 
     //Specifies whether there has been any output during the current code execution,
@@ -167,6 +173,7 @@ private:
     //Index of the script to be executed
     int executeIndex;
 
+    //The current number of tabs that the player has available to them
     int currentTabs;
 };
 

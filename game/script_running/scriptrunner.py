@@ -30,9 +30,10 @@ def start(script_api, script_name, script_state_container, engine):
     """
 
     """ How printing is handled """
+
     printed_flag = [False]  #This flag used to determine if the player has printed something, because if nothing has been printed there is no point in inserting the "----" in the terminal.
     def user_print(text):
-        """ A simple mthod to print text to the game console for the user, overrides the python default print method """
+        """ A simple method to print text to the game console for the user, overrides the python default print method """
         printed_flag[0] = True
         engine.print_terminal(text, False) #autoconvert print to strings (do not need to convert within the game)
 
@@ -54,6 +55,7 @@ def start(script_api, script_name, script_state_container, engine):
         It runs the script requested first and then runs the callback.
         the callback is therefore run in the seperate thread.
         """
+
         try:
             scoped_interpreter.runcode(script, HaltScriptException) #Run the script
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
@@ -66,6 +68,9 @@ def start(script_api, script_name, script_state_container, engine):
             engine.set_finished()
 
     thread = threading.Thread(target = thread_target)
+
+    engine.print_debug(script)
+
     thread.start()
     script_state_container.set_thread_id(thread.ident) #Save the player's thread id so that scripts can be halted
     return

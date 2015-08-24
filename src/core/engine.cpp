@@ -35,8 +35,6 @@
 
 ///Static variables
 MapViewer *Engine::map_viewer(nullptr);
-
-std::shared_ptr<TextBox> Engine::notification_bar(nullptr);
 GameMain* Engine::game_main(nullptr);
 
 GameWindow* Engine::game_window(nullptr);
@@ -246,7 +244,9 @@ void Engine::add_text(std::string text) {
 
 void Engine::open_notification_bar(bool disable_scripting, std::function<void ()> func){
     if(disable_scripting){
-        disable_py_scripter();
+        EventManager::get_instance()->add_event([] {
+            disable_py_scripter();
+        });
     }
     EventManager::get_instance()->add_event([func] {
         gui_main->open_notification_bar(func);
@@ -255,7 +255,9 @@ void Engine::open_notification_bar(bool disable_scripting, std::function<void ()
 
 void Engine::open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair <std::string, std::function<void ()> > > options){
     if(disable_scripting){
-        disable_py_scripter();
+        EventManager::get_instance()->add_event([] {
+            disable_py_scripter();
+        });
     }
     EventManager::get_instance()->add_event([options] {
         gui_main->open_notification_bar_with_options(options);
@@ -266,12 +268,34 @@ void Engine::open_notification_bar_with_options(bool disable_scripting, std::deq
 void Engine::close_notification_bar(){
     EventManager::get_instance()->add_event([] {
         gui_main->close_notification_bar();
-        enable_py_scripter();
+        if (!Engine::is_bar_with_options_open()){
+            enable_py_scripter();
+        }
     });
 }
 
 bool Engine::is_bar_open(){
     return (gui_main->is_bar_open());
+}
+
+bool Engine::is_bar_with_options_open(){
+    return (gui_main->is_bar_with_options_open());
+}
+
+void Engine::show_external_script_help(std::string text){
+    EventManager::get_instance()->add_event([text] {
+        gui_main->show_external_script_help(text);
+    });
+}
+
+void Engine::close_external_script_help(){
+    EventManager::get_instance()->add_event([] {
+        gui_main->close_external_script_help();
+    });
+}
+
+bool Engine::is_external_help_open(){
+    return (gui_main->is_external_help_open());
 }
 
 void Engine::show_py_scripter(){
@@ -323,19 +347,19 @@ void Engine::set_py_tabs(int val){
     });
 }
 
-void Engine::show_external_tab(){
+void Engine::show_external_script(std::function<void ()> confirm_callback, std::function<void ()> cancel_callback, std::string external_dialogue, std::function<void ()> script_init){
     auto _main_window = main_window;
-    EventManager::get_instance()->add_event([_main_window] {
-        _main_window->createExternalTab();
+    EventManager::get_instance()->add_event([_main_window,confirm_callback, cancel_callback, external_dialogue, script_init] {
+        _main_window->createExternalTab(confirm_callback, cancel_callback, script_init,  external_dialogue);
     });
 }
 
-void Engine::hide_external_tab(){
+/*void Engine::hide_external_tab(){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window] {
         _main_window->removeExternalTab();
     });
-}
+}*/
 
 void Engine::update_world(std::string text){
     auto _main_window = main_window;
@@ -385,6 +409,11 @@ void Engine::clear_scripter()
 std::string Engine::get_script()
 {
     return main_window->getEditorText();
+}
+
+std::string Engine::get_external_script()
+{
+    return main_window->getExternalText();
 }
 
 
