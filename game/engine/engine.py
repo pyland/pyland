@@ -276,6 +276,13 @@ class Engine:
     def enable_py_scripter(self, callback = lambda: None):
         self.__cpp_engine.enable_py_scripter(callback)
 
+    def hide_py_scripter(self, callback = lambda: None):
+        self.__cpp_engine.hide_py_scripter(callback)
+
+    def show_py_scripter(self, callback = lambda: None):
+        self.__cpp_engine.show_py_scripter(callback)
+
+
     def enable_script_editing(self, callback = lambda: None):
         self.__cpp_engine.enable_script_editing(callback)
 
