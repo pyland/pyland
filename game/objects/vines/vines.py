@@ -35,9 +35,9 @@ class Vines(GameObject):
 
     def grow(self, player_object, callback = lambda : None):
         if(self.get_position() == player_object.get_position()):
-            self.die_action()
+            self.contact_action()
         self.set_visible(True, callback)
-        self.start_animating(speed = 0.1, loop = False)
+        self.start_animating(speed = 0.1, loop = False, forward = True)
 
     def player_action(self, player_object):
         if not self.is_visible():
@@ -49,7 +49,7 @@ class Vines(GameObject):
     def player_walked_on(self, player_object):
         #self.get_engine().print_terminal("Been Walked on")
         if(self.is_visible()):
-            self.die_action()
+            self.contact_action()
 
-    def die_action(self):
+    def contact_action(self):
         self.get_engine().print_terminal("Oh no! The vines got you!")
