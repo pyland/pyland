@@ -27,6 +27,8 @@ class Entity {
 
         bool animating;
 
+        void animate(int current_frame, float speed, bool loop, bool forward, std::function<void ()> callback);
+        
     public:
         ///
         /// A name. The name is used to identify instances of the object in the python
@@ -130,15 +132,13 @@ class Entity {
         /// Make the object start animating, cycles through all the numbered png's in the sprite folder set
         ///
         ///
-        void start_animating(float speed, bool loop);
+        void start_animating(float speed, bool loop, bool forward, PyObject *callback);
 
         ///
         /// Make the object pause on the current frame of animation
         ///
         ///
         void pause_animating();
-
-        void animate(int current_frame, float speed, bool loop);
 
         ///
         /// @return

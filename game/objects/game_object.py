@@ -85,10 +85,9 @@ class GameObject:
         return
 
     #TODO: Make it so that the callbacks of the following methods get passed into c++ so they are put on the event queue as opposed to being run from Python!
-    def start_animating(self, speed = 0.06, loop = True, callback = lambda: None):
+    def start_animating(self, speed = 0.06, loop = True, forward = True, callback = lambda: None):
         #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
-        self.__entity.start_animating(speed, loop)
-        callback()
+        self.__entity.start_animating(speed, loop, forward, callback)
         return
 
     def stop_animating(self, callback = lambda: None):
