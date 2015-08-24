@@ -160,3 +160,6 @@ vine3a.wait(2 * alive_length, lambda: engine.run_callback_list_sequence(vine3c_l
 vine3a.wait(3 * alive_length, lambda: engine.run_callback_list_sequence(vine3d_list_sequence))
 vine3a.wait(4 * alive_length, lambda: engine.run_callback_list_sequence(vine3e_list_sequence))
 vine3a.wait(5 * alive_length, lambda: engine.run_callback_list_sequence(vine3f_list_sequence))
+
+#introducing the knife
+knife1.set_cut_power(5)

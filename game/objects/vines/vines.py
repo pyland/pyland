@@ -50,11 +50,11 @@ class Vines(GameObject):
         self.start_animating(speed = 0.1, loop = False, forward = False, callback = lambda: self.set_visible(False, lambda : callback))
         callback()
 
-    def kill(self, callback = lambda: None):
+    def kill(self):
         if(self.__alive):
             self.set_sprite("dead")
             self.__alive = False
-            callback()
+            return True
 
     def player_action(self, player_object):
         if not self.is_visible():
@@ -71,7 +71,7 @@ class Vines(GameObject):
             self.contact_action()
 
     def on_cut(self):
-        self.kill()
+        return self.kill()
 
     def contact_action(self):
         if(not self.__alive):

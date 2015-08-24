@@ -27,6 +27,7 @@ class Player(Character, ScriptStateContainer):
 
     __bag = []
     __focus_button_id = 0
+    __cuts_left = 0
 
     def initialise(self):
         """ An initialiser function.
@@ -287,29 +288,50 @@ class Player(Character, ScriptStateContainer):
             if hasattr(current, "yelled_at"):
                 current.yelled_at(self)
 
+    def set_cuts_left(self, cuts_left):
+        self.__cuts_left = cuts_left
+
+    def get_cuts_left(self):
+        return self.__cuts_left
+
     def cut(self):
         engine = self.get_engine()
+
+        if (self.__cuts_left == 0):
+            engine.print_terminal("Not enough cuts left!")
+            return
+        
         (x,y) = self.get_position()
         
+        made_cut = False
+
         if self.is_facing_east():
             for obj in engine.get_objects_at((x+1, y)):
                 if(hasattr(obj, "on_cut")):
-                    obj.on_cut()
+                    made_cut = made_cut or obj.on_cut()
 
         elif self.is_facing_west():
             for obj in engine.get_objects_at((x-1, y)):
                 if(hasattr(obj, "on_cut")):
-                    obj.on_cut()
+                    made_cut = made_cut or obj.on_cut()
 
         elif self.is_facing_north():
             for obj in engine.get_objects_at((x, y+1)):
                 if(hasattr(obj, "on_cut")):
-                    obj.on_cut()
+                    made_cut = made_cut or obj.on_cut()
 
         elif self.is_facing_south():
             for obj in engine.get_objects_at((x, y-1)):
                 if(hasattr(obj, "on_cut")):
-                    obj.on_cut()
+                    made_cut = made_cut or obj.on_cut()
+
+        if made_cut:
+            self.__cuts_left = self.__cuts_left - 1
+            if (self.__cuts_left == 0):
+                engine.print_terminal("Swoosh! Ran out of cuts")
+            else:
+                engine.print_terminal("Swoosh! This knife now has " + str(self.__cuts_left) + " cut(s) left!")
+
 
 
 

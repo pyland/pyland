@@ -27,7 +27,7 @@ As the GameObject is in the base objects folder.
 class Knife(GameObject):
 
     __message = "Looks like a sharp knife!"
-    __cuts_left = 0
+    __cut_power = 0
 
     def initialise(self):
         self.set_sprite("")
@@ -48,15 +48,15 @@ class Knife(GameObject):
 
     def contact_action(self, player_object):
         player_object.set_busy(True)
+        player_object.set_cuts_left(self.get_cut_power())
         self.get_engine().run_callback_list_sequence([
-            lambda callback: self.get_engine().show_dialogue("Picked up knife!", callback = callback), 
-            lambda callback: self.set_visible(False, callback = callback),
-            lambda callback: player_object.set_busy(False, callback = callback)
+            lambda callback: self.get_engine().show_dialogue("Picked up knife! This looks like it's sharp enough for " + str(self.__cut_power) + " cut(s)", callback = callback), 
+            lambda callback: player_object.set_busy(False, callback = callback),
+            lambda callback: self.set_visible(False, callback = callback)
         ])
 
-    def set_cuts_left(self, cuts_left):
-        self.__cuts_left = cuts_left
+    def set_cut_power(self, cut_power):
+        self.__cut_power = cut_power
 
-    def cut(self):
-        self.__cuts_left = self.__cuts_left - 1
-        engine.print_terminal("Swoosh! This knife can now cut " + str(self._cuts_left) + "times")
+    def get_cut_power(self):
+        return self.__cut_power
