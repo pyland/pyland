@@ -1,5 +1,3 @@
-import random
-
 player_one.focus()
 engine.play_music("beach")
 
@@ -16,6 +14,8 @@ intro_dialogue = [
     lambda callback: engine.show_dialogue("Myla: We need to go west, but the boulder is blocking us!", callback = callback),
     lambda callback: engine.show_dialogue("Careful, those crocodiles they are next to you!", callback = callback),
     lambda callback: engine.show_dialogue("Since there is only one bridge, I'll just jump into your bag", callback =callback),
+    lambda callback: player_one.face_west(callback = callback),
+    lambda callback: myla.set_visible(False, callback = callback),
     lambda callback: myla.move_to((0,0), 0.0001, callback = callback),
     lambda callback: player_one.set_busy(False, callback =callback)
     ]
@@ -120,11 +120,18 @@ def player_walked_on_challenge2b():
         challenge2_dialogue = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("Myla: You did it!!", callback = callback),
-        lambda callback: player_one.face_west(callback = callback),
+        lambda callback: engine.show_dialogue("Let me out of your bag now!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback =callback),
+        lambda callback: player_one.move_west(callback = callback),
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: myla.move_to((12,0), 0.0001, callback = callback),
+        lambda callback: myla.set_visible(True, callback = callback),
+        lambda callback: player_one.face_east(callback = callback),
         lambda callback: engine.show_dialogue("These crocodiles are making me nervous...lets get out of here", callback = callback),
+        lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback),
         ]
-        myla_follow = False
+
         engine.run_callback_list_sequence(challenge2_dialogue)
 
 
@@ -133,3 +140,4 @@ def player_walked_on_challenge2b():
 challenge2a.player_walked_on = lambda player_object: player_walked_on_challenge2a()
 challenge2b.player_walked_on = lambda player_object: player_walked_on_challenge2b()
 
+-
