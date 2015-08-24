@@ -6,7 +6,7 @@ import traceback
 
 class ScopedInterpreter(code.InteractiveInterpreter):
     """ Creates and defines a class called ScopedIntepreter which is used to run the player-code
-    
+
     By creating an instance of this class, and using it to run any code the player writes. The functions, objects and values
     the player has access to can be tightly controlled. The script_api is a dictionary from names to the values the player
     has access to.
@@ -26,7 +26,7 @@ class ScopedInterpreter(code.InteractiveInterpreter):
         self.error_output = error_output
 
     def runcode(self, code, HaltScriptException):
-        """ Run the code that is passed as an argument to ScopedInterpreter. 
+        """ Run the code that is passed as an argument to ScopedInterpreter.
 
         Parameters
         ----------
@@ -35,6 +35,9 @@ class ScopedInterpreter(code.InteractiveInterpreter):
         HaltScriptException : Exception
             An instance of the exception class you wish to use to halt the executing script asynchronously
         """
+
+        #print("Py: scoped interpreter runcode")
+
         with contextlib.closing(sys.stdout):
             # Emulate super().runcode(code), but don't catch
             # RESTART, STOP or KILL because those should
@@ -43,10 +46,13 @@ class ScopedInterpreter(code.InteractiveInterpreter):
             # The code here is a trivial modification of the
             # source of the implementaion we're overloading.
             try:
+                #print("Py: executing code")
                 exec(code, self.locals)
             except HaltScriptException as He:
+                #print("Py: halt script execption")
                 raise He
             except Exception as e:
                 #Print out any errors caught in the code to error_output
-                self.error_output(traceback.format_exc()) 
+                #print("Py: output error")
+                self.error_output(traceback.format_exc())
 

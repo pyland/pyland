@@ -49,8 +49,10 @@ private:
     Lifeline up_callback;
     Lifeline down_callback;
     Lifeline right_callback;
-
     Lifeline left_callback;
+    Lifeline right_select_callback;
+    Lifeline left_select_callback;
+
     Lifeline run_callback;
     Lifeline speed_callback;
     Lifeline switch_callback;
@@ -81,7 +83,7 @@ private:
     ChallengeData *challenge_data;
     Challenge* challenge;
     std::chrono::time_point<std::chrono::steady_clock> last_clock;
-    
+
     bool changing_challenge;
     std::string next_challenge;
 

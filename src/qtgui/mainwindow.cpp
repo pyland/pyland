@@ -118,6 +118,17 @@ MainWindow::MainWindow(GameMain *exGame):
 {
     LOG(INFO) << "Constructing MainWindow..." << std::endl;
 
+
+    externalWorkspace = false;
+    anyOutput = false;
+    scriptEnabled = true;
+    executeIndex = 1;
+    currentTabs = 1;
+
+    script_running = false;
+    fast = false;
+
+
     game = exGame;
     this->setUnifiedTitleAndToolBarOnMac(true);
 
@@ -202,8 +213,6 @@ MainWindow::MainWindow(GameMain *exGame):
         initWorkspace(workspaces[ws], ws);
     }
 
-    setTabs(1);
-
     // Setup draggable splitter for script embedWindow and terminal
     splitter = new QSplitter(Qt::Horizontal);
 
@@ -273,9 +282,6 @@ MainWindow::MainWindow(GameMain *exGame):
 
     int width = (gameWidget->width());
     int height = gameWidget->height();
-    anyOutput = false;
-    scriptEnabled = true;
-    executeIndex = 1;
 
     SDL_SetWindowSize(embedWindow, width, height);
     glViewport(0, 0, width, height);
@@ -286,6 +292,8 @@ MainWindow::MainWindow(GameMain *exGame):
     connect(buttonRun,SIGNAL(released()),this,SLOT (clickRun()));
     connect(buttonSpeed,SIGNAL(released()),this,SLOT (clickSpeed()));
     connect(buttonClear,SIGNAL(released()),this,SLOT (clearTerminal()));
+
+    setTabs(1);
 
     this->showMaximized();
 
@@ -776,26 +784,62 @@ void MainWindow::setTabs(int num){
     }
 }
 
-
-void MainWindow::createExternalTab(){
+//Create a new PyScripter tab, for scripts given by other players
+//The 'Run' and 'Speed' buttons get replaced with 'Give Script' and 'Cancel'
+//The results of clicking these buttons is given by the first two python callbacks
+//The scriptInit callback, can be used to pass information to the external script
+//void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, PyObject* scriptInit, std::string dialogue = "Click 'Give Script' when you're done!"){
+void MainWindow::createExternalTab(std::function<void ()> confirmCallback, std::function<void ()> cancelCallback, std::function<void ()> scriptInit, std::string dialogue = "Click 'Give Script' when you're done!"){
     textWidget->addTab(workspaces[workspace_max-1],"*");
-    textWidget->setCurrentIndex(workspace_max-1);
+
     buttonRun->setText("Give script");
     buttonSpeed->setText("Cancel");
-    for(int ws = 0; ws < (workspace_max-1); ws++)
+    for(int ws = 0; ws < (currentTabs); ws++)
     {
-        textWidget->setTabEnabled(ws,false);
+        textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]),false);
     }
+
+    textWidget->setTabEnabled(textWidget->indexOf(workspaces[workspace_max-1]),true);
+
+    textWidget->setCurrentWidget(workspaces[workspace_max-1]);
+
+    externalWorkspace = true;
+    externalConfirmCallback = confirmCallback;
+    externalCancelCallback = cancelCallback;
+
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+
+    ws->clear();
+
+    EventManager::get_instance()->add_event([this, dialogue] {
+        Engine::show_external_script_help(dialogue);
+    });
+    Engine::enable_py_scripter();
+
+    scriptInit();
+
+    //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(scriptInit)));
+    //EventManager::get_instance()->add_event([boost_callback] {
+    //    boost_callback();
+    //});
+
 }
 
 void MainWindow::removeExternalTab(){
     setTabs(currentTabs);
     setRunning(script_running);
     setFast(fast);
-    for(int ws = 0; ws < (workspace_max-1); ws++)
+    for(int ws = 0; ws < (currentTabs); ws++)
     {
-        textWidget->setTabEnabled(ws,true);
+        textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]), true);
     }
+
+    externalWorkspace = false;
+
+    EventManager::get_instance()->add_event([this] {
+        Engine::close_external_script_help();
+    });
+
 }
 
 //When the QT window is closed
@@ -815,6 +859,40 @@ void MainWindow::clickRun()
 //If zero the currently open script is run
 void MainWindow::runCode(int script)
 {
+    if (externalWorkspace){
+
+        QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+
+        //read in the player script paths (as defined in the config file)
+        std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
+        std::string path = player_scripts_location + "/10.py";
+
+        //Write out the external script text to 10.py
+        //This python script is always run in bootstrapper.py (in start)
+        ofstream fout(path.c_str(), ios::out|ios::trunc);
+
+        if(!(fout.good()))
+        {
+            LOG(INFO) << "Output file is bad" << endl;
+            return;
+        }
+
+        fout << ws->text().toStdString();
+
+        fout.close();
+
+        //externalConfirmCallback();
+
+        EventManager::get_instance()->add_event([this] {
+            this->externalConfirmCallback();
+            this->externalConfirmCallback = [] () {};
+        });
+
+        removeExternalTab();
+        setGameFocus();
+        return;
+    }
+
     if (!scriptEnabled) return;
     if (script_running)
     {
@@ -845,7 +923,7 @@ void MainWindow::runCode(int script)
             }
         }
 
-        //read in the player scripts (as defined in the config file)
+        //read in the player script paths (as defined in the config file)
         std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
         std::string path = player_scripts_location + "/" + std::to_string(index) + ".py";
 
@@ -853,19 +931,16 @@ void MainWindow::runCode(int script)
         //Also save as 'Current Script.py' as temporary measure before new input manager
         //This python script is always run in bootstrapper.py (in start)
         ofstream fout(path.c_str(), ios::out|ios::trunc);
-        //ofstream foutcopy(player_scripts_location + "/current.py", ios::out|ios::trunc);
 
-        if(!(fout.good()))// && foutcopy.good()))
+        if(!(fout.good()))
         {
             LOG(INFO) << "Output file is bad" << endl;
             return;
         }
 
         fout << ws->text().toStdString();
-        //foutcopy << ws->text().toStdString();
 
         fout.close();
-        //foutcopy.close();
 
         setRunning(true);
         updateSpeed();
@@ -891,6 +966,18 @@ void MainWindow::clickSpeed()
 //Toggle the speed setting
 void MainWindow::toggleSpeed()
 {
+    if (externalWorkspace){
+
+        EventManager::get_instance()->add_event([this] {
+            this->externalCancelCallback();
+            this->externalCancelCallback = [] () {};
+        });
+
+        removeExternalTab();
+
+        return;
+    }
+
     if (!scriptEnabled) return;
     setFast(!fast);
     updateSpeed();
@@ -913,11 +1000,11 @@ void MainWindow::updateSpeed()
         //
         //     start + (c⁵ - 5·c⁴ + 5·c³) change
         //
-        float eased(1.0f + 511.0f * (
-                        + 1.0f * completion * completion * completion * completion * completion
-                        - 5.0f * completion * completion * completion * completion
-                        + 5.0f * completion * completion * completion
-                    ));
+        //float eased(1.0f + 511.0f * (
+        //                + 1.0f * completion * completion * completion * completion * completion
+        //                - 5.0f * completion * completion * completion * completion
+        //                + 5.0f * completion * completion * completion
+        //            ));
 
         EventManager::get_instance()->time.set_game_seconds_per_real_second(2.5);
     }
@@ -1011,8 +1098,7 @@ void MainWindow::insertToTextEditor(std::string text)
 //Clear the text in the currently open text editor tab
 void MainWindow::clearTextEditor()
 {
-    QsciScintilla *ws;
-    ws = (QsciScintilla*)textWidget->currentWidget();
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
     ws->clear();
 }
@@ -1023,6 +1109,15 @@ std::string MainWindow::getEditorText()
     QsciScintilla *ws;
     ws = (QsciScintilla*)textWidget->currentWidget();
 
+    return ws->text().toStdString();
+}
+
+//Get the text from external tab (for when the user has just given an NPC a script)
+//It gets cleared every time the external tab is opened, but remains after the tab has been closed
+std::string MainWindow::getExternalText()
+{
+    QsciScintilla *ws;
+    ws = workspaces[workspace_max-1];
     return ws->text().toStdString();
 }
 

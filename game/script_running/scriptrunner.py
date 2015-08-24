@@ -30,6 +30,11 @@ def start(script_api, script_name, script_state_container, engine):
     """
 
     """ How printing is handled """
+
+    
+    engine.print_debug("Py: starting script runner")
+
+
     printed_flag = [False]  #This flag used to determine if the player has printed something, because if nothing has been printed there is no point in inserting the "----" in the terminal.
     def user_print(text):
         """ A simple mthod to print text to the game console for the user, overrides the python default print method """
@@ -40,9 +45,15 @@ def start(script_api, script_name, script_state_container, engine):
     if not "print" in script_api:
         script_api["print"] = user_print
 
+    
+    engine.print_debug("Py: instantiating scope interpreter")
+
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: engine.print_terminal(error_output, True)) #create an instance of it
     script_filename = engine.get_config()['files']['player_scripts'] + "/"+str(script_name)+".py" #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
+
+
+    engine.print_debug("Py: opening script")
 
     #open and read the script
     with open(script_filename, encoding="utf8") as script_file:
@@ -54,6 +65,8 @@ def start(script_api, script_name, script_state_container, engine):
         It runs the script requested first and then runs the callback.
         the callback is therefore run in the seperate thread.
         """
+
+        engine.print_debug("Py: starting thread target")
         try:
             scoped_interpreter.runcode(script, HaltScriptException) #Run the script
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
@@ -64,10 +77,24 @@ def start(script_api, script_name, script_state_container, engine):
                 engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has ended---", False)
             script_state_container.set_running_script_status(False)
             engine.set_finished()
+    
+    
+    engine.print_debug("Py: starting thread")
 
     thread = threading.Thread(target = thread_target)
+
+
+    engine.print_debug("Py: starting thread 2")
+
+    engine.print_debug(script)
+    
     thread.start()
+
+
+    engine.print_debug("Py: starting thread 3")
+
     script_state_container.set_thread_id(thread.ident) #Save the player's thread id so that scripts can be halted
+    engine.print_debug("Py: starting thread 4")
     return
 
 def make_blocking(async_function):

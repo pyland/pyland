@@ -14,6 +14,8 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     map_viewer(embedWindow, &gui_manager),
     em(EventManager::get_instance()),
     bar_open(false),
+    bar_options_open(false),
+    external_help_open(false),
     callback_options(false),
     option_start(0),
     option_selected(0),
@@ -23,6 +25,12 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
 {
     LOG(INFO) << "Constructing GUIMain...";
+
+    option_selected = 0;
+    bar_open = false; //whether or not the notification bar is open
+    bar_options_open = false;
+    external_help_open = false;
+    callback_options = false;
 
     config_gui();
 
@@ -77,7 +85,7 @@ void GUIMain::create_pause_menu(){
 
     pause_button->set_on_click( [&] (){
 
-        if(bag_open || bar_open){
+        if(bag_open || bar_open || external_help_open){
             return;
         }
 
@@ -125,6 +133,19 @@ void GUIMain::create_notification_bar(){
     notification_bar->set_clickable(false);
     notification_bar->set_buffer_size(notification_text_buffer);
 
+    external_script_help = std::make_shared<TextBox>(TextBoxType::ExternalScriptHelp);
+    external_script_help->set_width(notification_width);
+    external_script_help->set_height(notification_height);
+    external_script_help->set_x_offset(left_x_offset);
+    external_script_help->set_y_offset(bottom_y_offset);
+    external_script_help->move_text(notification_text_x, notification_text_y);
+    external_script_help->resize_text(notification_text_width, notification_text_height);
+    external_script_help->resize_buttons(notification_button_width, notification_button_height);
+    external_script_help->move_buttons(notification_button_x, notification_button_y);
+    external_script_help->set_visible(false);
+    external_script_help->set_clickable(false);
+    external_script_help->set_buffer_size(notification_text_buffer);
+
     options_box = std::make_shared<Board>(ButtonType::Board);
     options_box->set_width(option_width);
     options_box->set_height(option_height);
@@ -135,6 +156,7 @@ void GUIMain::create_notification_bar(){
 
     gui_window->add(options_box);
     gui_window->add(notification_bar);
+    gui_window->add(external_script_help);
 }
 
 void GUIMain::create_bag(){
@@ -152,7 +174,7 @@ void GUIMain::create_bag(){
 
     bag_button->set_on_click( [&] ()
     {
-        if(bar_open || pause_open){
+        if(bar_open || pause_open || external_help_open){
             return;
         }
 
@@ -476,10 +498,30 @@ void GUIMain::proceed_notification_bar(){
     notification_bar->proceed();
 }
 
+void GUIMain::proceed_notification_bar_with_options(){
+    for(unsigned int i=0; i<=1; i++){
+        if ((option_selected == i)){
+            option_buttons[i]->call_on_click();
+        }
+    }
+}
+
+void GUIMain::toggle_selection_notification_bar_with_options(){
+    option_selected++;
+    if (option_selected > 1) option_selected = 0;
+    for(unsigned int i=0; i<=1; i++){
+        if (i == option_selected){
+            option_buttons[i]->set_text_colour(255, 255, 255, 0);
+        }
+        else{
+            option_buttons[i]->set_text_colour(255, 255, 255, 255);
+        }
+    }
+}
+
 void GUIMain::close_notification_bar(){
-
-
     if(callback_options){
+        bar_options_open = true;
         options_box->set_visible(true);
         options_box->set_clickable(false);
 
@@ -494,13 +536,6 @@ void GUIMain::close_notification_bar(){
             option_button->move_text(option_button_text_x, option_button_text_y);
             option_button->set_visible(true);
             option_button->set_clickable(true);
-
-            if (i == option_selected){
-                option_button->set_text_colour(255, 255, 255, 255);
-            }
-            else{
-                option_button->set_text_colour(0, 0, 0, 0);
-            }
 
             option_button->set_on_click([this, i] (){
                 notification_bar->clear_text();
@@ -517,7 +552,9 @@ void GUIMain::close_notification_bar(){
                 option_buttons.clear();
 
                 refresh_gui();
+                Engine::enable_py_scripter();
                 bar_open = false;
+                bar_options_open = false;
             });
 
             option_buttons.push_back(option_button);
@@ -537,6 +574,24 @@ void GUIMain::close_notification_bar(){
     LOG(INFO) << "Notification Bar closed";
 }
 
+void GUIMain::show_external_script_help(std::string text){
+    external_help_open = true;
+    external_script_help->add_text(text);
+    external_script_help->open();
+    LOG(INFO) << "ExternalScript Help open";
+}
+
+void GUIMain::proceed_external_script_help(){
+    external_script_help->proceed();
+}
+
+void GUIMain::close_external_script_help(){
+    if (external_help_open){
+        external_script_help->clear_text();
+        external_script_help->close();
+        external_help_open = false;
+    }
+}
 
 void GUIMain::open_bag()
 {

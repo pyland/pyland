@@ -132,8 +132,13 @@ private:
     std::shared_ptr<GUIWindow> gui_window;
 
     bool bar_open; //whether or not the notification bar is open
+    bool bar_options_open;
+    bool external_help_open;
     bool callback_options; //whether or not there are options at the end of the notification bar
     void create_notification_bar();
+    std::shared_ptr<TextBox> notification_bar;
+    std::shared_ptr<TextBox> external_script_help;
+
     std::function<void ()> notification_func; // the function to be called after the bar is closed
     std::deque<std::pair<std::string, std::function<void ()> > > notification_options;
 
@@ -143,8 +148,6 @@ private:
     std::deque<std::shared_ptr<Button>> option_buttons;
     std::shared_ptr<Button> next_option;
     std::shared_ptr<Button> prev_option;
-
-    std::shared_ptr<TextBox> notification_bar;
 
     void create_pause_menu();
     bool pause_open; //whether or not the pause window is open
@@ -234,10 +237,19 @@ public:
     void open_notification_bar(std::function<void ()> func);
     void open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options);
     void proceed_notification_bar();
+    void proceed_notification_bar_with_options();
+    void close_external_script_help();
+
+    void toggle_selection_notification_bar_with_options();
     void close_notification_bar();
+
+    void show_external_script_help(std::string);
+    void proceed_external_script_help();
 
     //get whether or not the bar is open -required if show_dialogue is run consecutively
     bool is_bar_open() {return bar_open;}
+    bool is_bar_with_options_open() {return bar_options_open;}
+    bool is_external_help_open() {return external_help_open;}
 
     //This is used to render the components to the screen after any changes have made to the gui
     void refresh_gui();
