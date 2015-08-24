@@ -330,11 +330,11 @@ snakes[3].player_action  = lambda player_object: snake_action(3)
 snakes[4].player_action  = lambda player_object: snake_action(4)
 snakes[5].player_action  = lambda player_object: snake_action(5)
 snakes[6].player_action  = lambda player_object: snake_action(6)
-snakes[7].player_action  = lambda player_object: snake_action(7)
+#snakes[7].player_action  = lambda player_object: snake_action(7)
 
 myla.player_action = lambda player_object: engine.run_callback_list_sequence(myla_sequence)
 
-#engine.run_callback_list_sequence(dialogue_sequence)
+engine.run_callback_list_sequence(dialogue_sequence)
 player.set_busy(False)
 
 leave_hall.player_walked_on = lambda player_object: engine.run_callback_list_sequence(try_to_leave_sequence)
