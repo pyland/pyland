@@ -77,7 +77,7 @@ player1_sequence = [
     lambda callback: engine.show_dialogue("I'm scared. I thought the catchers were just a myth.", callback = callback),
     #lambda callback: engine.show_dialogue("My PyRunner script is broken. Can you fix it so I move east and get to the desert?", callback = callback),
     lambda callback: engine.show_dialogue_with_options(
-        "My PyRunner script is broken. Can you fix it so I move east and get to the desert?",
+        "My PyRunner script is broken. Can you fix it so I can move east fast enough to escape to the desert?",
         options = {
             "Yes": lambda: engine.run_callback_list_sequence(player1_help_sequence),
             "No" : lambda: engine.run_callback_list_sequence(player1_reject_sequence)
@@ -94,7 +94,7 @@ player1_help_sequence = [
     lambda callback: engine.show_external_script(
         confirm_callback = lambda: engine.run_callback_list_sequence(player1_try_script_sequence),
         cancel_callback = lambda: engine.run_callback_list_sequence(player1_cancel_script_sequence),
-        external_dialogue = "Give it a run when it's working!",
+        external_dialogue = "Click 'Give Script' below when you're done.",
         script_init = lambda: engine.insert_to_scripter("moe_east()")),
     #lambda callback: engine.show_external_script_help("Give it a run when it's working!", callback = callback),
     lambda callback: engine.show_dialogue("Test.",  callback = callback),
