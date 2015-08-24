@@ -139,5 +139,3 @@ def player_walked_on_challenge2b():
     
 challenge2a.player_walked_on = lambda player_object: player_walked_on_challenge2a()
 challenge2b.player_walked_on = lambda player_object: player_walked_on_challenge2b()
-
--
