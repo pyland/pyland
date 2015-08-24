@@ -31,7 +31,7 @@
  </layer>
  <layer name="Decor" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzl1EEKwCAMBMDgt/xPTv7/7F1QRLNJXBf2Jh1qmjYRaURFx9tBe1GO1ax144zH+7A5q+rQjPvK7qD+m+wOKr856LmxOlbxsqL21MtBJavz+v5EOifJ9h3UMu+Ns3ruTbPcm7XD0g78uteg
+   eJzllDsOwCAMQ6Neq/fJxP3n7pVoKcROap7kDfFEPjQza0JBw/agfVmeqF77wBnGe2ZxkueNL3X3Wyruq7oH9W+qe1Ds5kH3TdUTBcuVtacsD4qqnr/vT6ZnhmpzcB79rHie7l1JlbpFe1RyARGU2AY=
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="40">
@@ -49,5 +49,6 @@
   <object name="vines/vine2b" gid="101" x="640" y="704"/>
   <object name="vines/vine2c" gid="101" x="704" y="704"/>
   <object name="vines/vine2d" gid="101" x="768" y="704"/>
+  <object name="vines/vine0a" gid="101" x="1024" y="576"/>
  </objectgroup>
 </map>

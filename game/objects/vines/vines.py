@@ -38,6 +38,10 @@ class Vines(GameObject):
             self.contact_action()
         self.set_visible(True, callback)
         self.start_animating(speed = 0.1, loop = False, forward = True)
+        callback()
+
+    def destroy(self, callback = lambda: None):
+        self.start_animating(speed = 0.1, loop = False, forward = False, callback = lambda: self.set_visible(False))
 
     def player_action(self, player_object):
         if not self.is_visible():

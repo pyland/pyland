@@ -22,6 +22,10 @@ def vine_die_action():
         lambda callback: engine.show_dialogue("Aagh! The vines got you!", callback = callback)
     ])
 
+#scattered vines about the place
+vine0a.wait(7.0, lambda : vine0a.grow(player_one))
+vine0a.contact_action = vine_die_action
+
 #player meets vine 1
 met_vine1 = False
 
@@ -34,7 +38,7 @@ def meet_vine1():
             lambda callback: engine.show_dialogue("Watch out! Don't step on that vine! It's spiky and poisonous." , callback = callback),
             lambda callback: player_one.set_busy(False, callback = callback)
         ]
-        engine.run_callback_list_sequence(vine1_sequence)
+        engine.run_callback_list_sequence(vine1_sequence, vine0a.destroy())
 
 vine1.grow(player_one)
 vine1.contact_action = vine_die_action
