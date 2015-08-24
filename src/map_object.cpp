@@ -37,10 +37,10 @@ MapObject::MapObject(glm::vec2 position,
         generate_tex_data();
         generate_vertex_data();
 
-        LOG(INFO) << "MapObject initialized";
+        VLOG(2)<< "MapObject initialized";
 }
 MapObject::~MapObject() {
-    LOG(INFO) << "MapObject destructed";
+    VLOG(1) << "MapObject destructed";
 }
 
 std::shared_ptr<RenderableComponent> MapObject::get_renderable_component(){

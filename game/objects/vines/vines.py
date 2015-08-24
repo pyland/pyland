@@ -40,6 +40,8 @@ class Vines(GameObject):
         self.start_animating(speed = 0.1, loop = False)
 
     def player_action(self, player_object):
+        if not self.is_visible():
+            return
         engine = self.get_engine()
         player_object.set_busy(True)
         engine.show_dialogue(self.__message, callback = lambda: player_object.set_busy(False))

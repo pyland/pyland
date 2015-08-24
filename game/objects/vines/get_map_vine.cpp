@@ -5,7 +5,7 @@ using namespace std;
 int main(){
     
     int w = 40;
-    int h = 7;
+    int h = 64;
     
     int size = 64;
     

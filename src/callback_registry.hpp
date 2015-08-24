@@ -77,7 +77,7 @@ void CallbackRegistry<Ret, Args...>::unregister_callback(const Callback<Ret, Arg
 
 template <typename Ret, typename... Args>
 void CallbackRegistry<Ret, Args...>::unregister_callback(const Callback<Ret, Args...>* callback) {
-    LOG(INFO) << "Removing callback " << callback->uid << " from registry " << this;
+    VLOG(2) << "Removing callback " << callback->uid << " from registry " << this;
     callbacks.erase(*callback);
     callback->remove_registry(this);
 }
