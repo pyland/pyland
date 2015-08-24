@@ -84,7 +84,6 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
 
             if output:
                 engine.print_debug(output)
-                #entity.print_dialogue(output)
 
     return ScopedInterpreter
 

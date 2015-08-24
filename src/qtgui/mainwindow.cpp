@@ -973,6 +973,8 @@ void MainWindow::toggleSpeed()
 
         removeExternalTab();
 
+        setGameFocus();
+
         return;
     }
 
