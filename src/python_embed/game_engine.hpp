@@ -39,6 +39,7 @@ class GameEngine {
         static int TILE_TYPE_STANDARD() { return 0; }
         static int TILE_TYPE_SOLID() { return 1; }
         static int TILE_TYPE_WATER() { return 2; }
+        static int TILE_TYPE_QUICKSAND() { return 3; }
 
         GameEngine(GUIMain *_gui_main, Challenge *_challenge);
         ///

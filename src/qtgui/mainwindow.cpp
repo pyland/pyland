@@ -392,7 +392,7 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
     std::string path = player_scripts_location + "/" + std::to_string(i+1) + ".py";
 
-    LOG(INFO) << "Reading in python scripts..." << endl;
+    VLOG(1) << "Reading in python scripts..." << endl;
 
     ifstream fin(path, ios::in);
 
@@ -817,12 +817,6 @@ void MainWindow::createExternalTab(std::function<void ()> confirmCallback, std::
     Engine::enable_py_scripter();
 
     scriptInit();
-
-    //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(scriptInit)));
-    //EventManager::get_instance()->add_event([boost_callback] {
-    //    boost_callback();
-    //});
-
 }
 
 void MainWindow::removeExternalTab(){
@@ -855,6 +849,9 @@ void MainWindow::clickRun()
     runCode(0);
 }
 
+//RunCode is called when the run button is clicked
+//This button changes to 'Give Script' when the user is editing an external script
+
 //Script defines the current script to execute
 //If zero the currently open script is run
 void MainWindow::runCode(int script)
@@ -881,12 +878,10 @@ void MainWindow::runCode(int script)
 
         fout.close();
 
-        //externalConfirmCallback();
-
-        //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalConfirmCallback)));
-        //EventManager::get_instance()->add_event([boost_callback] {
-        //    boost_callback();
-        //});
+        EventManager::get_instance()->add_event([this] {
+            this->externalConfirmCallback();
+            this->externalConfirmCallback = [] () {};
+        });
 
         removeExternalTab();
         setGameFocus();
@@ -963,16 +958,18 @@ void MainWindow::clickSpeed()
     toggleSpeed();
 }
 
+//Toggle speed is called when the speed button is clicked
+//This button changes to 'Cancel' when the user is editing an external script
+
 //Toggle the speed setting
 void MainWindow::toggleSpeed()
 {
     if (externalWorkspace){
-        //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalCancelCallback)));
-        //EventManager::get_instance()->add_event([boost_callback] {
-        //    boost_callback();
-        //});
 
-        //externalCancelCallback();
+        EventManager::get_instance()->add_event([this] {
+            this->externalCancelCallback();
+            this->externalCancelCallback = [] () {};
+        });
 
         removeExternalTab();
 

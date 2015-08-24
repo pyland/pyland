@@ -23,7 +23,6 @@
 #include "event_manager.hpp"
 #include "fml.hpp"
 #include "map.hpp"
-#include "maptools.hpp"
 #include "map_loader.hpp"
 #include "map_viewer.hpp"
 #include "walkability.hpp"

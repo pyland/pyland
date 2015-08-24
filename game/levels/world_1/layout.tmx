@@ -53,5 +53,6 @@
   <object name="tile_trigger/level_1" gid="292" x="64" y="640"/>
   <object name="tile_trigger/level_2" gid="292" x="384" y="448"/>
   <object name="characters/player/player_one" gid="286" x="64" y="640"/>
+  <object name="player_data/player_data" gid="287" x="0" y="64"/>
  </objectgroup>
 </map>

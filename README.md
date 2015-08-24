@@ -31,7 +31,7 @@ sudo apt-get install libqscintilla2-dev
 sudo apt-get install install sqlite3
 ```
 
-Download and install extra dependancies:
+Download and install extra dependencies:
 ```bash
 mkdir pyl-temp
 cd pyl-temp

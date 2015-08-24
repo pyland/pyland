@@ -93,10 +93,6 @@ name_confirmed_sequence = [
 
 def start_game():
     """Save the player's game and start the game!"""
-    save_string = ""
-    with open(engine.get_config()['files']['initial_save_location'], encoding="utf8") as initial_save_file:
-        save_string = initial_save_file.read()
-    json_data = json.loads(save_string)
-    engine.save_player_data(engine.get_player_name(), json_data)
+    player_data.create(engine.get_player_name())
     engine.change_map("/world_1/level_1/player_house")
 

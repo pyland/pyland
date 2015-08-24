@@ -20,7 +20,22 @@
    eJxLYGBgSBjFo3gUj+JRPIpH8ShGwgDsl8MB
   </data>
  </layer>
+ <layer name="Decor" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJytVFsOwDAI8sS9/2f/iQi0kizrQ4F11VNVBx6GLg7XGFeS58R3vphPxYNv5Gbz6VvR13SuTOtFzwXTcv5TCuaX7f+C3YdtsLta5es5ZzvV05ZGiT2X3+Fx6p3l4FjpdHqqR6UaSe97qSXVF5WfVMPRSaD8/PaYJE/1to5ni5/FdXMXzpnieoILiqlXOw==
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzNlV0OwCAIg91Jdv9b7nGGUAsFEknMsg39avFnrbvjff7n3qYY6F8Xo5rT1T+aa31XNLJ+3TW1Y02smZ3jeaP6y3LstwyD6VI9svrYON6cox5ktKJ1gDz39EQY7NxAXKV+Jw5iVRkeJxMZPcpeVc+maF0m7p3Kfs5yTu8sPu4ODiE=
+  </data>
+ </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
   <object name="characters/player/player_one" gid="191" x="0" y="704"/>
+  <object name="sign/bog_sign" gid="193" x="128" y="640"/>
+  <object name="pyscripter/pyscripter" gid="192" x="320" y="704"/>
+  <object name="tile_trigger/exit_to_world" gid="197" x="0" y="704"/>
+  <object name="player_data/player_data" gid="192" x="0" y="64"/>
+  <object name="characters/enemies/crocodile/annoying_croc" gid="193" x="896" y="384"/>
  </objectgroup>
 </map>

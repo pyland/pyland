@@ -58,6 +58,7 @@ class Engine:
         """
 
         self.__cpp_engine = cpp_engine
+        self.__game_objects.clear() #Have to do this otherwise the engine seems to still have the objects of the last engine instance
         #Use some magic trickery to give the Engine class all the methods of the C++GameEngine with their functionality
         engine_properties = [a for a in dir(self.__cpp_engine) if not a.startswith('__')]   #get all the engine properties with the magic and private methods filtered out
         for engine_property in engine_properties:                                           #loop over all the engine properties
@@ -282,6 +283,13 @@ class Engine:
     def enable_py_scripter(self, callback = lambda: None):
         self.__cpp_engine.enable_py_scripter(callback)
 
+    def hide_py_scripter(self, callback = lambda: None):
+        self.__cpp_engine.hide_py_scripter(callback)
+
+    def show_py_scripter(self, callback = lambda: None):
+        self.__cpp_engine.show_py_scripter(callback)
+
+
     def enable_script_editing(self, callback = lambda: None):
         self.__cpp_engine.enable_script_editing(callback)
 
@@ -308,3 +316,5 @@ class Engine:
         self.__cpp_engine.change_map(map_name)
         raise
 
+    def get_all_objects(self):
+        return list(self.__game_objects.values())

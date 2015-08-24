@@ -420,5 +420,9 @@ class Character(GameObject, ScriptStateContainer):
         return message
 
     def yell(self):
-        pass
+        engine = self.get_engine()
+        objects = engine.get_all_objects()
+        for current in objects:
+            if hasattr(current, "yelled_at"):
+                current.yelled_at(self)
 

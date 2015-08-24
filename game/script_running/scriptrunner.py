@@ -41,7 +41,6 @@ def start(script_api, script_name, script_state_container, engine):
     if not "print" in script_api:
         script_api["print"] = user_print
 
-
     #Instantiate the scoped intepreter
     scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: engine.print_terminal(error_output, True)) #create an instance of it
     script_filename = engine.get_config()['files']['player_scripts'] + "/"+str(script_name)+".py" #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
@@ -71,6 +70,7 @@ def start(script_api, script_name, script_state_container, engine):
     thread = threading.Thread(target = thread_target)
 
     engine.print_debug(script)
+
     thread.start()
     script_state_container.set_thread_id(thread.ident) #Save the player's thread id so that scripts can be halted
     return

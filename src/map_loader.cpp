@@ -107,7 +107,7 @@ std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
             std::string object_file_location(object->GetName().substr(0, object->GetName().rfind("/"))); //get everything before last "/"
             std::string object_name(object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size())); //get everything after last "/"
 
-            LOG(INFO) << "Adding object to mapping " << object_file_location
+            VLOG(1) << "Adding object to mapping " << object_file_location
                       << " with name " << object_name;
 
             MapObjectProperties properties({

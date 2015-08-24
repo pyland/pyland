@@ -79,7 +79,7 @@ int Challenge::make_object(glm::vec2 position,
 
     auto new_object_id(new_object->get_id());
 
-    LOG(INFO) << "created new_object with id: " << new_object_id;
+    VLOG(1) << "created new_object with id: " << new_object_id;
     map_object_ids.push_back(new_object_id);
     map->add_map_object(new_object_id);
 
