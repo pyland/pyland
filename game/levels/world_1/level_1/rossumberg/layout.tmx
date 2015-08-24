@@ -37,5 +37,6 @@
   <object name="tile_trigger/exit_to_house" gid="197" x="1152" y="448"/>
   <object name="tile_trigger/exit_to_road_top" gid="197" x="1600" y="576"/>
   <object name="tile_trigger/exit_to_road_bottom" gid="197" x="1600" y="640"/>
+  <object name="player_data/player_data" gid="192" x="0" y="64"/>
  </objectgroup>
 </map>

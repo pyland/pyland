@@ -172,8 +172,11 @@ void TextBox::traverse_text(Direction direction) {
     Engine::get_gui()->refresh_gui();
 }
 
-void TextBox::add_message(std::string text_to_display) {
-    text_stack.add_new(text_to_display);
+void TextBox::add_message(std::string part) {
+    //right trim the string
+    part.erase(std::find_if(part.rbegin(), part.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), part.end());
+
+    text_stack.add_new(part);
 }
 
 

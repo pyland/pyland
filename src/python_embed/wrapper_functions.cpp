@@ -99,5 +99,6 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .add_static_property("INPUT_ACTION",    &GameEngine::INPUT_ACTION)
         .add_static_property("TILE_TYPE_STANDARD",   &GameEngine::TILE_TYPE_STANDARD)
         .add_static_property("TILE_TYPE_SOLID",   &GameEngine::TILE_TYPE_SOLID)
-        .add_static_property("TILE_TYPE_WATER",   &GameEngine::TILE_TYPE_WATER);
+        .add_static_property("TILE_TYPE_WATER",   &GameEngine::TILE_TYPE_WATER)
+        .add_static_property("TILE_TYPE_QUICKSAND",   &GameEngine::TILE_TYPE_QUICKSAND);
 }

@@ -29,7 +29,7 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
     this->file_location = std::string(file_location);
 
     this->sprite_location = "";
-    LOG(INFO) << "invalid: constructor " << this->id;
+    VLOG(1) << "invalid: constructor " << this->id;
 
     this->animating = false;
 
@@ -288,6 +288,5 @@ int Entity::get_id() {
 py::tuple Entity::get_position() {
     auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
     glm::ivec2 position = object->get_game_position();
-    return py::make_tuple(position.x, position.y);}
-
+    return py::make_tuple(position.x, position.y);
 }

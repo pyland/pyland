@@ -13,7 +13,8 @@
    eJztzsEJACAQxMBDBRXU/st1WzgQ9mEG8k8EAAB4qaiqmnskoauhpnskYamtjnsE37nacABJ
   </data>
  </layer>
- <objectgroup name="Camera" width="45" height="16">
+ <objectgroup name="Objects" width="45" height="16">
   <object name="camera/camera" gid="14" x="1408" y="64"/>
+  <object name="player_data/player_data" gid="2" x="0" y="64"/>
  </objectgroup>
 </map>
