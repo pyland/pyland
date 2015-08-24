@@ -3,12 +3,16 @@
 	"previous_exit": "/world_1/intro",
 	"totems": {},
 	"coins": 0, 
+	"py_scripter_tabs": 1,
+	"py_scripter_enabled": false,
 	"level_data" : {
 		"world_1" : {
 			"level_1" : {
 				"starting_map" : "player_house",
-				"previous_map_info" : "",
 				"heidi_state": 0
+			},
+			"level_2" : {
+				"starting_map" : "start"
 			}
 		}
 	}
