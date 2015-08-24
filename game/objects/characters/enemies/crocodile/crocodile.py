@@ -262,15 +262,15 @@ class Crocodile(Character):
         if not self.is_moving():
             if player_y == self_y:
                 if player_x < self_x and player.is_facing_east():
-                    self.face_west(lambda: self.move_horizontal(player, self.oscillate))
+                    self.move_west(lambda: self.move_horizontal(player, self.oscillate))
                 elif player_x > self_x and player.is_facing_west():
-                    self.face_east(lambda: self.move_horizontal(player, self.oscillate))
+                    self.move_east(lambda: self.move_horizontal(player, self.oscillate))
                 return
             if player_x == self_x:
                 if player_y < self_y and player.is_facing_north():
-                    self.face_south(lambda: self.move_vertical(player, self.oscillate))
+                    self.move_south(lambda: self.move_vertical(player, self.oscillate))
                 elif player_y > self_y and player.is_facing_south():
-                    self.face_north(lambda: self.move_vertical(player, self.oscillate))
+                    self.move_north(lambda: self.move_vertical(player, self.oscillate))
                 return
             
     def lose(self, player):

@@ -279,9 +279,8 @@ class Player(Character, ScriptStateContainer):
 
     def yell(self):
         engine = self.get_engine()
-        x,y = self.get_position()
         objects = engine.get_all_objects()
-
+        #self.get_engine().print_terminal(len(objects))
         for current in objects:
             if hasattr(current, "yelled_at"):
                 current.yelled_at(self)

@@ -288,5 +288,6 @@ int Entity::get_id() {
 py::tuple Entity::get_position() {
     auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
     glm::ivec2 position = object->get_game_position();
-    return py::make_tuple(position.x, position.y);
+    return py::make_tuple(position.x, position.y);}
+
 }
