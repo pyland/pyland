@@ -404,7 +404,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
                 vx2 = float(x + 1.001);
                 vy2 = float(y + 1.001);
             } else if (dense) {
-                LOG(INFO) << x << ", " << y;
+                VLOG(1) << x << ", " << y;
             }
 
             //bottom left

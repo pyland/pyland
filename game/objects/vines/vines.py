@@ -36,6 +36,8 @@ class Vines(GameObject):
         self.set_solidity(False)
 
     def grow(self, player_object, callback = lambda : None):
+        if(not self.__alive):
+            return
         if(self.get_position() == player_object.get_position()):
             self.contact_action()
         self.set_visible(True)
@@ -43,8 +45,16 @@ class Vines(GameObject):
 
     ##temporarily destroy a vine - this is not the same as killing it
     def destroy(self, callback = lambda: None):
+        if(not self.__alive):
+            return
         self.start_animating(speed = 0.1, loop = False, forward = False, callback = lambda: self.set_visible(False, lambda : callback))
         callback()
+
+    def kill(self, callback = lambda: None):
+        if(self.__alive):
+            self.set_sprite("dead")
+            self.__alive = False
+            callback()
 
     def player_action(self, player_object):
         if not self.is_visible():
@@ -55,8 +65,15 @@ class Vines(GameObject):
 
     def player_walked_on(self, player_object):
         #self.get_engine().print_terminal("Been Walked on")
+        if(not self.__alive):
+            return
         if(self.is_visible()):
             self.contact_action()
 
+    def on_cut(self):
+        self.kill()
+
     def contact_action(self):
+        if(not self.__alive):
+            return
         self.get_engine().print_terminal("Oh no! The vines got you!")

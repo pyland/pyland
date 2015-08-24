@@ -126,6 +126,7 @@ class Player(Character, ScriptStateContainer):
             script_api["get_flag_message"] = self.get_flag_message
 
             script_api["yell"] = self.yell
+            script_api["cut"] = self.cut
             scriptrunner.start(script_api, engine.get_run_script(), self, engine)
         return
 
@@ -285,6 +286,30 @@ class Player(Character, ScriptStateContainer):
         for current in objects:
             if hasattr(current, "yelled_at"):
                 current.yelled_at(self)
+
+    def cut(self):
+        engine = self.get_engine()
+        (x,y) = self.get_position()
+        
+        if self.is_facing_east():
+            for obj in engine.get_objects_at((x+1, y)):
+                if(hasattr(obj, "on_cut")):
+                    obj.on_cut()
+
+        elif self.is_facing_west():
+            for obj in engine.get_objects_at((x-1, y)):
+                if(hasattr(obj, "on_cut")):
+                    obj.on_cut()
+
+        elif self.is_facing_north():
+            for obj in engine.get_objects_at((x, y+1)):
+                if(hasattr(obj, "on_cut")):
+                    obj.on_cut()
+
+        elif self.is_facing_south():
+            for obj in engine.get_objects_at((x, y-1)):
+                if(hasattr(obj, "on_cut")):
+                    obj.on_cut()
 
 
 
