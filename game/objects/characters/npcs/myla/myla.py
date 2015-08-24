@@ -23,6 +23,33 @@ class Myla(Character):
         """
         pass
 
+    def yelled_at(self, player):
+        player_x, player_y = player.get_position()
+        self_x, self_y = self.get_position()
+        if not self.is_moving():
+            if player_y == self_y:
+                if player_x < self_x and player.is_facing_east():
+                    self.myla_yell(player)
+                elif player_x > self_x and player.is_facing_west():
+                    self.myla_yell(player)
+                return
+            if player_x == self_x:
+                if player_y < self_y and player.is_facing_north():
+                    self.myla_yell(player)
+                elif player_y > self_y and player.is_facing_south():
+                    self.myla_yell(player)
+                return
+
+        
+    def myla_yell(self, player):
+        engine = self.get_engine()
+        engine.run_callback_list_sequence([
+                    lambda callback: player.set_busy(True, callback = callback),
+                    lambda callback: engine.show_dialogue("Myla: AHH, STOP YELLING AT ME!", callback = callback),
+                    lambda callback: player.set_busy(False, callback =callback)])
+
+
+
 
 
 

@@ -111,13 +111,17 @@ class Player(Character, ScriptStateContainer):
             script_api["move_east"] = scriptrunner.make_blocking(self.move_east)
             script_api["move_south"] = scriptrunner.make_blocking(self.move_south)
             script_api["move_west"] = scriptrunner.make_blocking(self.move_west)
+            script_api["move"] = scriptrunner.make_blocking(self.move)
 
 
             script_api["face_north"] = scriptrunner.make_blocking(self.face_north)
             script_api["face_east"] = scriptrunner.make_blocking(self.face_east)
             script_api["face_south"] = scriptrunner.make_blocking(self.face_south)
             script_api["face_west"] = scriptrunner.make_blocking(self.face_west)
+            script_api["turn_left"] = scriptrunner.make_blocking(self.turn_left)
+            script_api["turn_right"] = scriptrunner.make_blocking(self.turn_right)
 
+            script_api["can_move"] = self.__can_move
 
             script_api["wait"] = scriptrunner.make_blocking(lambda callback: self.wait(0.3, callback))
 
@@ -148,6 +152,16 @@ class Player(Character, ScriptStateContainer):
 
     """ Override character move methods to trigger player events and stop the player from being walking on water (even when they are scripter)
     """
+    def move(self, callback = lambda: None):
+        if self.is_facing_east():
+            self.move_east(callback)
+        elif self.is_facing_north():
+            self.move_north(callback)
+        elif self.is_facing_west():
+            self.move_west(callback)
+        elif self.is_facing_south():
+            self.move_south(callback)
+
     def move_north(self, callback = lambda: None):
         engine = self.get_engine()
         x,y = self.get_position()
@@ -196,7 +210,38 @@ class Player(Character, ScriptStateContainer):
             self.face_west()
             self.move_on_spot(callback)
         
-        
+    def turn_left(self, callback = lambda: None):
+        if self.is_facing_east():
+            self.face_north(callback)
+        elif self.is_facing_north():
+            self.face_west(callback)
+        elif self.is_facing_west():
+            self.face_south(callback)
+        elif self.is_facing_south():
+            self.face_east(callback)
+       
+    def turn_right(self, callback = lambda: None):
+        if self.is_facing_east():
+            self.face_south(callback)
+        elif self.is_facing_north():
+            self.face_east(callback)
+        elif self.is_facing_west():
+            self.face_north(callback)
+        elif self.is_facing_south():
+            self.face_west(callback)
+
+    def __can_move(self):
+        engine = self.get_engine()
+        x,y = self.get_position()
+        if self.is_facing_east():
+            return engine.get_tile_type((x+1,y)) == engine.TILE_TYPE_STANDARD
+        elif self.is_facing_north():
+            return engine.get_tile_type((x,y+1)) == engine.TILE_TYPE_STANDARD
+        elif self.is_facing_west():
+            return engine.get_tile_type((x-1,y)) == engine.TILE_TYPE_STANDARD
+        elif self.is_facing_south():
+            return engine.get_tile_type((x,y-1)) == engine.TILE_TYPE_STANDARD
+
 
     def __input_move_north(self):
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
@@ -283,6 +328,8 @@ class Player(Character, ScriptStateContainer):
         for current in objects:
             if hasattr(current, "yelled_at"):
                 current.yelled_at(self)
+
+
 
 
 

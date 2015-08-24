@@ -26,31 +26,17 @@
    eJztwwEJAAAMA6A9+povx0HBXlJVVV8dlYs9cg==
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="25" height="25" visible="0">
-  <object name="characters/player/player_one" gid="286" x="1600" y="960"/>
-  <object name="characters/enemies/crocodile/croc_b2_0" gid="296" x="896" y="192"/>
-  <object name="tile_trigger/challenge2a" gid="289" x="1152" y="128"/>
-  <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="704" y="256"/>
-  <object name="characters/enemies/crocodile/croc_b2_2" gid="296" x="768" y="320"/>
-  <object name="characters/enemies/crocodile/croc_b2_3" gid="296" x="768" y="384"/>
-  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="704" y="448"/>
-  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="896" y="512"/>
-  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="1024" y="576"/>
-  <object name="characters/enemies/crocodile/croc_b2_7" gid="296" x="960" y="640"/>
-  <object name="characters/enemies/crocodile/croc_b2_8" gid="296" x="1088" y="704"/>
-  <object name="characters/enemies/crocodile/croc_b2_9" gid="296" x="1024" y="768"/>
-  <object name="characters/enemies/crocodile/croc_b2_10" gid="296" x="896" y="832"/>
-  <object name="characters/enemies/crocodile/croc_b2_11" gid="296" x="832" y="896"/>
-  <object name="tile_trigger/challenge2b" gid="290" x="1152" y="960"/>
+ <objectgroup name="Object Layer 1" width="25" height="25">
+  <object name="characters/player/player_one" gid="286" x="64" y="384"/>
  </objectgroup>
- <layer name="SpecialLayer" width="25" height="25" visible="0">
+ <layer name="SpecialLayer" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJyzZWJgsB0kmBJAih2UyI/aMWrHqB2jdlBqBzWBDZXNGwWjYBQMHQAAtGZMyA==
+   eJy9klEKQCEIBOOdq/uf6/2G7KqbmhBEVLNT7m+t/WBM1smYym7n3flR9i4fxED8bg+bv9uH/UfVx2N0+GQYig/bn32ryIfd6TEy7l5e1cOWcmfEUP6ywkD5mU9mn5rntqcV9yi3rdu+ibIhX+au+GQZzFX1iRiKzy2DFXqj8zxbr/Si0q9R/mpNZEfjB3OJVAs=
   </data>
  </layer>
  <layer name="Walls" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBhe4D4jA8MdKuJ7jJh23MUiRgnAZt6oHaN2jNoxaseoHaN2jGQ7HlK5Pn9AZTcPBgAAzoJFRQ==
+   eJxjYBhe4D4jA8MdKuJ7jJh23MUiRgnAZt4TOthBbYDNjqd08Ac94mPUjlE7Ru2AAGxl00CVL5QAbGXTUIyP4WzHQyrX5w/okE7pDQDx6UOn
   </data>
  </layer>
 </map>

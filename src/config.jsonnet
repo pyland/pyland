@@ -28,6 +28,8 @@
 		//"level_location" : "/world_1/level_7/town_hall",
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
+		"level_location" : "/world_2/level_1/main",
+
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
 		"font_location": self.game_folder + "/fonts",
