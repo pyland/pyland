@@ -31,7 +31,6 @@ def start(script_api, script_name, script_state_container, engine):
 
     """ How printing is handled """
 
-    
     engine.print_debug("Py: starting script runner")
 
 
@@ -45,7 +44,6 @@ def start(script_api, script_name, script_state_container, engine):
     if not "print" in script_api:
         script_api["print"] = user_print
 
-    
     engine.print_debug("Py: instantiating scope interpreter")
 
     #Instantiate the scoped intepreter
@@ -77,8 +75,8 @@ def start(script_api, script_name, script_state_container, engine):
                 engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has ended---", False)
             script_state_container.set_running_script_status(False)
             engine.set_finished()
-    
-    
+
+
     engine.print_debug("Py: starting thread")
 
     thread = threading.Thread(target = thread_target)
@@ -87,7 +85,7 @@ def start(script_api, script_name, script_state_container, engine):
     engine.print_debug("Py: starting thread 2")
 
     engine.print_debug(script)
-    
+
     thread.start()
 
 

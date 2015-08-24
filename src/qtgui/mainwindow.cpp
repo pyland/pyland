@@ -881,8 +881,6 @@ void MainWindow::runCode(int script)
 
         fout.close();
 
-        //externalConfirmCallback();
-
         EventManager::get_instance()->add_event([this] {
             this->externalConfirmCallback();
             this->externalConfirmCallback = [] () {};

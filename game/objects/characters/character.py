@@ -482,4 +482,3 @@ class Character(GameObject, ScriptStateContainer):
             if hasattr(current, "yelled_at"):
                 current.yelled_at(self)
 
-
