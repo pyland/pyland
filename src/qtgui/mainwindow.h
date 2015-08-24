@@ -63,7 +63,7 @@ public:
     void disableScripter();
 
     void setTabs(int num);
-    void createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, PyObject* scriptInit, std::string dialogue);
+    void createExternalTab(std::function<void ()> confirmCallback, std::function<void ()> cancelCallback, std::function<void ()> scriptInit, std::string dialogue);
     void removeExternalTab();
 
     void updateSpeed();
@@ -118,8 +118,8 @@ private:
     static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
     bool externalWorkspace;
-    PyObject* externalConfirmCallback;
-    PyObject* externalCancelCallback;
+    std::function<void ()> externalConfirmCallback;
+    std::function<void ()> externalCancelCallback;
     QWidget *zoomWidget[workspace_max];
     QHBoxLayout *zoomLayout[workspace_max];
     QPushButton *buttonIn[workspace_max];

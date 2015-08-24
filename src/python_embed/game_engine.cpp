@@ -210,7 +210,12 @@ void GameEngine::set_py_tabs(int val, PyObject* callback){
 }
 
 void GameEngine::show_external_script(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue, PyObject* script_init){
-    Engine::show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init);
+    //Engine::show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init);
+
+    boost::python::object boost_confirm_callback(boost::python::handle<>(boost::python::borrowed(confirm_callback)));
+    boost::python::object boost_cancel_callback(boost::python::handle<>(boost::python::borrowed(cancel_callback)));
+    boost::python::object boost_script_callback(boost::python::handle<>(boost::python::borrowed(script_init)));
+    Engine::show_external_script(boost_confirm_callback, boost_cancel_callback, external_dialogue, boost_script_callback);
 }
 
 /*void GameEngine::hide_external_tab(PyObject* callback){

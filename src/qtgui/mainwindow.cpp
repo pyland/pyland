@@ -788,7 +788,8 @@ void MainWindow::setTabs(int num){
 //The 'Run' and 'Speed' buttons get replaced with 'Give Script' and 'Cancel'
 //The results of clicking these buttons is given by the first two python callbacks
 //The scriptInit callback, can be used to pass information to the external script
-void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, PyObject* scriptInit, std::string dialogue = "Click 'Give Script' when you're done!"){
+//void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, PyObject* scriptInit, std::string dialogue = "Click 'Give Script' when you're done!"){
+void MainWindow::createExternalTab(std::function<void ()> confirmCallback, std::function<void ()> cancelCallback, std::function<void ()> scriptInit, std::string dialogue = "Click 'Give Script' when you're done!"){
     textWidget->addTab(workspaces[workspace_max-1],"*");
 
     buttonRun->setText("Give script");
@@ -803,18 +804,19 @@ void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCa
     textWidget->setCurrentWidget(workspaces[workspace_max-1]);
 
     externalWorkspace = true;
-    //externalConfirmCallback = confirmCallback;
-    //externalCancelCallback = cancelCallback;
+    externalConfirmCallback = confirmCallback;
+    externalCancelCallback = cancelCallback;
 
-    //QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
-    //ws->clear();
+    ws->clear();
 
-    //Engine::show_external_script_help(dialogue);
-    //EventManager::get_instance()->add_event([this, dialogue] {
-    //    Engine::show_external_script_help(dialogue);
-    //});
+    EventManager::get_instance()->add_event([this, dialogue] {
+        Engine::show_external_script_help(dialogue);
+    });
     Engine::enable_py_scripter();
+
+    scriptInit();
 
     //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(scriptInit)));
     //EventManager::get_instance()->add_event([boost_callback] {
@@ -824,10 +826,6 @@ void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCa
 }
 
 void MainWindow::removeExternalTab(){
-   // QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
-
-    //ws->clear();
-
     setTabs(currentTabs);
     setRunning(script_running);
     setFast(fast);
@@ -838,13 +836,9 @@ void MainWindow::removeExternalTab(){
 
     externalWorkspace = false;
 
-    //Engine::clear_scripter();
-
-    //if (external_dialougue) Engine::close_external_script_help();
-
-    //EventManager::get_instance()->add_event([this] {
-    //    Engine::close_external_script_help();
-    //});
+    EventManager::get_instance()->add_event([this] {
+        Engine::close_external_script_help();
+    });
 
 }
 
@@ -886,6 +880,8 @@ void MainWindow::runCode(int script)
         fout << ws->text().toStdString();
 
         fout.close();
+
+        //externalConfirmCallback();
 
         //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalConfirmCallback)));
         //EventManager::get_instance()->add_event([boost_callback] {
@@ -975,6 +971,8 @@ void MainWindow::toggleSpeed()
         //EventManager::get_instance()->add_event([boost_callback] {
         //    boost_callback();
         //});
+
+        //externalCancelCallback();
 
         removeExternalTab();
 
