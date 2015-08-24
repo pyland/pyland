@@ -111,6 +111,7 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
         except:
             tb = traceback.format_exc()
             engine.print_debug(tb)
+            engine.print_debug("Tried to print: " + str(entities))
 
         """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
         for entity in entities:
