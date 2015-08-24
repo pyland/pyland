@@ -66,7 +66,7 @@ public:
 template<typename Res>
 ResourceCache<Res>::ResourceCache(GraphicsContext*):
     weak_this() {
-    LOG(INFO) << "Created resource cache " << this;
+    VLOG(1) << "Created resource cache " << this;
 }
 
 template<typename Res>
@@ -106,7 +106,7 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
 
 template<typename Res>
 void ResourceCache<Res>::remove_resource(const std::string resource_name) {
-    LOG(INFO) << "Removing resource \"" << resource_name << "\" from cache " << this;
+    VLOG(1) << "Removing resource \"" << resource_name << "\" from cache " << this;
     resources.erase(resource_name);
 }
 

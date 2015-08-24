@@ -29,7 +29,7 @@ Entity::Entity(glm::vec2 start, std::string name, std::string file_location, int
     this->file_location = std::string(file_location);
 
     this->sprite_location = "";
-    LOG(INFO) << "invalid: constructor " << this->id;
+    VLOG(1) << "invalid: constructor " << this->id;
 
     this->animating = false;
 

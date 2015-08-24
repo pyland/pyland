@@ -26,16 +26,10 @@ def vine_die_action():
 for i in range(height):
     for j in range(width):
         vinename = "vines_" + str(i) + "_" + str(j)
-        command_grow = vinename + ".wait(" + str(0.70*i) + ", lambda : " + vinename + ".grow(player_one))"
+        command_grow = vinename + ".wait(" + str(1.40*i) + ", lambda : " + vinename + ".grow(player_one))"
         command_die = vinename + ".die_action = vine_die_action"
         exec(command_die)
         exec(command_grow)
 
-"""
-vinename = "vines" + str(0) + str(0)
-engine.print_terminal(vinename)
-command = vinename + ".wait(0.40, lambda : " + vinename + ".grow(player_one))"
-engine.print_terminal(command) 
-exec(command)
-"""
+
 #vines00.wait(0.40, lambda : vines00.grow(player_one))

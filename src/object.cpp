@@ -19,7 +19,7 @@ Object::Object(std::string name): name(name) {
 }
 
 Object::~Object() {
-    LOG(INFO) << "OBJECT DESTROYING (" << id << ")  " << name << std::endl;
+    VLOG(1) << "OBJECT DESTROYING (" << id << ")  " << name << std::endl;
 }
 
 void Object::set_id(int new_id) {

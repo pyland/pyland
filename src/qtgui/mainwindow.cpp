@@ -384,7 +384,7 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
     std::string path = player_scripts_location + "/" + std::to_string(i+1) + ".py";
 
-    LOG(INFO) << "Reading in python scripts..." << endl;
+    VLOG(1) << "Reading in python scripts..." << endl;
 
     ifstream fin(path, ios::in);
 
