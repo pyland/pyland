@@ -22,12 +22,12 @@
  </layer>
  <layer name="Decor" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJytVFsOwDAI8sS9/2f/iQi0kizrQ4F11VNVBx6GLg7XGFeS58R3vphPxYNv5Gbz6VvR13SuTOtFzwXTcv5TCuaX7f+C3YdtsLta5es5ZzvV05ZGiT2X3+Fx6p3l4FjpdHqqR6UaSe97qSXVF5WfVMPRSaD8/PaYJE/1to5ni5/FdXMXzpnieoILiqlXOw==
+   eJytVEEOwCAM4sX+/+i9KQW0JIs6W2DO9gA45WHo4uo7xpXkOfGdL+ZT8dSxcrP19K3V13SuTOtFzwXTcv5TCuaX7f+C3YdtsLsK+HrO2U71tKUBsefyOzxOvbOcOlc6nZ7qUalG0vteakn1ReUn1XB0Eig/vz0myVO9rePZ4mdx3dqFc6ZoRhcXorlXqQ==
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJzNlV0OwCAIg91Jdv9b7nGGUAsFEknMsg39avFnrbvjff7n3qYY6F8Xo5rT1T+aa31XNLJ+3TW1Y02smZ3jeaP6y3LstwyD6VI9svrYON6cox5ktKJ1gDz39EQY7NxAXKV+Jw5iVRkeJxMZPcpeVc+maF0m7p3Kfs5yTu8sPu4ODiE=
+   eJzNlV0OwCAIg91Jdv9b7lFDWoECyUiMyUS/rviz1r/jfXZ/tikGG+tiVHO65kdzre+KRm9ed03tWhN75uQgb1R/vRz7LcPwdKkeWX3eOuifox5ktLJ9wDxHeiIM795gXKV+Nw5jVRmIk4mMHuWsqndTtC4T707lPGc5qI/GB/UNDkE=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">

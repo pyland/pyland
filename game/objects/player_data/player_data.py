@@ -40,7 +40,16 @@ class PlayerData(GameObject):
             save_string = initial_save_file.read()
         json_data = json.loads(save_string)
         engine.save_player_data(player_name, json_data)
-        
+        return
+
+    def __get_player_data_value(self, data_name, default = 0):
+        if not (data_name in self.__player_data):
+            return default
+        else:
+            return self.__player_data[data_name]
+
+    def __set_player_data_value(self, data_name, value):
+        self.__player_data[data_name] = value
         return
 
     def __get_number_pyscripter_tabs(self):
@@ -50,7 +59,10 @@ class PlayerData(GameObject):
         return 1
 
     def __has_unlocked_pyscripter(self):
-        return False
+        return self.__get_player_data_value("has_unlocked_pyscripter", False)
+
+    def unlock_pyscripter(self):
+        self.__set_player_data_value("has_unlocked_pyscripter", True)
 
     def __get_pyscipter_speed(self):
         return 3.5
@@ -71,7 +83,7 @@ class PlayerData(GameObject):
             engine.hide_py_scripter()
         return
 
-    def save(self, ):
+    def save(self):
         self.get_engine().save_player_data(self.__player_name, self.__player_data)
         return
 
@@ -125,7 +137,10 @@ class PlayerData(GameObject):
     def get_level_state(self, level_state):
         """ Get some kind of state associated with the level, the default value is 0, otherwise it returns the number saved there. """
         level_data = self.__get_level_data()
-        return level_data[level_state]
+        if not (level_state in level_data):
+            return 0
+        else:
+            return level_data[level_state]
 
     def set_level_state(self, level_state, value):
         #TODO: add checks to this so that if the state doesn't exist it is created
