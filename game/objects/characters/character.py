@@ -97,16 +97,11 @@ class Character(GameObject, ScriptStateContainer):
         """
 
         engine = self.get_engine()
-        engine.print_debug("Py: running " + self.get_character_name() + "'s script")
         if not(self.is_running_script()): #only run script if one currently isn't running.
-            engine.print_debug("Py: is not running script so starting new script")
             if (script_to_run == -1):
-                engine.print_debug("Py: script to run is -1, so getting engine script to run: ")
                 script_to_run = engine.get_run_script()
 
             self.set_running_script_status(True)
-
-            engine.print_debug("Py: starting script api")
 
             #script_api is a python dictionary of python objects (variables, methods, class instances etc.)
             #available to the player. :)
@@ -135,9 +130,6 @@ class Character(GameObject, ScriptStateContainer):
             script_api["get_flag_message"] = self.get_flag_message
 
             script_api["yell"] = self.yell
-
-
-            engine.print_debug("Py: finished script api")
 
             scriptrunner.start(script_api, script_to_run, self, engine)
         return
@@ -291,54 +283,6 @@ class Character(GameObject, ScriptStateContainer):
     def move_west(self, callback = lambda: None):
         self.__move_x(self.face_west, super().move_west, callback)
         return
-
-#    def move_north(self, callback = lambda: None):
-#        engine = self.get_engine()
-#        x,y = self.get_position()
-#        def callback_wrap():
-#            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-#            engine.add_event(callback)
-#        if engine.get_tile_type((x,y+1)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
-#            super().move_north(callback_wrap)
-#        else:
-#            self.face_north()
-#            self.move_on_spot(callback)
-#
-#    def move_east(self, callback = lambda: None):
-#        engine = self.get_engine()
-#        x,y = self.get_position()
-#        def callback_wrap():
-#            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-#            engine.add_event(callback)
-#        if engine.get_tile_type((x+1,y)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
-#            super().move_east(callback_wrap)
-#        else:
-#            self.face_east()
-#            self.move_on_spot(callback)
-#
-#    def move_south(self, callback = lambda: None):
-#        engine = self.get_engine()
-#        x,y = self.get_position()
-#        def callback_wrap():
-#            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-#            engine.add_event(callback)
-#        if engine.get_tile_type((x,y-1)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
-#            super().move_south(callback_wrap)
-#        else:
-#            self.face_south()
-#            self.move_on_spot(callback)
-#
-#    def move_west(self, callback = lambda: None):
-#        engine = self.get_engine()
-#        x,y = self.get_position()
-#        def callback_wrap():
-#            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-#            engine.add_event(callback)
-#        if engine.get_tile_type((x-1,y)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
-#            super().move_west(callback_wrap)
-#        else:
-#            self.face_west()
-#            self.move_on_spot(callback)
 
     def change_state(self, state):
         sprite_location = self.get_sprite()
