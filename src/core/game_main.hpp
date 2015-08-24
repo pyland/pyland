@@ -77,8 +77,6 @@ private:
     Text tile_identifier_text;
     std::function<void (GameWindow*)> func_char;
 
-
-
     //Data for the present challenge
     ChallengeData *challenge_data;
     Challenge* challenge;
@@ -100,7 +98,6 @@ public:
     ~GameMain();
 
     void game_loop(bool showMouse);
-    Challenge* pick_challenge(ChallengeData* challenge_data);
     void change_challenge(std::string map_location);
 
     GameWindow* getGameWindow();

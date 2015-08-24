@@ -351,23 +351,25 @@ GameMain::GameMain(int &argc, char **argv):
                           input_manager
                         ));
     challenge_data->run_challenge = true;
-    challenge = pick_challenge(challenge_data);
+    //challenge = pick_challenge(challenge_data);
+
+    //Challenge *challenge(nullptr);
+    std::string challenge_name = j["files"]["level_location"];
+    std::string level_folder = j["files"]["level_folder"];
+    challenge_data->map_name = level_folder + challenge_name + "/layout.tmx";
+    challenge_data->level_location = challenge_name;
+    challenge = new Challenge(challenge_data, gui);
+
     Engine::set_challenge(challenge);
-    //challenge->start();
 
     last_clock = (std::chrono::steady_clock::now());
     gui->refresh_gui();
 
-    //test_world/yingischallenged/main
-    //change_challenge("intro");
-
-    //change_challenge("test_world/yingischallenged/intro");
 
     run_game = true;
 
     //Run the challenge - returns after challenge completes
     embedWindow.execute_app();
-
 
     LOG(INFO) << "Constructed GameMain" << endl;
 
@@ -485,20 +487,6 @@ void GameMain::game_loop(bool showMouse)
         std::cout << "not running game loop" << std::endl;
     }
     return;
-}
-
-Challenge* GameMain::pick_challenge(ChallengeData* challenge_data) {
-
-    //int next_challenge(challenge_data->next_challenge);
-    Challenge *challenge(nullptr);
-    Config::json j = Config::get_instance();
-    std::string challenge_name = j["files"]["level_location"];
-    std::string level_folder = j["files"]["level_folder"];
-    challenge_data->map_name = level_folder + challenge_name + "/layout.tmx";
-    challenge_data->level_location = challenge_name;
-    challenge = new Challenge(challenge_data, gui);
-
-    return challenge;
 }
 
 void GameMain::change_challenge(std::string map_location) {
