@@ -27,6 +27,9 @@
 #save files
 *.save
 
+#python stuff
+*.pyc
+
 # project specific
 src/qtgui/moc_mainwindow.cpp
 src/jsonnet/jsonnet

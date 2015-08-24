@@ -1,11 +1,19 @@
+#Python modules
 import operator
 import os
+import sys
 from random import randint
+
 """
 In Python comments,
 could define some standard which the C++ code can use to determine things about it handles
 the python code
 """
+
+#Custom modules
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../script_running')
+import scriptrunner
+from script_state_container import ScriptStateContainer
 
 """
 eg. We could be able to write:
@@ -61,7 +69,7 @@ This benifits of this class is that it provides very simple methods for movement
 However, it doesn't check if the tiles that are being moved to are empty or not. TODO: Talk about maybe changing this?
 """
 
-class Character(GameObject):
+class Character(GameObject, ScriptStateContainer):
 
     __character_name = ""
 
@@ -77,6 +85,62 @@ class Character(GameObject):
         self.set_sprite("main/north")
         self.set_visible(True)
         self.__character_name = self.get_name()
+
+
+    """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
+
+    def run_script(self, script_to_run = -1):
+        """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
+
+        Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
+        The callback is run after the script has finished running.
+        """
+
+        engine = self.get_engine()
+        if not(self.is_running_script()): #only run script if one currently isn't running.
+            if (script_to_run == -1):
+                script_to_run = engine.get_run_script()
+
+            self.set_running_script_status(True)
+
+            #script_api is a python dictionary of python objects (variables, methods, class instances etc.)
+            #available to the player. :)
+            #eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
+            #will be refering to what blob is known as here.
+            #Here the list of game_objects is being looped through, and their names are being mapped to each instance :)
+            script_api = {}
+
+            # Provide all the movement functions to the player, but make them blocking.
+            script_api["move_north"] = scriptrunner.make_blocking(self.move_north)
+            script_api["move_east"] = scriptrunner.make_blocking(self.move_east)
+            script_api["move_south"] = scriptrunner.make_blocking(self.move_south)
+            script_api["move_west"] = scriptrunner.make_blocking(self.move_west)
+
+
+            script_api["face_north"] = scriptrunner.make_blocking(self.face_north)
+            script_api["face_east"] = scriptrunner.make_blocking(self.face_east)
+            script_api["face_south"] = scriptrunner.make_blocking(self.face_south)
+            script_api["face_west"] = scriptrunner.make_blocking(self.face_west)
+
+
+            script_api["wait"] = scriptrunner.make_blocking(lambda callback: self.wait(0.3, callback))
+
+            #the method to get the position of the player
+            script_api["get_position"] = self.get_position
+            script_api["get_flag_message"] = self.get_flag_message
+
+            script_api["yell"] = self.yell
+
+            scriptrunner.start(script_api, script_to_run, self, engine)
+        return
+
+    #override ScriptStateContainer
+    def get_script_name(self):
+        return self.get_character_name()
+
+    #override ScriptStateContainer---
+    def set_script_name(self):
+        self.set_character_name(self)
 
     def get_character_name(self):
         return self.__character_name
@@ -344,4 +408,21 @@ class Character(GameObject):
         else:
             self.wait(time, callback = lambda: self.__turning(time, frequency))
         self.get_engine().add_event(callback)
+
+    def get_flag_message(self):
+        message = "There is no flag here!"
+        engine = self.get_engine()
+        position = self.get_position()
+        game_objects = engine.get_objects_at(position)
+        for current_object in game_objects:
+            if(hasattr(current_object, "get_message")):
+                message = current_object.get_message()
+        return message
+
+    def yell(self):
+        engine = self.get_engine()
+        objects = engine.get_all_objects()
+        for current in objects:
+            if hasattr(current, "yelled_at"):
+                current.yelled_at(self)
 

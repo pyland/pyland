@@ -65,6 +65,19 @@ void GameEngine::show_dialogue(std::string text, bool disable_scripting, PyObjec
     Engine::open_notification_bar(disable_scripting, boost_callback);
 }
 
+void GameEngine::show_external_script_help(std::string text, PyObject *callback) {
+
+    if(Engine::is_bar_open()){
+        LOG(INFO) << "Replacing the old notification bar with the external_script_help";
+        Engine::close_notification_bar();
+    }
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
+    LOG(INFO) << "Adding " << text << "to the external script help with a regular callback";
+    Engine::show_external_script_help(text);
+}
+
 void GameEngine::show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *_boost_options){
 
     if(Engine::is_bar_open()){
@@ -196,21 +209,22 @@ void GameEngine::set_py_tabs(int val, PyObject* callback){
     });
 }
 
-void GameEngine::show_external_tab(PyObject* callback){
-    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
-    Engine::show_external_tab();
-    EventManager::get_instance()->add_event([boost_callback] {
-       boost_callback();
-    });
+void GameEngine::show_external_script(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue, PyObject* script_init){
+    //Engine::show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init);
+
+    boost::python::object boost_confirm_callback(boost::python::handle<>(boost::python::borrowed(confirm_callback)));
+    boost::python::object boost_cancel_callback(boost::python::handle<>(boost::python::borrowed(cancel_callback)));
+    boost::python::object boost_script_callback(boost::python::handle<>(boost::python::borrowed(script_init)));
+    Engine::show_external_script(boost_confirm_callback, boost_cancel_callback, external_dialogue, boost_script_callback);
 }
 
-void GameEngine::hide_external_tab(PyObject* callback){
+/*void GameEngine::hide_external_tab(PyObject* callback){
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
     Engine::hide_external_tab();
     EventManager::get_instance()->add_event([boost_callback] {
        boost_callback();
     });
-}
+}*/
 
 
 void GameEngine::update_world(std::string text){
@@ -247,6 +261,11 @@ void GameEngine::clear_scripter(PyObject* callback)
 std::string GameEngine::get_script()
 {
     return Engine::get_script();
+}
+
+std::string GameEngine::get_external_script()
+{
+    return Engine::get_external_script();
 }
 
 void GameEngine::print_terminal(std::string text, bool error) {

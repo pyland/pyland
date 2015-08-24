@@ -48,7 +48,7 @@
   <object name="characters/enemies/crocodile/croc_0" gid="296" x="512" y="512"/>
   <object name="characters/enemies/crocodile/croc_2" gid="296" x="512" y="384"/>
   <object name="characters/enemies/crocodile/croc_3" gid="296" x="1600" y="320"/>
-  <object name="characters/player/player_one" gid="286" x="1664" y="704"/>
+  <object name="characters/player/player_one" gid="286" x="1792" y="704"/>
   <object name="tile_trigger/trigger_0" gid="571" x="128" y="320"/>
   <object name="tile_trigger/trigger_1" gid="571" x="128" y="384"/>
   <object name="tile_trigger/trigger_2" gid="571" x="128" y="448"/>
@@ -79,6 +79,8 @@
   <object name="tile_trigger/trigger_27" gid="571" x="1600" y="0"/>
   <object name="tile_trigger/trigger_28" gid="571" x="1344" y="640"/>
   <object name="tile_trigger/trigger_29" gid="571" x="1600" y="640"/>
+  <object name="characters/npcs/myla/myla" gid="286" x="1856" y="704"/>
+  <object name="tile_trigger/trigger_end" gid="292" x="576" y="192"/>
  </objectgroup>
  <layer name="SpecialLayer" width="30" height="11">
   <data encoding="base64" compression="zlib">
