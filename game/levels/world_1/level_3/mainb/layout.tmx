@@ -38,16 +38,16 @@
  </layer>
  <objectgroup name="Object Layer 1" width="29" height="15">
   <object name="characters/player/player_one" gid="286" x="1216" y="960"/>
-  <object name="characters/enemies/crocodile/croc_0" gid="296" x="1361" y="892"/>
-  <object name="characters/enemies/crocodile/croc_1" gid="296" x="1361" y="828"/>
-  <object name="characters/enemies/crocodile/croc_2" gid="296" x="1361" y="764"/>
-  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1361" y="700"/>
-  <object name="characters/enemies/crocodile/croc_4" gid="296" x="1361" y="636"/>
-  <object name="characters/enemies/crocodile/croc_5" gid="296" x="1361" y="572"/>
-  <object name="characters/enemies/crocodile/croc_6" gid="296" x="1361" y="508"/>
-  <object name="characters/enemies/crocodile/croc_7" gid="296" x="1361" y="444"/>
-  <object name="characters/enemies/crocodile/croc_8" gid="296" x="1361" y="380"/>
-  <object name="characters/enemies/crocodile/croc_9" gid="296" x="1361" y="316"/>
+  <object name="characters/enemies/crocodile/croc_0" gid="296" x="1536" y="896"/>
+  <object name="characters/enemies/crocodile/croc_1" gid="296" x="1280" y="832"/>
+  <object name="characters/enemies/crocodile/croc_2" gid="296" x="1536" y="768"/>
+  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1280" y="704"/>
+  <object name="characters/enemies/crocodile/croc_4" gid="296" x="1536" y="640"/>
+  <object name="characters/enemies/crocodile/croc_5" gid="296" x="1280" y="576"/>
+  <object name="characters/enemies/crocodile/croc_6" gid="296" x="1536" y="512"/>
+  <object name="characters/enemies/crocodile/croc_7" gid="296" x="1280" y="448"/>
+  <object name="characters/enemies/crocodile/croc_8" gid="296" x="1536" y="384"/>
+  <object name="characters/enemies/crocodile/croc_9" gid="296" x="1280" y="320"/>
   <object name="characters/npcs/myla/myla" gid="286" x="1728" y="960"/>
   <object name="tile_trigger/challenge2a" gid="289" x="768" y="128"/>
   <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="704" y="256"/>
@@ -75,7 +75,7 @@
  </objectgroup>
  <layer name="SpecialLayer" width="29" height="15">
   <data encoding="base64" compression="zlib">
-   eJyzZWJgsB1gTAmwpsBOcuUHi502o3aO2jlq56idJNpJiZuItZMcYEOmPhgAAMA+Wqo=
+   eJyzZWJgsB1gTAmwpsBOcuUHk502o3aO2jlq56idJNhJCFPDTnKADZn6YAAAwGpaqg==
   </data>
  </layer>
 </map>

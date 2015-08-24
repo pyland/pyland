@@ -37,5 +37,6 @@
   <object name="tile_trigger/exit_to_world" gid="197" x="0" y="704"/>
   <object name="player_data/player_data" gid="192" x="0" y="64"/>
   <object name="characters/enemies/crocodile/annoying_croc" gid="193" x="896" y="384"/>
+  <object name="characters/npcs/myla/myla" gid="191" x="320" y="64" width="64" height="64"/>
  </objectgroup>
 </map>
