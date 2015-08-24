@@ -71,7 +71,7 @@ dialogue_sequence = [
 ]
 
 player1_sequence = [
-    lambda callback: player.set_busy(True, callback = callback),
+    #lambda callback: player.set_busy(True, callback = callback),
     lambda callback: snake1.stop_turning(callback = callback),
     lambda callback: snake1.turn_to_face(player, callback = callback),
     lambda callback: engine.show_dialogue("I'm scared. I thought the catchers were just a myth.", callback = callback),
@@ -89,7 +89,7 @@ player1_sequence = [
 
 player1_help_sequence = [
     lambda callback: engine.show_dialogue("Thank you! Here is my script.",  callback = callback),
-    #lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player.set_busy(False, callback = callback),
     lambda callback: update_snake_stage(snake = 0, stage = 1, callback = callback),
     lambda callback: engine.show_external_script(
         confirm_callback = lambda: engine.run_callback_list_sequence(player1_try_script_sequence),
@@ -103,19 +103,21 @@ player1_help_sequence = [
 
 player1_reject_sequence = [
     lambda callback: engine.show_dialogue("Okay then...", callback = callback),
+    #lambda callback: engine.wait(5.0, callback = callback),
     lambda callback: player.set_busy(False, callback = callback),
 ]
 
 
 player1_try_script_sequence = [
     #lambda callback: engine.show_dialogue("Thanks for the help", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    #lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: update_snake_stage(snake = 0, stage = 0, callback = callback),
     lambda callback: snake1.run_script(script_to_run = 10),
     #lambda callback: engine.print_terminal(engine.get_external_script()),
 ]
 
 player1_cancel_script_sequence = [
-    lambda callback: player.set_busy(False, callback = callback),
+    #lambda callback: player.set_busy(False, callback = callback),
     lambda callback: engine.show_dialogue("You cancelled on me!", callback = callback),
 ]
 

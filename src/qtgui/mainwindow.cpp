@@ -118,6 +118,17 @@ MainWindow::MainWindow(GameMain *exGame):
 {
     LOG(INFO) << "Constructing MainWindow..." << std::endl;
 
+
+    externalWorkspace = false;
+    anyOutput = false;
+    scriptEnabled = true;
+    executeIndex = 1;
+    currentTabs = 1;
+
+    script_running = false;
+    fast = false;
+
+
     game = exGame;
     this->setUnifiedTitleAndToolBarOnMac(true);
 
@@ -135,8 +146,6 @@ MainWindow::MainWindow(GameMain *exGame):
         QString w = QString("%1").arg(QString::number(ws + 1));
         textWidget->addTab(workspaces[ws], w);
     }
-
-    externalWorkspace = false;
 
     lexer = new QsciLexerPython;
     lexer->setAutoIndentStyle(QsciScintilla::AiMaintain);
@@ -203,8 +212,6 @@ MainWindow::MainWindow(GameMain *exGame):
     {
         initWorkspace(workspaces[ws], ws);
     }
-
-    setTabs(1);
 
     // Setup draggable splitter for script embedWindow and terminal
     splitter = new QSplitter(Qt::Horizontal);
@@ -275,9 +282,6 @@ MainWindow::MainWindow(GameMain *exGame):
 
     int width = (gameWidget->width());
     int height = gameWidget->height();
-    anyOutput = false;
-    scriptEnabled = true;
-    executeIndex = 1;
 
     SDL_SetWindowSize(embedWindow, width, height);
     glViewport(0, 0, width, height);
@@ -288,6 +292,8 @@ MainWindow::MainWindow(GameMain *exGame):
     connect(buttonRun,SIGNAL(released()),this,SLOT (clickRun()));
     connect(buttonSpeed,SIGNAL(released()),this,SLOT (clickSpeed()));
     connect(buttonClear,SIGNAL(released()),this,SLOT (clearTerminal()));
+
+    setTabs(1);
 
     this->showMaximized();
 
@@ -787,7 +793,7 @@ void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCa
 
     buttonRun->setText("Give script");
     buttonSpeed->setText("Cancel");
-    for(int ws = 0; ws < (workspace_max); ws++)
+    for(int ws = 0; ws < (currentTabs); ws++)
     {
         textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]),false);
     }
@@ -797,20 +803,23 @@ void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCa
     textWidget->setCurrentWidget(workspaces[workspace_max-1]);
 
     externalWorkspace = true;
-    externalConfirmCallback = confirmCallback;
-    externalCancelCallback = cancelCallback;
+    //externalConfirmCallback = confirmCallback;
+    //externalCancelCallback = cancelCallback;
 
-    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+    //QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
-    ws->clear();
+    //ws->clear();
 
-    Engine::show_external_script_help(dialogue);
+    //Engine::show_external_script_help(dialogue);
+    //EventManager::get_instance()->add_event([this, dialogue] {
+    //    Engine::show_external_script_help(dialogue);
+    //});
     Engine::enable_py_scripter();
 
-    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(scriptInit)));
-    EventManager::get_instance()->add_event([boost_callback] {
-        boost_callback();
-    });
+    //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(scriptInit)));
+    //EventManager::get_instance()->add_event([boost_callback] {
+    //    boost_callback();
+    //});
 
 }
 
@@ -822,9 +831,9 @@ void MainWindow::removeExternalTab(){
     setTabs(currentTabs);
     setRunning(script_running);
     setFast(fast);
-    for(int ws = 0; ws < (workspace_max); ws++)
+    for(int ws = 0; ws < (currentTabs); ws++)
     {
-        textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]),true);
+        textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]), true);
     }
 
     externalWorkspace = false;
@@ -832,6 +841,11 @@ void MainWindow::removeExternalTab(){
     //Engine::clear_scripter();
 
     //if (external_dialougue) Engine::close_external_script_help();
+
+    //EventManager::get_instance()->add_event([this] {
+    //    Engine::close_external_script_help();
+    //});
+
 }
 
 //When the QT window is closed
@@ -873,15 +887,13 @@ void MainWindow::runCode(int script)
 
         fout.close();
 
-        boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalConfirmCallback)));
-        EventManager::get_instance()->add_event([boost_callback] {
-            boost_callback();
-        });
-
-        Engine::close_external_script_help();
+        //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalConfirmCallback)));
+        //EventManager::get_instance()->add_event([boost_callback] {
+        //    boost_callback();
+        //});
 
         removeExternalTab();
-
+        setGameFocus();
         return;
     }
 
@@ -959,12 +971,10 @@ void MainWindow::clickSpeed()
 void MainWindow::toggleSpeed()
 {
     if (externalWorkspace){
-        boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalCancelCallback)));
-        EventManager::get_instance()->add_event([boost_callback] {
-            boost_callback();
-        });
-
-        Engine::close_external_script_help();
+        //boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(externalCancelCallback)));
+        //EventManager::get_instance()->add_event([boost_callback] {
+        //    boost_callback();
+        //});
 
         removeExternalTab();
 

@@ -26,6 +26,12 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 {
     LOG(INFO) << "Constructing GUIMain...";
 
+    option_selected = 0;
+    bar_open = false; //whether or not the notification bar is open
+    bar_options_open = false;
+    external_help_open = false;
+    callback_options = false;
+
     config_gui();
 
     Engine::set_gui(this);
@@ -35,8 +41,6 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     Engine::set_game_window(embedWindow);
 
     Engine::set_map_viewer(&map_viewer);
-
-    option_selected = 0;
 
     gui_window = std::make_shared<GUIWindow>();
     gui_window->set_visible(false);
@@ -574,7 +578,7 @@ void GUIMain::show_external_script_help(std::string text){
     external_help_open = true;
     external_script_help->add_text(text);
     external_script_help->open();
-    LOG(INFO) << "ExternalScriptHelp open";
+    LOG(INFO) << "ExternalScript Help open";
 }
 
 void GUIMain::proceed_external_script_help(){
@@ -582,9 +586,11 @@ void GUIMain::proceed_external_script_help(){
 }
 
 void GUIMain::close_external_script_help(){
-    external_script_help->clear_text();
-    external_script_help->close();
-    external_help_open = false;
+    if (external_help_open){
+        external_script_help->clear_text();
+        external_script_help->close();
+        external_help_open = false;
+    }
 }
 
 void GUIMain::open_bag()
