@@ -13,6 +13,7 @@ class GameObject:
     """
 
     __name = ""
+    __visibility = False
     __entity = None  #An instance of Entity.hpp/cpp
     __engine = None  #An instanece of GameEngine.hpp/cpp
 
@@ -76,16 +77,17 @@ class GameObject:
         return
 
     def is_visible(self):
-        return True #TODO: implement this in entity
+        return self.__visibility
 
     def set_visible(self, visibility, callback = lambda : None):
-        self.__entity.set_visibility(visibility, callback)
+        self.__visibility = visibility
+        self.__entity.set_visible(visibility, callback)
         return
 
     #TODO: Make it so that the callbacks of the following methods get passed into c++ so they are put on the event queue as opposed to being run from Python!
-    def start_animating(self, callback = lambda: None):
+    def start_animating(self, speed = 0.06, loop = True, callback = lambda: None):
         #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
-        self.__entity.start_animating()
+        self.__entity.start_animating(speed, loop)
         callback()
         return
 

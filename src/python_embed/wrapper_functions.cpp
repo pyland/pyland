@@ -30,7 +30,7 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("read_message",      &Entity::read_message)
         .def("update_status",     &Entity::py_update_status)
         .def("set_solidity",      &Entity::set_solidity)
-        .def("set_visibility",       &Entity::set_visibility)
+        .def("set_visible",       &Entity::set_visible)
         .def("is_solid",          &Entity::is_solid)
         .def("callback_test",     &Entity::callback_test)
         .def("wait",              &Entity::wait)

@@ -99,7 +99,7 @@ void Entity::set_solidity(bool solidity, PyObject *callback) {
     });
 }
 
-void Entity::set_visibility(bool visibility, PyObject *callback) {
+void Entity::set_visible(bool visibility, PyObject *callback) {
 
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
@@ -110,6 +110,12 @@ void Entity::set_visibility(bool visibility, PyObject *callback) {
         object->set_renderable(visibility);
         EventManager::get_instance()->add_event(boost_callback);
     });
+}
+
+bool Entity::is_visible() {
+    auto object = ObjectManager::get_instance().get_object<MapObject>(this->id);
+    return object->is_renderable();
+    
 }
 
 bool Entity::is_solid() {
@@ -177,10 +183,10 @@ void Entity::set_animation_frame(int frame_number) {
 }
 
 
-void Entity::start_animating() {
+void Entity::start_animating(float speed, bool loop) {
     if(!this->animating) {
         this->animating = true;
-        this->animate(this->current_frame);
+        this->animate(this->current_frame, speed, loop);
     }
 }
 
@@ -188,16 +194,20 @@ void Entity::pause_animating() {
     this->animating = false;
 }
 
-void Entity::animate(int current_frame) {
+void Entity::animate(int current_frame, float speed, bool loop) {
     if (this->animating) {
         //auto num_frame = get_number_of_animation_frames();
         auto num_frame = 4;
-        EventManager::get_instance()->add_event([this, current_frame, num_frame]() {
+        EventManager::get_instance()->add_event([this, current_frame, num_frame, speed, loop]() {
             this->set_animation_frame(current_frame);
             int next_frame = (current_frame + 1) % num_frame;
-            EventManager::get_instance()->add_timed_event(GameTime::duration(.06), [next_frame, this] (float completion) {
+            if(next_frame == 0 && (!loop)){
+                this->animating = false;
+                return;
+            }
+            EventManager::get_instance()->add_timed_event(GameTime::duration(speed), [next_frame, this, speed, loop] (float completion) {
                 if (completion == 1.00) {
-                    this->animate(next_frame);
+                    this->animate(next_frame, speed, loop);
                 }
                 return true;
             });

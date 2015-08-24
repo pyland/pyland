@@ -55,6 +55,9 @@ Map::Map(const std::string map_src):
         for(auto layer : layers) {
             layer_ids.push_back(layer->get_id());
             ObjectManager::get_instance().add_object(layer);
+            if (layer->get_name() == Config::get_instance()["layers"]["special_layer_name"]) {
+                special_layer_id = layer->get_id();
+            }
         }
 
         tilesets = map_loader.get_tilesets();
@@ -81,10 +84,10 @@ Map::~Map() {
 }
 
 bool Map::is_walkable(int x_pos, int y_pos) {
-    for(auto it = std::begin(layer_ids); it != std::end(layer_ids); ++it) {
-        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(*it);
-        // Block only in the case where we're on the special layer and the tile is set
-        if(layer->get_name() == Config::get_instance()["layers"]["special_layer_name"] && (layer->get_tile(x_pos, y_pos).second == 1)) {
+    if (special_layer_id != 0) {
+        // Block only in the case where a tile is set on the special layer
+        auto layer = ObjectManager::get_instance().get_object<Layer>(special_layer_id);
+        if (layer->get_tile(x_pos, y_pos).second == 1) {
             return false;
         }
     }
@@ -92,12 +95,11 @@ bool Map::is_walkable(int x_pos, int y_pos) {
 }
 
 int Map::get_tile_type(int x, int y) {
-    for(auto it = layer_ids.begin(); it != layer_ids.end(); ++it) {
-        std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(*it);
-        if(layer->get_name() == Config::get_instance()["layers"]["special_layer_name"]) {
-            if((layer->get_width_tiles() < x) || (layer->get_height_tiles() < y) || (x < 0) || (y < 0)) {
-                return 1; //The edge of the map is solid
-            }
+    if (special_layer_id != 0) {
+        auto layer = ObjectManager::get_instance().get_object<Layer>(special_layer_id);
+        if ((layer->get_width_tiles() < x) || (layer->get_height_tiles() < y) || (x < 0) || (y < 0)) {
+            return 1; //The edge of the map is solid
+        } else {
             return layer->get_tile(x, y).second;
         }
     }
@@ -191,7 +193,7 @@ void Map::generate_data() {
         // Don't generate data for the collisions layer
         // TODO: handle this not being in layer_mappings
         // TODO: let python have some control over which layers are special
-        if (layer->get_name() == Config::get_instance()["layers"]["special_layer_name"]) {
+        if (layer_id == special_layer_id) {
             layer_num++;
             continue;
         }

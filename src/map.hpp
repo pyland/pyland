@@ -32,6 +32,11 @@ class Map {
     std::vector<int> layer_ids;
 
     ///
+    /// The id of the 'special' layer. Initialised during construction
+    ///
+    int special_layer_id = -1;
+
+    ///
     /// A vector of layers which maps the (x, y) position in the map
     /// onto the offset in the buffer. The offsets are based off of
     /// the number of vertices and the number of dimensions. It gives
