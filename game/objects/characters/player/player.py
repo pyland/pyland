@@ -87,14 +87,6 @@ class Player(Character):
         engine = self.get_engine()
         engine.update_player_name(character_name,self.__focus_button_id)
 
-    #override ScriptStateContainer
-    def get_script_name(self):
-        return self.get_character_name()
-
-    #override ScriptStateContainer---
-    def set_script_name(self):
-        self.set_character_name(self)
-
     def get_focus_button_id(self):
         return self.__focus_button_id
 

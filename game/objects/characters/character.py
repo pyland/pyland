@@ -96,13 +96,17 @@ class Character(GameObject, ScriptStateContainer):
         The callback is run after the script has finished running.
         """
 
+        engine = self.get_engine()
+        engine.print_debug("Py: running " + self.get_character_name() + "'s script")
         if not(self.is_running_script()): #only run script if one currently isn't running.
-            engine = self.get_engine()
-
+            engine.print_debug("Py: is not running script so starting new script")
             if (script_to_run == -1):
+                engine.print_debug("Py: script to run is -1, so getting engine script to run: ")
                 script_to_run = engine.get_run_script()
 
             self.set_running_script_status(True)
+
+            engine.print_debug("Py: starting script api")
 
             #script_api is a python dictionary of python objects (variables, methods, class instances etc.)
             #available to the player. :)
@@ -131,8 +135,20 @@ class Character(GameObject, ScriptStateContainer):
             script_api["get_flag_message"] = self.get_flag_message
 
             script_api["yell"] = self.yell
+
+
+            engine.print_debug("Py: finished script api")
+
             scriptrunner.start(script_api, script_to_run, self, engine)
         return
+
+    #override ScriptStateContainer
+    def get_script_name(self):
+        return self.get_character_name()
+
+    #override ScriptStateContainer---
+    def set_script_name(self):
+        self.set_character_name(self)
 
     def get_character_name(self):
         return self.__character_name
