@@ -65,13 +65,13 @@
 		"pyguide_title_y_offset": 0.9,
 
 		//for pause options
-		"pause_x_offset": 0.10,
+		"pause_x_offset": 0.40,
 		"pause_y_offset": 0.60,
 
 		//for placing an item on the menu
 		"menu_x_offset": 0.05,
 		"menu_y_offset": 0.70,
-		"menu_width": 0.08,
+		"menu_width": 0.15,
 		"menu_height": 0.12,
 		"menu_spacing": 0.15,	
 		"menu_max": 5,		
@@ -85,7 +85,7 @@
 		"notification_text_height": 0.40, 
 		"notification_text_x": 0.03,
 		"notification_text_y": 0.70,
-		"notification_text_buffer": 500,
+		"notification_text_buffer": 250,
 
 		//the parameters for notification button (next, back etc)
 		"notification_button_width": 0.50,
@@ -114,7 +114,7 @@
 		"py_help_y": 0.05,
 
 		//the parameters for the py guide commands on the menu 
-		"py_help_item_width": 0.08,
+		"py_help_item_width": 0.18,
 		"py_help_item_height": 0.12, 
 		"py_help_item_x": 0.02,
 		"py_help_item_y": 0.72,
@@ -127,7 +127,7 @@
 		"py_help_text_height": 0.50, 
 		"py_help_text_x": 0.05,
 		"py_help_text_y": 0.80,
-		"py_help_text_buffer": 500,
+		"py_help_text_buffer": 400,
 
 		//the parameters for the buttons accompanying the text box
 		"py_help_button_width": 0.10,
@@ -164,17 +164,9 @@
 	// "index": "pyguide api: description"
 	
 	"pyguide_apis": {
-		"number": 11,
+		"number": 2,
 		"0": "move_east(): This moves the present character towards the right by one step.",
-		"1": "print(args): THIS prints the argument args to the terminal",
-		"2": "blah1: blah bklah asjdassd 3",
-		"3": "blah2:  blah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgdblah bklah asjdassd fgd",
-		"4": "blah3: blah bklah asjdassd sadf",
-		"5": "blah4: blah bklah asjdassd jkl",
-		"6": "blah5: blah bklah asjdassd fgjk",
-		"7": "blah6: blah bklah asjdassd fghjk",
-		"8": "blah7: blah bklah asjdassd asdfghjkl;",
-		"9": "fsdhfs: dlkdfjslkfjsdlk",
-		"10": "fsdhfjsd: sfjsdklfjsdlfjs"	
+		"1": "print(args): This prints the argument args to the terminal (args must be of type string)",
+		
 	}
 }

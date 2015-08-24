@@ -24,24 +24,14 @@ As the GameObject is in the base objects folder.
 
 """
 """
-class Vines(GameObject):
+class Knife(GameObject):
 
-    __message = "Looks like a spiky and poisonous vine! Better avoid it."
+    __message = "Looks like a sharp knife!"
 
     def initialise(self):
         self.set_sprite("")
-        self.set_visible(False)
-        self.set_solidity(False)
-
-    def grow(self, player_object, callback = lambda : None):
-        if(self.get_position() == player_object.get_position()):
-            self.contact_action()
         self.set_visible(True)
-        self.start_animating(speed = 0.1, loop = False, forward = True, callback = callback)
-
-    def destroy(self, callback = lambda: None):
-        self.start_animating(speed = 0.1, loop = False, forward = False, callback = lambda: self.set_visible(False, lambda : callback))
-        callback()
+        self.set_solidity(False)
 
     def player_action(self, player_object):
         if not self.is_visible():
@@ -56,4 +46,4 @@ class Vines(GameObject):
             self.contact_action()
 
     def contact_action(self):
-        self.get_engine().print_terminal("Oh no! The vines got you!")
+        self.get_engine().print_terminal("Pick up knife!")

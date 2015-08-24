@@ -31,7 +31,7 @@
  </layer>
  <layer name="Decor" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzllDsOwCAMQ6Neq/fJxP3n7pVoKcROap7kDfFEPjQza0JBw/agfVmeqF77wBnGe2ZxkueNL3X3Wyruq7oH9W+qe1Ds5kH3TdUTBcuVtacsD4qqnr/vT6ZnhmpzcB79rHie7l1JlbpFe1RyARGU2AY=
+   eJzlkzsOwCAMQyOu1ftk4v4ze6WWn52E8CRviCdiUkWkJgobaw/b5+VBda0DZyzes4oaeXrMzF1fibiv2T3oILo8wcPiNg+rt+weFFYu9p56e1hE9Zy+P56eFaL9g6d8Z8fzd+9OoswN7cmSBoNl2mo=
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="40">
@@ -50,5 +50,12 @@
   <object name="vines/vine2c" gid="101" x="704" y="704"/>
   <object name="vines/vine2d" gid="101" x="768" y="704"/>
   <object name="vines/vine0a" gid="101" x="1024" y="576"/>
+  <object name="vines/vine3a" gid="101" x="1408" y="960"/>
+  <object name="vines/vine3b" gid="101" x="1472" y="960"/>
+  <object name="vines/vine3d" gid="101" x="1408" y="1024"/>
+  <object name="vines/vine3c" gid="101" x="1472" y="1024"/>
+  <object name="vines/vine3e" gid="101" x="1408" y="1088"/>
+  <object name="vines/vine3f" gid="101" x="1472" y="1088"/>
+  <object name="knife/knife1" gid="302" x="1024" y="1216"/>
  </objectgroup>
 </map>

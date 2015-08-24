@@ -18,6 +18,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     option_start(0),
     option_selected(0),
     pause_open(false),
+    music_on(true),
     bag_open(false),
     display_button_start(0)
 
@@ -98,16 +99,38 @@ void GUIMain::create_pause_menu(){
     exit_button = std::make_shared<Button>(ButtonType::NoPicture);
     exit_button->set_text("Exit Pyland");
     exit_button->set_alignment(ButtonAlignment::BottomLeft);
-    exit_button->set_on_click( [] () {
+    exit_button->set_on_click( [this] () {
     });
     exit_button->set_clickable(false);
     exit_button->set_visible(false);
     exit_button->set_width(menu_width);
     exit_button->set_height(menu_height);
     exit_button->set_x_offset(pause_x_offset);
-    exit_button->set_y_offset(pause_y_offset);
+    exit_button->set_y_offset(pause_y_offset - 1 * menu_spacing);
 
     gui_window->add(exit_button);
+
+    music_button = std::make_shared<Button>(ButtonType::NoPicture);
+    music_button->set_text("Music ON");
+    music_button->set_alignment(ButtonAlignment::BottomLeft);
+    music_button->set_on_click( [this] () {
+        if(music_on){
+            music_button->set_text("Music OFF");
+            refresh_gui();
+        }
+        else{
+            music_button->set_text("Music ON");
+            refresh_gui();
+        }
+        music_on = ! music_on;
+    });
+    music_button->set_visible(false);
+    music_button->set_width(menu_width);
+    music_button->set_height(menu_height);
+    music_button->set_x_offset(pause_x_offset);
+    music_button->set_y_offset(pause_y_offset - 0 * menu_spacing);
+
+    gui_window->add(music_button);
 }
 
 void GUIMain::create_notification_bar(){
@@ -224,7 +247,7 @@ void GUIMain::create_pyguide(){
     pyguide_next_button->set_alignment(ButtonAlignment::BottomLeft);
     pyguide_next_button->move_text(0.0, 0.0);
     pyguide_next_button->set_picture("gui/game/buttons/cycle");
-    pyguide_next_button->set_text("Next");
+    pyguide_next_button->set_text("");
     pyguide_next_button->set_width(menu_move_width);
     pyguide_next_button->set_height(menu_move_height);
     pyguide_next_button->set_x_offset(menu_move_x);
@@ -266,7 +289,7 @@ void GUIMain::create_pyguide(){
             pyguide_commands[i]->set_clickable(true);
         }
 
-        pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
+        pyguide_page_display->set_text(std::to_string(pyguide_page.first) + "/" + std::to_string(pyguide_page.second));
         refresh_gui();
     });
     pyguide_window->add(pyguide_next_button);
@@ -275,7 +298,7 @@ void GUIMain::create_pyguide(){
     pyguide_back_button->set_alignment(ButtonAlignment::BottomLeft);
     pyguide_back_button->move_text(0.0, 0.0);
     pyguide_back_button->set_picture("gui/game/buttons/cycle");
-    pyguide_back_button->set_text("Back");
+    pyguide_back_button->set_text("");
     pyguide_back_button->set_width(menu_move_width);
     pyguide_back_button->set_height(menu_move_height);
     pyguide_back_button->set_x_offset(menu_move_x - menu_move_spacing);
@@ -317,13 +340,13 @@ void GUIMain::create_pyguide(){
             pyguide_commands[i]->set_clickable(true);
         }
 
-        pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
+        pyguide_page_display->set_text(std::to_string(pyguide_page.first) + "/" + std::to_string(pyguide_page.second));
         refresh_gui();
     });
     pyguide_window->add(pyguide_back_button);
 
     pyguide_page_display = std::make_shared<Board>(ButtonType::NoPicture);
-    pyguide_page_display->set_text("Page");
+    pyguide_page_display->set_text("0/0");
     pyguide_page_display->set_alignment(ButtonAlignment::BottomLeft);
     pyguide_page_display->set_width(menu_move_width);
     pyguide_page_display->set_height(menu_move_height);
@@ -387,7 +410,7 @@ void GUIMain::open_pause_window(){
     pause_button->set_x_offset(close_x_offset);
     pause_button->set_y_offset(close_y_offset);
     pause_button->set_picture("gui/highlight/goal");
-    pause_button->set_text("Resume");
+    pause_button->set_text("");
 
     pause_open = true;
     gui_window->set_visible(true);
@@ -409,6 +432,9 @@ void GUIMain::open_pause_window(){
 
     exit_button->set_visible(true);
     exit_button->set_clickable(true);
+
+    music_button->set_visible(true);
+    music_button->set_clickable(true);
 
     refresh_gui();
 }
@@ -451,6 +477,9 @@ void GUIMain::close_pause_window(){
 
     exit_button->set_visible(false);
     exit_button->set_clickable(false);
+
+    music_button->set_visible(false);
+    music_button->set_clickable(false);
 
     refresh_gui();
 }
@@ -598,7 +627,7 @@ void GUIMain::open_pyguide()
     pyguide_back_button->set_visible(true);
     pyguide_back_button->set_clickable(true);
 
-    pyguide_page_display->set_text("Page " + std::to_string(pyguide_page.first) + " of " + std::to_string(pyguide_page.second));
+    pyguide_page_display->set_text(std::to_string(pyguide_page.first) + "/" + std::to_string(pyguide_page.second));
     pyguide_page_display->set_visible(true);
     pyguide_page_display->set_clickable(false);
 
