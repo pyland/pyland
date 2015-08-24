@@ -5,6 +5,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <boost/python/object_core.hpp>
+
 #include <glm/vec2.hpp>
 #include <string>
 #include <memory>
@@ -25,8 +27,6 @@ class TextBox;
 class Engine {
 private:
     static MapViewer *map_viewer;
-
-    static std::shared_ptr<TextBox> notification_bar;
 
     static GameMain* game_main;
 
@@ -182,6 +182,11 @@ public:
     static void open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair<std::string, std::function<void ()> > > _options);
     static void close_notification_bar();
     static bool is_bar_open();
+    static bool is_bar_with_options_open();
+
+    static void show_external_script_help(std::string text);
+    static void close_external_script_help();
+    static bool is_external_help_open();
 
     static std::string get_player_name();
     static void set_player_name(std::string player_name);
@@ -194,8 +199,8 @@ public:
     static void enable_script_editing();
     static void disable_script_editing();
     static void set_py_tabs(int val);
-    static void show_external_tab();
-    static void hide_external_tab();
+    static void show_external_script(std::function<void ()> confirm_callback, std::function<void ()> cancel_callback, std::string external_dialogue, std::function<void ()> script_init);
+    //static void hide_external_tab();
     static void update_world(std::string text);
     static void update_level(std::string text);
     static void update_coins(int value);
@@ -204,6 +209,7 @@ public:
     static void insert_to_scripter(std::string text);
     static void clear_scripter();
     static std::string get_script();
+    static std::string get_external_script();
     static void print_terminal(std::string text, bool error);
     static void focus_next();
     static void set_any_output(bool option);
