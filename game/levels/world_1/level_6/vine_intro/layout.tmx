@@ -31,12 +31,12 @@
  </layer>
  <layer name="Decor" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzlkzsOwCAMQyOu1ftk4v4ze6WWn52E8CRviCdiUkWkJgobaw/b5+VBda0DZyzes4oaeXrMzF1fibiv2T3oILo8wcPiNg+rt+weFFYu9p56e1hE9Zy+P56eFaL9g6d8Z8fzd+9OoswN7cmSBoNl2mo=
+   eJzdkzkOwCAMBK18i/+44v81PRJxAuuDXWkqECN8dBHpRHgn2uPty/Kgeq0f7kT8Zzca5LHyp+46UXFf2T1oEL28wYPK/Cb7vFnnKNg9qES5vPc02+OVqp7b9yfTs5Nqc9CeNSeet3dPqFI3tIeFAe0a264=
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzl0zsOACAIA1DCteD+53LRzUVDAWuTzi/h4yriREUn20F7VU7krivugd05mWnHf2VxTPdOdG2W3UHlNwe1N3YnKllW1Z9mOah0dV7/n0rnJl3vAOGsH4ss69xYOgDcGX5N
+   eJzd0zEOACAIA0Djt+T/73LRxTioaQHbpKuXIFgtxYTKjrfD9qIc5F9H7IO6czPTjPeq4rS6d9Bto+oOKuubKvt26rD+Td1BxcuKulMvh5Wszu/3E+m8JOseMJx5Y8iqzk2lHWlkfwc=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="40">

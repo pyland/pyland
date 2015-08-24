@@ -97,7 +97,7 @@ engine.run_callback_list_sequence(vine2d_list_sequence)
 
 #player meets vines 3
 
-alive_length = 1.40
+alive_length = 0.80
 
 vine3a_list_sequence = [
     lambda callback: vine3a.grow(player_one, callback = callback),

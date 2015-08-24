@@ -27,9 +27,11 @@ As the GameObject is in the base objects folder.
 class Vines(GameObject):
 
     __message = "Looks like a spiky and poisonous vine! Better avoid it."
+    __alive = False
 
     def initialise(self):
         self.set_sprite("")
+        self.__alive = True
         self.set_visible(False)
         self.set_solidity(False)
 
@@ -39,6 +41,7 @@ class Vines(GameObject):
         self.set_visible(True)
         self.start_animating(speed = 0.1, loop = False, forward = True, callback = callback)
 
+    ##temporarily destroy a vine - this is not the same as killing it
     def destroy(self, callback = lambda: None):
         self.start_animating(speed = 0.1, loop = False, forward = False, callback = lambda: self.set_visible(False, lambda : callback))
         callback()
