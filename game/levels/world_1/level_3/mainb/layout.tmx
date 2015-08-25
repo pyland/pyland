@@ -28,7 +28,7 @@
  </layer>
  <layer name="Decor" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJydV11vwyAMTJV0/Vq3vbR/seQl//+xoHHS6XYGMkunKLaxD2MISdOvbASVtcL5bAavQL+ZOJqPdeyTiMcU+IxycHAC/Wr0jEvGKeOjM0/OkypcvNf0lxPHxbvmLXLLeGZ8VVvBWXwuZMN4cNKcPA+1MY97xqHmPVcU3XfVAz/kcxIf2MAHXLmuLYDHUueCWgALxYX9IdCxXEfYe31Unp8y13uN95C4mKvjwmPVVnCkfK6H2Ib58Hh9ByfYnoGfg9YFov0DLjq+lYP7o8ej+M6ST/cx87wGXHj+WnOsr+OEccwj6hHmgt6N6uD0WnNXV/Vb5an1AI8of8RvGYgRrU0yuilYm5Ge4T0b7R2cBZo3+j6httEe6q0b97Dbd6NnHJ8te2ujfXkTG/f8Xj58vo/s0QPxiPpF15O/Ywx3P9E6RWfIUcboN6OF1rcgGR3qNFc7143rgZ5TewtzHePOl1IbvQ/1xO3HPTLaO9GZWITvSC4u3qO7VpQjQnQmRlw4/7SDR2sddF4qSXxHYjp/xHK1aeVsxXSxWvd9t0dczNG8I2vcq9l/xipw93L/TPoPE/2n6DexyBuozLct
+   eJydV9FywyAMY0u6tsu69aX5xdKX/P/jwg3dNE0mpL7T5WKDLRtwSE4/shBUHhVuzGJwD/SL8aPxWMdjMvFIwZheDg5OoH8YPeO84rjibSNPjpMrnL97+s+J/eJd4xaZVswrPqut4CRjzmTDfHDSmJyH2pjHZcVLjXuqKLqvqgeuNOYoY2ADH3DlurYAHmPNBbUARvIL+02gc7mOheewwQE1+ZBcL9XfTfwiV8eF50KHWg2yFm4PsQ35sH99ByfY5mAceDAH5QHR/QMu6s/F0JyvnTwQhzmBi/J8D7hw/oxD+l1f5cT7y9VE68B27N2oDk4/it8pxVy0L+GpHMEjih/xGxs+9Exr3Gx0Rdza9OwZPrMuF+ajcaPvE2obnaGtdeM97M5db4/j3rK3NnP628MmsQHP8OH+3uKlPay153Q9+TvGcPcTrVPUQw4yR78Z2gf0exLVJBsd6jRUO9eN64E9p3bGq5mbaC4/S230PrQl7jzukd69E/XEInxHcn7xHt21ohgRop4YceH4aQeP1jpoXipZxvb4dOPhS+e4+S7vFgfWt+777ow4n71xe9Z4q2bPzFXg7uX+mfQfJvpP0W9ikW9VxrUq
   </data>
  </layer>
  <layer name="Bridge" width="35" height="25">
@@ -38,16 +38,16 @@
  </layer>
  <objectgroup name="Object Layer 1" width="35" height="25">
   <object name="characters/player/player_one" gid="286" x="1920" y="1600"/>
-  <object name="characters/enemies/crocodile/croc_0" gid="296" x="1664" y="1152"/>
-  <object name="characters/enemies/crocodile/croc_1" gid="296" x="1472" y="1088"/>
-  <object name="characters/enemies/crocodile/croc_2" gid="296" x="1664" y="1024"/>
-  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1472" y="960"/>
+  <object name="characters/enemies/crocodile/croc_0" gid="296" x="1837" y="1159"/>
+  <object name="characters/enemies/crocodile/croc_1" gid="296" x="1536" y="1088"/>
+  <object name="characters/enemies/crocodile/croc_2" gid="296" x="1792" y="1024"/>
+  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1536" y="960"/>
   <object name="characters/enemies/crocodile/croc_4" gid="296" x="1664" y="896"/>
   <object name="characters/enemies/crocodile/croc_5" gid="296" x="1472" y="832"/>
-  <object name="characters/enemies/crocodile/croc_6" gid="296" x="1664" y="768"/>
-  <object name="characters/enemies/crocodile/croc_7" gid="296" x="1472" y="704"/>
-  <object name="characters/enemies/crocodile/croc_8" gid="296" x="1664" y="640"/>
-  <object name="characters/enemies/crocodile/croc_9" gid="296" x="1472" y="576"/>
+  <object name="characters/enemies/crocodile/croc_6" gid="296" x="1600" y="768"/>
+  <object name="characters/enemies/crocodile/croc_7" gid="296" x="1472" y="512"/>
+  <object name="characters/enemies/crocodile/croc_8" gid="296" x="1536" y="640"/>
+  <object name="characters/enemies/crocodile/croc_9" gid="296" x="1536" y="448"/>
   <object name="characters/npcs/myla/myla" gid="286" x="2176" y="64"/>
   <object name="tile_trigger/challenge2a" gid="292" x="960" y="384"/>
   <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="896" y="512"/>
@@ -72,15 +72,14 @@
   <object name="tile_trigger/trigger_croc_8" gid="292" x="960" y="960"/>
   <object name="tile_trigger/trigger_croc_9" gid="292" x="960" y="1024"/>
   <object name="tile_trigger/trigger_croc_10" gid="292" x="960" y="1088"/>
-  <object name="tile_trigger/checkpoint1" gid="292" x="960" y="384"/>
   <object name="tile_trigger/exit_level_start" gid="292" x="1920" y="1600"/>
-  <object name="tile_trigger/exit_level_end" gid="292" x="64" y="1408"/>
+  <object name="tile_trigger/exit_level_end" gid="292" x="0" y="1472"/>
   <object name="player_data/player_data" gid="287" x="64" y="64"/>
   <object name="tile_trigger/myla_warn_crocs" gid="292" x="1408" y="1216"/>
  </objectgroup>
  <layer name="SpecialLayer" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJy9lmEOhSAMg43Xenr/a734g2Rpuq4DdMkigcE+y0CPo2fX2Zzwkg0Oh+eJYT6Tk/kdPItROVmM4svyPnafuauYLI9iYRy7fBiyZzoix4r9CrZqTxlL9a7ZWMWiNIljb7Fc0HZq/SuWmHMnC+6vYkEtdtcL3kMZC7tbkIWd5RmWShemB+tbYXHqJcuLmnzBws6NUyuzLFW9IJNzhmZYnHphfRkL8jos7Fu+ytLVCVniuMsy8ihtVAzG47yOdXSp7iUWj3zuf1cVw9bt8Ff5ca6zrqOFw+vwdPdarenwqT6H1X13l73i3JHXYRrt+PwDEqp90g==
+   eJy9lmEKhTAMg8Vrqfe/1sMfgxGSNt3qKxRlZuu3tk6Po2b3WZzwkQ0Oh+fVMF+JyfyZXGmimEwT8am4rz2n9kij4kQsjKPLhyG7yiNy7NiVsGU1ZSzZXtWziAXrwAxr1M1yE46M5wsWjKnuO1iwvhfhUP3a3S94DikWdrYgC3uXV1iyGrF8sLEdFrd3ndr8g6XC08HC+kXxuO/zCkvULxGXYkFeh4V9y3dZqnlClvm5yzLiRLmJNKjHeRWr5CU7l5ge+dz/rkzD1q3wZ/FxrrOukwuH19VULFrT4YvGstxV9u6yZ5wdcR2mcT9ff7tbfFc=
   </data>
  </layer>
 </map>
