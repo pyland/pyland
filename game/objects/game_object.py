@@ -106,7 +106,7 @@ class GameObject:
     def get_number_of_animation_frames(self):
         return self.__entity.get_number_of_animation_frames()
 
-    def focus(self):
+    def focus(self, callback = lambda: None):
         """ Centre the camera on the position of this object. And make the object the focus of input.
 
         If the object moves, then the camera follows it as well. This is the case until
@@ -114,6 +114,7 @@ class GameObject:
         snaps instantly
         """
         self.__entity.focus()
+        callback()
         return
 
     def is_focus(self):

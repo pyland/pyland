@@ -65,7 +65,7 @@ class Player(Character):
     Put the regular public methods you wish to use here.
     """
 
-    def focus(self):
+    def focus(self, callback = lambda: None):
         """Override focus method for generic game_object, to update running button
         and update focused player button above
         """
@@ -78,6 +78,7 @@ class Player(Character):
             engine.set_finished()
         #Update the currently focused player in the player heads at the top
         engine.set_cur_player(self.__focus_button_id)
+        callback()
         return
 
     def set_character_name(self, character_name):
@@ -308,9 +309,9 @@ class Player(Character):
         if (self.__cuts_left == 0):
             engine.print_terminal("Not enough cuts left!")
             return
-        
+
         (x,y) = self.get_position()
-        
+
         made_cut = False
 
         if self.is_facing_east():

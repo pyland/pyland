@@ -12,10 +12,10 @@ player.face_east()
 player.set_busy(True)
 myla.face_east()
 
-leader.face_west()
+elisabeth.face_west()
 
 #List of snakes
-snakes = [snake1,snake2,snake3,snake4,snake5,snake6,snake7]
+snakes = [ben,robert,alexandra,annie,elisabeth,brad,francesca,jamie]
 #List of initial and final snake positions (to check if they have move by correct amount)
 snakes_initial_pos = []
 snakes_final_pos = []
@@ -42,7 +42,7 @@ snakes[4].change_state("red")
 snakes[5].change_state("yellow")
 snakes[6].change_state("orange")
 
-leader.change_state("blue")
+elisabeth.change_state("blue")
 
 #Get snake object from the action_index (ie 0 is the first snake talked to)
 def get_snake(action_index):
@@ -74,6 +74,13 @@ def update_snake_stage(snake = 0, stage = 1, callback = lambda: None):
 def update_snake_final_position(snake_index):
     snakes_final_pos[snake_index] = snakes[snake_index].get_position()
 
+
+def turn_snakes(callback = lambda: None):
+    for snake in snakes:
+        snake.start_turning(time = 0.1, frequency = 8)
+    elisabeth.stop_turning()
+    callback()
+
 def pace(cur_object, callback = lambda: None):
     cur_object.move_north(lambda: cur_object.wait(1.0, lambda: cur_object.move_south(lambda: cur_object.move_south(lambda: cur_object.wait(1.0, lambda: cur_object.move_north(lambda: pace(cur_object)))))))
     callback()
@@ -82,23 +89,17 @@ def pace(cur_object, callback = lambda: None):
 dialogue_sequence = [
     lambda callback: engine.show_dialogue("Minister: Attention my friends. I am sorry to have to say this again.", callback = callback),
     lambda callback: engine.show_dialogue("The catchers are back.", callback = callback),
-    lambda callback: snake1.start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: snake2.start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: snake3.start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: snake4.start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: snake5.start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: snake6.start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: snake7.start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: leader.move_north(callback = callback),
-    lambda callback: leader.move_west(callback = callback),
-    lambda callback: leader.move_west(callback = callback),
-    lambda callback: leader.move_south(callback = callback),
-    lambda callback: leader.face_west(callback = callback),
+    lambda callback: turn_snakes(callback = callback),
+    lambda callback: elisabeth.move_north(callback = callback),
+    lambda callback: elisabeth.move_west(callback = callback),
+    lambda callback: elisabeth.move_west(callback = callback),
+    lambda callback: elisabeth.move_south(callback = callback),
+    lambda callback: elisabeth.face_west(callback = callback),
     lambda callback: engine.show_dialogue("Please stay calm. I can handle this.", callback = callback),
     lambda callback: engine.show_dialogue("But we must prepare to escape to the desert, in case they do not leave.", callback = callback),
     lambda callback: myla.move_east(callback = callback),
     lambda callback: engine.show_dialogue("Myla: Lets help them out, talk to as many of them as you can.", callback = callback),
-    lambda callback: pace(leader, callback = callback),
+    lambda callback: pace(elisabeth, callback = callback),
 
     lambda callback: player.set_busy(False, callback = callback),
     lambda callback: myla.follow(player, callback = callback),
@@ -169,7 +170,6 @@ def snake_run_script(action_index):
 try_script_sequence_0 = [
     lambda callback: engine.show_dialogue("Thank you, it means a lot! I'll try running it now.", callback = callback),
     #lambda callback: player.set_busy(False, callback = callback),
-    lambda callback: update_snake_stage(snake = 0, stage = 0, callback = callback),
     lambda callback: player.set_busy(True, callback = callback),
     lambda callback: snake_run_script(0),
 ]
@@ -179,15 +179,35 @@ cancel_script_sequence_0 = [
     lambda callback: player.set_busy(False, callback = callback),
 ]
 
+def turn_snakes_west(callback = lambda: None):
+    for snake in snakes:
+        snake.stop_turning()
+        snake.face_west()
+    callback()
+
 successful_sequence_0 = [
     lambda callback: engine.show_dialogue("Thank you so much, I can now move east!", callback = callback),
     lambda callback: myla.turn_to_face(player, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Lets try and help the others!", callback = callback),
     lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: myla.wait(1.5, callback = callback),
+    #lambda callback: engine.show_dialogue("Test !", callback = callback),
+    lambda callback: camera.move_to(player.get_position(), time = 0.0, callback = callback),
+    #lambda callback: engine.show_dialogue("Test2 !", callback = callback),
+    lambda callback: camera.focus(callback = callback),
+    #lambda callback: engine.show_dialogue("Test22 !", callback = callback),
+    lambda callback: camera.move_by((2,0), time = 0.75, callback = callback),
+    lambda callback: camera.move_by((-2,0), time = 0.75, callback = callback),
+    lambda callback: engine.show_dialogue("THUD... THUD...", callback = callback),
+    lambda callback: turn_snakes_west(callback = callback),
+    #lambda callback: engine.show_dialogue("Test222 !", callback = callback),
+
+    #lambda callback: player.set_busy(False, callback = callback),
 ]
 
+
 unsuccessful_sequence_0 = [
-    lambda callback: myla.wait(2, callback = callback),
+    lambda callback: myla.wait(1.5, callback = callback),
     lambda callback: myla.turn_to_face(player, callback = callback),
     lambda callback: engine.show_dialogue("Myla: That didn't seem to work. Make sure their script says move_east() !", callback = callback),
     lambda callback: get_snake(0).start_turning(time = 0.1, frequency = 8, callback = callback),
