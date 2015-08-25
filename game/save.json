@@ -4,11 +4,10 @@
     },
     "player_saves": {
         "YourName": {
-            "current_map": "/world_1/level_2/start",
-            "coins": 0,
+            "current_map": "/world_1/level_2/bogs",
+            "py_scripter_tabs": 1,
             "py_scripter_enabled": false,
-            "totems": {},
-            "previous_exit": "/world_1",
+            "coins": 0,
             "level_data": {
                 "world_1": {
                     "level_2": {
@@ -21,8 +20,9 @@
                     }
                 }
             },
-            "has_unlocked_pyscripter": true,
-            "py_scripter_tabs": 1
+            "previous_exit": "/world_1/level_2/start",
+            "totems": {},
+            "has_unlocked_pyscripter": true
         }
     }
 }

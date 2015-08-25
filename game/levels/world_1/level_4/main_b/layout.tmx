@@ -21,22 +21,22 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <layer name="ground" width="30" height="11" visible="0">
+ <layer name="ground" width="30" height="11">
   <data encoding="base64" compression="zlib">
    eJxLYGBgSBjFo3gUj+JRjBMDABpoe8E=
   </data>
  </layer>
- <layer name="water" width="30" height="11" visible="0">
+ <layer name="water" width="30" height="11">
   <data encoding="base64" compression="zlib">
    eJxjYBgF9AacQMwBxOxQjMzGJoaNjYtGV4cMuIFYFIrFkNiiRIgTI48sh8teYs0UI4BxmUWqvWIMqG7AZxe+MCPHv9j8Qsh/6GYgAx4gZgRiJiQaGTNiYTNiUYtNHTp/pAEAgG0J0Q==
   </data>
  </layer>
- <layer name="bridge/rock" width="30" height="11" visible="0">
+ <layer name="bridge/rock" width="30" height="11">
   <data encoding="base64" compression="zlib">
    eJxjYBgFgwVcHSAzRu0dfPYqMKLS9LIXm53k2jucAACS8gpg
   </data>
  </layer>
- <layer name="trees" width="30" height="11" visible="0">
+ <layer name="trees" width="30" height="11">
   <data encoding="base64" compression="zlib">
    eJzFlFsKACAIBPe2mfc/QPQRyBIqBToQvbQxiBSAUtsIYqJ4uzZozE5xnEI9u6N6rfv1rjZO4efc9thZRZd3Mxuc0uTtcB6y77eCTC0/9d7+Au/saJ5lAUPMFOk=
   </data>
@@ -82,7 +82,7 @@
   <object name="characters/npcs/myla/myla" gid="286" x="1856" y="704"/>
   <object name="tile_trigger/trigger_end" gid="292" x="576" y="192"/>
  </objectgroup>
- <layer name="SpecialLayer" width="30" height="11" visible="0">
+ <layer name="SpecialLayer" width="30" height="11">
   <data encoding="base64" compression="zlib">
    eJyzYWJgsEHDxAJS1WPTS64ZlOqj1O2U2GuLA4MALjliMboZA2UvcjiNBHuR0wQ17LVBo/H5l5r2YrOTkL0jAQAAFlErcg==
   </data>

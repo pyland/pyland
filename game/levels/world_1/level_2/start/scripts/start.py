@@ -20,7 +20,11 @@ if player_data.previous_exit_is("world_1"):
 def go_to_world(player_object):
     player_data.save_and_exit("/world_1")
 
+def go_to_bogs(player_object):
+    player_data.save_and_exit("/world_1/level_2/bogs")
+
 exit_to_world.player_walked_on = go_to_world
+exit_to_bogs.player_walked_on = go_to_bogs
 
 pyscripter_state = player_data.get_level_state("pyscripter_state")
 if pyscripter_state == pyscripter_state_not_found:
