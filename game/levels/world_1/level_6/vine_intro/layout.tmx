@@ -24,7 +24,7 @@
  <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="26" height="40" visible="0">
+ <layer name="Ground" width="26" height="40">
   <data encoding="base64" compression="zlib">
    eJztwwENAAAMw6BKnX8Vd3AFkLBqqqqqqs8DlhyGEA==
   </data>
@@ -44,38 +44,38 @@
   <object name="characters/npcs/myla/myla" gid="291" x="0" y="256" width="64" height="64"/>
   <object name="tile_trigger/trigger1a" gid="292" x="1216" y="384"/>
   <object name="tile_trigger/trigger1b" gid="292" x="1280" y="384"/>
-  <object name="vines/vine1" gid="101" x="1280" y="448"/>
-  <object name="vines/vine2a" gid="101" x="576" y="704"/>
-  <object name="vines/vine2b" gid="101" x="640" y="704"/>
-  <object name="vines/vine2c" gid="101" x="704" y="704"/>
-  <object name="vines/vine2d" gid="101" x="768" y="704"/>
-  <object name="vines/vine0a" gid="101" x="1024" y="576"/>
-  <object name="vines/vine3a" gid="101" x="1408" y="960"/>
-  <object name="vines/vine3b" gid="101" x="1472" y="960"/>
-  <object name="vines/vine3d" gid="101" x="1408" y="1024"/>
-  <object name="vines/vine3c" gid="101" x="1472" y="1024"/>
-  <object name="vines/vine3e" gid="101" x="1408" y="1088"/>
-  <object name="vines/vine3f" gid="101" x="1472" y="1088"/>
+  <object name="vine/poison_vine/vine1" gid="101" x="1280" y="448"/>
+  <object name="vine/poison_vine/vine2a" gid="101" x="576" y="704"/>
+  <object name="vine/poison_vine/vine2b" gid="101" x="640" y="704"/>
+  <object name="vine/poison_vine/vine2c" gid="101" x="704" y="704"/>
+  <object name="vine/poison_vine/vine2d" gid="101" x="768" y="704"/>
+  <object name="vine/poison_vine/vine0a" gid="101" x="1024" y="576"/>
+  <object name="vine/poison_vine/vine3a" gid="101" x="1408" y="960"/>
+  <object name="vine/poison_vine/vine3b" gid="101" x="1472" y="960"/>
+  <object name="vine/poison_vine/vine3d" gid="101" x="1408" y="1024"/>
+  <object name="vine/poison_vine/vine3c" gid="101" x="1472" y="1024"/>
+  <object name="vine/poison_vine/vine3e" gid="101" x="1408" y="1088"/>
+  <object name="vine/poison_vine/vine3f" gid="101" x="1472" y="1088"/>
   <object name="whetstone/whetstone1" gid="302" x="1472" y="1280"/>
-  <object name="vines/vine4a" gid="101" x="320" y="1344"/>
-  <object name="vines/vine4b" gid="101" x="256" y="1344"/>
-  <object name="vines/vine4c" gid="101" x="192" y="1344"/>
-  <object name="vines/vine4d" gid="101" x="128" y="1344"/>
-  <object name="vines/vine4e" gid="101" x="128" y="1408"/>
-  <object name="vines/vine4f" gid="101" x="192" y="1408"/>
-  <object name="vines/vine4g" gid="101" x="256" y="1408"/>
-  <object name="vines/vine4h" gid="101" x="320" y="1408"/>
-  <object name="vines/vine4i" gid="101" x="320" y="1472"/>
-  <object name="vines/vine4j" gid="101" x="256" y="1472"/>
-  <object name="vines/vine4k" gid="101" x="192" y="1472"/>
-  <object name="vines/vine4l" gid="101" x="128" y="1472"/>
-  <object name="vines/vine4m" gid="101" x="128" y="1536"/>
-  <object name="vines/vine4n" gid="101" x="192" y="1536"/>
-  <object name="vines/vine4o" gid="101" x="192" y="1600"/>
+  <object name="vine/poison_vine/vine4a" gid="101" x="320" y="1344"/>
+  <object name="vine/poison_vine/vine4b" gid="101" x="256" y="1344"/>
+  <object name="vine/poison_vine/vine4c" gid="101" x="192" y="1344"/>
+  <object name="vine/poison_vine/vine4d" gid="101" x="128" y="1344"/>
+  <object name="vine/poison_vine/vine4e" gid="101" x="128" y="1408"/>
+  <object name="vine/poison_vine/vine4f" gid="101" x="192" y="1408"/>
+  <object name="vine/poison_vine/vine4g" gid="101" x="256" y="1408"/>
+  <object name="vine/poison_vine/vine4h" gid="101" x="320" y="1408"/>
+  <object name="vine/poison_vine/vine4i" gid="101" x="320" y="1472"/>
+  <object name="vine/poison_vine/vine4j" gid="101" x="256" y="1472"/>
+  <object name="vine/poison_vine/vine4k" gid="101" x="192" y="1472"/>
+  <object name="vine/poison_vine/vine4l" gid="101" x="128" y="1472"/>
+  <object name="vine/poison_vine/vine4m" gid="101" x="128" y="1536"/>
+  <object name="vine/poison_vine/vine4n" gid="101" x="192" y="1536"/>
+  <object name="vine/poison_vine/vine4o" gid="101" x="192" y="1600"/>
   <object name="tile_trigger/trigger_whetstone1" gid="292" x="1472" y="1152"/>
   <object name="tile_trigger/trigger_whetstone2a" gid="292" x="1408" y="1280"/>
   <object name="tile_trigger/trigger_whetstone2b" gid="292" x="1472" y="1216"/>
-  <object name="vines/vine0b" gid="101" x="1344" y="1280"/>
-  <object name="vines/vine0c" gid="101" x="1344" y="1216"/>
+  <object name="vine/poison_vine/vine0b" gid="101" x="1344" y="1280"/>
+  <object name="vine/poison_vine/vine0c" gid="101" x="1344" y="1216"/>
  </objectgroup>
 </map>
