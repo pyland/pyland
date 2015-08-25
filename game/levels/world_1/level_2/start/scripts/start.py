@@ -121,7 +121,6 @@ if pyscripter_state == pyscripter_state_not_found:
         ], save_pyscripter_state)
 
     def save_pyscripter_state():
-        player_object.set_cuts_left(3)
         player_data.set_level_state("pyscripter_state", pyscripter_state_found)
         player_data.unlock_pyscripter()
         player_data.save()
