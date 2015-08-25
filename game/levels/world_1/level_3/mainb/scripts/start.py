@@ -1,26 +1,48 @@
+#commence save-data set-up
+world_name = "world_1"
+level_name = "level_3"
+map_name = "mainb"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
+#end save-data set-up
+
+#setting the player's starting position
+if player_data.previous_exit_is("world_1"):
+    player_one.move_north()
+    myla_start_position = exit_level_start.get_position()
+    myla.set_solidity(False, callback = lambda: myla.move_to(myla_start_position, callback = lambda: myla.follow(player_one)))
+#end setting the player's starting position
+
+
+def go_to_world(player_object):
+    player_data.save_and_exit("/world_1")
+
+exit_level_start.player_walked_on = go_to_world
+exit_level_end.player_walked_on = go_to_world
+
 player_one.focus()
 engine.play_music("beach")
 
 intro_dialogue = [
     lambda callback: player_one.set_busy(True, callback = callback),
-    lambda callback: myla.move_west(callback = callback),
-    lambda callback: myla.move_west(callback = callback),
-    lambda callback: myla.move_west(callback = callback),
-    lambda callback: myla.move_west(callback = callback),
-    lambda callback: myla.move_west(callback = callback),
-    lambda callback: myla.move_west(callback = callback),
-    lambda callback: myla.move_west(callback = callback),
-    lambda callback: player_one.face_east(callback = callback),
+    lambda callback: myla.wait(0.3, callback = callback),
+    lambda callback: myla.stop_follow(callback = callback),
+    lambda callback: myla.face_north(callback = callback),
+    lambda callback: player_one.face_south(callback = callback),
     lambda callback: engine.show_dialogue("Myla: We need to go west, but the boulder is blocking us!", callback = callback),
     lambda callback: engine.show_dialogue("Careful, those crocodiles they are next to you!", callback = callback),
     lambda callback: engine.show_dialogue("Since there is only one bridge, I'll just jump into your bag", callback =callback),
-    lambda callback: player_one.face_west(callback = callback),
+    lambda callback: player_one.face_north(callback = callback),
+    lambda callback: myla.set_solidity(False, callback = callback),
+    lambda callback: myla.move_north(callback = callback),
     lambda callback: myla.set_visible(False, callback = callback),
     lambda callback: myla.move_to((0,0), 0.0001, callback = callback),
     lambda callback: player_one.set_busy(False, callback =callback)
     ]
 
-engine.run_callback_list_sequence(intro_dialogue)
+myla_warn_crocs.player_walked_on = lambda player_object: engine.run_callback_list_sequence(intro_dialogue)
+
 b1_croc = [
 croc_0,
 croc_1,

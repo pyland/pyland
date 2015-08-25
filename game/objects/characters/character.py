@@ -156,7 +156,8 @@ class Character(GameObject, ScriptStateContainer):
 
     def set_busy(self, busy, callback = lambda: None):
         self.__busy = busy
-        callback()
+        self.halt_script() #Halt the player script
+        self.get_engine().add_event(callback)
 
     def is_busy(self):
         return self.__busy
