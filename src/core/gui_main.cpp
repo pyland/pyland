@@ -279,7 +279,7 @@ void GUIMain::create_pyguide(){
     pyguide_next_button = std::make_shared<Button>(ButtonType::Single);
     pyguide_next_button->set_alignment(ButtonAlignment::BottomLeft);
     pyguide_next_button->move_text(0.0, 0.0);
-    pyguide_next_button->set_picture("gui/game/buttons/cycle");
+    pyguide_next_button->set_picture("gui/game/next");
     pyguide_next_button->set_text("");
     pyguide_next_button->set_width(menu_move_width);
     pyguide_next_button->set_height(menu_move_height);
@@ -330,7 +330,7 @@ void GUIMain::create_pyguide(){
     pyguide_back_button = std::make_shared<Button>(ButtonType::Single);
     pyguide_back_button->set_alignment(ButtonAlignment::BottomLeft);
     pyguide_back_button->move_text(0.0, 0.0);
-    pyguide_back_button->set_picture("gui/game/buttons/cycle");
+    pyguide_back_button->set_picture("gui/game/prev");
     pyguide_back_button->set_text("");
     pyguide_back_button->set_width(menu_move_width);
     pyguide_back_button->set_height(menu_move_height);
@@ -442,7 +442,7 @@ void GUIMain::open_pause_window(){
 
     pause_button->set_x_offset(close_x_offset);
     pause_button->set_y_offset(close_y_offset);
-    pause_button->set_picture("gui/highlight/goal");
+    pause_button->set_picture("gui/game/play");
     pause_button->set_text("");
 
     pause_open = true;
