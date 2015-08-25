@@ -13,7 +13,7 @@ from scoped_interpreter import ScopedInterpreter
 class HaltScriptException(Exception):
     pass
 
-def start(script_api, script_name, script_state_container, engine, callback = None):
+def start(script_api, script_name, script_state_container, engine, callback = lambda: None):
     """ This function runs the script provided in the argument in a seperate thread.
 
     The script has access to a set of API's defined in script_api that allow
@@ -49,7 +49,7 @@ def start(script_api, script_name, script_state_container, engine, callback = No
     with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()
 
-    def thread_target(callback = None):
+    def thread_target(callback):
         """ This is the method that is run in the seperate thread.
 
         It runs the script requested first and then runs the callback.
@@ -66,7 +66,7 @@ def start(script_api, script_name, script_state_container, engine, callback = No
                 engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has ended---", False)
             script_state_container.set_running_script_status(False)
             engine.set_finished()
-            callback()
+            engine.add_event(callback)
 
     thread = threading.Thread(target = lambda: thread_target(callback))
 

@@ -79,6 +79,8 @@ class Character(GameObject, ScriptStateContainer):
 
     __finish_following = False#A flag to specify whether the character is finishing another object(to make the game more dynamic)
 
+    __cuts_left = 0
+
     def initialise(self):
         super().initialise
         self.set_solidity(True)
@@ -89,7 +91,7 @@ class Character(GameObject, ScriptStateContainer):
 
     """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
 
-    def run_script(self, script_to_run = -1, callback = None):
+    def run_script(self, script_to_run = -1, callback = lambda: None):
         """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
 
         Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
@@ -132,7 +134,8 @@ class Character(GameObject, ScriptStateContainer):
             script_api["get_position"] = self.get_position
             script_api["get_flag_message"] = self.get_flag_message
 
-            script_api["yell"] = self.yell
+            script_api["yell"] = self.__yell
+            script_api["cut"] = self.__cut
 
             scriptrunner.start(script_api, script_to_run, self, engine, callback)
         return
@@ -454,10 +457,61 @@ class Character(GameObject, ScriptStateContainer):
                 message = current_object.get_message()
         return message
 
-    def yell(self):
+    def __yell(self):
         engine = self.get_engine()
         objects = engine.get_all_objects()
         for current in objects:
             if hasattr(current, "yelled_at"):
                 current.yelled_at(self)
+
+    def set_cuts_left(self, cuts_left):
+        self.__cuts_left = cuts_left
+
+    def get_cuts_left(self):
+        return self.__cuts_left
+
+    def __cut(self):
+        engine = self.get_engine()
+
+        if (self.__cuts_left == 0):
+            engine.print_terminal("Not enough cuts left!")
+            return
+        
+        (x,y) = self.get_position()
+        
+        made_cut = False
+
+        if self.is_facing_east():
+            for obj in engine.get_objects_at((x+1, y)):
+                if(hasattr(obj, "on_cut")):
+                    made_cut = made_cut or obj.on_cut()
+
+        elif self.is_facing_west():
+            for obj in engine.get_objects_at((x-1, y)):
+                if(hasattr(obj, "on_cut")):
+                    made_cut = made_cut or obj.on_cut()
+
+        elif self.is_facing_north():
+            for obj in engine.get_objects_at((x, y+1)):
+                if(hasattr(obj, "on_cut")):
+                    made_cut = made_cut or obj.on_cut()
+
+        elif self.is_facing_south():
+            for obj in engine.get_objects_at((x, y-1)):
+                if(hasattr(obj, "on_cut")):
+                    made_cut = made_cut or obj.on_cut()
+
+        if made_cut:
+            self.__cuts_left = self.__cuts_left - 1
+            if (self.__cuts_left == 0):
+                engine.print_terminal("Swoosh! Ran out of cuts")
+            else:
+                engine.print_terminal("Swoosh! This knife now has " + str(self.__cuts_left) + " cut(s) left!")
+        else:
+            engine.print_terminal("Swish? There's nohing to cut. This knife still has " + str(self.__cuts_left) + " cut(s) left!")
+
+
+
+
+
 
