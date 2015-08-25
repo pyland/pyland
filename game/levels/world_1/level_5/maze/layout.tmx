@@ -31,12 +31,12 @@
  </layer>
  <layer name="Decor" width="70" height="70">
   <data encoding="base64" compression="zlib">
-   eJztmFGKwzAMRE2vtZfJAXL/72WhBlfE6cgeJ1l4D4aqgUqTSeK6LeU7m1F7kLO3UwrOeXunfpoUnPPIhVwyIpfzXEohl1bkcp5LrJ8mBee8K3KJe6SR/ZKC2/NRvWqGcvxICqs8kwu5ZDyTyz25sO72cxntoeDyW95eS1O7erf6r7lE/26N5BKfNwWH18oVvwN664vymVorOLzWPlc+R3/8vLR7545cevfo2X59Vt88nH1mdS4xiy30nOm9UmourutWad9HT0fHXOf6lPul5ynjdeZ61LVlK59zex5duYzcN73aqXbdVWeN5JJZ31TPitdR7c2r6vWO5+hsvrN37JvpHzNUWOE563tkxkx/hRWeZ30rM8iFXDIzZr4nFFZ4jvWKGfEcyCV3/EgKqzyTy/W5zO5DFdyej+qnScE5j1zIJSNyIZeMyIVcMiKXfi4z//ddJQAAAAAAAAAAAAAAAAAA8PILl3baiA==
+   eJztmFFqwzAQREWv1cv4ALn/dynUoCySPSuN5BTeg4GNwbvjsa0oKeWew6hXkLO3UwrOea9O/WlScM4jF3LJiFyucymFXGqRy3Uusf40KTjn7cgl7pFG9ksKbs+tetUM5XhLCqs8kwu5ZDyTyzO5sO72cxntoeDyW/68lqp29a71X3OJ/t0a2VPH903B4fVkx++A3vqinHPWCg6vZ5+d79Ev31/vGd2dEz1e4fDZekav9uuzanm4m7krl5jFEXrO9F4pNRfXfTupP0dPrWOua1W9PvUeZbzO3I9zbTnK+9yeR1cuI89Nr3apnleKPmskl8z6pvhWvY6oXssyXp94j67mO3vHvpn+MUOFFZ6zvkdmzPRXWOF51rcyg1zIJTNj5ntCYYXnWK+YEa+BXHLHW1JY5Zlc9ucyuw9VcHtu1Z8mBec8ciGXjMiFXDIiF3LJiFz6ucz837dLAAAAAAAAAAAAAAAAAADg5QcL0Nl0
   </data>
  </layer>
  <layer name="SpecialLayer" width="70" height="70">
   <data encoding="base64" compression="zlib">
-   eJzt14EKgjAUQFHxt+z/vytCoiXXcjjee4N7QAjBXNe21rLEeqzfh3ZtC7t82IXZhdmF2YXZhdmFRXQ57pFm2C9Fdek5X4FdmF2YXVhkF9ddvkflDkd2YVW7ZM+3zPUle1zZ92/fd1v3o2KXs+f2a79+93h5N9k6ronoMsPvI7k63rvPLVPF70t7nwrz6N8Y6fWIz9v7LGZfd0fOk8guPWPNmEfR92+79FyTuS5W7ZLNLswuLHPdrdwp+nf6yvkK7MLswqK6VP2/diZ7X1mVXZhdmF2YXZhdmF2YXdgs+yxJkiRJkiRJkiRJ0lhPHWJGrQ==
+   eJzt14EKgjAURmHxtfT9nytCwtv41a22e+/gfCCEULNjW3NZfO3r94GDbUGXE100umh00eii0UWji+bRpdwjzbBf8urScj4Dumh00eiieXZh3dVjZO5Qoovmvb7UjhE93yLXl+jrih7ffu62HsdTm4guV/ftbr/+7/H2abKZczXPCKO7zPD/qPy6JrXet0jlPMrwe7HjZJlHd9eoXvf4vq33YsR9Kccb2aXnPPHoYl/XXmvEPPIe3/73tLwncl3M2iUaXTS6aN5doteNWp5das9nQBeNLppXl6zPa1ei95VZ0UWji0YXjS4aXTS6aHTRZtlnAQAAAAAAAAAAAAD6egGitEbr
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="70" height="70">
@@ -45,8 +45,10 @@
   <object name="sign/sign_one" gid="287" x="1856" y="1408" width="64" height="64"/>
   <object name="sign/sign_two" gid="287" x="3392" y="1408" width="64" height="64"/>
   <object name="characters/npcs/generic/helper_one" gid="291" x="3584" y="1408" width="64" height="64"/>
-  <object name="characters/npcs/generic/security_one" gid="301" x="3456" y="1216" width="64" height="64"/>
-  <object name="characters/npcs/generic/security_two" gid="301" x="3712" y="1344" width="64" height="64"/>
-  <object name="characters/npcs/generic/security_three" gid="301" x="3456" y="1536" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_one" gid="301" x="3456" y="1152" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_three" gid="301" x="3712" y="1344" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_two" gid="301" x="3456" y="1536" width="64" height="64"/>
+  <object name="key/key1" gid="287" x="3584" y="704"/>
+  <object name="key/key2" gid="287" x="3584" y="2048"/>
  </objectgroup>
 </map>

@@ -81,6 +81,8 @@ class Character(GameObject, ScriptStateContainer):
 
     __cuts_left = 0
 
+    __keys = 0
+
     def initialise(self):
         super().initialise
         self.set_solidity(True)
@@ -470,6 +472,15 @@ class Character(GameObject, ScriptStateContainer):
 
     def get_cuts_left(self):
         return self.__cuts_left
+
+    def add_keys(self, num):
+        self.__keys += num
+
+    def get_keys(self):
+        return self.__keys
+
+    def give_keys(self):
+        pass
 
     def __cut(self):
         engine = self.get_engine()
