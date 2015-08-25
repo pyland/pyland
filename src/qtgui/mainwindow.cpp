@@ -19,6 +19,7 @@
 // Standard stuff
 #include <fstream>
 #include <iostream>
+#include <deque>
 #include <string>
 #include <math.h>
 #include <sstream>
@@ -305,6 +306,9 @@ MainWindow::~MainWindow()
     //delete all objects created with new
 
     LOG(INFO) << "Destructing MainWindow..." << std::endl;
+
+    terminalText.clear();
+
     delete textWidget;
 
     for(int ws = 0; ws < workspace_max; ws++)
@@ -1018,14 +1022,24 @@ void MainWindow::updateSpeed()
 //If error is set the text is read, otherwise it is black
 void MainWindow::pushTerminalText(std::string text, bool error)
 {
+    terminalText.push_front(text);
     if (error)
     {
         terminalDisplay->setTextColor(QColor("red"));
     }
-    QString qtext = QString::fromStdString(text+"\n");
-    terminalDisplay->insertPlainText(qtext);
+    QString qtext = QString::fromStdString(text);
+    terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
+    terminalDisplay->append(qtext);
+    //terminalDisplay->insertPlainText(qtext);
     terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
     terminalDisplay->setTextColor(QColor("black"));
+}
+
+//Get the history of the terminal output
+//index 0 is the most recent output, and subsequent indexes are previous strings
+std::string MainWindow::getTerminalText(unsigned int index){
+    if ((terminalText.size()) <= index) return "";
+    return terminalText[index];
 }
 
 //Increase the font size of the current script
@@ -1124,6 +1138,8 @@ std::string MainWindow::getExternalText()
 //Clear the text from the terminal
 void MainWindow::clearTerminal()
 {
+    //Clear the deque storing the terminal history
+    terminalText.clear();
     terminalDisplay->clear();
 }
 

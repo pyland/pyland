@@ -272,6 +272,10 @@ void GameEngine::print_terminal(std::string text, bool error) {
     Engine::print_terminal(text, error);
 }
 
+std::string GameEngine::get_terminal_text(unsigned int index) {
+    return Engine::get_terminal_text(index);
+}
+
 std::string GameEngine::get_config() {
     Config::json j = Config::get_instance();
     return j.dump();

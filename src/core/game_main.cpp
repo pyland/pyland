@@ -387,6 +387,10 @@ GameMain::~GameMain()
     LOG(INFO) << "Destructed GameMain..." << endl;
 }
 
+std::string GameMain::get_current_challenge(){
+    return challenge_data->level_location;
+}
+
 void GameMain::game_loop(bool showMouse)
 {
     if(changing_challenge) {
