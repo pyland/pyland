@@ -8,6 +8,7 @@
 	"files": {
 		"game_folder": "../game",
 		"level_folder": self.game_folder+"/levels/",
+		"main_menu": "/start_screen",
 		//"level_location": "/test_world/test_level/test_one",
 		//"level_location": "/test_world/yingischallenged/main",
 		//"level_location": "/world_one_old/level_one/main",

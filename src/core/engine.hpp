@@ -220,6 +220,10 @@ public:
     static void trigger_speed();
     static int get_run_script();
 
+    static void set_music(bool on);
+    static void open_main_menu();
+    static void restart_level();
+
     /// global access to game font
     static TextFont get_game_font();
     static Typeface get_game_typeface();
