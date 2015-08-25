@@ -4,13 +4,21 @@ level_name = "level_2"
 map_name = "bogs"
 
 player_data.load(engine.get_player_name())
-#player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
+player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
 
 #setting the player's starting position
 if player_data.previous_exit_is("world_1", level_name = "level_2", map_name = "start"):
     player_one.move_south()
+    myla_start_position = exit_to_start.get_position()
+    myla.set_solidity(False, callback = lambda: myla.move_to(myla_start_position, callback = lambda: myla.follow(player_one)))
 #end setting the player's starting position
+
+def go_to_start(player_object):
+    player_data.save_and_exit("/world_1/level_2/start")
+
+exit_to_start.player_walked_on = go_to_start
+
 
 bog_sign.set_message("Welcome to the bogs! The home of stinky water...")
 
@@ -20,22 +28,33 @@ croc_guard_totem.face_north()
 
 vine1.grow(player_one)
 
-myla.follow(player_one)
-
 def myla_explain_cut_action(player_object):
+    def myla_ask_player_if_there_is_way(callback):
+        engine.show_dialogue_with_options(
+            "Aren't you gonna ask me if there is a way?",
+            {
+                "Yes" : lambda: engine.show_dialogue("Why thank you, you can use your *ahem*, my PyScripter!", callback = callback),
+                "No": lambda: engine.show_dialogue("Argh ok you win. You can use the PyScripter.", callback = callback)
+            }
+        )
+
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Hi however is reading this early!", callback = callback),
-        lambda callback: engine.show_dialogue("This level is early and incomplete, so I will place messages where the level's events...", callback = callback),
-        lambda callback: engine.show_dialogue("... would normally occur and explain what would happen so that you can give feedback on that.", callback = callback),
-        lambda callback: engine.show_dialogue("Here Myla would give the cut script to the player, and show it's usefulness for cutting down vines.", callback = callback),
-        lambda callback: engine.show_dialogue("I will also edit the earlier levels slightly with secrets hidden behind vines, that the player can...", callback = callback),
-        lambda callback: engine.show_dialogue("... retroactively get.", callback = callback),
-        lambda callback: engine.show_dialogue("Anindya's levels will expand on the usage of cut.", callback = callback),
+        lambda callback: player_one.face_east(callback = callback),
+        lambda callback: engine.show_dialogue(engine.get_player_name() + ", there's a vine in the way over there.", callback = callback),
+        lambda callback: engine.show_dialogue("What's that, I hear you ask? How could we possibly make it through?", callback = callback),
+        lambda callback: engine.show_dialogue("If only there was a way...", callback = callback),
+        lambda callback: engine.show_dialogue("...", callback = callback),
+        myla_ask_player_if_there_is_way,
+        lambda callback: engine.show_dialogue("I'm going to give you my knife so that you can cut down vines.", callback = callback),
+        lambda callback: engine.show_dialogue("The PyScripter let's you control objects from the real world. So you can use it to cut down vines!", callback = callback),
+        lambda callback: engine.show_dialogue("I have written a small script for you and put it into your PyScripter...", callback = callback),
+        lambda callback: engine.show_dialogue("Stand next to a vine and hit the 'Run' button (or you can use the spacebar to run scripts)!", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
         lambda callback: engine.insert_to_scripter("cut()", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
+
 
 myla_explain_cut.player_walked_on = myla_explain_cut_action
 
