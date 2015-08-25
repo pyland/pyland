@@ -1027,12 +1027,14 @@ void MainWindow::pushTerminalText(std::string text, bool error)
     {
         terminalDisplay->setTextColor(QColor("red"));
     }
+    else{
+        terminalDisplay->setTextColor(QColor("black"));
+    }
     QString qtext = QString::fromStdString(text);
     terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
     terminalDisplay->append(qtext);
     //terminalDisplay->insertPlainText(qtext);
     terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
-    terminalDisplay->setTextColor(QColor("black"));
 }
 
 //Get the history of the terminal output
