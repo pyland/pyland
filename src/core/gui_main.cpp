@@ -26,13 +26,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
 {
     LOG(INFO) << "Constructing GUIMain...";
-
-    option_selected = 0;
-    bar_open = false; //whether or not the notification bar is open
-    bar_options_open = false;
-    external_help_open = false;
-    callback_options = false;
-
+    
     config_gui();
 
     Engine::set_gui(this);
@@ -86,7 +80,7 @@ void GUIMain::create_pause_menu(){
 
     pause_button->set_on_click( [&] (){
 
-        if(bag_open || bar_open || external_help_open){
+        if(bag_open || bar_open || bar_options_open || external_help_open){
             return;
         }
 
@@ -214,7 +208,7 @@ void GUIMain::create_bag(){
 
     bag_button->set_on_click( [&] ()
     {
-        if(bar_open || pause_open || external_help_open){
+        if(pause_open || bar_open || bar_options_open || external_help_open){
             return;
         }
 
@@ -506,6 +500,9 @@ void GUIMain::close_pause_window(){
             continue;
         }
         else if(i->second == notification_bar){
+            continue;
+        }
+        else if(i->second == external_script_help){
             continue;
         }
         else if(i->second == options_box){
