@@ -13,7 +13,7 @@ from scoped_interpreter import ScopedInterpreter
 class HaltScriptException(Exception):
     pass
 
-def start(script_api, script_name, script_state_container, engine, parse_error = False, callback = None):
+def start(script_api, script_name, script_state_container, engine, parse_error = True, callback = None):
     """ This function runs the script provided in the argument in a seperate thread.
 
     The script has access to a set of API's defined in script_api that allow
@@ -37,17 +37,47 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
         printed_flag[0] = True
         engine.print_terminal(text, False) #autoconvert print to strings (do not need to convert within the game)
 
-    #Parse any Python error output to be user friendly
-    def parse_output(error_message):
-
-        parsed_error_message = ""
+    #Gets the nth line number from the error message
+    def parse_line_number(string, n):
 
         parse_stage = 0
 
         start_char = 0
         end_char = 0
 
+        for cur_line_remove in range(n-1):
+            if ("line" in string):
+                string = string[string.index("line")+4:len(string)]
+
+        #engine.print_terminal("string is now \n "+string + " string ended",True)
+
+        for char in range(string.index("line"),len(string)):
+            if parse_stage == 0:
+                if string[char] == " ":
+                    start_char = char+1
+                    parse_stage = 1
+            elif parse_stage == 1:
+                if ((string[char] == " ") or (string[char] == ",")):
+                    end_char = char
+                    parse_stage = 2
+                    break
+
+        return string[start_char:end_char]
+
+
+    #Parse any Python error output to be user friendly
+    def parse_output(error_message):
+
+        parsed_error_message = ""
+
         if ("NameError" in error_message):
+            command = ""
+            line = ""
+
+            parse_stage = 0
+
+            start_char = 0
+            end_char = 0
             for char in range(error_message.index("NameError"),len(error_message)):
                 if parse_stage == 0:
                     if error_message[char] == "'":
@@ -58,10 +88,73 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
                         end_char = char
                         parse_stage = 2
                         break
-            parsed_error_message = ("PyRunner Error: Command "+str(error_message[start_char:end_char])+" is not understood")
 
+            command = error_message[start_char:end_char]
+
+            parse_stage = 0
+
+            start_char = 0
+            end_char = 0
+
+            if ("line" in error_message):
+                #Output the second line number
+                first_line_removed_error_message = error_message[error_message.index("line")+4:len(error_message)]
+
+                if ("line" in first_line_removed_error_message):
+
+                    for char in range(first_line_removed_error_message.index("line"),len(first_line_removed_error_message)):
+                        if parse_stage == 0:
+                            if first_line_removed_error_message[char] == " ":
+                                start_char = char+1
+                                parse_stage = 1
+                        elif parse_stage == 1:
+                            if ((first_line_removed_error_message[char] == " ") or (first_line_removed_error_message[char] == ",")):
+                                end_char = char
+                                parse_stage = 2
+                                break
+
+            line = first_line_removed_error_message[start_char:end_char]
+
+            parsed_error_message = ("PyRunner Error: Command '"+ command +"' in line "+ line +" is not understood")
+        elif ("SyntaxError" in error_message) and ("print" in error_message):
+            parse_stage = 0
+
+            start_char = 0
+            end_char = 0
+
+            line = ""
+
+            if ("line" in error_message):
+                #Output the second line number
+                first_line_removed_error_message = error_message[error_message.index("line")+4:len(error_message)]
+                if ("line" in first_line_removed_error_message):
+                    for char in range(first_line_removed_error_message.index("line"),len(first_line_removed_error_message)):
+                        if parse_stage == 0:
+                            if first_line_removed_error_message[char] == " ":
+                                start_char = char+1
+                                parse_stage = 1
+                        elif parse_stage == 1:
+                            if ((first_line_removed_error_message[char] == " ") or (first_line_removed_error_message[char] == ",")):
+                                end_char = char
+                                parse_stage = 2
+                                break
+
+            line = first_line_removed_error_message[start_char:end_char]
+
+            parsed_error_message = ("PyRunner Error: The 'print' command in line "+ line +" must use brackets \nFor example: print('Hello World')")
+
+        else:
+            engine.print_terminal(error_message, True)
+            engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has terminated early---", False)
+            return
+
+        engine.print_terminal("first line number is "+parse_line_number(error_message,1), True)
+        engine.print_terminal("second line number is "+parse_line_number(error_message,2), True)
+        engine.print_terminal(error_message, True)
         engine.print_terminal(parsed_error_message, True)
-        engine.print_terminal("---" + script_state_container.get_script_name() + "'s script could not be run---", False)
+        engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has terminated early---", False)
+
+        printed_flag[0] = False
 
 
     #Replace print statement in player script so that all their output goes to the terminal. (unless it has already been overidden)
