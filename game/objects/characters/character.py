@@ -151,14 +151,15 @@ class Character(GameObject, ScriptStateContainer):
         self.set_character_name(self)
 
     def get_character_name(self):
-        return self.__character_name
+        return self.__character_name.capitalize()
 
     def set_character_name(self, character_name):
         self.__character_name = character_name
 
     def set_busy(self, busy, callback = lambda: None):
         self.__busy = busy
-        callback()
+        self.halt_script() #Halt the player script
+        self.get_engine().add_event(callback)
 
     def is_busy(self):
         return self.__busy

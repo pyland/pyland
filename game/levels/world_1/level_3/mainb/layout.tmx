@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="29" height="15" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="35" height="25" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -21,61 +21,65 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <layer name="land" width="29" height="15">
+ <layer name="Ground" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJxLZGBgSGSAgEQkjA3gkk8ggHGZQ66dpNpHqZ2E7MNlJyWAGDupbTc97CDWbnoAetuHbu8oGAXUBgkMqOUXOp+WmJ52YcMA2900dQ==
+   eJztzsEJACAMA8CM2v2ncIKCPhQp97hfSFJJCgCGyoOe3Y0cZG/75YcvAL0FYrhFMA==
   </data>
  </layer>
- <layer name="water/island" width="29" height="15">
+ <layer name="Decor" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJzFlEsKwDAIRBPoolD62ZgL9v536CxaEDFGE0IDb5NRxrEllFIiUMAJMrjeO2KapVNDs1jADTbm8yF1rTeJXo/nAVawV3q4HtE0ZB5+r9WSqPdmkn01PfJtIr5WJmuu1rxyF8XpOzNvJL9nB1Zer/fMXD379mYemafl45mhdz7trbLqRv4j6RUl/8Af5wGfex7k
+   eJydV9FywyAMY0u6tsu69aX5xdKX/P/jwg3dNE0mpL7T5WKDLRtwSE4/shBUHhVuzGJwD/SL8aPxWMdjMvFIwZheDg5OoH8YPeO84rjibSNPjpMrnL97+s+J/eJd4xaZVswrPqut4CRjzmTDfHDSmJyH2pjHZcVLjXuqKLqvqgeuNOYoY2ADH3DlurYAHmPNBbUARvIL+02gc7mOheewwQE1+ZBcL9XfTfwiV8eF50KHWg2yFm4PsQ35sH99ByfY5mAceDAH5QHR/QMu6s/F0JyvnTwQhzmBi/J8D7hw/oxD+l1f5cT7y9VE68B27N2oDk4/it8pxVy0L+GpHMEjih/xGxs+9Exr3Gx0Rdza9OwZPrMuF+ajcaPvE2obnaGtdeM97M5db4/j3rK3NnP628MmsQHP8OH+3uKlPay153Q9+TvGcPcTrVPUQw4yR78Z2gf0exLVJBsd6jRUO9eN64E9p3bGq5mbaC4/S230PrQl7jzukd69E/XEInxHcn7xHt21ohgRop4YceH4aQeP1jpoXipZxvb4dOPhS+e4+S7vFgfWt+777ow4n71xe9Z4q2bPzFXg7uX+mfQfJvpP0W9ikW9VxrUq
   </data>
  </layer>
- <layer name="Bridge" width="29" height="15">
+ <layer name="Bridge" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJwTZaAOSEHDpIIreDA+eXLtvEqifAoSfZVOdqLL2TMh+G5MOJWO2jlqJ9F2EmPvcPDnqJ3Eg4GwEwQUGCnTDwAXzzKR
+   eJxjYBgFo2BgQQoapha4ggUTkr9CA7dcJVF9ChJ9lc5uwScPkrNnQvDdmHAqHXXLqFsGvVsocc9wDpdRt1DfLYTAYHLLKBgFo2DwAQDu2C/e
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="29" height="15">
-  <object name="characters/player/player_one" gid="286" x="1216" y="960"/>
-  <object name="characters/enemies/crocodile/croc_0" gid="296" x="1536" y="896"/>
-  <object name="characters/enemies/crocodile/croc_1" gid="296" x="1280" y="832"/>
-  <object name="characters/enemies/crocodile/croc_2" gid="296" x="1536" y="768"/>
-  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1280" y="704"/>
-  <object name="characters/enemies/crocodile/croc_4" gid="296" x="1536" y="640"/>
-  <object name="characters/enemies/crocodile/croc_5" gid="296" x="1280" y="576"/>
-  <object name="characters/enemies/crocodile/croc_6" gid="296" x="1536" y="512"/>
-  <object name="characters/enemies/crocodile/croc_7" gid="296" x="1280" y="448"/>
-  <object name="characters/enemies/crocodile/croc_8" gid="296" x="1536" y="384"/>
-  <object name="characters/enemies/crocodile/croc_9" gid="296" x="1280" y="320"/>
-  <object name="characters/npcs/myla/myla" gid="286" x="1728" y="960"/>
-  <object name="tile_trigger/challenge2a" gid="289" x="768" y="128"/>
-  <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="704" y="256"/>
-  <object name="characters/enemies/crocodile/croc_b2_2" gid="296" x="704" y="320"/>
-  <object name="characters/enemies/crocodile/croc_b2_3" gid="296" x="704" y="384"/>
-  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="320" y="448"/>
-  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="320" y="512"/>
-  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="320" y="576"/>
-  <object name="characters/enemies/crocodile/croc_b2_7" gid="296" x="704" y="640"/>
-  <object name="characters/enemies/crocodile/croc_b2_8" gid="296" x="704" y="704"/>
-  <object name="characters/enemies/crocodile/croc_b2_9" gid="296" x="704" y="768"/>
-  <object name="characters/enemies/crocodile/croc_b2_10" gid="296" x="704" y="832"/>
-  <object name="tile_trigger/challenge2b" gid="290" x="768" y="960"/>
-  <object name="tile_trigger/trigger_croc_0" gid="575" x="768" y="192"/>
-  <object name="tile_trigger/trigger_croc_1" gid="575" x="768" y="256"/>
-  <object name="tile_trigger/trigger_croc_2" gid="575" x="768" y="320"/>
-  <object name="tile_trigger/trigger_croc_3" gid="575" x="768" y="384"/>
-  <object name="tile_trigger/trigger_croc_4" gid="575" x="256" y="448"/>
-  <object name="tile_trigger/trigger_croc_5" gid="575" x="256" y="512"/>
-  <object name="tile_trigger/trigger_croc_6" gid="575" x="256" y="576"/>
-  <object name="tile_trigger/trigger_croc_7" gid="574" x="768" y="640"/>
-  <object name="tile_trigger/trigger_croc_8" gid="574" x="768" y="704"/>
-  <object name="tile_trigger/trigger_croc_9" gid="574" x="768" y="768"/>
-  <object name="tile_trigger/trigger_croc_10" gid="574" x="768" y="832"/>
+ <objectgroup name="Object Layer 1" width="35" height="25">
+  <object name="characters/player/player_one" gid="286" x="1920" y="1600"/>
+  <object name="characters/enemies/crocodile/croc_0" gid="296" x="1837" y="1159"/>
+  <object name="characters/enemies/crocodile/croc_1" gid="296" x="1536" y="1088"/>
+  <object name="characters/enemies/crocodile/croc_2" gid="296" x="1792" y="1024"/>
+  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1536" y="960"/>
+  <object name="characters/enemies/crocodile/croc_4" gid="296" x="1664" y="896"/>
+  <object name="characters/enemies/crocodile/croc_5" gid="296" x="1472" y="832"/>
+  <object name="characters/enemies/crocodile/croc_6" gid="296" x="1600" y="768"/>
+  <object name="characters/enemies/crocodile/croc_7" gid="296" x="1472" y="512"/>
+  <object name="characters/enemies/crocodile/croc_8" gid="296" x="1536" y="640"/>
+  <object name="characters/enemies/crocodile/croc_9" gid="296" x="1536" y="448"/>
+  <object name="characters/npcs/myla/myla" gid="286" x="2176" y="64"/>
+  <object name="tile_trigger/challenge2a" gid="292" x="960" y="384"/>
+  <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="896" y="512"/>
+  <object name="characters/enemies/crocodile/croc_b2_2" gid="296" x="896" y="576"/>
+  <object name="characters/enemies/crocodile/croc_b2_3" gid="296" x="896" y="640"/>
+  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="512" y="704"/>
+  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="512" y="768"/>
+  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="512" y="832"/>
+  <object name="characters/enemies/crocodile/croc_b2_7" gid="296" x="896" y="896"/>
+  <object name="characters/enemies/crocodile/croc_b2_8" gid="296" x="896" y="960"/>
+  <object name="characters/enemies/crocodile/croc_b2_9" gid="296" x="896" y="1024"/>
+  <object name="characters/enemies/crocodile/croc_b2_10" gid="296" x="896" y="1088"/>
+  <object name="tile_trigger/challenge2b" gid="292" x="960" y="1216"/>
+  <object name="tile_trigger/trigger_croc_0" gid="292" x="960" y="448"/>
+  <object name="tile_trigger/trigger_croc_1" gid="292" x="960" y="512"/>
+  <object name="tile_trigger/trigger_croc_2" gid="292" x="960" y="576"/>
+  <object name="tile_trigger/trigger_croc_3" gid="292" x="960" y="640"/>
+  <object name="tile_trigger/trigger_croc_4" gid="292" x="448" y="704"/>
+  <object name="tile_trigger/trigger_croc_5" gid="292" x="448" y="768"/>
+  <object name="tile_trigger/trigger_croc_6" gid="292" x="448" y="832"/>
+  <object name="tile_trigger/trigger_croc_7" gid="292" x="960" y="896"/>
+  <object name="tile_trigger/trigger_croc_8" gid="292" x="960" y="960"/>
+  <object name="tile_trigger/trigger_croc_9" gid="292" x="960" y="1024"/>
+  <object name="tile_trigger/trigger_croc_10" gid="292" x="960" y="1088"/>
+  <object name="tile_trigger/exit_level_start" gid="292" x="1920" y="1600"/>
+  <object name="tile_trigger/exit_level_end" gid="292" x="0" y="1472"/>
+  <object name="player_data/player_data" gid="287" x="64" y="64"/>
+  <object name="tile_trigger/myla_warn_crocs" gid="292" x="1408" y="1216"/>
  </objectgroup>
- <layer name="SpecialLayer" width="29" height="15">
+ <layer name="SpecialLayer" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJyzZWJgsB1gTAmwpsBOcuUHk502o3aO2jlq56idJNhJCFPDTnKADZn6YAAAwGpaqg==
+   eJy9lmEKhTAMg8Vrqfe/1sMfgxGSNt3qKxRlZuu3tk6Po2b3WZzwkQ0Oh+fVMF+JyfyZXGmimEwT8am4rz2n9kij4kQsjKPLhyG7yiNy7NiVsGU1ZSzZXtWziAXrwAxr1M1yE46M5wsWjKnuO1iwvhfhUP3a3S94DikWdrYgC3uXV1iyGrF8sLEdFrd3ndr8g6XC08HC+kXxuO/zCkvULxGXYkFeh4V9y3dZqnlClvm5yzLiRLmJNKjHeRWr5CU7l5ge+dz/rkzD1q3wZ/FxrrOukwuH19VULFrT4YvGstxV9u6yZ5wdcR2mcT9ff7tbfFc=
   </data>
  </layer>
 </map>
