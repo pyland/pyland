@@ -424,9 +424,12 @@ void Engine::print_terminal(std::string text, bool error) {
         _main_window->setAnyOutput(true);
         _main_window->pushTerminalText(text, error);
     });
-
 }
 
+//Get text from the output history in QT terminal widget
+std::string Engine::get_terminal_text(unsigned int index) {
+    return main_window->getTerminalText(index);
+}
 
 //Focuses on the next player that has a focus button for it
 void Engine::focus_next() {

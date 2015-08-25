@@ -15,6 +15,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <deque>
+
 #include <boost/python/object_core.hpp>
 
 #include <QMainWindow>
@@ -45,8 +47,6 @@ class QSlider;
 class QPalette;
 class GameMain;
 
-
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -68,6 +68,7 @@ public:
 
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
+    std::string getTerminalText(unsigned int index);
     void setWorld(std::string text);
     void setLevel(std::string text);
     void setCoins(int value);
@@ -175,6 +176,9 @@ private:
 
     //The current number of tabs that the player has available to them
     int currentTabs;
+
+    //The text that has been pushed to the terminal
+    std::deque<std::string> terminalText;
 };
 
 #endif

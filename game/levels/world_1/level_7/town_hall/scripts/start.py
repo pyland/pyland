@@ -311,6 +311,7 @@ def snake_complete(action_index):
 def snake_action(index):
     #engine.print_terminal("index is " + str(index))
     #engine.print_terminal("snakes talked to is " + str(snakes_talked_to()))
+
     if snakes_helped[index] == 0:
         #Talk to first time
         snake_actions[index] = snakes_talked_to()

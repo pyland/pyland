@@ -211,6 +211,7 @@ public:
     static std::string get_script();
     static std::string get_external_script();
     static void print_terminal(std::string text, bool error);
+    static std::string get_terminal_text(unsigned int index);
     static void focus_next();
     static void set_any_output(bool option);
     static void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
