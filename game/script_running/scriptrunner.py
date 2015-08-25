@@ -96,24 +96,8 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
             start_char = 0
             end_char = 0
 
-            if ("line" in error_message):
-                #Output the second line number
-                first_line_removed_error_message = error_message[error_message.index("line")+4:len(error_message)]
-
-                if ("line" in first_line_removed_error_message):
-
-                    for char in range(first_line_removed_error_message.index("line"),len(first_line_removed_error_message)):
-                        if parse_stage == 0:
-                            if first_line_removed_error_message[char] == " ":
-                                start_char = char+1
-                                parse_stage = 1
-                        elif parse_stage == 1:
-                            if ((first_line_removed_error_message[char] == " ") or (first_line_removed_error_message[char] == ",")):
-                                end_char = char
-                                parse_stage = 2
-                                break
-
-            line = first_line_removed_error_message[start_char:end_char]
+            #Get the second line number from the error message
+            line = parse_line_number(error_message,2)
 
             parsed_error_message = ("PyRunner Error: Command '"+ command +"' in line "+ line +" is not understood")
         elif ("SyntaxError" in error_message) and ("print" in error_message):
@@ -122,35 +106,16 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
             start_char = 0
             end_char = 0
 
-            line = ""
+            #Get the second line number from the error message
+            line = parse_line_number(error_message,2)
 
-            if ("line" in error_message):
-                #Output the second line number
-                first_line_removed_error_message = error_message[error_message.index("line")+4:len(error_message)]
-                if ("line" in first_line_removed_error_message):
-                    for char in range(first_line_removed_error_message.index("line"),len(first_line_removed_error_message)):
-                        if parse_stage == 0:
-                            if first_line_removed_error_message[char] == " ":
-                                start_char = char+1
-                                parse_stage = 1
-                        elif parse_stage == 1:
-                            if ((first_line_removed_error_message[char] == " ") or (first_line_removed_error_message[char] == ",")):
-                                end_char = char
-                                parse_stage = 2
-                                break
-
-            line = first_line_removed_error_message[start_char:end_char]
-
-            parsed_error_message = ("PyRunner Error: The 'print' command in line "+ line +" must use brackets \nFor example: print('Hello World')")
+            parsed_error_message = ("PyRunner Error: The 'print' command in line "+ line +" should use brackets \n\nMake sure your print statements look like:\n print('Hello World')")
 
         else:
             engine.print_terminal(error_message, True)
             engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has terminated early---", False)
             return
 
-        engine.print_terminal("first line number is "+parse_line_number(error_message,1), True)
-        engine.print_terminal("second line number is "+parse_line_number(error_message,2), True)
-        engine.print_terminal(error_message, True)
         engine.print_terminal(parsed_error_message, True)
         engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has terminated early---", False)
 
