@@ -22,18 +22,43 @@ exit_to_start.player_walked_on = go_to_start
 
 bog_sign.set_message("Welcome to the bogs! The home of stinky water...")
 
+#TODO: Use a method in engine to get all the vines in a level.
+vine_list = [
+    vine0,
+    vine1,
+    vine2,
+    vine3,
+    vine4,
+    vine5,
+    vine6,
+    vine6,
+    vine7,
+    vine8,
+    vine9,
+    vine10,
+    vine11,
+    vine12,
+    vine13,
+    vine14,
+    vine15
+]
+
+whetstone1.prepare(2, vine_list)
+
+
 player_one.focus()
 engine.play_music("world_1_jungle")
 croc_guard_totem.face_north()
 
-vine1.grow(player_one)
-
 def myla_explain_cut_action(player_object):
+    player_one.set_cuts_left(2)
+    myla_explain_cut.player_walked_on = lambda: None
+
     def myla_ask_player_if_there_is_way(callback):
         engine.show_dialogue_with_options(
             "Aren't you gonna ask me if there is a way?",
             {
-                "Yes" : lambda: engine.show_dialogue("Why thank you, you can use your *ahem*, my PyScripter!", callback = callback),
+                "Yes" : lambda: engine.show_dialogue("Why thank you, you can use your *ahem*, I mean MY PyScripter!", callback = callback),
                 "No": lambda: engine.show_dialogue("Argh ok you win. You can use the PyScripter.", callback = callback)
             }
         )
@@ -58,7 +83,35 @@ def myla_explain_cut_action(player_object):
 
 myla_explain_cut.player_walked_on = myla_explain_cut_action
 
+
+def myla_explain_whetstone_action(player_object):
+    myla_explain_whetstone.player_walked_on = lambda: None
+    engine.run_callback_list_sequence([
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: myla.stop_follow(callback = callback),
+        lambda callback: myla.set_solidity(True, callback = callback),
+        lambda callback: myla.wait(0.3, callback = callback),
+        lambda callback: myla.move_east(callback = callback),
+        lambda callback: myla.face_north(callback = callback),
+        lambda callback: player_one.face_south(callback = callback),
+        lambda callback: engine.show_dialogue("You might have noticed that in the console the number of 'cuts' you have left decreased when you cut the vines.", callback = callback),
+        lambda callback: engine.show_dialogue("That's because the knife gets more blunt everytime you use it!", callback = callback),
+        lambda callback: myla.face_east(callback = callback),
+        lambda callback: player_one.face_east(callback = callback),
+        lambda callback: engine.show_dialogue("You see that object over there? That's a whetstone.", callback = callback),
+        lambda callback: myla.face_north(callback = callback),
+        lambda callback: player_one.face_south(callback = callback),
+        lambda callback: engine.show_dialogue("If you interact with it, it will replenish the amount of vines you will be able to cut!", callback = callback),
+        lambda callback: engine.show_dialogue("The quality of the whetstone determines how much your knife will be sharpened.", callback = callback),
+        lambda callback: engine.show_dialogue("Also, all the vines in the area will be restored in the time taken to sharpen the knife!", callback = callback),
+        lambda callback: myla.follow(player_one, callback = callback),
+        lambda callback: player_one.set_busy(False, callback = callback)
+    ])
+
+myla_explain_whetstone.player_walked_on = myla_explain_whetstone_action
+
 def myla_explain_crocodiles_action(player_object):
+    myla_explain_crocodiles.player_walked_on = lambda: None
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("Here Myla would explain that there are sleeping crocodiles here.", callback = callback),

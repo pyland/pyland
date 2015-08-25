@@ -1,28 +1,28 @@
 {
-    "settings": {
-        "language": "english"
-    },
     "player_saves": {
         "YourName": {
+            "py_scripter_tabs": 1,
+            "current_map": "/world_1/level_2/bogs",
+            "totems": {},
+            "coins": 0,
+            "has_unlocked_pyscripter": true,
+            "py_scripter_enabled": false,
             "level_data": {
                 "world_1": {
-                    "level_1": {
-                        "heidi_state": 2,
-                        "starting_map": "player_house"
-                    },
                     "level_2": {
                         "pyscripter_state": 1,
                         "starting_map": "start"
+                    },
+                    "level_1": {
+                        "heidi_state": 2,
+                        "starting_map": "player_house"
                     }
                 }
             },
-            "current_map": "/world_1/level_2/bogs",
-            "coins": 0,
-            "previous_exit": "/world_1/level_2/start",
-            "py_scripter_tabs": 1,
-            "totems": {},
-            "py_scripter_enabled": false,
-            "has_unlocked_pyscripter": true
+            "previous_exit": "/world_1/level_2/start"
         }
+    },
+    "settings": {
+        "language": "english"
     }
 }

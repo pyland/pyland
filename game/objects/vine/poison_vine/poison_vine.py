@@ -16,15 +16,16 @@ and replace it with:
 """
 import sys
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/..')
-from game_object import GameObject
+from vine import Vine
 """
 As the GameObject is in the base objects folder.
 """
 
 
-"""
-"""
-class Vines(GameObject):
+class PoisonVine(Vine):
+    """ The poison vine is a special kind of vine that can kill the player
+
+    """
 
     __message = "Looks like a spiky and poisonous vine! Better avoid it."
     __alive = False
@@ -32,8 +33,8 @@ class Vines(GameObject):
     def initialise(self):
         self.set_sprite("")
         self.__alive = True
-        self.set_visible(False)
-        self.set_solidity(False)
+        self.set_visible(True)
+        self.set_solidity(True)
 
     def grow(self, player_object, callback = lambda : None):
         if(not self.__alive):
@@ -53,6 +54,7 @@ class Vines(GameObject):
     def kill(self):
         if(self.__alive):
             self.stop_animating()
+            self.set_solidity(False)
             self.set_sprite("dead")
             self.__alive = False
             return True
