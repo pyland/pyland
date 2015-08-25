@@ -1,5 +1,25 @@
 {
-    "player_saves": {},
+    "player_saves": {
+        "YourName": {
+            "level_data": {
+                "world_1": {
+                    "level_2": {
+                        "starting_map": "start"
+                    },
+                    "level_1": {
+                        "starting_map": "player_house",
+                        "heidi_state": 2
+                    }
+                }
+            },
+            "coins": 0,
+            "py_scripter_tabs": 1,
+            "totems": {},
+            "previous_exit": "/world_1",
+            "current_map": "/world_1/level_3/mainb",
+            "py_scripter_enabled": false
+        }
+    },
     "settings": {
         "language": "english"
     }

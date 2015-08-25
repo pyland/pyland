@@ -7,8 +7,76 @@ player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
 
+
+need_croc_warning = True
+first_time_a = True
+first_time_b = True
+
+def player_walked_on_myla_warn_crocs():
+    global need_croc_warning
+    if need_croc_warning:
+        need_croc_warning = False
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: myla.wait(0.3, callback = callback),
+            lambda callback: myla.stop_follow(callback = callback),
+            lambda callback: myla.face_north(callback = callback),
+            lambda callback: player_one.face_south(callback = callback),
+            lambda callback: engine.show_dialogue("Myla: We need to go west, but the boulder is blocking us!", callback = callback),
+            lambda callback: engine.show_dialogue("Careful, those crocodiles they are next to you!", callback = callback),
+            lambda callback: engine.show_dialogue("Since there is only one bridge, I'll just jump into your bag", callback =callback),
+            lambda callback: player_one.face_north(callback = callback),
+            lambda callback: myla.set_solidity(False, callback = callback),
+            lambda callback: myla.move_north(callback = callback),
+            lambda callback: myla.set_visible(False, callback = callback),
+            lambda callback: myla.move_to((0,0), 0.0001, callback = callback),
+            lambda callback: player_one.set_busy(False, callback =callback)
+        ])
+
+def player_walked_on_challenge2a():
+    player_data.save_checkpoint("challenge2a")
+    global first_time_a
+    if first_time_a:
+        first_time_a = False
+        engine.run_callback_list_sequence([
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("Myla: Good job!", callback = callback),
+        lambda callback: engine.show_dialogue("Those crocodiles are blocking our path...", callback = callback),
+        lambda callback: engine.show_dialogue("I've put a script in your PyScripter called yell()", callback = callback),
+        lambda callback: engine.clear_scripter(callback = callback),
+        lambda callback: engine.insert_to_scripter("yell()", callback = callback),
+        lambda callback: engine.show_dialogue("Face the crocodiles and run the script in order to aggrivate them", callback = callback),
+        lambda callback: engine.show_dialogue("Make sure you get out of the way before he gets to you though!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback =callback),
+        ])
+
+def player_walked_on_challenge2b():
+    global first_time_b
+    if first_time_b:
+        first_time_b = False
+        challenge2_dialogue = [
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("Myla: You did it!!", callback = callback),
+        lambda callback: engine.show_dialogue("Let me out of your bag now!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback =callback),
+        lambda callback: player_one.move_west(callback = callback),
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: myla.move_to((12,0), 0.0001, callback = callback),
+        lambda callback: myla.set_visible(True, callback = callback),
+        lambda callback: player_one.face_east(callback = callback),
+        lambda callback: engine.show_dialogue("These crocodiles are making me nervous...lets get out of here", callback = callback),
+        lambda callback: myla.follow(player_one, callback = callback),
+        lambda callback: player_one.set_busy(False, callback =callback),
+        ]
+
+        engine.run_callback_list_sequence(challenge2_dialogue)
+
 #setting the player's starting position
-if player_data.previous_exit_is("world_1"):
+if player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "challenge2a"):
+    need_croc_warning = False
+    x, y = challenge2a.get_position()
+    player_one.move_to((x, y), callback = player_walked_on_challenge2a)
+elif player_data.previous_exit_is("world_1"):
     player_one.move_north()
     myla_start_position = exit_level_start.get_position()
     myla.set_solidity(False, callback = lambda: myla.move_to(myla_start_position, callback = lambda: myla.follow(player_one)))
@@ -23,25 +91,6 @@ exit_level_end.player_walked_on = go_to_world
 
 player_one.focus()
 engine.play_music("beach")
-
-intro_dialogue = [
-    lambda callback: player_one.set_busy(True, callback = callback),
-    lambda callback: myla.wait(0.3, callback = callback),
-    lambda callback: myla.stop_follow(callback = callback),
-    lambda callback: myla.face_north(callback = callback),
-    lambda callback: player_one.face_south(callback = callback),
-    lambda callback: engine.show_dialogue("Myla: We need to go west, but the boulder is blocking us!", callback = callback),
-    lambda callback: engine.show_dialogue("Careful, those crocodiles they are next to you!", callback = callback),
-    lambda callback: engine.show_dialogue("Since there is only one bridge, I'll just jump into your bag", callback =callback),
-    lambda callback: player_one.face_north(callback = callback),
-    lambda callback: myla.set_solidity(False, callback = callback),
-    lambda callback: myla.move_north(callback = callback),
-    lambda callback: myla.set_visible(False, callback = callback),
-    lambda callback: myla.move_to((0,0), 0.0001, callback = callback),
-    lambda callback: player_one.set_busy(False, callback =callback)
-    ]
-
-myla_warn_crocs.player_walked_on = lambda player_object: engine.run_callback_list_sequence(intro_dialogue)
 
 b1_croc = [
 croc_0,
@@ -110,54 +159,7 @@ def player_walked_on_ti():
 
 for t in trigger_croc:
     t.player_walked_on = lambda player_object: player_walked_on_ti()
-
-
-first_time_a = True
-first_time_b = True
-def player_walked_on_challenge2a():
-    global first_time_a;
-    if first_time_a:
-        first_time_a = False
-        engine.run_callback_list_sequence([
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Myla: Good job!", callback = callback),
-        lambda callback: engine.show_dialogue("Those crocodiles are blocking our path...", callback = callback),
-        lambda callback: engine.show_dialogue("I've put a script in your PyScripter called yell()", callback = callback),
-        lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("yell()", callback = callback),
-        lambda callback: engine.show_dialogue("Face the crocodiles and run the script in order to aggrivate them", callback = callback),
-        lambda callback: engine.show_dialogue("Make sure you get out of the way before he gets to you though!", callback = callback),
-        lambda callback: player_one.set_busy(False, callback =callback),
-        ])
-
-
-
-
-
-def player_walked_on_challenge2b():
-    global first_time_b;
-    global myla_follow
-    if first_time_b:
-        first_time_b = False
-        challenge2_dialogue = [
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Myla: You did it!!", callback = callback),
-        lambda callback: engine.show_dialogue("Let me out of your bag now!", callback = callback),
-        lambda callback: player_one.set_busy(False, callback =callback),
-        lambda callback: player_one.move_west(callback = callback),
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: myla.move_to((12,0), 0.0001, callback = callback),
-        lambda callback: myla.set_visible(True, callback = callback),
-        lambda callback: player_one.face_east(callback = callback),
-        lambda callback: engine.show_dialogue("These crocodiles are making me nervous...lets get out of here", callback = callback),
-        lambda callback: myla.follow(player_one, callback = callback),
-        lambda callback: player_one.set_busy(False, callback =callback),
-        ]
-
-        engine.run_callback_list_sequence(challenge2_dialogue)
-
-
-
     
+myla_warn_crocs.player_walked_on = lambda player_object: player_walked_on_myla_warn_crocs()
 challenge2a.player_walked_on = lambda player_object: player_walked_on_challenge2a()
 challenge2b.player_walked_on = lambda player_object: player_walked_on_challenge2b()
