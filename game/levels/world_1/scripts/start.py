@@ -70,3 +70,4 @@ def go_to_level_8(player_object):
 level_8.player_walked_on = go_to_level_8
 
 player_one.focus()
+engine.play_music("world_1_jungle")

@@ -141,7 +141,7 @@ else:
     heidi.set_visible(False)
 
 # end object set-up
-engine.play_music("heroic")
+engine.play_music("world_1_jungle")
 player_one.focus()
 
 

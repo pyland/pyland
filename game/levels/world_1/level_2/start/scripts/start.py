@@ -74,7 +74,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: player_one.wait(0.5, callback = callback),
             lambda callback: player_one.face_east(callback = callback),
             lambda callback: engine.show_dialogue("Annoying Croc: Ow!", callback = callback),
-            lambda callback: engine.show_dialogue("There may be two of you now, but I will put the lads on patrol to catch you.", callback = callback),
+            lambda callback: engine.show_dialogue("I might be outnumbered by the two of you now, but I will put the lads on patrol to catch you.", callback = callback),
             lambda callback: engine.show_dialogue("I will tell them not to bite you...", callback = callback),
             lambda callback: engine.show_dialogue("... too hard. Hehehehehehe.", callback = callback),
             lambda callback: annoying_croc.face_east(callback = callback),
@@ -129,5 +129,6 @@ elif pyscripter_state == pyscripter_state_found:
     myla.follow(player_one)
 
 player_one.focus()
+engine.play_music("world_1_jungle")
 
 bog_sign.set_message("(west) rossumberg (south) bog")

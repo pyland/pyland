@@ -4,7 +4,7 @@ level_name = "level_2"
 map_name = "bogs"
 
 player_data.load(engine.get_player_name())
-player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
+#player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
 
 #setting the player's starting position
@@ -15,6 +15,7 @@ if player_data.previous_exit_is("world_1", level_name = "level_2", map_name = "s
 bog_sign.set_message("Welcome to the bogs! The home of stinky water...")
 
 player_one.focus()
+engine.play_music("world_1_jungle")
 croc_guard_totem.face_north()
 
 vine1.grow(player_one)
