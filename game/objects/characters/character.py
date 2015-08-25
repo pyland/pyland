@@ -149,7 +149,7 @@ class Character(GameObject, ScriptStateContainer):
         self.set_character_name(self)
 
     def get_character_name(self):
-        return self.__character_name
+        return self.__character_name.capitalize()
 
     def set_character_name(self, character_name):
         self.__character_name = character_name

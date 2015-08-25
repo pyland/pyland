@@ -1,6 +1,49 @@
 {
-    "player_saves": {},
     "settings": {
         "language": "english"
+    },
+    "player_saves": {
+        "???": {
+            "py_scripter_enabled": false,
+            "level_data": {
+                "world_1": {
+                    "level_2": {
+                        "starting_map": "start",
+                        "pyscripter_state": 1
+                    },
+                    "level_1": {
+                        "heidi_state": 2,
+                        "starting_map": "player_house"
+                    }
+                }
+            },
+            "has_unlocked_pyscripter": true,
+            "previous_exit": "/world_1/level_2/bogs/myla_explain_cut_action",
+            "coins": 0,
+            "py_scripter_tabs": 1,
+            "current_map": "/world_1/level_2/bogs",
+            "totems": {}
+        },
+        "YourName": {
+            "py_scripter_enabled": false,
+            "level_data": {
+                "world_1": {
+                    "level_2": {
+                        "starting_map": "start",
+                        "pyscripter_state": 1
+                    },
+                    "level_1": {
+                        "heidi_state": 2,
+                        "starting_map": "player_house"
+                    }
+                }
+            },
+            "has_unlocked_pyscripter": true,
+            "previous_exit": "/world_1/level_2/start",
+            "coins": 0,
+            "py_scripter_tabs": 1,
+            "current_map": "/world_1/level_2/bogs",
+            "totems": {}
+        }
     }
 }
