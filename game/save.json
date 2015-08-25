@@ -1,6 +1,28 @@
 {
-    "player_saves": {},
     "settings": {
         "language": "english"
+    },
+    "player_saves": {
+        "YourName": {
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "heidi_state": 2,
+                        "starting_map": "player_house"
+                    },
+                    "level_2": {
+                        "pyscripter_state": 1,
+                        "starting_map": "start"
+                    }
+                }
+            },
+            "current_map": "/world_1/level_2/bogs",
+            "coins": 0,
+            "previous_exit": "/world_1/level_2/start",
+            "py_scripter_tabs": 1,
+            "totems": {},
+            "py_scripter_enabled": false,
+            "has_unlocked_pyscripter": true
+        }
     }
 }

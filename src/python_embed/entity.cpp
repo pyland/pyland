@@ -207,10 +207,10 @@ void Entity::animate(int current_frame, float speed, bool loop, bool forward, st
             this->set_animation_frame(current_frame);
             int next_frame;
             if(forward){
-                next_frame = (current_frame + 1) % num_frame;
+                next_frame = ((current_frame + 1) % num_frame);
             }
             else{
-                next_frame = (current_frame - 1) % num_frame;
+                next_frame = ((current_frame - 1 + num_frame) % num_frame); // we have to add num_frame cause c++ treats negative numbers weirdly in mod
             }
 
             if(next_frame == 0 && (!loop)){

@@ -13,8 +13,15 @@ pyscripter_state_found = 1
 #end state definitions
 
 #setting the player's starting position
-if player_data.previous_exit_is("world_1"):
+if player_data.previous_exit_is("world_1", level_name = "level_2", map_name = "bogs"):
+    engine.run_callback_list_sequence([
+        lambda callback: player_one.move_to(exit_to_bogs.get_position(), callback = callback),
+        lambda callback: player_one.move_north(callback = callback),
+    ])
+    myla_start_position = exit_to_bogs.get_position()
+elif player_data.previous_exit_is("world_1"):
     player_one.move_east()
+    myla_start_position = (3, 10)
 #end setting the player's starting position
 
 def go_to_world(player_object):
@@ -114,6 +121,7 @@ if pyscripter_state == pyscripter_state_not_found:
         ], save_pyscripter_state)
 
     def save_pyscripter_state():
+        player_object.set_cuts_left(3)
         player_data.set_level_state("pyscripter_state", pyscripter_state_found)
         player_data.unlock_pyscripter()
         player_data.save()
@@ -125,7 +133,7 @@ elif pyscripter_state == pyscripter_state_found:
     pyscripter.set_solidity(False, callback = lambda: pyscripter.move_to((0,0)))
     annoying_croc.set_visible(False)
     annoying_croc.set_solidity(False)
-    myla.move_to((3, 10))
+    myla.move_to(myla_start_position)
     myla.follow(player_one)
 
 player_one.focus()

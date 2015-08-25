@@ -195,7 +195,7 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
     with open(script_filename, encoding="utf8") as script_file:
                 script = script_file.read()
 
-    def thread_target(callback = None):
+    def thread_target(callback):
         """ This is the method that is run in the seperate thread.
 
         It runs the script requested first and then runs the callback.
@@ -212,7 +212,7 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
                 engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has ended---", False)
             script_state_container.set_running_script_status(False)
             engine.set_finished()
-            callback()
+            engine.add_event(callback)
 
     thread = threading.Thread(target = lambda: thread_target(callback))
 
