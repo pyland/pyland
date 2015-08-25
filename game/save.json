@@ -1,48 +1,5 @@
 {
-    "player_saves": {
-        "YourName": {
-            "level_data": {
-                "world_1": {
-                    "level_2": {
-                        "pyscripter_state": 1,
-                        "starting_map": "start"
-                    },
-                    "level_1": {
-                        "heidi_state": 2,
-                        "starting_map": "player_house"
-                    }
-                }
-            },
-            "current_map": "/world_1",
-            "has_unlocked_pyscripter": true,
-            "py_scripter_enabled": false,
-            "totems": {},
-            "coins": 0,
-            "previous_exit": "/world_1",
-            "py_scripter_tabs": 1
-        },
-        "Rob": {
-            "level_data": {
-                "world_1": {
-                    "level_2": {
-                        "pyscripter_state": 1,
-                        "starting_map": "start"
-                    },
-                    "level_1": {
-                        "heidi_state": 2,
-                        "starting_map": "player_house"
-                    }
-                }
-            },
-            "current_map": "/world_1/level_2/bogs",
-            "has_unlocked_pyscripter": true,
-            "py_scripter_enabled": false,
-            "totems": {},
-            "coins": 0,
-            "previous_exit": "/world_1/level_2/start",
-            "py_scripter_tabs": 1
-        }
-    },
+    "player_saves": {},
     "settings": {
         "language": "english"
     }
