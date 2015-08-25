@@ -7,9 +7,37 @@ engine.play_music("eery")
 engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in the config.
 engine.set_py_tabs(9)
 
-sign_one.set_message("Stuck in the maze? MWAHAHA. I'm gonna give you a small hint though - Go 25 steps east")
-
 sign_two.set_message("MWAHAHA. You will never get past these security guards!")
+
+def for_help(player_object):
+    engine.run_callback_list_sequence([
+        lambda callback: engine.clear_scripter(callback = callback),
+        lambda callback: engine.insert_to_scripter("#Code to move 25 times to the east using a loop", callback = callback),
+        lambda callback: engine.insert_to_scripter("\nfor i in range(25):", callback = callback),
+        lambda callback: engine.insert_to_scripter("\n\tmove_east()", callback = callback),
+        lambda callback: player_object.set_busy(False)
+    ])
+
+def no_thanks(player_object):
+    engine.run_callback_list_sequence([
+        lambda callback: engine.show_dialogue("All right then!", callback = callback),
+        lambda callback: player_object.set_busy(False)
+    ])
+
+def help_with_loop(player_object):
+    engine.run_callback_list_sequence([
+        lambda callback: player_object.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("MWAHAHA! This maze will be the death of you!", callback = callback),
+        lambda callback: engine.show_dialogue("I'll give you a hint though, you need to go east by 25 steps", callback = callback),
+        lambda callback: myla.start_animating(speed = 0.1, loop = False, forward = False, callback = callback)
+    ], callback = lambda: engine.show_dialogue_with_options(
+        "Myla: Do you want me to help you with that?",
+        {
+            "Yes": lambda: for_help(player_object),
+            "No": lambda: no_thanks(player_object)
+        }))
+
+sign_one.player_action = help_with_loop
 
 def helper_one_action(player_object):
     if(player_object.is_facing_south()):
