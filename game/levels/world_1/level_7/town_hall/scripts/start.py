@@ -9,7 +9,7 @@ engine.update_level("7")
 engine.set_py_tabs(9)
 
 player.face_east()
-#player.set_busy(True)
+player.set_busy(True)
 myla.face_east()
 
 leader.face_west()
@@ -150,22 +150,19 @@ def snake_finish_script_0(snake_index):
     engine.print_terminal(snake1.get_position())
 
     if ((engine.get_external_script()) == "move_east()" or (xchange == 1)):
-        engine.print_terminal("THANK YOU IT WORKED!")
-
+        update_snake_stage(snake = snake_index, stage = 1, callback = callback)
+        engine.run_callback_list_sequence(successful_sequence_0)
+    else:
+        engine.run_callback_list_sequence(unsuccessful_sequence_0)
 
 def snake_run_script_0(index):
-        #default snakes is the first one
-        snake = snakes[0]
-        snake_index = -1
-        for count in range(len(snakes_action)):
-            if (snakes_action[count] == index):
-                snake = snakes[count]
-                snake_index = count
+        snake = get_snake(index)
 
-        initialPosition = snake1.get_position()
+        initialPosition = snake.get_position()
         snakes_initial_pos[0] = initialPosition
         engine.print_terminal(initialPosition)
-        snake1.run_script(script_to_run = 10, callback = lambda: snake_finish_script_0(snake_index))
+
+        snake.run_script(script_to_run = 10, parse_error = True, callback = lambda: snake_finish_script_0(index))
         #finalPosition = snake1.get_position()
         #engine.print_terminal(finalPosition[0])
         #engine.print_terminal(finalPosition[1])
@@ -182,11 +179,24 @@ try_script_sequence_0 = [
 
 cancel_script_sequence_0 = [
     lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: get_snake(0).start_turning(time = 0.1, frequency = 8, callback = callback),
+]
+
+successful_sequence_0 = [
+    lambda callback: engine.show_dialogue("Thank you so much, I can now move east!", callback = callback),
+    lambda callback: update_snake_stage(snake = snake_index, stage = 1, callback = callback),
+]
+
+unsuccessful_sequence_0 = [
+    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: engine.show_dialogue("Myla: That didn't seem to work. Make sure their script says move_east() !", callback = callback),
+    lambda callback: get_snake(0).start_turning(time = 0.1, frequency = 8, callback = callback)
+
 ]
 
 
 complete_sequence_0 = [
-    lambda callback: engine.show_dialogue("Thank you! Here is my script. Please let me know when it works", callback = callback),
+    lambda callback: engine.show_dialogue("Thank you for you help.", callback = callback),
 ]
 
 sequence_1 = [
@@ -299,8 +309,8 @@ def snake_complete(action_index):
         engine.run_callback_list_sequence(complete_sequence_6)
 
 def snake_action(index):
-    engine.print_terminal("index is " + str(index))
-    engine.print_terminal("snakes talked to is " + str(snakes_talked_to()))
+    #engine.print_terminal("index is " + str(index))
+    #engine.print_terminal("snakes talked to is " + str(snakes_talked_to()))
     if snakes_helped[index] == 0:
         #Talk to first time
         snake_actions[index] = snakes_talked_to()
@@ -335,6 +345,5 @@ snakes[6].player_action  = lambda player_object: snake_action(6)
 myla.player_action = lambda player_object: engine.run_callback_list_sequence(myla_sequence)
 
 engine.run_callback_list_sequence(dialogue_sequence)
-player.set_busy(False)
 
 leave_hall.player_walked_on = lambda player_object: engine.run_callback_list_sequence(try_to_leave_sequence)

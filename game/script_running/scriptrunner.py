@@ -13,7 +13,7 @@ from scoped_interpreter import ScopedInterpreter
 class HaltScriptException(Exception):
     pass
 
-def start(script_api, script_name, script_state_container, engine, callback = None):
+def start(script_api, script_name, script_state_container, engine, parse_error = False, callback = None):
     """ This function runs the script provided in the argument in a seperate thread.
 
     The script has access to a set of API's defined in script_api that allow
@@ -37,12 +37,45 @@ def start(script_api, script_name, script_state_container, engine, callback = No
         printed_flag[0] = True
         engine.print_terminal(text, False) #autoconvert print to strings (do not need to convert within the game)
 
+    #Parse any Python error output to be user friendly
+    def parse_output(error_message):
+
+        parsed_error_message = ""
+
+        parse_stage = 0
+
+        start_char = 0
+        end_char = 0
+
+        if ("NameError" in error_message):
+            for char in range(error_message.index("NameError"),len(error_message)):
+                if parse_stage == 0:
+                    if error_message[char] == "'":
+                        start_char = char+1
+                        parse_stage = 1
+                elif parse_stage == 1:
+                    if error_message[char] == "'":
+                        end_char = char
+                        parse_stage = 2
+                        break
+            parsed_error_message = ("PyRunner Error: Command "+str(error_message[start_char:end_char])+" is not understood")
+
+        engine.print_terminal(parsed_error_message, True)
+        engine.print_terminal("---" + script_state_container.get_script_name() + "'s script could not be run---", False)
+
+
     #Replace print statement in player script so that all their output goes to the terminal. (unless it has already been overidden)
     if not "print" in script_api:
         script_api["print"] = user_print
 
     #Instantiate the scoped intepreter
-    scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: engine.print_terminal(error_output, True)) #create an instance of it
+
+    if (parse_error):
+        scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: parse_output(error_output)) #create an instance of it
+        #scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: engine.print_terminal(parse_output(error_output), True)) #create an instance of it
+
+    else:
+        scoped_interpreter = ScopedInterpreter(script_api, lambda error_output: engine.print_terminal(error_output, True)) #create an instance of it
     script_filename = engine.get_config()['files']['player_scripts'] + "/"+str(script_name)+".py" #grab the absolute location of the script TODO: implement this path stuff in a config (ini) file!!!!!
 
     #open and read the script

@@ -89,7 +89,7 @@ class Character(GameObject, ScriptStateContainer):
 
     """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
 
-    def run_script(self, script_to_run = -1, callback = None):
+    def run_script(self, script_to_run = -1, parse_error = False, callback = None):
         """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
 
         Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
@@ -134,7 +134,7 @@ class Character(GameObject, ScriptStateContainer):
 
             script_api["yell"] = self.yell
 
-            scriptrunner.start(script_api, script_to_run, self, engine, callback)
+            scriptrunner.start(script_api, script_to_run, self, engine, parse_error, callback)
         return
 
     #override ScriptStateContainer
@@ -206,7 +206,7 @@ class Character(GameObject, ScriptStateContainer):
             self.face_south(callback)
         elif self.is_facing_south():
             self.face_east(callback)
-       
+
     def turn_right(self, callback = lambda: None):
         if self.is_facing_east():
             self.face_south(callback)
