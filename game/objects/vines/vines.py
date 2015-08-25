@@ -52,6 +52,7 @@ class Vines(GameObject):
 
     def kill(self):
         if(self.__alive):
+            self.stop_animating()
             self.set_sprite("dead")
             self.__alive = False
             return True
