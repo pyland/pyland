@@ -163,3 +163,5 @@ for t in trigger_croc:
 myla_warn_crocs.player_walked_on = lambda player_object: player_walked_on_myla_warn_crocs()
 challenge2a.player_walked_on = lambda player_object: player_walked_on_challenge2a()
 challenge2b.player_walked_on = lambda player_object: player_walked_on_challenge2b()
+
+

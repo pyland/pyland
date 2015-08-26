@@ -1,18 +1,3 @@
-import time
-
-move_north()
-
-for i in range(10):
-  move_north()
-  time.sleep(.3)
-  
-move_north()
-move_north()
-
-
-
-
-import time
 for i in range(8):
     move_west()
     

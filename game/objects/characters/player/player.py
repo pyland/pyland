@@ -39,7 +39,7 @@ class Player(Character):
 
         def focus_func(func):
             """ Wraps functions so that they are only run if the player is the focus """
-            return lambda: func() if self.is_focus() else None
+            return lambda: func() if self.is_focus() else lambda: None
 
         #register input callbacks to make character playable
         #register callbacks for running player scripts

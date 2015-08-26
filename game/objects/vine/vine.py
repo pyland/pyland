@@ -30,10 +30,14 @@ class Vine(GameObject):
     def initialise(self):
         self._passive_grow()
 
-    def on_cut(self):
-        self.__alive = False
-        self.start_animating(loop = False, forward = False, speed = 0.1, callback = lambda: self.set_visible(False, callback = 	self.set_solidity(False)))
-        return True
+    def on_cut(self, callback = lambda: None):
+        if(self.__alive):
+            self.__alive = False
+            self.start_animating(loop = False, forward = False, speed = 0.1, callback = lambda: self.set_visible(False, callback = 	self.set_solidity(False, callback = callback)))
+            return True
+        else:
+            self.get_engine().add_event(callback)
+            return False
 
     def _kill_player(self, player_object):
         self.get_engine().run_callback_list_sequence([
