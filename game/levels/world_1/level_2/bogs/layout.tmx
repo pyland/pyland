@@ -22,12 +22,12 @@
  </layer>
  <layer name="SpecialLayer" width="26" height="50">
   <data encoding="base64" compression="zlib">
-   eJy1ldsKAyEMREv3//+5Ly3IkLkFKyxdXZMziTF9vebxPh5cx+9srxpv+FVr057p25ahfDO2WkuGs2N5V+8tI/F35uDWmTfaJh/puacsFxOzb2qo1ZwwlE92VmkNb89HjeQ+bdlNvErT831wfq4xnmKc70/4IAd9KUbDaXrdVHsq9yfD6U7WkY1rqgb+UdNMk8pfUjdqXxK7Yzq/zV1N8ppwbpyP8ocxszuHOtvYWU9JeknKSWLZxMPWHAf71YaTxPMQG5Yjxk84yGJ+b3NU/SpO0vOZHdPNdCkW0zjNVc051mS35fzmG8ZtjusFbM8/OMzvhuPqTP3/TBymOdF7i5PmqelPzJ75ct9aDpu7+NxIdaexJiwWj8tTkjfkOQbz27CYbdJ33P5EY8rZ2CW63Ej7oup7bY3hPNXZDLwfjtVoYdqQw55zfAA+aARn
+   eJy1ldsKQzEIBEvP//9zX1oI4q6zkgqhJxcdNca+Xr28j1HX67466+Rdft1ad6bb2zKcbcV2a0QmPZV3950yiL0zB7fuPPGts0HvnbKmmJR+UkOpz4ThbKq7ojW8vR8n5D1t2Um8zqfnO+r8XFM8xzi/Hzgqp9pyjIST9Lqu9lzuT8bkd8dROqpPuRpI+1UiXf4Un9SNO0did3vEbvJWSU4J58bdOHs1ZvXmqp9p7KqnkF5COSSWTTxqbeLUfrXhkHgeoaNypPiEU1nK7m2Oq1/HIT1f6Sm/lV+OpXzs5q7mJlant+X85hvGbc7UC9SZf3CU3Q1nqjP3/9NxlM/E31scmqekPyl9ZWvaSzlqPsU3CfWbxkpYKp4pTyRvlTcxlN2EpXRJ35nOEx8pZ6NH/JqE9kXX99Iaq3PqZyL1fUysxBflW+WoccoHwkAEcQ==
   </data>
  </layer>
  <layer name="Decor" width="26" height="50">
   <data encoding="base64" compression="zlib">
-   eJylWNFuwjAM9KeyTWwMtvEyPrHQF/5pjVRL3unOdsGSFZrEPp+TuCl3M7sXaqIdemvYWjKGc1jfvOKwsS2xK4yp8F3hVXIL8WMcSqpcZn5YrnCMYTEbHOvy95xGPGV3C+1kuWT2CueRXKucZHy6+8V1TmKcCh8m7Lqc2Fy0U1KtkZqv8or+5qa/KFv4sjV0OSy6h+f3tW8idnENM4z4e/j8WvR70Y/V/3i+rH2O5/PZPsnqic87Lfqy6i7oeD4v+rPoq/XzpvZelvtTgjHbfxzML+tHbOyrlNXijmypS1X+OrWpqitXaB+tQVvsbMVjcVaialaVi5h3XDf1XsX6wrCG+Nl23ZP5zA/DyvqPi/6uOs74WxHX1v0+5BAwXBkOnjkcV1z87DiXS8AZNWsP85/BGfJJ+CCn6ix18sn4ICe3uRJek+CDOMgn4jFOV9N8FI7X23PAcByv9UNuxE7FzfoQi3FhOVcxu2R3nqPgksU9meYYY4ptxMHzwzCUL2bD+Kh6oO5A1X73c9rhk9VuhoPfSchHrU2cx+5QjA/bbxEnW5tsrykc1LG3d4SL27B7H/rv4DCJeX4GZ7a8DiOfDAtxGCeMX72bWVxdPoxLdg+o1jvDiePVvbGDgfWoyl/EZf9RIBaLqYOn7LbgeDtixe8VVkMyLkbmVnyyGBVO9zvykf+4KlH+jfxmfRVWN8Ysf9X+YRh/BdsgQQ==
+   eJylWO1uwzAI5FG7Td267qN/1kdMkz99p8VSkNjpDsiKhNLYhuMwpm7vZnYv1MRz6NywtWQO17CxZcNhc3tiVxhT4bvCq2QO8WMcSqpcZn5YrnCOYTEbnOvy95xGPGU3h+dkuWT2Cuc/uVY5yfh068V1SWKcCh8m7Lqc2Fq0U1LtkVqv8or+lqa/KHv4sj10Oa16hPfXbWwidnEPM4z4efj8XPVr1bfN/3i/bmOO5+tZnWT9xNd9rPq06SHoeL+s+r3qs/Xzpmovy/1HgrHYXxysExxnceBY58yxHljJnr7EMLM1XX9x7gZP1Uu6eenY2YbH4qxE9awqFzHvuG/qexX7C8Ma4mfb9UjWMz8MKxs/r/qz6TjjL0Vce+t9yClguDIcPHM4r7gMnQOXa8AZPesI6x/BGfJO+CCn6ix18sn4ICe3uRFek+CDOMgn4jFON9N8FI7320vAcBzv9UNmYqfiZmOIxbiwnKuYXbI7z1lwyeKeTHOMMcVnxMHzwzCUL2bD+Kh+oO5AVb37Oe3wyXo3w8HfSchH7U1cx+5QjA+rt4iT7U1WawoHddT2gXBxG3bvQ/8dHCYxz4/gLJb3YeSTYSEO44Txq+9mFleXD+OS3QOq/c5w4jzDQLwKA/tRlb+Iy/6jQCwWUwdP2e3B8eeIFe+irIdkXIysrfhkMSqc7u/I//zHVYnyb+QzG6uwujFm+avqh2H8Aqp6I2w=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="50">
@@ -73,5 +73,6 @@
   <object name="tile_trigger/myla_explain_whetstone" gid="292" x="960" y="384"/>
   <object name="vine/vine1" gid="196" x="640" y="448"/>
   <object name="whetstone/whetstone2" gid="292" x="1280" y="3072"/>
+  <object name="tile_trigger/exit_to_world" gid="292" x="768" y="3200"/>
  </objectgroup>
 </map>

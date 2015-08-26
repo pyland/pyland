@@ -68,6 +68,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: player_one.face_north(callback = callback),
             lambda callback: annoying_croc.face_north(callback = callback),
             lambda callback: engine.show_dialogue("???: Wait you lousy croc!", callback = callback),
+            lambda callback: engine.show_dialogue("Monkey surprise attack!", callback = callback),
             lambda callback: myla.face_south(callback = callback),
             lambda callback: myla.set_solidity(False, callback = callback),
             lambda callback: myla.start_animating(callback = callback),

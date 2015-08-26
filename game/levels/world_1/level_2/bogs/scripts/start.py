@@ -65,56 +65,149 @@ def myla_explain_whetstone_action(player_object):
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
+
+myla_in_bag = True
+def myla_go_in_bag(player_object):
+    #TODO: make it so that myla actually pauses is the player and gets in/out of their bag
+    global myla_in_bag
+    if (myla_in_bag):
+        myla.set_visible(True)
+        myla_in_bag = False
+    else:
+        myla.set_visible(False)
+        myla_in_bag = True
+
 def myla_explain_crocodiles_action(player_object):
-    myla_explain_crocodiles.player_walked_on = lambda player_object: None
+    myla_explain_crocodiles.player_walked_on = myla_go_in_bag
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Here Myla would explain that there are sleeping crocodiles here.", callback = callback),
-        lambda callback: engine.show_dialogue("She will also get in your bag to hide from them.", callback = callback),
-        lambda callback: engine.show_dialogue("If you stand next to a sleeping crocodile it 'gets' you.", callback = callback),
-        lambda callback: engine.show_dialogue("So you have to cut the vines to proceed.", callback = callback),
-        lambda callback: engine.show_dialogue("Myla will get in the player's bag to hide from the crocs.", callback = callback),
-        lambda callback: engine.show_dialogue("Ying's levels properly introduce player mechanics for interacting with crocs.", callback = callback),
+        lambda callback: myla.stop_follow(callback = callback),
+        lambda callback: myla.set_solidity(True, callback = callback),
+        lambda callback: myla.move_south(callback = callback),
+        lambda callback: myla.move_south(callback = callback),
+        lambda callback: myla.set_solidity(False, callback = callback),
+        lambda callback: player_one.face_east(callback = callback),
+        lambda callback: myla.face_west(callback = callback),
+        lambda callback: engine.show_dialogue("Swinging monkeys! Seems like the crocs are already out.", callback = callback),
+        lambda callback: engine.show_dialogue("They seem to be sleeping. But if you walk next to them I'm sure they will wake up, so cut down the vines to avoid them!", callback = callback),
+        lambda callback: engine.show_dialogue("Also.. I might be a bit slightly too clumsly and loud...", callback = callback),
+        lambda callback: engine.show_dialogue("So I'm just gonna...", callback = callback),
+        lambda callback: engine.show_dialogue("Ummm... you know...", callback = callback),
+        lambda callback: engine.show_dialogue("Just hop into your bag if that's ok...", callback = callback),
+        lambda callback: engine.show_dialogue("Thank you!", callback = callback),
+        lambda callback: player_one.face_west(callback = callback),
+        lambda callback: myla.move_west(callback = callback),
+        lambda callback: myla.set_visible(False, callback = callback),
+        lambda callback: myla.wait(0.3, callback = callback),
+        lambda callback: engine.show_dialogue("Oh nice, you have a banana in here.", callback = callback),
+        lambda callback: engine.show_dialogue("Arrgh old banana, old banana! Eurgh, eurgh!", callback = callback),
+        lambda callback: engine.show_dialogue("You really need to clear your bag out sometime " + engine.get_player_name() + "!", callback = callback),
+        lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
-
 def myla_explain_basic_move_action(player_object):
+    myla_explain_basic_move.player_walked_on = myla_go_in_bag
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Here the basic move functions will be introduced and automatically inserted into the scripter.", callback = callback),
-        lambda callback: engine.show_dialogue("It simply introduces the functionality to the player.", callback = callback),
+        lambda callback: myla.stop_follow(callback = callback),
+        lambda callback: myla.wait(0.3, callback = callback),
+        lambda callback: myla.set_solidity(False, callback = callback),
+        lambda callback: myla.move_to(player_one.get_position(), callback = callback),
+        lambda callback: myla.set_visible(True, callback = callback),
+        lambda callback: myla.move_west(callback = callback),
+        lambda callback: myla.face_east(callback = callback),
+        lambda callback: player_one.face_west(callback = callback),
+        lambda callback: engine.show_dialogue("You can also use the PyScripter to move about " + engine.get_player_name() + ".", callback = callback),
+        lambda callback: engine.show_dialogue("I'm just gonna put some movement functions into your PyScripter...", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("move_east()\nmove_south()\nmove_west()\nmove_north()", callback = callback),
+        lambda callback: engine.insert_to_scripter("print(\"Starting Movement\") \n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_west()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_west()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_west()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_west()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_north()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_east()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("move_east()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("print(\"Stopped Movement\") \n", callback = callback),
+        lambda callback: engine.show_dialogue("A function is something you can use to 'do' something, they always end with a pair of brackets ().", callback = callback),
+        lambda callback: engine.show_dialogue("cut() is also a function.", callback = callback),
+        lambda callback: engine.show_dialogue("Moving by programming might seem a bit pointless now when you can just use the arrow keys...", callback = callback),
+        lambda callback: engine.show_dialogue("..BUT play around with it anyway and give it a try.", callback = callback),
+        lambda callback: engine.show_dialogue("I will show you the true power of scripting in a sec, teehee...", callback = callback),
+        lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
 def myla_give_simple_loop_action(player_object):
+    myla_give_simple_loop.player_walked_on = lambda player_object: None
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Here a simple loop to speed up movement is given to the player that they can run. To move east to the end.", callback = callback),
-        lambda callback: engine.show_dialogue("The player will also be referred to the 'speed toggle' button.", callback = callback),
+        lambda callback: myla.set_solidity(True, callback = callback),
+        lambda callback: myla.stop_follow(callback = callback),
+        lambda callback: myla.move_south(callback = callback),
+        lambda callback: myla.move_east(callback = callback),
+        lambda callback: player_one.face_west(callback = callback),
+        lambda callback: engine.show_dialogue("I remember coming here before, this path is really, really, really, really long...", callback = callback),
+        lambda callback: engine.show_dialogue("Maybe not that long, but long enough to be BORING.", callback = callback),
+        lambda callback: engine.show_dialogue("I'm just gonna give you another script...", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("while True:\n  move_east()", callback = callback),
+        lambda callback: engine.insert_to_scripter("for i in range(17):\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("  move_east()\n", callback = callback),
+        lambda callback: engine.show_dialogue("Aha! There we go. This script will make you move east 20 times!", callback = callback),
+        lambda callback: engine.show_dialogue("The PyScripter has some awesome technology that lets you speed up time.", callback = callback),
+        lambda callback: engine.show_dialogue("Look at the bottom-right of your PyScripter " + engine.get_player_name() + " and you will see a 'Speed' button.", callback = callback),
+        lambda callback: engine.show_dialogue("Give it a click so that it says 'Speed: Fast'.", callback = callback),
+        lambda callback: engine.show_dialogue("Then run your script!", callback = callback),
+        lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
 
 def myla_tells_loop_modify_action(player_object):
+    myla_tells_loop_modify.player_walked_on = lambda player_object: None
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Here Myla will ask the player to replace the move_east() with a move_south(), and run that to save time.", callback = callback),
+        lambda callback: player_one.wait(0.3, callback = callback),
+        lambda callback: myla.move_east(callback = callback),
+        lambda callback: myla.face_south(callback = callback),
+        lambda callback: player_one.face_north(callback = callback),
+        lambda callback: engine.show_dialogue("Fast right?", callback = callback),
+        lambda callback: engine.show_dialogue("If I remember correctly, the next bit is 30 steps to the south.", callback = callback),
+        lambda callback: engine.show_dialogue("Your turn to change the script!!!", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("while True:\n  move_east()", callback = callback),
+        lambda callback: engine.insert_to_scripter("#You probably already forgot how many steps\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("#and in which direction we are going.\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("#Luckily, Myla to the rescue!!!\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("#btw this is something called a comment\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("#everything after a hash on a line in your program will be ignored.\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("#socool #awesome #pyscripter\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("#We are heading 30 steps south.\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("for i in range(17): # change the number of steps we will be moving from 17 to 30\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("  move_east()       # change this to move_south()\n", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
 def myla_give_vine_loop_action(player_object):
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("There will be a lot of vines in the way up north. So Myla will give the player another script...", callback = callback),
+        lambda callback: engine.show_dialogue("The PyScripter is really useful for solving repetative tasks, quickly.", callback = callback),
+        lambda callback: engine.show_dialogue(engine.get_player_name() + " I'm just going to give you a new script to cut down all these vines.", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("while True:\n  move_north()\n  cut()", callback = callback),
+        lambda callback: engine.insert_to_scripter('""" This is another type of comment,\n', callback = callback),
+        lambda callback: engine.insert_to_scripter('it lasts for multiple lines!\n', callback = callback),
+        lambda callback: engine.insert_to_scripter('"""\n', callback = callback),
+        lambda callback: engine.insert_to_scripter("for i in range(11):\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("  move_north()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("  cut()", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
@@ -143,7 +236,10 @@ elif player_data.previous_exit_is(world_name, level_name = level_name, map_name 
 def go_to_start(player_object):
     player_data.save_and_exit("/world_1/level_2/start")
 
-exit_to_start.player_walked_on = go_to_start
+def go_to_world(player_object):
+    player_data.save_and_exit("/world_1")
+
+exit_to_world.player_walked_on = go_to_world
 
 
 bog_sign.set_message("Welcome to the bogs! The home of stinky water...")
