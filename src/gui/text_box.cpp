@@ -31,7 +31,7 @@ TextBox::TextBox(TextBoxType _type) {
 
     if(type == TextBoxType::Bar){
         forward_button->move_text(0.0f, 0.0f);
-        forward_button->set_picture("gui/status/running");
+        forward_button->set_picture("gui/game/next");
 
         forward_button->set_on_click([&] () {
             LOG(INFO) << "forward button pressed";
@@ -40,7 +40,7 @@ TextBox::TextBox(TextBoxType _type) {
                 traverse_text(Direction::NEXT);
 
                 if(!text_stack.can_forward()){
-                    forward_button->set_picture("gui/status/failed");
+                    forward_button->set_picture("gui/game/next");
                 }
                 Engine::get_gui()->refresh_gui();
             }
@@ -54,7 +54,7 @@ TextBox::TextBox(TextBoxType _type) {
     }
     if(type == TextBoxType::ExternalScriptHelp){
         forward_button->move_text(0.0f, 0.0f);
-        forward_button->set_picture("gui/status/running");
+        forward_button->set_picture("gui/game/next");
 
         forward_button->set_on_click([&] () {
             LOG(INFO) << "forward button pressed";
@@ -63,7 +63,7 @@ TextBox::TextBox(TextBoxType _type) {
                 traverse_text(Direction::NEXT);
 
                 if(!text_stack.can_forward()){
-                    forward_button->set_picture("gui/status/failed");
+                    forward_button->set_picture("gui/game/next");
                     forward_button->set_visible(false);
                     forward_button->set_clickable(false);
                 }
@@ -75,7 +75,7 @@ TextBox::TextBox(TextBoxType _type) {
     }
     else if(type == TextBoxType::Display){
         forward_button->move_text(0.0f, 0.0f);
-        forward_button->set_picture("gui/status/running");
+        forward_button->set_picture("gui/game/next");
 
         forward_button->set_on_click([&] () {
             LOG(INFO) << "forward button pressed";
@@ -84,24 +84,24 @@ TextBox::TextBox(TextBoxType _type) {
                 traverse_text(Direction::NEXT);
 
                 if(!text_stack.can_forward()){
-                    forward_button->set_picture("gui/status/failed");
+                    forward_button->set_picture("gui/game/next");
                 }
                 else if(text_stack.can_forward()){
-                    forward_button->set_picture("gui/status/running");
+                    forward_button->set_picture("gui/game/next");
                 }
 
                 if(!text_stack.can_backward()){
-                    backward_button->set_picture("gui/status/failed");
+                    backward_button->set_picture("gui/game/prev");
                 }
                 else if(text_stack.can_backward()){
-                    backward_button->set_picture("gui/status/running");
+                    backward_button->set_picture("gui/game/prev");
                 }
                 Engine::get_gui()->refresh_gui();
             }
         });
 
         backward_button->move_text(0.0f, 0.0f);
-        backward_button->set_picture("gui/status/running");
+        backward_button->set_picture("gui/game/prev");
 
         backward_button->set_on_click([&] () {
             LOG(INFO) << "backward button pressed";
@@ -110,17 +110,17 @@ TextBox::TextBox(TextBoxType _type) {
                 traverse_text(Direction::PREVIOUS);
 
                 if(!text_stack.can_backward()){
-                    backward_button->set_picture("gui/status/failed");
+                    backward_button->set_picture("gui/game/prev");
                 }
                 else if(text_stack.can_backward()){
-                    backward_button->set_picture("gui/status/running");
+                    backward_button->set_picture("gui/game/prev");
                 }
 
                 if(!text_stack.can_forward()){
-                    forward_button->set_picture("gui/status/failed");
+                    forward_button->set_picture("gui/game/next");
                 }
                 else if(text_stack.can_forward()){
-                    forward_button->set_picture("gui/status/running");
+                    forward_button->set_picture("gui/game/next");
                 }
 
                 Engine::get_gui()->refresh_gui();
@@ -151,7 +151,7 @@ void TextBox::open(){
         forward_button->set_clickable(true);
 
         if(!text_stack.can_forward()){
-            forward_button->set_picture("gui/status/failed");
+            forward_button->set_picture("gui/game/next");
         }
     }
     if(type == TextBoxType::ExternalScriptHelp){
@@ -159,7 +159,7 @@ void TextBox::open(){
         forward_button->set_clickable(true);
 
         if(!text_stack.can_forward()){
-            forward_button->set_picture("gui/status/failed");
+            forward_button->set_picture("gui/game/next");
             forward_button->set_visible(false);
             forward_button->set_clickable(false);
         }
@@ -172,10 +172,10 @@ void TextBox::open(){
         backward_button->set_clickable(true);
 
         if(!text_stack.can_forward()){
-            forward_button->set_picture("gui/status/failed");
+            forward_button->set_picture("gui/game/next");
         }
         if(!text_stack.can_backward()){
-            backward_button->set_picture("gui/status/failed");
+            backward_button->set_picture("gui/game/prev");
         }
     }
 

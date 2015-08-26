@@ -37,3 +37,6 @@ gui/game/bag: 35
 gui/game/pause: 36
 gui/game/buttons/cycle: 37
 gui/black-tile: 38
+gui/game/play: 39
+gui/game/next: 40
+gui/game/prev: 41
