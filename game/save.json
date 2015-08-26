@@ -1,25 +1,5 @@
 {
-    "player_saves": {
-        "Tom": {
-            "py_scripter_tabs": 1,
-            "coins": 0,
-            "previous_exit": "/world_1/level_1/rossumberg/bottom",
-            "current_map": "/world_1/level_1/road_one",
-            "totems": {},
-            "level_data": {
-                "world_1": {
-                    "level_1": {
-                        "starting_map": "player_house",
-                        "heidi_state": 1
-                    },
-                    "level_2": {
-                        "starting_map": "start"
-                    }
-                }
-            },
-            "py_scripter_enabled": false
-        }
-    },
+    "player_saves": {},
     "settings": {
         "language": "english"
     }
