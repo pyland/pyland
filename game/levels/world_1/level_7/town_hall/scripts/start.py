@@ -1,5 +1,6 @@
 import copy
 from random import randint
+import string
 
 player.focus()
 engine.update_player_name(engine.get_player_name(), player.get_focus_button_id())
@@ -75,6 +76,8 @@ def update_snake_final_position(snake_index):
 
 
 def turn_snakes(time = 0.1, callback = lambda: None):
+    for snake in snakes:
+        snake.stop_turning()
     for snake_index in range(len(snakes)):
         if (not snakes_helped[snake_index] == 2):
             snakes[snake_index].start_turning(time, frequency = 8)
@@ -193,7 +196,11 @@ def snake_finish_script_0(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    if ((engine.get_external_script()) == "move_east()" or (xchange == 1)) and (not engine.get_error()):
+    removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
+
+    snake.set_solidity(True)
+
+    if (removed_white_space == "move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
         snake.turn_to_face(player)
         engine.run_callback_list_sequence(successful_sequence_0, callback = check_finish)
@@ -207,16 +214,19 @@ def snake_run_script(action_index, run_callback = lambda: None):
         initialPosition = snake.get_position()
         snakes_initial_pos[snake_index] = initialPosition
 
-        if not (("while True" in engine.get_external_script()) or ("while  True" in engine.get_external_script())):
-            snake.run_script(script_to_run = 10, parse_error = True, callback = lambda: run_callback(snake_index))
-        else:
-            engine.run_callback_list_sequence(loop_sequence, callback = turn_snakes)
+        removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
-loop_sequence = [
-    lambda callback: myla.turn_to_face(player, callback = callback),
-    lambda callback: engine.show_dialogue("Myla: Stop, don't give them a script with an inifinite loop! They can't halt!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
-]
+        #if not ("whileTrue" in removed_white_space):
+        snake.set_solidity(False, callback = lambda: snake.run_script(script_to_run = 10, parse_error = True, callback = lambda: run_callback(snake_index)))
+        snake.wait(12.0, callback = snake.halt_script)
+        #else:
+        #    engine.run_callback_list_sequence(loop_sequence, callback = turn_snakes)
+
+#loop_sequence = [
+#    lambda callback: myla.turn_to_face(player, callback = callback),
+#    lambda callback: engine.show_dialogue("Myla: Stop, don't give them a script with an inifinite loop! They can't halt!", callback = callback),
+#    lambda callback: player.set_busy(False, callback = callback),
+#]
 
 
 try_script_sequence_0 = [
@@ -308,7 +318,7 @@ sequence_1 = [
     lambda callback: player.set_busy(True, callback = callback),
     lambda callback: get_snake(1).stop_turning(callback = callback),
     lambda callback: get_snake(1).turn_to_face(player, callback = callback),
-    lambda callback: engine.show_dialogue("My north movement script is broken. I need it to get around the buildings, if we are to run to the desert!", callback = callback),
+    lambda callback: engine.show_dialogue("My west movement script is broken. I might need it to avoid the catchers, if we are to run to the desert!", callback = callback),
     lambda callback: engine.run_callback_list_sequence(help_sequence_1),
 ]
 
@@ -316,7 +326,7 @@ help_sequence_1 = [
     lambda callback: engine.show_external_script(
         confirm_callback = lambda: engine.run_callback_list_sequence(try_script_sequence_1),
         cancel_callback = lambda: engine.run_callback_list_sequence(cancel_script_sequence_1),
-        external_dialogue = "Here is my script. It would be great if you could fix it to make me go north and then choose 'Give Script'.",
+        external_dialogue = "Here is my script. It would be great if you could fix it to make me go west and then choose 'Give Script'.",
         script_init = lambda: engine.insert_to_scripter("move_()")),
 ]
 
@@ -328,7 +338,11 @@ def snake_finish_script_1(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    if ((engine.get_external_script()) == "move_north()" or (ychange == 1)) and (not engine.get_error()):
+    snake.set_solidity(True)
+
+    removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
+
+    if (removed_white_space == "move_west()" or ((xchange == -1)  and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
         snake.turn_to_face(player)
         engine.run_callback_list_sequence(successful_sequence_1, callback = check_finish)
@@ -344,7 +358,7 @@ successful_sequence_1 = [
 unsuccessful_sequence_1 = [
     lambda callback: myla.wait(1.5, callback = callback),
     lambda callback: myla.turn_to_face(player, callback = callback),
-    lambda callback: engine.show_dialogue("Myla: I think the script needs to say move_north()", callback = callback),
+    lambda callback: engine.show_dialogue("Myla: I think the script needs to say move_west()", callback = callback),
     lambda callback: get_snake(1).start_turning(time = 0.1, frequency = 8, callback = callback),
     lambda callback: player.set_busy(False, callback = callback),
 ]
@@ -386,7 +400,11 @@ def snake_finish_script_2(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    if ((engine.get_external_script()) == "move_east()" or (xchange == 1)) and (not engine.get_error()):
+    snake.set_solidity(True)
+
+    removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
+
+    if (removed_white_space == "move_east()" or ((xchange == 1)  and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
         snake.turn_to_face(player)
         engine.run_callback_list_sequence(successful_sequence_2, callback = check_finish)
@@ -445,7 +463,11 @@ def snake_finish_script_3(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    if ((engine.get_external_script()) == "move_east()" or (engine.get_external_script()) =="/nmove_east()" or (xchange == 1)) and (not engine.get_error()):
+    snake.set_solidity(True)
+
+    removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
+
+    if (removed_white_space == "move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
         snake.turn_to_face(player)
         engine.run_callback_list_sequence(successful_sequence_3, callback = check_finish)
@@ -505,7 +527,11 @@ def snake_finish_script_4(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    if ((engine.get_external_script()) == "move_east()" or (engine.get_external_script()) == "print('I'm moving east')\nmove_east()" or (xchange == 1)) and (not engine.get_error()):
+    snake.set_solidity(True)
+
+    removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
+
+    if (removed_white_space == "move_east()" or removed_white_space == "print('I'm moving east')move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
         snake.turn_to_face(player)
         engine.run_callback_list_sequence(successful_sequence_4, callback = check_finish)
@@ -563,7 +589,11 @@ def snake_finish_script_5(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    if ((engine.get_external_script()) == "move_east()" or (engine.get_external_script()) == "\nmove_east()" or (xchange == 1)) and (not engine.get_error()):
+    snake.set_solidity(True)
+
+    removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
+
+    if (removed_white_space == "move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
         snake.turn_to_face(player)
         engine.run_callback_list_sequence(successful_sequence_5, callback = check_finish)
@@ -621,6 +651,8 @@ def snake_finish_script_6(snake_index):
 
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
+
+    snake.set_solidity(True)
 
     if ((not engine.get_error()) and ("print" in engine.get_external_script())):
         snake.turn_to_face(player)
