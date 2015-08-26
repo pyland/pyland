@@ -29,7 +29,6 @@ def player_walked_on_myla_warn_crocs():
             lambda callback: myla.set_solidity(False, callback = callback),
             lambda callback: myla.move_north(callback = callback),
             lambda callback: myla.set_visible(False, callback = callback),
-            lambda callback: myla.move_to((0,0), 0.0001, callback = callback),
             lambda callback: player_one.set_busy(False, callback =callback)
         ])
 
@@ -40,6 +39,7 @@ def player_walked_on_challenge2a():
         first_time_a = False
         engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: player_one.face_west(callback = callback),
         lambda callback: engine.show_dialogue("Myla: Good job!", callback = callback),
         lambda callback: engine.show_dialogue("Those crocodiles are blocking our path...", callback = callback),
         lambda callback: engine.show_dialogue("I've put a script in your PyScripter called yell()", callback = callback),
@@ -61,8 +61,11 @@ def player_walked_on_challenge2b():
         lambda callback: player_one.set_busy(False, callback =callback),
         lambda callback: player_one.move_west(callback = callback),
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: myla.move_to((12,0), 0.0001, callback = callback),
+        lambda callback: myla.set_solidity(False, callback = callback),
+        lambda callback: myla.move_to(player_one.get_position(), callback = callback),
         lambda callback: myla.set_visible(True, callback = callback),
+        lambda callback: myla.move_east(callback = callback),
+        lambda callback: myla.face_west(callback = callback),
         lambda callback: player_one.face_east(callback = callback),
         lambda callback: engine.show_dialogue("These crocodiles are making me nervous...lets get out of here", callback = callback),
         lambda callback: myla.follow(player_one, callback = callback),
@@ -84,9 +87,10 @@ elif player_data.previous_exit_is("world_1"):
 
 
 def go_to_world(player_object):
+    player_data.complete_level_and_save()
     player_data.save_and_exit("/world_1")
 
-exit_level_start.player_walked_on = go_to_world
+exit_level_start.player_walked_on = lambda: player_data.save_and_exit("/world_1")
 exit_level_end.player_walked_on = go_to_world #TODO: have this save that the level has been completed
 
 player_one.focus()

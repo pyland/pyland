@@ -138,6 +138,7 @@ class Character(GameObject, ScriptStateContainer):
 
             script_api["yell"] = self.__yell
             script_api["cut"] = scriptrunner.make_blocking(self.__cut)
+            script_api["get_cuts_left"] = self.__get_cuts_left
 
             scriptrunner.start(script_api, script_to_run, self, engine, parse_error, callback)
         return
@@ -527,6 +528,9 @@ class Character(GameObject, ScriptStateContainer):
         if made_cut:
             self.__cuts_left = self.__cuts_left - 1
         return made_cut
+
+    def __get_cuts_left(self):
+        return self.__cuts_left
 
 
 

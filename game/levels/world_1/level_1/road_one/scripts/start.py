@@ -35,6 +35,7 @@ def go_to_merchant(player_object):
     player_data.save_and_exit("/world_1/level_1/merchant")
 
 def go_to_world(player_object):
+    player_data.complete_level_and_save()
     player_data.save_and_exit("/world_1")
 
 exit_to_village_top.player_walked_on = go_to_village_top

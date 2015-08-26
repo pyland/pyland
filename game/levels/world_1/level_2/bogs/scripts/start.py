@@ -36,7 +36,8 @@ def myla_explain_cut_action(player_object):
         lambda callback: engine.show_dialogue("I have written a small script for you and put it into your PyScripter...", callback = callback),
         lambda callback: engine.show_dialogue("Stand next to a vine and hit the 'Run' button (or you can use the spacebar to run scripts)!", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("cut()", callback = callback),
+        lambda callback: engine.insert_to_scripter("cut()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter('print("You have " + str(get_cuts_left()) + " cuts left.")', callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
@@ -60,7 +61,7 @@ def myla_explain_whetstone_action(player_object):
         lambda callback: player_one.face_south(callback = callback),
         lambda callback: engine.show_dialogue("If you interact with it, it will replenish the amount of vines you will be able to cut!", callback = callback),
         lambda callback: engine.show_dialogue("The quality of the whetstone determines how much your knife will be sharpened.", callback = callback),
-        lambda callback: engine.show_dialogue("Also, all the vines in the area will be restored in the time taken to sharpen the knife!", callback = callback),
+        lambda callback: engine.show_dialogue("Also, all the vines in the area will grow back when you sharpen your knife.", callback = callback),
         lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
@@ -100,7 +101,7 @@ def myla_explain_crocodiles_action(player_object):
         lambda callback: myla.set_visible(False, callback = callback),
         lambda callback: myla.wait(0.3, callback = callback),
         lambda callback: engine.show_dialogue("Oh nice, you have a banana in here.", callback = callback),
-        lambda callback: engine.show_dialogue("Arrgh old banana, old banana! Eurgh, eurgh!", callback = callback),
+        lambda callback: engine.show_dialogue("Arrgh old banana, old moldy banana! Eurgh, eurgh!", callback = callback),
         lambda callback: engine.show_dialogue("You really need to clear your bag out sometime " + engine.get_player_name() + "!", callback = callback),
         lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
@@ -162,10 +163,11 @@ def myla_give_simple_loop_action(player_object):
         lambda callback: engine.clear_scripter(callback = callback),
         lambda callback: engine.insert_to_scripter("for i in range(17):\n", callback = callback),
         lambda callback: engine.insert_to_scripter("  move_east()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter('print("Script Finished!")\n', callback = callback),
         lambda callback: engine.show_dialogue("Aha! There we go. This script will make you move east 20 times!", callback = callback),
         lambda callback: engine.show_dialogue("The PyScripter has some awesome technology that lets you speed up time.", callback = callback),
         lambda callback: engine.show_dialogue("Look at the bottom-right of your PyScripter " + engine.get_player_name() + " and you will see a 'Speed' button.", callback = callback),
-        lambda callback: engine.show_dialogue("Give it a click so that it says 'Speed: Fast'.", callback = callback),
+        lambda callback: engine.show_dialogue("Give it a click so that it says 'Speed: Fast' (or use the shift key).", callback = callback),
         lambda callback: engine.show_dialogue("Then run your script!", callback = callback),
         lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
@@ -188,11 +190,12 @@ def myla_tells_loop_modify_action(player_object):
         lambda callback: engine.insert_to_scripter("#and in which direction we are going.\n", callback = callback),
         lambda callback: engine.insert_to_scripter("#Luckily, Myla to the rescue!!!\n", callback = callback),
         lambda callback: engine.insert_to_scripter("#btw this is something called a comment\n", callback = callback),
-        lambda callback: engine.insert_to_scripter("#everything after a hash on a line in your program will be ignored.\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("#everything after a '#' on a line in your program will be ignored.\n", callback = callback),
         lambda callback: engine.insert_to_scripter("#socool #awesome #pyscripter\n", callback = callback),
         lambda callback: engine.insert_to_scripter("#We are heading 30 steps south.\n", callback = callback),
         lambda callback: engine.insert_to_scripter("for i in range(17): # change the number of steps we will be moving from 17 to 30\n", callback = callback),
         lambda callback: engine.insert_to_scripter("  move_east()       # change this to move_south()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter('print("Script Finished!")\n', callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
@@ -207,7 +210,9 @@ def myla_give_vine_loop_action(player_object):
         lambda callback: engine.insert_to_scripter('"""\n', callback = callback),
         lambda callback: engine.insert_to_scripter("for i in range(11):\n", callback = callback),
         lambda callback: engine.insert_to_scripter("  move_north()\n", callback = callback),
-        lambda callback: engine.insert_to_scripter("  cut()", callback = callback),
+        lambda callback: engine.insert_to_scripter("  cut()\n", callback = callback),
+        lambda callback: engine.insert_to_scripter("  move_north()", callback = callback),
+        lambda callback: engine.insert_to_scripter('print("Cut all the vines, yeah!")\n', callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
@@ -237,6 +242,7 @@ def go_to_start(player_object):
     player_data.save_and_exit("/world_1/level_2/start")
 
 def go_to_world(player_object):
+    player_data.complete_level_and_save()
     player_data.save_and_exit("/world_1")
 
 exit_to_world.player_walked_on = go_to_world

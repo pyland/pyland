@@ -67,6 +67,23 @@ class PlayerData(GameObject):
     def __get_pyscipter_speed(self):
         return 3.5
 
+    def is_level_completed(self, full_level_name):
+        completed_levels = self.__get_completed_levels()
+        if not full_level_name in completed_levels:
+            return False
+        else:
+            return completed_levels[full_level_name]
+
+    def complete_level_and_save(self):
+        self.__get_completed_levels()["/" + self.__current_world + "/" + self.__current_level] = True
+        self.save()
+        
+
+    def __get_completed_levels(self):
+        if not ("completed_levels" in self.__player_data):
+            self.__player_data["completed_levels"] = {}
+        return self.__player_data["completed_levels"]
+
     def load(self, player_name):
         """ loads in the player data, and correctly set's up all the global states of the game.
 
