@@ -33,8 +33,11 @@ class PoisonVine(Vine):
             self.get_engine().add_event(callback)
         super()._passive_grow(callback = un_solidify)
 
-    def player_action(self, player_object):
-        player_object.set_busy(True, callback = lambda: self.get_engine().show_dialogue("These vines look poisonous, better not touch them.", callback = lambda: player_object.set_busy(False)))
+    def player_action(self, player_object):#if not self.__visible:
+        if not self.is_visible():
+            return
+        else:
+            player_object.set_busy(True, callback = lambda: self.get_engine().show_dialogue("These vines look poisonous, better not touch them.", callback = lambda: player_object.set_busy(False)))
 
     def player_walked_on(self, player_object):
         if(self.is_visible() and self._is_alive()):

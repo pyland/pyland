@@ -21,7 +21,6 @@ class Whetstone(GameObject):
         self.__sharpen_knife(player_object)
 
     def __sharpen_knife(self, player_object):
-        #TODO: regrow all the vines
         player_object.set_busy(True)
         if(self.__replenish_power > player_object.get_cuts_left()):
             player_object.set_cuts_left(self.__replenish_power)
