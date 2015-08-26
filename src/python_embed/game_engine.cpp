@@ -335,4 +335,8 @@ void GameEngine::set_player_name(std::string player_name) {
 }
 
 
+void GameEngine::restart_level() {
+    Engine::restart_level();
+}
+
 

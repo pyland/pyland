@@ -203,6 +203,8 @@ class GameEngine {
         std::string get_player_name();
 
         void set_player_name(std::string player_name);
+
+        void restart_level();
 };
 
 #endif

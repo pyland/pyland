@@ -241,3 +241,6 @@ class Player(Character):
             if(hasattr(current_object, "get_message")):
                 message = current_object.get_message()
         return message
+
+    def kill(self):
+        self.get_engine().restart_level()

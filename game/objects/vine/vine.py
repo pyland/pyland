@@ -28,15 +28,31 @@ class Vine(GameObject):
     __alive = True
 
     def initialise(self):
-        self.grow()
+        self._passive_grow()
 
     def on_cut(self):
         self.__alive = False
         self.start_animating(loop = False, forward = False, speed = 0.1, callback = lambda: self.set_visible(False, callback = 	self.set_solidity(False)))
         return True
 
+    def _kill_player(self, player_object):
+        self.get_engine().run_callback_list_sequence([
+            lambda callback: player_object.set_busy(True, callback = callback),
+            lambda callback: self.get_engine().show_dialogue("Aagh! The vines got you!", callback = callback),
+            lambda callback: player_object.set_busy(False, callback = callback)
+        ], callback = player_object.kill)
+
     def grow(self, callback = lambda: None):
-        #TODO: kill the player if they are standing here!!!!
+        def check_for_and_kill_player():
+            objects = self.get_engine().get_objects_at(self.get_position())
+            for game_object in objects:
+                if hasattr(game_object, "kill"):
+                    self._kill_player(game_object)
+                    return
+            self.get_engine().add_event(callback)
+        self._passive_grow(callback = check_for_and_kill_player)
+
+    def _passive_grow(self, callback = lambda: None):
         if self.__alive:
             self.set_visible(True)
             self.set_solidity(True)

@@ -27,29 +27,17 @@ class PoisonVine(Vine):
 
     """
 
-    def initialise(self):
-        super().initialise()
-        self.set_solidity(False)
+    def _passive_grow(self, callback = lambda: None):
+        def un_solidify():
+            self.set_solidity(False)
+            self.get_engine().add_event(callback)
+        super()._passive_grow(callback = un_solidify)
 
     def player_action(self, player_object):
         player_object.set_busy(True, callback = lambda: self.get_engine().show_dialogue("These vines look poisonous, better not touch them.", callback = lambda: player_object.set_busy(False)))
 
     def player_walked_on(self, player_object):
-        #self.get_engine().print_terminal("Been Walked on")
-        if(not self._is_alive()):
-            return
-        if(self.is_visible()):
-            self.contact_action(player_object)
-
-    def contact_action(self, player_object):
-        if(not self._is_alive()):
-            return
-        if(not self.is_visible()):
-            return
-        self.get_engine().run_callback_list_sequence([
-            lambda callback: player_object.set_busy(True, callback = callback),
-            lambda callback: self.get_engine().show_dialogue("Aagh! The vines got you!", callback = callback),
-            lambda callback: player_object.set_busy(False, callback = callback)
-        ])
+        if(self.is_visible() and self._is_alive()):
+            self._kill_player(player_object)
 
 
