@@ -8,6 +8,8 @@ player_one.face_south()
 player_one.focus()
 myla.follow(player_one)
 
+crocodile1.rand_explore()
+
 vine_list = [
     vine0a,
     vine0b,

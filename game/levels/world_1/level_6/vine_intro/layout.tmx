@@ -36,7 +36,7 @@
  </layer>
  <layer name="SpecialLayer" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzd1FEOgCAMA1Cyaw3vfy1//FJMgKzraJP+7kVhdGutCxWdbAftsZzIs2bcB3Vn5Z9W3FcVx23sRNefqjtRec9UuW+zDurc1J2oZFmsPc1yUKnqnL4/TGcnuzMum++fszKjkuP23dfM70EE/b6xegOySIw2
+   eJzdk8EOwCAIQw2/hf7/b3nZaTMZOAquTXrxwCOWdmmtExmtbA6aV8WJzLriHtg5nj89sa8sHJU1J9p6mZ0TpftMlnuzclC5sXOilMWq6mkWB6VTOX/vTyVnR7szvLtb3lYeRr9xrHMsHJVnXxHZf8nHK9TdVnsCXpyMCw==
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="40">
@@ -97,5 +97,6 @@
   <object name="vine/poison_vine/vine67" gid="101" x="1216" y="1600"/>
   <object name="vine/poison_vine/vine68" gid="101" x="1280" y="1536"/>
   <object name="vine/poison_vine/vine69" gid="101" x="1344" y="1600"/>
+  <object name="crocodile/crocodile1" gid="296" x="768" y="2240"/>
  </objectgroup>
 </map>

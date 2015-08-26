@@ -104,12 +104,12 @@ def puzzle_wrong(name):
         lambda callback: player_one.set_busy(False, callback = callback),
     ])
 
-def solved_puzzle(name):
+def solved_puzzle(name, callback = lambda: None):
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue(name + ": Thanks chum!", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
-    ])
+    ], callback = callback)
 
 def being_smart():
     engine.run_callback_list_sequence([
@@ -146,7 +146,17 @@ def security_one_action(player_object):
         )
             
     else:
-        solved_puzzle("Alpha")
+        engine.run_callback_list_sequence([
+                lambda callback: solved_puzzle("Alpha", callback = callback),
+            ],
+            callback = lambda: engine.show_external_script(
+                confirm_callback = lambda: security_one.run_script(script_to_run = 10),
+                cancel_callback = cancel_script(),
+                external_dialogue = "I love running your scripts, give me another!",
+                script_init = lambda: engine.insert_to_scripter("")
+            )
+        )
+        
 
 def security_one_problem():
     engine.run_callback_list_sequence([
@@ -222,7 +232,15 @@ def security_two_action(player_object):
         )
             
     else:
-        solved_puzzle("Bravo")
+        engine.run_callback_list_sequence([
+            lambda callback: solved_puzzle("Bravo", callback = callback)
+        ], callback = lambda: engine.show_external_script(
+                confirm_callback = lambda: security_two.run_script(script_to_run = 10),
+                cancel_callback = cancel_script(),
+                external_dialogue = "I'm hungry for more scripts!",
+                script_init = lambda: engine.insert_to_scripter("")
+            )
+        )
 
 def security_two_problem():
     engine.run_callback_list_sequence([
