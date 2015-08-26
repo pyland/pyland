@@ -18,6 +18,9 @@ class Engine:
     #Represents the connections to the sqlite database
     conn = dict()
 
+    #Whether the most recent script run gave an error
+    __error = False
+
     __json_data = None
 
     def get_dialogue(self, level_name, identifier, escapes = dict()):
@@ -311,3 +314,9 @@ class Engine:
 
     def get_all_objects(self):
         return list(self.__game_objects.values())
+
+    def get_error(self):
+        return self.__error
+
+    def set_error(self, boolean):
+        self.__error = boolean

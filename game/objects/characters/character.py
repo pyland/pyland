@@ -423,6 +423,7 @@ class Character(GameObject, ScriptStateContainer):
     #If frequency is 3, then the player with repeatedly face in different directions.
     #The greater frequency is, the less often the player will turn
     def start_turning(self, time = 0.5, frequency = 8, callback = lambda: None):
+        self.__finish_turning = False
         if frequency < 3:
             self.__turning(time, 3, callback = callback)
         else:
