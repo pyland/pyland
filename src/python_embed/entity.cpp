@@ -186,6 +186,9 @@ void Entity::set_animation_frame(int frame_number) {
 void Entity::start_animating(float speed, bool loop, bool forward, PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
+    if(!loop && this->current_frame == 3){
+        this->current_frame = 0;
+    }
     if(!this->animating) {
         this->animating = true;
         this->animate(this->current_frame, speed, loop, forward, boost_callback);
@@ -201,16 +204,16 @@ void Entity::pause_animating() {
 
 void Entity::animate(int current_frame, float speed, bool loop, bool forward, std::function<void ()> callback) {
     if (this->animating) {
-        //auto num_frame = get_number_of_animation_frames();
+        //TODO: auto num_frame = get_number_of_animation_frames();
         auto num_frame = 4;
         EventManager::get_instance()->add_event([this, current_frame, num_frame, speed, loop, forward, callback]() {
             this->set_animation_frame(current_frame);
             int next_frame;
             if(forward){
-                next_frame = (current_frame + 1) % num_frame;
+                next_frame = ((current_frame + 1) % num_frame);
             }
             else{
-                next_frame = (current_frame - 1) % num_frame;
+                next_frame = ((current_frame - 1 + num_frame) % num_frame); // we have to add num_frame cause c++ treats negative numbers weirdly in mod
             }
 
             if(next_frame == 0 && (!loop)){

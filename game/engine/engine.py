@@ -253,15 +253,8 @@ class Engine:
     def show_dialogue(self, dialogue, disable_scripting = True, callback = lambda: None):
         self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
 
-#    def show_external_script_help(self, dialogue, callback = lambda: None):
-#        self.__cpp_engine.show_external_script_help(dialogue, callback)
-
-  #  def show_dialogue_with_options(self, dialogue, disable_scripting = True, callback = lambda: None):
-   #     self.__cpp_engine.show_dialogue_with_options(dialogue, disable_scripting, callback)
-#=======
     def show_dialogue_with_options(self, dialogue, options, disable_scripting = True):
         self.__cpp_engine.show_dialogue_with_options(dialogue, disable_scripting, options)
-#>>>>>>> 75281727a200bdb81b5d20fbfd1522457316e6c6
 
     def run_callback_list_sequence(self, callback_list_sequence, callback = lambda: None):
         """ Run the given list of functions, passing the rest of the list as an argument to the first function so that they are run in sequence.

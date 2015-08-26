@@ -272,6 +272,10 @@ void GameEngine::print_terminal(std::string text, bool error) {
     Engine::print_terminal(text, error);
 }
 
+std::string GameEngine::get_terminal_text(unsigned int index) {
+    return Engine::get_terminal_text(index);
+}
+
 std::string GameEngine::get_config() {
     Config::json j = Config::get_instance();
     return j.dump();
@@ -330,5 +334,9 @@ void GameEngine::set_player_name(std::string player_name) {
     Engine::set_player_name(player_name);
 }
 
+
+void GameEngine::restart_level() {
+    Engine::restart_level();
+}
 
 

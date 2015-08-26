@@ -26,13 +26,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
 {
     LOG(INFO) << "Constructing GUIMain...";
-
-    option_selected = 0;
-    bar_open = false; //whether or not the notification bar is open
-    bar_options_open = false;
-    external_help_open = false;
-    callback_options = false;
-
+    
     config_gui();
 
     Engine::set_gui(this);
@@ -86,7 +80,7 @@ void GUIMain::create_pause_menu(){
 
     pause_button->set_on_click( [&] (){
 
-        if(bag_open || bar_open || external_help_open){
+        if(bag_open || bar_open || bar_options_open || external_help_open){
             return;
         }
 
@@ -105,16 +99,17 @@ void GUIMain::create_pause_menu(){
     gui_window->add(pause_button);
 
     exit_button = std::make_shared<Button>(ButtonType::NoPicture);
-    exit_button->set_text("Exit Pyland");
+    exit_button->set_text("Main Menu");
     exit_button->set_alignment(ButtonAlignment::BottomLeft);
     exit_button->set_on_click( [this] () {
+        Engine::open_main_menu();
     });
     exit_button->set_clickable(false);
     exit_button->set_visible(false);
     exit_button->set_width(menu_width);
     exit_button->set_height(menu_height);
     exit_button->set_x_offset(pause_x_offset);
-    exit_button->set_y_offset(pause_y_offset - 1 * menu_spacing);
+    exit_button->set_y_offset(pause_y_offset - 2 * menu_spacing);
 
     gui_window->add(exit_button);
 
@@ -125,10 +120,12 @@ void GUIMain::create_pause_menu(){
         if(music_on){
             music_button->set_text("Music OFF");
             refresh_gui();
+            Engine::set_music(false);
         }
         else{
             music_button->set_text("Music ON");
             refresh_gui();
+            Engine::set_music(true);
         }
         music_on = ! music_on;
     });
@@ -136,9 +133,23 @@ void GUIMain::create_pause_menu(){
     music_button->set_width(menu_width);
     music_button->set_height(menu_height);
     music_button->set_x_offset(pause_x_offset);
-    music_button->set_y_offset(pause_y_offset - 0 * menu_spacing);
+    music_button->set_y_offset(pause_y_offset - 1 * menu_spacing);
 
     gui_window->add(music_button);
+
+    restart_button = std::make_shared<Button>(ButtonType::NoPicture);
+    restart_button->set_text("Restart Level");
+    restart_button->set_alignment(ButtonAlignment::BottomLeft);
+    restart_button->set_on_click( [this] () {
+        Engine::restart_level();
+    });
+    restart_button->set_visible(false);
+    restart_button->set_width(menu_width);
+    restart_button->set_height(menu_height);
+    restart_button->set_x_offset(pause_x_offset);
+    restart_button->set_y_offset(pause_y_offset - 0 * menu_spacing);
+
+    gui_window->add(restart_button);
 }
 
 void GUIMain::create_notification_bar(){
@@ -197,7 +208,7 @@ void GUIMain::create_bag(){
 
     bag_button->set_on_click( [&] ()
     {
-        if(bar_open || pause_open || external_help_open){
+        if(pause_open || bar_open || bar_options_open || external_help_open){
             return;
         }
 
@@ -268,7 +279,7 @@ void GUIMain::create_pyguide(){
     pyguide_next_button = std::make_shared<Button>(ButtonType::Single);
     pyguide_next_button->set_alignment(ButtonAlignment::BottomLeft);
     pyguide_next_button->move_text(0.0, 0.0);
-    pyguide_next_button->set_picture("gui/game/buttons/cycle");
+    pyguide_next_button->set_picture("gui/game/next");
     pyguide_next_button->set_text("");
     pyguide_next_button->set_width(menu_move_width);
     pyguide_next_button->set_height(menu_move_height);
@@ -319,7 +330,7 @@ void GUIMain::create_pyguide(){
     pyguide_back_button = std::make_shared<Button>(ButtonType::Single);
     pyguide_back_button->set_alignment(ButtonAlignment::BottomLeft);
     pyguide_back_button->move_text(0.0, 0.0);
-    pyguide_back_button->set_picture("gui/game/buttons/cycle");
+    pyguide_back_button->set_picture("gui/game/prev");
     pyguide_back_button->set_text("");
     pyguide_back_button->set_width(menu_move_width);
     pyguide_back_button->set_height(menu_move_height);
@@ -431,7 +442,7 @@ void GUIMain::open_pause_window(){
 
     pause_button->set_x_offset(close_x_offset);
     pause_button->set_y_offset(close_y_offset);
-    pause_button->set_picture("gui/highlight/goal");
+    pause_button->set_picture("gui/game/play");
     pause_button->set_text("");
 
     pause_open = true;
@@ -457,6 +468,9 @@ void GUIMain::open_pause_window(){
 
     music_button->set_visible(true);
     music_button->set_clickable(true);
+
+    restart_button->set_visible(true);
+    restart_button->set_clickable(true);
 
     refresh_gui();
 }
@@ -488,6 +502,9 @@ void GUIMain::close_pause_window(){
         else if(i->second == notification_bar){
             continue;
         }
+        else if(i->second == external_script_help){
+            continue;
+        }
         else if(i->second == options_box){
             continue;
         }
@@ -502,6 +519,9 @@ void GUIMain::close_pause_window(){
 
     music_button->set_visible(false);
     music_button->set_clickable(false);
+
+    restart_button->set_visible(false);
+    restart_button->set_clickable(false);
 
     refresh_gui();
 }
@@ -540,10 +560,10 @@ void GUIMain::toggle_selection_notification_bar_with_options(){
     if (option_selected > 1) option_selected = 0;
     for(unsigned int i=0; i<=1; i++){
         if (i == option_selected){
-            option_buttons[i]->set_text_colour(255, 255, 255, 0);
+            option_buttons[i]->set_text_colour(255, 255, 255, 255);
         }
         else{
-            option_buttons[i]->set_text_colour(255, 255, 255, 255);
+            option_buttons[i]->set_text_colour(255, 255, 255, 0);
         }
     }
 }

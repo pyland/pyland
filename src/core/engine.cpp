@@ -20,6 +20,7 @@
 #include <tuple>
 #include <vector>
 
+#include "audio_engine.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
@@ -182,6 +183,16 @@ bool Engine::walkable(glm::ivec2 location) {
     return true;
 }
 
+void Engine::open_main_menu(){
+    Config::json j = Config::get_instance();
+    std::string map_location = j["files"]["main_menu"];
+    game_main->change_challenge(map_location);
+}
+
+void Engine::restart_level(){
+    game_main->change_challenge(game_main->get_current_challenge());
+}
+
 void Engine::change_map(std::string map_location){
     game_main->change_challenge(map_location);
 }
@@ -210,6 +221,18 @@ std::vector<int> Engine::get_objects_at(glm::ivec2 location) {
 MainWindow* Engine::get_main_window(){
     return main_window;
 }
+
+void Engine::set_music(bool on){
+    if(!on){
+        AudioEngine::get_instance()->set_music_volume(0);
+    }
+    else{
+        AudioEngine::get_instance()->set_music_volume(128);
+    }
+    
+    return;
+}
+
 
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
@@ -424,9 +447,12 @@ void Engine::print_terminal(std::string text, bool error) {
         _main_window->setAnyOutput(true);
         _main_window->pushTerminalText(text, error);
     });
-
 }
 
+//Get text from the output history in QT terminal widget
+std::string Engine::get_terminal_text(unsigned int index) {
+    return main_window->getTerminalText(index);
+}
 
 //Focuses on the next player that has a focus button for it
 void Engine::focus_next() {

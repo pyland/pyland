@@ -132,6 +132,12 @@ class PlayerData(GameObject):
         self.save()
         self.get_engine().change_map(destination)
 
+    def save_checkpoint(self, checkpoint_name, callback = lambda: None):
+        previous_exit = self.get_full_map_name() + "/" + checkpoint_name
+        self.__player_data["previous_exit"] = previous_exit
+        self.save()
+        self.get_engine().add_event(callback)
+
     def __get_level_data(self):
         return self.__player_data["level_data"][self.__current_world][self.__current_level]
 

@@ -163,6 +163,11 @@ class GameEngine {
         void print_terminal(std::string text, bool error);
 
         ///
+        /// Get text from the terminal's output history
+        /// Index = 0 is the most recent text
+        std::string get_terminal_text(unsigned int index);
+
+        ///
         /// Update the QT interface with new colours
         /// (preferrably two shades of the same colour)
         void set_ui_colours(int r1, int b1, int g1, int r2, int b2, int g2);
@@ -198,6 +203,8 @@ class GameEngine {
         std::string get_player_name();
 
         void set_player_name(std::string player_name);
+
+        void restart_level();
 };
 
 #endif
