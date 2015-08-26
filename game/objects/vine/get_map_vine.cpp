@@ -16,7 +16,7 @@ int main(){
     {
         for(int j = 0; j<w; j++)
         {
-            cout << "  " << "<object " << "name=" << "\"vines/vines_" << (i) << "_" << (j) << "\" " << "gid=\"101\" ";
+            cout << "  " << "<object " << "name=" << "\"vine/vine_" << (i) << "_" << (j) << "\" " << "gid=\"101\" ";
             cout << "x=\"" << ((j+x) * size) << "\" y=\"" << ((i+y) * size) << "\" ";
             cout << "width=\"" << (size)	<< "\" height=\"" << (size) << "\"/>" << endl;
         }
