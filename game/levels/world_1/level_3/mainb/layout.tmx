@@ -28,12 +28,12 @@
  </layer>
  <layer name="Decor" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJydV9FywjAMCxRWuI5tL+0vkr70/x9pbtFNaHIbyJ2uEDu27DhumtPvWAg65gqnsxjcg/nF2FF/PMc6mXikQKeVg4MbmJ/NPOO6ol/xsRMn+8kVzt49/efEdvFf/ZYxrJhWfFVZwUV0riTDenBSnxyHypjHjfxeKsrc94oD4Yd0etGBDHzAlfO6BfAYK5eRfhecyG6uuRoFJ5JpHgvPbocDcvJZ42HbEz1hF7E6LsjTjeaQq072wtUQyxCP48P+esmZ0wMP5qA8MFB/DI4n4qK+UB8tPMCFOaWG+LVenPyc/vZXOXF9uZwwl4jDFidXq2x3SDEX7Ut4gksUr6tdJ2cufA5RV3ymdW8yzR3Tc6+I+Gxx4TPrao35KJfo/YTcRvu1t29cw+7ctfa4qLe05GZKzz1sEBnwDp/WPdMe5uol2k9+jzHc/UTzFPWQs6xBn1S4POn5Y2Qzhzx1Vc5543yg5lTOOJq1idbys+RG70N7w/VPDL0TOJ3W2lE7/OQ7krPL8b3iI8Ic6EVc2L/m5ZW41Z7a5ZFFt8Wm04ctXePWu7i3OPD81n3fnRFns9Vvyx7v5eydtQrcvdw3k37DRN8p/E7E8wHuObHV
+   eJydV9FuwyAQY226tMq69SX5xdKX/P/jgoZV1/MFVCQrLQeHz3cQktNfWwnaHhVuzGpwD/pX40fX4z4ek4lHCsb0cnBwDf0P08+4bBg3fDbi5HVyhfN3T/85sV/813VLmzYsG76rreAsYy5kw3xw0jU5DrUxjyute64ofT8bPgg3GjPKGNjAB1xZ1z2Ax1y5zPS7YCC/uWo1CwayqY6F57HBAZp81XjY90JP+EWsjgt0ulIftDpKLlwNsQ3xOD683iiauXHgwRyUBxrqjxHlSNfQmFXPiAe4MKfUEb/Wi7Of0jO/yonry2nCXCIOe5xcrbLfKcVc9FzCE1yieF3tOjtz4X2IuuI9rbnJ1HdIr2dFxGePC+/Za2AHH+USvZ+gbZSvVt64ht2+6z3jorOlR5slvZ5hk9iAd/j05kzPMFcvUT75PcZw9xPwauXnJHNwTiqcTrr/GNn0uTPe6YGaY10VB/mPM3A1z6KN3oegjeoymPn67tc7gRvTWzusDd8Vbun5Lo78cnw9a7R4wU/RhnOB/8qF11ddeuH8qV9uWcb2+HTj4UvnuPku7j0O3L9333d7xPnsXbcnxy3N3pmrwN3LfTPpN0z0ncLvRDx/ATczsKg=
   </data>
  </layer>
  <layer name="Bridge" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2BgQQoapga4CsRXsGBkgE3+Co3cQgpIQaKv0tkt+ORBcvZMCL4bE06lo26hEBCyb9QtlLuFlu6hd7iMuoV09wyUW3DZN1jcMgpGwSgYfAAAydMwsw==
+   eJxjYBgFo2BgQQoapga4CsRXsGBkgE3+Co3cQgpIQaKv0tkt+ORBcvZMCL4bE06lo26h0C3oaXWg3EKMfUPVLbRMM0M5XCgFV/DYSW+34LNzpLsFXzwNBBhMbhkFo2CwAQAxYzWu
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="35" height="25">
@@ -53,25 +53,25 @@
   <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="896" y="512"/>
   <object name="characters/enemies/crocodile/croc_b2_2" gid="296" x="896" y="576"/>
   <object name="characters/enemies/crocodile/croc_b2_3" gid="296" x="896" y="640"/>
-  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="576" y="704"/>
-  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="576" y="768"/>
-  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="576" y="832"/>
-  <object name="characters/enemies/crocodile/croc_b2_7" gid="296" x="896" y="896"/>
-  <object name="characters/enemies/crocodile/croc_b2_8" gid="296" x="896" y="960"/>
-  <object name="characters/enemies/crocodile/croc_b2_9" gid="296" x="896" y="1024"/>
-  <object name="characters/enemies/crocodile/croc_b2_10" gid="296" x="896" y="1088"/>
-  <object name="tile_trigger/challenge2b" gid="292" x="960" y="1216"/>
+  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="576" y="768"/>
+  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="576" y="832"/>
+  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="576" y="896"/>
+  <object name="characters/enemies/crocodile/croc_b2_7" gid="296" x="896" y="1024"/>
+  <object name="characters/enemies/crocodile/croc_b2_8" gid="296" x="896" y="1088"/>
+  <object name="characters/enemies/crocodile/croc_b2_9" gid="296" x="896" y="1216"/>
+  <object name="characters/enemies/crocodile/croc_b2_10" gid="296" x="896" y="1280"/>
+  <object name="tile_trigger/challenge2b" gid="292" x="960" y="1408"/>
   <object name="tile_trigger/trigger_croc_0" gid="292" x="960" y="448"/>
   <object name="tile_trigger/trigger_croc_1" gid="292" x="960" y="512"/>
   <object name="tile_trigger/trigger_croc_2" gid="292" x="960" y="576"/>
   <object name="tile_trigger/trigger_croc_3" gid="292" x="960" y="640"/>
-  <object name="tile_trigger/trigger_croc_4" gid="292" x="512" y="704"/>
-  <object name="tile_trigger/trigger_croc_5" gid="292" x="512" y="768"/>
-  <object name="tile_trigger/trigger_croc_6" gid="292" x="512" y="832"/>
-  <object name="tile_trigger/trigger_croc_7" gid="292" x="960" y="896"/>
-  <object name="tile_trigger/trigger_croc_8" gid="292" x="960" y="960"/>
-  <object name="tile_trigger/trigger_croc_9" gid="292" x="960" y="1024"/>
-  <object name="tile_trigger/trigger_croc_10" gid="292" x="960" y="1088"/>
+  <object name="tile_trigger/trigger_croc_4" gid="292" x="512" y="768"/>
+  <object name="tile_trigger/trigger_croc_5" gid="292" x="512" y="832"/>
+  <object name="tile_trigger/trigger_croc_6" gid="292" x="512" y="896"/>
+  <object name="tile_trigger/trigger_croc_7" gid="292" x="960" y="1024"/>
+  <object name="tile_trigger/trigger_croc_8" gid="292" x="960" y="1088"/>
+  <object name="tile_trigger/trigger_croc_9" gid="292" x="960" y="1216"/>
+  <object name="tile_trigger/trigger_croc_10" gid="292" x="960" y="1280"/>
   <object name="tile_trigger/exit_level_start" gid="292" x="1920" y="1600"/>
   <object name="tile_trigger/exit_level_end" gid="292" x="0" y="1472"/>
   <object name="player_data/player_data" gid="287" x="64" y="64"/>
@@ -79,7 +79,7 @@
  </objectgroup>
  <layer name="SpecialLayer" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJy1lmsKhEAMg8Vrud7/Wos/CiUkbeqMhbKLZiafbX0cxyx+53DBRxEcDs+jYfnGk+WdUmkqT6ap+JTvE/eps9Ion4qFcezKCGRndWQcK3E1bKqnmRFZumtV5yoWvH7kYLXZzcK8Ms9brylLV4OdLNjfi3CoeXVYOh5kyT1WLOzZ8hVL1yN1z+xkcWdXzQz2buo5ZXF44tgOFjYviqd7d62wVPNScSkW9V5mPHGMrVll6eqEPMiSz7ss4VPVptKgHtfhXp3Gieq5VOnR2/3u6jRs3wl/549rnX2dWji8rmYS1Z4OXzdf7r3u1Mth7zh3+DpM8T///gE/roI7
+   eJy1llEKhEAMQ8Vrqfe/lvgxUEqSploLZRc3M32m1dlt68W5Nxf8FIvD4Xk0KN/URHmFZBpVE2kUH6v7xLXzVBpWR7EgjqlckdmRj4jjSxwFG+tpZMws1b2y3xRLvv/MgbyZZkG1Is/bWl2WyoNJltzfA3CweXVZlCazxB4zFvRucVgqbxBL1SP2zEyyuLPLZib37m8Wh2ddm2BB88J4qrOrM7/5upoXxcVY0LlcsaA1X1mYTy5L1Lksq47yJrMgnriPOm8rjeuL8obpc233f1eliTOA5ojxOHujtZUvKjq1sl5pOqH2dPiq+XKfdccvh73inKjrMK3v8fMGmxOEdQ==
   </data>
  </layer>
 </map>
