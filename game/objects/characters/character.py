@@ -93,7 +93,7 @@ class Character(GameObject, ScriptStateContainer):
 
     """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
 
-    def run_script(self, script_to_run = -1, parse_error = False, callback = None):
+    def run_script(self, script_to_run = -1, parse_error = False, callback = lambda: None):
         """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
 
         Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
@@ -137,7 +137,7 @@ class Character(GameObject, ScriptStateContainer):
             script_api["get_flag_message"] = self.get_flag_message
 
             script_api["yell"] = self.__yell
-            script_api["cut"] = self.__cut
+            script_api["cut"] = scriptrunner.make_blocking(self.__cut)
 
             scriptrunner.start(script_api, script_to_run, self, engine, parse_error, callback)
         return
@@ -482,12 +482,13 @@ class Character(GameObject, ScriptStateContainer):
     def give_keys(self):
         pass
 
-    def __cut(self):
+    def __cut(self, callback = lambda: None):
         engine = self.get_engine()
 
         if (self.__cuts_left == 0):
+            engine.add_event(callback)
             engine.print_terminal("Not enough cuts left!")
-            return
+            return False
 
         (x,y) = self.get_position()
 
@@ -496,22 +497,26 @@ class Character(GameObject, ScriptStateContainer):
         if self.is_facing_east():
             for obj in engine.get_objects_at((x+1, y)):
                 if(hasattr(obj, "on_cut")):
-                    made_cut = made_cut or obj.on_cut()
+                    made_cut = obj.on_cut(callback = callback)
+                    break
 
         elif self.is_facing_west():
             for obj in engine.get_objects_at((x-1, y)):
                 if(hasattr(obj, "on_cut")):
-                    made_cut = made_cut or obj.on_cut()
+                    made_cut = obj.on_cut(callback = callback)
+                    break
 
         elif self.is_facing_north():
             for obj in engine.get_objects_at((x, y+1)):
                 if(hasattr(obj, "on_cut")):
-                    made_cut = made_cut or obj.on_cut()
+                    made_cut = obj.on_cut(callback = callback)
+                    break
 
         elif self.is_facing_south():
             for obj in engine.get_objects_at((x, y-1)):
                 if(hasattr(obj, "on_cut")):
-                    made_cut = made_cut or obj.on_cut()
+                    made_cut = obj.on_cut(callback = callback)
+                    break
 
         if made_cut:
             self.__cuts_left = self.__cuts_left - 1
@@ -521,6 +526,8 @@ class Character(GameObject, ScriptStateContainer):
                 engine.print_terminal("Swoosh! This knife now has " + str(self.__cuts_left) + " cut(s) left!")
         else:
             engine.print_terminal("Swish? There's nohing to cut. This knife still has " + str(self.__cuts_left) + " cut(s) left!")
+            engine.add_event(callback)
+        return made_cut
 
 
 

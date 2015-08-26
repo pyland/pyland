@@ -13,7 +13,7 @@ from scoped_interpreter import ScopedInterpreter
 class HaltScriptException(Exception):
     pass
 
-def start(script_api, script_name, script_state_container, engine, parse_error = True, callback = None):
+def start(script_api, script_name, script_state_container, engine, parse_error = True, callback = lambda: None):
     """ This function runs the script provided in the argument in a seperate thread.
 
     The script has access to a set of API's defined in script_api that allow
@@ -32,7 +32,7 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
     """ How printing is handled """
 
     printed_flag = [False]  #This flag used to determine if the player has printed something, because if nothing has been printed there is no point in inserting the "----" in the terminal.
-    def user_print(text):
+    def user_print(text = ""):
         """ A simple method to print text to the game console for the user, overrides the python default print method """
         printed_flag[0] = True
         engine.print_terminal(text, False) #autoconvert print to strings (do not need to convert within the game)
@@ -233,10 +233,10 @@ def make_blocking(async_function):
         """ This is the blocking version of the async_function that is provided as and argument. """
         lock = threading.Lock()
         lock.acquire()
-        async_function(callback = lock.release) #run the async_function with the callback provided above as its argument
+        result = async_function(callback = lock.release) #run the async_function with the callback provided above as its argument
         lock.acquire() # Try to a acquire a lock until it is released. It isn't released until the callback releases it.
         lock.release() # release the lock, it isn't needed anymore
-        return
+        return result
 
     return blocking_function
 

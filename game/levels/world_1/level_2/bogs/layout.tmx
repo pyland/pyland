@@ -72,5 +72,6 @@
   <object name="whetstone/whetstone1" gid="292" x="1344" y="320"/>
   <object name="tile_trigger/myla_explain_whetstone" gid="292" x="960" y="384"/>
   <object name="vine/vine1" gid="196" x="640" y="448"/>
+  <object name="whetstone/whetstone2" gid="292" x="1280" y="3072"/>
  </objectgroup>
 </map>

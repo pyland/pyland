@@ -27,7 +27,7 @@ class Whetstone(GameObject):
         for vine in self.__vine_list:
             vine.restore()
         self.get_engine().run_callback_list_sequence([
-            lambda callback: self.get_engine().show_dialogue("You used the whetstone, to replenished your knife to have " + str(self.__replenish_power) + " cut(s)", callback = callback),
+            lambda callback: self.get_engine().show_dialogue("You used the whetstone, your knife now has " + str(self.__replenish_power) + " cuts left.", callback = callback),
             lambda callback: self.get_engine().show_dialogue("All the vines in the area have been restored.", callback = callback),
             lambda callback: player_object.set_busy(False, callback = callback)
         ])

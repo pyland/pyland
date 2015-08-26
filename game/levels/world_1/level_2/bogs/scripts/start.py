@@ -11,7 +11,7 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 
 def myla_explain_cut_action(player_object):
     player_one.set_cuts_left(2)
-    myla_explain_cut.player_walked_on = lambda: None
+    myla_explain_cut.player_walked_on = lambda player_object: None
     player_data.save_checkpoint("myla_explain_cut_action")
 
     def myla_ask_player_if_there_is_way(callback):
@@ -42,7 +42,7 @@ def myla_explain_cut_action(player_object):
 
 
 def myla_explain_whetstone_action(player_object):
-    myla_explain_whetstone.player_walked_on = lambda: None
+    myla_explain_whetstone.player_walked_on = lambda player_object: None
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: myla.stop_follow(callback = callback),
@@ -66,7 +66,7 @@ def myla_explain_whetstone_action(player_object):
     ])
 
 def myla_explain_crocodiles_action(player_object):
-    myla_explain_crocodiles.player_walked_on = lambda: None
+    myla_explain_crocodiles.player_walked_on = lambda player_object: None
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("Here Myla would explain that there are sleeping crocodiles here.", callback = callback),
@@ -170,6 +170,7 @@ vine_list = [
 ]
 
 whetstone1.prepare(2, vine_list)
+whetstone2.prepare(11, vine_list)
 
 
 player_one.focus()
