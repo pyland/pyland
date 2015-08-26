@@ -119,7 +119,6 @@ MainWindow::MainWindow(GameMain *exGame):
 {
     LOG(INFO) << "Constructing MainWindow..." << std::endl;
 
-
     externalWorkspace = false;
     anyOutput = false;
     scriptEnabled = true;
@@ -128,7 +127,6 @@ MainWindow::MainWindow(GameMain *exGame):
 
     script_running = false;
     fast = false;
-
 
     game = exGame;
     this->setUnifiedTitleAndToolBarOnMac(true);
@@ -1033,7 +1031,6 @@ void MainWindow::pushTerminalText(std::string text, bool error)
     QString qtext = QString::fromStdString(text);
     terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
     terminalDisplay->append(qtext);
-    //terminalDisplay->insertPlainText(qtext);
     terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
 }
 

@@ -74,6 +74,8 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
     def parse_output(error_message):
         parsed_error_message = ""
 
+        engine.set_error(True)
+
         #Add more elif statements for the error messages we want to parse to give more useful messages
         if ("NameError" in error_message):
             command = ""
@@ -134,7 +136,7 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
             #Get the second line number from the error message
             line = parse_line_number(error_message,2)
 
-            parsed_error_message = ("PyRunner Error: There is no end bracket for the 'print' command\n in line "+ line + "\n"+error_pointer)
+            parsed_error_message = ("PyRunner Error: There is no end bracket in line "+ line + "\n"+error_pointer)
         ##This only works if a print statement was used, fails if print is part of a variable name or string
 #        elif ("SyntaxError" in error_message) and ("print" in error_message):
 #            #Get the section of the error after the second line number has been given
@@ -214,6 +216,7 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
         """
 
         try:
+            engine.set_error(False)
             scoped_interpreter.runcode(script, HaltScriptException) #Run the script
         except HaltScriptException: #If an exception is sent to halt the script, catch it and act appropriately
             engine.print_terminal("Halted Script", True)
