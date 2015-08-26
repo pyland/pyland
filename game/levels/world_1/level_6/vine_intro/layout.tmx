@@ -26,17 +26,17 @@
  </tileset>
  <layer name="Ground" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJztwwENAAAMw6BKnX8Vd3AFkLBqqqqqqs8DlhyGEA==
+   eJztzjENAAAIA7Bd6MS/CmwsoUf/bpIFAACg3hQc+OsAtQ2Ftg==
   </data>
  </layer>
  <layer name="Decor" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzdlEEOgCAMBBu/5Wc8ceL/Z09G0ogg7JbaTeZGOtACWURyINix9rB9qzyoWaeONRbnGU0y8rType9J4fG9RvegQczyDx5UdE3mPTjk/ieYnvIvYr751syieEpXT572pblSc1l4kKz2sOLVg+4nuq5nz0i83YN9qzPjeas7g5e+oT1ROAFf/en0
+   eJzdlD0OgCAMRgnG+BNXvYyXcWLi/rOQaCBEoZK2IF/yNuwDKtVCCN0Q1OH2UPtKebB6rQBrOM6TG8XkSeXLvauAGt9r6x5sMHr5Bw9WwpqU/8Eh3Jyg9PiziPLNQ/rWmgeScE9P3HlzcXgwKe2hSq0e7PvErluzJye5NSbDACDmsTXGBOvFlqCPeGbA91CsZ5cO37MYJBJd5DwUoZ5vpTgBMxrnDA==
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="40">
   <data encoding="base64" compression="zlib">
-   eJzd0zEOACAIA0Djt+T/73LRxTioaQHbpKuXIFgtxYTKjrfD9qIc5F9H7IO6czPTjPeq4rS6d9Bto+oOKuubKvt26rD+Td1BxcuKulMvh5Wszu/3E+m8JOseMJx5Y8iqzk2lHWlkfwc=
+   eJzd1FEOgCAMA1Cyaw3vfy1//FJMgKzraJP+7kVhdGutCxWdbAftsZzIs2bcB3Vn5Z9W3FcVx23sRNefqjtRec9UuW+zDurc1J2oZFmsPc1yUKnqnL4/TGcnuzMum++fszKjkuP23dfM70EE/b6xegOySIw2
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="40">
