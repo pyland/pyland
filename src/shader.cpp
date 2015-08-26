@@ -35,12 +35,12 @@ std::shared_ptr<Shader> Shader::new_resource(const std::string resource_name) {
 Shader::Shader(const std::string program_name):
     Shader(
 #ifdef USE_GLES
-           program_name + ".glesv",
-           program_name + ".glesf"
+           "shaders/" + program_name + ".glesv",
+           "shaders/" + program_name + ".glesf"
 #endif
 #ifdef USE_GL
-           program_name + ".glv",
-           program_name + ".glf"
+           "shaders/" + program_name + ".glv",
+           "shaders/" + program_name + ".glf"
 #endif
            ) {
 }

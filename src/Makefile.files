@@ -1,4 +1,4 @@
-EXECUTABLE = main.bin
+EXECUTABLE = ../game/main.bin
 EXECUTABLE_OBJ = main.o
 
 TEST_EXECUTABLE = test/test.bin
