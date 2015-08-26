@@ -28,15 +28,14 @@
  </layer>
  <layer name="Decor" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJydV9FywjAMCyuscB3bXtpfJH3p/z/S3KJDaHIbyJ2uEDu27DhumtPfWAg65gqnsxjcgvnF2FF/PMc6mXikQKeVg4MbmJ/NPOOyol/xuRMn+8kVzt4t/efEdvFf/ZYxrJhWfFdZwVl0LiTDenBSnxyHypjHlfyeK8rcz4oD4Zd0etGBDHzAlfO6BfAYK5eRfhccyW6uuRoFR5JpHgvPbocDcvJV42HbEz1hF7E6LsjTleaQq072wtUQyxCP48P+esmZ0wMP5qA8MOb0qAeuC7XnfGjMms+IB7gwJ3Bp8Tml5/gZp/TYX+XE9eVyojXiOGxxcrXKdocUc9G+hCdkUbyudp2cufA5RF3xmda9yTLHvSLis8WFz6yrNeajXKL3E3Ib7dfevnENu3PX2uOi3tKSmyk997BBZMA7fFr3THuYq5doP/k9xnD3E81T1ENOsgZ9UuHypOePkc0c8tRVOeeN84GaUznjw6xNtJafJTd6H9obrn9i6J3A6bTWjtrhJ9+RnF2O7xUfEbQn8jrHhf1rXl6JW+2pXR5ZdFtsOn3Y0jVuvYt7iwPPb9333RlxNlv9tuzxXs7eWavA3ct9M+k3TPSdou/EMu7XvrOo
+   eJydV9FywjAMCxRWuI5tL+0vkr70/x9pbtFNaHIbyJ2uEDu27DhumtPvWAg65gqnsxjcg/nF2FF/PMc6mXikQKeVg4MbmJ/NPOO6ol/xsRMn+8kVzt49/efEdvFf/ZYxrJhWfFVZwUV0riTDenBSnxyHypjHjfxeKsrc94oD4Yd0etGBDHzAlfO6BfAYK5eRfhecyG6uuRoFJ5JpHgvPbocDcvJZ42HbEz1hF7E6LsjTjeaQq072wtUQyxCP48P+esmZ0wMP5qA8MFB/DI4n4qK+UB8tPMCFOaWG+LVenPyc/vZXOXF9uZwwl4jDFidXq2x3SDEX7Ut4gksUr6tdJ2cufA5RV3ymdW8yzR3Tc6+I+Gxx4TPrao35KJfo/YTcRvu1t29cw+7ctfa4qLe05GZKzz1sEBnwDp/WPdMe5uol2k9+jzHc/UTzFPWQs6xBn1S4POn5Y2Qzhzx1Vc5543yg5lTOOJq1idbys+RG70N7w/VPDL0TOJ3W2lE7/OQ7krPL8b3iI8Ic6EVc2L/m5ZW41Z7a5ZFFt8Wm04ctXePWu7i3OPD81n3fnRFns9Vvyx7v5eydtQrcvdw3k37DRN8p/E7E8wHuObHV
   </data>
  </layer>
  <layer name="Bridge" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2BgQQoapga4CsRXsGBkgE3+Co3cQgpIQaKv0tkt+ORBcvZMCL4bE06lo24Zdcugdwsl7hnO4TLqFuq7hRAYTG4ZBaNgFAw+AADxwzCz
+   eJxjYBgFo2BgQQoapga4CsRXsGBkgE3+Co3cQgpIQaKv0tkt+ORBcvZMCL4bE06lo26hEBCyb9QtlLuFlu6hd7iMuoV09wyUW3DZN1jcMgpGwSgYfAAAydMwsw==
   </data>
  </layer>
-
  <objectgroup name="Object Layer 1" width="35" height="25">
   <object name="characters/player/player_one" gid="286" x="1920" y="1600"/>
   <object name="characters/enemies/crocodile/croc_0" gid="296" x="1837" y="1159"/>
@@ -54,9 +53,9 @@
   <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="896" y="512"/>
   <object name="characters/enemies/crocodile/croc_b2_2" gid="296" x="896" y="576"/>
   <object name="characters/enemies/crocodile/croc_b2_3" gid="296" x="896" y="640"/>
-  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="512" y="704"/>
-  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="512" y="768"/>
-  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="512" y="832"/>
+  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="576" y="704"/>
+  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="576" y="768"/>
+  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="576" y="832"/>
   <object name="characters/enemies/crocodile/croc_b2_7" gid="296" x="896" y="896"/>
   <object name="characters/enemies/crocodile/croc_b2_8" gid="296" x="896" y="960"/>
   <object name="characters/enemies/crocodile/croc_b2_9" gid="296" x="896" y="1024"/>
@@ -66,9 +65,9 @@
   <object name="tile_trigger/trigger_croc_1" gid="292" x="960" y="512"/>
   <object name="tile_trigger/trigger_croc_2" gid="292" x="960" y="576"/>
   <object name="tile_trigger/trigger_croc_3" gid="292" x="960" y="640"/>
-  <object name="tile_trigger/trigger_croc_4" gid="292" x="448" y="704"/>
-  <object name="tile_trigger/trigger_croc_5" gid="292" x="448" y="768"/>
-  <object name="tile_trigger/trigger_croc_6" gid="292" x="448" y="832"/>
+  <object name="tile_trigger/trigger_croc_4" gid="292" x="512" y="704"/>
+  <object name="tile_trigger/trigger_croc_5" gid="292" x="512" y="768"/>
+  <object name="tile_trigger/trigger_croc_6" gid="292" x="512" y="832"/>
   <object name="tile_trigger/trigger_croc_7" gid="292" x="960" y="896"/>
   <object name="tile_trigger/trigger_croc_8" gid="292" x="960" y="960"/>
   <object name="tile_trigger/trigger_croc_9" gid="292" x="960" y="1024"/>
@@ -80,7 +79,7 @@
  </objectgroup>
  <layer name="SpecialLayer" width="35" height="25">
   <data encoding="base64" compression="zlib">
-   eJy9llEOgzAMQxHXAu5/rYmPSpVlJw5NFykCDbd+JFm346jFfRYXbIrB4fC8GpZfPFk+UypN5Mk0EZ/yfeM5dUYa5ROxMI6uHIHsqo7IsRJXwpb1lLFk76qeRSzYBxbYo26Wm3AgzxevKgt6qvsOFuzvRTjUvO5gmXusWNjZsosl6xGrx7/nJZsZ/Gw3S4Wng4XNi+LJzpcVlmheIi7FgrwOC/stX2Wp1glZ5ucuy/CJahNpUI/rcK9M40R2Lik9erv/uzIN27fCn/njWmdfpxYOr6upRLSnw5fNl/tdd+rlsGecHb4O07ifrz/6KIAI
+   eJy1lmsKhEAMg8Vrud7/Wos/CiUkbeqMhbKLZiafbX0cxyx+53DBRxEcDs+jYfnGk+WdUmkqT6ap+JTvE/eps9Ion4qFcezKCGRndWQcK3E1bKqnmRFZumtV5yoWvH7kYLXZzcK8Ms9brylLV4OdLNjfi3CoeXVYOh5kyT1WLOzZ8hVL1yN1z+xkcWdXzQz2buo5ZXF44tgOFjYviqd7d62wVPNScSkW9V5mPHGMrVll6eqEPMiSz7ss4VPVptKgHtfhXp3Gieq5VOnR2/3u6jRs3wl/549rnX2dWji8rmYS1Z4OXzdf7r3u1Mth7zh3+DpM8T///gE/roI7
   </data>
  </layer>
 </map>

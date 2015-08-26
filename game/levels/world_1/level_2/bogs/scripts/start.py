@@ -89,7 +89,7 @@ def myla_explain_crocodiles_action(player_object):
         lambda callback: myla.set_solidity(False, callback = callback),
         lambda callback: player_one.face_east(callback = callback),
         lambda callback: myla.face_west(callback = callback),
-        lambda callback: engine.show_dialogue("Swinging monkeys! Seems like the crocs are already out.", callback = callback),
+        lambda callback: engine.show_dialogue("Swinging monkeys! Seems like the Carl's lads and lasses are already out.", callback = callback),
         lambda callback: engine.show_dialogue("They seem to be sleeping. But if you walk next to them I'm sure they will wake up, so cut down the vines to avoid them!", callback = callback),
         lambda callback: engine.show_dialogue("Also.. I might be a bit slightly too clumsly and loud...", callback = callback),
         lambda callback: engine.show_dialogue("So I'm just gonna...", callback = callback),
