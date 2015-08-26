@@ -97,6 +97,10 @@ class GameObject:
         callback()
         return
 
+    def set_animation_frame(self, frame_number, callback = lambda: None):
+        self.__entity.set_animation_frame(frame_number)
+        self.get_engine().add_event(callback)
+
     def pause_animating(self, callback = lambda: None):
         """ Pauses the animation of the object, displaying the current frame it's on. """
         self.__entity.pause_animating()

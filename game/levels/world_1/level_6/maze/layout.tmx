@@ -31,12 +31,12 @@
  </layer>
  <layer name="Decor" width="40" height="70">
   <data encoding="base64" compression="zlib">
-   eJztljEWgCAMQzmtE/efXR0UCaUk8DL8xScQQiitpZRqjNmSy5jNycy471nME4YGBW9U/Ffzx/BBMrGq9rXGsOoI4hH7TP/2yNZgfdqovRe9OpQ0z96bCu419oBxNllrOjtmNTN6XTTvqvXUNdw8ycroyrt2gf+yvWbrQM6NrcdwMvD2jf1etdavHWOyGPVUhVPvOrvviq4/U2fm3kfmZPTAKj242Y+sd2Gmtuwx6HxRL3r8RHxfVQNdV/q9ypoXfV+/xkS0InNHszOyd3YG2Dk8Wd8NbRprEw==
+   eJztljEWgCAMQzktE/efXR1ECaUk+DL8xSclhNK2lVKaMeZIqjGmi99ZzBOGBgVvVPxX88fwQXJiV+17W8OqI4hH7Dv9OiNbg/Vpo9YvRnUoaV59NhU8a5wB426y9nTumN2smHXRfFetp67h5k5Wju58axX8l+01Wwdyb2w9hpMDT9/Y/ept/zawJotZT1X461tnz13R/VfqzDz7TEzGDKwyg5vzyOoLK7Vlr0HjRb0Y8RPxfVcNdF0Z9yorLtpfe2siWpHY0dyZOTs7B9h5+Gd9F3QRauM=
   </data>
  </layer>
- <layer name="SpecialLayer" width="40" height="70" visible="0">
+ <layer name="SpecialLayer" width="40" height="70">
   <data encoding="base64" compression="zlib">
-   eJztlksOgCAMRI3X0sN6VF2SqEjpb2rmJd2Q6EyhLezrsuwMBqNkEFIdzxpnn91ByLunuSXud8R5sxaJBklNRM2+3jdZc2Q0F/Seoj8d6P4sQLsvJL2H4nmUP/jlWwOPjLPx0mTtkGgs3rrSekedp5zhpMWrRiN7rdVDppLHCl6JD0/njnBf9fTbNY/73mI+ofLXXr9yOr4CWd/Sp2fuM/+MPos3zUh9UpeRXs6qpxk9rxnwtDarM7Kfkn2PmoGcK3289kZzv759o/Eq+be2dmZyl+ZjSbb+F9X9nb5368o=
+   eJztllsOhSAMRI3bui7WpXo/SRSk9DU1c5L+kOhMoS0c+7YdDAajZBBC+rDP7iDkPdL8Je53xHmzFokGSU1Ezb7RN1lzZDYX9J6iPx3o/ixAuy8kvYfieZYv+OVbA4+Ms/HSZO2QaCzeutJ6R52nnOGkxatGI3ut1UOmkscKXokPT+eOcF+N9Ns1j/veYj6h8tVe/+d0vgWyvqVPz9xX/hl9Fj3NSH1Sl5lezqqnFT2vGfC0tqozs5+SfY+agZwrY7z2RnO/9r7ReJX8W1s7K7lL87EkW/+N6v4usS/p2g==
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="40" height="70">
@@ -2602,5 +2602,6 @@
   <object name="vine/poison_vine/vine_63_37" gid="101" x="2368" y="4480" width="64" height="64"/>
   <object name="vine/poison_vine/vine_63_38" gid="101" x="2432" y="4480" width="64" height="64"/>
   <object name="vine/poison_vine/vine_63_39" gid="101" x="2496" y="4480" width="64" height="64"/>
+  <object name="whetstone/whetstone1" gid="293" x="1344" y="1088"/>
  </objectgroup>
 </map>
