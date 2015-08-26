@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="70" height="70" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
+ <layer name="Ground" width="70" height="70">
+  <data encoding="base64" compression="zlib">
+   eJztzjENwEAAxLCHWv4oCqEZKnn4s5Q953x7LqzQj6JCP4oK/Sgq9KOo0I+iQj+KCv0oKvSjqNCPokI/igr9KCr0o6jQj6JCP4oK/Sgq9KOo0I+iQj+KCv0oKvSjqNCPokI/igr9KCr0o6jQj6JCP4oK/Sgq9KOo0I+iQj+KCv0oKvSjqNCPokI/igr9KCr0o6jQj6JCP4oK/Sgq9KOo0I+iQj+KZmZmZmZmZmZmZmZmZmbmXy/8cNfO
+  </data>
+ </layer>
+ <layer name="Decor" width="70" height="70">
+  <data encoding="base64" compression="zlib">
+   eJztmFGKwzAMRE2vtZfJAXL/72WhBlfE6cgeJ1l4D4aqgUqTSeK6LeU7m1F7kLO3UwrOeXunfpoUnPPIhVwyIpfzXEohl1bkcp5LrJ8mBee8K3KJe6SR/ZKC2/NRvWqGcvxICqs8kwu5ZDyTyz25sO72cxntoeDyW95eS1O7erf6r7lE/26N5BKfNwWH18oVvwN664vymVorOLzWPlc+R3/8vLR7545cevfo2X59Vt88nH1mdS4xiy30nOm9UmourutWad9HT0fHXOf6lPul5ynjdeZ61LVlK59zex5duYzcN73aqXbdVWeN5JJZ31TPitdR7c2r6vWO5+hsvrN37JvpHzNUWOE563tkxkx/hRWeZ30rM8iFXDIzZr4nFFZ4jvWKGfEcyCV3/EgKqzyTy/W5zO5DFdyej+qnScE5j1zIJSNyIZeMyIVcMiKXfi4z//ddJQAAAAAAAAAAAAAAAAAA8PILl3baiA==
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="70" height="70">
+  <data encoding="base64" compression="zlib">
+   eJzt14EKgjAUQFHxt+z/vytCoiXXcjjee4N7QAjBXNe21rLEeqzfh3ZtC7t82IXZhdmF2YXZhdmFRXQ57pFm2C9Fdek5X4FdmF2YXVhkF9ddvkflDkd2YVW7ZM+3zPUle1zZ92/fd1v3o2KXs+f2a79+93h5N9k6ronoMsPvI7k63rvPLVPF70t7nwrz6N8Y6fWIz9v7LGZfd0fOk8guPWPNmEfR92+79FyTuS5W7ZLNLswuLHPdrdwp+nf6yvkK7MLswqK6VP2/diZ7X1mVXZhdmF2YXZhdmF2YXdgs+yxJkiRJkiRJkiRJ0lhPHWJGrQ==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="70" height="70">
+  <object name="characters/player/player_one" gid="286" x="640" y="1536" width="64" height="64"/>
+  <object name="characters/npcs/myla/myla" gid="291" x="640" y="1472" width="64" height="64"/>
+  <object name="sign/sign_one" gid="287" x="1856" y="1408" width="64" height="64"/>
+  <object name="sign/sign_two" gid="287" x="3392" y="1408" width="64" height="64"/>
+  <object name="characters/npcs/generic/helper_one" gid="291" x="3584" y="1408" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_one" gid="301" x="3456" y="1216" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_two" gid="301" x="3712" y="1344" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_three" gid="301" x="3456" y="1536" width="64" height="64"/>
+ </objectgroup>
+</map>

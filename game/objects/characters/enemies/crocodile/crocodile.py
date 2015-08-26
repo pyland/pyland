@@ -278,7 +278,13 @@ class Crocodile(Character):
         engine.run_callback_list_sequence([
         lambda callback: player.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
+        lambda callback: self.go_to_checkpoint()
         ])
+
+    def go_to_checkpoint(self, callback = lambda: None):
+        pass
+    
+
 
 
 

@@ -71,6 +71,7 @@ class PlayerData(GameObject):
         """ loads in the player data, and correctly set's up all the global states of the game.
 
         For example, it displays the correct number of totems, PyScipter tabs etc. """
+        #TODO: Make this return a dummy save if a save doesn't exist
         engine = self.get_engine()
         self.__player_name = player_name
         self.__player_data = engine.get_player_data(player_name)
