@@ -24,14 +24,14 @@
  <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="26" height="40">
+ <layer name="Ground" width="26" height="40" visible="0">
   <data encoding="base64" compression="zlib">
    eJztzjENAAAIA7Bd6MS/CmwsoUf/bpIFAACg3hQc+OsAtQ2Ftg==
   </data>
  </layer>
- <layer name="Decor" width="26" height="40">
+ <layer name="Decor" width="26" height="40" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzdlD0OgCAMRgnG+BNXvYyXcWLi/rOQaCBEoZK2IF/yNuwDKtVCCN0Q1OH2UPtKebB6rQBrOM6TG8XkSeXLvauAGt9r6x5sMHr5Bw9WwpqU/8Eh3Jyg9PiziPLNQ/rWmgeScE9P3HlzcXgwKe2hSq0e7PvErluzJye5NSbDACDmsTXGBOvFlqCPeGbA91CsZ5cO37MYJBJd5DwUoZ5vpTgBMxrnDA==
+   eJzdlD0OgCAMRhuMv3HVy3gZJybuPyuJBkIUKmkB+ZK3YR9QqQIAVRHcSe3h9uXyUPVaItakOE9sZCJPKF/uXTqU+F5r91BD0cs/eKji1uT8D3Ywc4LTY88izjeP6VttHkzcPT1x582VwkNJbg9XSvVQ3yd13ZI9MYmtMZ70CDqPR9cYAiwXa4DW45kQ32PRnk0YbM98IohoPOfhCPd8y8UBQhrnEg==
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="40">
@@ -39,7 +39,7 @@
    eJzdk8EOwCAIQw2/hf7/b3nZaTMZOAquTXrxwCOWdmmtExmtbA6aV8WJzLriHtg5nj89sa8sHJU1J9p6mZ0TpftMlnuzclC5sXOilMWq6mkWB6VTOX/vTyVnR7szvLtb3lYeRr9xrHMsHJVnXxHZf8nHK9TdVnsCXpyMCw==
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="26" height="40">
+ <objectgroup name="Object Layer 1" width="26" height="40" visible="0">
   <object name="characters/player/player_one" gid="286" x="128" y="256" width="64" height="64"/>
   <object name="characters/npcs/myla/myla" gid="291" x="0" y="256" width="64" height="64"/>
   <object name="tile_trigger/trigger1a" gid="292" x="1216" y="384"/>
@@ -97,6 +97,6 @@
   <object name="vine/poison_vine/vine67" gid="101" x="1216" y="1600"/>
   <object name="vine/poison_vine/vine68" gid="101" x="1280" y="1536"/>
   <object name="vine/poison_vine/vine69" gid="101" x="1344" y="1600"/>
-  <object name="crocodile/crocodile1" gid="296" x="768" y="2240"/>
+  <object name="characters/enemies/crocodile/crocodile1" gid="296" x="768" y="2240"/>
  </objectgroup>
 </map>
