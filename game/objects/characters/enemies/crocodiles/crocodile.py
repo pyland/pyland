@@ -1,48 +1,17 @@
 import sys
 import os
-sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../characters')
-#sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../../game_object')
-#from game_object import GameObject
-from character import Character #TODO: it should import from here, but some kind of definitions with the movement functions are screwing around with follow_path, causing the game to freeze.
-
 import random
 
-def hello_world():
-    print("hello_world")
+sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/..')
+from enemy import Enemy
 
+class Crocodile(Enemy):
+    """ The crocodiles are a class of enemy """
 
-""" A brief description of the class will go here.
-The auto-generated comment produced by the script should also mention where to get a list of the api
-and which built-in variables exist already.
-"""
-class Crocodile(Character):
-
-    """ constructor
-    run when the object is created in-engine
-    """
-    def __init__(self):
-        super().__init__()
-        self.oscillate = 10000000
-
-
-    """ game engine features (public)
-    These are methods which the game engine will execute at the commented moments.
-    This will all be autofilled by the creation script with super filled in to help
-    prevent errors when it comes to this.
-    """
-
-    """ This method is run every frame before the graphics are displayed.
-    You can put code here you want to run before every frame.
-    You MUST but super().beforeFrameUpdate() for this to work. Otherwise this may lead
-    to unexpected behaviour. MAY NOT BE NEEDED, may be able to do everything with callbacks!
-    """
-    def before_frame_update(self):
-        super().before_frame_update()
-        self.__handle_movement_input()
-
-    """ public:
-    Put the regular public methods you wish to use here.
-    """
+    def initialise(self):
+        super().initialise()
+        self.__check_swim_state()
+        self.oscillate = 0
 
     """ The Crocodile follows the path given, a string a comma-seperated directions, eg. "north, east, east, south, west, north"
     If repeat is set to True, the most recent direction completed will be added to the end of the string so that whole thing becomes a cycle
@@ -97,9 +66,9 @@ class Crocodile(Character):
         return
 
 
-    """ The Crocodile follows a random path forever!
-    """
     def rand_explore(self):
+        """ The Crocodile follows a random path forever!
+        """
         rand = random.randint(1, 5)
         if rand==1:
             return self.move_north(self.rand_explore)
@@ -114,7 +83,7 @@ class Crocodile(Character):
 
 
 
-    def __check_swim_state(self, callback):
+    def __check_swim_state(self, callback = lambda: None):
         """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
 
         It is called as a callback once the crocodile has finished moving as that gives the smoothest change-over.
@@ -123,9 +92,8 @@ class Crocodile(Character):
         x, y = self.get_position()
         if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
             self.change_state("swim")
-        return callback()
+        engine.add_event(callback)
 
-    """ Overriding movement methods so that crocodiles swim in water :) """
     def move_north(self, callback = lambda: None):
         super().move_north(lambda: self.__check_swim_state(callback))
         engine = self.get_engine()
@@ -158,7 +126,6 @@ class Crocodile(Character):
     def player_action(self, player_object):
         """ This is the method that is run if the player presses the action key while facing a character.
         
-        TODO: move this to character.py and make it print an explenation on how to override this by default.
         """
         pass
 
@@ -171,14 +138,9 @@ class Crocodile(Character):
         if(self.is_facing_east()):
             return self.face_west()
         if(self.is_facing_west()):
-            return self.face_east()    
+            return self.face_east()
 
-    """ private:
-    Put the private methods you wish to use here.
-    """
-
-
-    def move_horizontal(self, player, times = 100000):
+    def move_horizontal(self, player, times = -1):
         x,y = self.get_position()
         player_x, player_y = player.get_position()
         engine = self.get_engine()
@@ -209,7 +171,7 @@ class Crocodile(Character):
         else:
             return self.toggle()
 
-    def move_vertical(self, player, times = 100000):
+    def move_vertical(self, player, times = -1):
         x,y = self.get_position()
         player_x, player_y = player.get_position()
         engine = self.get_engine()
@@ -242,19 +204,6 @@ class Crocodile(Character):
         if times == 0:
             return self.toggle()
 
-
-
-    def __check_swim_state(self, callback):
-        """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
-
-        It is called as a callback once the crocodile has finished moving as that gives the smoothest change-over.
-        """
-        engine = self.get_engine()
-        x, y = self.get_position()
-        '''if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
-            self.change_state("swim")'''
-        return callback()
-
     
     def yelled_at(self, player):
         player_x, player_y = player.get_position()
@@ -279,9 +228,6 @@ class Crocodile(Character):
             lambda callback: player.set_busy(True, callback = callback),
             lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
         ], player.kill)
-
-    def go_to_checkpoint(self, callback = lambda: None):
-        pass
     
 
 
