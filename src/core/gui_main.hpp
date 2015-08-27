@@ -133,6 +133,7 @@ private:
 
     bool bar_open; //whether or not the notification bar is open
     bool bar_options_open;
+    bool notification_bar_with_options_arrow_select_enable; //Whether the user has pressed arrow keys to select an option to press enter through
     bool external_help_open;
     bool callback_options; //whether or not there are options at the end of the notification bar
     void create_notification_bar();
@@ -272,7 +273,7 @@ public:
     //(for when a player's name is changed in python)
     void update_button_text(std::string name, unsigned int button_id);
 
-    //Update GUI buttons to distinguish the currently selected sprite from the others
+    //Update GUI buttons to distinguish the currently selected player from the others
     void update_selected();
 
 };
