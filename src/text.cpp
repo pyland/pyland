@@ -76,7 +76,6 @@ Text::Text(GameWindow* window, TextFont font, bool smooth):
     alignment_h(Text::Alignment::LEFT),
     alignment_v(Text::Alignment::TOP),
     smooth(smooth),
-    glow_radius(0),
     width(0),
     width_ratio(0),
     height(0),
@@ -101,9 +100,8 @@ Text::Text(GameWindow* window, TextFont font, bool smooth):
             }
         })
 {
-    rgba[0] = rgba[1] = rgba[2] = rgba[3] = 255;
-    glow_rgba[0] = glow_rgba[1] = glow_rgba[2] = 0;
-    glow_rgba[3] = 255;
+    rgba[0] = rgba[1] = rgba[2] = 0;
+    rgba[3] = 255;
     window->register_resize_handler(resize_callback);
 }
 
@@ -159,7 +157,7 @@ void Text::render() {
         throw Text::RenderException("Invalid dimensions after auto-sizing.");
     }
 
-    int available_width = width - glow_radius * 2;
+    int available_width = width;
     // It took a whole day to discover that there was a bug in
     // SDL_ttf. Starting with certain characters on certain
     // fonts seems to break it. :(
@@ -173,7 +171,6 @@ void Text::render() {
         throw Text::RenderException("No available width for rendering text.");
     }
 
-    // int available_height = height - glow_radius * 2;
     int line_height = TTF_FontHeight(font.font);
     int line_number = 0;
     int lost_lines = 0;
@@ -325,9 +322,9 @@ void Text::render() {
     }
     int line_count = line_number;
 
-    int used_height = line_count * line_height + 2 * glow_radius;
+    int used_height = line_count * line_height;
 
-    used_width += glow_radius * 2 + border;
+    used_width += border;
 
     image = Image(used_width, (used_height < height) ? used_height : height, true);
     uint8_t clear_colour[4] = {rgba[0], rgba[1], rgba[2], 0x00};
@@ -409,13 +406,13 @@ void Text::render() {
         switch (alignment_h) {
         default:
         case Alignment::LEFT:
-            x_offset = glow_radius;
+            x_offset = 0;
             break;
         case Alignment::CENTRE:
             x_offset = (used_width - rendered_line->w) / 2;
             break;
         case Alignment::RIGHT:
-            x_offset = used_width - rendered_line->w - glow_radius;
+            x_offset = used_width - rendered_line->w;
             break;
         }
         switch (alignment_v) {
@@ -430,7 +427,6 @@ void Text::render() {
             y_offset = line_number * line_height - (used_height - image.height);
             break;
         }
-        y_offset += glow_radius;
         // x surface
         int xs;
         // y surface
@@ -482,148 +478,10 @@ void Text::render() {
     this->used_height = used_height;
     delete[] line;
     delete[] lines;
-    if (glow_radius > 0) {
-        apply_newson_bloom();
-    }
     generate_texture();
     dirty_texture = false;
     dirty_vbo = true;
 }
-
-
-// My own spicy algorithm for creating a cheap bloom effect.
-//
-// Perform a vertical scan, to create a list of vertical distances from
-// seed points.
-// Perform a horizontal scan and calculate a winning radiance from the
-// distances in the vertical scan.
-//
-// We perform vertical scan and then horizontal to enable better
-// optimisation.
-void Text::apply_newson_bloom() {
-    // Stores distance information from the first pass.
-    int* vertical_scan(new int[image.width*image.height]);
-    int width = image.width;
-    int height = image.height;
-    int grpo = glow_radius + 1;
-
-    // Vertical Scan.
-    int i = 0;
-    for (int x = 0; x < width; ++x) {
-        int seed_y = 0;
-        for (; seed_y < height && image[seed_y][x].a == 0; ++seed_y);
-        if (seed_y == height) {
-            // It's a blank line, so move on.
-            for (int y = 0; y < height; ++y) {
-                vertical_scan[i] = 0;
-                i += width;
-            }
-        } else {
-            int seed_y_prev = -1;
-            for (int y = 0; y < height; ++y) {
-                if (y == seed_y) {
-                    // Find the next seed (or go outside of image).
-                    for (++seed_y; seed_y < height && image[seed_y][x].a == 0; ++seed_y);
-                    seed_y_prev = y;
-                }
-
-                int r(0);
-                if (seed_y_prev != -1) {
-                    // Calculate radius from distance from last seed.
-                    r = glow_radius - (y - seed_y_prev);
-                }
-                if (seed_y != height) {
-                    // Calculate radius from distance from next seed.
-                    int r2(glow_radius - (seed_y - y));
-                    if (r2 > r) {
-                        r = r2;
-                    }
-                }
-                if (r > 0) {
-                    vertical_scan[i] = r;
-                }
-                else {
-                    // If it's too far away, set radiance to 0.
-                    vertical_scan[i] = 0;
-                }
-                i += width;
-            }
-        }
-        i += 1 - (width * height);
-    }
-
-    // Pre-compute pythagoras's theorem and 0-255 scale strength.
-    int* pythag(new int[(grpo)*(grpo)]);
-    for (int y = 0; y <= glow_radius; ++y) {
-        int ry = glow_radius - y;
-        for (int x = 0; x <= glow_radius; ++x) {
-            int rx = x;
-            int score(int((float(glow_radius) - sqrt(float(rx*rx + ry*ry))) * 255.0f / float(glow_radius)));
-            pythag[x+y*grpo] = (score > 0) ? score*score/255 : 0;
-        }
-    }
-
-    // Pre-compute merge colours.
-    uint8_t merge_rgba[4][256];
-    for (int a = 0; a < 256; ++a) {
-        merge_rgba[0][a] = uint8_t(((255-a) * glow_rgba[0] + a * rgba[0]) / 255);
-        merge_rgba[1][a] = uint8_t(((255-a) * glow_rgba[1] + a * rgba[1]) / 255);
-        merge_rgba[2][a] = uint8_t(((255-a) * glow_rgba[2] + a * rgba[2]) / 255);
-        merge_rgba[3][a] = uint8_t(((255-a) * glow_rgba[3] + a * rgba[3]) / 255);
-    }
-
-    // Pre-compute radiance alpha.
-    uint8_t radiance[256];
-    for (int r = 0; r < 256; ++r) {
-        radiance[r] = uint8_t(int(glow_rgba[3]) * r / 255);
-    }
-    // uint8_t* radiance(new uint8_t[glow_radius+1]);
-    // for (int r = 0; r <= glow_radius; ++r) {
-    //     radiance[r] = uint8_t(int(glow_rgba[3]) * r / glow_radius);
-    // }
-
-    // Horizontal Scan.
-    i = 0;
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            int winner = pythag[vertical_scan[i]*grpo];
-
-            // Don't go over solid text.
-            if (image[y][x].a == 0) {
-                for (int dx = 1; dx < glow_radius; ++dx) {
-                    int candidate(0);
-                    if (x - dx >= 0) {
-                        candidate = pythag[dx+vertical_scan[i - dx]*grpo];
-                    }
-                    if (x + dx < width) {
-                        int candidate2(pythag[dx+vertical_scan[i + dx]*grpo]);
-                        if (candidate2 > candidate) {
-                            candidate = candidate2;
-                        }
-                    }
-                    if (candidate > winner) {
-                        winner = candidate;
-                    }
-                }
-                image[y][x].r = glow_rgba[0];
-                image[y][x].g = glow_rgba[1];
-                image[y][x].b = glow_rgba[2];
-                image[y][x].a = radiance[winner];
-            }
-            else {
-                    image[y][x].r = merge_rgba[0][image[y][x].a];
-                    image[y][x].g = merge_rgba[1][image[y][x].a];
-                    image[y][x].b = merge_rgba[2][image[y][x].a];
-                    image[y][x].a = merge_rgba[3][image[y][x].a];
-            }
-            ++i;
-        }
-    }
-
-    delete[] vertical_scan;
-    delete[] pythag;
-}
-
 
 void Text::generate_texture() {
     if (texture != 0) {
@@ -866,21 +724,6 @@ void Text::set_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     rgba[1] = g;
     rgba[2] = b;
     rgba[3] = a;
-    dirty_texture = true;
-}
-
-
-void Text::set_bloom_radius(int radius) {
-    glow_radius = (radius >= 0) ? radius : 0;
-    dirty_texture = true;
-}
-
-
-void Text::set_bloom_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    glow_rgba[0] = r;
-    glow_rgba[1] = g;
-    glow_rgba[2] = b;
-    glow_rgba[3] = a;
     dirty_texture = true;
 }
 

@@ -33,7 +33,7 @@
 		"object_location": self.game_folder + "/objects",
 		"font_location": self.game_folder + "/fonts",
 		"script_running_location": self.game_folder + "/script_running",
-		"dialogue_font": self.font_location + "/Ubuntu-R.ttf",
+		"dialogue_font": self.font_location + "/Ubuntu-B.ttf",
 		"game_save_location": self.game_folder + "/save.json",
 		"initial_save_location": self.game_folder + "/initial_save.json"
 	},

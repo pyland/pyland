@@ -561,10 +561,10 @@ void GUIMain::toggle_selection_notification_bar_with_options(){
     if (option_selected > 1) option_selected = 0;
     for(unsigned int i=0; i<=1; i++){
         if (i == option_selected){
-            option_buttons[i]->set_text_colour(255, 255, 255, 255);
+            option_buttons[i]->set_text_colour(0, 0, 0, 255);
         }
         else{
-            option_buttons[i]->set_text_colour(255, 255, 255, 0);
+            option_buttons[i]->set_text_colour(150, 150, 200, 240);
         }
     }
 }
@@ -901,12 +901,12 @@ void GUIMain::update_selected()
     {
         if (cur_button_index == i)
         {
-            buttons[i]->set_text_colour(255, 255, 255, 255);
+            buttons[i]->set_text_colour(0, 0, 0, 255);
             refresh_gui();
         }
         else
         {
-            buttons[i]->set_text_colour(255, 255, 255, 0);
+            buttons[i]->set_text_colour(150, 150, 200, 240);
             refresh_gui();
         }
     }
