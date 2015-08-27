@@ -367,7 +367,7 @@ class Character(GameObject, ScriptStateContainer):
         xD, yD = (xP - xC, yP - yC)
         if(abs(xD) > abs(yD)):
             if(xD > 1):
-                if not engine.is_solid((xC + 1, yC)):
+                if not (engine.is_solid((xC + 1, yC)) or (engine.get_tile_type((xC + 1, yC)) == engine.TILE_TYPE_WATER)):
                     self.set_solidity(True)
                     self.move_east(callback = lambda: self.__follow_loop(game_object))
                 else:
@@ -382,7 +382,7 @@ class Character(GameObject, ScriptStateContainer):
             elif(xD == 1):
                 self.face_east(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             elif(xD < -1):
-                if not engine.is_solid((xC - 1, yC)):
+                if not (engine.is_solid((xC - 1, yC)) or (engine.get_tile_type((xC - 1, yC)) == engine.TILE_TYPE_WATER)):
                     self.set_solidity(True)
                     self.move_west(callback = lambda: self.__follow_loop(game_object))
                 else:
@@ -400,7 +400,7 @@ class Character(GameObject, ScriptStateContainer):
                 self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
         else:
             if(yD > 1):
-                if not engine.is_solid((xC, yC + 1)):
+                if (not engine.is_solid((xC, yC + 1)) or (engine.get_tile_type((xC, yC + 1)) == engine.TILE_TYPE_WATER)):
                     self.set_solidity(True)
                     self.move_north(callback = lambda: self.__follow_loop(game_object))
                 else:
@@ -416,7 +416,7 @@ class Character(GameObject, ScriptStateContainer):
             elif(yD == 1):
                 self.face_north(callback = lambda: self.wait(0.3, callback = lambda: self.__follow_loop(game_object)))
             elif(yD < -1):
-                if not engine.is_solid((xC, yC - 1)):
+                if not (engine.is_solid((xC, yC - 1)) or (engine.get_tile_type((xC, yC - 1)) == engine.TILE_TYPE_WATER)):
                     self.set_solidity(True)
                     self.move_south(callback = lambda: self.__follow_loop(game_object))
                 else:
@@ -533,7 +533,7 @@ class Character(GameObject, ScriptStateContainer):
                     made_cut = obj.on_cut(callback = callback)
                     object_responded = True
                     break
-            
+
         if not object_responded:
             engine.add_event(callback)
 

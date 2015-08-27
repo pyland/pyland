@@ -198,7 +198,7 @@ def snake_finish_script_0(snake_index):
 
     removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
-    snake.set_solidity(True)
+    set_all_solid()
 
     if (removed_white_space == "move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
@@ -206,6 +206,17 @@ def snake_finish_script_0(snake_index):
         engine.run_callback_list_sequence(successful_sequence_0, callback = check_finish)
     else:
         engine.run_callback_list_sequence(unsuccessful_sequence_0)
+
+def set_other_snakes_not_solid(snake_index):
+    for cur_index in range(len(snakes)):
+        if not snake_index == cur_index:
+            snakes[cur_index].set_solidity(False)
+
+def set_all_solid():
+    for snake in snakes:
+        snake.set_solidity(True)
+    player.set_solidity(True)
+
 
 def snake_run_script(action_index, run_callback = lambda: None):
         snake = get_snake(action_index)
@@ -216,18 +227,15 @@ def snake_run_script(action_index, run_callback = lambda: None):
 
         removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
-        #if not ("whileTrue" in removed_white_space):
-        snake.set_solidity(False, callback = lambda: snake.run_script(script_to_run = 10, parse_error = True, callback = lambda: run_callback(snake_index)))
-        snake.wait(12.0, callback = snake.halt_script)
-        #else:
-        #    engine.run_callback_list_sequence(loop_sequence, callback = turn_snakes)
+        player.set_solidity(False)
 
-#loop_sequence = [
-#    lambda callback: myla.turn_to_face(player, callback = callback),
-#    lambda callback: engine.show_dialogue("Myla: Stop, don't give them a script with an inifinite loop! They can't halt!", callback = callback),
-#    lambda callback: player.set_busy(False, callback = callback),
-#]
+        #set all other snakes to not solid
 
+        set_other_snakes_not_solid(snake_index)
+
+
+        snake.set_solidity(True, callback = lambda: snake.run_script(script_to_run = 10, parse_error = True, callback = lambda: run_callback(snake_index)))
+        snake.wait(10.0, callback = snake.halt_script)
 
 try_script_sequence_0 = [
     lambda callback: engine.show_dialogue("Thank you, this means a lot! I'll try running it now.", callback = callback),
@@ -338,7 +346,7 @@ def snake_finish_script_1(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    snake.set_solidity(True)
+    set_all_solid()
 
     removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
@@ -400,7 +408,7 @@ def snake_finish_script_2(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    snake.set_solidity(True)
+    set_all_solid()
 
     removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
@@ -463,7 +471,7 @@ def snake_finish_script_3(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    snake.set_solidity(True)
+    set_all_solid()
 
     removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
@@ -527,7 +535,7 @@ def snake_finish_script_4(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    snake.set_solidity(True)
+    set_all_solid()
 
     removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
@@ -589,7 +597,7 @@ def snake_finish_script_5(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    snake.set_solidity(True)
+    set_all_solid()
 
     removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
@@ -610,6 +618,8 @@ unsuccessful_sequence_5 = [
     lambda callback: myla.wait(1.5, callback = callback),
     lambda callback: myla.turn_to_face(player, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Looks like didn't work. Make sure you remove the tab from the start of move_east(), when it's no longer inside a loop!", callback = callback),
+    lambda callback: engine.show_dialogue("Good job I set their scripts to terminate after 10 seconds, or they could get stuck forever!", callback = callback),
+
     lambda callback: get_snake(5).start_turning(time = 0.1, frequency = 8, callback = callback),
     lambda callback: player.set_busy(False, callback = callback),
 ]
@@ -652,7 +662,7 @@ def snake_finish_script_6(snake_index):
     xchange = snakes_final_pos[snake_index][0] - snakes_initial_pos[snake_index][0]
     ychange = snakes_final_pos[snake_index][1] - snakes_initial_pos[snake_index][1]
 
-    snake.set_solidity(True)
+    set_all_solid()
 
     if ((not engine.get_error()) and ("print" in engine.get_external_script())):
         snake.turn_to_face(player)
@@ -749,7 +759,7 @@ finish_sequence = [
     lambda callback: engine.show_dialogue("Myla: I've not heard any noises outside for a while. We'll have to try and escape now.", callback = callback),
     lambda callback: jamie.move_west(callback = callback),
     lambda callback: engine.show_dialogue("Jamie: Lets do it. I trust in you both.", callback = callback),
-    lambda callback: myla.stop_follow(callback = callback),
+    lambda callback: myla.follow(player, callback = callback),
     lambda callback: follow_all(),
 ]
 
