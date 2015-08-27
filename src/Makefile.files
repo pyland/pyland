@@ -1,4 +1,4 @@
-EXECUTABLE = main.bin
+EXECUTABLE = ../game/pyland
 EXECUTABLE_OBJ = main.o
 
 TEST_EXECUTABLE = test/test.bin

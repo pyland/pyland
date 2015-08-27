@@ -351,9 +351,7 @@ GameMain::GameMain(int &argc, char **argv):
                           input_manager
                         ));
     challenge_data->run_challenge = true;
-    //challenge = pick_challenge(challenge_data);
 
-    //Challenge *challenge(nullptr);
     std::string challenge_name = j["files"]["level_location"];
     std::string level_folder = j["files"]["level_folder"];
     challenge_data->map_name = level_folder + challenge_name + "/layout.tmx";

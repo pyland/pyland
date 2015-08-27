@@ -186,16 +186,21 @@ void Entity::set_animation_frame(int frame_number) {
 void Entity::start_animating(float speed, bool loop, bool forward, PyObject *callback) {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
+    //to replay from start if the present frame is at the end
     if(!loop && this->current_frame == 3){
         this->current_frame = 0;
     }
+
+    //if we have a loop or this is already being animated, run the callback immediately
+    if(loop || this->animating){
+        EventManager::get_instance()->add_event(boost_callback);
+    }
+
     if(!this->animating) {
         this->animating = true;
         this->animate(this->current_frame, speed, loop, forward, boost_callback);
     }
-    if(loop){
-        EventManager::get_instance()->add_event(boost_callback);
-    }
+    
 }
 
 void Entity::pause_animating() {

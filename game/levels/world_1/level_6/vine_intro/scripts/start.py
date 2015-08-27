@@ -8,6 +8,62 @@ player_one.face_south()
 player_one.focus()
 myla.follow(player_one)
 
+crocodile1.rand_explore()
+
+vine_list = [
+    vine0a,
+    vine0b,
+    vine0c,
+    vine1,
+    vine2a,
+    vine2b,
+    vine2c,
+    vine2d,
+    vine3a,
+    vine3b,
+    vine3c,
+    vine3d,
+    vine3e,
+    vine3f,
+    vine4a,
+    vine4b,
+    vine4c,
+    vine4d,
+    vine4e,
+    vine4f,
+    vine4g,
+    vine4h,
+    vine4i,
+    vine4j,
+    vine4k,
+    vine4l,
+    vine4n,
+    vine4n,
+    vine4o,
+    vine51,
+    vine52,
+    vine53,
+    vine54,
+    vine55,
+    vine56,
+    vine57,
+    vine58,
+    vine59,
+    vine61,
+    vine62,
+    vine63,
+    vine64,
+    vine65,
+    vine66,
+    vine67,
+    vine68,
+    vine69
+]
+
+whetstone1.prepare(5, vine_list)
+whetstone2.prepare(5, vine_list)
+whetstone3.prepare(7, vine_list)
+
 #beginning of level
 engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
@@ -71,10 +127,10 @@ vine2d_list_sequence = [
     lambda callback: engine.run_callback_list_sequence(vine2d_list_sequence)
 ]
 
-engine.run_callback_list_sequence(vine2a_list_sequence)
-engine.run_callback_list_sequence(vine2b_list_sequence)
-engine.run_callback_list_sequence(vine2c_list_sequence)
-engine.run_callback_list_sequence(vine2d_list_sequence)
+cycle_length, engine.run_callback_list_sequence(vine2a_list_sequence)
+cycle_length, engine.run_callback_list_sequence(vine2b_list_sequence)
+cycle_length, engine.run_callback_list_sequence(vine2c_list_sequence)
+cycle_length, engine.run_callback_list_sequence(vine2d_list_sequence)
 
 #player meets vines 3
 
@@ -135,11 +191,6 @@ vine3a.wait(3 * alive_length, lambda: engine.run_callback_list_sequence(vine3d_l
 vine3a.wait(4 * alive_length, lambda: engine.run_callback_list_sequence(vine3e_list_sequence))
 vine3a.wait(5 * alive_length, lambda: engine.run_callback_list_sequence(vine3f_list_sequence))
 
-vine_list = []
-
-#introducing the whetstone
-whetstone1.prepare(5, vine_list)
-
 met_whetstone = False
 def meet_whetstone():
     global met_whetstone
@@ -173,3 +224,18 @@ def meet_cut():
 
 trigger_whetstone2a.player_walked_on = lambda player_object: meet_cut()
 trigger_whetstone2b.player_walked_on = lambda player_object: meet_cut()
+
+
+jumpingvines = [vine51, vine52, vine53, vine54, vine55, vine56, vine57, vine58, vine59]
+
+def vine_jumping(v):
+    engine.run_callback_list_sequence([
+        lambda callback: v.wait(cycle_length, callback = callback),
+        lambda callback: v.grow(callback = callback),
+        lambda callback: v.wait(cycle_length, callback = callback),
+        lambda callback: v.shrink(callback = callback),
+        lambda callback: vine_jumping(v)
+    ])
+
+for vine in jumpingvines:
+    vine_jumping(vine)

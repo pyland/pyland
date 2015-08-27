@@ -129,7 +129,7 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
                 engine.print_debug("Reading from file: {}".format(script_filename))
                 with open(script_filename, encoding="utf8") as script_file:
                     script = script_file.read()
-                    engine.print_debug(script)
+                    #engine.print_debug(script)
 
                 scoped_interpreter.runcode(script)
 

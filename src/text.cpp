@@ -52,12 +52,7 @@ static std::map<GameWindow*, std::shared_ptr<Shader>> shaders;
 
 static void load_program(GameWindow* window) {
     window->use_context();
-#ifdef USE_GLES
-    shaders.insert(std::make_pair(window,std::make_shared<Shader>("text_shader.glesv", "text_shader.glesf")));
-#endif
-#ifdef USE_GL
-    shaders.insert(std::make_pair(window,std::make_shared<Shader>("text_shader.glv", "text_shader.glf")));
-#endif
+    shaders.insert(std::make_pair(window,std::make_shared<Shader>("text_shader")));
     std::shared_ptr<Shader> shader = shaders.find(window)->second;
     shader->bind_location_to_attribute(SHADER_LOCATION_POSITION, SHADER_VARIABLE_POSITION);
     shader->bind_location_to_attribute(SHADER_LOCATION_TEXTURE, SHADER_VARIABLE_TEXTURE);

@@ -20,9 +20,9 @@ tmx-parser/libtmxparser.a: tmx-parser/Makefile.linux
 		$(MAKE) CXXFLAGS=-fPIC -C tmx-parser -f Makefile.linux; \
 	fi
 
-jsonnet/libjsonnet.a: jsonnet/Makefile
+jsonnet/jsonnet: jsonnet/Makefile
 	@echo "${bold}[ Compiling jsonnet library ]${normal}"       
-	$(MAKE) -C jsonnet libjsonnet.a;
+	$(MAKE) -C jsonnet;
 
 #
 # Folders
@@ -63,7 +63,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
                $(PYTHON_OBJS)            \
                $(QT_OBJS)                \
                tmx-parser/libtmxparser.a \
-               jsonnet/libjsonnet.a      \
+               jsonnet/jsonnet           \
                | dependencies            \
 
 	@echo "${bold}${green}[ Compiling $(EXECUTABLE) ]${normal}"
@@ -253,6 +253,7 @@ clean:
 	@-$(RM) $(HEADER_DEPENDS)
 
 	@-$(RM) *~core *.core
+	@-$(RM) dependencies/.d
 	@-$(RM) qtgui/moc_mainwindow.cpp	
 
 	@-for directory in dependencies/* dependencies; do \

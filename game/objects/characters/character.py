@@ -139,6 +139,7 @@ class Character(GameObject, ScriptStateContainer):
 
             script_api["yell"] = self.__yell
             script_api["cut"] = scriptrunner.make_blocking(self.__cut)
+            script_api["get_cuts_left"] = self.__get_cuts_left
 
             scriptrunner.start(script_api, script_to_run, self, engine, parse_error, callback)
         return
@@ -436,6 +437,7 @@ class Character(GameObject, ScriptStateContainer):
     #If frequency is 3, then the player with repeatedly face in different directions.
     #The greater frequency is, the less often the player will turn
     def start_turning(self, time = 0.5, frequency = 8, callback = lambda: None):
+        self.__finish_turning = False
         if frequency < 3:
             self.__turning(time, 3, callback = callback)
         else:
@@ -505,42 +507,43 @@ class Character(GameObject, ScriptStateContainer):
 
         (x,y) = self.get_position()
 
+        object_responded = False
         made_cut = False
 
         if self.is_facing_east():
             for obj in engine.get_objects_at((x+1, y)):
                 if(hasattr(obj, "on_cut")):
                     made_cut = obj.on_cut(callback = callback)
+                    object_responded = True
                     break
-
         elif self.is_facing_west():
             for obj in engine.get_objects_at((x-1, y)):
                 if(hasattr(obj, "on_cut")):
                     made_cut = obj.on_cut(callback = callback)
+                    object_responded = True
                     break
-
         elif self.is_facing_north():
             for obj in engine.get_objects_at((x, y+1)):
                 if(hasattr(obj, "on_cut")):
                     made_cut = obj.on_cut(callback = callback)
+                    object_responded = True
                     break
-
         elif self.is_facing_south():
             for obj in engine.get_objects_at((x, y-1)):
                 if(hasattr(obj, "on_cut")):
                     made_cut = obj.on_cut(callback = callback)
+                    object_responded = True
                     break
+            
+        if not object_responded:
+            engine.add_event(callback)
 
         if made_cut:
             self.__cuts_left = self.__cuts_left - 1
-            if (self.__cuts_left == 0):
-                engine.print_terminal("Swoosh! Ran out of cuts")
-            else:
-                engine.print_terminal("Swoosh! This knife now has " + str(self.__cuts_left) + " cut(s) left!")
-        else:
-            engine.print_terminal("Swish? There's nohing to cut. This knife still has " + str(self.__cuts_left) + " cut(s) left!")
-            engine.add_event(callback)
         return made_cut
+
+    def __get_cuts_left(self):
+        return self.__cuts_left
 
 
 

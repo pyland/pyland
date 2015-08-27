@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="7" tilewidth="64" tileheight="64" nextobjectid="24">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="7" tilewidth="64" tileheight="64" nextobjectid="25">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -37,15 +37,16 @@
  <objectgroup name="Object Layer 1">
   <object id="1" name="characters/player/player" gid="286" x="64" y="256" width="64" height="64"/>
   <object id="5" name="characters/npcs/myla/myla" gid="286" x="0" y="256" width="64" height="64"/>
-  <object id="8" name="characters/npcs/snake/snake1" gid="286" x="384" y="384" width="64" height="64"/>
-  <object id="11" name="characters/npcs/snake/snake2" gid="286" x="192" y="128" width="64" height="64"/>
-  <object id="12" name="characters/npcs/snake/snake3" gid="286" x="192" y="384" width="64" height="64"/>
-  <object id="13" name="characters/npcs/snake/snake4" gid="286" x="704" y="128" width="64" height="64"/>
-  <object id="14" name="characters/npcs/snake/leader" gid="286" x="832" y="256" width="64" height="64"/>
-  <object id="15" name="characters/npcs/snake/snake5" gid="286" x="576" y="384" width="64" height="64"/>
-  <object id="16" name="characters/npcs/snake/snake6" gid="286" x="384" y="192" width="64" height="64"/>
-  <object id="20" name="characters/npcs/snake/snake7" gid="286" x="512" y="128" width="64" height="64"/>
+  <object id="8" name="characters/npcs/snake/ben" gid="286" x="384" y="384" width="64" height="64"/>
+  <object id="11" name="characters/npcs/snake/robert" gid="286" x="192" y="128" width="64" height="64"/>
+  <object id="12" name="characters/npcs/snake/alexandra" gid="286" x="192" y="384" width="64" height="64"/>
+  <object id="13" name="characters/npcs/snake/annie" gid="286" x="704" y="128" width="64" height="64"/>
+  <object id="14" name="characters/npcs/snake/elisabeth" gid="286" x="832" y="256" width="64" height="64"/>
+  <object id="15" name="characters/npcs/snake/brad" gid="286" x="576" y="384" width="64" height="64"/>
+  <object id="16" name="characters/npcs/snake/francesca" gid="286" x="384" y="192" width="64" height="64"/>
+  <object id="20" name="characters/npcs/snake/jamie" gid="286" x="512" y="128" width="64" height="64"/>
   <object id="23" name="tile_trigger/leave_hall" gid="292" x="0" y="256" width="64" height="64"/>
+  <object id="24" name="camera/camera" gid="292" x="0" y="64" width="64" height="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="15" height="7">
   <data encoding="base64" compression="zlib">
