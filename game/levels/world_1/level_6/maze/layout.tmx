@@ -31,7 +31,7 @@
  </layer>
  <layer name="Decor" width="40" height="70">
   <data encoding="base64" compression="zlib">
-   eJztljEWgCAMQzktE/efXR1ECaUk+DL8xSclhNK2lVKaMeZIqjGmi99ZzBOGBgVvVPxX88fwQXJiV+17W8OqI4hH7Dv9OiNbg/Vpo9YvRnUoaV59NhU8a5wB426y9nTumN2smHXRfFetp67h5k5Wju58axX8l+01Wwdyb2w9hpMDT9/Y/ept/zawJotZT1X461tnz13R/VfqzDz7TEzGDKwyg5vzyOoLK7Vlr0HjRb0Y8RPxfVcNdF0Z9yorLtpfe2siWpHY0dyZOTs7B9h5+Gd9F3QRauM=
+   eJztljEOxSAMQzltJ+4/d+1AKSYEm8pfestXE4wJIbWUUo0xR3IZY17xPYt5wtCg4I2K/2r+GD5ITezqfb0YVh9BPGKf6dce2RqsTxu192JUh5Lm1XtTwbPGGTDOJmtN147ZzYpZF6131X7qHm6eZNXozrt2gd+yvWbrQM6NrcdwaqD1H/u96q1fB2KymPVUhb/edfbcFV1/pc7Mvc/kZMzAKjO4OY+sd2GltuwYNF/UixE/Ed939UD3lXGvsvKi7+tbTEQrkjtaO63Y3o9dl1/6FGr0ZH03S2xfuw==
   </data>
  </layer>
  <layer name="SpecialLayer" width="40" height="70">
@@ -2475,13 +2475,6 @@
   <object name="vine/poison_vine/vine_60_30" gid="101" x="1920" y="4288" width="64" height="64"/>
   <object name="vine/poison_vine/vine_60_31" gid="101" x="1984" y="4288" width="64" height="64"/>
   <object name="vine/poison_vine/vine_60_32" gid="101" x="2048" y="4288" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_60_33" gid="101" x="2112" y="4288" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_60_34" gid="101" x="2176" y="4288" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_60_35" gid="101" x="2240" y="4288" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_60_36" gid="101" x="2304" y="4288" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_60_37" gid="101" x="2368" y="4288" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_60_38" gid="101" x="2432" y="4288" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_60_39" gid="101" x="2496" y="4288" width="64" height="64"/>
   <object name="vine/poison_vine/vine_61_0" gid="101" x="0" y="4352" width="64" height="64"/>
   <object name="vine/poison_vine/vine_61_1" gid="101" x="64" y="4352" width="64" height="64"/>
   <object name="vine/poison_vine/vine_61_2" gid="101" x="128" y="4352" width="64" height="64"/>
@@ -2515,13 +2508,6 @@
   <object name="vine/poison_vine/vine_61_30" gid="101" x="1920" y="4352" width="64" height="64"/>
   <object name="vine/poison_vine/vine_61_31" gid="101" x="1984" y="4352" width="64" height="64"/>
   <object name="vine/poison_vine/vine_61_32" gid="101" x="2048" y="4352" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_61_33" gid="101" x="2112" y="4352" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_61_34" gid="101" x="2176" y="4352" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_61_35" gid="101" x="2240" y="4352" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_61_36" gid="101" x="2304" y="4352" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_61_37" gid="101" x="2368" y="4352" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_61_38" gid="101" x="2432" y="4352" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_61_39" gid="101" x="2496" y="4352" width="64" height="64"/>
   <object name="vine/poison_vine/vine_62_0" gid="101" x="0" y="4416" width="64" height="64"/>
   <object name="vine/poison_vine/vine_62_1" gid="101" x="64" y="4416" width="64" height="64"/>
   <object name="vine/poison_vine/vine_62_2" gid="101" x="128" y="4416" width="64" height="64"/>
@@ -2555,13 +2541,6 @@
   <object name="vine/poison_vine/vine_62_30" gid="101" x="1920" y="4416" width="64" height="64"/>
   <object name="vine/poison_vine/vine_62_31" gid="101" x="1984" y="4416" width="64" height="64"/>
   <object name="vine/poison_vine/vine_62_32" gid="101" x="2048" y="4416" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_62_33" gid="101" x="2112" y="4416" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_62_34" gid="101" x="2176" y="4416" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_62_35" gid="101" x="2240" y="4416" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_62_36" gid="101" x="2304" y="4416" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_62_37" gid="101" x="2368" y="4416" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_62_38" gid="101" x="2432" y="4416" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_62_39" gid="101" x="2496" y="4416" width="64" height="64"/>
   <object name="vine/poison_vine/vine_63_0" gid="101" x="0" y="4480" width="64" height="64"/>
   <object name="vine/poison_vine/vine_63_1" gid="101" x="64" y="4480" width="64" height="64"/>
   <object name="vine/poison_vine/vine_63_2" gid="101" x="128" y="4480" width="64" height="64"/>
@@ -2595,13 +2574,6 @@
   <object name="vine/poison_vine/vine_63_30" gid="101" x="1920" y="4480" width="64" height="64"/>
   <object name="vine/poison_vine/vine_63_31" gid="101" x="1984" y="4480" width="64" height="64"/>
   <object name="vine/poison_vine/vine_63_32" gid="101" x="2048" y="4480" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_63_33" gid="101" x="2112" y="4480" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_63_34" gid="101" x="2176" y="4480" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_63_35" gid="101" x="2240" y="4480" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_63_36" gid="101" x="2304" y="4480" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_63_37" gid="101" x="2368" y="4480" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_63_38" gid="101" x="2432" y="4480" width="64" height="64"/>
-  <object name="vine/poison_vine/vine_63_39" gid="101" x="2496" y="4480" width="64" height="64"/>
   <object name="whetstone/whetstone1" gid="293" x="1344" y="1088"/>
  </objectgroup>
 </map>
