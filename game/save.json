@@ -1,5 +1,32 @@
 {
-    "player_saves": {},
+    "player_saves": {
+        "Bob": {
+            "coins": 0,
+            "completed_levels": {
+                "/world_1/level_1": true,
+                "/world_1/level_3": true,
+                "/world_1/level_2": true
+            },
+            "totems": {},
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "starting_map": "player_house",
+                        "heidi_state": 2
+                    },
+                    "level_2": {
+                        "starting_map": "start",
+                        "pyscripter_state": 1
+                    }
+                }
+            },
+            "current_map": "/world_1/level_2/bogs",
+            "py_scripter_tabs": 1,
+            "has_unlocked_pyscripter": true,
+            "py_scripter_enabled": false,
+            "previous_exit": "/world_1/level_2/bogs/myla_explain_cut_action"
+        }
+    },
     "settings": {
         "language": "english"
     }

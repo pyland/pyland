@@ -39,7 +39,7 @@
    eJzdk8EOwCAIQw2/hf7/b3nZaTMZOAquTXrxwCOWdmmtExmtbA6aV8WJzLriHtg5nj89sa8sHJU1J9p6mZ0TpftMlnuzclC5sXOilMWq6mkWB6VTOX/vTyVnR7szvLtb3lYeRr9xrHMsHJVnXxHZf8nHK9TdVnsCXpyMCw==
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="26" height="40" visible="0">
+ <objectgroup name="Object Layer 1" width="26" height="40">
   <object name="characters/player/player_one" gid="286" x="128" y="256" width="64" height="64"/>
   <object name="characters/npcs/myla/myla" gid="291" x="0" y="256" width="64" height="64"/>
   <object name="tile_trigger/trigger1a" gid="292" x="1216" y="384"/>
