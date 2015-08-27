@@ -28,7 +28,7 @@ def vine_start():
     for i in range(height):
         for j in range(width):
             vinename = "vine_" + str(i) + "_" + str(j)
-            command_grow = vinename + ".wait(" + str(2.00*i) + ", lambda : " + vinename + ".grow())"
+            command_grow = vinename + ".wait(" + str(4.00*i) + ", lambda : " + vinename + ".grow())"
             command_die = vinename + ".contact_action = vine_die_action"
             exec(command_die)
             exec(command_grow)

@@ -37,7 +37,7 @@ def myla_explain_cut_action(player_object):
         lambda callback: engine.show_dialogue("Stand next to a vine and hit the 'Run' button (or you can use the spacebar to run scripts)!", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
         lambda callback: engine.insert_to_scripter("cut()\n", callback = callback),
-        lambda callback: engine.insert_to_scripter('print("You have " + str(get_cuts_left()) + " cuts left.")', callback = callback),
+        lambda callback: engine.insert_to_scripter('print("You have " + str(get_cuts_left()) + " cut(s) left.")', callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
