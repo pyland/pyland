@@ -42,18 +42,18 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="16" height="11">
-  <object name="characters/enemies/crocodile/croc_1" gid="296" x="320" y="448"/>
-  <object name="characters/enemies/crocodile/croc_0" gid="296" x="320" y="512"/>
-  <object name="characters/enemies/crocodile/croc_2" gid="296" x="320" y="384"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="320" y="448"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_0" gid="296" x="320" y="512"/>
+  <object name="characters/enemies/crocodiles/white_crocodile/croc_2" gid="296" x="320" y="384"/>
   <object name="characters/player/player_one" gid="286" x="768" y="704"/>
   <object name="characters/npcs/myla/myla" gid="286" x="832" y="704"/>
-  <object name="characters/enemies/crocodile/croc_3" gid="296" x="320" y="320"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="320" y="320"/>
   <object name="tile_trigger/end_level" gid="292" x="0" y="640"/>
   <object name="tile_trigger/end_level_2" gid="292" x="0" y="704"/>
  </objectgroup>
  <layer name="SpecialLayer" width="16" height="11">
   <data encoding="base64" compression="zlib">
-   eJyzZ2JgsCcSYwPEqCXGHHLMBQEbJgRG52PD+NTA5Gxx4JGin5TwwwWw6SMFEKsfAAhLHTw=
+   eJyzZ2JgsCcSYwPEqCXGHHLMBQFbJgQGARsmVDFkbMOEqWdUP2X6cQEbJlRMKiBWPwBEqx1s
   </data>
  </layer>
 </map>

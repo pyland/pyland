@@ -1,16 +1,9 @@
 player_one.focus()
-croc_0.change_state("swim")
-croc_1.change_state("swim_dark")
-croc_2.change_state("swim_lite")
-croc_3.change_state("swim")
 
 croc_0.face_east()
 croc_1.face_east()
 croc_2.face_east()
 croc_3.face_east()
-
-croc_1.oscillate = 1
-croc_2.oscillate = 2
 
 
 engine.run_callback_list_sequence([

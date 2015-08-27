@@ -20,7 +20,6 @@
 		//"level_location" : "/world_1/level_1/player_house",
 		//"level_location" : "/world_1/level_1/road_one",
 		//"level_location" : "/world_1/level_3/main",
-		//"level_location" : "/world_1/level_3/mainb",
 		//"level_location" : "/world_1/level_4/main_a",
 		//"level_location" : "/world_1/level_4/main_b",
 		//"level_location" : "/world_1/level_5/maze",

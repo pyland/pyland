@@ -38,28 +38,28 @@
  </layer>
  <objectgroup name="Object Layer 1" width="35" height="25">
   <object name="characters/player/player_one" gid="286" x="1920" y="1600"/>
-  <object name="characters/enemies/crocodile/croc_0" gid="296" x="1837" y="1159"/>
-  <object name="characters/enemies/crocodile/croc_1" gid="296" x="1536" y="1088"/>
-  <object name="characters/enemies/crocodile/croc_2" gid="296" x="1792" y="1024"/>
-  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1536" y="960"/>
-  <object name="characters/enemies/crocodile/croc_4" gid="296" x="1664" y="896"/>
-  <object name="characters/enemies/crocodile/croc_5" gid="296" x="1472" y="832"/>
-  <object name="characters/enemies/crocodile/croc_6" gid="296" x="1600" y="768"/>
-  <object name="characters/enemies/crocodile/croc_7" gid="296" x="1472" y="512"/>
-  <object name="characters/enemies/crocodile/croc_8" gid="296" x="1536" y="640"/>
-  <object name="characters/enemies/crocodile/croc_9" gid="296" x="1536" y="448"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="1837" y="1159"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="1536" y="1088"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_2" gid="296" x="1792" y="1024"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="1536" y="960"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_4" gid="296" x="1664" y="896"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_5" gid="296" x="1472" y="832"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_6" gid="296" x="1600" y="768"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_7" gid="296" x="1472" y="512"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_8" gid="296" x="1536" y="640"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_9" gid="296" x="1536" y="448"/>
   <object name="characters/npcs/myla/myla" gid="286" x="2176" y="64"/>
   <object name="tile_trigger/challenge2a" gid="292" x="960" y="384"/>
-  <object name="characters/enemies/crocodile/croc_b2_1" gid="296" x="896" y="512"/>
-  <object name="characters/enemies/crocodile/croc_b2_2" gid="296" x="896" y="576"/>
-  <object name="characters/enemies/crocodile/croc_b2_3" gid="296" x="896" y="640"/>
-  <object name="characters/enemies/crocodile/croc_b2_4" gid="296" x="576" y="768"/>
-  <object name="characters/enemies/crocodile/croc_b2_5" gid="296" x="576" y="832"/>
-  <object name="characters/enemies/crocodile/croc_b2_6" gid="296" x="576" y="896"/>
-  <object name="characters/enemies/crocodile/croc_b2_7" gid="296" x="896" y="1024"/>
-  <object name="characters/enemies/crocodile/croc_b2_8" gid="296" x="896" y="1088"/>
-  <object name="characters/enemies/crocodile/croc_b2_9" gid="296" x="896" y="1216"/>
-  <object name="characters/enemies/crocodile/croc_b2_10" gid="296" x="896" y="1280"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_1" gid="296" x="896" y="512"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_2" gid="296" x="896" y="576"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_3" gid="296" x="896" y="640"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_4" gid="296" x="576" y="768"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_5" gid="296" x="576" y="832"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_6" gid="296" x="576" y="896"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_7" gid="296" x="896" y="1024"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_8" gid="296" x="896" y="1088"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_9" gid="296" x="896" y="1216"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_10" gid="296" x="896" y="1280"/>
   <object name="tile_trigger/challenge2b" gid="292" x="960" y="1408"/>
   <object name="tile_trigger/trigger_croc_0" gid="292" x="960" y="448"/>
   <object name="tile_trigger/trigger_croc_1" gid="292" x="960" y="512"/>
