@@ -129,4 +129,9 @@ player_one.focus()
 engine.play_music("calm")
 engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in the config.
 
+villager1.set_dialogue_list(["Oh " + engine.get_player_name() + ", not up to mischief again are you?"])
+villager2.set_dialogue_list(["These PyRunners that they make nowadays are great.", "If only I could write my own scripts instead of just running the ones they give me..."])
+villager3.set_dialogue_list(["I like turtles."])
+villager4.set_dialogue_list(["Ok."])
+
 #engine.disable_py_scripter()

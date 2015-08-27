@@ -90,7 +90,7 @@ def go_to_world(player_object):
     player_data.complete_level_and_save()
     player_data.save_and_exit("/world_1")
 
-exit_level_start.player_walked_on = lambda: player_data.save_and_exit("/world_1")
+exit_level_start.player_walked_on = lambda player_object: player_data.save_and_exit("/world_1")
 exit_level_end.player_walked_on = go_to_world #TODO: have this save that the level has been completed
 
 player_one.focus()

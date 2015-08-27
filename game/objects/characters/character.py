@@ -502,6 +502,7 @@ class Character(GameObject, ScriptStateContainer):
 
         if (self.__cuts_left == 0):
             engine.add_event(callback)
+            engine.print_terminal("Your knife is too blunt to cut anything.")
             return False
 
         (x,y) = self.get_position()
@@ -539,10 +540,82 @@ class Character(GameObject, ScriptStateContainer):
 
         if made_cut:
             self.__cuts_left = self.__cuts_left - 1
+            if self.__cuts_left  == 1:
+                engine.print_terminal("You just cut something, you have " + str(self.__cuts_left) + " cut left.")
+            elif self.__cuts_left  == 0:
+                engine.print_terminal("You just cut something, your knife is now too blunt to cut anything else.")
+            else:
+                engine.print_terminal("You just cut something, you have " + str(self.__cuts_left) + " cuts left.")
         return made_cut
 
     def __get_cuts_left(self):
         return self.__cuts_left
+
+    def follow_path(self, path, repeat = False, is_paused = lambda: False):
+        """ The character follows the path given, a string a comma-seperated directions, eg. "north, east, east, south, west, north"
+        If repeat is set to True, the most recent direction completed will be added to the end of the string so that whole thing becomes a cycle
+        """
+        if(path.strip() == ""): #if path is empty terminate
+            return
+
+        if(is_paused()):
+            self.wait(0.3, callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+            return
+        
+        engine = self.get_engine()
+        x, y = self.get_position()
+
+        comma_location = path.find(",") # Find the first comma in the path
+        if(comma_location == -1):  # No commas in the path! On last word!
+            comma_location = len(path)
+
+        old_path = path #store the old_path
+        
+        instruction = path[ 0 : comma_location].strip() #get instruction and remove whitespace
+        path = path[comma_location + 1: ].strip() #remove the instruction from the path itself
+        if(repeat):
+            path = path + ", " + instruction #add instruction back to the path, at the end if to be repeated
+        if(instruction == "north"):
+            if engine.is_solid((x, y+1)): #if position isn't walkable, then wait
+                self.face_north()
+                return self.wait(0.3, callback = lambda: self.follow_path(old_path, repeat = repeat, is_paused = is_paused))
+            else:
+                return self.move_north(callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+        elif(instruction == "east"):
+            if engine.is_solid((x+1, y)): #if the position you are trying to move to is taken, wait
+                self.face_east()
+                return self.wait(0.3, callback = lambda: self.follow_path(old_path, repeat = repeat, is_paused = is_paused))
+            else:
+                return self.move_east(callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+            return
+        elif(instruction == "south"):
+            if engine.is_solid((x, y-1)):
+                self.face_south()
+                return self.wait(0.3, callback = lambda: self.follow_path(old_path, repeat = repeat, is_paused = is_paused))
+            else:
+                return self.move_south(callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+        elif(instruction == "west"):
+            if engine.is_solid((x-1, y)):
+                self.face_west()
+                return self.wait(0.3, lambda: self.follow_path(old_path, repeat = repeat, is_paused = is_paused))
+            else:
+                return self.move_west(lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+        elif(instruction == "face_north"):
+            self.face_north(callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+        elif(instruction == "face_east"):
+            self.face_east(callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+        elif(instruction == "face_south"):
+            self.face_south(callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+        elif(instruction == "face_west"):
+            self.face_west(callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+        elif(instruction == "pause"):
+            self.wait(0.3, callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
+        else:
+            pass #TODO: handle invalid path!!!!!
+            print(instruction)
+            print(path)
+
+        return
 
 
 

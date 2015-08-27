@@ -42,7 +42,7 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="30" height="11">
-  <object name="characters/enemies/ccrocodiles/white_crocodile/croc_5" gid="296" x="640" y="256"/>
+  <object name="characters/enemies/crocodiles/white_crocodile/croc_5" gid="296" x="640" y="256"/>
   <object name="characters/enemies/crocodiles/blue_crocodile/croc_4" gid="296" x="1344" y="512"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="512" y="448"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="512" y="512"/>
