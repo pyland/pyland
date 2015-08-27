@@ -19,7 +19,8 @@ jobs = ""
 try:
     opts, args = getopt.getopt(sys.argv[1:],"dj:c:p:",["desktop", "jobs=", "compiler=", "python_version="])
 except getopt.GetoptError:
-    print('build.py -c <compiler>')
+    print('Run build.py using a version of python >= 3.2 specifying a compiler -c <compiler>')
+    print("eg. ~$ python3.4 build.py -c \"clang++-3.6\"")
     sys.exit(2)
 
 
@@ -42,7 +43,8 @@ if(python_version_fl < 3.2):
     sys.exit(2)
 
 if not (compiler and python_version):
-    print('build.py -c <compiler>')
+    print('Run build.py using a version of python >= 3.2 specifying a compiler -c <compiler>')
+    print("eg. ~$ python3.4 build.py -c \"clang++-3.6\"")
     sys.exit(2)
 
 compile_string = platform + "COMPILER=" + compiler + " PYTHON_VERSION=" + python_version + " LIBBOOST_PYTHON=boost_python-py" + python_version.replace(".", "") + " make" + jobs
