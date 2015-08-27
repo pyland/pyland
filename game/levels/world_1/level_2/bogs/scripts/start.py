@@ -82,6 +82,7 @@ def myla_explain_crocodiles_action(player_object):
     myla_explain_crocodiles.player_walked_on = myla_go_in_bag
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: player_one.wait(0.3, callback = callback),
         lambda callback: myla.stop_follow(callback = callback),
         lambda callback: myla.set_solidity(True, callback = callback),
         lambda callback: myla.move_south(callback = callback),
@@ -211,7 +212,7 @@ def myla_give_vine_loop_action(player_object):
         lambda callback: engine.insert_to_scripter("for i in range(11):\n", callback = callback),
         lambda callback: engine.insert_to_scripter("  move_north()\n", callback = callback),
         lambda callback: engine.insert_to_scripter("  cut()\n", callback = callback),
-        lambda callback: engine.insert_to_scripter("  move_north()", callback = callback),
+        lambda callback: engine.insert_to_scripter("  move_north()\n", callback = callback),
         lambda callback: engine.insert_to_scripter('print("Cut all the vines, yeah!")\n', callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])

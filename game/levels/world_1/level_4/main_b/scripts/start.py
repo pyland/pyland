@@ -75,7 +75,7 @@ def player_walked_on_ti():
             return obj.face_south(lambda: obj.lose(player_one))
     for obj in engine.get_objects_at((x,y-1)):
         if obj in croc:
-            return oambda.face_north(lambda: obj.lose(player_one))
+            return obj.face_north(lambda: obj.lose(player_one))
 
 for t in triggers:
     t.player_walked_on = lambda player_object: player_walked_on_ti()
