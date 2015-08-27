@@ -55,9 +55,17 @@ mkdir("game/jsonnet") #TODO: move this to the makefile!!!
 mkdir("game/python_embed")
 
 os.system("rm game/database.db")
+print("Building database.db...")
 os.system("sqlite3 game/database.db < game/database_source.sql")
+print("Finished building database.db...")
 os.chdir("src")
+print("Compiling using make...")
+print(compile_string)
 os.system(compile_string)
+print("Finished ompiling using make...")
 os.chdir("..")
+print("Copying jsonnet...")
 os.system("cp src/jsonnet/jsonnet game/jsonnet/jsonnet") #TODO: make it so that these are compiled in the right places directly
+print("Copying wrapper_functions.so...")
 os.system("cp src/python_embed/wrapper_functions.so game/python_embed/wrapper_functions.so")
+print("done.")
