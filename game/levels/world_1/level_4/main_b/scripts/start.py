@@ -1,10 +1,4 @@
 player_one.focus()
-croc_0.change_state("swim")
-croc_1.change_state("swim")
-croc_2.change_state("swim")
-croc_3.change_state("swim")
-croc_4.change_state("swim_dark")
-croc_5.change_state("swim_lite")
 
 croc_0.face_east()
 croc_1.face_east()

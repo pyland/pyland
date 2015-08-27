@@ -502,6 +502,7 @@ class Character(GameObject, ScriptStateContainer):
 
         if (self.__cuts_left == 0):
             engine.add_event(callback)
+            engine.print_terminal("Your knife is too blunt to cut anything.")
             return False
 
         (x,y) = self.get_position()
@@ -539,6 +540,12 @@ class Character(GameObject, ScriptStateContainer):
 
         if made_cut:
             self.__cuts_left = self.__cuts_left - 1
+            if self.__cuts_left  == 1:
+                engine.print_terminal("You just cut something, you have " + str(self.__cuts_left) + " cut left.")
+            elif self.__cuts_left  == 0:
+                engine.print_terminal("You just cut something, your knife is now too blunt to cut anything else.")
+            else:
+                engine.print_terminal("You just cut something, you have " + str(self.__cuts_left) + " cuts left.")
         return made_cut
 
     def __get_cuts_left(self):
