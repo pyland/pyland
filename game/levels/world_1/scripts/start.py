@@ -121,3 +121,6 @@ level_8.player_walked_on = go_to_level_8
 
 player_one.focus()
 engine.play_music("world_1_jungle")
+
+no_desert_guy.face_west()
+no_desert_guy.set_dialogue_list(["The rest of Pyland is still under construction, so...", "...no desert for you."])

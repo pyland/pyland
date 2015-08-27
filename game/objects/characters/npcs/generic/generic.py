@@ -12,8 +12,6 @@ class Generic(NPC):
 
     def initialise(self):
         super().initialise()
-        self.face_south()
-        self.rand_explore()
 
     def player_action(self, player_object):
         engine = self.get_engine()
