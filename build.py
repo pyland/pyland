@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+#TODO: make it so that the python version isn't needed as a command-line argument! (Use the version of python that is used to "build" the game, and detect if the python version is high enough!")
+
 import os
 import subprocess
 import sys
@@ -48,4 +50,5 @@ os.system("sqlite3 game/database.db < game/database_source.sql")
 os.chdir("src")
 os.system(compile_string)
 os.chdir("..")
-os.system("cp src/jsonnet/jsonnet game/jsonnet/jsonnet")
+os.system("cp src/jsonnet/jsonnet game/jsonnet/jsonnet") #TODO: make it so that these are compiled in the right places directly
+os.system("cp src/python_embed/wrapper_functions.so game/python_embed/wrapper_functions.so")

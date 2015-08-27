@@ -177,7 +177,7 @@ $(QT_OBJS): %.o : %.cpp | dependencies/qtgui
 $(PYTHON_SHARED_OBJS): %.so : %.cpp $(PYTHON_SHARED_OBJS_DEPENDS) | dependencies/python_embed
 	@echo "${bold}[ Compiling Python shared object file ${purple}$*.so${normal}${bold} from ${purple}$*.cpp${normal}${bold} ]${normal}"
 
-	@$(COMPILER) -shared -fPIC $*.cpp -o "../game/"$*.so \
+	@$(COMPILER) -shared -fPIC $*.cpp -o $*.so \
 		$(PYTHON_LDLIBS) $(PYTHON_CPPFLAGS) \
 		$(BOOST_LDLIBS) $(BOOST_CPPFLAGS)   \
 		$(CXXFLAGS) $(CPPFLAGS)             \
