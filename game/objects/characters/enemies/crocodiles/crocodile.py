@@ -13,76 +13,6 @@ class Crocodile(Enemy):
         self.__check_swim_state()
         self.oscillate = 0
 
-    """ The Crocodile follows the path given, a string a comma-seperated directions, eg. "north, east, east, south, west, north"
-    If repeat is set to True, the most recent direction completed will be added to the end of the string so that whole thing becomes a cycle
-    """
-    def follow_path(self, path, repeat = False):
-        if(path.strip() == ""): #if path is empty terminate
-            return
-        
-        engine = self.get_engine()
-        x, y = self.get_position()
-
-        comma_location = path.find(",") # Find the first comma in the path
-        if(comma_location == -1):  # No commas in the path! On last word!
-            comma_location = len(path)
-
-        old_path = path #store the old_path
-        
-        instruction = path[ 0 : comma_location].strip() #get instruction and remove whitespace
-        path = path[comma_location + 1: ].strip() #remove the instruction from the path itself
-        if(repeat):
-            path = path + ", " + instruction #add instruction back to the path, at the end if to be repeated
-        if(instruction == "north"):
-            if engine.is_solid((x, y+1)): #if position isn't walkable, then wait
-                self.face_north()
-                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
-            else:
-                return self.move_north(lambda: self.follow_path(path, repeat))
-        elif(instruction == "east"):
-            if engine.is_solid((x+1, y)): #if the position you are trying to move to is taken, wait
-                self.face_east()
-                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
-            else:
-                return self.move_east(lambda: self.follow_path(path, repeat))
-            return
-        elif(instruction == "south"):
-            if engine.is_solid((x, y-1)):
-                self.face_south()
-                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
-            else:
-                return self.move_south(lambda: self.follow_path(path, repeat))
-        elif(instruction == "west"):
-            if engine.is_solid((x-1, y)):
-                self.face_west()
-                return self.wait(0.3, lambda: self.follow_path(old_path, repeat))
-            else:
-                return self.move_west(lambda: self.follow_path(path, repeat))
-        else:
-            pass #TODO: handle invalid path!!!!!
-            print(instruction)
-            print(path)
-
-        return
-
-
-    def rand_explore(self):
-        """ The Crocodile follows a random path forever!
-        """
-        rand = random.randint(1, 5)
-        if rand==1:
-            return self.move_north(self.rand_explore)
-        elif rand==2:
-            return self.move_south(self.rand_explore)
-        elif rand==3:
-            return self.move_east(self.rand_explore)
-        elif rand==4:
-            return self.move_west(self.rand_explore)
-        elif rand==5:
-            return self.wait(0.3, self.rand_explore)
-
-
-
     def __check_swim_state(self, callback = lambda: None):
         """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
 
@@ -204,7 +134,6 @@ class Crocodile(Enemy):
         if times == 0:
             return self.toggle()
 
-    
     def yelled_at(self, player):
         player_x, player_y = player.get_position()
         self_x, self_y = self.get_position()

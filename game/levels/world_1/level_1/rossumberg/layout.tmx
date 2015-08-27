@@ -38,5 +38,9 @@
   <object name="tile_trigger/exit_to_road_top" gid="197" x="1600" y="576"/>
   <object name="tile_trigger/exit_to_road_bottom" gid="197" x="1600" y="640"/>
   <object name="player_data/player_data" gid="192" x="0" y="64"/>
+  <object name="characters/npcs/generic/villager1" gid="196" x="1088" y="768"/>
+  <object name="characters/npcs/generic/villager2" gid="196" x="640" y="576"/>
+  <object name="characters/npcs/generic/villager3" gid="196" x="768" y="960"/>
+  <object name="characters/npcs/generic/villager4" gid="196" x="832" y="384"/>
  </objectgroup>
 </map>
