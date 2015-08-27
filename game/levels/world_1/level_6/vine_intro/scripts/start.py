@@ -8,7 +8,7 @@ engine.set_py_tabs(9)
 player_one.focus()
 myla.follow(player_one)
 
-crocodile1.focus()
+#crocodile1.focus()
 crocodile1.rand_explore()
 
 vine_list = [
