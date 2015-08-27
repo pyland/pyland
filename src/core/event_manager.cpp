@@ -143,17 +143,6 @@ void EventManager::add_event(std::function<void ()> func) {
     if (!enabled) { return; }
 
     //Add it to the queue
-    curr_frame_queue->push_back(func);
-}
-
-void EventManager::add_event_next_frame(std::function<void ()> func) {
-    // Manages locking in an exception-safe manner
-    // Lock released when this lock_guard goes out of scope
-    std::lock_guard<std::mutex> lock(queue_mutex);
-
-    if (!enabled) { return; }
-
-    //Add it to the queue
     next_frame_queue->push_back(func);
 }
 
@@ -178,7 +167,7 @@ void EventManager::add_timed_event(GameTime::duration duration, std::function<bo
 
             if (func(fraction_complete) && fraction_complete < 1.0) {
                 // Repeat if the callback wishes and the event isn't complete.
-                add_event_next_frame(std::bind(callback, duration, func, start_time));
+                add_event(std::bind(callback, duration, func, start_time));
             }
         };
 

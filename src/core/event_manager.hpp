@@ -96,9 +96,7 @@ public:
 
     ///
     /// Add an event to the event manager. If the event loop is running,
-    /// is will be added to the end of the current queue and also run
-    /// in this event frame. Otherwise it will be delayed until the
-    /// circumstance occurs.
+    /// is will be added to the end of the queue for the next frame and run then.
     ///
     /// The callback will be silently ignored if the event manager is disabled.
     ///
@@ -109,25 +107,6 @@ public:
     /// @see add_event_next_frame
     ///
     void add_event(std::function<void ()> func);
-
-    ///
-    /// Add an event to the event manager to be called after this event
-    /// frame is finished. This is typically not what is wanted, and exists
-    /// only to allow animations and other self-repeating callbacks.
-    ///
-    /// The callback will be silently ignored if the event manager is disabled.
-    ///
-    /// @param func
-    ///     A callback with no arguments and no return, to be
-    ///     run on the frame after this one.
-    ///
-    /// @note
-    ///     Many event frames can occur between each rendered frame,
-    ///     so don't expect a consistent or slow FPS.
-    ///
-    /// @see add_event
-    ///
-    void add_event_next_frame(std::function<void ()> func);
 
     ///
     /// Add an event with a time duration to run for. e.g. a timer
