@@ -4,10 +4,11 @@ engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in 
 engine.set_py_tabs(9)
 
 #initial setting of players
-player_one.face_south()
+#player_one.face_south()
 player_one.focus()
 myla.follow(player_one)
 
+#crocodile1.focus()
 crocodile1.rand_explore()
 
 vine_list = [

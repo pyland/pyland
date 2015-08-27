@@ -11,7 +11,7 @@ c1 = (210, 210, 210)
 c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
-
+engine.show_py_scripter()
 
 """ Some quick and hacky methods I wrote to grab the player's name from the terminal"""
 player_name = "???"

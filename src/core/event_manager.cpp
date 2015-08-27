@@ -9,6 +9,7 @@
 #include <ostream>
 #include <ratio>
 
+#include <engine.hpp>
 #include "event_manager.hpp"
 #include "game_time.hpp"
 #include "locks.hpp"
@@ -39,11 +40,13 @@ bool EventManager::is_paused(){
 
 void EventManager::pause(){
     time.set_game_seconds_per_real_second(0.0);
+    Engine::disable_py_scripter();	
     paused = true;
 }
 
 void EventManager::resume(){
-time.set_game_seconds_per_real_second(1.0);
+    time.set_game_seconds_per_real_second(1.0);
+    Engine::enable_py_scripter();
     paused = false;
 }
 
