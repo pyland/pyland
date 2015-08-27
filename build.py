@@ -13,13 +13,13 @@ def mkdir(directory):
 
 compiler = ""
 desktop = False
-python_version = ""
+python_version = str(sys.version_info[0]) + "." + str(sys.version_info[1])
 jobs = ""
 
 try:
     opts, args = getopt.getopt(sys.argv[1:],"dj:c:p:",["desktop", "jobs=", "compiler=", "python_version="])
 except getopt.GetoptError:
-    print('build.py -c <compiler> -p <python_version>')
+    print('build.py -c <compiler>')
     sys.exit(2)
 
 
@@ -34,8 +34,15 @@ for opt, arg in opts:
     elif opt in ("-p", "--python_version"):
         python_version = arg
 
+python_version_fl = float(python_version)
+
+if(python_version_fl < 3.2):
+    print("Pyland can only build against python 3.2 or above. Make sure you are building against python3.2 or specifiy a version number using the -p or --python_version flags")
+    print("You are using python version " + python_version)
+    sys.exit(2)
+
 if not (compiler and python_version):
-    print('build.py -c <compiler> -p <python_version>')
+    print('build.py -c <compiler>')
     sys.exit(2)
 
 compile_string = platform + "COMPILER=" + compiler + " PYTHON_VERSION=" + python_version + " LIBBOOST_PYTHON=boost_python-py" + python_version.replace(".", "") + " make" + jobs
