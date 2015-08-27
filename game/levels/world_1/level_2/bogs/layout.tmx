@@ -74,5 +74,13 @@
   <object name="vine/vine1" gid="196" x="640" y="448"/>
   <object name="whetstone/whetstone2" gid="292" x="1280" y="3072"/>
   <object name="tile_trigger/exit_to_world" gid="292" x="768" y="3200"/>
+  <object name="tile_trigger/trigger_croc_0" gid="292" x="1216" y="832"/>
+  <object name="tile_trigger/trigger_croc_1" gid="292" x="1024" y="768"/>
+  <object name="tile_trigger/trigger_croc_2" gid="292" x="768" y="768"/>
+  <object name="tile_trigger/trigger_croc_3" gid="292" x="64" y="1600"/>
+  <object name="tile_trigger/trigger_croc_4" gid="292" x="64" y="1664"/>
+  <object name="tile_trigger/trigger_croc_5" gid="292" x="64" y="1728"/>
+  <object name="tile_trigger/trigger_croc_6" gid="292" x="64" y="1792"/>
+  <object name="tile_trigger/trigger_croc_7" gid="292" x="64" y="1856"/>
  </objectgroup>
 </map>
