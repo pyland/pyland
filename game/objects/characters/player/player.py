@@ -106,15 +106,6 @@ class Player(Character):
 
     """ Override character move methods to trigger player events and stop the player from being walking on water (even when they are scripter)
     """
-    def move(self, callback = lambda: None):
-        if self.is_facing_east():
-            self.move_east(callback)
-        elif self.is_facing_north():
-            self.move_north(callback)
-        elif self.is_facing_west():
-            self.move_west(callback)
-        elif self.is_facing_south():
-            self.move_south(callback)
 
     def move_north(self, callback = lambda: None):
         engine = self.get_engine()

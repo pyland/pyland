@@ -35,7 +35,7 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="19" height="19">
-  <object name="characters/enemies/monkey/monkey" gid="287" x="448" y="192"/>
+  <object name="characters/enemies/monkey/monkey" gid="287" x="256" y="512"/>
   <object name="characters/player/player_one" gid="286" x="1152" y="512"/>
   <object name="characters/player/player_four" gid="286" x="704" y="1216"/>
   <object name="characters/player/player_three" gid="286" x="0" y="768"/>

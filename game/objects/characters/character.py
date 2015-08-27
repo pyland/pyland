@@ -125,10 +125,11 @@ class Character(GameObject, ScriptStateContainer):
             script_api["face_east"] = scriptrunner.make_blocking(self.face_east)
             script_api["face_south"] = scriptrunner.make_blocking(self.face_south)
             script_api["face_west"] = scriptrunner.make_blocking(self.face_west)
-            script_api["turn_left"] = scriptrunner.make_blocking(self.turn_left)
-            script_api["turn_right"] = scriptrunner.make_blocking(self.turn_right)
+            script_api["turn_left"] = scriptrunner.make_blocking(self.__turn_left)
+            script_api["turn_right"] = scriptrunner.make_blocking(self.__turn_right)
 
             script_api["can_move"] = self.__can_move
+            script_api["move"] = scriptrunner.make_blocking(self.__move)
 
             script_api["wait"] = scriptrunner.make_blocking(lambda callback: self.wait(0.3, callback))
 
@@ -203,7 +204,7 @@ class Character(GameObject, ScriptStateContainer):
             callback()
         return
 
-    def turn_left(self, callback = lambda: None):
+    def __turn_left(self, callback = lambda: None):
         if self.is_facing_east():
             self.face_north(callback)
         elif self.is_facing_north():
@@ -213,7 +214,7 @@ class Character(GameObject, ScriptStateContainer):
         elif self.is_facing_south():
             self.face_east(callback)
 
-    def turn_right(self, callback = lambda: None):
+    def __turn_right(self, callback = lambda: None):
         if self.is_facing_east():
             self.face_south(callback)
         elif self.is_facing_north():
@@ -226,16 +227,28 @@ class Character(GameObject, ScriptStateContainer):
     def __can_move(self):
         engine = self.get_engine()
         x,y = self.get_position()
+        try:
+            if self.is_facing_east():
+                return not engine.is_solid((x+1,y))
+            elif self.is_facing_north():
+                return not engine.is_solid((x,y+1))
+            elif self.is_facing_west():
+                return not engine.is_solid((x-1,y))
+            elif self.is_facing_south():
+                return not engine.is_solid((x,y-1))
+        except IndexError:
+            return False
+
+
+    def __move(self, callback = lambda: None):
         if self.is_facing_east():
-            return engine.get_tile_type((x+1,y)) == engine.TILE_TYPE_STANDARD
+            self.move_east(callback)
         elif self.is_facing_north():
-            return engine.get_tile_type((x,y+1)) == engine.TILE_TYPE_STANDARD
+            self.move_north(callback)
         elif self.is_facing_west():
-            return engine.get_tile_type((x-1,y)) == engine.TILE_TYPE_STANDARD
+            self.move_west(callback)
         elif self.is_facing_south():
-            return engine.get_tile_type((x,y-1)) == engine.TILE_TYPE_STANDARD
-
-
+            self.move_south(callback)
     """ Get the character to "face" the direction specified
     simply changes the last part of the sprite folder as relevant
     """
