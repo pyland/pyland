@@ -256,6 +256,12 @@ class Engine:
     def show_dialogue(self, dialogue, disable_scripting = True, callback = lambda: None):
         self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
 
+    def close_external_script_help(self, callback = lambda: None):
+        self.__cpp_engine.close_external_script_help(callback)
+
+    def show_external_script_help(self, dialogue, callback = lambda: None):
+        self.__cpp_engine.show_external_script_help(dialogue, callback)
+
     def show_dialogue_with_options(self, dialogue, options, disable_scripting = True):
         self.__cpp_engine.show_dialogue_with_options(dialogue, disable_scripting, options)
 
