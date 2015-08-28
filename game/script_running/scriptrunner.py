@@ -223,7 +223,7 @@ def start(script_api, script_name, script_state_container, engine, parse_error =
             printed_flag[0] = True
         finally:
             if printed_flag[0]:
-                engine.print_terminal("---" + name + "'s script has ended---", False)
+                engine.print_terminal("---" + script_state_container.get_script_name() + "'s script has ended---", False)
             script_state_container.set_running_script_status(False)
             engine.set_finished()
             engine.add_event(callback)
