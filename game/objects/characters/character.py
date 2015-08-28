@@ -423,10 +423,10 @@ class Character(GameObject, ScriptStateContainer):
         return (sprite_location == direction)
 
     def __move_x(self, face_x, parent_move_x, callback = lambda: None):
-         """ Moves the character in the given direction by one tile and animates them.
-
+        """ Moves the character in the given direction by one tile and animates them.
+        
         They will only move and animate if they are not busy.
-
+        
         Parameters
         ----------
         face_x : func
@@ -436,7 +436,7 @@ class Character(GameObject, ScriptStateContainer):
         callback : func, optional 
             Places the callback onto the engine event-queue
         """
-        if not(self.is_busy()):
+        if not self.is_busy():
             face_x()
             self.start_animating()
             parent_move_x(lambda: self.__stop_animating_func(callback))
