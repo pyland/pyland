@@ -3,6 +3,8 @@
 #commence save-data set-up
 world_name = "world_1"
 
+update_world(world_name)
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name) #change the map and save that the map has changed
 #end save-data set-up
@@ -69,7 +71,7 @@ def ask_to_go_to_level(level_name, map_name, readable_name, move_method):
             player_one.set_busy(False, callback = move_method)
         else:
             player_one.set_busy(False)
-        
+
     engine.show_dialogue_with_options(
         "Would you like go to " + readable_name + "?",
         {
