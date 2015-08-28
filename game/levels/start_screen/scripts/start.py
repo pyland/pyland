@@ -16,7 +16,7 @@ engine.set_py_tabs(1)
 engine.enable_py_scripter()
 engine.insert_to_scripter("#Message to all Pyland Citizens:\n#- Use the arrow keys to select menu options\n#- Press 'Enter' to select an option")
 
-def load_save(save_name):
+def load_game(save_name):
     save_data = engine.get_player_data(save_name)
     engine.set_player_name(save_name)
     engine.change_map(save_data["current_map"])
@@ -24,7 +24,7 @@ def load_save(save_name):
 #Let the player run python scripts in the menu...
 stc = ScriptStateContainer()
 script_api = {
-    "load_save" : load_save,
+    "load_game" : load_game,
     "load_map" : engine.change_map
 }
 stc.set_script_name("Menu")
