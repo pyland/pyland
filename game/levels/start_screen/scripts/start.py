@@ -12,6 +12,9 @@ c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
 engine.play_music("heroic") #Menus have herioc music always
 engine.show_py_scripter()
+engine.set_py_tabs(1)
+engine.enable_py_scripter()
+engine.insert_to_scripter("#Message to all Pyland Citizens:\n#- Use the arrow keys to select menu options\n#- Press 'Enter' to select an option")
 
 def load_save(save_name):
     save_data = engine.get_player_data(save_name)
@@ -21,7 +24,8 @@ def load_save(save_name):
 #Let the player run python scripts in the menu...
 stc = ScriptStateContainer()
 script_api = {
-    "load_save" : load_save
+    "load_save" : load_save,
+    "load_map" : engine.change_map
 }
 stc.set_script_name("Menu")
 engine.register_input_callback(engine.INPUT_RUN, lambda: stc.run_script(script_api, engine)) ##TODO: could provide some customer easter egg api's in the menu? :) (cheatcodes?)

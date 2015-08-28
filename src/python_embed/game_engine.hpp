@@ -98,6 +98,7 @@ class GameEngine {
         void show_dialogue(std::string text, bool disable_scripting, PyObject *callback);
         void show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *options);
         void show_external_script_help(std::string text, PyObject *callback);
+        void close_external_script_help(PyObject *callback);
 
         ///
         /// Register a callback against a given input

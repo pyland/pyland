@@ -234,14 +234,14 @@ class Engine:
         result = self.__cpp_engine.get_config()
         return json.loads(result)
 
-    def __get_json_data(self):
+    def __get_json_data(self, force_reread = False):
         """
         Returns
         -------
         python json object
             A json object that contains the data of the player. (Last checkpoint, worlds unlocked, etc.)
         """
-        if not self.__json_data:
+        if (not self.__json_data) or force_reread:
             settings_string = ""
             with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
                 settings_string = save_file.read()
@@ -301,7 +301,12 @@ class Engine:
 
 
         """
-        return self.__get_json_data()["player_saves"][name]
+        if name in self.__get_json_data()["player_saves"]:
+            return self.__get_json_data()["player_saves"][name]
+        elif name in self.__get_json_data(force_reread = True)["player_saves"]:
+            return self.__get_json_data()["player_saves"][name]
+        else:			
+            return {}
 
     def save_player_data(self, name, game_save):
         """ Saves the player's save state in the json save file
@@ -417,6 +422,12 @@ class Engine:
 
         """
         self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
+
+    def close_external_script_help(self, callback = lambda: None):
+        self.__cpp_engine.close_external_script_help(callback)
+
+    def show_external_script_help(self, dialogue, callback = lambda: None):
+        self.__cpp_engine.show_external_script_help(dialogue, callback)
 
     def show_dialogue_with_options(self, dialogue, options, disable_scripting = True):
         """ The engine display the dialogue as a pop-up text window with options. 

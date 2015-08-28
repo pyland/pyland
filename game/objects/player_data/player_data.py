@@ -88,16 +88,18 @@ class PlayerData(GameObject):
         """ loads in the player data, and correctly set's up all the global states of the game.
 
         For example, it displays the correct number of totems, PyScipter tabs etc. """
-        #TODO: Make this return a dummy save if a save doesn't exist
+        #TODO: Make handling a save not existing a lot nicer
         engine = self.get_engine()
         self.__player_name = player_name
         self.__player_data = engine.get_player_data(player_name)
+        if not self.__player_data:
+            self.create(player_name)
+            self.__player_data = engine.get_player_data(player_name)
 
         #setup all the player-data (what they have unlocked)
         if(self.__has_unlocked_pyscripter()):
             engine.show_py_scripter()
         else:
-            engine.print_terminal("should be hidden now!")
             engine.hide_py_scripter()
         return
 
