@@ -74,9 +74,20 @@ void GameEngine::show_external_script_help(std::string text, PyObject *callback)
 
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
+    EventManager::get_instance()->add_event(boost_callback);
+
     LOG(INFO) << "Adding " << text << "to the external script help with a regular callback";
     Engine::show_external_script_help(text);
 }
+
+void GameEngine::close_external_script_help(PyObject *callback) {
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
+    LOG(INFO) << "Closing external script help";
+    Engine::close_external_script_help();
+}
+
 
 void GameEngine::show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *_boost_options){
 

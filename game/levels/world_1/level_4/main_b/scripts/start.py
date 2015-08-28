@@ -94,7 +94,7 @@ engine.run_callback_list_sequence([
     lambda callback: myla.move_west(callback = callback),
     lambda callback: myla.set_visible(False, callback = callback),
     lambda callback: engine.show_dialogue("Sweet, you have a book I can read in here!", callback = callback),
-    lambda callback: engine.show_dialogue("Oh it's \"Jungle Book\", its too unrealistic for me to enjoy it.", callback = callback),
+    lambda callback: engine.show_dialogue("Oh it's \"Jungle Book\", far too unrealistic for me to enjoy.", callback = callback),
     lambda callback: player_one.set_busy(False, callback =callback)
     ])
 

@@ -70,5 +70,8 @@
             "previous_exit": "/world_1/intro",
             "coins": 0
         }
+    "player_saves": {},
+    "settings": {
+        "language": "english"
     }
 }
