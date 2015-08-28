@@ -53,7 +53,6 @@ def create_execution_scope(game_objects, engine, RESTART, STOP, KILL):
             super().__init__(imbued_locals)
 
         def write(self, data):
-            #entity.print_dialogue(data) # work out what to do here now! (Should print to in-game console)
             engine.print_debug(data)
 
         def runcode(self, code):
@@ -98,19 +97,13 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
             time.sleep(0.05)
 
         engine = Engine(cpp_engine)	#wrap the cpp engine in the python engine wrapper
-        #engine = DummyEngine(engine)
         """
         Run the main bootstrapper loop! It's fun!
         """
         engine.print_debug("Started bootstrapper")
         game_objects = list()
 
-        try:
-            print(entities) #For some reason after changing levels this can throw an I/O error (specifically after a change from the intro level) TODO: sort this out!
-        except:
-            tb = traceback.format_exc()
-            engine.print_debug(tb)
-            engine.print_debug("Tried to print: " + str(entities))
+        engine.print_debug(entities)
 
         """Grab each entity in the entities list. Wrap them in the approperiate class :D (the classes defined in game)"""
         for entity in entities:
