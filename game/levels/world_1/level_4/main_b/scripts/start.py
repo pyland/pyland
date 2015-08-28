@@ -107,11 +107,9 @@ def player_walked_on_end():
         engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("Myla: You did it!", callback = callback),
-        lambda callback: player_one.set_busy(False, callback = callback),
-        lambda callback: player_one.move_north(callback = callback),
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: myla.move_to((9,8), 0.0001, callback = callback),
+        lambda callback: myla.move_to(player_one.get_position(), callback = callback),
         lambda callback: myla.set_visible(True, callback = callback),
+        lambda callback: myla.move_south(callback = callback),
         lambda callback: myla.face_north(callback = callback),
         lambda callback: engine.show_dialogue("Myla: See you later alligator!", callback = callback),
         lambda callback: engine.show_dialogue("In a while crocodile!", callback = callback),
