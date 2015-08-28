@@ -418,6 +418,12 @@ class Engine:
         """
         self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
 
+    def close_external_script_help(self, callback = lambda: None):
+        self.__cpp_engine.close_external_script_help(callback)
+
+    def show_external_script_help(self, dialogue, callback = lambda: None):
+        self.__cpp_engine.show_external_script_help(dialogue, callback)
+
     def show_dialogue_with_options(self, dialogue, options, disable_scripting = True):
         """ The engine display the dialogue as a pop-up text window with options. 
 
