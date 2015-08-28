@@ -2,6 +2,13 @@ import copy
 from random import randint
 import string
 
+world_name = "world_1"
+level_name = "level_7"
+map_name = "town_hall"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name)
+
 player.focus()
 engine.update_player_name(engine.get_player_name(), player.get_focus_button_id())
 
@@ -824,7 +831,8 @@ engine.run_callback_list_sequence(dialogue_sequence)
 
 def try_leave():
     if level_finished():
-        engine.change_map("/world_1/level_7/village_escape")
+        player_data.complete_level_and_save()
+        player_data.save_and_exit("/world_1")	
     else:
         engine.run_callback_list_sequence(try_to_leave_sequence)
 

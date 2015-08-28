@@ -1,6 +1,26 @@
 {
+    "player_saves": {
+        "Mr Batman": {
+            "previous_exit": "/world_1/level_1/rossumberg/top",
+            "current_map": "/world_1/level_1/road_one",
+            "py_scripter_tabs": 1,
+            "level_data": {
+                "world_1": {
+                    "level_2": {
+                        "starting_map": "start"
+                    },
+                    "level_1": {
+                        "heidi_state": 2,
+                        "starting_map": "player_house"
+                    }
+                }
+            },
+            "py_scripter_enabled": false,
+            "totems": {},
+            "coins": 0
+        }
+    },
     "settings": {
         "language": "english"
-    },
-    "player_saves": {}
+    }
 }
