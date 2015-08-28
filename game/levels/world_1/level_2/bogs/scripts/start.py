@@ -228,7 +228,8 @@ def myla_notice_bog_water_action(player_object):
     player_data.save_checkpoint("myla_notice_bog_water")
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Here the player will be able to get bog-water and proceed to the next level with Myla...", callback = callback),
+        lambda callback: engine.show_dialogue("Myla: There's lots of crocodiles here making me feel uncomfortable.", callback = callback),
+        lambda callback: engine.show_dialogue("Lets head out as quickly as we can.", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
