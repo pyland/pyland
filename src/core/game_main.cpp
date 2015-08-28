@@ -323,9 +323,7 @@ GameMain::GameMain(int &argc, char **argv):
     tile_identifier_text.align_right();
     tile_identifier_text.vertical_align_bottom();
     tile_identifier_text.align_at_origin(true);
-    tile_identifier_text.set_bloom_radius(5);
-    tile_identifier_text.set_bloom_colour(0x00, 0x0, 0x00, 0xa0);
-    tile_identifier_text.set_colour(0xff, 0xff, 0xff, 0xa8);
+    tile_identifier_text.set_colour(0x00, 0x00, 0x00, 0xa8);
     tile_identifier_text.set_text("(?, ?)");
 
     func_char = [&] (GameWindow *)

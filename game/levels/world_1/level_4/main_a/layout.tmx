@@ -50,6 +50,7 @@
   <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="320" y="320"/>
   <object name="tile_trigger/end_level" gid="292" x="0" y="640"/>
   <object name="tile_trigger/end_level_2" gid="292" x="0" y="704"/>
+  <object name="player_data/player_data" gid="287" x="0" y="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="16" height="11">
   <data encoding="base64" compression="zlib">

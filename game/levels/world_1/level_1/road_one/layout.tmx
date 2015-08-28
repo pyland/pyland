@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="30" height="50" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="25" height="30" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -24,35 +24,32 @@
  <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="30" height="50">
+ <layer name="Ground" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJztw0ENAAAMA6GTWv8qJmJfSFg1VVVVVVX19QDK+zKf
+   eJztw0ENAAAMA6GTWv8qZmMPSFg1VVX19QOR5hlQ
   </data>
  </layer>
- <layer name="Decor" width="30" height="50">
+ <layer name="Decor" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJy1mEtuwzAMRHlUrhp7k9O29ykMlCg7GX6dDiDEliU+kZRkK08ReQ6LNNpoUKfBs4zl1RnHxP6j4DHuhs3qu6p8OAZ+ZzoWbPRPoZ/F99KnK5c+Fn77fB3gs12f4O8X/DL7Xb6PdxXnjHvKXy7GfhJzLBHX7FbK1keWD1OVVy/fNmMo1GGOUWwuR+rOcRb3u5qyGTfz9dHgWiwtl+ruVV79jtSJ+XZO+/qtMrvZmrY2HbG5v80xi8dE2O+U3D57vol/xw+cc1HuWV2XyUonz56z4arEY8+eR+0jdedOlteoMG2+D97l68b/O75u2PiujN6dkc4FXwPGu327G0v9KYe7thLZiWKMfTIhK+IKuY7GwJi472e+bdZFx9eKNS3Wb8r7b1/RxtRuZw6ztYjton314tt7xvaA7pnBlJ0HDnk9+2Sx92yR/MxbcfEbsTMGZms6l41zkjq897Hpnu8rdsfP6TxmijhdflfT/ao6B27FuNG9JOxsDNkYJ3m0dcT6efk1NGVrwmf9Nsp8NL6QOnx+qXPWZxz//wfLZRaLDS+yhW2YrxWX2Zl8c7OxVfscjpXZw98qDuxZFE8Wr2qP8Gso4inYwjYVw9qL/P730c1D5m8UQ3yvi/B3qPX5BtFUt5U=
+   eJytVlsOwzAI47R5/Oy2uU9VrZE8yzyiDgmtYWBDgHVmX/kU1Bzfqu1ET7hQ++PTX3Jn9hn4V+I5ZzwPJw5FYXYRq/Cint3SBA9rc/gVvsqfJettpZ+3LNAtU2DPAhY+D8Bb9KlqeTv7zIH8nFtlL1Qf1oOLHA38Tu9fzVIkUX48u17tZr/zmnG86cmWSWfl7+2cul+s2xOe4b1/iieahyr+oHO0Gwqf59WEb3X3KvlXfrOyfTiRKj6/J1DwjqozzOeoT8zJPZnkE2GoPTTza1N4aOdY790RzXI226cYO48s/0qNt+D9ZvWhrZvPh74cp/JBO88KP6t3oglfVI6J8hkBFtoYE+8j+9/Vwa6+N2H/pyoOj0/5qfyU3wVqwtwy
   </data>
  </layer>
- <layer name="SpecialLayer" width="30" height="50">
-  <data encoding="base64" compression="zlib">
-   eJzt02EKgCAMBWDpXN7/XNEPIWTK3N7bknwwAiG/LbNepdTFerL6jrX6RHtMV5sME233e0XZbZ/3U9of7XtcxOySO1pD2d7s5p6ZY12vv6tr7QHtantguTMfaa58+yyXbWuT5SJtS1jnifa/MhvLs5pRc0beD7Sl+V+ZlelKfta8bPtPriYZJsr3Zje32bMeZj2yz5htWxLtRt8ntKc9Y6Y76oNtn8LWDVPT9hE=
-  </data>
- </layer>
- <objectgroup name="Object Layer 1" width="30" height="50">
-  <object name="characters/player/player_one" gid="286" x="0" y="2496"/>
-  <object name="tile_trigger/exit_to_village_bottom" gid="292" x="0" y="2560"/>
-  <object name="tile_trigger/exit_to_village_top" gid="292" x="0" y="2496"/>
-  <object name="sign/village_sign" gid="288" x="192" y="2496"/>
-  <object name="sign/bog_sign" gid="288" x="1408" y="1472"/>
-  <object name="sign/merchant_sign" gid="288" x="768" y="128"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/annoying_croc" gid="288" x="1856" y="1600"/>
-  <object name="characters/npcs/heidi/heidi" gid="291" x="1792" y="3200"/>
-  <object name="tile_trigger/no_potion" gid="292" x="768" y="1216"/>
-  <object name="tile_trigger/exit_to_merchant" gid="292" x="832" y="64"/>
-  <object name="characters/npcs/generic/merchant_blocker" gid="291" x="832" y="128"/>
-  <object name="characters/npcs/generic/merchant" gid="291" x="384" y="448"/>
-  <object name="tile_trigger/exit_to_world" gid="292" x="1856" y="1600"/>
-  <object name="player_data/player_data" gid="287" x="0" y="64"/>
+ <objectgroup name="Object Layer 1" width="25" height="30">
+  <object name="characters/player/player_one" gid="286" x="0" y="1216"/>
+  <object name="tile_trigger/exit_to_village_bottom" gid="292" x="0" y="1280"/>
+  <object name="tile_trigger/exit_to_village_top" gid="292" x="0" y="1216"/>
+  <object name="sign/village_sign" gid="288" x="192" y="1216"/>
+  <object name="sign/bog_sign" gid="288" x="704" y="1216"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/annoying_croc" gid="288" x="640" y="1280"/>
+  <object name="characters/npcs/heidi/heidi" gid="291" x="1536" y="1920"/>
+  <object name="tile_trigger/no_potion" gid="292" x="64" y="576"/>
+  <object name="characters/npcs/generic/merchant" gid="291" x="384" y="576"/>
+  <object name="tile_trigger/exit_to_world" gid="292" x="1536" y="1600"/>
+  <object name="player_data/player_data" gid="287" x="0" y="320"/>
  </objectgroup>
+ <layer name="SpecialLayer" width="25" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlVEOgDAIQxfP5f3P5a+ZFFqK8cclJga3vtEhW+sf7jiP5/OGfhXr6mZaDkfxpMOI9CPe/k1loNiUZygPh4F8R7509aO5bO6Of10Gqo+sjjIPo7lZzaCYm2/VI5jzRO+MF2zNR3psbsqZT/fgLxh3ljJX9bXD2VnKXiZ6PeqX+xpmPyyf2RezpmJM9j+GiXpedQepnEhr6j9yvWcZTg1NjgsUDSjv
+  </data>
+ </layer>
 </map>

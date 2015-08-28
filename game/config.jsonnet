@@ -29,11 +29,12 @@
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
 		//"level_location" : "/world_2/level_1/main",
+		//"level_location" : "world_8/treasure_matrix",	
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
 		"font_location": self.game_folder + "/fonts",
 		"script_running_location": self.game_folder + "/script_running",
-		"dialogue_font": self.font_location + "/Ubuntu-R.ttf",
+		"dialogue_font": self.font_location + "/Ubuntu-B.ttf",
 		"game_save_location": self.game_folder + "/save.json",
 		"initial_save_location": self.game_folder + "/initial_save.json"
 	},

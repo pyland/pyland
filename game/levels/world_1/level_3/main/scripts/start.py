@@ -13,6 +13,7 @@ first_time_a = True
 first_time_b = True
 
 def player_walked_on_myla_warn_crocs():
+    player_data.save_checkpoint("myla_warn_crocs")
     global need_croc_warning
     if need_croc_warning:
         need_croc_warning = False
@@ -22,13 +23,13 @@ def player_walked_on_myla_warn_crocs():
             lambda callback: myla.stop_follow(callback = callback),
             lambda callback: myla.face_north(callback = callback),
             lambda callback: player_one.face_south(callback = callback),
-            lambda callback: engine.show_dialogue("Myla: We need to go west, but the boulder is blocking us!", callback = callback),
-            lambda callback: engine.show_dialogue("Careful, those crocodiles they are next to you!", callback = callback),
-            lambda callback: engine.show_dialogue("Since there is only one bridge, I'll just jump into your bag", callback =callback),
+            lambda callback: engine.show_dialogue("We have some lively crocs here, so I'm just gonna hop in your bag again...", callback = callback),
             lambda callback: player_one.face_north(callback = callback),
             lambda callback: myla.set_solidity(False, callback = callback),
             lambda callback: myla.move_north(callback = callback),
             lambda callback: myla.set_visible(False, callback = callback),
+            lambda callback: engine.show_dialogue("Sweet, some chocolate.", callback = callback),
+            lambda callback: engine.show_dialogue("Oh no, it's all melted in here, " + engine.get_player_name() + ", seriously, clear out your bag!", callback = callback),
             lambda callback: player_one.set_busy(False, callback =callback)
         ])
 
@@ -41,23 +42,25 @@ def player_walked_on_challenge2a():
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_west(callback = callback),
         lambda callback: engine.show_dialogue("Myla: Good job!", callback = callback),
-        lambda callback: engine.show_dialogue("Those crocodiles are blocking our path...", callback = callback),
-        lambda callback: engine.show_dialogue("I've put a script in your PyScripter called yell()", callback = callback),
+        lambda callback: engine.show_dialogue("Those sleeping crocodiles are blocking our bag.", callback = callback),
+        lambda callback: engine.show_dialogue("I'm puting a script in your PyScripter called yell().", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
         lambda callback: engine.insert_to_scripter("yell()", callback = callback),
-        lambda callback: engine.show_dialogue("Face the crocodiles and run the script in order to aggrivate them", callback = callback),
-        lambda callback: engine.show_dialogue("Make sure you get out of the way before he gets to you though!", callback = callback),
+        lambda callback: engine.show_dialogue("Face the crocodiles and run the script in order to startle them and wake them up", callback = callback),
+        lambda callback: engine.show_dialogue("Make sure you get out of the way before they get to you though!", callback = callback),
+        lambda callback: engine.show_dialogue("Oh and the chocolate was delicious by the way.", callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback),
         ])
 
 def player_walked_on_challenge2b():
+    player_data.save_checkpoint("challenge2b")
     global first_time_b
     if first_time_b:
         first_time_b = False
         challenge2_dialogue = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("Myla: You did it!!", callback = callback),
-        lambda callback: engine.show_dialogue("Let me out of your bag now!", callback = callback),
+        lambda callback: engine.show_dialogue("Let me out of your bag now! It's getting a bit stuffy.", callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback),
         lambda callback: player_one.move_west(callback = callback),
         lambda callback: player_one.set_busy(True, callback = callback),
@@ -67,7 +70,11 @@ def player_walked_on_challenge2b():
         lambda callback: myla.move_east(callback = callback),
         lambda callback: myla.face_west(callback = callback),
         lambda callback: player_one.face_east(callback = callback),
-        lambda callback: engine.show_dialogue("These crocodiles are making me nervous...lets get out of here", callback = callback),
+        lambda callback: myla.wait(0.3, callback = callback),
+        lambda callback: myla.face_north(callback = callback),
+        lambda callback: myla.wait(0.3, callback = callback),
+        lambda callback: engine.show_dialogue("Take that you green stupid lungerheads!", callback = callback),
+        lambda callback: engine.show_dialogue("Swinging monkeys! ... (TODO: Carl arrives)", callback = callback),
         lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback),
         ]
@@ -75,10 +82,18 @@ def player_walked_on_challenge2b():
         engine.run_callback_list_sequence(challenge2_dialogue)
 
 #setting the player's starting position
-if player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "challenge2a"):
+if player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_warn_crocs"):
+    x, y = myla_warn_crocs.get_position()
+    player_one.move_to((x, y),callback = lambda: myla.move_to((x, y-1), callback = player_walked_on_myla_warn_crocs))
+elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "challenge2a"):
     need_croc_warning = False
     x, y = challenge2a.get_position()
     player_one.move_to((x, y), callback = player_walked_on_challenge2a)
+elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "challenge2b"):
+    need_croc_warning = False
+    first_time_a = False
+    x, y = challenge2b.get_position()
+    player_one.move_to((x, y), callback = player_walked_on_challenge2b)
 elif player_data.previous_exit_is("world_1"):
     player_one.move_north()
     myla_start_position = exit_level_start.get_position()
@@ -90,7 +105,7 @@ def go_to_world(player_object):
     player_data.complete_level_and_save()
     player_data.save_and_exit("/world_1")
 
-exit_level_start.player_walked_on = lambda: player_data.save_and_exit("/world_1")
+exit_level_start.player_walked_on = lambda player_object: player_data.save_and_exit("/world_1")
 exit_level_end.player_walked_on = go_to_world #TODO: have this save that the level has been completed
 
 player_one.focus()

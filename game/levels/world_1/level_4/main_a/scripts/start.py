@@ -1,3 +1,13 @@
+#commence save-data set-up
+world_name = "world_1"
+level_name = "level_4"
+map_name = "main_a"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
+#end save-data set-up
+
+
 player_one.focus()
 
 croc_0.face_east()
@@ -17,7 +27,7 @@ engine.run_callback_list_sequence([
     ])
 
 def go_next(player_object):
-    engine.change_map("/world_1/level_4/main_b")
+    player_data.save_and_exit("/world_1/level_4/main_b")
 
 end_level.player_walked_on = go_next
 end_level_2.player_walked_on = go_next

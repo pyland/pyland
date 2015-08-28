@@ -12,7 +12,7 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 def myla_explain_cut_action(player_object):
     player_one.set_cuts_left(2)
     myla_explain_cut.player_walked_on = lambda player_object: None
-    player_data.save_checkpoint("myla_explain_cut_action")
+    player_data.save_checkpoint("myla_explain_cut")
 
     def myla_ask_player_if_there_is_way(callback):
         engine.show_dialogue_with_options(
@@ -44,6 +44,7 @@ def myla_explain_cut_action(player_object):
 
 def myla_explain_whetstone_action(player_object):
     myla_explain_whetstone.player_walked_on = lambda player_object: None
+    player_data.save_checkpoint("myla_explain_whetstone")
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: myla.stop_follow(callback = callback),
@@ -80,6 +81,7 @@ def myla_go_in_bag(player_object):
 
 def myla_explain_crocodiles_action(player_object):
     myla_explain_crocodiles.player_walked_on = myla_go_in_bag
+    player_data.save_checkpoint("myla_explain_crocodiles")
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.wait(0.3, callback = callback),
@@ -110,6 +112,7 @@ def myla_explain_crocodiles_action(player_object):
 
 def myla_explain_basic_move_action(player_object):
     myla_explain_basic_move.player_walked_on = myla_go_in_bag
+    player_data.save_checkpoint("myla_explain_basic_move")
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: myla.stop_follow(callback = callback),
@@ -151,6 +154,7 @@ def myla_explain_basic_move_action(player_object):
 
 def myla_give_simple_loop_action(player_object):
     myla_give_simple_loop.player_walked_on = lambda player_object: None
+    player_data.save_checkpoint("myla_give_simple_loop")
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: myla.set_solidity(True, callback = callback),
@@ -201,6 +205,8 @@ def myla_tells_loop_modify_action(player_object):
     ])
 
 def myla_give_vine_loop_action(player_object):
+    myla_give_vine_loop.player_walked_on = lambda player_object: None
+    player_data.save_checkpoint("myla_give_vine_loop")
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("The PyScripter is really useful for solving repetative tasks, quickly.", callback = callback),
@@ -219,6 +225,7 @@ def myla_give_vine_loop_action(player_object):
 
 
 def myla_notice_bog_water_action(player_object):
+    player_data.save_checkpoint("myla_notice_bog_water")
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("Here the player will be able to get bog-water and proceed to the next level with Myla...", callback = callback),
@@ -226,6 +233,16 @@ def myla_notice_bog_water_action(player_object):
     ])
 
 #end function definitions
+#assign functions to checkpoints
+myla_explain_cut.player_walked_on = myla_explain_cut_action
+myla_explain_whetstone.player_walked_on = myla_explain_whetstone_action
+myla_explain_crocodiles.player_walked_on = myla_explain_crocodiles_action
+myla_explain_basic_move.player_walked_on = myla_explain_basic_move_action
+myla_give_simple_loop.player_walked_on = myla_give_simple_loop_action
+myla_tells_loop_modify.player_walked_on = myla_tells_loop_modify_action
+myla_give_vine_loop.player_walked_on = myla_give_vine_loop_action
+myla_notice_bog_water.player_walked_on = myla_notice_bog_water_action
+#end function assignment
 
 #setting the player's starting position
 if player_data.previous_exit_is("world_1", level_name = "level_2", map_name = "start"):
@@ -236,7 +253,53 @@ elif player_data.previous_exit_is(world_name, level_name = level_name, map_name 
     x, y = myla_explain_cut.get_position()
     player_one.move_to((x, y), callback = lambda: myla_explain_cut_action(player_one))
     myla.set_solidity(False, callback = lambda: myla.move_to((x + 1, y), callback = lambda: myla.follow(player_one)))
-
+elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_explain_whetstone"):
+    myla_explain_cut.player_walked_on = lambda player_object: None
+    x, y = myla_explain_whetstone.get_position()
+    player_one.move_to((x, y), callback = lambda: myla_explain_whetstone_action(player_one))
+    myla.set_solidity(False, callback = lambda: myla.move_to((x, y-1), callback = lambda: myla.follow(player_one)))
+elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_explain_crocodiles"):
+    myla_explain_cut.player_walked_on = lambda player_object: None
+    myla_explain_whetstone.player_walked_on = lambda player_object: None
+    x, y = myla_explain_crocodiles.get_position()
+    player_one.move_to((x, y), callback = lambda: myla_explain_crocodiles_action(player_one))
+    myla.set_solidity(False, callback = lambda: myla.move_to((x+1, y), callback = lambda: myla.follow(player_one)))
+elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_explain_basic_move"):
+    myla_explain_cut.player_walked_on = lambda player_object: None
+    myla_explain_whetstone.player_walked_on = lambda player_object: None
+    myla_explain_crocodiles.player_walked_on = myla_go_in_bag
+    x, y = myla_explain_basic_move.get_position()
+    player_one.move_to((x, y), callback = lambda: myla_explain_basic_move_action(player_one))
+    myla.set_solidity(False, callback = lambda: myla.move_to((x, y), callback = lambda: myla.follow(player_one)))
+elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_give_simple_loop"):
+    myla_explain_cut.player_walked_on = lambda player_object: None
+    myla_explain_whetstone.player_walked_on = lambda player_object: None
+    myla_explain_crocodiles.player_walked_on = myla_go_in_bag
+    myla_explain_basic_move.player_walked_on = myla_go_in_bag
+    x, y = myla_give_simple_loop.get_position()
+    player_one.move_to((x, y), callback = lambda: myla_give_simple_loop_action(player_one))
+    myla.set_solidity(False, callback = lambda: myla.move_to((x - 2, y + 1), callback = lambda: myla.follow(player_one)))
+elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_give_vine_loop"):
+    myla_explain_cut.player_walked_on = lambda player_object: None
+    myla_explain_whetstone.player_walked_on = lambda player_object: None
+    myla_explain_crocodiles.player_walked_on = myla_go_in_bag
+    myla_explain_basic_move.player_walked_on = myla_go_in_bag
+    myla_give_simple_loop.player_walked_on = lambda player_object: None
+    myla_tells_loop_modify.player_walked_on = lambda player_object: None
+    x, y = myla_give_vine_loop.get_position()
+    player_one.move_to((x, y), callback = lambda: myla_give_vine_loop_action(player_one))
+    myla.set_solidity(False, callback = lambda: myla.move_to((x, y-1), callback = lambda: myla.follow(player_one)))
+elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_notice_bog_water"):
+    myla_explain_cut.player_walked_on = lambda player_object: None
+    myla_explain_whetstone.player_walked_on = lambda player_object: None
+    myla_explain_crocodiles.player_walked_on = myla_go_in_bag
+    myla_explain_basic_move.player_walked_on = myla_go_in_bag
+    myla_give_simple_loop.player_walked_on = lambda player_object: None
+    myla_tells_loop_modify.player_walked_on = lambda player_object: None
+    myla_give_vine_loop.player_walked_on = lambda player_object: None
+    x, y = myla_notice_bog_water.get_position()
+    player_one.move_to((x, y), callback = lambda: myla_notice_bog_water_action(player_one))
+    myla.set_solidity(False, callback = lambda: myla.move_to((x + 1, y), callback = lambda: myla.follow(player_one)))
 #end setting the player's starting position
 
 def go_to_start(player_object):
@@ -280,12 +343,43 @@ player_one.focus()
 engine.play_music("world_1_jungle")
 croc_guard_totem.face_north()
 
-myla_explain_cut.player_walked_on = myla_explain_cut_action
-myla_explain_whetstone.player_walked_on = myla_explain_whetstone_action
-myla_explain_crocodiles.player_walked_on = myla_explain_crocodiles_action
-myla_explain_basic_move.player_walked_on = myla_explain_basic_move_action
-myla_give_simple_loop.player_walked_on = myla_give_simple_loop_action
-myla_tells_loop_modify.player_walked_on = myla_tells_loop_modify_action
-myla_give_vine_loop.player_walked_on = myla_give_vine_loop_action
-myla_notice_bog_water.player_walked_on = myla_notice_bog_water_action
+#Making it so that crocs can kill you, HACK FOR BEFORE CROCS CAN CREATE THEIR OWN LISTENERS, WILL BE IMPROVED!!!!
 
+b2_croc = [
+    croc_face_vine_left,
+    croc_face_vine_right,
+    croc_bottom_0,
+    croc_bottom_1,
+    croc_bottom_2,
+    croc_bottom_3,
+    croc_bottom_4,
+    croc_bottom_5,
+    croc_bottom_6,
+    croc_bottom_7,
+    croc_guard_totem
+]
+
+trigger_crocs = [
+    trigger_croc_0,
+    trigger_croc_1,
+    trigger_croc_2,
+    trigger_croc_3,
+    trigger_croc_4,
+    trigger_croc_5,
+    trigger_croc_6,
+    trigger_croc_7,
+]
+
+
+def player_walked_on_ti():
+    x,y = player_one.get_position()
+    for a in [-1, 1]:
+        for obj in engine.get_objects_at((x+a,y)):
+            if obj in b2_croc:
+                return obj.lose(player_one)
+        for obj in engine.get_objects_at((x,y+a)):
+            if obj in b2_croc:
+                return obj.lose(player_one)
+
+for t in trigger_crocs:
+    t.player_walked_on = lambda player_object: player_walked_on_ti()
