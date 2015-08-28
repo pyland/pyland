@@ -83,6 +83,8 @@
   <object name="tile_trigger/trigger_end" gid="387" x="704" y="448"/>
   <object name="tile_trigger/level_exit" gid="387" x="640" y="64"/>
   <object name="player_data/player_data" gid="382" x="0" y="64"/>
+  <object name="tile_trigger/exit_level_start1" gid="387" x="1856" y="1152"/>
+  <object name="tile_trigger/exit_level_start2" gid="387" x="1920" y="1152"/>
  </objectgroup>
  <layer name="SpecialLayer" width="34" height="18">
   <data encoding="base64" compression="zlib">

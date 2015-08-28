@@ -1,10 +1,22 @@
+#commence save-data set-up
+world_name = "world_1"
+level_name = "level_3"
+map_name = "main"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name)
+#end save-data set-up
+
 #global settings for level
 #engine.play_music("eery")
 engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in the config.
 engine.set_py_tabs(9)
 
+#checkpoint establishing
+
+
 #initial setting of players
-#player_one.face_south()
+player_one.face_south()
 player_one.focus()
 myla.follow(player_one)
 
