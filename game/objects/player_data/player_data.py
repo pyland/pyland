@@ -97,7 +97,6 @@ class PlayerData(GameObject):
         if(self.__has_unlocked_pyscripter()):
             engine.show_py_scripter()
         else:
-            engine.print_terminal("should be hidden now!")
             engine.hide_py_scripter()
         return
 
