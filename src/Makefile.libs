@@ -114,8 +114,8 @@ TMXPARSER_LDLIBS   = -ltmxparser
 
 JSON_INC_FLAGS = -isystem ./json-parser
 
-JSONNET_LDFLAGS    = -L./jsonnet
-JSONNET_LDLIBS     = -ljsonnet
+#JSONNET_LDFLAGS    = -L./jsonnet
+#JSONNET_LDLIBS     = -ljsonnet
 
 ZLIB_CPPFLAGS = $(shell pkg-config zlib --cflags)
 ZLIB_CXXFLAGS =

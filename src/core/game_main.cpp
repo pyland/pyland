@@ -51,7 +51,6 @@ GameMain::GameMain(int &argc, char **argv):
     interpreter(boost::filesystem::absolute("python_embed/wrapper_functions.so").normalize()),
     callbackstate(),
     em(EventManager::get_instance()),
-    tile_identifier_text(&embedWindow, Engine::get_game_font(), false),
     changing_challenge(false),
     player_name("???")
 
@@ -318,14 +317,6 @@ GameMain::GameMain(int &argc, char **argv):
     }
     ));
 
-    tile_identifier_text.move_ratio(1.0f, 0.0f);
-    tile_identifier_text.resize(256, 64);
-    tile_identifier_text.align_right();
-    tile_identifier_text.vertical_align_bottom();
-    tile_identifier_text.align_at_origin(true);
-    tile_identifier_text.set_colour(0x00, 0x00, 0x00, 0xa8);
-    tile_identifier_text.set_text("(?, ?)");
-
     func_char = [&] (GameWindow *)
     {
         LOG(INFO) << "text embedWindow resizing";
@@ -466,13 +457,8 @@ void GameMain::game_loop(bool showMouse)
             if (tile != tile_identifier_old_tile)
             {
                 tile_identifier_old_tile = tile;
-                std::stringstream position;
-                position << "(" << tile.x << ", " << tile.y << ")";
-
-                tile_identifier_text.set_text(position.str());
             }
         }
-        tile_identifier_text.display();
 
         //Only show SDL cursor on rapsberry pi, not required on desktop
         #ifdef USE_GLES

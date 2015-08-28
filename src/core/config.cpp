@@ -24,7 +24,7 @@ std::string exec(const char* cmd) {
 
 Config::json Config::j;
 bool Config::created = false;
-
+/*
 int bob(int argc, const char *fn)
 {
     int error;
@@ -47,7 +47,7 @@ int bob(int argc, const char *fn)
     jsonnet_destroy(vm);
     return EXIT_SUCCESS;
 }
-
+*/
 Config::json Config::get_instance() {
     /*
     int error;

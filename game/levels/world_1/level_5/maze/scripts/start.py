@@ -1,4 +1,31 @@
+#commence save-data set-up
+world_name = "world_1"
+level_name = "level_5"
+map_name = "maze"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name)
+#end save-data set_up
+
 import random
+
+reached_arith = False
+
+#setting player's starting position
+if player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "reached_arith_help"):
+    x, y = challenge_arith.get_position()
+    player_one.move_to((x,y), callback = lambda: myla.move_to((x-1, y), callback = reached_arith_fun))
+else: 
+    pass
+    #do nothing as we have not got the checkpoint
+
+def go_to_world(player_object):
+    player_data.complete_level_and_save()
+    player_data.save_and_exit("/world_1")
+
+exit_level_start.player_walked_on = lambda player_object: player_data.save_and_exit("/world_1")
+
+exit_level_end.player_walked_on = go_to_world
 
 player_one.focus()
 myla.follow(player_one)
@@ -34,6 +61,28 @@ def help_with_for(player_object):
             "Yes": lambda: for_help(player_object),
             "No": lambda: no_thanks(player_object)
         }))
+
+def reached_arith_fun():
+    player_data.save_checkpoint("reached_arith_help")
+    global reached_arith
+    if not reached_arith:
+        reached_arith = True
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: engine.show_dialogue("Myla: Looks like we need to get past these guards! Look at the sign, it might help us understand why the guards are here.", callback = callback),
+            lambda callback : player_one.set_busy(False, callback = callback)
+        ])
+
+challenge_arith.player_walked_on = lambda player_object: reached_arith_fun()
+
+def myla_speak(player_object):
+    engine.run_callback_list_sequence([
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("The yellow signs look like they could be helpful!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback = callback)]
+    )
+
+myla.player_action = myla_speak
 
 def arithmetic_help(player_object):
     engine.run_callback_list_sequence([
@@ -328,3 +377,5 @@ def check_security_three(player_object):
         ])
 
 security_three.player_action = security_three_action
+
+

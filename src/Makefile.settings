@@ -12,7 +12,7 @@ WARNINGS = \
 	-isystem ./catch                \
 	-isystem ./tmx-parser           \
 	-isystem ./tmx-parser/TmxParser \
-	-isystem ./jsonnet              \
+#	-isystem ./jsonnet              \
 	-isystem ./json-parser          \
 	-pedantic                       \
 	-Wall -Wextra                   \
