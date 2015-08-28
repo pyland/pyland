@@ -9,6 +9,9 @@ class GreenCrocodile(Crocodile):
     """ The crocodiles are a class of enemy """
 
     def initialise(self):
+
+        """Green crocodiles oscillate forever """
+
         super().initialise()
         self.oscillate = -1
 

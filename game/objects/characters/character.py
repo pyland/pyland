@@ -492,6 +492,7 @@ class Character(GameObject, ScriptStateContainer):
         """ Moves the character east by one tile and makes them face in that direction.
 
         Overides general object implementation
+        
         Parameters
         ----------
         callback : func, optional
@@ -505,6 +506,7 @@ class Character(GameObject, ScriptStateContainer):
         """ Moves the character south by one tile and makes them face in that direction.
 
         Overides general object implementation
+
         Parameters
         ----------
         callback : func, optional
