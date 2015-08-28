@@ -24,7 +24,8 @@ def load_save(save_name):
 #Let the player run python scripts in the menu...
 stc = ScriptStateContainer()
 script_api = {
-    "load_save" : load_save
+    "load_save" : load_save,
+    "load_map" : engine.change_map
 }
 stc.set_script_name("Menu")
 engine.register_input_callback(engine.INPUT_RUN, lambda: stc.run_script(script_api, engine)) ##TODO: could provide some customer easter egg api's in the menu? :) (cheatcodes?)
