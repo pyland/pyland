@@ -1,7 +1,7 @@
 #commence save-data set-up
 world_name = "world_1"
-level_name = "level_3"
-map_name = "main"
+level_name = "level_6"
+map_name = "vine_intro"
 
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name)
@@ -13,7 +13,13 @@ engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in 
 engine.set_py_tabs(9)
 
 #checkpoint establishing
-
+def check1(player_object):
+    player_data.save_checkpoint("check1")
+    
+check1a.player_walked_on = check1
+check1b.player_walked_on = check1
+check1c.player_walked_on = check1
+check1d.player_walked_on = check1
 
 #initial setting of players
 player_one.face_south()
