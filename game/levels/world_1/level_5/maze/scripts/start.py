@@ -46,6 +46,27 @@ def help_with_for(player_object):
             "No": lambda: no_thanks(player_object)
         }))
 
+def reached_arith_fun():
+    global reached_arith
+    if not reached_arith:
+        reached_arith = True
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: engine.show_dialogue("Myla: Looks like we need to get past these guards! Look at the sign, it might help us understand why the guards are here.", callback = callback),
+            lambda callback : player_one.set_busy(False, callback = callback)
+        ])
+
+challenge_arith.player_walked_on = lambda player_object: reached_arith_fun()
+
+def myla_speak(player_object):
+    engine.run_callback_list_sequence([
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("The yellow signs look like they could be helpful!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback = callback)]
+    )
+
+myla.player_action = myla_speak
+
 def arithmetic_help(player_object):
     engine.run_callback_list_sequence([
         lambda callback: engine.clear_scripter(callback = callback),

@@ -52,7 +52,7 @@
   <object name="key/key2" gid="287" x="2944" y="2048"/>
   <object name="player_data/player_data" gid="287" x="0" y="1408"/>
   <object name="tile_trigger/challenge_arith" gid="292" x="2752" y="1344"/>
-  <object name="tile_tigger/exit_level_start" gid="292" x="0" y="1536"/>
+  <object name="tile_trigger/exit_level_start" gid="292" x="0" y="1536"/>
   <object name="tile_trigger/exit_level_end" gid="292" x="3648" y="1344"/>
  </objectgroup>
 </map>
