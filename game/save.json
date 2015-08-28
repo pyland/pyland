@@ -1,14 +1,8 @@
 {
-    "settings": {
-        "language": "english"
-    },
     "player_saves": {
-        "???": {
-            "py_scripter_tabs": 1,
-            "totems": {},
-            "previous_exit": "/world_1/level_1/player_house",
-            "coins": 0,
-            "current_map": "/world_1/level_1/rossumberg",
+        "YourName": {
+            "current_map": "/world_1/level_1/player_house",
+            "previous_exit": "/world_1/intro",
             "level_data": {
                 "world_1": {
                     "level_1": {
@@ -20,26 +14,60 @@
                     }
                 }
             },
-            "py_scripter_enabled": false
-        },
-        "YourName": {
-            "py_scripter_tabs": 1,
             "totems": {},
-            "previous_exit": "/world_1/intro",
+            "py_scripter_enabled": false,
             "coins": 0,
-            "current_map": "/world_1/level_1/player_house",
+            "py_scripter_tabs": 1
+        },
+        "liftlift": {
+            "current_map": "/world_1/level_6/vine_intro",
+            "previous_exit": "/world_1/level_6/vine_intro/check1",
+            "completed_levels": {
+                "/world_1/level_3": true,
+                "/world_1/level_4": true,
+                "/world_1/level_1": true,
+                "/world_1/level_2": true,
+                "/world_1/level_5": true
+            },
             "level_data": {
                 "world_1": {
                     "level_1": {
-                        "starting_map": "player_house",
-                        "heidi_state": 0
+                        "heidi_state": 2,
+                        "starting_map": "player_house"
+                    },
+                    "level_2": {
+                        "starting_map": "start",
+                        "pyscripter_state": 1
+                    }
+                }
+            },
+            "totems": {},
+            "has_unlocked_pyscripter": true,
+            "py_scripter_enabled": false,
+            "coins": 0,
+            "py_scripter_tabs": 1
+        },
+        "???": {
+            "current_map": "/world_1/level_1/rossumberg",
+            "previous_exit": "/world_1/level_1/player_house",
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "heidi_state": 0,
+                        "starting_map": "player_house"
                     },
                     "level_2": {
                         "starting_map": "start"
                     }
                 }
             },
-            "py_scripter_enabled": false
+            "totems": {},
+            "py_scripter_enabled": false,
+            "coins": 0,
+            "py_scripter_tabs": 1
         }
+    },
+    "settings": {
+        "language": "english"
     }
 }
