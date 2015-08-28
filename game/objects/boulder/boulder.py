@@ -21,7 +21,6 @@ from game_object import GameObject
 As the GameObject is in the base objects folder.
 """
 
-
 """
 """
 class Boulder(GameObject):

@@ -48,7 +48,7 @@ std::string GameEngine::get_level_location() {
 }
 
 void GameEngine::print_debug(std::string debug_message) {
-    LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
+    std::cout << debug_message << std::endl; // TODO: work out properly how python messages should be debugged.
 }
 
 void GameEngine::show_dialogue(std::string text, bool disable_scripting, PyObject *callback) {

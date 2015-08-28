@@ -29,17 +29,17 @@
    eJztwwENAAAMw6BKnX8Vd3AFkLBqqqqqqs8DlhyGEA==
   </data>
  </layer>
- <layer name="Decor" width="26" height="40" visible="0">
+ <layer name="Decor" width="26" height="40">
   <data encoding="base64" compression="zlib">
    eJzdlD0OgCAMRhuMv3HVy3gZJybuPyuJBkIUKmkB+ZK3YR9QqQIAVRHcSe3h9uXyUPVaItakOE9sZCJPKF/uXTqU+F5r91BD0cs/eKji1uT8D3Ywc4LTY88izjeP6VttHkzcPT1x582VwkNJbg9XSvVQ3yd13ZI9MYmtMZ70CDqPR9cYAiwXa4DW45kQ32PRnk0YbM98IohoPOfhCPd8y8UBQhrnEg==
   </data>
  </layer>
- <layer name="SpecialLayer" width="26" height="40" visible="0">
+ <layer name="SpecialLayer" width="26" height="40">
   <data encoding="base64" compression="zlib">
    eJzdk8EOwCAIQw2/hf7/b3nZaTMZOAquTXrxwCOWdmmtExmtbA6aV8WJzLriHtg5nj89sa8sHJU1J9p6mZ0TpftMlnuzclC5sXOilMWq6mkWB6VTOX/vTyVnR7szvLtb3lYeRr9xrHMsHJVnXxHZf8nHK9TdVnsCXpyMCw==
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="26" height="40" visible="0">
+ <objectgroup name="Object Layer 1" width="26" height="40">
   <object name="characters/player/player_one" gid="286" x="128" y="256" width="64" height="64"/>
   <object name="characters/npcs/myla/myla" gid="291" x="0" y="256" width="64" height="64"/>
   <object name="tile_trigger/trigger1a" gid="292" x="1216" y="384"/>
@@ -98,5 +98,17 @@
   <object name="vine/poison_vine/vine68" gid="101" x="1280" y="1536"/>
   <object name="vine/poison_vine/vine69" gid="101" x="1344" y="1600"/>
   <object name="characters/enemies/crocodiles/white_crocodile/crocodile1" gid="296" x="768" y="2240"/>
+  <object name="tile_trigger/check1a" gid="292" x="576" y="768"/>
+  <object name="tile_trigger/check1b" gid="292" x="640" y="768"/>
+  <object name="tile_trigger/check1c" gid="292" x="704" y="768"/>
+  <object name="tile_trigger/check1d" gid="292" x="768" y="768"/>
+  <object name="tile_trigger/check2a" gid="292" x="1344" y="1216"/>
+  <object name="tile_trigger/check2b" gid="292" x="1280" y="1280"/>
+  <object name="tile_trigger/exit_level_start1" gid="292" x="0" y="256"/>
+  <object name="tile_trigger/exit_level_start2" gid="292" x="0" y="192"/>
+  <object name="tile_trigger/exit_level_end" gid="292" x="1600" y="2304"/>
+  <object name="tile_trigger/check3a" gid="292" x="1408" y="1600"/>
+  <object name="tile_trigger/check3b" gid="292" x="1408" y="1536"/>
+  <object name="player_data/player_data" gid="287" x="0" y="128"/>
  </objectgroup>
 </map>

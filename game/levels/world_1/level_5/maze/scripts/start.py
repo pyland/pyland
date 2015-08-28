@@ -1,4 +1,31 @@
+#commence save-data set-up
+world_name = "world_1"
+level_name = "level_5"
+map_name = "maze"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name)
+#end save-data set_up
+
 import random
+
+reached_arith = False
+
+#setting player's starting position
+if player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "reached_arith_help"):
+    x, y = challenge_arith.get_position()
+    player_one.move_to((x,y), callback = lambda: myla.move_to((x-1, y), callback = reached_arith_fun))
+else: 
+    pass
+    #do nothing as we have not got the checkpoint
+
+def go_to_world(player_object):
+    player_data.complete_level_and_save()
+    player_data.save_and_exit("/world_1")
+
+exit_level_start.player_walked_on = lambda player_object: player_data.save_and_exit("/world_1")
+
+exit_level_end.player_walked_on = go_to_world
 
 player_one.focus()
 myla.follow(player_one)
@@ -25,8 +52,8 @@ def for_help(player_object):
 def help_with_for(player_object):
     engine.run_callback_list_sequence([
         lambda callback: player_object.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Evil Guy: MWAHAHA! This maze will be the death of you!", callback = callback),
-        lambda callback: engine.show_dialogue("Evil Guy: I'll give you a hint though, you need to go east by 25 steps", callback = callback),
+        lambda callback: engine.show_dialogue("There are three guardians here, solve their challenges to prove your worth...", callback = callback),
+        lambda callback: engine.show_dialogue("They will pose riddles a plenty, can you achieve this?", callback = callback),
         lambda callback: myla.start_animating(speed = 0.1, loop = False, forward = False, callback = callback)
     ], callback = lambda: engine.show_dialogue_with_options(
         "Myla: Do you want me to help you with that?",
@@ -34,6 +61,30 @@ def help_with_for(player_object):
             "Yes": lambda: for_help(player_object),
             "No": lambda: no_thanks(player_object)
         }))
+
+def reached_arith_fun():
+    player_data.save_checkpoint("reached_arith_help")
+    global reached_arith
+    if not reached_arith:
+        reached_arith = True
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: engine.show_dialogue("Myla: Looks like we need to get past these guardians. I've heard of them before, Anindya, Maenan and Alexander.", callback = callback),
+            lambda callback: engine.show_dialogue("They have a reputation for testing adventurers on their way to cross the jungle.", callback = callback),
+            lambda callback: engine.show_dialogue("But they actually just want their chores done for them.", callback = callback),
+            lambda callback : player_one.set_busy(False, callback = callback)
+        ])
+
+challenge_arith.player_walked_on = lambda player_object: reached_arith_fun()
+
+def myla_speak(player_object):
+    engine.run_callback_list_sequence([
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("Read the sign if you get stuck.", callback = callback),
+        lambda callback: player_one.set_busy(False, callback = callback)]
+    )
+
+myla.player_action = myla_speak
 
 def arithmetic_help(player_object):
     engine.run_callback_list_sequence([
@@ -50,8 +101,8 @@ def arithmetic_help(player_object):
 def help_with_arithmetic(player_object):
     engine.run_callback_list_sequence([
         lambda callback: player_object.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Evil Guy: MWAHAHA! You will never get past these security guards!", callback = callback),
-        lambda callback: engine.show_dialogue("Evil Guy: I have given them a bunch of problems they will be stuck on forever!", callback = callback),
+        lambda callback: engine.show_dialogue("There are three guardians here, solve their challenges to prove your worth...", callback = callback),
+        lambda callback: engine.show_dialogue("They will pose riddles a plenty, can you achieve this?", callback = callback),
         lambda callback: myla.start_animating(speed = 0.1, loop = False, forward = False, callback = callback)
     ], callback = lambda: engine.show_dialogue_with_options(
         "Myla: Do you want me to help you with that?",
@@ -78,8 +129,9 @@ def helper_one_action(player_object):
         helper_one.face_east()
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Dug: I have been stuck here for ages!", callback = callback),
-        lambda callback: engine.show_dialogue("Dug: Wish I had a device to help me solve problems!", callback = callback),
+        lambda callback: engine.show_dialogue("Ying: Don't look at me, I'm new and still an apprentice guardian!", callback = callback),
+        lambda callback: engine.show_dialogue("These three have told me I need to learn how to use sphinx for them because it confuses them...", callback = callback),
+        lambda callback: engine.show_dialogue("... but I thought they were the ones that were meant to be good at riddles!", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
     ])
 
@@ -134,20 +186,20 @@ def security_one_action(player_object):
     if(not puzzle_one_solved):
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
-            lambda callback: engine.show_dialogue("Alpha: I am security guard Alpha! I will let you pass if you help me.", callback = callback),
-            lambda callback: engine.show_dialogue("Alpha: I need to know the total cost of building my snake cages in pounds", callback = callback)
+            lambda callback: engine.show_dialogue("Anindya: I am security guard Alpha! I will let you pass if you help me.", callback = callback),
+            lambda callback: engine.show_dialogue("I need to know the total cost of building my snake cages in pounds.", callback = callback)
         ],
         callback = lambda: engine.show_dialogue_with_options(
-            "Alpha: Can you help me?",
+            "Can you help me?",
             options = {
                 "Yes": lambda: security_one_problem(),
-                "No" : lambda: no_help("Alpha")
+                "No" : lambda: no_help("Anindya")
             })
         )
             
     else:
         engine.run_callback_list_sequence([
-                lambda callback: solved_puzzle("Alpha", callback = callback),
+                lambda callback: solved_puzzle("Anindya", callback = callback),
             ],
             callback = lambda: engine.show_external_script(
                 confirm_callback = lambda: security_one.run_script(script_to_run = 10),
@@ -165,7 +217,7 @@ def security_one_problem():
         lambda callback: engine.show_external_script(
             confirm_callback = lambda: engine.run_callback_list_sequence(try_security_one),
             cancel_callback = lambda: cancel_script(),
-            external_dialogue = "I need to know the cost of building " + str(puzzle_one_a) + " cages, each costing £" + str(puzzle_one_b) + " (in pounds)",
+            external_dialogue = "I need to know the cost of building " + str(puzzle_one_a) + " cages, each costing £" + str(puzzle_one_b) + ".",
             script_init = lambda: engine.insert_to_scripter("print(1 + 2)")
         )
     ])
@@ -185,7 +237,7 @@ def check_security_one():
         puzzle_one_solved = True
         puzzle_one_right()
     else:
-        puzzle_wrong("Alpha")
+        puzzle_wrong("Anindya")
 
     if(security_one.get_position() != security_one_org_posn):
         security_one_org_posn = security_one.get_position()
@@ -220,20 +272,20 @@ def security_two_action(player_object):
     if(not puzzle_two_solved):
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
-            lambda callback: engine.show_dialogue("Bravo: I am security guard Bravo! I will let you pass if you help me.", callback = callback),
-            lambda callback: engine.show_dialogue("Bravo: I need to know how many minutes I have left before meeting my bosses", callback = callback)
+            lambda callback: engine.show_dialogue("Maenan: I am security guard Bravo! I will let you pass if you help me.", callback = callback),
+            lambda callback: engine.show_dialogue("I need to know how many minutes I have left before meeting my bosses", callback = callback)
         ],
         callback = lambda: engine.show_dialogue_with_options(
-            "Bravo: Can you help me?",
+            "Maenan: Can you help me?",
             options = {
                 "Yes": lambda: security_two_problem(),
-                "No" : lambda: no_help("Bravo")
+                "No" : lambda: no_help("Maenan")
             })
         )
             
     else:
         engine.run_callback_list_sequence([
-            lambda callback: solved_puzzle("Bravo", callback = callback)
+            lambda callback: solved_puzzle("Maenan", callback = callback)
         ], callback = lambda: engine.show_external_script(
                 confirm_callback = lambda: security_two.run_script(script_to_run = 10),
                 cancel_callback = cancel_script(),
@@ -269,7 +321,7 @@ def check_security_two():
         puzzle_two_solved = True
         puzzle_two_right()
     else:
-        puzzle_wrong("Bravo")
+        puzzle_wrong("Maenan")
 
     if(security_two.get_position() != security_two_org_posn):
         security_two_org_posn = security_two.get_position()
@@ -299,13 +351,14 @@ def security_three_action(player_object):
     if(not puzzle_three_solved):
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
-            lambda callback: engine.show_dialogue("Charlie: I am security guard Charlie! I will let you pass if you help me.", callback = callback),
-            lambda callback: engine.show_dialogue("Charlie: I need to find the 2 keys that I lost around here", callback = callback),
-            lambda callback: engine.show_dialogue("Charlie: Can you find them and give them to me?", callback = callback),
+            lambda callback: engine.show_dialogue("Alexander: I am security guard Charlie! I will let you pass if you help me.", callback = callback),
+            lambda callback: engine.show_dialogue("I need to find the 2 keys that I lost around here", callback = callback),
+            lambda callback: engine.show_dialogue("Can you find them and give them to me?", callback = callback),
+            lambda callback: engine.show_dialogue("The other two guardians always hide them from me.", callback = callback),
             lambda callback: check_security_three(player_object)
         ])
     else:
-        solved_puzzle("Charlie")
+        solved_puzzle("Alexander")
 
 
 def check_security_three(player_object):
@@ -314,8 +367,9 @@ def check_security_three(player_object):
         player_object.add_keys(-2)
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
-            lambda callback: engine.show_dialogue("Charlie: What's that? You have two keys? Oh Thank You! ", callback = callback),
-            lambda callback: engine.show_dialogue("Charlie: To thank you, I will let you pass!", callback = callback),
+            lambda callback: engine.show_dialogue("Alexander: What's that? You have two keys? Oh Thank You! ", callback = callback),
+            lambda callback: engine.show_dialogue("To thank you, I will let you pass!", callback = callback),
+            lambda callback: engine.show_dialogue("I bet the other two were hiding them...", callback = callback),
             lambda callback: security_three.move_east(callback = callback),
             lambda callback: security_three.move_north(callback = callback),
             lambda callback: player_one.set_busy(False, callback = callback)
@@ -323,8 +377,10 @@ def check_security_three(player_object):
     else:
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
-            lambda callback: engine.show_dialogue("Charlie: You have don't have 2 keys? Oh never mind.", callback = callback),
+            lambda callback: engine.show_dialogue("Alexander: You have don't have 2 keys? Oh never mind.", callback = callback),
             lambda callback: player_one.set_busy(False, callback = callback)
         ])
 
 security_three.player_action = security_three_action
+
+

@@ -16,5 +16,10 @@ class NPC(Character):
         """ This is the method that is run if the player presses the action key while facing a character.
         
         TODO: move this to character.py and make it print an explenation on how to override this by default.
+
+        Parameters
+        ----------
+        player_object : Player
+            The player that interacts with the NPC
         """
         pass

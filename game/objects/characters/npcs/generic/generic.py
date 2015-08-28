@@ -14,6 +14,13 @@ class Generic(NPC):
         super().initialise()
 
     def player_action(self, player_object):
+        """ This is the method that is run if the player presses the action key while facing the generic NPC.
+
+        Parameters
+        ----------
+        player_object : Player 
+            The player that interacts with the generic NPC
+        """
         engine = self.get_engine()
         dialogue_actions = []
         dialogue_actions.append(lambda callback: player_object.set_busy(True, callback = callback))
@@ -28,6 +35,15 @@ class Generic(NPC):
         engine.run_callback_list_sequence(dialogue_actions)
 
     def set_dialogue_list(self, dialogue_list):
+        """ Sets the NPC dialogue to dialogue_list. 
+
+        The dialogue_list is run whenever the player talks to the NPC
+
+        Parameters
+        ----------
+        dialogue_list : list of dialogues 
+            The list of dialogues (functions) to be run in order.
+        """
         self.__dialogue_list = dialogue_list
     
     def __set_in_conversation(self, value, callback):
@@ -35,7 +51,7 @@ class Generic(NPC):
         self.get_engine().add_event(callback)
 
     def rand_explore(self):
-        """ The NPC follows a random path forever!
+        """ The NPC follows a random path forever
         """
         if self.__in_conversation:
             return self.wait(5.0, callback = self.rand_explore)

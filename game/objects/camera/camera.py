@@ -24,4 +24,7 @@ As the GameObject is in the base objects folder.
 """
 """
 class Camera(GameObject):
+    """
+    A camera object is used to set a location that we can pan through.
+    """
     pass

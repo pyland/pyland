@@ -19,3 +19,11 @@ def move_north(callback = lambda: None):
 player_one.move_north =  move_north
 player_one.move_west = move_west
 
+import numpy
+numpy.matrix([1, 2], [3, 4])
+
+prefix code = 
+"import numpy
+numpy.matrix([1, 2], [3, 4])
+"
+
