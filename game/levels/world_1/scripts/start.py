@@ -3,7 +3,9 @@
 #commence save-data set-up
 world_name = "world_1"
 
-update_world(world_name)
+engine.update_world("1")
+
+engine.clear_level_text()
 
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name) #change the map and save that the map has changed
