@@ -28,7 +28,7 @@
  </layer>
  <layer name="water" width="34" height="18">
   <data encoding="base64" compression="zlib">
-   eJztVNEOwyAI9FNdNttlnfOl/v80kYSyA2v7uJJcbDyEgyrOXXbZf9qzYCqY20rfQfDSJ/xEOmevghUgtnzvDj8L3dxkDVQH8iUdtwLfVpS3B66Lcu+tgXzvQtvCNPmDuo7C+ueLce7TtCa2lxVfbR/xE4B1lnqp3TNLQ+5gpI8jOrLbarJyj/Z0tB+o1r31Wz6ko96hJDi6Ox5wyEciAV6Lw9+a7Ann6A3KmPKtcqvxHmDvjA4tD/epcw/NnyDOIB3RbWeR5ND743mi6889rdYvZViZNQ==
+   eJztVMsOwyAM41OZNsZebS/l/wcSkSIv5qHttkayqEggjpvg3GGH/afdMq4Zsa7yHcCPMeHjpu/skbEbWGq+V8cfgbc2rEHqsGILjzXjlOHruql8CdYdfLKveUnu0Rok9gzcnoqTB16M0y8g/Ng/vzfOrgZXxrPHH7VFMH2T0pL1WYtD6mBEQ4mb4YG91so9q+msHlato/UzTTWP0tvYz9I73vBZMYjN8LN79KyhJtonM4h34qxqK/ddjL2WHj0eLI+OKe+e9f4EOMNmPjp7rtj86TyL688lq/UN0+mZFg==
   </data>
  </layer>
  <layer name="bridge/rock" width="34" height="18">
