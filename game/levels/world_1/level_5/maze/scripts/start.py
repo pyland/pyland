@@ -11,6 +11,22 @@ import random
 
 reached_arith = False
 
+#setting player's starting position
+if player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "reached_arith_help"):
+    x, y = challenge_arith.get_position()
+    player_one.move_to((x,y), callback = lambda: myla.move_to((x-1, y), callback = reached_arith_fun))
+else: 
+    pass
+    #do nothing as we have not got the checkpoint
+
+def go_to_world(player_object):
+    player_data.complete_level_and_save()
+    player_data.save_and_exit("/world_1")
+
+exit_level_start.player_walked_on = lambda player_object: player_data.save_and_exit("/world_1")
+
+exit_level_end.player_walked_on = go_to_world
+
 player_one.focus()
 myla.follow(player_one)
 
@@ -47,6 +63,7 @@ def help_with_for(player_object):
         }))
 
 def reached_arith_fun():
+    player_data.save_checkpoint("reached_arith_help")
     global reached_arith
     if not reached_arith:
         reached_arith = True
