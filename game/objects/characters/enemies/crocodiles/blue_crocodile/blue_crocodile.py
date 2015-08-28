@@ -9,6 +9,8 @@ class BlueCrocodile(Crocodile):
     """ The crocodiles are a class of enemy """
 
     def initialise(self):
+        """Blue crocodiles can have one collision before stopping"""
+
         super().initialise()
         self.oscillate = 1
 

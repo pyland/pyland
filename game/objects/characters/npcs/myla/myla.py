@@ -24,6 +24,16 @@ class Myla(Character):
         pass
 
     def yelled_at(self, player):
+        """ Method that is run if the player yells at Myla
+
+        This checks if the player is facing Myla.
+
+        Parameter
+        ---------
+        player : Player
+            The player that yells at Myla.
+        """
+
         player_x, player_y = player.get_position()
         self_x, self_y = self.get_position()
         if not self.is_moving():
@@ -42,7 +52,13 @@ class Myla(Character):
 
         
     def myla_yell(self, player):
-        #TODO: make this work like 
+        """ The method that is run by yelled_at()
+
+        Parameter
+        ---------
+        player : Player
+            The player that yells at Myla.
+        """
         engine = self.get_engine()
         engine.run_callback_list_sequence([
             lambda callback: player.set_busy(True, callback = callback),
@@ -51,6 +67,14 @@ class Myla(Character):
         ])
 
     def on_cut(self, callback = lambda: None):
+        """ The method that is run when the player tries to cut Myla
+
+        Parameter
+        ---------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+        
         engine = self.get_engine()
         cut_responses = [
             "Oi, don't even think about that.",
