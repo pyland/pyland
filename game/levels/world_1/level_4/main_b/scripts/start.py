@@ -87,15 +87,14 @@ engine.run_callback_list_sequence([
     lambda callback: player_one.face_east(callback = callback),
     lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: myla.face_west(callback = callback),
-    lambda callback: engine.show_dialogue("We need to get across the bridge on the left!", callback = callback),
-    lambda callback: engine.show_dialogue("I think I'm going to get back into your bag again...", callback =callback),
-    lambda callback: myla.move_north(callback = callback),
+    lambda callback: engine.show_dialogue("Lots and lots and lots of crocodiles are out...", callback = callback),
+    lambda callback: engine.show_dialogue("In your bag I go!", callback = callback),
+    lambda callback: player_one.face_west(callback = callback),
+    lambda callback: myla.set_solidity(False, callback = callback),
     lambda callback: myla.move_west(callback = callback),
-    lambda callback: myla.move_west(callback = callback),
-    lambda callback: myla.move_south(callback = callback),
-    lambda callback: myla.move_east(callback = callback),
     lambda callback: myla.set_visible(False, callback = callback),
-    lambda callback: myla.move_to((0,4), 0.0001, callback = callback),
+    lambda callback: engine.show_dialogue("Sweet, you have a book I can read in here!", callback = callback),
+    lambda callback: engine.show_dialogue("Oh it's \"Jungle Book\", its too unrealistic for me to enjoy it.", callback = callback),
     lambda callback: player_one.set_busy(False, callback =callback)
     ])
 
