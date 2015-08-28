@@ -14,9 +14,12 @@
 // notice is included.
 //++
 
+//This class sets up and handles the QT main window
+
 // Standard stuff
 #include <fstream>
 #include <iostream>
+#include <deque>
 #include <string>
 #include <math.h>
 #include <sstream>
@@ -71,9 +74,11 @@ using namespace std;
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexerpython.h>
 
+#include "config.hpp"
 #include "mainwindow.h"
 #include "game_main.hpp"
 #include "h_tab_bar.hpp"
+#include "input_handler.hpp"
 #include "input_manager.hpp"
 #include "event_manager.hpp"
 
@@ -108,9 +113,20 @@ struct SDL_Window
 };
 typedef struct SDL_Window SDL_Window;
 
-MainWindow::MainWindow(GameMain *exGame)
+MainWindow::MainWindow(GameMain *exGame):
+    colourPalette(palette())
+
 {
     LOG(INFO) << "Constructing MainWindow..." << std::endl;
+
+    externalWorkspace = false;
+    anyOutput = false;
+    scriptEnabled = true;
+    executeIndex = 1;
+    currentTabs = 1;
+
+    script_running = false;
+    fast = false;
 
     game = exGame;
     this->setUnifiedTitleAndToolBarOnMac(true);
@@ -152,7 +168,7 @@ MainWindow::MainWindow(GameMain *exGame)
 
     terminalDisplay = new QTextEdit;
     terminalDisplay->setReadOnly(true);
-    terminalDisplay->setLineWrapMode(QTextEdit::NoWrap);
+    terminalDisplay->setLineWrapMode(QTextEdit::NoWrap);\
     terminalDisplay->document()->setMaximumBlockCount(1000);
     terminalDisplay->zoomIn(1);
     terminalDisplay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -227,19 +243,16 @@ MainWindow::MainWindow(GameMain *exGame)
 
     mainWidget = new QWidget;
 
-    //createToolBar();
+    createToolBar();
 
     setWindowTitle(tr("Pyland"));
     mainWidget->setWindowIcon(QIcon("/images/icon.png"));
 
-    QPalette colourPalette(palette());
-    colourPalette.setColor(QPalette::Background,QColor(250,250,197));
-    colourPalette.setColor(QPalette::Button,QColor(245,245,165));
+    setColourScheme(250,250,197,245,245,165);
 
-    mainWidget->setPalette(colourPalette);
     mainWidget->setAutoFillBackground(true);
 
-    mainWidget->setMinimumSize(600,420);
+    mainWidget->setMinimumSize(int(1080.0f*0.6),int(756.0f*0.6));
 
     this->setContextMenuPolicy(Qt::NoContextMenu);
     this->setCentralWidget(mainWidget);
@@ -275,9 +288,11 @@ MainWindow::MainWindow(GameMain *exGame)
     SDL_GL_LoadLibrary(NULL);
     glContext = SDL_GL_CreateContext(embedWindow);
 
-    connect(buttonRun,SIGNAL(released()),this,SLOT (runCode()));
-    connect(buttonSpeed,SIGNAL(released()),this,SLOT (toggleSpeed()));
+    connect(buttonRun,SIGNAL(released()),this,SLOT (clickRun()));
+    connect(buttonSpeed,SIGNAL(released()),this,SLOT (clickSpeed()));
     connect(buttonClear,SIGNAL(released()),this,SLOT (clearTerminal()));
+
+    setTabs(1);
 
     this->showMaximized();
 
@@ -289,6 +304,9 @@ MainWindow::~MainWindow()
     //delete all objects created with new
 
     LOG(INFO) << "Destructing MainWindow..." << std::endl;
+
+    terminalText.clear();
+
     delete textWidget;
 
     for(int ws = 0; ws < workspace_max; ws++)
@@ -299,7 +317,6 @@ MainWindow::~MainWindow()
         delete zoomLayout[ws];
         delete workspaces[ws];
     }
-
 
     delete lexer;
     api->clear();
@@ -340,14 +357,135 @@ MainWindow::~MainWindow()
 
 }
 
-SDL_Window* MainWindow::getSDLWindow()
+void MainWindow::initWorkspace(QsciScintilla* ws, int i)
 {
-    return embedWindow;
+    ws->setAutoIndent(true);
+    ws->setIndentationsUseTabs(false);
+    ws->setBackspaceUnindents(true);
+    ws->setTabIndents(true);
+    ws->setMatchedBraceBackgroundColor(QColor("dimgray"));
+    ws->setMatchedBraceForegroundColor(QColor("white"));
+    ws->setIndentationWidth(2);
+    ws->setIndentationGuides(true);
+    ws->setIndentationGuidesForegroundColor(QColor("deep pink"));
+    ws->setBraceMatching(QsciScintilla::SloppyBraceMatch);
+    ws->setCaretLineVisible(true);
+    ws->setCaretLineBackgroundColor(QColor("whitesmoke"));
+    ws->setFoldMarginColors(QColor("whitesmoke"),QColor("whitesmoke"));
+    ws->setMarginLineNumbers(0, true);
+    ws->setMarginWidth(0, "100000");
+    ws->setMarginsForegroundColor(QColor("gray"));
+    ws->setMarginsForegroundColor(QColor("dark gray"));
+    ws->setMarginsFont(QFont("Menlo",5, -1, true));
+    ws->setUtf8(true);
+    ws->setText("");
+    ws->setLexer(lexer);
+    ws->zoomIn(13);
+    ws->setAutoCompletionThreshold(3);
+    ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
+    ws->setSelectionBackgroundColor("DeepPink");
+    ws->setSelectionForegroundColor("white");
+    ws->setCaretWidth(5);
+    ws->setMarginWidth(1,5);
+    ws->setCaretForegroundColor("deep pink");
+
+    //Read 9 python scripts and display in scintilla widget
+
+    std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
+    std::string path = player_scripts_location + "/" + std::to_string(i+1) + ".py";
+
+    VLOG(1) << "Reading in python scripts..." << endl;
+
+    ifstream fin(path, ios::in);
+
+    std::string script = "";
+
+    while(fin)
+    {
+        if(fin.bad())
+        {
+            LOG(INFO) << "Error reading in python script: " << path << endl;
+            return;
+        }
+        else if(fin.eof())
+        {
+            break;
+        }
+
+        std::string curString;
+
+        std::getline(fin,curString);
+
+        script = script + curString;
+
+        if (!fin.eof())
+        {
+            script = script + "\n";
+        }
+    }
+
+    QString qScript = QString(script.c_str());
+
+    ws->setText(qScript);
+
+    fin.close();
+
+    //Create zoom buttons for text widget
+    zoomLayout[i] = new QHBoxLayout;
+
+    buttonIn[i] = new QPushButton("+");
+    buttonOut[i] = new QPushButton("-");                 //Text do not seem centered in buttons
+
+    buttonIn[i]->setMaximumWidth(20);
+    buttonOut[i]->setMaximumWidth(20);
+    buttonIn[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+    buttonOut[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+
+    zoomLayout[i]->addWidget(buttonIn[i]);
+    zoomLayout[i]->addWidget(buttonOut[i]);
+
+    zoomLayout[i]->setContentsMargins(0,0,0,0);
+    zoomLayout[i]->setSpacing(0);
+
+    zoomWidget[i] = new QWidget;
+
+    zoomWidget[i]->setLayout(zoomLayout[i]);
+    zoomWidget[i]->setMaximumWidth(40);
+
+    ws->addScrollBarWidget(zoomWidget[i],Qt::AlignLeft);
+
+    //Connect buttons to functions
+    connect(buttonIn[i],SIGNAL(released()),this,SLOT (zoomFontIn()));
+    connect(buttonOut[i],SIGNAL(released()),this,SLOT (zoomFontOut()));
+
 }
 
-void MainWindow::showMax()
+void MainWindow::createToolBar()
 {
-    this->showMaximized();
+    toolBar = new QToolBar;
+    toolBar->setFloatable(false);
+    toolBar->setMovable(false);
+
+    textLayout = new QHBoxLayout;
+
+    textWorld = new QLabel("");
+    textLevel = new QLabel("");
+    textCoins = new QLabel("");
+    textTotems = new QLabel("");
+
+    textLayout->addWidget(textWorld);
+    textLayout->addWidget(textLevel);
+    textLayout->addWidget(textCoins);
+    textLayout->addWidget(textTotems);
+    textInfoWidget = new QWidget();
+    textInfoWidget->setLayout(textLayout);
+
+    textInfoWidget->setFocusPolicy(Qt::NoFocus);
+    textInfoWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+    toolBar->addWidget(textInfoWidget);
+
+    addToolBar(toolBar);
 }
 
 SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
@@ -357,7 +495,9 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     switch (keyEvent->key())
     {
     case Qt::Key_Enter:
-        return SDL_SCANCODE_KP_ENTER;
+        return SDL_SCANCODE_RETURN;
+    case Qt::Key_Return:
+        return SDL_SCANCODE_RETURN;
     case Qt::Key_Left:
         return SDL_SCANCODE_LEFT;
     case Qt::Key_Right:
@@ -369,7 +509,7 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     case Qt::Key_Escape:
         return SDL_SCANCODE_ESCAPE;
     case Qt::Key_Tab:
-        return SDL_SCANCODE_KP_TAB;
+        return SDL_SCANCODE_TAB;
     case Qt::Key_Backspace:
         return SDL_SCANCODE_BACKSPACE;
     case Qt::Key_Insert:
@@ -431,8 +571,32 @@ SDL_Scancode MainWindow::parseKeyCode(QKeyEvent *keyEvent)
     case Qt::Key_Menu:
         return SDL_SCANCODE_MENU;
     default:
-        //Remaining keys can be mapped directly
-        return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+        switch (keyEvent->nativeScanCode())
+        {
+        //Map keypad numbers to standard numbers for executing scripts
+        //Numlock must be on
+        case 87:
+            return SDL_SCANCODE_1;
+        case 88:
+            return SDL_SCANCODE_2;
+        case 89:
+            return SDL_SCANCODE_3;
+        case 83:
+            return SDL_SCANCODE_4;
+        case 84:
+            return SDL_SCANCODE_5;
+        case 85:
+            return SDL_SCANCODE_6;
+        case 79:
+            return SDL_SCANCODE_7;
+        case 80:
+            return SDL_SCANCODE_8;
+        case 81:
+            return SDL_SCANCODE_9;
+        default:
+            //Remaining keys can be mapped directly
+            return SDL_GetScancodeFromKey(keyEvent->nativeVirtualKey());
+        }
     }
 }
 
@@ -462,8 +626,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     QKeyEvent *keyEvent = NULL;
     QMouseEvent *mouseEvent = NULL;
-    //QFocusEvent *focusEvent = NULL;
-    //QResizeEvent *resizeEvent = NULL;
     //Check if QT event is a keyboard or mouse event, and push it to SDL
     if (event->type() == 6)//QEvent::KeyPress)
     {
@@ -552,7 +714,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
         return QObject::eventFilter(obj, event);
     }
-
     return true;
 }
 
@@ -562,122 +723,433 @@ void MainWindow::timerHandler()
     game->game_loop(gameWidget->underMouse());
 }
 
-void MainWindow::initWorkspace(QsciScintilla* ws, int i)
+//Show the entire scripter panel
+void MainWindow::showScripterPanel()
 {
-    ws->setAutoIndent(true);
-    ws->setIndentationsUseTabs(false);
-    ws->setBackspaceUnindents(true);
-    ws->setTabIndents(true);
-    ws->setMatchedBraceBackgroundColor(QColor("dimgray"));
-    ws->setMatchedBraceForegroundColor(QColor("white"));
-    ws->setIndentationWidth(2);
-    ws->setIndentationGuides(true);
-    ws->setIndentationGuidesForegroundColor(QColor("deep pink"));
-    ws->setBraceMatching(QsciScintilla::SloppyBraceMatch);
-    ws->setCaretLineVisible(true);
-    ws->setCaretLineBackgroundColor(QColor("whitesmoke"));
-    ws->setFoldMarginColors(QColor("whitesmoke"),QColor("whitesmoke"));
-    ws->setMarginLineNumbers(0, true);
-    ws->setMarginWidth(0, "100000");
-    ws->setMarginsForegroundColor(QColor("gray"));
-    ws->setMarginsForegroundColor(QColor("dark gray"));
-    ws->setMarginsFont(QFont("Menlo",5, -1, true));
-    ws->setUtf8(true);
-    ws->setText("");
-    ws->setLexer(lexer);
-    ws->zoomIn(13);
-    ws->setAutoCompletionThreshold(3);
-    //ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
-    ws->setSelectionBackgroundColor("DeepPink");
-    ws->setSelectionForegroundColor("white");
-    ws->setCaretWidth(5);
-    ws->setMarginWidth(1,5);
-    ws->setCaretForegroundColor("deep pink");
+    scriptEnabled = true;
+    splitter->show();
+}
 
-    //Read 9 python scripts and display in scintilla widget
+//Hide the entire scripter panel
+void MainWindow::hideScripterPanel()
+{
+    scriptEnabled = false;
+    splitter->hide();
+}
 
-    std::string path = "python_embed/scripts/Script " + std::to_string(i+1) + ".py";
+//Allow the player to use the entire scripter panel
+void MainWindow::enableScripterPanel()
+{
+    scriptEnabled = true;
+    splitter->setEnabled(true);
+    lexer->setPaper(QColor(255,255,255));
+}
 
-    LOG(INFO) << "Reading in python scripts..." << endl;
+//Prevent the player from using the entire scripter panel
+void MainWindow::disableScripterPanel()
+{
+    scriptEnabled = false;
+    splitter->setEnabled(false);
+    lexer->setPaper(QColor(225,223,224));
+}
 
-    ifstream fin(path, ios::in);
+//Allow the player to edit scripts
+void MainWindow::enableScripter()
+{
+    textWidget->setEnabled(true);
+    lexer->setPaper(QColor(255,255,255));
+}
 
-    std::string script = "";
+//Prevent the player from editing scripts
+void MainWindow::disableScripter()
+{
+    textWidget->setEnabled(false);
+    lexer->setPaper(QColor(225,223,224));
+}
 
-    while(fin)
-    {
-        if(fin.bad())
-        {
-            LOG(INFO) << "Error reading in python script: " << path << endl;
-            return;
-        }
-        else if(fin.eof())
-        {
-            break;
-        }
+//Set the number of scripting tabs
+void MainWindow::setTabs(int num){
+    currentTabs = num;
 
-        std::string curString;
+    textWidget->clear();
 
-        std::getline(fin,curString);
-
-        script = script + curString;
-
-        if (!fin.eof())
-        {
-            script = script + "\n";
-        }
+    //The final workspace is allocated to the external workspace (for editing other character's scripts)
+    if ((num < 1 ) || (num > (workspace_max-1))){
+        LOG(INFO) << "May only set between 1 and workspace_max ("<< std::to_string(workspace_max) << ") tabs" << std::endl;
+        return;
     }
 
-    QString qScript = QString(script.c_str());
+    for(int ws = 0; ws < num; ws++)
+    {
+        QString w = QString("%1").arg(QString::number(ws + 1));
+        textWidget->addTab(workspaces[ws],w);
+    }
+}
 
-    ws->setText(qScript);
+//Create a new PyScripter tab, for scripts given by other players
+//The 'Run' and 'Speed' buttons get replaced with 'Give Script' and 'Cancel'
+//The results of clicking these buttons is given by the first two python callbacks
+//The scriptInit callback, can be used to pass information to the external script
+//void MainWindow::createExternalTab(PyObject* confirmCallback, PyObject* cancelCallback, PyObject* scriptInit, std::string dialogue = "Click 'Give Script' when you're done!"){
+void MainWindow::createExternalTab(std::function<void ()> confirmCallback, std::function<void ()> cancelCallback, std::function<void ()> scriptInit, std::string dialogue = "Click 'Give Script' when you're done!"){
+    textWidget->addTab(workspaces[workspace_max-1],"*");
 
-    fin.close();
+    buttonRun->setText("Give script");
+    buttonSpeed->setText("Cancel");
+    for(int ws = 0; ws < (currentTabs); ws++)
+    {
+        textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]),false);
+    }
 
-    //Create zoom buttons for text widget
-    zoomLayout[i] = new QHBoxLayout;
+    textWidget->setTabEnabled(textWidget->indexOf(workspaces[workspace_max-1]),true);
 
-    buttonIn[i] = new QPushButton("+");
-    buttonOut[i] = new QPushButton("-");                 //Text do not seem centered in buttons
+    textWidget->setCurrentWidget(workspaces[workspace_max-1]);
 
-    buttonIn[i]->setMaximumWidth(20);
-    buttonOut[i]->setMaximumWidth(20);
-    buttonIn[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
-    buttonOut[i]->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
+    externalWorkspace = true;
+    externalConfirmCallback = confirmCallback;
+    externalCancelCallback = cancelCallback;
 
-    zoomLayout[i]->addWidget(buttonIn[i]);
-    zoomLayout[i]->addWidget(buttonOut[i]);
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
-    zoomLayout[i]->setContentsMargins(0,0,0,0);
-    zoomLayout[i]->setSpacing(0);
+    ws->clear();
 
-    zoomWidget[i] = new QWidget;
+    EventManager::get_instance()->add_event([this, dialogue] {
+        Engine::show_external_script_help(dialogue);
+    });
+    Engine::enable_py_scripter();
 
-    zoomWidget[i]->setLayout(zoomLayout[i]);
-    zoomWidget[i]->setMaximumWidth(40);
+    scriptInit();
+}
 
-    ws->addScrollBarWidget(zoomWidget[i],Qt::AlignLeft);
+void MainWindow::removeExternalTab(){
+    setTabs(currentTabs);
+    setRunning(script_running);
+    setFast(fast);
+    for(int ws = 0; ws < (currentTabs); ws++)
+    {
+        textWidget->setTabEnabled(textWidget->indexOf(workspaces[ws]), true);
+    }
 
-    //Connect buttons to functions
-    connect(buttonIn[i],SIGNAL(released()),this,SLOT (zoomFontIn()));
-    connect(buttonOut[i],SIGNAL(released()),this,SLOT (zoomFontOut()));
-    //connect(ws->horizontalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
-    //connect(ws->verticalScrollBar(),SIGNAL(sliderPressed()),this,SLOT (setGameFocus()));
+    externalWorkspace = false;
+
+    EventManager::get_instance()->add_event([this] {
+        Engine::close_external_script_help();
+    });
 
 }
 
+//When the QT window is closed
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
 }
 
+//Called when the run button is clicked
+//Run the currently open script
+void MainWindow::clickRun()
+{
+    runCode(0);
+}
+
+//RunCode is called when the run button is clicked
+//This button changes to 'Give Script' when the user is editing an external script
+
+//Script defines the current script to execute
+//If zero the currently open script is run
+void MainWindow::runCode(int script)
+{
+    if (externalWorkspace){
+
+        QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+
+        //read in the player script paths (as defined in the config file)
+        std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
+        std::string path = player_scripts_location + "/10.py";
+
+        //Write out the external script text to 10.py
+        //This python script is always run in bootstrapper.py (in start)
+        ofstream fout(path.c_str(), ios::out|ios::trunc);
+
+        if(!(fout.good()))
+        {
+            LOG(INFO) << "Output file is bad" << endl;
+            return;
+        }
+
+        fout << ws->text().toStdString();
+
+        fout.close();
+
+        EventManager::get_instance()->add_event([this] {
+            this->externalConfirmCallback();
+            this->externalConfirmCallback = [] () {};
+        });
+
+        removeExternalTab();
+        setGameFocus();
+        return;
+    }
+
+    if (!scriptEnabled) return;
+    if (script_running)
+    {
+        setRunning(false);
+        updateSpeed();
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_HALT);
+        //TODO, create hooks into script-runner to stop the correct script.
+    }
+    else
+    {
+        int index;
+        QsciScintilla *ws;
+
+        if (script == 0)
+        {
+            index = getCurrentScript();
+            ws = (QsciScintilla*)textWidget->currentWidget();
+        }
+        else
+        {
+            if (script <= currentTabs){
+                index = script;
+                ws = (QsciScintilla*)textWidget->widget(script-1);  //Subtract one since first widget is at qt index 0
+            }
+            else{
+                LOG(INFO) << "Script "<< std::to_string(script) << " is not available to be run" << std::endl;
+                return;
+            }
+        }
+
+        //read in the player script paths (as defined in the config file)
+        std::string player_scripts_location = Config::get_instance()["files"]["player_scripts"];
+        std::string path = player_scripts_location + "/" + std::to_string(index) + ".py";
+
+        //Save script as 'Script 1'/'Script 2' etc
+        //Also save as 'Current Script.py' as temporary measure before new input manager
+        //This python script is always run in bootstrapper.py (in start)
+        ofstream fout(path.c_str(), ios::out|ios::trunc);
+
+        if(!(fout.good()))
+        {
+            LOG(INFO) << "Output file is bad" << endl;
+            return;
+        }
+
+        fout << ws->text().toStdString();
+
+        fout.close();
+
+        setRunning(true);
+        updateSpeed();
+        if (script == 0)
+        {
+            executeIndex = getCurrentScript();
+        }
+        else
+        {
+            executeIndex = script;
+        }
+        InputHandler::get_instance()->run_list(InputHandler::INPUT_RUN); //Run this list of events registered against run in the input handler
+    }
+    setGameFocus();
+}
+
+//Called when the speed button is clicked
+void MainWindow::clickSpeed()
+{
+    toggleSpeed();
+}
+
+//Toggle speed is called when the speed button is clicked
+//This button changes to 'Cancel' when the user is editing an external script
+
+//Toggle the speed setting
+void MainWindow::toggleSpeed()
+{
+    if (externalWorkspace){
+
+        EventManager::get_instance()->add_event([this] {
+            this->externalCancelCallback();
+            this->externalCancelCallback = [] () {};
+        });
+
+        removeExternalTab();
+
+        setGameFocus();
+
+        return;
+    }
+
+    if (!scriptEnabled) return;
+    setFast(!fast);
+    updateSpeed();
+    setGameFocus();
+}
+
+//If a script is being run and the speed is set to fast, update the game speed
+//Otherwise keep the game at normal speed
+void MainWindow::updateSpeed()
+{
+    if (fast && script_running)
+    {
+        auto now(std::chrono::steady_clock::now());
+        auto time_passed = now - game->get_start_time();
+
+        float completion(time_passed / std::chrono::duration<float>(6.0f));
+        completion = std::min(completion, 1.0f);
+
+        // Using an easing function from the internetz:
+        //
+        //     start + (c⁵ - 5·c⁴ + 5·c³) change
+        //
+        //float eased(1.0f + 511.0f * (
+        //                + 1.0f * completion * completion * completion * completion * completion
+        //                - 5.0f * completion * completion * completion * completion
+        //                + 5.0f * completion * completion * completion
+        //            ));
+
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(2.5);
+    }
+    else
+    {
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(1.0);
+    }
+}
+
+//Output text to the terminal
+//If error is set the text is read, otherwise it is black
+void MainWindow::pushTerminalText(std::string text, bool error)
+{
+    terminalText.push_front(text);
+    if (error)
+    {
+        terminalDisplay->setTextColor(QColor("red"));
+    }
+    else{
+        terminalDisplay->setTextColor(QColor("black"));
+    }
+    QString qtext = QString::fromStdString(text);
+    terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
+    terminalDisplay->append(qtext);
+    terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
+}
+
+//Get the history of the terminal output
+//index 0 is the most recent output, and subsequent indexes are previous strings
+std::string MainWindow::getTerminalText(unsigned int index){
+    if ((terminalText.size()) <= index) return "";
+    return terminalText[index];
+}
+
+//Increase the font size of the current script
+void MainWindow::zoomFontIn()
+{
+    ((QsciScintilla*)textWidget->currentWidget())->zoomIn(3);
+    setGameFocus();
+}
+
+//Decrease the font size of the current script
+void MainWindow::zoomFontOut()
+{
+    ((QsciScintilla*)textWidget->currentWidget())->zoomOut(3);
+    setGameFocus();
+}
+
+//Give the game widget focus so keyboard events are handled
+void MainWindow::setGameFocus()
+{
+    gameWidget->setFocus();
+}
+
+//Update the world text in the tool bar
+void MainWindow::setWorld(std::string text){
+    QString qtext = QString::fromStdString("World: "+text);
+    textWorld->setText(qtext);
+}
+
+//Update the level text in the tool bar
+void MainWindow::setLevel(std::string text){
+    QString qtext = QString::fromStdString("Level: "+text);
+    textLevel->setText(qtext);
+}
+
+//Update the coin text in the tool bar
+void MainWindow::setCoins(int value){
+    QString qtext = QString::fromStdString("Coins: "+std::to_string(value));
+    textCoins->setText(qtext);
+}
+
+//Update the totem text in the tool bar
+void MainWindow::setCurTotems(int value,bool show){
+  //Update the number of totems collected on the current level
+  if (show){
+      textTotems->show();
+      QString qtext = QString::fromStdString("Totems: "+std::to_string(value)+"/5");
+      textTotems->setText(qtext);
+  }
+  else
+  {
+      textTotems->hide();
+  }
+}
+
+//Insert text to the end of the currently open text editor tab
+void MainWindow::insertToTextEditor(std::string text)
+{
+    QsciScintilla *ws;
+    ws = (QsciScintilla*)textWidget->currentWidget();
+
+    QString qtext = QString::fromStdString(text);
+
+    QString priorText = ws->text();
+
+    clearTextEditor();
+    ws->insert(qtext);
+    ws->insert(priorText);
+}
+
+//Clear the text in the currently open text editor tab
+void MainWindow::clearTextEditor()
+{
+    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+
+    ws->clear();
+}
+
+//Get the text from the currently open text editor tab
+std::string MainWindow::getEditorText()
+{
+    QsciScintilla *ws;
+    ws = (QsciScintilla*)textWidget->currentWidget();
+
+    return ws->text().toStdString();
+}
+
+//Get the text from external tab (for when the user has just given an NPC a script)
+//It gets cleared every time the external tab is opened, but remains after the tab has been closed
+std::string MainWindow::getExternalText()
+{
+    QsciScintilla *ws;
+    ws = workspaces[workspace_max-1];
+    return ws->text().toStdString();
+}
+
+//Clear the text from the terminal
+void MainWindow::clearTerminal()
+{
+    //Clear the deque storing the terminal history
+    terminalText.clear();
+    terminalDisplay->clear();
+}
+
+//Update the run button when it has been clicked
 //This gets called when clicking on the Run/Halt button
 //and from engine.cpp update_status, when the script terminates
 void MainWindow::setRunning(bool option)
 {
-    running = option;
+    script_running = option;
 
-    if (running)
+    if (script_running)
     {
         buttonRun->setText("Halt");
     }
@@ -690,6 +1162,7 @@ void MainWindow::setRunning(bool option)
 
 }
 
+//Update the fast button when it has been clicked
 void MainWindow::setFast(bool option)
 {
     fast = option;
@@ -705,182 +1178,61 @@ void MainWindow::setFast(bool option)
 
 }
 
-bool MainWindow::saveAs()
+//Specify whether there has been any output to the terminal
+//during the current script execution
+void MainWindow::setAnyOutput(bool option)
 {
-    return false;
+    anyOutput = option;
 }
 
-void MainWindow::runCode()
+//Set the colours of the QT interface
+void MainWindow::setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2)
 {
 
-    if (running)
-    {
-        setRunning(false);
-        updateSpeed();
-        game->getCallbackState().stop();
-    }
-    else{
-        QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
+    textInfoWidget->setStyleSheet(("background-color: rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
+                                   "border: 5px rgb("+std::to_string(r2)+","+std::to_string(g2)+","+std::to_string(b2)+");"+
+                                   "font: 17pt;").c_str());
 
-        int index = (textWidget->currentIndex())+ 1;
-
-        std::string path = "python_embed/scripts/Script " + std::to_string(index) + ".py";
-
-        //Save script as 'Script 1'/'Script 2' etc
-        //Also save as 'Current Script.py' as temporary measure before new input manager
-        //This python script is always run in bootstrapper.py (in start)
-        ofstream fout(path.c_str(), ios::out|ios::trunc);
-        ofstream foutcopy("python_embed/scripts/Current Script.py", ios::out|ios::trunc);
-
-        if(!(fout.good() && foutcopy.good()))
-        {
-            LOG(INFO) << "Output file is bad" << endl;
-            return;
-        }
-
-        fout << ws->text().toStdString();
-        foutcopy << ws->text().toStdString();
-
-        fout.close();
-        foutcopy.close();
-
-        setRunning(true);
-        updateSpeed();
-        game->getCallbackState().restart();
-    }
-    setGameFocus();
+    colourPalette.setColor(QPalette::Background,QColor(r1,g1,b1));
+    colourPalette.setColor(QPalette::Button,QColor(r2,g2,b2));
+    mainWidget->setPalette(colourPalette);
 }
 
-void MainWindow::toggleSpeed(){
-    setFast(!fast);
-    updateSpeed();
-    setGameFocus();
-}
-
-//If a script is being run and the speed is set to fast, update the game speed
-//Otherwise keep the game at normal speed
-void MainWindow::updateSpeed(){
-    if (fast && running){
-        auto now(std::chrono::steady_clock::now());
-        auto time_passed = now - game->get_start_time();
-
-        float completion(time_passed / std::chrono::duration<float>(6.0f));
-        completion = std::min(completion, 1.0f);
-
-        // Using an easing function from the internetz:
-        //
-        //     start + (c⁵ - 5·c⁴ + 5·c³) change
-        //
-        float eased(1.0f + 511.0f * (
-                        + 1.0f * completion * completion * completion * completion * completion
-                        - 5.0f * completion * completion * completion * completion
-                        + 5.0f * completion * completion * completion
-                    ));
-
-        EventManager::get_instance()->time.set_game_seconds_per_real_second(eased);
-    }
-    else{
-        EventManager::get_instance()->time.set_game_seconds_per_real_second(1.0);
-    }
-}
-
-void MainWindow::pushTerminalText(std::string text, bool error){
-    //terminalDisplay->insertPlainText(text);
-    if (error){
-        terminalDisplay->setTextColor(QColor("red"));
-    }
-    QString qtext = QString::fromStdString(text);
-    terminalDisplay->insertPlainText(qtext);
-    terminalDisplay->verticalScrollBar()->setValue(terminalDisplay->verticalScrollBar()->maximum());
-    terminalDisplay->setTextColor(QColor("black"));
-}
-
-void MainWindow::zoomFontIn()
+SDL_Window* MainWindow::getSDLWindow()
 {
-    ((QsciScintilla*)textWidget->currentWidget())->zoomIn(3);
-    setGameFocus();
+    return embedWindow;
 }
 
-void MainWindow::zoomFontOut()
+//Get the current width of the QT game widget
+//so the SDL window can be displayed with the correct size
+int MainWindow::getGameWidgetWidth()
 {
-    ((QsciScintilla*)textWidget->currentWidget())->zoomOut(3);
-    setGameFocus();
-}
-
-
-void MainWindow::documentWasModified()
-{
-    setWindowModified(textEdit->isModified());
-}
-
-
-void MainWindow::clearTerminal()
-{
-    terminalDisplay->clear();
-}
-
-//Give the game widget focus so keyboard events are handled
-void MainWindow::setGameFocus()
-{
-    gameWidget->setFocus();
-}
-
-void MainWindow::createToolBar()
-{
-    toolBar = new QToolBar;
-    toolBar->setFloatable(false);
-    toolBar->setMovable(false);
-
-    textLayout = new QHBoxLayout;
-
-    textWorld = new QLabel("");
-    textLevel = new QLabel("");
-    textCoins = new QLabel("");
-    textTotems = new QLabel("");
-
-    //Use the required variables
-    textWorld->setText("World: 1");
-    textLevel->setText("Level: 1");
-    textCoins->setText("Coins: 0");
-    textTotems->setText("Totems: 0/5");
-
-    textLayout->addWidget(textWorld);
-    textLayout->addWidget(textLevel);
-    textLayout->addWidget(textCoins);
-    textLayout->addWidget(textTotems);
-    textInfoWidget = new QWidget();
-    textInfoWidget->setLayout(textLayout);
-
-    //textInfoWidget->setMinimumWidth(400);
-    //textInfoWidget->setMaximumHeight(38);
-    textInfoWidget->setStyleSheet("background-color: rgb(245,245,165);border: rgb(245,245,165);font: 17pt;");
-    textInfoWidget->setFocusPolicy(Qt::NoFocus);
-    textInfoWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-
-    toolBar->addWidget(textInfoWidget);
-
-    addToolBar(toolBar);
-}
-
-void MainWindow::updateToolBar()
-{
-    //Use the require variables
-    textWorld->setText("World: 1");
-    textLevel->setText("Level: 1");
-    textCoins->setText("Coins: 0");
-    textTotems->setText("Totems: 0/5");
-}
-
-
-void MainWindow::createStatusBar()
-{
-    statusBar()->showMessage(tr("Ready"));
-}
-
-int MainWindow::getGameWidgetWidth(){
     return gameWidget->width();
 }
 
-int MainWindow::getGameWidgetHeight(){
+//Get the current height of the QT game widget
+//so the SDL window can be displayed with the correct size
+int MainWindow::getGameWidgetHeight()
+{
     return gameWidget->height();
+}
+
+//Find out if any text has been output to the terminal
+//during the current script execution
+bool MainWindow::getAnyOutput()
+{
+    return anyOutput;
+}
+
+//Get the currently open script tab number
+int MainWindow::getCurrentScript()
+{
+    return (textWidget->currentIndex())+ 1;
+}
+
+//Get the number of the script that is to be run
+//This may be different to the open one (due to keybindings)
+int MainWindow::getExecuteScript()
+{
+    return executeIndex;
 }

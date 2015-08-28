@@ -6,14 +6,7 @@
 #include <utility>
 #include <vector>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 #include "component.hpp"
 
@@ -60,7 +53,7 @@ public:
     /// Get the map listing all the components of the group
     /// @return a reference to a constant map object
     ///
-    const std::map<int, std::shared_ptr<Component>>& get_components();
+    const std::map<int, std::shared_ptr<Component>> * get_components();
 
     ///
     /// Generates the vertex data for this particular component. This

@@ -11,17 +11,6 @@
 #include <utility>
 #include <vector>
 
-extern "C" {
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-}
-
 #include "cacheable_resource.hpp"
 #include "engine.hpp"
 #include "fml.hpp"
@@ -30,13 +19,13 @@ extern "C" {
 #include "texture_atlas.hpp"
 
 
-
-bool TextureAtlas::global_name_to_tileset_initialized = false;
+//TODO: Clean up all the fml file stuff that isn't required, cause we're using fml only for gui stuff
+bool TextureAtlas::global_name_to_tileset_initialized = true;
 std::map<std::string, std::string> TextureAtlas::global_name_to_tileset;
 
 std::map<std::string, std::string> const &TextureAtlas::names_to_tilesets() {
     if (!global_name_to_tileset_initialized) {
-        std::ifstream input("../resources/tiles/associated_texture_atlas.fml");
+        std::ifstream input("");
         fml::from_stream(input, global_name_to_tileset);
 
         global_name_to_tileset_initialized = true;
@@ -47,13 +36,10 @@ std::map<std::string, std::string> const &TextureAtlas::names_to_tilesets() {
 
 // std::map<GraphicsContext*, std::shared_ptr<ResourceCache<TextureAtlas>>> TextureAtlas::atlas_caches;
 
-
-
 // Need to inherit constructors manually.
 // NOTE: This will, and are required to, copy the message.
 TextureAtlas::LoadException::LoadException(const char *message): std::runtime_error(message) {}
 TextureAtlas::LoadException::LoadException(const std::string &message): std::runtime_error(message) {}
-
 
 
 std::shared_ptr<TextureAtlas> TextureAtlas::new_resource(const std::string resource_name) {
@@ -114,7 +100,7 @@ void TextureAtlas::merge(const std::vector<std::shared_ptr<TextureAtlas>> &atlas
             throw TextureAtlas::LoadException("Inconsistent tile sizes in merging atlases.");
         }
     }
-    
+
     for (auto atlas : atlases) {
         // Free up the old textures, reset layout.
         atlas->deinit_texture();
@@ -144,7 +130,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
     unit_h(Engine::get_tile_size()),
     sub_atlases(atlases.size()),
     super_atlas(),
-    names_to_indexes()
+    names_to_indices()
 {
     int texture_count = 0;
     // Assume all tiles are the same size. They should be...
@@ -168,7 +154,7 @@ TextureAtlas::TextureAtlas(const std::set<std::shared_ptr<TextureAtlas>, std::ow
     }
     gl_image = image = Image(unit_w * unit_columns, unit_h * unit_rows, true);
 
-    indexes_to_names = std::vector<std::string>(unit_columns * unit_rows);
+    indices_to_names = std::vector<std::string>(unit_columns * unit_rows);
 
     LOG(INFO) << "Generating super atlas: textures: " << texture_count << " = (" << unit_columns << ", " << unit_rows << ") => pixels: (" << gl_image.width << ", " << gl_image.height << ")";
 
@@ -211,8 +197,8 @@ TextureAtlas::TextureAtlas(const std::string image_path):
     textures(unit_columns * unit_rows),
     sub_atlases(),
     super_atlas(),
-    names_to_indexes(),
-    indexes_to_names(unit_columns * unit_rows)
+    names_to_indices(),
+    indices_to_names(unit_columns * unit_rows)
 {
     init_texture();
 }
@@ -270,7 +256,7 @@ void TextureAtlas::init_texture() {
         textures = std::vector<std::weak_ptr<Texture>>(unit_columns * unit_rows);
         reshaped = true;
     }
-    
+
     glGenTextures(1, &gl_texture);
 
     if (gl_texture == 0) {
@@ -412,23 +398,37 @@ std::tuple<float,float,float,float> TextureAtlas::index_to_coords(int index) {
 
 
 void TextureAtlas::load_names(const std::string filename) {
-    std::ifstream file(filename + ".fml");
 
-    if (file.fail()) {
-        throw TextureAtlas::LoadException("File \"" + filename + ".fml\" could not be opened.");
+    bool is_fml = (filename == "../game/gui/gui") || (filename == "../game/gui/cursor");
+    //bool is_fml = true;
+
+    if(is_fml){
+
+        LOG(INFO) << "Using fml file for " << filename;
+
+        std::ifstream file(filename + ".fml");
+
+        if (file.fail()) {
+            throw TextureAtlas::LoadException("File \"" + filename + ".fml\" could not be opened.");
+        }
+
+        fml::from_stream(file, names_to_indices);
+
+        for (const std::pair<std::string,int> &mapping : names_to_indices) {
+            indices_to_names[mapping.second] = mapping.first;
+        }
+    }
+    else{
+        names_to_indices[filename] = 0;
+        indices_to_names[0] = filename;
     }
 
-    fml::from_stream(file, names_to_indexes);
-
-    for (const std::pair<std::string,int> &mapping : names_to_indexes) {
-        indexes_to_names[mapping.second] = mapping.first;
-    }
 }
 
 std::string TextureAtlas::get_index_name(int index) {
     if (index >= 0 && index < get_texture_count()) {
-        VLOG(2) << "Atlas " << this << " index to name: " << index << ": " << indexes_to_names[index];
-        return indexes_to_names[index];
+        VLOG(2) << "Atlas " << this << " index to name: " << index << ": " << indices_to_names[index];
+        return indices_to_names[index];
     }
     else {
         VLOG(2) << "Atlas " << this << " index out of bounds: " << index << " / " << get_texture_count();
@@ -437,8 +437,8 @@ std::string TextureAtlas::get_index_name(int index) {
 }
 
 int TextureAtlas::get_name_index(const std::string name) {
-    VLOG(2) << "Name to index: " << name << ": " << names_to_indexes.at(name);
-    return names_to_indexes.at(name);
+    VLOG(2) << "Name to index: " << name << ": " << names_to_indices.at(name);
+    return names_to_indices.at(name);
 }
 
 std::pair<int, std::string> TextureAtlas::from_name(const std::string tile_name) {
@@ -447,6 +447,6 @@ std::pair<int, std::string> TextureAtlas::from_name(const std::string tile_name)
     return std::make_pair(index, tileset_name);
 }
 
-std::map<std::string, int> const &TextureAtlas::get_names_to_indexes() {
-    return names_to_indexes;
+std::map<std::string, int> const &TextureAtlas::get_names_to_indices() {
+    return names_to_indices;
 }

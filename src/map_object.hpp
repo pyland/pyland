@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-#include "animation_frames.hpp"
 #include "map.hpp"
 #include "object.hpp"
 #include "walkability.hpp"
@@ -43,10 +42,28 @@ using OrderedHashSet = boost::multi_index_container<
 >;
 
 ///
-/// Represents an object which can be rendered on the map
+/// Represents an object which can be rendered on the map.
+/// The only CPP class needed for this. All other functinality is written
+//  in python.
 ///
 class MapObject : public Object {
 protected:
+
+    ///
+    ///The location of the image to be displayed for this object
+    ///
+    std::string tile;
+
+    ///
+    /// The focus icon, to move with sprite and hide, depending on if mapobject is in focus;
+    ///
+    bool is_focus;
+
+    ///
+    /// The focus icon, to move with sprite and hide, depending on if mapobject is in focus;
+    ///
+    int focus_icon_id;
+
     ///
     /// Render the object above sprites as an overlay
     ///
@@ -68,15 +85,14 @@ protected:
     std::vector<Map::Blocker> body_blockers;
 
     ///
-    /// The position of the object
+    /// The position of the object in game_logic
     ///
-    glm::vec2 position;
+    glm::ivec2 game_position;
 
     ///
-    /// An ordered container of positions that the map object has been on,
-    /// as recorded by set_state_on_moving_finish().
+    /// Where the sprite of the object is rendered
     ///
-    OrderedHashSet<glm::vec2> positions;
+    glm::vec2 render_position;
 
     ///
     /// Tiles that the object is blocking, probably
@@ -88,16 +104,6 @@ protected:
     /// The object's moving state
     ///
     bool moving = false;
-
-    ///
-    /// Whether the object can be cut down
-    ///
-    bool cuttable;
-
-    ///
-    /// Whether the object can be found on the map
-    ///
-    bool findable;
 
     ///
     /// The challenge that created or now owns the object.
@@ -123,36 +129,18 @@ public:
     ///
     MapObject(glm::vec2 position,
               std::string name,
-              Walkability walkability,
-              AnimationFrames walk_frames,
-              std::string start_frame);
+              Walkability walkability);
 
 
     virtual ~MapObject();
 
-    glm::vec2 get_position() { return position; }
+    glm::ivec2 get_game_position() { return game_position; }
 
-    virtual void set_position(glm::vec2 position);
+    void set_game_position(glm::ivec2 game_position);
 
-    ///
-    /// Set the object's cuttable state
-    ///
-    void set_cuttable(bool _cuttable) { cuttable = _cuttable; }
+    glm::vec2 get_render_position() { return render_position; }
 
-    ///
-    /// Get the object's cuttable state
-    ///
-    bool is_cuttable() { return cuttable; }
-
-    ///
-    /// Set the object's findable state
-    ///
-    void set_findable(bool _findable) { findable = _findable; }
-
-    ///
-    /// Get the object's findable state
-    ///
-    bool is_findable() { return findable; }
+    void set_render_position(glm::vec2 render_position);
 
     ///
     /// manage collisions for spirtes as they move
@@ -181,12 +169,12 @@ public:
     ///
     /// Generate the texture coordinate data for the object
     ///
-    virtual void generate_tex_data(std::pair<int, std::string> tile);
+    virtual void generate_tex_data();
 
     ///
     /// Change the tile of the sprite to that of the given name
     ///
-    virtual void set_tile(std::pair<int, std::string> tile);
+    virtual void set_tile(std::string tile);
 
     ///
     /// Generate the vertex data for the object
@@ -196,12 +184,7 @@ public:
     ///
     /// Load the textures that are being used by the object
     ///
-    virtual void load_textures(std::pair<int, std::string> tile);
-
-    ///
-    /// Initialise the shaders that are being used by the object
-    ///
-    virtual bool init_shaders();
+    virtual void load_textures();
 
     ///
     /// Set the object's moving status
@@ -220,21 +203,15 @@ public:
     virtual void set_walkability(Walkability walkability);
 
     ///
+    /// Returns the walkability of the mapobject
+    ///
+    virtual Walkability get_walkability();
+
+    ///
     /// Get if the object is moving
     /// @return the object's moving status
     ///
     virtual bool is_moving() { return moving; }
-
-    ///
-    /// Walking frames to animate movement.
-    ///created
-    AnimationFrames frames;
-
-    ///
-    /// An ordered container of positions that the map object has been on,
-    /// as recorded by set_state_on_moving_finish().
-    ///
-    OrderedHashSet<glm::vec2> const &get_positions();
 
     ///
     /// Set the challenge that created or now owns the object.
@@ -253,6 +230,10 @@ public:
     /// and may be null at any time.
     ///
     Challenge const *get_challenge();
+
+    void set_focus(bool _is_focus); //TODO BLEH COMMENT THIS AFTER WORKING OUT WHAT IT DOES
+
+    std::shared_ptr<RenderableComponent>  get_renderable_component() override;
 };
 
 #endif

@@ -8,10 +8,13 @@
 #include <boost/python.hpp>
 #include <memory>
 #include <vector>
-#include "entitythread.hpp"
+#include <list>
+#include "python_thread_runner.hpp"
 #include "interpreter_context.hpp"
-#include "thread_killer.hpp"
+//#include "thread_killer.hpp"
 #include "locks.hpp"
+
+class GameEngine;
 
 ///
 /// The Python Interpreter singleton.
@@ -44,8 +47,8 @@ class Interpreter {
         ~Interpreter();
 
         ///
-        /// Give an entity to the interpreter, which will be wrapped
-        /// by the Python-side API. This is the canonical way of giving
+        /// Give a list of entities to the interpreter, which will be wrapped
+        /// by the Python-side API as a list of python objects. This is the canonical way of giving
         /// a daemon to an entity.
         ///
         /// Returns the thread in a lockable object. This can be used
@@ -57,8 +60,11 @@ class Interpreter {
         /// @deprecated
         ///     Will be changed to accept an ID.
         ///
-        /// @param entity
-        ///     The game entity to wrap.
+        /// @param entities
+        ///     The list of game entities to be wrapped
+        ///
+        /// @param game_engine
+        /// 	The instance of the game_engine interface that will be provided to the python code to interact with the engine.
         ///
         /// @return
         ///     The thread in a lockable object. This can be used to tell
@@ -67,7 +73,7 @@ class Interpreter {
         ///     When the thread is discarded, it will be destroyed. This is
         ///     a blocking operation. 
         ///
-        LockableEntityThread register_entity(Entity &entity);
+        LockablePythonThreadRunner register_entities(std::list<Entity> &entities, GameEngine &game_engine);
 
         ///
         /// The main thread of the spawned interpreter.
@@ -112,10 +118,10 @@ class Interpreter {
         static std::atomic_flag initialized;
 
         ///
-        /// The thread that kills EntityThreads when they
+        /// The thread that kills PythonThreadRunners when they
         /// have not called a wrapped API sufficiently recently.
         ///
-        std::unique_ptr<ThreadKiller> thread_killer;
+        //std::unique_ptr<ThreadKiller> thread_killer;
 
         ///
         /// The spawed threads, mainly for usage by kill_thread.
@@ -125,7 +131,7 @@ class Interpreter {
         ///
         /// @see thread_killer
         ///
-        EntityThreads entitythreads;
+        PythonThreadRunners entitythreads;
 
         ///
         /// Internal API to start CPython. Called on creation.

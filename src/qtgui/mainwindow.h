@@ -15,6 +15,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <deque>
+
+#include <boost/python/object_core.hpp>
+
 #include <QMainWindow>
 #include <QDialog>
 #include <QLabel>
@@ -33,15 +37,15 @@
 class QAction;
 class QMenu;
 class QsciScintilla;
+class QsciAPIs;
 class QProcess;
 class QTextEdit;
 class QSplitter;
 class SonicPiLexer;
 class QString;
 class QSlider;
+class QPalette;
 class GameMain;
-class QsciAPIs;
-
 
 class MainWindow : public QMainWindow
 {
@@ -50,36 +54,60 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(GameMain *exGame);
     ~MainWindow();
-    SDL_Window* getSDLWindow();
-    void showMax();
-    void setRunning(bool option);
-    void setFast(bool option);
+
+    void showScripterPanel();
+    void hideScripterPanel();
+    void enableScripterPanel();
+    void disableScripterPanel();
+    void enableScripter();
+    void disableScripter();
+
+    void setTabs(int num);
+    void createExternalTab(std::function<void ()> confirmCallback, std::function<void ()> cancelCallback, std::function<void ()> scriptInit, std::string dialogue);
+    void removeExternalTab();
+
     void updateSpeed();
     void pushTerminalText(std::string text, bool error);
-    void updateToolBar();
+    std::string getTerminalText(unsigned int index);
+    void setWorld(std::string text);
+    void setLevel(std::string text);
+    void setCoins(int value);
+    void setCurTotems(int value,bool show);
+    void insertToTextEditor(std::string text);
+    void clearTextEditor();
+    std::string getEditorText();
+    std::string getExternalText();
+    void runCode(int script);
+    void toggleSpeed();
+    void setRunning(bool option);
+    void setFast(bool option);
+    void setAnyOutput(bool option);
+    void setColourScheme(int r1, int g1, int b1, int r2, int g2, int b2);
+    SDL_Window* getSDLWindow();
     int getGameWidgetWidth();
     int getGameWidgetHeight();
+    bool getAnyOutput();
+    int getCurrentScript();
+    int getExecuteScript();
+
 protected:
-    void closeEvent(QCloseEvent *event);
-    bool eventFilter(QObject *obj, QEvent *event);
     SDL_Scancode parseKeyCode(QKeyEvent *keyEvent);
     Uint8 parseButton(QMouseEvent *mouseEvent);
+    bool eventFilter(QObject *obj, QEvent *event);
+    void closeEvent(QCloseEvent *event);
 
 private slots:
-    void runCode();
-    void toggleSpeed();
-    bool saveAs();
-    void documentWasModified();
     void zoomFontIn();
     void zoomFontOut();
     void setGameFocus();
     void timerHandler();
     void clearTerminal();
+    void clickRun();
+    void clickSpeed();
 
 private:
     void initWorkspace(QsciScintilla* ws, int i);
     void createToolBar();
-    void createStatusBar();
     std::string number_name(int);
     std::string workspaceFilename(QsciScintilla* text);
     QsciScintilla* filenameToWorkspace(std::string filename);
@@ -88,8 +116,11 @@ private:
 
     QsciScintilla *textEdit;
 
-    static const int workspace_max = 9;
+    static const int workspace_max = 10;
     QsciScintilla *workspaces[workspace_max];
+    bool externalWorkspace;
+    std::function<void ()> externalConfirmCallback;
+    std::function<void ()> externalCancelCallback;
     QWidget *zoomWidget[workspace_max];
     QHBoxLayout *zoomLayout[workspace_max];
     QPushButton *buttonIn[workspace_max];
@@ -98,8 +129,10 @@ private:
     QTextEdit *terminalDisplay;
     QSplitter *splitter;
     QPushButton *buttonRun;
-    bool running;
+    //indicates whether a script is running or not
+    bool script_running;
     QPushButton *buttonSpeed;
+    //whether the script setting fast or slow
     bool fast;
     QWidget *mainWidget;
     QTabWidget *textWidget;
@@ -121,32 +154,31 @@ private:
     QPushButton *buttonClear;
     QVBoxLayout *windowLayout;
 
-/*
-    QAction *runAct;
-    QAction *stopAct;
-    QAction *saveAct;
-    QAction *textIncAct;
-    QAction *textDecAct;
+    QPalette colourPalette;
 
-    QAction *saveAsAct;
-    QAction *exitAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-
-    QCheckBox *print_output;
-    QCheckBox *check_args;
-
-    QMap<QString, QString> *map;
-
-    QLabel *imageLabel;
-*/
     SDL_GLContext glContext;
     SDL_Window *embedWindow;
     QTimer *eventTimer;
 
+    //The instance of the game main class (running the main game loop)
     GameMain *game;
 
+    //Specifies whether there has been any output during the current code execution,
+    //it determine if output separate lines are needed
+    bool anyOutput;
+
+    //Specifies whether the Pyscripter can be run/halted/have its speed changed
+    //(to prevent keybindings controlling it when the scripter is disabled)
+    bool scriptEnabled;
+
+    //Index of the script to be executed
+    int executeIndex;
+
+    //The current number of tabs that the player has available to them
+    int currentTabs;
+
+    //The text that has been pushed to the terminal
+    std::deque<std::string> terminalText;
 };
 
 #endif

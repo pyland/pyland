@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="25" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <layer name="land" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMA6A9+povx0HBXlJVVV8dlYs9cg==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="25" height="25">
+  <object name="characters/player/player_one" gid="286" x="192" y="384"/>
+  <object name="tile_trigger/dimension" gid="288" x="1536" y="64"/>
+ </objectgroup>
+ <layer name="SpecialLayer" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJy9kksKwDAIBUPOlfufq9sg/sZoA0IX4rypnr3W+aEm382Yyi6/u/NbjM78HmPSo3s/lofM0e3R5ZNhEB+rn9yu52PN9BgZdy9v1aMyM2KQXb4wtPyWT6aP5iE3XWFkcstXvRvyjyN34kP2obkSnwzj1afiEc2I+ukt0pKMqTeRXasPVZ1P7Q==
+  </data>
+ </layer>
+ <layer name="Walls" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJzdlFsOhSAMRGH/W/T9vncVxkR+xg5thS+bEAMC08M0DeFb0ccQmoqji0+NVlgrCem+tFbKM0VdoxaPdM/vzmOoxPM3+FHKY/HDyrOTesppLE4exp/T0PhYvivMc57jGMgZvIt9LRz4n+Xr0cA32QkP+sfmkoZWw959ubP4JljT6N9GfJQ0kLUkb6bBuBgP8qZYBU1kZx6/9YeteXg8GrPCw2rT0oPe9iXr/itG0kvSOJQ560FfihNDnMuN
+  </data>
+ </layer>
+</map>

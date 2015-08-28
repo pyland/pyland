@@ -1,4 +1,4 @@
-EXECUTABLE = main.bin
+EXECUTABLE = ../game/pyland
 EXECUTABLE_OBJ = main.o
 
 TEST_EXECUTABLE = test/test.bin
@@ -10,12 +10,7 @@ TEST_EXECUTABLE_OBJ = test/test.o
 #
 
 BASE_OBJS = \
-	animation_frames.o     \
 	challenge_helper.o     \
-	engine.o               \
-	event_manager.o        \
-	game_time.o            \
-	game_main.o	       \
 	graphics_context.o     \
 	image.o                \
 	layer.o                \
@@ -26,14 +21,12 @@ BASE_OBJS = \
 	map_object.o           \
 	map_viewer.o           \
 	mouse_cursor.o         \
-	notification_bar.o     \
-	notification_stack.o   \
+	challenge.o            \
 	object.o               \
 	object_manager.o       \
 	renderable_component.o \
 	shader.o               \
-	sprite.o               \
-	sprite_switcher.o      \
+	sprite_manager.o       \
 	text.o                 \
 	text_font.o            \
 	texture.o              \
@@ -41,66 +34,64 @@ BASE_OBJS = \
 	tileset.o              \
 	typeface.o             \
 
+CORE_OBJS = \
+	core/audio_engine.o        \
+	core/config.o              \
+	core/engine.o              \
+	core/event_manager.o       \
+	core/game_main.o           \
+	core/game_time.o           \
+	core/gui_main.o            \
 
-CHALLENGE_OBJS = \
-	challenges/challenge.o              \
-	challenges/cutting_challenge.o      \
-	challenges/final_challenge.o        \
-	challenges/introduction_challenge.o \
-        challenges/base_challenge.o         \
-	challenges/start_screen.o           \
-	challenges/new_challenge.o	    \
+GUI_OBJS = \
+	gui/button.o                 \
+	gui/component.o	             \
+	gui/component_group.o        \
+	gui/gui_text.o               \
+	gui/text_box.o	     \
+	gui/text_stack.o         \
+	gui/gui_window.o             \
+	gui/gui_manager.o            \
+
+
+INPUT_OBJS = \
+	input_management/filters.o              \
+	input_management/input_event.o          \
+	input_management/input_handler.o        \
+	input_management/input_manager.o        \
+	input_management/keyboard_input_event.o \
+	input_management/mouse_input_event.o    \
+	input_management/mouse_state.o          \
+
+PYTHON_OBJS = \
+	python_embed/entity.o               \
+	python_embed/interpreter.o          \
+	python_embed/interpreter_context.o  \
+	python_embed/locks.o                \
+	python_embed/python_thread_runner.o \
+	python_embed/game_engine.o          \
 
 QT_OBJS = \
-	qtgui/mainwindow.o		\
-	qtgui/moc_mainwindow.o		\
-	qtgui/game_init.o		\
-	qtgui/parsingfunctions.o	\
-	qtgui/game_window.o          \
+	qtgui/game_window.o      \
+	qtgui/mainwindow.o       \
+	qtgui/moc_mainwindow.o   \
+	qtgui/parsingfunctions.o \
 
 HEADER_DEPENDS_ROOT = \
 	${BASE_OBJS:.o=.d}            \
-	${CHALLENGE_OBJS:.o=.d}       \
+	${CORE_OBJS:.o=.d}            \
 	${EXECUTABLE:.bin=.d}         \
 	${EXECUTABLE_OBJ:.o=.d}       \
 	${GUI_OBJS:.o=.d}             \
-	${QT_OBJS:.o=.d}             \
 	${INPUT_OBJS:.o=.d}           \
 	${PYTHON_OBJS:.o=.d}          \
+	${QT_OBJS:.o=.d}              \
 	${PYTHON_SHARED_OBJS:.so=.sd} \
 	${TEST_EXECUTABLE:.bin=.d}    \
 	${TEST_EXECUTABLE_OBJ:.o=.d}  \
 	${TEST_OBJS:.o=.d}            \
 
 HEADER_DEPENDS = $(addprefix dependencies/,${HEADER_DEPENDS_ROOT})
-
-
-INPUT_OBJS = \
-	input_management/filters.o              \
-	input_management/input_event.o          \
-	input_management/input_manager.o        \
-	input_management/keyboard_input_event.o \
-	input_management/mouse_input_event.o    \
-	input_management/mouse_state.o          \
-
-GUI_OBJS = \
-	gui/button.o                 \
-	gui/component.o	             \
-	gui/component_group.o        \
-        gui/gui_text.o               \
-	gui/gui_window.o             \
-	gui/gui_manager.o            \
-
-
-PYTHON_OBJS = \
-	python_embed/api.o                 \
-	python_embed/gil_safe_future.o     \
-	python_embed/interpreter.o         \
-	python_embed/interpreter_context.o \
-	python_embed/locks.o               \
-	python_embed/entitythread.o        \
-	python_embed/thread_killer.o       \
-
 
 # For precompiling
 PYTHON_HEADER = \
@@ -111,8 +102,10 @@ PYTHON_SHARED_OBJS = \
 	python_embed/wrapper_functions.so
 
 PYTHON_SHARED_OBJS_DEPENDS = \
-	python_embed/api.o
+	python_embed/entity.o
 
 
 TEST_OBJS = \
 	test/test_fml.o \
+
+

@@ -21,12 +21,14 @@ These install instructions may be incomplete and you may require additional pack
 #### Getting Dependencies (Raspberry Pi)
 
 Install packages from raspbian repo:
-```bash
+```
 sudo apt-get update
 sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
 sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
+sudo apt-get install libts-dev
 sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
 sudo apt-get install libqscintilla2-dev
+sudo apt-get install install sqlite3
 ```
 
 Download and install extra dependencies:
@@ -45,9 +47,28 @@ wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog-dev_0.3.3-1_armhf.deb
 sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
 cd ..
 ```
+Also requires libsdl2-mixer-dev, not currently on the raspbian repo.
 
-#### Getting Dependencies (Desktop)
+Get source code using git:
+```bash
+sudo apt-get install --no-install-recommends git-core
+git clone http://github.com/pyland/pyland
+```
 
+#### Compiling on Raspberry Pi
+
+For compiling on the Raspberry Pi, use:
+
+```bash
+cd pyland/src/
+#Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
+COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
+cd jsonnet/
+make
+cd ..
+```
+
+#### Compiling on Desktop GNU/Linux
 For desktop, you will need the packages listed above, which can be found here:
 
 ```bash
@@ -61,6 +82,8 @@ sudo apt-get install libsdl2-ttf-dev
 sudo apt-get install libgoogle-glog0
 sudo apt-get install libgoogle-glog-dev
 sudo apt-get install libqscintilla2-dev
+sudo apt-get install install sqlite3
+sudo apt-get install libsdl2-mixer-dev 
 ```
 
 If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
@@ -80,6 +103,11 @@ For compiling on the Raspberry Pi, use:
 
 ```bash
 cd pyland/src
+cd jsonnet
+make
+cd../../game
+rm database.db
+sqlite3 database.db < database_source.sql
 #Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
 COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
 ```
@@ -96,6 +124,11 @@ For compiling on desktop, use:
 # but at least g++-4.7 or a recent clang++. Plain "g++" is the default.
 
 cd pyland/src
+cd jsonnet
+make
+cd../../game
+rm database.db
+sqlite3 database.db < database_source.sql
 PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.4 LIBBOOST_PYTHON=boost_python-py34 make
 ```
 
@@ -106,15 +139,28 @@ Please note that desktop support is secondary, and may be incomplete. At the mom
 To launch (you must be in the /src folder):
 
 ```bash
+#Must be in the src folder
 ./main.bin
 ```
 
 Keybindings
+* <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - Move sprite
+* <kbd>Enter</kbd> - Run the current script/halt running script
+* <kbd>1-9</kbd> - Run the script of given number/halt running script
+* <kbd>Space</kbd> - Toggle speed
+* <kbd>Tab</kbd> - Switch player
 
-* <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - move sprite
+* <kbd>escape</kbd> - Go back to level selection map
 
-* <kbd>escape</kbd> - go back to level selection map
+##Installing qt for integrated editor test
 
+Install the following packages:
+
+```bash
+sudo apt-get install libqscintilla2-dev
+```
+
+This will create the executable "application" which can then be run.
 ##API
 
 * `help()` and `help(command)` - Get help on the current task and any in-game (or other) commands.
