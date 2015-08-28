@@ -2,35 +2,44 @@
     "settings": {
         "language": "english"
     },
-<<<<<<< HEAD
     "player_saves": {
-        "???": {
-            "previous_exit": "/world_1/level_2/bogs/myla_explain_cut_action",
-            "py_scripter_tabs": 1,
-            "current_map": "/world_1/level_2/bogs",
-            "py_scripter_enabled": false,
-            "totems": {},
-            "has_unlocked_pyscripter": true,
-            "completed_levels": {
-                "/world_1/level_1": true
-            },
+        "YourName": {
             "level_data": {
                 "world_1": {
+                    "level_2": {
+                        "starting_map": "start"
+                    },
                     "level_1": {
                         "starting_map": "player_house",
-                        "heidi_state": 2
-                    },
-                    "level_2": {
-                        "starting_map": "start",
-                        "pyscripter_state": 1
+                        "heidi_state": 0
                     }
                 }
             },
-            "coins": 0
+            "previous_exit": "/world_1/intro",
+            "coins": 0,
+            "totems": {},
+            "py_scripter_tabs": 1,
+            "py_scripter_enabled": false,
+            "current_map": "/world_1/level_1/player_house"
+        },
+        "???": {
+            "py_scripter_enabled": false,
+            "previous_exit": "/world_1/intro",
+            "coins": 0,
+            "totems": {},
+            "py_scripter_tabs": 1,
+            "level_data": {
+                "world_1": {
+                    "level_2": {
+                        "starting_map": "start"
+                    },
+                    "level_1": {
+                        "starting_map": "player_house",
+                        "heidi_state": 0
+                    }
+                }
+            },
+            "current_map": "/world_1/level_1/player_house"
         }
     }
 }
-=======
-    "player_saves": {}
-}
->>>>>>> 23ef44d838ad2f1827fa5b17cdad4ebced055d1c

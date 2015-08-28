@@ -554,11 +554,10 @@ class Character(GameObject, ScriptStateContainer):
     def __get_cuts_left(self):
         return self.__cuts_left
 
-<<<<<<< HEAD
     def dig(self, callback = lambda: None):
         self.get_engine().print_terminal("You can't dig here!")
         self.get_engine().add_event(callback)
-=======
+
     def follow_path(self, path, repeat = False, is_paused = lambda: False):
         """ The character follows the path given, a string a comma-seperated directions, eg. "north, east, east, south, west, north"
         If repeat is set to True, the most recent direction completed will be added to the end of the string so that whole thing becomes a cycle
@@ -625,9 +624,5 @@ class Character(GameObject, ScriptStateContainer):
 
         return
 
-
-
-
->>>>>>> 23ef44d838ad2f1827fa5b17cdad4ebced055d1c
 
 
