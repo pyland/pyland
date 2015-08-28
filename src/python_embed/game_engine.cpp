@@ -246,6 +246,10 @@ void GameEngine::update_level(std::string text){
   Engine::update_level(text);
 }
 
+void GameEngine::clear_level_text(){
+  Engine::clear_level_text();
+}
+
 void GameEngine::update_coins(int value){
   Engine::update_coins(value);
 }
@@ -253,6 +257,10 @@ void GameEngine::update_coins(int value){
 
 void GameEngine::update_totems(int value, bool show){
    Engine::update_totems(value, show);
+}
+
+void GameEngine::clear_totems_text(){
+  Engine::clear_totems_text();
 }
 
 void GameEngine::insert_to_scripter(std::string text)

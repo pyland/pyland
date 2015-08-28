@@ -135,8 +135,10 @@ class GameEngine {
         ///
         void update_world(std::string text);
         void update_level(std::string text);
+        void clear_level_text();
         void update_coins(int value);
         void update_totems(int value, bool show);
+        void clear_totems_text();
 
         /// Insert text to the current QsciScintilla
         /// text edtior

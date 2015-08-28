@@ -203,8 +203,10 @@ public:
     //static void hide_external_tab();
     static void update_world(std::string text);
     static void update_level(std::string text);
+    static void clear_level_text();
     static void update_coins(int value);
     static void update_totems(int value,bool show);
+    static void clear_totems_text();
 
     static void insert_to_scripter(std::string text);
     static void clear_scripter();

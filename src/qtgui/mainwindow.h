@@ -71,8 +71,10 @@ public:
     std::string getTerminalText(unsigned int index);
     void setWorld(std::string text);
     void setLevel(std::string text);
+    void clearLevelText();
     void setCoins(int value);
     void setCurTotems(int value,bool show);
+    void clearTotemsText();
     void insertToTextEditor(std::string text);
     void clearTextEditor();
     std::string getEditorText();

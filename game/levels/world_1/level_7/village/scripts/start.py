@@ -3,6 +3,8 @@ engine.update_player_name(engine.get_player_name(), player.get_focus_button_id()
 
 engine.play_music("eery")
 
+engine.update_level("6")
+
 engine.clear_scripter()
 
 player.face_east()

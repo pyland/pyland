@@ -3,6 +3,8 @@ world_name = "world_1"
 level_name = "level_4"
 map_name = "main_a"
 
+engine.update_level("3")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
@@ -31,7 +33,7 @@ if not came_from_main_b:
         lambda callback: player_one.set_busy(False, callback =callback)
         ])
 
-def go_next(player_object):	
+def go_next(player_object):
     player_data.save_and_exit("/world_1/level_4/main_b")
 
 end_level.player_walked_on = go_next
@@ -41,4 +43,4 @@ def leave_beg(player_object):
     player_data.save_and_exit("/world_1")
 
 exit_level_start.player_walked_on = leave_beg
- 
+
