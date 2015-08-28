@@ -24,10 +24,23 @@ class Engine:
     __json_data = None
 
     def get_dialogue(self, level_name, identifier, escapes = dict()):
-        """ Get the piece of dialoge requested form the database.
+        """ Get the piece of dialoge requested form the database. 
 
-        The escapes argument is a dictionary from escape keys to replacements to allow parts of the result to be dynamically replaced.
+        Parameters
+        ----------
+        level_name : str
+            The level the dialogue is associated with. For example, a dialogue in World i, level j has a level name of "/world_i/level_j"
+        identifier : str
+            More specifically what the dialogue within the level is. For example, Myla talking to you about a crocodile might be called "myla_croc_talk"
+        esacpes : dict of str * str
+            A dictionary mapping escape keys (player_name) to its replacement in the game (escapes[player_name] = Tom) to allow parts of the result to be dynamically replaced.
+
+        Returns 
+        --------
+        str
+            Returns the specific dialogue requested from the database
         """
+
         if not(threading.current_thread() in self.conn):
             self.conn[threading.current_thread()] = sqlite3.connect(self.dblocation)
         result = self.conn[threading.current_thread()].execute("SELECT english, french, dutch, hindi, pyrate FROM dialogue WHERE level=? AND identifier=?;", (level_name, identifier))
@@ -76,16 +89,38 @@ class Engine:
         self.conn[threading.current_thread()] = sqlite3.connect(self.dblocation)
 
     def __del__(self):
+        """ Destructor for the game engine.
+
+        On termination all links to the database are closed
+        """
         for key in self.conn:
             self.conn[key].close()
 
     def set_language(self, language_to_set):
+        """ Sets the language of the game. (English, French, Dutch, Hindi, Pyrate)
+        When querying from the database, it will return the requested string associated with the current language of the game.
+
+        Parameters
+        ---------
+        language_to_set : str
+            The language desired to be set. Currently supported are "english", "français", "nederlands", "hindi", and "pyrate"
+        """
+
         if(language_to_set in self.all_languages):
             self.language = language_to_set
         else:
             print("Not a valid language!")
 
     def get_language(self):
+        """Returns the language the game engine is currently set to 
+
+        Returns
+        -------
+        str
+            The string name of the language the game is currently set to
+        """
+
+
         return self.language
 
     def register_game_object(self, game_object):
@@ -126,7 +161,17 @@ class Engine:
     def is_solid(self, position):
         """ Returns if a given position "is solid" (true if it can't be walked on, false otherwise)
 
-        The Goald if this little wrapper is to make it so that a tuple is accepted.
+        The Goal of this little wrapper is to make it so that a tuple is accepted.
+
+        Parameters
+        ----------
+        position: 2-tuple of int
+            The position you want to check for solidity. (x,y)
+
+        Returns
+        -------
+        bool
+            Boolean value regarding if the position is solid or not.
         """
         x, y = position                                     #Extract the position x and y coordinates
         return self.__cpp_engine.is_solid(x, y)
@@ -147,21 +192,45 @@ class Engine:
         """ This is meant to return a new instance of a given game object, but it hasn't been properly implemented yet """
         x, y = position
         entity = self.__cpp_engine.create_object( object_file_location, object_name, x, y)
-        return self.wrap_entity_in_game_object(self, entity)
+        return self.wrap_entity_in_game_object(self, entity) #TODO: COMMENT THIS
 
     def get_tile_type(self, position):
+        """Returns an integer corresponding to a specific tile type specified in the SpecialLayer of tiled at the current position.
+
+        The currently special tiles are STANDARD, WATER, SOLID, and QUICKSAND
+
+        Parameters
+        ----------
+        position: 2-tuple of int
+            The position you want to get the tile type of. (x,y)
+
+        Returns
+        -------
+        int
+            returns one of engine.TILE_TYPE STANDARD, engine.TILE_TYPE_WATER, engine.TILE_TYPE_SOLID, or engine.TILE_TYPE_QUICKSAND, corresponding to the values 0,1,2,3.
+        """
         x, y = position
         return self.__cpp_engine.get_tile_type(x, y)
 
-    def open_dialogue_box(self, callback = lambda: None):
-        self.__cpp_engine.open_dialogue_box(callback)
 
     def get_config(self):
-        """ Return the config.jsonnet file parsed as a python json object """
+        """ Parses the current config.jsonnet file as a python json object
+
+        Returns
+        -------
+        python json object
+            Returns the config.jsonnet file parsed as a python json object
+        """
         result = self.__cpp_engine.get_config()
         return json.loads(result)
 
     def __get_json_data(self):
+        """
+        Returns
+        -------
+        python json object
+            A json object that contains the data of the player. (Last checkpoint, worlds unlocked, etc.)
+        """
         if not self.__json_data:
             settings_string = ""
             with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
@@ -170,6 +239,8 @@ class Engine:
         return self.__json_data
 
     def __save_json_data(self):
+        """ Updates the json save file with the current state of the player """
+
         save_file_string = ""
         with open(self.get_config()['files']['game_save_location'], encoding="utf8") as save_file:
             save_file_string = save_file.read()
@@ -183,26 +254,71 @@ class Engine:
         return
 
     def get_settings(self):
-        "Return the settings from the save.json file as a python json object """
+        """ Return the settings from the save.json file as a python json object 
+
+        Returns
+        -------
+        python json object
+            The current settings of the game as a json object.
+        """
         return self.__get_json_data()["settings"]
 
     def save_settings(self, settings):
-        """save the game settings""" #TODO: add resiliency!!!!
+        """ Saves the game settings with the current settings
+
+        Parameters
+        ----------
+        settings : python json object
+            The settings that we want to save. It is whatever that is return by get_settings
+        """ #TODO: add resiliency!!!!
+
+
         self.__json_data["settings"] = settings
         self.__save_json_data()
         return
 
     def get_player_data(self, name):
-        "get the player's save"
+        """ Returns the player data from the save.json file as a python json object.
+
+        Parameters
+        ----------
+        name : str
+            String of a player name that has been initialised with a save.json entry 
+
+        Returns
+        -------
+            The save file of the player with "name" as its name
+
+
+        """
         return self.__get_json_data()["player_saves"][name]
 
     def save_player_data(self, name, game_save):
-        """save the player's save""" #TODO: add resiliency!!!!
+        """ Saves the player's save state in the json save file
+
+        Parameters
+        ----------
+        name : str
+            The name of the player we want to same the game_save state into
+        game_save : save object
+             
+
+        """ 
+        #TODO: add resiliency!!!!
         self.__json_data["player_saves"][name] = game_save
         self.__save_json_data()
         return
 
     def save_exists(self, name):
+        """ Returns whether or not "name" has a save file in save.json.
+
+        This usually indicates if there is a player called "name" that has played the game and saved.
+
+        Parameters
+        ----------
+        name : str
+            The string of the name that we want to check for existence in the save.json file.
+        """
         save_data = self.__get_json_data()
         if name in save_data["player_saves"]:
             return True
@@ -210,6 +326,18 @@ class Engine:
             return False
 
     def set_ui_colours(self, colour_one, colour_two):
+        """ Sets the user interface to a color scheme indicated by colour_one and colour_two.
+
+        Colour_one and colour_two are three-tuples indicating the RGB color value of two extremes of a gradient. This gradient is used across the PyScripter and tabs
+
+        Parameters
+        ----------
+        colour_one : tuple of int * int * int
+            The RGB value of one extreme of the color gradient
+        colour_two : tuple of int * int * int
+            The RGB value of the other extreme of the color gradient
+        """
+
         r1, g1, b1 = colour_one
         r2, g2, b2, = colour_two
         self.__cpp_engine.set_ui_colours(r1, g1, b1, r2, g2, b2)
@@ -218,6 +346,16 @@ class Engine:
         """ converts snake_case to CamelCase
 
         eg "name_name_name" -> "NameNameName"
+
+        Parameters
+        ----------
+        snake_string : str
+            An input string in snake case that we want to convert to Camel Case
+
+        Returns
+        -------
+        str:
+            A string of the input string converted to Camel Case
         """
         components = snake_string.split('_')
         result = ""
@@ -254,13 +392,50 @@ class Engine:
         return game_object
 
     def show_dialogue(self, dialogue, disable_scripting = True, callback = lambda: None):
+        """ The engine display the dialogue as a pop-up text window.
+
+        This is usually used for dialogue (NPCs talking to the player) or this is run when interacting with a sign. (The pop-up shows the text on the sign)
+
+        Parameters
+        ----------
+        dialogue : str
+            The string that will be display on the dialogue window
+        disable_scripting : bool
+            A boolean value that indicates if we want the PyScripter to be disabled or not if the dialogue window is up.
+        callback : func, optional
+            Places the callback onto the engine
+
+        """
         self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
 
     def show_dialogue_with_options(self, dialogue, options, disable_scripting = True):
+        """ The engine display the dialogue as a pop-up text window with options. 
+
+        This is usually used for dialogue with options (NPCs talking to the player and ask if the player wants to help them or not)
+
+        Parameters
+        ----------
+        dialogue : str
+            The string that will be display on the dialogue window
+        options : dict of str * func
+            A dictionary that maps strings to callbacks. The keys of the dictionary are displayed as the options the player can select, after which options[selected_key] is run. 
+        disable_scripting : bool
+            A boolean value that indicates if we want the PyScripter to be disabled or not if the dialogue window is up.
+        """
         self.__cpp_engine.show_dialogue_with_options(dialogue, disable_scripting, options)
 
     def run_callback_list_sequence(self, callback_list_sequence, callback = lambda: None):
         """ Run the given list of functions, passing the rest of the list as an argument to the first function so that they are run in sequence.
+
+        Ths is commonly used to display sequence of dialogue and to ensure that the functions run in the order specified in the code
+
+        Parameters
+        ----------
+        callback_list_sequence : list of func
+            A list of functions we want to run in sequence with callback linking together. (e.g. the callback taken by every function in this list should be callback). 
+            Only functions that accept callbacks may be in this list, except for the last function which doesn't necessarily have to accept a callback.
+        callback : func, optional
+            Places the callback onto the engine
         """
         if not isinstance(callback_list_sequence, collections.deque): #Convert the list to a deque if it isn't already one
             callback_list_sequence = collections.deque(callback_list_sequence)
@@ -274,49 +449,181 @@ class Engine:
 
 
     def disable_py_scripter(self, callback = lambda: None):
+        """ Disables the PyScritpter
+
+        Called during important text when we don't want the player to be able to edit code in their PyScritpetr. Doesn't do anything if the PyScripter is already disabled.
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+        """
         self.__cpp_engine.disable_py_scripter(callback)
 
     def enable_py_scripter(self, callback = lambda: None):
+        """ Enables the PyScritpter
+
+        Enables the player's PyScritpter, usually called after it has been disabled. Doesn't do anything if the PyScritpter is already enabled.
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+        """
+
         self.__cpp_engine.enable_py_scripter(callback)
 
     def hide_py_scripter(self, callback = lambda: None):
+        """ Hides the PyScritpter from the player
+
+        Called when we don't want the player to see the PyScritpter (e.g. before they have even received the PyScripter)
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+        """
         self.__cpp_engine.hide_py_scripter(callback)
 
     def show_py_scripter(self, callback = lambda: None):
+        """ Allows the player to see the PyScritpter
+
+        Called when the player first receives the PyScritpter    
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+        """
         self.__cpp_engine.show_py_scripter(callback)
 
-
     def enable_script_editing(self, callback = lambda: None):
+        """ Allows the player to edit code in their PyScripter
+
+        Called after the PyScripter has been disabled and we want to enable it, usually called at the end of a dialogue sequence    
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+        """
         self.__cpp_engine.enable_script_editing(callback)
 
     def disable_script_editing(self, callback = lambda: None):
+        """ Does not allow the player to edit code in their PyScripter
+
+        usually called at the beginning of a dialogue sequence and we don't want the player to edit their PyScripter
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+        """
         self.__cpp_engine.disable_script_editing(callback)
 
-    def set_py_tabs(self, num, callback = lambda: None):
+    def set_py_tabs(self, num_tabs, callback = lambda: None):
+        """ Sets the number of tabs on the PyScripter to num_tabs.
+
+        We incrementally increase the number of tabs in the player's PyScripter as he/she progresses in the game
+
+        Parameters
+        ----------
+        num_tabs : int
+            An integer between 1 and 9 that indicates the number of tabs we want the PyScripter to have.
+        callback : func, optional
+            Places the callback onto the engine
+
+
+        """
         self.__cpp_engine.set_py_tabs(num, callback)
 
     def show_external_script(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", script_init = lambda: None):
+        """ This function is used to have the player give a script to an NPC (after which the NPC may or may not run the script)
+
+        When an NPC requires a script he will ask the player if he/she can help write a script. If the player says yes, confirm_callback is run, if the palyer says no, the cancel_callback is run. The tab that the player is given to edit is 
+        the external_tab that can be initialized via script_init and external dialogue is displayed when this tab is open.
+        
+        Parameters
+        ----------
+        confirm_callback : func
+            The callback that is run if the player clicks on "Give Script"
+        cancel_callback : func
+            The callback that is run if the player clicks "Cancel"
+        external_dialogue :  str, optional
+            String that gets displayed in the dialogue window while the external PyScritpt is open
+        script_init : func, optional
+            The callback that is run when tab is created and before the player confirms/cancels. This is used to initialize the external script and commonly includes "insert_to_scripter"
+        """
+
         self.__cpp_engine.show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init)
 
-   # def hide_external_tab(self, callback = lambda: None):
-    #    self.__cpp_engine.hide_external_tab(callback)
-
     def insert_to_scripter(self, text, callback = lambda: None):
+        """ Inserts code into the PyScripter
+
+        This function can be used to have an NPC give the player code to run.
+
+        Parameters
+        ----------
+        text : str
+            The text/code we wish to insert into the current tab of the PyScripter
+        callback : func, optional
+            Places the callback onto the engine
+        """
         self.__cpp_engine.insert_to_scripter(text)
         self.add_event(callback)
 
     def clear_scripter(self, callback = lambda: None):
+        """ Clears the PyScripter. (Deletes all code associated with the current tab)
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+
+        """
         self.__cpp_engine.clear_scripter(callback)
 
     def change_map(self, map_name):
+        """ Changes from the current map to next map with file path map_name
+
+        Used to link levels together and "enter buildings" etc.
+        On death change_map is called to change to the current map, restarting the level.
+
+        Parameters
+        ----------
+        map_name : str
+            String of the path to the folder containing the level/map we want to change to 
+        """
+
         self.__cpp_engine.change_map(map_name)
         raise
 
     def get_all_objects(self):
+        """ Returns all of the game object in the current engine (characters/tiles/etc)
+
+        Returns
+        -------
+        list of game_object
+            A list of all the game_object
+        """
         return list(self.__game_objects.values())
 
     def get_error(self):
+        """Gets if the last run of the PyScripter ran with errors or not
+
+        Returns
+        -------
+        bool
+            If the last run of the PyScripter contained an error
+        """
         return self.__error
 
-    def set_error(self, boolean):
-        self.__error = boolean
+    def set_error(self, has_error):
+        """Sets a flag called error regarding if the last run of the PyScripter ran with errors or not
+
+        Parameters
+        ----------
+        has_error : bool
+            If the last run had an error or not
+        """
+        self.__error = has_error

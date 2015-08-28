@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="70" height="70" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="29" height="30" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -24,35 +24,35 @@
  <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="70" height="70">
+ <layer name="Ground" width="29" height="30">
   <data encoding="base64" compression="zlib">
-   eJztzrENwEAQhMAr9fuvwi0QQeAdiZx3d+9HUfWnHVV/2lH1px1Vf9pR9acdVX/aUfWnHVV/2lH1px1Vf9pR9acdVX/aUfWnHVV/2lH1px1Vf9pR9acdVX/aUfWnHVV/2lH1px1Vf9pR9acdVX/aUfWnHVV/2lH1px1Vf9pR9acdVX/aUfWnHVV/2lH1px1Vf9pR9acdVX/aUfWnHVV/2lH1px1Vf9pR9acdVX/azczMzMzMzMzMzMzMzMxM4wMQVseu
+   eJztw0ENAAAMA6GTWv8qJmMfSFg1VVVV3x6XLEZQ
   </data>
  </layer>
- <layer name="Decor" width="70" height="70">
+ <layer name="Decor" width="29" height="30">
   <data encoding="base64" compression="zlib">
-   eJztmG2KwzAMRMVeay+TA/T+v8tCDV5hJyNL+Si8BwNqaKRhkjhuNzPbCvRyquh5hlSq5r0m9dOkUjWPXMglInLZz8WMXHqRy34uvn6aVKrmXZGL3yOt7JdUKj2P6krN+pILuRzNUI6PpHKGZ3K5JxfW3Xkuqz1UKvzax6t1dUVfr2/Nxfuv1sqe2j9vKlmvjSt+B8zWF+WcVqtkvbYeVz5Hf/z+/M/o6Bzv8Yisz9E9urdfz2rk4Wim/65CNo/Ww1y90vdsRXKpuG6N/rP3NDpWoYjXaC5VniJeM9ejrS2bHfuvfI5W7ptZXaV+npk+K3O/KOub4lv1uqJ+LYt4veN9tDe/qu9oRqS/z1Cl2nPU98qMTH+Vas9Z38oMciGXyIzMe0Kl2rOvK9W/p3v/5BI7PpLKGZ7J5fpcsvtQlUrPo/ppUqmaRy7kEhG5kEtE5EIuEZHLPJfM/31XCQAAAAAAAAAAAAAAAAAA7uEN+CrJSA==
+   eJydVsmqxDAM86fmlDaX/v/x8WAMGiHZ7hRM03iR16RPRDwNLbN2spW80//fvwb2pz4usX5jaxLzEny1l3QGthAfydm/C94lbDB+PimzX8R/kcxd8BUmx1rV5DS+dPz4yIThv+2xjjbFGTGrXa6PyCfm9JA9XCPupNem+VxCnvkxlFVYv/jq9lb0PdFhKL2gOBVukH6Hj7YD9DM3iYn0kBzbQdwj9HPOle2O2EeVH0V3fJ/zijZ9q9zg0/XWBbIH1hv22Ceu6Y7veQ7gOVwXH88K7h3iYXz8Pe3rBfqdfNWT1dyoPOTDMVdzp/xz+5N55vNzDd54Z6lz6Qh7LjY+3915X8VQ1WXBu/Il56DC4FwoGcTk+83hO7sdD/3l2VN6uXY55rpVtUgMpEk/qhzzP1Knw5hVLpVv3LNK3/k6zeW0XxyuiqPLi/p3dnVwfnW9wXnlOvC3ulc7cr4y/QEXhE4W
   </data>
  </layer>
- <layer name="SpecialLayer" width="70" height="70">
-  <data encoding="base64" compression="zlib">
-   eJzt1wEKwjAQBdHSa9X7n0ukiDH82o1JdjcwDwpS0NSpSeO2jfHYvw+cyhZ0+aCLRheNLhpdNLpodNE8utR7pBX2S15dWs5nQBeNLhpdNM8urLt6jMwdanTRvNcX6xjR8y1yfYm+rujxy8899vO4axPR5eq+/dqv9x4v7yZHcc7yH2F2lxWej0rL9fbct0j1PBr9e+n5jpnmkeX79d7Pf343s+dxPd7sLqPmiUeX8rX1WiOeR97jl8+elvdErotZu0Sji0YXzbtL9Lph5dnFej4Dumh00by6ZP2/diV6X5kVXTS6aHTR6KLRRaOLRhdtlX0WAAAAAAAAAAAAACDGE0IXRq0=
-  </data>
- </layer>
- <objectgroup name="Object Layer 1" width="70" height="70">
-  <object name="characters/player/player_one" gid="286" x="0" y="1536" width="64" height="64"/>
-  <object name="characters/npcs/myla/myla" gid="291" x="64" y="1472" width="64" height="64"/>
-  <object name="sign/sign_one" gid="287" x="1216" y="1408" width="64" height="64"/>
-  <object name="sign/sign_two" gid="287" x="2752" y="1408" width="64" height="64"/>
-  <object name="characters/npcs/generic/helper_one" gid="291" x="2944" y="1408" width="64" height="64"/>
-  <object name="characters/npcs/generic/security_one" gid="301" x="2816" y="1152" width="64" height="64"/>
-  <object name="characters/npcs/generic/security_three" gid="301" x="3072" y="1344" width="64" height="64"/>
-  <object name="characters/npcs/generic/security_two" gid="301" x="2816" y="1536" width="64" height="64"/>
-  <object name="key/key1" gid="287" x="2944" y="704"/>
-  <object name="key/key2" gid="287" x="2944" y="2048"/>
-  <object name="player_data/player_data" gid="287" x="0" y="1408"/>
-  <object name="tile_trigger/challenge_arith" gid="292" x="2752" y="1344"/>
-  <object name="tile_trigger/exit_level_start" gid="292" x="0" y="1536"/>
-  <object name="tile_trigger/exit_level_end" gid="292" x="3648" y="1344"/>
+ <objectgroup name="Object Layer 1" width="29" height="30">
+  <object name="characters/player/player_one" gid="286" x="0" y="960" width="64" height="64"/>
+  <object name="characters/npcs/myla/myla" gid="291" x="64" y="896" width="64" height="64"/>
+  <object name="sign/sign_one" gid="287" x="384" y="1472" width="64" height="64"/>
+  <object name="sign/sign_two" gid="287" x="832" y="960" width="64" height="64"/>
+  <object name="characters/npcs/generic/helper_one" gid="291" x="1024" y="960" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_one" gid="301" x="896" y="704" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_three" gid="301" x="1152" y="896" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_two" gid="301" x="896" y="1152" width="64" height="64"/>
+  <object name="key/key1" gid="287" x="1024" y="256"/>
+  <object name="key/key2" gid="287" x="1024" y="1600"/>
+  <object name="player_data/player_data" gid="287" x="0" y="832"/>
+  <object name="tile_trigger/challenge_arith" gid="292" x="832" y="896"/>
+  <object name="tile_trigger/exit_level_start" gid="292" x="0" y="960"/>
+  <object name="tile_trigger/exit_level_end" gid="292" x="1792" y="1152"/>
  </objectgroup>
+ <layer name="SpecialLayer" width="29" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlmsKgEAIhJfO1f3P1d+QcbRVB4IVoofLfD42a61/2H3hQ8FD/Gke8k8wK/4q0+pP1taep3vJ7qdMVU/EZX2t6Hqa6N3sYlrtKIYvfG+OMW1Ph+mhtd2WzaWDkfHv1IE9y3J34/VyYOsZ08vdXkf7bbePHfuvi62cuarvypsZxaJiRr4qU/k/xHSna6uc24ir2LfH8vYAtP8lyQ==
+  </data>
+ </layer>
 </map>

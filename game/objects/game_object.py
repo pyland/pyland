@@ -11,7 +11,6 @@ class GameObject:
     In cases where it is appropriate, it calls the entity methods directly, but other times
     makes their behaviour a bit nicer as well.
     """
-
     __name = ""
     __visibility = False
     __entity = None  #An instance of Entity.hpp/cpp
@@ -44,70 +43,197 @@ class GameObject:
         self.__engine = engine
 
     def get_engine(self):
+        """ This method returns the engine the GameObject is created in 
+        Returns
+        -------
+        engine
+            Engine that holds the gameobject
+        """
         return self.__engine
 
-    def callback_test(self, callback):
-        """ This method can be used to test a callback, all it does is take a callback and put it onto the event queue to be run by the game the next frame """
+    def callback_test(self, callback): #TODO DELETE THIS
+        """ This method can be used to test a callback, all it does is take a callback and put it onto the event queue to be run by the game the next frame 
+
+        Parameters
+        ----------
+        callback : func 
+
+        """
         self.__entity.callback_test(callback)
         return
 
     def wait(self, time, callback):
-        """ Calls the callback after a certain amount of time """
+        """ Calls the callback after a certain amount of time 
+
+        Parameters
+        ----------
+        time : float
+            The amount of time in seconds that the event-queue must wait for before running the callback
+        callback : func
+            The callback we want to get run after "time" seconds
+        """
         self.__entity.wait(time, callback)
         return
 
     def get_name(self):
+        """ Returns the name of the game object specified in tiled 
+
+        Returns
+        -------
+        str
+            Name of the object
+
+        """
         return self.__entity.get_name()
 
     def get_file_location(self):
+        """
+        Returns
+        -------
+        str
+            String of the file path to the game object
+        """
         return self.__entity.get_location()
 
-    def set_sprite(self, sprite_location, callback = lambda : None): #all sprites are relative to sprites/sprite_location/0.png , when objects are animated the engine automatically cycles through the numbered sprites in the folder
+    def set_sprite(self, sprite_location, callback = lambda : None):
+        """ Sets the sprite of the object to the image located at sprite_location relative sprites/sprite_location/0.png.
+
+        When objects are animated the engine automatically cycles through the numbered sprites in the folder.
+
+        Parameters
+        ----------
+        sprite_location : str
+            String of the file path to the png file of the sprite we want to set the object to. The sprite_location is relative to sprites/sprite_location/0.png
+        callback : func, optional
+            Places the callback onto the engine
+
+        """
         self.__entity.set_sprite(sprite_location, callback)
         return
 
     def get_sprite(self):
+        """
+
+        Returns
+        -------
+        str
+            String of the filepath name of the sprite png that the object is current set to
+        """
         return self.__entity.get_sprite()
 
     def is_solid(self):
+        """
+        Returns
+        -------
+        bool
+            A boolean value regarding if the object is solid or not (if a new object can walk on/through our object)
+        """
         return self.__entity.is_solid()
 
     def set_solidity(self, solidity, callback = lambda : None):
+        """ Sets the solidity to a boolean value indicating if objects can walk on/through the current position of the object
+
+        Parameters
+        ----------
+        solidity : bool
+            A boolean value indicating if the object is solid or not
+        callback : func, optional
+            Places the callback onto the engine event-queue
+
+        """
         self.__entity.set_solidity(solidity, callback)
         return
 
     def is_visible(self):
+        """
+        Returns 
+        -------
+        bool
+            A boolean value regarding if the object is visible or not.
+        """
         return self.__visibility
 
     def set_visible(self, visibility, callback = lambda : None):
+        """ Sets the visibility of the object to True/False. If the object's visibility is set to false then the object will be transparent.
+
+        Parameters
+        ----------
+        visibility : bool
+            A boolean value that the object's visibility is set to
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__visibility = visibility
         self.__entity.set_visible(visibility, callback)
         return
 
     #TODO: Make it so that the callbacks of the following methods get passed into c++ so they are put on the event queue as opposed to being run from Python!
     def start_animating(self, speed = 0.06, loop = True, forward = True, callback = lambda: None):
-        #the api will start animating the sprite by cycling through the images in the given sprite_location folder!
+        """ If the object can be animated (looping through static png pictures), the object will start animating
+
+        The api will start animating the sprite by cycling through the images in the given sprite_location folder!
+
+        Parameters
+        ----------
+        speed : float, optional
+            Time in between the frames during the animation
+        loop : bool, optional
+            A boolean value indicating if the animation should reset after the last frame is shown. (Reset back to 0.png)
+        forward : bool, optional
+            A boolean value indicating if the animation frames should be numerical order (0.png -> 1.png etc) vs (1.png -> 0.png)
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.__entity.start_animating(speed, loop, forward, callback)
         return
 
     def stop_animating(self, callback = lambda: None):
-        """ Stops animating the object, reseting it back to the first frame. """
+        """ Stops animating the object, reseting it back to the first frame. 
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.pause_animating()
         self.__entity.set_animation_frame(0) #set animation back to first frame
         callback()
         return
 
     def set_animation_frame(self, frame_number, callback = lambda: None):
+        """ Sets the current animation frame to the specified frame_number
+
+        Parameters
+        ----------
+        frame_number : int
+            The frame_number we want to set the current animation frame to. The animation will continue from this frame. frame_number should be a valid number (frame_number.png must be valid)
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__entity.set_animation_frame(frame_number)
         self.get_engine().add_event(callback)
 
     def pause_animating(self, callback = lambda: None):
-        """ Pauses the animation of the object, displaying the current frame it's on. """
+        """ Pauses the animation of the object, displaying the current frame it's on. 
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.__entity.pause_animating()
         callback()
         return
 
     def get_number_of_animation_frames(self):
+        """
+        Returns
+        -------
+        int
+            Returns the number of event frames the object has
+        """
         return self.__entity.get_number_of_animation_frames()
 
     def focus(self, callback = lambda: None):
@@ -116,13 +242,22 @@ class GameObject:
         If the object moves, then the camera follows it as well. This is the case until
         the focus of the camera gets changed to another object or the level is reloaded/changed,
         snaps instantly
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
         """
         self.__entity.focus()
         callback()
         return
 
     def is_focus(self):
-        """ Return if the object is being focused on by the camera
+        """ 
+        Returns
+        -------
+        bool
+            A boolean value regarding if the object is being focused on by the camera
         """
 
         return self.__entity.is_focus()
@@ -158,9 +293,9 @@ class GameObject:
         ----------
         move_amount : 2 tuple of int
             The amount you wish to move the object by
-        time : double
+        time : double, optional
             The amount of time the movent should take
-        callback : function
+        callback : function, optional
             The callback that you wish to run once the movement is complete
         """
         x, y = move_amount
@@ -173,9 +308,9 @@ class GameObject:
         ----------
         target_position : 2 tuple of int
             The position you wish to move the object to
-        time : double
+        time : double, optional
             The amount of time the movent should take
-        callback : function
+        callback : function, optional
             The callback that you wish to run once the movement is complete
 
         """
@@ -187,7 +322,12 @@ class GameObject:
     def move_north(self, callback = lambda: None):
         """ Smoothly slides this object north by one tile.
 
-        The callback is put on the event queue when the operation is complete.
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+
         """
         self.__entity.move_north(callback)
         return
@@ -195,7 +335,10 @@ class GameObject:
     def move_east(self, callback = lambda: None):
         """ Smoothly slides this object east by one tile.
 
-        The callback is put on the event queue when the operation is complete.
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
         """
         self.__entity.move_east(callback)
         return
@@ -203,7 +346,10 @@ class GameObject:
     def move_south(self, callback = lambda: None):
         """ Smoothly slides this object south by one tile.
 
-        The callback is put on the event queue when the operation is complete.
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
         """
         self.__entity.move_south(callback)
         return
@@ -211,7 +357,10 @@ class GameObject:
     def move_west(self, callback = lambda: None):
         """ Smoothly slides this object west by one tile.
 
-        The callback is put on the event queue when the operation is complete
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
         """
         self.__entity.move_west(callback)
         return
@@ -226,15 +375,27 @@ class GameObject:
         """
         return self.__entity.is_moving()
 
-    def destroy(self, callback):
+    def destroy(self, callback = lambda : None):
         """ Destroys the object (removes the instance from the map, and cleans up all information associated with it).
-        callback gets run once the operation is complete.
+        
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
         """
         #TODO: implement stub
         return
 
     def get_id(self):
-        """ Return the entity id of the object, used for certain back-end features (such as retrieving objects at any given position """
+        """ Return the entity id of the object.
+
+        This is used for certain back-end features (such as retrieving objects at any given position) 
+
+        Returns
+        -------
+        int
+            entity id of the object
+        """
         return self.__entity.get_id()
 
 
