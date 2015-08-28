@@ -4,72 +4,52 @@ import os
 import sys
 from random import randint
 
-"""
-In Python comments,
-could define some standard which the C++ code can use to determine things about it handles
-the python code
-"""
-
 #Custom modules
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/../../script_running')
 import scriptrunner
 from script_state_container import ScriptStateContainer
-
-"""
-eg. We could be able to write:
-"""
-#__ import_object  game_object/GameObject
-"""
-The game code, at runtime, could recognise the "#__"
-and replace it with:
-"""
-import sys
 sys.path.insert(1, os.path.dirname(os.path.realpath(__file__)) + '/..')
 from game_object import GameObject
-"""
-As the GameObject is in the base objects folder.
-"""
-
-
-""" This class is the parent of all characters in the game
-It provides a lot of useful prebuilt functionality, mainly to do with movement animation.
-
-Lets say you have an object called 'x' in objects/x, by default a sprite will be looked for in objects/x/sprites/main.png, if none is found,
-the object will be invisible in game.
-
-However, a character MUST have at least the following sprites in the specified (relative to objects/x/sprites) locations.
-
-If the sprite location is changed, the following relative paths to that location must still be valid sprites.
-main/north/1.png (state/direction_facing/animation_frame.png)
-main/north/2.png
-main/north/3.png
-main/north/4.png
-
-main/east/1.png
-main/east/2.png
-main/east/3.png
-main/east/4.png
-
-main/south/1.png
-main/south/2.png
-main/south/3.png
-main/south/4.png
-
-main/west/1.png
-main/west/2.png
-main/west/3.png
-main/west/4.png
-
-
-Here the first folder represents the state of the character. (All characters MUST have a "main" state)
-The second folder represents the direction they are facing.
-The filename represents the frames of animation of the character when they are moving. (The first frame is implicitly assumed to be used when they are still)
-
-This benifits of this class is that it provides very simple methods for movement + animation.
-However, it doesn't check if the tiles that are being moved to are empty or not. TODO: Talk about maybe changing this?
-"""
 
 class Character(GameObject, ScriptStateContainer):
+    """ This class is the parent of all characters in the game.
+    
+    It provides a lot of useful prebuilt functionality, mainly to do with movement animation.
+
+    Lets say you have an object called 'x' in objects/x, by default a sprite will be looked for in objects/x/sprites/main.png, if none is found,
+    the object will be invisible in game.
+
+    However, a character MUST have at least the following sprites in the specified (relative to objects/x/sprites) locations.
+
+    If the sprite location is changed, the following relative paths to that location must still be valid sprites.
+    main/north/1.png (state/direction_facing/animation_frame.png)
+    main/north/2.png
+    main/north/3.png
+    main/north/4.png
+
+    main/east/1.png
+    main/east/2.png
+    main/east/3.png
+    main/east/4.png
+
+    main/south/1.png
+    main/south/2.png
+    main/south/3.png
+    main/south/4.png
+
+    main/west/1.png
+    main/west/2.png
+    main/west/3.png
+    main/west/4.png
+
+
+    Here the first folder represents the state of the character. (All characters MUST have a "main" state)
+    The second folder represents the direction they are facing.
+    The filename represents the frames of animation of the character when they are moving. (The first frame is implicitly assumed to be used when they are still)
+
+    This benifits of this class is that it provides very simple methods for movement + animation.
+    However, it doesn't check if the tiles that are being moved to are empty or not. TODO: Talk about maybe changing this?
+    """
 
     __character_name = ""
 
@@ -94,10 +74,19 @@ class Character(GameObject, ScriptStateContainer):
     """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
 
     def run_script(self, script_to_run = -1, parse_error = True, callback = lambda: None):
-        """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
+        """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player.
 
         Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
-        The callback is run after the script has finished running.
+
+
+        Parameters
+        ----------
+        script_to_run : int, optional
+            A flag that indicates which script to run. -1 indicates the current script
+        parse_error : bool, optional
+            #TODOFILL THIS
+        callback : func, optional
+            Places the callback onto the engine event-queue
         """
 
         engine = self.get_engine()
@@ -149,48 +138,120 @@ class Character(GameObject, ScriptStateContainer):
 
     #override ScriptStateContainer
     def get_script_name(self):
+        """ This is used by the runscript to identify each character thread as unique
+        Returns
+        -------
+        str
+            String of the character name
+        """
         return self.get_character_name()
 
     #override ScriptStateContainer---
     def set_script_name(self):
+        """ Sets the character name to the name of the object 
+        """
         self.set_character_name(self)
 
     def get_character_name(self):
+        """
+        Returns
+        -------
+        str
+            A capitalized string of the character's name
+        """
         return self.__character_name.capitalize()
 
     def set_character_name(self, character_name):
+        """ Sets the character name to the inputted character_name string
+
+        Parameters
+        ----------
+        character_name : str
+            A string indicating the new name of the character
+        """
         self.__character_name = character_name
 
     def set_busy(self, busy, callback = lambda: None):
+        """ Sets the play to busy or un-busy. 
+
+        If the player is busy then he cannot move or run scripts.
+
+        Parameters
+        ----------
+        busy : bool
+            A boolean value indicating if the player should be set to busy
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.__busy = busy
         self.halt_script() #Halt the player script
         self.get_engine().add_event(callback)
 
     def is_busy(self):
+        """
+        Returns
+        -------
+        bool
+            A boolean value indicating if the character is busy or not 
+        """
         return self.__busy
 
-    """ Change the sprite folder to "north" """
     def face_north(self, callback = lambda: None):
+        """ Change the sprite folder to "north" 
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__face("north", callback)
         return
 
-    """ Change the sprite folder to "east" """
     def face_east(self, callback = lambda: None):
+        """ Change the sprite folder to "east" 
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.__face("east", callback)
         return
 
-    """ Change the sprite folder to "south" """
     def face_south(self, callback = lambda: None):
+        """ Change the sprite folder to "south" 
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.__face("south", callback)
         return
 
-    """ Change the sprite folder to "west" """
     def face_west(self, callback = lambda: None):
+        """ Change the sprite folder to "west" 
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__face("west", callback)
         return
 
-    """ Change the sprite to face towards the given object """
     def turn_to_face(self, object_towards, callback = lambda: None):
+        """ Change the sprite to face towards the given object" 
+
+        Parameters
+        ----------
+        object_towards : GameObject
+            The GameObject that we want the current object to face towards.
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         xP, yP = object_towards.get_position()
         xS, yS = self.get_position()
         xDiff = xP - xS
@@ -209,6 +270,14 @@ class Character(GameObject, ScriptStateContainer):
         return
 
     def __turn_left(self, callback = lambda: None):
+        """ Makes the character turn left
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         if self.is_facing_east():
             self.face_north(callback)
         elif self.is_facing_north():
@@ -219,6 +288,13 @@ class Character(GameObject, ScriptStateContainer):
             self.face_east(callback)
 
     def __turn_right(self, callback = lambda: None):
+        """ Makes the character turn right
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         if self.is_facing_east():
             self.face_south(callback)
         elif self.is_facing_north():
@@ -229,6 +305,12 @@ class Character(GameObject, ScriptStateContainer):
             self.face_west(callback)
 
     def __can_move(self):
+        """
+        Returns
+        -------
+        bool
+            A boolean value indicating if the tile in front of the character can be moved to
+        """
         engine = self.get_engine()
         x,y = self.get_position()
         try:
@@ -245,6 +327,14 @@ class Character(GameObject, ScriptStateContainer):
 
 
     def __move(self, callback = lambda: None):
+        """ If possible, moves the character forward one space
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         if self.is_facing_east():
             self.move_east(callback)
         elif self.is_facing_north():
@@ -253,10 +343,21 @@ class Character(GameObject, ScriptStateContainer):
             self.move_west(callback)
         elif self.is_facing_south():
             self.move_south(callback)
-    """ Get the character to "face" the direction specified
-    simply changes the last part of the sprite folder as relevant
-    """
+    
     def __face(self, direction, callback):
+
+        """ Get the character to "face" the direction specified
+        
+        This method simply changes the last part of the sprite folder as relevant
+
+        Parameters
+        ----------
+        direction : str
+            A direction string. This should be in ["north", "east", "south", "west"]
+        callback : func, optional
+            Places the callback onto the engine event-queue
+
+        """
         engine = self.get_engine()
         sprite_location = self.get_sprite()
         sprite_location = sprite_location[0 : sprite_location.rfind("/") + 1] #grab all the characters before the last "/" from the string (as sprite_location will be something like main/north)
@@ -264,85 +365,177 @@ class Character(GameObject, ScriptStateContainer):
         engine.add_event(callback)
         return
 
-    """ Says if the character is facing north """
     def is_facing_north(self):
+        """
+        Returns
+        -------
+        bool
+            A boolean value indicating if the player is facing north.
+        """
+
         return self.__is_facing("north")
 
-    """ Says if the character is facing east """
     def is_facing_east(self):
+        """
+        Returns
+        -------
+        bool
+            A boolean value indicating if the player is facing east.
+        """
         return self.__is_facing("east")
 
-    """ Says if the character is facing south """
     def is_facing_south(self):
+        """
+        Returns
+        -------
+        bool
+            A boolean value indicating if the player is facing south.
+        """
         return self.__is_facing("south")
 
-    """ Says if the character is facing west """
     def is_facing_west(self):
+        """
+        Returns
+        -------
+        bool
+            A boolean value indicating if the player is facing west.
+        """
         return self.__is_facing("west")
 
-    """ Checks to see if the character is facing in the direction given
-    direction -- a string specifing the direction, either 'north', 'east', 'south' or 'west'
-    """
+    
     def __is_facing(self, direction):
+        """ Checks to see if the character is facing in the direction given
+        direction -- a string specifing the direction, either 'north', 'east', 'south' or 'west'
+
+        Parameters
+        ----------
+        direction : str
+            A directional string ("north", "east", "south", "west") that we want to check if the character is facing
+
+        Returns
+        -------
+        bool
+            A boolean value indicating if the player is facing in the direction specified.
+        """
         sprite_location = self.get_sprite()  # The direction is related to where the sprite is stored, so extract the information from there
         sprite_location = sprite_location[sprite_location.rfind("/") + 1 : ] # Slice all the characters before the last "/" from the string
         return (sprite_location == direction)
 
-    """ Moves the character in the given direction by one tile and animates them.
+    def __move_x(self, face_x, parent_move_x, callback = lambda: None):
+         """ Moves the character in the given direction by one tile and animates them.
 
-    They will only move and animate if they are not busy.
-    face_x -- the function to make the character face in the correct direction
-    parent_move_x -- the parent move function, calls the engine api but doesn't start the animation
-    callback -- the function that you would like to call after the movement is complete
-    """
-    def __move_x(self, face_x, parent_move_x, callback):
+        They will only move and animate if they are not busy.
+
+        Parameters
+        ----------
+        face_x : func
+            The function to make the character face in the correct direction
+        parent_move_x : func
+            The parent move function, calls the engine api but doesn't start the animation
+        callback : func, optional 
+            Places the callback onto the engine event-queue
+        """
         if not(self.is_busy()):
             face_x()
             self.start_animating()
             parent_move_x(lambda: self.__stop_animating_func(callback))
         return
 
-    def __stop_animating_func(self, callback):
-        self.get_engine().add_event(callback)
+    def __stop_animating_func(self, callback = lambda : None):
+        """ After 0.03 the character stops animating.
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.wait(0.03, self.__check_stop_animating)
+        self.get_engine().add_event(callback)
+
 
     def __check_stop_animating(self):
+        """
+        Returns
+        -------
+        bool
+            A boolean value indicating if the character is being animated or not
+        """
         if not self.is_moving():
             self.stop_animating()
 
     def move_on_spot(self, callback = lambda: None):
+        """ Makes the character walk in place. Runs the animation but the position of the character does not changes
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+
+        """
         self.start_animating()
         self.move_by((0, 0), time = 0.3, callback = lambda: self.__stop_animating_func(callback))
 
-    """ Moves the character North by one tile and makes them face in that direction
-    callback -- the function that you would like to call after the movement is complete
-    """
+    
     def move_north(self, callback = lambda: None):
+        """ Moves the character north by one tile and makes them face in that direction
+        
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.__move_x(self.face_north, super().move_north, callback)
         return
 
-    """ Move character in direction by one tile.
-    Overides general object implementation
-    """
     def move_east(self, callback = lambda: None):
+        """ Moves the character east by one tile and makes them face in that direction.
+
+        Overides general object implementation
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__move_x(self.face_east, super().move_east, callback)
         return
 
-    """ Move character in direction by one tile.
-    Overides general object implementation
-    """
     def move_south(self, callback = lambda: None):
+        """ Moves the character south by one tile and makes them face in that direction.
+
+        Overides general object implementation
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__move_x(self.face_south, super().move_south, callback)
         return
 
-    """ Move character in direction by one tile.
-    Overides general object implementation
-    """
     def move_west(self, callback = lambda: None):
+        """ Moves the character west by one tile and makes them face in that direction.
+
+        Overides general object implementation
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.__move_x(self.face_west, super().move_west, callback)
         return
 
     def change_state(self, state):
+        """ Changes the state of the character.
+
+        A character can have multiple "states". e.g. a crocodile can have a main state and a swim state. If a crocodile is in the swim state, then the animation frames to be used should be the swimming frames. 
+
+        Parameters
+        ----------
+        state : str,
+            A string indicating the state that the character should be changed to. e.g. "swim", "main".
+        """
+
         sprite_location = self.get_sprite()
         sprite_location = sprite_location[sprite_location.rfind("/"): ]
         self.set_sprite(state + sprite_location)
@@ -350,16 +543,44 @@ class Character(GameObject, ScriptStateContainer):
 
 
     def follow(self, game_object, callback = lambda: None):
+        """ The current character follows the game_object specified.
+
+        The follow algorithm is implemented in __follow_loop. 
+
+        Parameters
+        ----------
+        game_objects : GameObject
+            The GameObject that the character will follow
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__follow_loop(game_object)
         self.get_engine().add_event(callback)
 
-    #Stop following whichever object the character was set to follow
+
     def stop_follow(self, callback = lambda: None):
+        """ The character will stop following all GameObject it has been set to follow
+
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__finish_following = True
         self.get_engine().add_event(callback)
 
     def __follow_loop(self, game_object):
-        """ Basic AI for the argument character to follow the player, isn't solid when still so that player doesn't get stuck TODO: find a better compromise!!! """
+        """ Basic AI for the argument character to follow a GameObject.
+
+        The characters isn't solid when still so that player doesn't get stuck 
+        TODO: find a better compromise!
+
+        Parameters
+        ----------
+        game_object : GameObject,
+            The GameObject our character will follow.
+        """
+
         if(self.__finish_following):
             self.__finish_following = False
             return
@@ -436,23 +657,45 @@ class Character(GameObject, ScriptStateContainer):
             else:
                 self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
 
-    #Start the character turning randomly on the spot.
-    #If frequency is 3, then the player with repeatedly face in different directions.
-    #The greater frequency is, the less often the player will turn
-    def start_turning(self, time = 0.5, frequency = 8, callback = lambda: None):
+    
+    def start_turning(self, time = 0.5, frequency = 8, callback = lambda: None): #Change frquency to period/sample
+        """ Start the character turning randomly on the spot.
+        
+        The greater frequency is, the less often the player will turn
+        """
+
         self.__finish_turning = False
         if frequency < 3:
             self.__turning(time, 3, callback = callback)
         else:
             self.__turning(time, frequency, callback = callback)
 
-    #Stop the character turning on the spot
     def stop_turning(self, callback = lambda: None):
+        """ Stops the character turning on the spot
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         self.__finish_turning = True
         self.get_engine().add_event(callback)
 
-    #Recusively turn the character around
-    def __turning(self, time = 0.5, frequency = 8, callback = lambda: None):
+    def __turning(self, time = 0.5, frequency = 8, callback = lambda: None): #Change frequencey to period/sample
+        """
+        This method recursively turns the character around
+
+        Parameters
+        ----------
+        time : double, optional
+            The time in seconds in between turns
+        frequency : int, optional  
+                
+        callback : func, optional
+            Places the callback onto the engine event-queue
+
+        """
         direction = randint(0,frequency)
         if (self.__finish_turning):
             self.__finish_turning = False
@@ -469,6 +712,13 @@ class Character(GameObject, ScriptStateContainer):
         self.get_engine().add_event(callback)
 
     def get_flag_message(self):
+        """
+        Returns
+        -------
+        str
+            String of the a flag at the position of the player.
+        """
+
         message = "There is no flag here!"
         engine = self.get_engine()
         position = self.get_position()
@@ -479,6 +729,11 @@ class Character(GameObject, ScriptStateContainer):
         return message
 
     def __yell(self):
+        """ Loops through all the GameObjects and if they have a yelled_at() function runs it.
+
+        This is used for when you yell at crocodiles/anything else that can get yelled at
+        """
+
         engine = self.get_engine()
         objects = engine.get_all_objects()
         for current in objects:
@@ -486,21 +741,56 @@ class Character(GameObject, ScriptStateContainer):
                 current.yelled_at(self)
 
     def set_cuts_left(self, cuts_left):
+        """ Sets the number of cuts the player has to cuts_left
+
+        Parameters
+        ----------
+        cuts_left : int
+            An integer indicating how many cuts the player has
+        """
         self.__cuts_left = cuts_left
 
     def get_cuts_left(self):
+        """
+        Returns
+        -------
+        int 
+            Number of cuts the player has left
+        """
         return self.__cuts_left
 
-    def add_keys(self, num):
+    def add_keys(self, num): #Move to level 
+        """ Increments the number of keys the player has by num.
+
+        This is used the the "math" challenge where we have to collect two keys
+
+        Parameters
+        ----------
+        num : int
+            Integer we want to increment the number of keys the player has by
+        """
         self.__keys += num
 
     def get_keys(self):
+        """
+        Returns
+        -------
+        int
+            Number of keys the player current has 
+        """
         return self.__keys
 
-    def give_keys(self):
-        pass
-
     def __cut(self, callback = lambda: None):
+        """ Tries to cut the object in front of the player. This is done by running the on_cut method if the object in front of the character has one
+
+        First checks if the character has enough cuts left, if not it prints an error. Otherwise it runs the on_cut method
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+
+        """
         engine = self.get_engine()
 
         if (self.__cuts_left == 0):
@@ -552,15 +842,42 @@ class Character(GameObject, ScriptStateContainer):
         return made_cut
 
     def __get_cuts_left(self):
+        """
+        Returns
+        -------
+        int
+            Number of cuts the character has left
+        """
         return self.__cuts_left
 
     def dig(self, callback = lambda: None):
+        """ The player tries to dig at a location.
+
+        This will usually be overridden in a level script if needed.
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
         self.get_engine().print_terminal("You can't dig here!")
         self.get_engine().add_event(callback)
 
+
     def follow_path(self, path, repeat = False, is_paused = lambda: False):
-        """ The character follows the path given, a string a comma-seperated directions, eg. "north, east, east, south, west, north"
+        """ The character follows the path given, a string with comma-seperated directions, eg. "north, east, east, south, west, north"
+
         If repeat is set to True, the most recent direction completed will be added to the end of the string so that whole thing becomes a cycle
+
+        Parameters
+        ----------
+        path : str
+            A string with comma-seperated directions indicating the path of the object to follow
+        repeat : bool, optional
+            A boolean indicating if the path should be repeated after completion
+        is_paused : void -> bool, optional
+            A function which returns a boolean, checked on every call follow_path, if it returns True, the character will stop following the path until it returns False again
+
         """
         if(path.strip() == ""): #if path is empty terminate
             return
