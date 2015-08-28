@@ -1,5 +1,6 @@
 {
     "player_saves": {
+<<<<<<< HEAD
         "YourName": {
             "current_map": "/world_1/level_1/player_house",
             "previous_exit": "/world_1/intro",
@@ -65,6 +66,26 @@
             "py_scripter_enabled": false,
             "coins": 0,
             "py_scripter_tabs": 1
+=======
+        "Mr Batman": {
+            "previous_exit": "/world_1/level_1/rossumberg/top",
+            "current_map": "/world_1/level_1/road_one",
+            "py_scripter_tabs": 1,
+            "level_data": {
+                "world_1": {
+                    "level_2": {
+                        "starting_map": "start"
+                    },
+                    "level_1": {
+                        "heidi_state": 2,
+                        "starting_map": "player_house"
+                    }
+                }
+            },
+            "py_scripter_enabled": false,
+            "totems": {},
+            "coins": 0
+>>>>>>> 7e10e5748b043c3a99d7b8bdd2319d3426b52129
         }
     },
     "settings": {
