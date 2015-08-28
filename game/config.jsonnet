@@ -29,8 +29,8 @@
 		//"level_location" : "/world_1/level_7/town_hall",
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
-		"level_location" : "/world_2/level_1/main",
-		//"level_location" : "/world_8/monkey_escape",
+		//"level_location" : "/world_2/level_1/main",
+		"level_location" : "/find_treasure",
 
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
