@@ -24,6 +24,9 @@
 # Emacs auto-generated files
 \#*\#
 
+#Vim auto-generated files
+*.swp
+
 #save files
 *.save
 

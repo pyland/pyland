@@ -51,16 +51,16 @@
   <object name="vine/vine13" gid="196" x="1024" y="2624"/>
   <object name="vine/vine14" gid="196" x="1024" y="1728"/>
   <object name="vine/vine15" gid="196" x="1024" y="1600"/>
-  <object name="characters/enemies/crocodile/croc_face_vine_left" gid="296" x="1024" y="832"/>
-  <object name="characters/enemies/crocodile/croc_face_vine_right" gid="296" x="768" y="832"/>
-  <object name="characters/enemies/crocodile/croc_bottom_0" gid="296" x="128" y="1792"/>
-  <object name="characters/enemies/crocodile/croc_bottom_1" gid="296" x="128" y="1728"/>
-  <object name="characters/enemies/crocodile/croc_bottom_2" gid="296" x="128" y="1664"/>
-  <object name="characters/enemies/crocodile/croc_bottom_3" gid="296" x="128" y="1600"/>
-  <object name="characters/enemies/crocodile/croc_bottom_4" gid="296" x="128" y="1856"/>
-  <object name="characters/enemies/crocodile/croc_bottom_5" gid="296" x="320" y="1984"/>
-  <object name="characters/enemies/crocodile/croc_bottom_6" gid="296" x="384" y="2240"/>
-  <object name="characters/enemies/crocodile/croc_bottom_7" gid="296" x="320" y="1536"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_face_vine_left" gid="296" x="1024" y="832"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_face_vine_right" gid="296" x="768" y="832"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_0" gid="296" x="128" y="1792"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_1" gid="296" x="128" y="1728"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_2" gid="296" x="128" y="1664"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_3" gid="296" x="128" y="1600"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_4" gid="296" x="128" y="1856"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_5" gid="296" x="320" y="1984"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_6" gid="296" x="384" y="2240"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_7" gid="296" x="320" y="1536"/>
   <object name="tile_trigger/myla_explain_cut" gid="292" x="512" y="256"/>
   <object name="tile_trigger/myla_explain_crocodiles" gid="292" x="1216" y="704"/>
   <object name="tile_trigger/myla_explain_basic_move" gid="292" x="448" y="704"/>
@@ -68,11 +68,19 @@
   <object name="tile_trigger/myla_tells_loop_modify" gid="292" x="1472" y="1216"/>
   <object name="tile_trigger/myla_give_vine_loop" gid="292" x="1024" y="3008"/>
   <object name="tile_trigger/myla_notice_bog_water" gid="292" x="640" y="1408"/>
-  <object name="characters/enemies/crocodile/croc_guard_totem" gid="296" x="1216" y="896"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_guard_totem" gid="296" x="1216" y="896"/>
   <object name="whetstone/whetstone1" gid="292" x="1344" y="320"/>
   <object name="tile_trigger/myla_explain_whetstone" gid="292" x="960" y="384"/>
   <object name="vine/vine1" gid="196" x="640" y="448"/>
   <object name="whetstone/whetstone2" gid="292" x="1280" y="3072"/>
   <object name="tile_trigger/exit_to_world" gid="292" x="768" y="3200"/>
+  <object name="tile_trigger/trigger_croc_0" gid="292" x="1216" y="832"/>
+  <object name="tile_trigger/trigger_croc_1" gid="292" x="1024" y="768"/>
+  <object name="tile_trigger/trigger_croc_2" gid="292" x="768" y="768"/>
+  <object name="tile_trigger/trigger_croc_3" gid="292" x="64" y="1600"/>
+  <object name="tile_trigger/trigger_croc_4" gid="292" x="64" y="1664"/>
+  <object name="tile_trigger/trigger_croc_5" gid="292" x="64" y="1728"/>
+  <object name="tile_trigger/trigger_croc_6" gid="292" x="64" y="1792"/>
+  <object name="tile_trigger/trigger_croc_7" gid="292" x="64" y="1856"/>
  </objectgroup>
 </map>

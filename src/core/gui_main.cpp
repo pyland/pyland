@@ -26,7 +26,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
 
 {
     LOG(INFO) << "Constructing GUIMain...";
-    
+
     config_gui();
 
     Engine::set_gui(this);
@@ -549,21 +549,22 @@ void GUIMain::proceed_notification_bar(){
 
 void GUIMain::proceed_notification_bar_with_options(){
     for(unsigned int i=0; i<=1; i++){
-        if ((option_selected == i)){
+        if ((option_selected == i) && (notification_bar_with_options_arrow_select_enable)){
             option_buttons[i]->call_on_click();
         }
     }
 }
 
 void GUIMain::toggle_selection_notification_bar_with_options(){
+    notification_bar_with_options_arrow_select_enable = true;
     option_selected++;
     if (option_selected > 1) option_selected = 0;
     for(unsigned int i=0; i<=1; i++){
         if (i == option_selected){
-            option_buttons[i]->set_text_colour(255, 255, 255, 255);
+            option_buttons[i]->set_text_colour(0, 0, 0, 255);
         }
         else{
-            option_buttons[i]->set_text_colour(255, 255, 255, 0);
+            option_buttons[i]->set_text_colour(150, 150, 200, 240);
         }
     }
 }
@@ -609,6 +610,7 @@ void GUIMain::close_notification_bar(){
             option_buttons.push_back(option_button);
             options_box->add(option_buttons[i]);
         }
+        notification_bar_with_options_arrow_select_enable = false;
     }
     else{
         notification_bar->clear_text();
@@ -899,12 +901,12 @@ void GUIMain::update_selected()
     {
         if (cur_button_index == i)
         {
-            buttons[i]->set_text_colour(255, 255, 255, 255);
+            buttons[i]->set_text_colour(0, 0, 0, 255);
             refresh_gui();
         }
         else
         {
-            buttons[i]->set_text_colour(255, 255, 255, 0);
+            buttons[i]->set_text_colour(150, 150, 200, 240);
             refresh_gui();
         }
     }

@@ -11,7 +11,7 @@ c1 = (210, 210, 210)
 c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)
 engine.play_music("heroic") #Menus have herioc music always
-
+engine.show_py_scripter()
 
 def load_save(save_name):
     save_data = engine.get_player_data(save_name)

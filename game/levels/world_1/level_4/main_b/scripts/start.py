@@ -1,10 +1,13 @@
+#commence save-data set-up
+world_name = "world_1"
+level_name = "level_4"
+map_name = "main_b"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
+#end save-data set-up
+
 player_one.focus()
-croc_0.change_state("swim")
-croc_1.change_state("swim")
-croc_2.change_state("swim")
-croc_3.change_state("swim")
-croc_4.change_state("swim_dark")
-croc_5.change_state("swim_lite")
 
 croc_0.face_east()
 croc_1.face_east()
@@ -75,7 +78,7 @@ def player_walked_on_ti():
             return obj.face_south(lambda: obj.lose(player_one))
     for obj in engine.get_objects_at((x,y-1)):
         if obj in croc:
-            return oambda.face_north(lambda: obj.lose(player_one))
+            return obj.face_north(lambda: obj.lose(player_one))
 
 for t in triggers:
     t.player_walked_on = lambda player_object: player_walked_on_ti()
@@ -117,4 +120,9 @@ def player_walked_on_end():
         lambda callback: myla.follow(player_one, callback = callback),
         ])
 
+def level_end(player_object):
+    player_data.complete_level_and_save()
+    player_data.save_and_exit("/world_1")
+
 trigger_end.player_walked_on = lambda player_object: player_walked_on_end()
+level_exit.player_walked_on = level_end

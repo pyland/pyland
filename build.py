@@ -62,7 +62,7 @@ os.chdir("src")
 print("Compiling using make...")
 print(compile_string)
 os.system(compile_string)
-print("Finished ompiling using make...")
+print("Finished compiling using make...")
 os.chdir("..")
 print("Copying jsonnet...")
 os.system("cp src/jsonnet/jsonnet game/jsonnet/jsonnet") #TODO: make it so that these are compiled in the right places directly

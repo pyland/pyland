@@ -38,16 +38,16 @@
  </layer>
  <layer name="trees" width="30" height="11">
   <data encoding="base64" compression="zlib">
-   eJzFlFsKACAIBPe2mfc/QPQRyBIqBToQvbQxiBSAUtsIYqJ4uzZozE5xnEI9u6N6rfv1rjZO4efc9thZRZd3Mxuc0uTtcB6y77eCTC0/9d7+Au/saJ5lAUPMFOk=
+   eJzFlMEKACEIROdv1/XQ/x+jw8IwWQkL+UAoS5+HyAG4RJNAkGt0f2CY4dwja3Xaogf34XN2r/yRW72n2mgOx74mOlPnLaq8g7fAaUXeCudH9v3eIDPLn3mjv2DX+7TP0gGTKxhf
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="30" height="11">
-  <object name="characters/enemies/crocodile/croc_5" gid="296" x="640" y="256"/>
-  <object name="characters/enemies/crocodile/croc_4" gid="296" x="1344" y="512"/>
-  <object name="characters/enemies/crocodile/croc_1" gid="296" x="512" y="448"/>
-  <object name="characters/enemies/crocodile/croc_0" gid="296" x="512" y="512"/>
-  <object name="characters/enemies/crocodile/croc_2" gid="296" x="512" y="384"/>
-  <object name="characters/enemies/crocodile/croc_3" gid="296" x="1600" y="320"/>
+  <object name="characters/enemies/crocodiles/white_crocodile/croc_5" gid="296" x="640" y="256"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_4" gid="296" x="1344" y="512"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="512" y="448"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="512" y="512"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_2" gid="296" x="512" y="384"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="1600" y="320"/>
   <object name="characters/player/player_one" gid="286" x="1792" y="704"/>
   <object name="tile_trigger/trigger_0" gid="571" x="128" y="320"/>
   <object name="tile_trigger/trigger_1" gid="571" x="128" y="384"/>
@@ -81,10 +81,12 @@
   <object name="tile_trigger/trigger_29" gid="571" x="1600" y="640"/>
   <object name="characters/npcs/myla/myla" gid="286" x="1856" y="704"/>
   <object name="tile_trigger/trigger_end" gid="292" x="576" y="192"/>
+  <object name="tile_trigger/level_exit" gid="292" x="576" y="64"/>
+  <object name="player_data/player_data" gid="287" x="0" y="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="30" height="11">
   <data encoding="base64" compression="zlib">
-   eJyzYWJgsEHDxAJS1WPTS64ZlOqj1O2U2GuLA4MALjliMboZA2UvcjiNBHuR0wQ17LVBo/H5l5r2YrOTkL0jAQAAFlErcg==
+   eJyzYWJgsCGAQYCQPKmAUjMo1Uep2ymx1xYHBgFccsRidDMGyl7kcBoJ9iKnCWrYa4NG4/MvNe3FZiche0cCAAAAxC2g
   </data>
  </layer>
 </map>

@@ -27,7 +27,7 @@
  </layer>
  <layer name="SpecialLayer" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJyTZ2RgkB/kGAZoaTY6oJc9yHYRYy81AbXtwGcGte1BpmllDy67aWX2YAC08h+90jWxdlDDfnrYQ2rZCGPTyh5KADXKSmrZQYmdtKwPqGE2NTEAJ6oewQ==
+   eJzN1EEKACAIRFE7ife/ZatAXIjk1xpwF/PAQF0i+vmcdHb7TDnWyrhkaCPqIC27q6xD7a7616Q74XT1vnCid6RFOtm9+RvS5VRC3ErKqJi3RsYjusnZ+AYgYQ==
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
@@ -38,5 +38,9 @@
   <object name="tile_trigger/exit_to_road_top" gid="197" x="1600" y="576"/>
   <object name="tile_trigger/exit_to_road_bottom" gid="197" x="1600" y="640"/>
   <object name="player_data/player_data" gid="192" x="0" y="64"/>
+  <object name="characters/npcs/generic/villager1" gid="196" x="1088" y="768"/>
+  <object name="characters/npcs/generic/villager2" gid="196" x="640" y="576"/>
+  <object name="characters/npcs/generic/villager3" gid="196" x="768" y="960"/>
+  <object name="characters/npcs/generic/villager4" gid="196" x="832" y="384"/>
  </objectgroup>
 </map>

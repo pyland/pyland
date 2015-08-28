@@ -51,7 +51,7 @@ def heidi_player_action(player_object):
 
 heidi.player_action = heidi_player_action
 
-route_sign.set_message("Rossumberg, where your mum is the village bicycle \n(east) merchant (east) bog")
+route_sign.set_message("Rossumberg, a peaceful town. \n(east) merchant (east) bog")
 
 """ LEVEL EVENTS """
 
@@ -128,5 +128,15 @@ player_one.focus()
 
 engine.play_music("calm")
 engine.set_ui_colours((200,255,200),(215,255,215)) #TODO: save these colours in the config.
+
+villager1.set_dialogue_list(["Oh " + engine.get_player_name() + ", not up to mischief again are you?"])
+villager2.set_dialogue_list(["These PyRunners that they make nowadays are great.", "If only I could write my own scripts instead of just running the ones they give me..."])
+villager3.set_dialogue_list(["I like turtles."])
+villager4.set_dialogue_list(["Ok."])
+
+villager1.rand_explore()
+villager2.rand_explore()
+villager3.rand_explore()
+villager4.rand_explore()
 
 #engine.disable_py_scripter()

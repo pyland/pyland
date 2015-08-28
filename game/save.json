@@ -2,6 +2,7 @@
     "settings": {
         "language": "english"
     },
+<<<<<<< HEAD
     "player_saves": {
         "???": {
             "previous_exit": "/world_1/level_2/bogs/myla_explain_cut_action",
@@ -29,3 +30,7 @@
         }
     }
 }
+=======
+    "player_saves": {}
+}
+>>>>>>> 23ef44d838ad2f1827fa5b17cdad4ebced055d1c
