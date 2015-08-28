@@ -5,7 +5,6 @@ class Vertex:
         self.neighbors = []
         self.parent = None 
         self.distance = float("inf")
-        self.m = 19
         self.visited = False
     def __lt__(self, other):
         return (self.distance - other.distance) < 0

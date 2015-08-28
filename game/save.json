@@ -1,6 +1,31 @@
 {
-    "player_saves": {},
     "settings": {
         "language": "english"
+    },
+    "player_saves": {
+        "???": {
+            "previous_exit": "/world_1/level_2/bogs/myla_explain_cut_action",
+            "py_scripter_tabs": 1,
+            "current_map": "/world_1/level_2/bogs",
+            "py_scripter_enabled": false,
+            "totems": {},
+            "has_unlocked_pyscripter": true,
+            "completed_levels": {
+                "/world_1/level_1": true
+            },
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "starting_map": "player_house",
+                        "heidi_state": 2
+                    },
+                    "level_2": {
+                        "starting_map": "start",
+                        "pyscripter_state": 1
+                    }
+                }
+            },
+            "coins": 0
+        }
     }
 }

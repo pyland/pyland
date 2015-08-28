@@ -141,6 +141,9 @@ class Character(GameObject, ScriptStateContainer):
             script_api["cut"] = scriptrunner.make_blocking(self.__cut)
             script_api["get_cuts_left"] = self.__get_cuts_left
 
+            script_api["dig"] = self.dig
+
+
             scriptrunner.start(script_api, script_to_run, self, engine, parse_error, callback)
         return
 
@@ -545,8 +548,8 @@ class Character(GameObject, ScriptStateContainer):
     def __get_cuts_left(self):
         return self.__cuts_left
 
-
-
-
+    def dig(self, callback = lambda: None):
+        self.get_engine().print_terminal("You can't dig here!")
+        self.get_engine().add_event(callback)
 
 
