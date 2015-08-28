@@ -311,7 +311,7 @@ def go_to_world(player_object):
     player_data.save_and_exit("/world_1")
 
 exit_to_world.player_walked_on = go_to_world
-
+exit_to_start.player_walked_on = go_to_start
 
 bog_sign.set_message("Welcome to the bogs! The home of stinky water...")
 
