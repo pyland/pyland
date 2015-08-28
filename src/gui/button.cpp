@@ -19,8 +19,6 @@ Button::Button(ButtonType _type) {
     button_text->set_y_offset(0.1f);
     set_text("");
 
-    get_text()->set_bloom_radius(4);
-
     add(button_text);
 
     picture_name = "gui/black-tile";
@@ -57,7 +55,6 @@ Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<voi
     button_text->set_x_offset(0.3f);
     button_text->set_y_offset(0.1f);
     button_text->set_text(_text);
-    get_text()->set_bloom_radius(4);
 
     add(button_text);
 }
@@ -90,7 +87,6 @@ void Button::set_text(std::string text) {
     std::shared_ptr<Text> new_text = std::make_shared<Text>(Engine::get_game_window(), buttonfont, true);
     new_text->set_text(text);
     button_text->set_text(new_text);
-    get_text()->set_bloom_radius(4);
 }
 std::shared_ptr<Text> Button::get_text() {
     return button_text->get_text();
@@ -99,7 +95,6 @@ std::shared_ptr<Text> Button::get_text() {
 void Button::set_text(std::shared_ptr<Text> _text) {
 
     button_text->set_text(_text);
-    get_text()->set_bloom_radius(4);
 }
 
 void Button::set_text_colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {

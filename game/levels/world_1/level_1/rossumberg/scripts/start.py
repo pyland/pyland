@@ -134,4 +134,9 @@ villager2.set_dialogue_list(["These PyRunners that they make nowadays are great.
 villager3.set_dialogue_list(["I like turtles."])
 villager4.set_dialogue_list(["Ok."])
 
+villager1.rand_explore()
+villager2.rand_explore()
+villager3.rand_explore()
+villager4.rand_explore()
+
 #engine.disable_py_scripter()

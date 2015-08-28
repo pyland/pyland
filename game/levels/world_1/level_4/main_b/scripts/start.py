@@ -1,3 +1,12 @@
+#commence save-data set-up
+world_name = "world_1"
+level_name = "level_4"
+map_name = "main_b"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
+#end save-data set-up
+
 player_one.focus()
 
 croc_0.face_east()
@@ -111,4 +120,9 @@ def player_walked_on_end():
         lambda callback: myla.follow(player_one, callback = callback),
         ])
 
+def level_end(player_object):
+    player_data.complete_level_and_save()
+    player_data.save_and_exit("/world_1")
+
 trigger_end.player_walked_on = lambda player_object: player_walked_on_end()
+level_exit.player_walked_on = level_end

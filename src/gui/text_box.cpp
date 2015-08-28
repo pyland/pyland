@@ -138,7 +138,6 @@ TextBox::TextBox(TextBoxType _type) {
     text->set_y_offset(0.0f);
 
     set_text("");
-    text->get_text()->set_bloom_radius(6);
     this->add(text);
 }
 
@@ -284,7 +283,6 @@ void TextBox::set_text(std::string _text) {
     std::shared_ptr<Text> new_text = std::make_shared<Text>(Engine::get_game_window(), font, true);
     new_text->set_text(_text);
     text->set_text(new_text);
-    get_text()->set_bloom_radius(6);
 }
 
 std::shared_ptr<Text> TextBox::get_text() {
@@ -294,7 +292,6 @@ std::shared_ptr<Text> TextBox::get_text() {
 void TextBox::set_text(std::shared_ptr<Text> _text) {
 
     text->set_text(_text);
-    get_text()->set_bloom_radius(6);
 }
 
 void TextBox::resize_text(float width, float height){

@@ -47,20 +47,25 @@ class Vine(GameObject):
         ], callback = player_object.kill)
 
     def grow(self, callback = lambda: None):
-        def check_for_and_kill_player():
-            objects = self.get_engine().get_objects_at(self.get_position())
-            for game_object in objects:
-                if hasattr(game_object, "kill"):
-                    self._kill_player(game_object)
-                    return
-            self.get_engine().add_event(callback)
-        self._passive_grow(callback = check_for_and_kill_player)
+        if self.__alive:
+            def check_for_and_kill_player():
+                objects = self.get_engine().get_objects_at(self.get_position())
+                for game_object in objects:
+                    if hasattr(game_object, "kill"):
+                        self._kill_player(game_object)
+                        return
+            callback() #TODO sort out timing issues
+            self._passive_grow(callback = check_for_and_kill_player)
+        else:
+            self._passive_grow(callback = callback)
 
     def _passive_grow(self, callback = lambda: None):
         if self.__alive:
             self.set_visible(True)
             self.set_solidity(True)
             self.start_animating(loop = False, speed = 0.1, callback = callback)
+        else:
+            self.wait(0.4, callback = callback)
 
     def restore(self):
         """ Restore the vine to its starting state, used by the whetstone."""
@@ -77,8 +82,8 @@ class Vine(GameObject):
         return self.__alive
 
     def shrink(self, callback = lambda: None):
-        if not self.__alive:
-            return
-        self.start_animating(speed = 0.1, loop = False, forward = False, callback = lambda: self.set_visible(False, callback = lambda: self.set_solidity(False, callback = callback)))
-
+        if self.__alive:
+            self.start_animating(speed = 0.1, loop = False, forward = False, callback = lambda: self.set_visible(False, callback = lambda: self.set_solidity(False, callback = callback)))
+        else:
+            self.wait(0.4, callback = callback)
 
