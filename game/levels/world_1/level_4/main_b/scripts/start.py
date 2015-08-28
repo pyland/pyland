@@ -123,3 +123,10 @@ def level_end(player_object):
 
 trigger_end.player_walked_on = lambda player_object: player_walked_on_end()
 level_exit.player_walked_on = level_end
+
+def prev_level(player_object):
+    player_data.save_and_exit("/world_1/level_4/main_a")
+
+exit_level_start1.player_walked_on = prev_level
+exit_level_start2.player_walked_on = prev_level
+

@@ -188,6 +188,16 @@ class Engine:
         """
         self.__cpp_engine.print_terminal(str(message), highlighted)
 
+    def print_debug(self, message):
+        """ print the given message to the operating system terminal
+
+        Parameters
+        ----------
+        message
+            the message that you wish to print (python will attempt to convert it to a string before printing if possible using the str() method)
+        """
+        self.__cpp_engine.print_debug(str(message))
+
     def create_object(self, object_file_location, object_name, position):
         """ This is meant to return a new instance of a given game object, but it hasn't been properly implemented yet """
         x, y = position
@@ -535,7 +545,7 @@ class Engine:
 
 
         """
-        self.__cpp_engine.set_py_tabs(num, callback)
+        self.__cpp_engine.set_py_tabs(num_tabs, callback)
 
     def show_external_script(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", script_init = lambda: None):
         """ This function is used to have the player give a script to an NPC (after which the NPC may or may not run the script)

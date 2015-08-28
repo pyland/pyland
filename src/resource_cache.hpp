@@ -54,6 +54,11 @@ public:
     /// Removes a resource from the cache. Does not destroy it.
     ///
     void remove_resource(const std::string resource_name);
+
+    ///
+    /// Removes all the resources from the cache. Does not destoy it.
+    ///
+    void clear();
 };
 
 // //////////////////////////////////////////////////////////////
@@ -110,4 +115,9 @@ void ResourceCache<Res>::remove_resource(const std::string resource_name) {
     resources.erase(resource_name);
 }
 
+template<typename Res>
+void ResourceCache<Res>::clear() {
+    VLOG(1) << "Clearing all resources from cache";
+    resources.clear();
+}
 #endif

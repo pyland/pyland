@@ -83,10 +83,12 @@
   <object name="tile_trigger/trigger_end" gid="387" x="704" y="448"/>
   <object name="tile_trigger/level_exit" gid="387" x="640" y="64"/>
   <object name="player_data/player_data" gid="382" x="0" y="64"/>
+  <object name="tile_trigger/exit_level_start1" gid="387" x="1856" y="1152"/>
+  <object name="tile_trigger/exit_level_start2" gid="387" x="1920" y="1152"/>
  </objectgroup>
  <layer name="SpecialLayer" width="34" height="18">
   <data encoding="base64" compression="zlib">
-   eJztklEOwCAIQw27/533tcQ00FFB97MmxDgqPJxjvMum1ab9Sc19bWgsndyMg9X3zlUZLPjGcqxW5PNybAbVHyniUv8/nnl0kcjkV4XMrI8aKDaL590Zao+dd6T4LbivKlfHXNkazPdzrHMYrF/eBzKoHJGX5dCTUVedao/qW+t4q8hxA8iMBGI=
+   eJztkVEKwDAIQ4u7/533NRDR1Fjb/iwgpTPVpxtjLlGnqPtJ6b4yOJZObsSB6nvvVhkk+IZyqFbk83JoBtYfKeJi/7998+kBkclXZZlRHzas0Cyed2ewPXbuiPFLsK9Vro65sjWQ7+eoc4g5b+7DMrAckRflrCej2Qwdqs56MjyOF8qMBGQ=
   </data>
  </layer>
 </map>
