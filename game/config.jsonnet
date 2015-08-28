@@ -29,7 +29,6 @@
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
 		//"level_location" : "/world_2/level_1/main",
-		//"level_location" : "/find_treasure",
 		//"level_location" : "world_8/treasure_matrix",	
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
