@@ -74,7 +74,6 @@ private:
     glm::ivec2 tile_identifier_old_tile;
     std::chrono::steady_clock::time_point start_time;
     std::vector<Lifeline> digit_callbacks;
-    Text tile_identifier_text;
     std::function<void (GameWindow*)> func_char;
 
     //Data for the present challenge

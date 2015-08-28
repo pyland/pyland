@@ -1,4 +1,15 @@
+#commence save-data set-up
+world_name = "world_1"
+level_name = "level_5"
+map_name = "maze"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name)
+#end save-data set_up
+
 import random
+
+reached_arith = False
 
 player_one.focus()
 myla.follow(player_one)
@@ -328,3 +339,5 @@ def check_security_three(player_object):
         ])
 
 security_three.player_action = security_three_action
+
+
