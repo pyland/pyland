@@ -24,6 +24,16 @@ class Monkey(Enemy):
         pass
 
     def find_escape_path(self, callback = lambda: None):
+        """ The monkey tries to find the nearest exit and escape!
+
+        Implemented using Djikstras
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+
+        """
         engine = self.get_engine()
         self_x, self_y = self.get_position()
         x_dim = 19

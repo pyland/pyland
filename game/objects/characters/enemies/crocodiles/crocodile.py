@@ -16,8 +16,13 @@ class Crocodile(Enemy):
     def __check_swim_state(self, callback = lambda: None):
         """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
 
-        It is called as a callback once the crocodile has finished moving as that gives the smoothest change-over.
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+
         """
+
         engine = self.get_engine()
         x, y = self.get_position()
         if(engine.get_tile_type((x, y)) == engine.TILE_TYPE_WATER):
@@ -71,6 +76,7 @@ class Crocodile(Enemy):
             return self.face_east()
 
     def move_horizontal(self, player, times = -1):
+
         x,y = self.get_position()
         player_x, player_y = player.get_position()
         engine = self.get_engine()
@@ -101,7 +107,11 @@ class Crocodile(Enemy):
         else:
             return self.toggle()
 
-    def move_vertical(self, player, times = -1):
+    def move_vertical(self, player, times = -1): 
+        """ The crocodile moves vertically (north/south direction).
+
+        Everytime there is a collision, times is decremented. When time hits zero, the crocodile stops moving and holds in place. The toggle is made to 
+        """
         x,y = self.get_position()
         player_x, player_y = player.get_position()
         engine = self.get_engine()
@@ -135,6 +145,15 @@ class Crocodile(Enemy):
             return self.toggle()
 
     def yelled_at(self, player):
+        """ This is run whenever the player yells at the crocodile
+
+        If the crocodile is still and the player is facing the crocodile and yells, the crocodile will start to oscillate
+
+        Parameters
+        ----------
+        player : Player
+            The player that gets caught by the crocodile
+        """
         player_x, player_y = player.get_position()
         self_x, self_y = self.get_position()
         if not self.is_moving():
@@ -152,6 +171,13 @@ class Crocodile(Enemy):
                 return
             
     def lose(self, player):
+        """ This is run whenever the player gets caught by a crocodiles
+
+        Parameters
+        ----------
+        player : Player
+            The player that gets caught by the crocodile
+        """
         engine = self.get_engine()
         engine.run_callback_list_sequence([
             lambda callback: player.set_busy(True, callback = callback),
