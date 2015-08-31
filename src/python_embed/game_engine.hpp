@@ -98,6 +98,7 @@ class GameEngine {
         void show_dialogue(std::string text, bool disable_scripting, PyObject *callback);
         void show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *options);
         void show_external_script_help(std::string text, PyObject *callback);
+        void close_external_script_help(PyObject *callback);
 
         ///
         /// Register a callback against a given input
@@ -134,8 +135,10 @@ class GameEngine {
         ///
         void update_world(std::string text);
         void update_level(std::string text);
+        void clear_level_text();
         void update_coins(int value);
         void update_totems(int value, bool show);
+        void clear_totems_text();
 
         /// Insert text to the current QsciScintilla
         /// text edtior
@@ -203,6 +206,8 @@ class GameEngine {
         std::string get_player_name();
 
         void set_player_name(std::string player_name);
+
+        void restart_level();
 };
 
 #endif

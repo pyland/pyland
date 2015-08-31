@@ -27,7 +27,6 @@ class Player(Character):
 
     __bag = []
     __focus_button_id = 0
-    __cuts_left = 0
 
     def initialise(self):
         """ An initialiser function.
@@ -40,7 +39,7 @@ class Player(Character):
 
         def focus_func(func):
             """ Wraps functions so that they are only run if the player is the focus """
-            return lambda: func() if self.is_focus() else None
+            return lambda: func() if self.is_focus() else lambda: None
 
         #register input callbacks to make character playable
         #register callbacks for running player scripts
@@ -66,8 +65,12 @@ class Player(Character):
     """
 
     def focus(self, callback = lambda: None):
-        """Override focus method for generic game_object, to update running button
-        and update focused player button above
+        """Override focus method for generic game_object, to update running button and update focused player button above.
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
         """
         #self.__entity.focus()
         super().focus();
@@ -82,66 +85,46 @@ class Player(Character):
         return
 
     def set_character_name(self, character_name):
-        """Override set_character_name from character to
-        update the player focus button with the new name
+        """Override set_character_name from character to update the player focus button with the new name
+
+        Parameters
+        ----------
+        character_name : str 
+            A string of the character_name we want to set the player to 
         """
         super().set_character_name(character_name)
         engine = self.get_engine()
         engine.update_player_name(character_name,self.__focus_button_id)
 
-    """ ---- All code to do with running player scripts (also see inherited ScriptStateContainer) ---- """
-
-    def run_script(self):
-        """ Runs the current script in the player_scripts folder in a seperate thread. Exposes the PyGuide API to the script to allow it to control this player. :)
-
-        Everything in the API is bocking, however this doesn't impact regular gameplay as it's run in a seperate thread.
-        The callback is run after the script has finished running.
-        """
-        if not(self.is_running_script()): #only run script if one currently isn't running.
-            engine = self.get_engine()
-            self.set_running_script_status(True)
-
-            #script_api is a python dictionary of python objects (variables, methods, class instances etc.)
-            #available to the player. :)
-            #eg. if there is an entry named "fart" whos entry is blob, then in the level script, any reference to fart
-            #will be refering to what blob is known as here.
-            #Here the list of game_objects is being looped through, and their names are being mapped to each instance :)
-            script_api = {}
-
-            # Provide all the movement functions to the player, but make them blocking.
-            script_api["move_north"] = scriptrunner.make_blocking(self.move_north)
-            script_api["move_east"] = scriptrunner.make_blocking(self.move_east)
-            script_api["move_south"] = scriptrunner.make_blocking(self.move_south)
-            script_api["move_west"] = scriptrunner.make_blocking(self.move_west)
-
-
-            script_api["face_north"] = scriptrunner.make_blocking(self.face_north)
-            script_api["face_east"] = scriptrunner.make_blocking(self.face_east)
-            script_api["face_south"] = scriptrunner.make_blocking(self.face_south)
-            script_api["face_west"] = scriptrunner.make_blocking(self.face_west)
-
-
-            script_api["wait"] = scriptrunner.make_blocking(lambda callback: self.wait(0.3, callback))
-
-            #the method to get the position of the player
-            script_api["get_position"] = self.get_position
-            script_api["get_flag_message"] = self.get_flag_message
-
-            script_api["yell"] = self.yell
-            script_api["cut"] = self.cut
-            scriptrunner.start(script_api, engine.get_run_script(), self, engine)
-        return
-
-    #override ScriptStateContainer
     def get_script_name(self):
+        """ 
+        Overrdies the ScriptStateContainer
+
+        Returns
+        -------
+        str
+            A string of the player name
+        """
         return self.get_character_name()
 
-    #override ScriptStateContainer---
     def set_script_name(self):
+        """
+        Overrides the ScriptStateContainer
+        """
         self.set_character_name(self)
 
     def get_focus_button_id(self):
+        """
+        Returns
+        -------
+        int
+            Integer corresponding to the focus button id of the player
+        """
         return self.__focus_button_id
+
+
+
+
 
     """ ---- / All Code todo with running player scripts ---- """
 
@@ -149,67 +132,108 @@ class Player(Character):
     Put the private methods you wish to use here.
     """
 
-    """ Override character move methods to trigger player events and stop the player from being walking on water (even when they are scripter)
-    """
-    def move(self, callback = lambda: None):
-        if self.is_facing_east():
-            self.move_east(callback)
-        elif self.is_facing_north():
-            self.move_north(callback)
-        elif self.is_facing_west():
-            self.move_west(callback)
-        elif self.is_facing_south():
-            self.move_south(callback)
 
     def move_north(self, callback = lambda: None):
+        """ Moves the player north one square.
+
+        Overrides the move methods to trigger player events and stop the player from walking on water (even when they are on scripter)
+
+        This is kind of a hack and might be modified in the future
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         engine = self.get_engine()
         x,y = self.get_position()
-        def callback_wrap():
-            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-            engine.add_event(callback)
-        if engine.get_tile_type((x,y+1)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
-            super().move_north(callback_wrap)
+        target_position = (x, y+1)
+        if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
+            super().move_north(callback)
+            self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
             self.face_north()
             self.move_on_spot(callback)
 
     def move_east(self, callback = lambda: None):
+        """ Moves the player east one square.
+
+        Overrides the move methods to trigger player events and stop the player from walking on water (even when they are on scripter)
+
+        This is kind of a hack and might be modified in the future
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
+
         engine = self.get_engine()
         x,y = self.get_position()
-        def callback_wrap():
-            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-            engine.add_event(callback)
-        if engine.get_tile_type((x+1,y)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
-            super().move_east(callback_wrap)
+        target_position = (x+1, y)
+        if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
+            super().move_east(callback)
+            self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
             self.face_east()
             self.move_on_spot(callback)
 
     def move_south(self, callback = lambda: None):
+        """ Moves the player south one square.
+
+        Overrides the move methods to trigger player events and stop the player from walking on water (even when they are on scripter)
+
+        This is kind of a hack and might be modified in the future
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         engine = self.get_engine()
         x,y = self.get_position()
-        def callback_wrap():
-            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-            engine.add_event(callback)
-        if engine.get_tile_type((x,y-1)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
-            super().move_south(callback_wrap)
+        target_position = (x, y-1)
+        if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
+            super().move_south(callback)
+            self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on a moment before they reach there
         else:
             self.face_south()
             self.move_on_spot(callback)
 
     def move_west(self, callback = lambda: None):
+        """ Moves the player west one square.
+
+        Overrides the move methods to trigger player events and stop the player from walking on water (even when they are on scripter)
+
+        This is kind of a hack and might be modified in the future
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine event-queue
+        """
+
         engine = self.get_engine()
         x,y = self.get_position()
-        def callback_wrap():
-            self.__trigger_walk_on() #call walk-on triggers on objects player walks on
-            engine.add_event(callback)
-        if engine.get_tile_type((x-1,y)) != engine.TILE_TYPE_WATER: #stop the player from being Chris Angel
-            super().move_west(callback_wrap)
+        target_position = (x-1, y)
+        if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
+            super().move_west(callback)
+            self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
             self.face_west()
             self.move_on_spot(callback)
 
     def __input_move_north(self):
+        """ Moves the player north one square if w or up-arrow are entered.
+
+        Overrides the move methods to trigger player events and stop the player from walking on water (even when they are on scripter)
+
+        This is kind of a hack and might be modified in the future
+        """
+
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             if self.is_facing_north():
                 self.move_north()
@@ -218,6 +242,14 @@ class Player(Character):
         return
 
     def __input_move_east(self):
+
+        """ Moves the player east one square if d or right-arrow are entered.
+
+        Overrides the move methods to trigger player events and stop the player from walking on water (even when they are on scripter)
+
+        This is kind of a hack and might be modified in the future
+        """
+
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             if self.is_facing_east():
                 self.move_east()
@@ -226,6 +258,14 @@ class Player(Character):
         return
 
     def __input_move_south(self, callback = lambda: None):
+
+        """ Moves the player south one square if s or down-arrow are entered.
+
+        Overrides the move methods to trigger player events and stop the player from walking on water (even when they are on scripter)
+
+        This is kind of a hack and might be modified in the future
+        """
+
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             if self.is_facing_south():
                 self.move_south()
@@ -234,6 +274,14 @@ class Player(Character):
         return
 
     def __input_move_west(self, callback = lambda: None):
+
+        """ Moves the player west one square if a or left-arrow are entered.
+
+        Overrides the move methods to trigger player events and stop the player from walking on water (even when they are on scripter)
+
+        This is kind of a hack and might be modified in the future
+        """
+
         if (not self.is_running_script()) and (not self.is_moving()) and (not self.is_busy()): #Check that a script isn't running
             if self.is_facing_west():
                 self.move_west()
@@ -261,13 +309,17 @@ class Player(Character):
         return
 
 
-    def __trigger_walk_on(self):
+    def __trigger_walk_on(self, position):
         """ Triggers the walked-on functions for objects, objects which have a walked_on method will have those methods automatically called when they are walked on.
 
         Everytime the player finishes, walking, this is called. The player looks at all objects they are standing on and triggers their player_walked_one method if they have one.
+
+        Parameters
+        ----------
+        position : tuple of int * int
+            A tuple containing the x and y coordinate of the position being walked onto
         """
         engine = self.get_engine()
-        position = self.get_position()
         game_objects = engine.get_objects_at(position)
         for game_object in game_objects:
             if(hasattr(game_object, "player_walked_on")):
@@ -275,75 +327,18 @@ class Player(Character):
         return
 
     def add_to_bag(self, bag_item):
+        """ Adds a baggable item (bag_item) to the player's bag
+
+        Parameters
+        ----------
+        bag_item : BagableItem
+            Item to be added to the player's bag
+        """
         pass
 
-    def get_flag_message(self):
-        message = "There is no flag here!"
-        engine = self.get_engine()
-        position = self.get_position()
-        game_objects = engine.get_objects_at(position)
-        for current_object in game_objects:
-            if(hasattr(current_object, "get_message")):
-                message = current_object.get_message()
-        return message
+    def kill(self):
+        """ Method that is called if a player loses a level.
 
-
-    def yell(self):
-        engine = self.get_engine()
-        x,y = self.get_position()
-        objects = engine.get_all_objects()
-
-        for current in objects:
-            if hasattr(current, "yelled_at"):
-                current.yelled_at(self)
-
-    def set_cuts_left(self, cuts_left):
-        self.__cuts_left = cuts_left
-
-    def get_cuts_left(self):
-        return self.__cuts_left
-
-    def cut(self):
-        engine = self.get_engine()
-
-        if (self.__cuts_left == 0):
-            engine.print_terminal("Not enough cuts left!")
-            return
-
-        (x,y) = self.get_position()
-
-        made_cut = False
-
-        if self.is_facing_east():
-            for obj in engine.get_objects_at((x+1, y)):
-                if(hasattr(obj, "on_cut")):
-                    made_cut = made_cut or obj.on_cut()
-
-        elif self.is_facing_west():
-            for obj in engine.get_objects_at((x-1, y)):
-                if(hasattr(obj, "on_cut")):
-                    made_cut = made_cut or obj.on_cut()
-
-        elif self.is_facing_north():
-            for obj in engine.get_objects_at((x, y+1)):
-                if(hasattr(obj, "on_cut")):
-                    made_cut = made_cut or obj.on_cut()
-
-        elif self.is_facing_south():
-            for obj in engine.get_objects_at((x, y-1)):
-                if(hasattr(obj, "on_cut")):
-                    made_cut = made_cut or obj.on_cut()
-
-        if made_cut:
-            self.__cuts_left = self.__cuts_left - 1
-            if (self.__cuts_left == 0):
-                engine.print_terminal("Swoosh! Ran out of cuts")
-            else:
-                engine.print_terminal("Swoosh! This knife now has " + str(self.__cuts_left) + " cut(s) left!")
-        else:
-            engine.print_terminal("Swish? There's nohing to cut. This knife still has " + str(self.__cuts_left) + " cut(s) left!")
-
-
-
-
-
+        It resets the level and places the player at the last known checkpoint.
+        """
+        self.get_engine().restart_level()

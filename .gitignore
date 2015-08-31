@@ -24,6 +24,9 @@
 # Emacs auto-generated files
 \#*\#
 
+#Vim auto-generated files
+*.swp
+
 #save files
 *.save
 
@@ -33,11 +36,12 @@
 # project specific
 src/qtgui/moc_mainwindow.cpp
 src/jsonnet/jsonnet
+game/jsonnet/jsonnet
 game/.idea
 src/Pyland.*
 src/python_embed/interpreter
 game/player_scripts/*.py
-*main.bin
+game/pyland
 *__pycache__/
 src/dependencies
 src/python_embed/python_embed_headers.hpp.gch

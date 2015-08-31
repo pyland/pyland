@@ -31,15 +31,12 @@ def go_to_village_top(player_object):
 def go_to_village_bottom(player_object):
     player_data.save_and_exit("/world_1/level_1/rossumberg", info = "bottom")
 
-def go_to_merchant(player_object):
-    player_data.save_and_exit("/world_1/level_1/merchant")
-
 def go_to_world(player_object):
+    player_data.complete_level_and_save()
     player_data.save_and_exit("/world_1")
 
 exit_to_village_top.player_walked_on = go_to_village_top
 exit_to_village_bottom.player_walked_on = go_to_village_bottom
-exit_to_merchant.player_walked_on = go_to_merchant
 exit_to_world.player_walked_on = go_to_world
 
 #end setting up the level exits
@@ -48,7 +45,6 @@ exit_to_world.player_walked_on = go_to_world
 
 village_sign.set_message("(west) rossumberg (north) bog (north) merchant")
 bog_sign.set_message("(south) rossumberg (east) bog (north) merchant")
-merchant_sign.set_message("(south) rossumberg (south) bog (north) merchant")
 
 def no_potion_player_action(player_object):
     player_one.set_busy(True)
@@ -67,13 +63,6 @@ def merchant_player_action(player_object):
 
 merchant.player_action = merchant_player_action
 merchant.face_south()
-
-def merchant_blocker_player_action(player_object):
-    player_one.set_busy(True)
-    engine.show_dialogue("Sorry, this part of the game is still in progress, please come back later!", callback = lambda: player_one.set_busy(False))
-
-merchant_blocker.player_action = merchant_blocker_player_action
-merchant_blocker.face_south()
 
 # end general object set-up
 
@@ -113,9 +102,10 @@ if heidi_state == heidi_state_getting_prank_materials:
             lambda callback: heidi.stop_follow(callback = callback),		
             lambda callback: heidi.move_south(callback = callback),
             lambda callback: heidi.move_south(callback = callback),
-            lambda callback: heidi.move_east(callback = callback),
-            lambda callback: heidi.move_east(callback = callback),
-            lambda callback: heidi.move_east(callback = callback),
+            lambda callback: heidi.move_south(callback = callback),
+            lambda callback: heidi.move_south(callback = callback),
+            lambda callback: heidi.move_south(callback = callback),
+            lambda callback: heidi.move_south(callback = callback),
             lambda callback: heidi.move_south(callback = callback),
             lambda callback: heidi.move_south(callback = callback),
             lambda callback: heidi.set_solidity(False, callback = callback),

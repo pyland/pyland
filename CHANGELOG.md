@@ -1,1 +1,0 @@
-Changelog for major changes

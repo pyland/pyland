@@ -20,6 +20,7 @@
 #include <tuple>
 #include <vector>
 
+#include "audio_engine.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
 #include "event_manager.hpp"
@@ -182,6 +183,16 @@ bool Engine::walkable(glm::ivec2 location) {
     return true;
 }
 
+void Engine::open_main_menu(){
+    Config::json j = Config::get_instance();
+    std::string map_location = j["files"]["main_menu"];
+    game_main->change_challenge(map_location);
+}
+
+void Engine::restart_level(){
+    game_main->change_challenge(game_main->get_current_challenge());
+}
+
 void Engine::change_map(std::string map_location){
     game_main->change_challenge(map_location);
 }
@@ -210,6 +221,18 @@ std::vector<int> Engine::get_objects_at(glm::ivec2 location) {
 MainWindow* Engine::get_main_window(){
     return main_window;
 }
+
+void Engine::set_music(bool on){
+    if(!on){
+        AudioEngine::get_instance()->set_music_volume(0);
+    }
+    else{
+        AudioEngine::get_instance()->set_music_volume(128);
+    }
+
+    return;
+}
+
 
 // TODO: Consider whether finding the object and checking its position is saner
 bool Engine::is_object_at(glm::ivec2 location, int object_id) {
@@ -354,13 +377,6 @@ void Engine::show_external_script(std::function<void ()> confirm_callback, std::
     });
 }
 
-/*void Engine::hide_external_tab(){
-    auto _main_window = main_window;
-    EventManager::get_instance()->add_event([_main_window] {
-        _main_window->removeExternalTab();
-    });
-}*/
-
 void Engine::update_world(std::string text){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, text] {
@@ -372,6 +388,13 @@ void Engine::update_level(std::string text){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, text] {
           _main_window->setLevel(text);
+    });
+}
+
+void Engine::clear_level_text(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+          _main_window->clearLevelText();
     });
 }
 
@@ -387,6 +410,14 @@ void Engine::update_totems(int value,bool show){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, value, show] {
           _main_window->setCurTotems(value, show);
+    });
+}
+
+
+void Engine::clear_totems_text(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+          _main_window->clearTotemsText();
     });
 }
 

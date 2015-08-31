@@ -67,10 +67,28 @@ class PlayerData(GameObject):
     def __get_pyscipter_speed(self):
         return 3.5
 
+    def is_level_completed(self, full_level_name):
+        completed_levels = self.__get_completed_levels()
+        if not full_level_name in completed_levels:
+            return False
+        else:
+            return completed_levels[full_level_name]
+
+    def complete_level_and_save(self):
+        self.__get_completed_levels()["/" + self.__current_world + "/" + self.__current_level] = True
+        self.save()
+        
+
+    def __get_completed_levels(self):
+        if not ("completed_levels" in self.__player_data):
+            self.__player_data["completed_levels"] = {}
+        return self.__player_data["completed_levels"]
+
     def load(self, player_name):
         """ loads in the player data, and correctly set's up all the global states of the game.
 
         For example, it displays the correct number of totems, PyScipter tabs etc. """
+        #TODO: Make this return a dummy save if a save doesn't exist
         engine = self.get_engine()
         self.__player_name = player_name
         self.__player_data = engine.get_player_data(player_name)
@@ -130,6 +148,12 @@ class PlayerData(GameObject):
         self.__player_data["previous_exit"] = previous_exit
         self.save()
         self.get_engine().change_map(destination)
+
+    def save_checkpoint(self, checkpoint_name, callback = lambda: None):
+        previous_exit = self.get_full_map_name() + "/" + checkpoint_name
+        self.__player_data["previous_exit"] = previous_exit
+        self.save()
+        self.get_engine().add_event(callback)
 
     def __get_level_data(self):
         return self.__player_data["level_data"][self.__current_world][self.__current_level]

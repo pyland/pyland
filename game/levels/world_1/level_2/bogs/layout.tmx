@@ -22,12 +22,12 @@
  </layer>
  <layer name="SpecialLayer" width="26" height="50">
   <data encoding="base64" compression="zlib">
-   eJy1ldsKAyEMREv3//+5Ly3IkLkFKyxdXZMziTF9vebxPh5cx+9srxpv+FVr057p25ahfDO2WkuGs2N5V+8tI/F35uDWmTfaJh/puacsFxOzb2qo1ZwwlE92VmkNb89HjeQ+bdlNvErT831wfq4xnmKc70/4IAd9KUbDaXrdVHsq9yfD6U7WkY1rqgb+UdNMk8pfUjdqXxK7Yzq/zV1N8ppwbpyP8ocxszuHOtvYWU9JeknKSWLZxMPWHAf71YaTxPMQG5Yjxk84yGJ+b3NU/SpO0vOZHdPNdCkW0zjNVc051mS35fzmG8ZtjusFbM8/OMzvhuPqTP3/TBymOdF7i5PmqelPzJ75ct9aDpu7+NxIdaexJiwWj8tTkjfkOQbz27CYbdJ33P5EY8rZ2CW63Ej7oup7bY3hPNXZDLwfjtVoYdqQw55zfAA+aARn
+   eJy1ldsKQzEIBEvP//9zX1oI4q6zkgqhJxcdNca+Xr28j1HX67466+Rdft1ad6bb2zKcbcV2a0QmPZV3950yiL0zB7fuPPGts0HvnbKmmJR+UkOpz4ThbKq7ojW8vR8n5D1t2Um8zqfnO+r8XFM8xzi/Hzgqp9pyjIST9Lqu9lzuT8bkd8dROqpPuRpI+1UiXf4Un9SNO0did3vEbvJWSU4J58bdOHs1ZvXmqp9p7KqnkF5COSSWTTxqbeLUfrXhkHgeoaNypPiEU1nK7m2Oq1/HIT1f6Sm/lV+OpXzs5q7mJlant+X85hvGbc7UC9SZf3CU3Q1nqjP3/9NxlM/E31scmqekPyl9ZWvaSzlqPsU3CfWbxkpYKp4pTyRvlTcxlN2EpXRJ35nOEx8pZ6NH/JqE9kXX99Iaq3PqZyL1fUysxBflW+WoccoHwkAEcQ==
   </data>
  </layer>
  <layer name="Decor" width="26" height="50">
   <data encoding="base64" compression="zlib">
-   eJylWNFuwjAM9KeyTWwMtvEyPrHQF/5pjVRL3unOdsGSFZrEPp+TuCl3M7sXaqIdemvYWjKGc1jfvOKwsS2xK4yp8F3hVXIL8WMcSqpcZn5YrnCMYTEbHOvy95xGPGV3C+1kuWT2CueRXKucZHy6+8V1TmKcCh8m7Lqc2Fy0U1KtkZqv8or+5qa/KFv4sjV0OSy6h+f3tW8idnENM4z4e/j8WvR70Y/V/3i+rH2O5/PZPsnqic87Lfqy6i7oeD4v+rPoq/XzpvZelvtTgjHbfxzML+tHbOyrlNXijmypS1X+OrWpqitXaB+tQVvsbMVjcVaialaVi5h3XDf1XsX6wrCG+Nl23ZP5zA/DyvqPi/6uOs74WxHX1v0+5BAwXBkOnjkcV1z87DiXS8AZNWsP85/BGfJJ+CCn6ix18sn4ICe3uRJek+CDOMgn4jFOV9N8FI7X23PAcByv9UNuxE7FzfoQi3FhOVcxu2R3nqPgksU9meYYY4ptxMHzwzCUL2bD+Kh6oO5A1X73c9rhk9VuhoPfSchHrU2cx+5QjA/bbxEnW5tsrykc1LG3d4SL27B7H/rv4DCJeX4GZ7a8DiOfDAtxGCeMX72bWVxdPoxLdg+o1jvDiePVvbGDgfWoyl/EZf9RIBaLqYOn7LbgeDtixe8VVkMyLkbmVnyyGBVO9zvykf+4KlH+jfxmfRVWN8Ysf9X+YRh/BdsgQQ==
+   eJylWO1uwzAI5FG7Td267qN/1kdMkz99p8VSkNjpDsiKhNLYhuMwpm7vZnYv1MRz6NywtWQO17CxZcNhc3tiVxhT4bvCq2QO8WMcSqpcZn5YrnCOYTEbnOvy95xGPGU3h+dkuWT2Cuc/uVY5yfh068V1SWKcCh8m7Lqc2Fq0U1LtkVqv8or+lqa/KHv4sj10Oa16hPfXbWwidnEPM4z4efj8XPVr1bfN/3i/bmOO5+tZnWT9xNd9rPq06SHoeL+s+r3qs/Xzpmovy/1HgrHYXxysExxnceBY58yxHljJnr7EMLM1XX9x7gZP1Uu6eenY2YbH4qxE9awqFzHvuG/qexX7C8Ma4mfb9UjWMz8MKxs/r/qz6TjjL0Vce+t9yClguDIcPHM4r7gMnQOXa8AZPesI6x/BGfJO+CCn6ix18sn4ICe3uRFek+CDOMgn4jFON9N8FI7320vAcBzv9UNmYqfiZmOIxbiwnKuYXbI7z1lwyeKeTHOMMcVnxMHzwzCUL2bD+Kh+oO5AVb37Oe3wyXo3w8HfSchH7U1cx+5QjA+rt4iT7U1WawoHddT2gXBxG3bvQ/8dHCYxz4/gLJb3YeSTYSEO44Txq+9mFleXD+OS3QOq/c5w4jzDQLwKA/tRlb+Iy/6jQCwWUwdP2e3B8eeIFe+irIdkXIysrfhkMSqc7u/I//zHVYnyb+QzG6uwujFm+avqh2H8Aqp6I2w=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="50">
@@ -36,31 +36,31 @@
   <object name="tile_trigger/exit_to_start" gid="292" x="832" y="64"/>
   <object name="player_data/player_data" gid="287" x="0" y="64"/>
   <object name="characters/npcs/myla/myla" gid="286" x="64" y="128" width="64" height="64"/>
-  <object name="vines/vine1" gid="196" x="320" y="256"/>
-  <object name="vines/vine2" gid="196" x="1088" y="192"/>
-  <object name="vines/vine3" gid="196" x="1024" y="704"/>
-  <object name="vines/vine4" gid="196" x="768" y="704"/>
-  <object name="vines/vine5" gid="196" x="1024" y="2880"/>
-  <object name="vines/vine6" gid="196" x="1024" y="2496"/>
-  <object name="vines/vine7" gid="196" x="1024" y="2368"/>
-  <object name="vines/vine8" gid="196" x="1024" y="2240"/>
-  <object name="vines/vine9" gid="196" x="1024" y="2112"/>
-  <object name="vines/vine10" gid="196" x="1024" y="1984"/>
-  <object name="vines/vine11" gid="196" x="1024" y="1856"/>
-  <object name="vines/vine12" gid="196" x="1024" y="2752"/>
-  <object name="vines/vine13" gid="196" x="1024" y="2624"/>
-  <object name="vines/vine14" gid="196" x="1024" y="1728"/>
-  <object name="vines/vine15" gid="196" x="1024" y="1600"/>
-  <object name="characters/enemies/crocodile/croc_face_vine_left" gid="296" x="1024" y="832"/>
-  <object name="characters/enemies/crocodile/croc_face_vine_right" gid="296" x="768" y="832"/>
-  <object name="characters/enemies/crocodile/croc_bottom_0" gid="296" x="128" y="1792"/>
-  <object name="characters/enemies/crocodile/croc_bottom_1" gid="296" x="128" y="1728"/>
-  <object name="characters/enemies/crocodile/croc_bottom_2" gid="296" x="128" y="1664"/>
-  <object name="characters/enemies/crocodile/croc_bottom_3" gid="296" x="128" y="1600"/>
-  <object name="characters/enemies/crocodile/croc_bottom_4" gid="296" x="128" y="1856"/>
-  <object name="characters/enemies/crocodile/croc_bottom_5" gid="296" x="320" y="1984"/>
-  <object name="characters/enemies/crocodile/croc_bottom_6" gid="296" x="384" y="2240"/>
-  <object name="characters/enemies/crocodile/croc_bottom_7" gid="296" x="320" y="1536"/>
+  <object name="vine/vine0" gid="196" x="320" y="256"/>
+  <object name="vine/vine2" gid="196" x="1088" y="192"/>
+  <object name="vine/vine3" gid="196" x="1024" y="704"/>
+  <object name="vine/vine4" gid="196" x="768" y="704"/>
+  <object name="vine/vine5" gid="196" x="1024" y="2880"/>
+  <object name="vine/vine6" gid="196" x="1024" y="2496"/>
+  <object name="vine/vine7" gid="196" x="1024" y="2368"/>
+  <object name="vine/vine8" gid="196" x="1024" y="2240"/>
+  <object name="vine/vine9" gid="196" x="1024" y="2112"/>
+  <object name="vine/vine10" gid="196" x="1024" y="1984"/>
+  <object name="vine/vine11" gid="196" x="1024" y="1856"/>
+  <object name="vine/vine12" gid="196" x="1024" y="2752"/>
+  <object name="vine/vine13" gid="196" x="1024" y="2624"/>
+  <object name="vine/vine14" gid="196" x="1024" y="1728"/>
+  <object name="vine/vine15" gid="196" x="1024" y="1600"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_face_vine_left" gid="296" x="1024" y="832"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_face_vine_right" gid="296" x="768" y="832"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_0" gid="296" x="128" y="1792"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_1" gid="296" x="128" y="1728"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_2" gid="296" x="128" y="1664"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_3" gid="296" x="128" y="1600"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_4" gid="296" x="128" y="1856"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_5" gid="296" x="320" y="1984"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_6" gid="296" x="384" y="2240"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_bottom_7" gid="296" x="320" y="1536"/>
   <object name="tile_trigger/myla_explain_cut" gid="292" x="512" y="256"/>
   <object name="tile_trigger/myla_explain_crocodiles" gid="292" x="1216" y="704"/>
   <object name="tile_trigger/myla_explain_basic_move" gid="292" x="448" y="704"/>
@@ -68,6 +68,19 @@
   <object name="tile_trigger/myla_tells_loop_modify" gid="292" x="1472" y="1216"/>
   <object name="tile_trigger/myla_give_vine_loop" gid="292" x="1024" y="3008"/>
   <object name="tile_trigger/myla_notice_bog_water" gid="292" x="640" y="1408"/>
-  <object name="characters/enemies/crocodile/croc_guard_totem" gid="296" x="1216" y="896"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_guard_totem" gid="296" x="1216" y="896"/>
+  <object name="whetstone/whetstone1" gid="292" x="1344" y="320"/>
+  <object name="tile_trigger/myla_explain_whetstone" gid="292" x="960" y="384"/>
+  <object name="vine/vine1" gid="196" x="640" y="448"/>
+  <object name="whetstone/whetstone2" gid="292" x="1280" y="3072"/>
+  <object name="tile_trigger/exit_to_world" gid="292" x="768" y="3200"/>
+  <object name="tile_trigger/trigger_croc_0" gid="292" x="1216" y="832"/>
+  <object name="tile_trigger/trigger_croc_1" gid="292" x="1024" y="768"/>
+  <object name="tile_trigger/trigger_croc_2" gid="292" x="768" y="768"/>
+  <object name="tile_trigger/trigger_croc_3" gid="292" x="64" y="1600"/>
+  <object name="tile_trigger/trigger_croc_4" gid="292" x="64" y="1664"/>
+  <object name="tile_trigger/trigger_croc_5" gid="292" x="64" y="1728"/>
+  <object name="tile_trigger/trigger_croc_6" gid="292" x="64" y="1792"/>
+  <object name="tile_trigger/trigger_croc_7" gid="292" x="64" y="1856"/>
  </objectgroup>
 </map>

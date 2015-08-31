@@ -27,16 +27,17 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="25" height="25">
-  <object name="characters/player/player_one" gid="286" x="64" y="384"/>
+  <object name="characters/player/player_one" gid="286" x="192" y="384"/>
+  <object name="tile_trigger/dimension" gid="288" x="1536" y="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJy9klEKQCEIBOOdq/uf6/2G7KqbmhBEVLNT7m+t/WBM1smYym7n3flR9i4fxED8bg+bv9uH/UfVx2N0+GQYig/bn32ryIfd6TEy7l5e1cOWcmfEUP6ywkD5mU9mn5rntqcV9yi3rdu+ibIhX+au+GQZzFX1iRiKzy2DFXqj8zxbr/Si0q9R/mpNZEfjB3OJVAs=
+   eJy9kksKwDAIBUPOlfufq9sg/sZoA0IX4rypnr3W+aEm382Yyi6/u/NbjM78HmPSo3s/lofM0e3R5ZNhEB+rn9yu52PN9BgZdy9v1aMyM2KQXb4wtPyWT6aP5iE3XWFkcstXvRvyjyN34kP2obkSnwzj1afiEc2I+ukt0pKMqTeRXasPVZ1P7Q==
   </data>
  </layer>
  <layer name="Walls" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBhe4D4jA8MdKuJ7jJh23MUiRgnAZt4TOthBbYDNjqd08Ac94mPUjlE7Ru2AAGxl00CVL5QAbGXTUIyP4WzHQyrX5w/okE7pDQDx6UOn
+   eJzdlFsOhSAMRGH/W/T9vncVxkR+xg5thS+bEAMC08M0DeFb0ccQmoqji0+NVlgrCem+tFbKM0VdoxaPdM/vzmOoxPM3+FHKY/HDyrOTesppLE4exp/T0PhYvivMc57jGMgZvIt9LRz4n+Xr0cA32QkP+sfmkoZWw959ubP4JljT6N9GfJQ0kLUkb6bBuBgP8qZYBU1kZx6/9YeteXg8GrPCw2rT0oPe9iXr/itG0kvSOJQ560FfihNDnMuN
   </data>
  </layer>
 </map>

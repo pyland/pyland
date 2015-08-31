@@ -3,6 +3,8 @@ world_name = "world_1"
 level_name = "level_2"
 map_name = "start"
 
+engine.update_level("1")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
@@ -13,8 +15,15 @@ pyscripter_state_found = 1
 #end state definitions
 
 #setting the player's starting position
-if player_data.previous_exit_is("world_1"):
+if player_data.previous_exit_is("world_1", level_name = "level_2", map_name = "bogs"):
+    engine.run_callback_list_sequence([
+        lambda callback: player_one.move_to(exit_to_bogs.get_position(), callback = callback),
+        lambda callback: player_one.move_north(callback = callback),
+    ])
+    myla_start_position = exit_to_bogs.get_position()
+elif player_data.previous_exit_is("world_1"):
     player_one.move_east()
+    myla_start_position = (3, 10)
 #end setting the player's starting position
 
 def go_to_world(player_object):
@@ -61,6 +70,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: player_one.face_north(callback = callback),
             lambda callback: annoying_croc.face_north(callback = callback),
             lambda callback: engine.show_dialogue("???: Wait you lousy croc!", callback = callback),
+            lambda callback: engine.show_dialogue("Monkey surprise attack!", callback = callback),
             lambda callback: myla.face_south(callback = callback),
             lambda callback: myla.set_solidity(False, callback = callback),
             lambda callback: myla.start_animating(callback = callback),
@@ -74,7 +84,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: player_one.wait(0.5, callback = callback),
             lambda callback: player_one.face_east(callback = callback),
             lambda callback: engine.show_dialogue("Annoying Croc: Ow!", callback = callback),
-            lambda callback: engine.show_dialogue("I might be outnumbered by the two of you now, but I will put the lads on patrol to catch you.", callback = callback),
+            lambda callback: engine.show_dialogue("I might be outnumbered by the two of you now, but I will put the lads and lasses on patrol to catch you.", callback = callback),
             lambda callback: engine.show_dialogue("I will tell them not to bite you...", callback = callback),
             lambda callback: engine.show_dialogue("... too hard. Hehehehehehe.", callback = callback),
             lambda callback: annoying_croc.face_east(callback = callback),
@@ -88,7 +98,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: annoying_croc.move_north(callback = callback),
             lambda callback: annoying_croc.wait(0.5, callback = callback),
             lambda callback: annoying_croc.face_west(callback = callback),
-            lambda callback: engine.show_dialogue("Annoying Croc: And monkey...", callback = callback),
+            lambda callback: engine.show_dialogue("Annoying Croc: And Myla...", callback = callback),
             lambda callback: engine.show_dialogue("... your mother is very dissapointed.", callback = callback),
             lambda callback: annoying_croc.face_east(callback = callback),
             lambda callback: annoying_croc.start_animating(callback = callback),
@@ -102,8 +112,9 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: annoying_croc.set_solidity(False, callback = callback),
             lambda callback: myla.face_west(callback = callback),
             lambda callback: engine.show_dialogue("???: Thank you so much for helping me out back there!", callback = callback),
-            lambda callback: engine.show_dialogue("I think if you hadn't come along I would have been croc dinner!", callback = callback),
-            lambda callback: engine.show_dialogue("By the way I'm Myla, and you are?", callback = callback),
+            lambda callback: engine.show_dialogue("I think if you hadn't come along I don't know what I would have done.", callback = callback),
+            lambda callback: engine.show_dialogue("The green one you just had the pleasure of meeting is Carl.", callback = callback),
+            lambda callback: engine.show_dialogue("By the way I'm Myla, as you heard I guess? Oh sorry! You are?", callback = callback),
             lambda callback: engine.show_dialogue("...", callback = callback),
             lambda callback: engine.show_dialogue("Nice to meet you " + engine.get_player_name() + "!", callback = callback),
             lambda callback: engine.show_dialogue("It seems that you have found my PyScripter, this is an early prototype, there aren't many around ...", callback = callback),
@@ -125,7 +136,7 @@ elif pyscripter_state == pyscripter_state_found:
     pyscripter.set_solidity(False, callback = lambda: pyscripter.move_to((0,0)))
     annoying_croc.set_visible(False)
     annoying_croc.set_solidity(False)
-    myla.move_to((3, 10))
+    myla.move_to(myla_start_position)
     myla.follow(player_one)
 
 player_one.focus()

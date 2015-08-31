@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="16" height="11" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="31" height="18" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -21,39 +21,41 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <layer name="ground" width="16" height="11">
+ <layer name="ground" width="31" height="18">
   <data encoding="base64" compression="zlib">
-   eJxLYGBgSBjFo3iIYgBMFUIB
+   eJxLYGBgSBjFo3gUj+JRPIpH8SgeAhgAE8bRQQ==
   </data>
  </layer>
- <layer name="water" width="16" height="11">
+ <layer name="water" width="31" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYBjagB2IOaA0MuYgwIbRYkAsigXjEidGHpucGA6MS78YmlnE6sWmB5fZIMwIxExomBELmxGLWkYi4ofWAAClpQXn
+   eJztVNEOgzAIpG6JM6tbX+T/P3UuKfHGrrgmvk2Siy0Hh0LtIiJLxXNFciiEHxynJHeo/Nt/kc3uoIe6GMNir4TTBmc8y/G1WS7G6o7OUbWnFWOFjxsBM/gfjjPe+2eiabUnx+Msbc6J7D1XSA3UZLV75hEZzsqeKt91sWesJ6yft52111Hh3xz1phXbo9GbE8Uyv0rc16OA+mye5sP7ppC9v8d+Oau+Xuu98Ixm+by7ssSWZft/EImsE4ll9+Rpp/2bvQBklxHe
   </data>
  </layer>
- <layer name="bridge/rock" width="16" height="11">
+ <layer name="bridge/rock" width="31" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYBg+4CoQKzDilgfJXR3VTzP9AwEAhJYLiQ==
+   eJxjYBia4AoaxiVPK/NHwdAFV4mQV2DELQ+SI2TGqN2jdhMDBtLuUTAKhioAAOwCF/o=
   </data>
  </layer>
- <layer name="trees" width="16" height="11">
+ <layer name="trees" width="31" height="18">
   <data encoding="base64" compression="zlib">
-   eJxjYBhaIGOgHTAKUACu+MgH4jwoLiLDnBIk/fl47AEAE6IFHQ==
+   eJztk8EKwCAMQ/u1ai/7/+NOg1KaGicIQh8UwTVNpihyFzr53jZm/tFGc9j9ggPdyziaoihyHree8EOFQG+G1fteTfyZdxtp2YzdaZjsHyg30kc+WR6mOphpacQc9C9ZHg20vl8WPYeprB+dofWfnfkLQ7FAEg==
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="16" height="11">
-  <object name="characters/enemies/crocodile/croc_1" gid="296" x="320" y="448"/>
-  <object name="characters/enemies/crocodile/croc_0" gid="296" x="320" y="512"/>
-  <object name="characters/enemies/crocodile/croc_2" gid="296" x="320" y="384"/>
-  <object name="characters/player/player_one" gid="286" x="768" y="704"/>
-  <object name="characters/npcs/myla/myla" gid="286" x="832" y="704"/>
-  <object name="characters/enemies/crocodile/croc_3" gid="296" x="320" y="320"/>
-  <object name="tile_trigger/end_level" gid="292" x="0" y="640"/>
-  <object name="tile_trigger/end_level_2" gid="292" x="0" y="704"/>
+ <objectgroup name="Object Layer 1" width="31" height="18">
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="832" y="640"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_0" gid="296" x="832" y="704"/>
+  <object name="characters/enemies/crocodiles/white_crocodile/croc_2" gid="296" x="832" y="576"/>
+  <object name="characters/player/player_one" gid="286" x="1472" y="1088"/>
+  <object name="characters/npcs/myla/myla" gid="286" x="1472" y="1152"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="832" y="512"/>
+  <object name="tile_trigger/end_level" gid="292" x="1728" y="64"/>
+  <object name="tile_trigger/end_level_2" gid="292" x="1664" y="64"/>
+  <object name="player_data/player_data" gid="287" x="0" y="64"/>
+  <object name="tile_trigger/exit_level_start" gid="292" x="1472" y="1152"/>
  </objectgroup>
- <layer name="SpecialLayer" width="16" height="11">
+ <layer name="SpecialLayer" width="31" height="18">
   <data encoding="base64" compression="zlib">
-   eJyzZ2JgsCcSYwPEqCXGHHLMBQEbJgRG52PD+NTA5Gxx4JGin5TwwwWw6SMFEKsfAAhLHTw=
+   eJyzZWJgsKUDhgFi1OBSCwI2WNQRC3DZS6qZuNwNMwebOCXhQss4GQh7CdmNDuyZsGNyw46QHkJxhh7Po3aPPLvR0x6yGfjKE2rabcOEG5MKSNGPz15S7SdFLzH2Ems3qfqJtZsaeCDtRnfHYLUbANKVaMc=
   </data>
  </layer>
 </map>

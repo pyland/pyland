@@ -74,7 +74,6 @@ private:
     glm::ivec2 tile_identifier_old_tile;
     std::chrono::steady_clock::time_point start_time;
     std::vector<Lifeline> digit_callbacks;
-    Text tile_identifier_text;
     std::function<void (GameWindow*)> func_char;
 
     //Data for the present challenge
@@ -93,6 +92,7 @@ public:
 
     //A variable to hold the name of the player currently playing, used to keep track of game saves
     std::string player_name;
+    std::string get_current_challenge();
 
     GameMain(int &argc, char **argv);
     ~GameMain();

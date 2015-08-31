@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="64" tileheight="64" nextobjectid="10">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="64" tileheight="64" nextobjectid="41">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -31,17 +31,22 @@
  </layer>
  <layer name="foreground" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDFaQSwBTy44cHHgo2cFABzuGS1jRI12NglEwCmgPAIreF04=
+   eJzFVu0KwjAMjE/rEPoIOj8n6Eu7P4EQ7tKkDj0IHXS7y1fTNRFpRTsMfGPB9qucW1oGGX/RewyPncjdWSbHPUzm+blyXpxV8rAP+HVlGlL022tYi+IY4UQ4rpwnZ/+G7ZGbW68J/3y8KH6UW7V3R8P3AkOk8UpoRHWzyGqgvs7EsXyRK6RVrQfKVeQzq4/2+gx6/kw0lMP2ZC+WKtBMaWZvVMOfAaRRma/Ih14t/UzPcLNY2Yxnd1Okk8kny1U2nq00qjPfn3M745UH1YXdv1X84t/lA6R4jnA=
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
   <object id="1" name="characters/player/player" gid="286" x="0" y="832" width="64" height="64"/>
-  <object id="5" name="characters/npcs/myla/myla" gid="286" x="0" y="896" width="64" height="64"/>
-  <object id="9" name="tile_trigger/hall_entrance" gid="292" x="448" y="832" width="64" height="64"/>
+  <object id="2" name="characters/npcs/myla/myla" gid="286" x="0" y="896" width="64" height="64"/>
+  <object id="3" name="tile_trigger/hall_entrance" gid="292" x="448" y="832" width="64" height="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDFZgw4QfU8sOdJAMxbSyI5mB+nbgArT0Bz3tICRHqh20TlejYBSMAtoDAOoXCMQ=
+   eJxjYBgFlIIsMvXZMGFiagNK7SBG/VDwx2Cxgxpuorb7hosdhOxBV0dt84dSWFFiBz3yx6gdo3ZQy0xq2ZGFhGkNSLEDAO90G/0=
+  </data>
+ </layer>
+ <layer name="Bridge" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAHgzCcQAAQ==
   </data>
  </layer>
 </map>

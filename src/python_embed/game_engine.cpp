@@ -48,7 +48,7 @@ std::string GameEngine::get_level_location() {
 }
 
 void GameEngine::print_debug(std::string debug_message) {
-    LOG(INFO) << debug_message; // TODO: work out properly how python messages should be debugged.
+    std::cout << debug_message << std::endl; // TODO: work out properly how python messages should be debugged.
 }
 
 void GameEngine::show_dialogue(std::string text, bool disable_scripting, PyObject *callback) {
@@ -74,9 +74,20 @@ void GameEngine::show_external_script_help(std::string text, PyObject *callback)
 
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
 
+    EventManager::get_instance()->add_event(boost_callback);
+
     LOG(INFO) << "Adding " << text << "to the external script help with a regular callback";
     Engine::show_external_script_help(text);
 }
+
+void GameEngine::close_external_script_help(PyObject *callback) {
+
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+
+    LOG(INFO) << "Closing external script help";
+    Engine::close_external_script_help();
+}
+
 
 void GameEngine::show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *_boost_options){
 
@@ -235,6 +246,10 @@ void GameEngine::update_level(std::string text){
   Engine::update_level(text);
 }
 
+void GameEngine::clear_level_text(){
+  Engine::clear_level_text();
+}
+
 void GameEngine::update_coins(int value){
   Engine::update_coins(value);
 }
@@ -242,6 +257,10 @@ void GameEngine::update_coins(int value){
 
 void GameEngine::update_totems(int value, bool show){
    Engine::update_totems(value, show);
+}
+
+void GameEngine::clear_totems_text(){
+  Engine::clear_totems_text();
 }
 
 void GameEngine::insert_to_scripter(std::string text)
@@ -334,5 +353,9 @@ void GameEngine::set_player_name(std::string player_name) {
     Engine::set_player_name(player_name);
 }
 
+
+void GameEngine::restart_level() {
+    Engine::restart_level();
+}
 
 

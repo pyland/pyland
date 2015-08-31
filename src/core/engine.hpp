@@ -203,8 +203,10 @@ public:
     //static void hide_external_tab();
     static void update_world(std::string text);
     static void update_level(std::string text);
+    static void clear_level_text();
     static void update_coins(int value);
     static void update_totems(int value,bool show);
+    static void clear_totems_text();
 
     static void insert_to_scripter(std::string text);
     static void clear_scripter();
@@ -220,6 +222,10 @@ public:
     static void trigger_run(int script);
     static void trigger_speed();
     static int get_run_script();
+
+    static void set_music(bool on);
+    static void open_main_menu();
+    static void restart_level();
 
     /// global access to game font
     static TextFont get_game_font();
