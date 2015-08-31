@@ -130,7 +130,7 @@ cd../../game
 rm database.db
 sqlite3 database.db < database_source.sql
 cd ..
-python3.2 build.py -d -j 6 -c clang++-3.6
+python3.4 build.py -d -j 6 -c g++
 ```
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
