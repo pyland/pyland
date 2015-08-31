@@ -129,7 +129,8 @@ make
 cd../../game
 rm database.db
 sqlite3 database.db < database_source.sql
-PLATFORM=desktop COMPILER=g++-4.7 PYTHON_VERSION=3.4 LIBBOOST_PYTHON=boost_python-py34 make
+cd ..
+python3.2 build.py -d -j 6 -c clang++-3.6
 ```
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
@@ -140,7 +141,7 @@ To launch (you must be in the /src folder):
 
 ```bash
 #Must be in the src folder
-./main.bin
+./pyland
 ```
 
 Keybindings
