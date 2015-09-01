@@ -3,7 +3,8 @@ world_name = "world_1"
 level_name = "level_6"
 map_name = "vine_intro"
 
-engine.update_level("5")
+engine.update_world_text("1")
+engine.update_level_text("6")
 
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name)

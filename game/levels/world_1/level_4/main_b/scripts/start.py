@@ -3,6 +3,9 @@ world_name = "world_1"
 level_name = "level_4"
 map_name = "main_b"
 
+engine.update_world_text("1")
+engine.update_level_text("4")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
@@ -47,7 +50,7 @@ trigger_11,
 trigger_12,
 trigger_13,
 trigger_14,
-trigger_15, 
+trigger_15,
 trigger_16,
 trigger_17,
 trigger_18,
@@ -66,7 +69,7 @@ trigger_29]
 
 def player_walked_on_ti():
     x,y = player_one.get_position()
-    
+
     for obj in engine.get_objects_at((x+1,y)):
         if obj in croc:
             return obj.face_west(lambda: obj.lose(player_one))

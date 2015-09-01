@@ -133,11 +133,11 @@ class GameEngine {
         /// Update the info bar with the current
         /// world/level/coins/totems
         ///
-        void update_world(std::string text);
-        void update_level(std::string text);
+        void update_world_text(std::string text);
+        void update_level_text(std::string text);
         void clear_level_text();
-        void update_coins(int value);
-        void update_totems(int value, bool show);
+        void update_coins_text(int value);
+        void update_totems_text(int value, bool show);
         void clear_totems_text();
 
         /// Insert text to the current QsciScintilla

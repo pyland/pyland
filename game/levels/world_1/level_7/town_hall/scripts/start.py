@@ -6,6 +6,9 @@ world_name = "world_1"
 level_name = "level_7"
 map_name = "town_hall"
 
+engine.update_world_text("1")
+engine.update_level_text("7")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name)
 
@@ -833,7 +836,7 @@ engine.run_callback_list_sequence(dialogue_sequence)
 def try_leave():
     if level_finished():
         player_data.complete_level_and_save()
-        player_data.save_and_exit("/world_1")	
+        player_data.save_and_exit("/world_1")
     else:
         engine.run_callback_list_sequence(try_to_leave_sequence)
 

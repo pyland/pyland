@@ -3,6 +3,9 @@ level_name = "level_1"
 world_name = "world_1"
 map_name = "road_one"
 
+engine.update_world_text("1")
+engine.update_level_text("1")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
@@ -99,7 +102,7 @@ if heidi_state == heidi_state_getting_prank_materials:
             lambda callback: player_one.face_south(callback = callback),
             lambda callback: player_one.wait(0.3, callback = callback),
             lambda callback: engine.show_dialogue("Heidi: I'll go and set-up all this stuff back in the village! Why don't you head east to the bog? Hopefully the annoying crocodile has moved!", callback = callback),
-            lambda callback: heidi.stop_follow(callback = callback),		
+            lambda callback: heidi.stop_follow(callback = callback),
             lambda callback: heidi.move_south(callback = callback),
             lambda callback: heidi.move_south(callback = callback),
             lambda callback: heidi.move_south(callback = callback),
