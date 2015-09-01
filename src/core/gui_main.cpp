@@ -857,6 +857,7 @@ void GUIMain::set_button_index(unsigned int value)
 
 void GUIMain::click_next_player()
 {
+    if (buttons.size() < 1) return;
     cur_button_index = cur_button_index + 1;
     if (cur_button_index >= buttons.size())
     {
