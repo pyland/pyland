@@ -13,7 +13,7 @@ private:
 
 public:
     static std::shared_ptr<RenderableComponent> get_component(std::string filepath);
-
+    static void clear();
 };
 
 #endif

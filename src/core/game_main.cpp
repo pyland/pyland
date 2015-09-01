@@ -32,6 +32,7 @@
 #include "mouse_cursor.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
+#include "sprite_manager.hpp"
 
 #ifdef USE_GLES
 #include "typeface.hpp"
@@ -385,6 +386,8 @@ void GameMain::game_loop(bool showMouse)
         challenge_data->run_challenge = false;
         em->flush_and_disable(interpreter.interpreter_context);
         delete challenge;
+        
+        SpriteManager::clear(); 
         {
             lock::GIL raii_gil(interpreter.interpreter_context);
             delete gui;

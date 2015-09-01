@@ -32,3 +32,7 @@ std::shared_ptr<RenderableComponent> SpriteManager::get_component(std::string fi
     return sprite_map[filepath];
 
 }
+
+void SpriteManager::clear(){
+    sprite_map.clear();
+}

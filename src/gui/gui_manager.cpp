@@ -145,7 +145,7 @@ GUIManager::GUIManager() {
 }
 
 GUIManager::~GUIManager() {
-
+   renderable_component->get_texture()->clear();
 }
 
 
