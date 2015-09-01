@@ -19,7 +19,7 @@ Button::Button(ButtonType _type) {
     button_text->set_y_offset(0.1f);
     set_text("");
 
-	is_highlighted = false;
+    is_highlighted = false;
 
     add(button_text);
 
@@ -57,28 +57,28 @@ Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<voi
     button_text->set_x_offset(0.3f);
     button_text->set_y_offset(0.1f);
     button_text->set_text(_text);
-	is_highlighted = false;
+    is_highlighted = false;
     add(button_text);
 }
 
 void Button::highlight(){
-	if(!is_highlighted){
-		std::string disp_text = button_text->get_text_as_string();	
-		disp_text[disp_text.find_first_of(' ')] = '<';
-		disp_text += ">";
-		this->set_text(disp_text);
-		is_highlighted = true;
-	}
+    if(!is_highlighted){
+        std::string disp_text = button_text->get_text_as_string();	
+        disp_text[disp_text.find_first_of(' ')] = '<';
+        disp_text += ">";
+        this->set_text(disp_text);
+        is_highlighted = true;
+    }
 }
 
 void Button::unhighlight(){
-	if(is_highlighted){
-		std::string disp_text = button_text->get_text_as_string();
-		disp_text[disp_text.find_first_of('<')] = ' ';
-		disp_text.erase(disp_text.find_last_of('>'), 1); 
-		this->set_text(disp_text);
-		is_highlighted = false;	
-	}
+    if(is_highlighted){
+        std::string disp_text = button_text->get_text_as_string();
+        disp_text[disp_text.find_first_of('<')] = ' ';
+        disp_text.erase(disp_text.find_last_of('>'), 1); 
+        this->set_text(disp_text);
+        is_highlighted = false;	
+    }
 }
 
 void Button::resize_text(float width, float height){
