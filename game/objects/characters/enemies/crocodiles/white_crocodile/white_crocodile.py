@@ -10,6 +10,9 @@ class WhiteCrocodile(Crocodile):
 
     def initialise(self):
         super().initialise()
+        """
+        White crocodiles can have two collisions before stopping
+        """
         self.oscillate = 2
 
 

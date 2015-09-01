@@ -197,7 +197,7 @@ void GUIMain::create_bag(){
 
     bag_button = std::make_shared<Button>(ButtonType::Single);
     bag_button->set_picture("gui/game/bag");
-    bag_button->set_text("Bag");
+    bag_button->set_text("");
     bag_button->set_alignment(ButtonAlignment::TopRight);
     bag_button->set_width(button_width);
     bag_button->set_height(button_height);
@@ -227,7 +227,7 @@ void GUIMain::create_bag(){
     });
 
     bag_window = std::make_shared<Board>(ButtonType::Board);
-    bag_window->set_text("Bag");
+    bag_window->set_text("");
     bag_window->set_clickable(false);
     bag_window->set_visible(false);
     bag_window->move_text(title_x_offset, title_y_offset);
@@ -565,16 +565,27 @@ void GUIMain::proceed_notification_bar_with_options(){
     }
 }
 
-void GUIMain::toggle_selection_notification_bar_with_options(){
+void GUIMain::proceed_selection_notification_bar_with_options(bool forward){
     notification_bar_with_options_arrow_select_enable = true;
-    option_selected++;
-    if (option_selected > 1) option_selected = 0;
-    for(unsigned int i=0; i<=1; i++){
+
+	if(forward)
+	{
+		if(option_selected > 0){
+			option_selected--;
+		}
+	}
+	else{
+		if(option_selected < 1){
+			option_selected++; 
+		}
+	}
+	LOG(INFO) << "££££" << option_selected;	
+    for(unsigned int i=0; i<2; i++){
         if (i == option_selected){
-            option_buttons[i]->set_text_colour(0, 0, 0, 255);
+            option_buttons[i]->highlight();
         }
         else{
-            option_buttons[i]->set_text_colour(150, 150, 200, 240);
+            option_buttons[i]->unhighlight();
         }
     }
 }
@@ -592,7 +603,7 @@ void GUIMain::close_notification_bar(){
             option_button->set_height(option_button_height);
             option_button->set_x_offset(option_button_x - float(i)*option_button_spacing);
             option_button->set_y_offset(option_button_y);
-            option_button->set_text(notification_options[i].first);
+            option_button->set_text(" " + notification_options[i].first); 
             option_button->move_text(option_button_text_x, option_button_text_y);
             option_button->set_visible(true);
             option_button->set_clickable(true);
@@ -660,7 +671,7 @@ void GUIMain::open_bag()
     bag_window->set_visible(true);
     bag_window->set_clickable(false);
 
-    bag_button->set_text("Close");
+    bag_button->set_text("");
 
     pyguide_button->set_visible(true);
     pyguide_button->set_clickable(true);
@@ -682,7 +693,7 @@ void GUIMain::close_bag()
     bag_window->set_clickable(false);
 
     close_pyguide();
-    bag_button->set_text("Bag");
+    bag_button->set_text("");
 
     pyguide_button->set_visible(false);
     pyguide_button->set_clickable(false);
@@ -701,7 +712,7 @@ void GUIMain::open_pyguide()
 {
     close_bag();
     bag_open = true; //because the pyguide is now open
-    bag_button->set_text("Close");
+    bag_button->set_text("");
 
     pyguide_window->set_visible(true);
     pyguide_window->set_clickable(false);
@@ -733,7 +744,7 @@ void GUIMain::open_pyguide()
 void GUIMain::close_pyguide()
 {
     bag_open = false;
-    bag_button->set_text("Bag");
+    bag_button->set_text("");
 
     pyguide_window->set_visible(false);
     pyguide_window->set_clickable(false);
@@ -807,6 +818,7 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     new_button->set_height(button_height);
     new_button->set_visible(true);
     new_button->set_clickable(true);
+	new_button->move_text(button_text_x, button_text_y);
 
     //Push to index element 'id'
     if (button_id > (button_indices.size() - 1))
@@ -1016,6 +1028,8 @@ void GUIMain::config_gui()
 
     button_width = j["scales"]["button_width"];
     button_height = j["scales"]["button_height"];
+	button_text_x = j["scales"]["button_text_x"];
+	button_text_y = j["scales"]["button_text_y"];
 
     horizontal_button_spacing = j["scales"]["horizontal_button_spacing"];
     vertical_button_spacing = j["scales"]["vertical_button_spacing"];

@@ -140,7 +140,7 @@ GameMain::GameMain(int &argc, char **argv):
     [&] (KeyboardInputEvent)
     {
         if (Engine::is_bar_with_options_open()){
-            gui->toggle_selection_notification_bar_with_options();
+            gui->proceed_selection_notification_bar_with_options(true);
         }
     }
     ));
@@ -150,7 +150,7 @@ GameMain::GameMain(int &argc, char **argv):
     [&] (KeyboardInputEvent)
     {
         if (Engine::is_bar_with_options_open()){
-            gui->toggle_selection_notification_bar_with_options();
+            gui->proceed_selection_notification_bar_with_options(false);
         }
     }
     ));

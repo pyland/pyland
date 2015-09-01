@@ -66,6 +66,8 @@ class Crocodile(Enemy):
 
 
     def toggle(self):
+        """ Toggles the crocodile and makes him face the opposite direction
+        """
         if(self.is_facing_north()):
             return self.face_south()
         if(self.is_facing_south()):
@@ -76,6 +78,18 @@ class Crocodile(Enemy):
             return self.face_east()
 
     def move_horizontal(self, player, times = -1):
+        """ The crocodile moves horizontally (east/west direction).
+
+        Everytime there is a collision, times is decremented. When time hits zero, the crocodile stops moving and holds in place. The toggle is needed to the crocodile faces the correct direction when stopping.
+        Whilst moving the crocodile checks if there is a player adjacent to it, if so it eats the player and the player loses.
+
+        Parameters
+        ----------
+        player : Player
+            The player the crocodile is looking for
+        times : int, optional
+            Number of times the crocoilde can collide with the edge of a riverbank before stopping.
+        """
 
         x,y = self.get_position()
         player_x, player_y = player.get_position()
@@ -110,7 +124,15 @@ class Crocodile(Enemy):
     def move_vertical(self, player, times = -1): 
         """ The crocodile moves vertically (north/south direction).
 
-        Everytime there is a collision, times is decremented. When time hits zero, the crocodile stops moving and holds in place. The toggle is made to 
+        Everytime there is a collision, times is decremented. When time hits zero, the crocodile stops moving and holds in place. The toggle is needed to the crocodile faces the correct direction when stopping.
+        Whilst moving the crocodile checks if there is a player adjacent to it, if so it eats the player and the player loses.
+
+        Parameters
+        ----------
+        player : Player
+            The player the crocodile is looking for
+        times : int, optional
+            Number of times the crocoilde can collide with the edge of a riverbank before stopping.
         """
         x,y = self.get_position()
         player_x, player_y = player.get_position()

@@ -1002,13 +1002,13 @@ void MainWindow::updateSpeed()
         //
         //     start + (c⁵ - 5·c⁴ + 5·c³) change
         //
-        //float eased(1.0f + 511.0f * (
-        //                + 1.0f * completion * completion * completion * completion * completion
-        //                - 5.0f * completion * completion * completion * completion
-        //                + 5.0f * completion * completion * completion
-        //            ));
+        float eased(1.0f + 511.0f * (
+                        + 1.0f * completion * completion * completion * completion * completion
+                        - 5.0f * completion * completion * completion * completion
+                        + 5.0f * completion * completion * completion
+                    ));
 
-        EventManager::get_instance()->time.set_game_seconds_per_real_second(2.5);
+        EventManager::get_instance()->time.set_game_seconds_per_real_second(eased/20.0);
     }
     else
     {

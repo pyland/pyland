@@ -34,10 +34,12 @@ engine.register_input_callback(engine.INPUT_HALT, stc.halt_script)
 
 
 #The actual menu implementation...
-def set_current_state(next_state):
+def set_current_state(next_state, callback = lambda: None):
     """ A simple callback that is run to set the current menu state after the camera has finished moving """
     global current_state
     current_state = next_state
+    engine.add_event(callback)
+
 
 class MenuState:
     """ A menu state is a way of defining what each input does when the player is on a particular option (state) in the menu """
@@ -56,26 +58,48 @@ class MenuState:
 
     #The implementaion for changing state based on each input, these can be overridden as well to provide specific behavious (eg. change a setting)
     #By default, the "current state" will change, and the camera will move to the location of the given "next state" based on the input
+    def move_bracket(self, next_pos, time = 0.2, callback = lambda: None):
+        x,y = next_pos
+        left.move_to((x-4,y), time)
+        right.move_to((x+4,y), time)
+
+        engine.add_event(callback)
+
     def select(self):
-        if not camera.is_moving():
+        if not left.is_moving() and not camera.is_moving():
             next_state = self.select_destination
-            camera.move_to(next_state.location, time = 0.2, callback = lambda: set_current_state(next_state))
+            engine.run_callback_list_sequence([
+                lambda callback: camera.move_to(next_state.location, time = 0, callback = callback),
+                lambda callback: set_current_state(next_state, callback = callback),
+                lambda callback: self.move_bracket(next_state.location, callback = callback),
+            ])
 
     def navigate_up(self):
-        if not camera.is_moving():
+        if not left.is_moving():
             next_state = self.up_destination
-            camera.move_to(next_state.location, time = 0.2, callback = lambda: set_current_state(next_state))
+            engine.run_callback_list_sequence([
+                #lambda callback: camera.move_to(next_state.location, time = 0.2, callback = callback),
+                lambda callback: set_current_state(next_state, callback = callback),
+                lambda callback: self.move_bracket(next_state.location)
+            ])
+
 
     def navigate_down(self):
-        if not camera.is_moving():
+        if not left.is_moving():
             next_state = self.down_destination
-            camera.move_to(next_state.location, time = 0.2, callback = lambda: set_current_state(next_state))
+            engine.run_callback_list_sequence([
+                #lambda callback: camera.move_to(next_state.location, time = 0.2, callback = callback),
+                lambda callback: set_current_state(next_state, callback = callback),
+                lambda callback: self.move_bracket(next_state.location)
+            ])
+
+    
 
 #Add all the menu states
 start_game = MenuState((17, 10))    #start the game....
 options = MenuState((17, 8))        #move to the options menu
 language = MenuState((34, 10))      #change the language from the options menu
-options_back = MenuState((34, 8))   #the "back" optoin in the options menu
+options_back = MenuState((34, 8))   #the "back" option in the options menu
 english = MenuState((51, 10))       #the option to change the language to english
 pyrate = MenuState((51, 8))         #the option to change the language to pyrate
 language_back = MenuState((51, 6))  #the "back" option in the language menu
@@ -95,7 +119,7 @@ language.down_destination = options_back
 language.select_destination = english
 
 options_back.up_destination = language
-options_back.select_destination = options
+options_back.select_destination = start_game
 
 def save_language(language):
     settings["language"] = language

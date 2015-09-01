@@ -13,8 +13,8 @@
 		//"level_location": "/test_world/yingischallenged/main",
 		//"level_location": "/world_one_old/level_one/main",
 		//"level_location": "/world_one_old/level_two/main",
-		"level_location": "/start_screen",
-		//"level_location": "/world_1",
+		//"level_location": "/start_screen",
+		"level_location": "/world_1",
 		//"level_location" : "/world_1/intro",
 		//"level_location" : "/world_1/level_1/rossumberg",
 		//"level_location" : "/world_1/level_1/player_house",
@@ -28,7 +28,8 @@
 		//"level_location" : "/world_1/level_7/town_hall",
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
-		//"level_location" : "/world_2/level_1/main",
+		//"level_location" : "/world_2/level_2/main",
+		//"level_location" : "/demo_levels/level_1/main",
 		//"level_location" : "world_8/treasure_matrix",	
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
@@ -151,6 +152,8 @@
 		//the sizes of the buttons on top of the screen
 		"button_width": 0.08,
 		"button_height": 0.12,
+		"button_text_x": 0.4,
+		"button_text_y": -0.5,
 
 		//the distance between two buttons
 		"horizontal_button_spacing": 0.08,
@@ -167,9 +170,13 @@
 	// "index": "pyguide api: description"
 	
 	"pyguide_apis": {
-		"number": 2,
+		"number": 7,
 		"0": "move_east(): This moves the present character towards the right by one step.",
-		"1": "print(args): This prints the argument args to the terminal (args must be of type string)",
-		
+		"1": "move_west(): This moves the present character towards the left by one step.",
+		"2": "move_south(): This moves the present character towards the bottom by one step.",
+		"3": "move_north(): This moves the present character towards the top by one step.",
+		"4": "yell(): This has effect when it is called by a character that is facing a crocodile. This attracts the crocodile towards the yeller.",
+		"5": "cut(): This cuts a vine that is present in front of a character",
+		"6": "print(args): This prints the argument args to the terminal (args must be of type string)"
 	}
 }
