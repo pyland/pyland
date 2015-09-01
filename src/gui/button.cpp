@@ -63,7 +63,10 @@ Button::Button(ButtonType _type, std::shared_ptr<Text>  _text, std::function<voi
 
 void Button::highlight(){
 	if(!is_highlighted){
-		this->set_text("<" + button_text->get_text_as_string() + ">");
+		std::string disp_text = button_text->get_text_as_string();	
+		disp_text[disp_text.find_first_of(' ')] = '<';
+		disp_text += ">";
+		this->set_text(disp_text);
 		is_highlighted = true;
 	}
 }
@@ -71,8 +74,8 @@ void Button::highlight(){
 void Button::unhighlight(){
 	if(is_highlighted){
 		std::string disp_text = button_text->get_text_as_string();
-		disp_text.erase(disp_text.find_first_of('<'), 1);
-		disp_text.erase(disp_text.find_last_of('>'), 1);
+		disp_text[disp_text.find_first_of('<')] = ' ';
+		disp_text.erase(disp_text.find_last_of('>'), 1); 
 		this->set_text(disp_text);
 		is_highlighted = false;	
 	}
