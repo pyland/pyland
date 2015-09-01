@@ -244,7 +244,7 @@ public:
     void proceed_notification_bar_with_options();
     void close_external_script_help();
 
-    void toggle_selection_notification_bar_with_options();
+    void proceed_selection_notification_bar_with_options(bool forward);
     void close_notification_bar();
 
     void show_external_script_help(std::string);

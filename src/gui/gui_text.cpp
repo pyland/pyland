@@ -36,6 +36,10 @@ std::shared_ptr<Text> GUIText::get_text() {
     return text_data->get_text();
 }
 
+std::string GUIText::get_text_as_string(){
+	return text_data->get_text_as_string();
+}
+
 void GUIText::set_text(std::shared_ptr<Text> _text) {
     text_data->set_text(_text);
 }

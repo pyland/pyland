@@ -565,16 +565,27 @@ void GUIMain::proceed_notification_bar_with_options(){
     }
 }
 
-void GUIMain::toggle_selection_notification_bar_with_options(){
+void GUIMain::proceed_selection_notification_bar_with_options(bool forward){
     notification_bar_with_options_arrow_select_enable = true;
-    option_selected++;
-    if (option_selected > 1) option_selected = 0;
-    for(unsigned int i=0; i<=1; i++){
+
+	if(forward)
+	{
+		if(option_selected > 0){
+			option_selected--;
+		}
+	}
+	else{
+		if(option_selected < 1){
+			option_selected++; 
+		}
+	}
+	LOG(INFO) << "££££" << option_selected;	
+    for(unsigned int i=0; i<2; i++){
         if (i == option_selected){
-            option_buttons[i]->set_text_colour(0, 0, 0, 255);
+            option_buttons[i]->highlight();
         }
         else{
-            option_buttons[i]->set_text_colour(150, 150, 200, 240);
+            option_buttons[i]->unhighlight();
         }
     }
 }
@@ -592,7 +603,7 @@ void GUIMain::close_notification_bar(){
             option_button->set_height(option_button_height);
             option_button->set_x_offset(option_button_x - float(i)*option_button_spacing);
             option_button->set_y_offset(option_button_y);
-            option_button->set_text(notification_options[i].first);
+            option_button->set_text(" " + notification_options[i].first); 
             option_button->move_text(option_button_text_x, option_button_text_y);
             option_button->set_visible(true);
             option_button->set_clickable(true);
