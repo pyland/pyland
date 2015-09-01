@@ -750,6 +750,7 @@ def follow_all():
         snakes[snake_index].follow(player)
 
 finish_sequence = [
+    lambda callback: elisabeth.set_solidity(False, callback = callback),
     lambda callback: jamie.face_east(callback = callback),
     lambda callback: camera.move_to(player.get_position(), time = 0.0, callback = callback),
     lambda callback: camera.focus(callback = callback),
