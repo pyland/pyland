@@ -1,3 +1,5 @@
+camera.focus()
+
 import sys
 import json
 
@@ -6,7 +8,6 @@ from script_state_container import ScriptStateContainer
 
 config = engine.get_config()
 
-camera.focus()
 c1 = (210, 210, 210)
 c2 = (190, 190, 190)
 engine.set_ui_colours(c1, c2)

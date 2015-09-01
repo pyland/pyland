@@ -159,8 +159,12 @@ void GameEngine::flush_input_callback_list(int input_key) {
     return;
 }
 
-void GameEngine::play_music(std::string song_name) {
+void GameEngine::play_music(std::string song_name, PyObject* callback) {
     AudioEngine::get_instance()->play_music("../game/music/" + song_name + ".ogg");
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
 

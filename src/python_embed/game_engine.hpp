@@ -109,7 +109,7 @@ class GameEngine {
         ///
         /// Play a given song from the music folder
         ///
-        void play_music(std::string song_name);
+        void play_music(std::string song_name, PyObject* callback);
 
         ///
         /// Returns a raw string of the json config

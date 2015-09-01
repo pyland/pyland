@@ -24,7 +24,7 @@ class Engine:
     __json_data = None
 
     def get_dialogue(self, level_name, identifier, escapes = dict()):
-        """ Get the piece of dialoge requested form the database. 
+        """ Get the piece of dialoge requested form the database.
 
         Parameters
         ----------
@@ -35,7 +35,7 @@ class Engine:
         esacpes : dict of str * str
             A dictionary mapping escape keys (player_name) to its replacement in the game (escapes[player_name] = Tom) to allow parts of the result to be dynamically replaced.
 
-        Returns 
+        Returns
         --------
         str
             Returns the specific dialogue requested from the database
@@ -112,7 +112,7 @@ class Engine:
             print("Not a valid language!")
 
     def get_language(self):
-        """Returns the language the game engine is currently set to 
+        """Returns the language the game engine is currently set to
 
         Returns
         -------
@@ -222,6 +222,20 @@ class Engine:
         x, y = position
         return self.__cpp_engine.get_tile_type(x, y)
 
+    def play_music(self, track_location, callback = lambda: None):
+        """ Sets the currently playing music to the given track, this track loops until another one is set
+
+        Parameters
+        ----------
+        track_location : string
+            The name of the track to be played
+
+        callback : func, optional
+            Places the callback onto the engine
+
+        """
+        self.__cpp_engine.play_music(track_location, callback)
+
 
     def get_config(self):
         """ Parses the current config.jsonnet file as a python json object
@@ -264,7 +278,7 @@ class Engine:
         return
 
     def get_settings(self):
-        """ Return the settings from the save.json file as a python json object 
+        """ Return the settings from the save.json file as a python json object
 
         Returns
         -------
@@ -293,7 +307,7 @@ class Engine:
         Parameters
         ----------
         name : str
-            String of a player name that has been initialised with a save.json entry 
+            String of a player name that has been initialised with a save.json entry
 
         Returns
         -------
@@ -305,7 +319,7 @@ class Engine:
             return self.__get_json_data()["player_saves"][name]
         elif name in self.__get_json_data(force_reread = True)["player_saves"]:
             return self.__get_json_data()["player_saves"][name]
-        else:			
+        else:
             return {}
 
     def save_player_data(self, name, game_save):
@@ -316,9 +330,9 @@ class Engine:
         name : str
             The name of the player we want to same the game_save state into
         game_save : save object
-             
 
-        """ 
+
+        """
         #TODO: add resiliency!!!!
         self.__json_data["player_saves"][name] = game_save
         self.__save_json_data()
@@ -430,7 +444,7 @@ class Engine:
         self.__cpp_engine.show_external_script_help(dialogue, callback)
 
     def show_dialogue_with_options(self, dialogue, options, disable_scripting = True):
-        """ The engine display the dialogue as a pop-up text window with options. 
+        """ The engine display the dialogue as a pop-up text window with options.
 
         This is usually used for dialogue with options (NPCs talking to the player and ask if the player wants to help them or not)
 
@@ -439,7 +453,7 @@ class Engine:
         dialogue : str
             The string that will be display on the dialogue window
         options : dict of str * func
-            A dictionary that maps strings to callbacks. The keys of the dictionary are displayed as the options the player can select, after which options[selected_key] is run. 
+            A dictionary that maps strings to callbacks. The keys of the dictionary are displayed as the options the player can select, after which options[selected_key] is run.
         disable_scripting : bool
             A boolean value that indicates if we want the PyScripter to be disabled or not if the dialogue window is up.
         """
@@ -453,7 +467,7 @@ class Engine:
         Parameters
         ----------
         callback_list_sequence : list of func
-            A list of functions we want to run in sequence with callback linking together. (e.g. the callback taken by every function in this list should be callback). 
+            A list of functions we want to run in sequence with callback linking together. (e.g. the callback taken by every function in this list should be callback).
             Only functions that accept callbacks may be in this list, except for the last function which doesn't necessarily have to accept a callback.
         callback : func, optional
             Places the callback onto the engine
@@ -509,7 +523,7 @@ class Engine:
     def show_py_scripter(self, callback = lambda: None):
         """ Allows the player to see the PyScritpter
 
-        Called when the player first receives the PyScritpter    
+        Called when the player first receives the PyScritpter
 
         Parameters
         ----------
@@ -521,7 +535,7 @@ class Engine:
     def enable_script_editing(self, callback = lambda: None):
         """ Allows the player to edit code in their PyScripter
 
-        Called after the PyScripter has been disabled and we want to enable it, usually called at the end of a dialogue sequence    
+        Called after the PyScripter has been disabled and we want to enable it, usually called at the end of a dialogue sequence
 
         Parameters
         ----------
@@ -561,9 +575,9 @@ class Engine:
     def show_external_script(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", script_init = lambda: None):
         """ This function is used to have the player give a script to an NPC (after which the NPC may or may not run the script)
 
-        When an NPC requires a script he will ask the player if he/she can help write a script. If the player says yes, confirm_callback is run, if the palyer says no, the cancel_callback is run. The tab that the player is given to edit is 
+        When an NPC requires a script he will ask the player if he/she can help write a script. If the player says yes, confirm_callback is run, if the palyer says no, the cancel_callback is run. The tab that the player is given to edit is
         the external_tab that can be initialized via script_init and external dialogue is displayed when this tab is open.
-        
+
         Parameters
         ----------
         confirm_callback : func
@@ -571,7 +585,7 @@ class Engine:
         cancel_callback : func
             The callback that is run if the player clicks "Cancel"
         external_dialogue :  str, optional
-            String that gets displayed in the dialogue window while the external PyScritpt is open
+            String that gets displayed in the dialogue window while the external PyScript is open
         script_init : func, optional
             The callback that is run when tab is created and before the player confirms/cancels. This is used to initialize the external script and commonly includes "insert_to_scripter"
         """
@@ -613,7 +627,7 @@ class Engine:
         Parameters
         ----------
         map_name : str
-            String of the path to the folder containing the level/map we want to change to 
+            String of the path to the folder containing the level/map we want to change to
         """
 
         self.__cpp_engine.change_map(map_name)
