@@ -229,7 +229,7 @@ void Engine::set_music(bool on){
     else{
         AudioEngine::get_instance()->set_music_volume(128);
     }
-    
+
     return;
 }
 
@@ -377,28 +377,28 @@ void Engine::show_external_script(std::function<void ()> confirm_callback, std::
     });
 }
 
-/*void Engine::hide_external_tab(){
-    auto _main_window = main_window;
-    EventManager::get_instance()->add_event([_main_window] {
-        _main_window->removeExternalTab();
-    });
-}*/
-
-void Engine::update_world(std::string text){
+void Engine::update_world_text(std::string text){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, text] {
          _main_window->setWorld(text);
     });
 }
 
-void Engine::update_level(std::string text){
+void Engine::update_level_text(std::string text){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, text] {
           _main_window->setLevel(text);
     });
 }
 
-void Engine::update_coins(int value){
+void Engine::clear_level_text(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+          _main_window->clearLevelText();
+    });
+}
+
+void Engine::update_coins_text(int value){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, value] {
           _main_window->setCoins(value);
@@ -406,10 +406,18 @@ void Engine::update_coins(int value){
 }
 
 
-void Engine::update_totems(int value,bool show){
+void Engine::update_totems_text(int value,bool show){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window, value, show] {
           _main_window->setCurTotems(value, show);
+    });
+}
+
+
+void Engine::clear_totems_text(){
+    auto _main_window = main_window;
+    EventManager::get_instance()->add_event([_main_window] {
+          _main_window->clearTotemsText();
     });
 }
 

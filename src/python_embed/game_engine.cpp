@@ -159,8 +159,12 @@ void GameEngine::flush_input_callback_list(int input_key) {
     return;
 }
 
-void GameEngine::play_music(std::string song_name) {
+void GameEngine::play_music(std::string song_name, PyObject* callback) {
     AudioEngine::get_instance()->play_music("../game/music/" + song_name + ".ogg");
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
 }
 
 
@@ -238,21 +242,29 @@ void GameEngine::show_external_script(PyObject* confirm_callback, PyObject* canc
 }*/
 
 
-void GameEngine::update_world(std::string text){
-  Engine::update_world(text);
+void GameEngine::update_world_text(std::string text){
+  Engine::update_world_text(text);
 }
 
-void GameEngine::update_level(std::string text){
-  Engine::update_level(text);
+void GameEngine::update_level_text(std::string text){
+  Engine::update_level_text(text);
 }
 
-void GameEngine::update_coins(int value){
-  Engine::update_coins(value);
+void GameEngine::clear_level_text(){
+  Engine::clear_level_text();
+}
+
+void GameEngine::update_coins_text(int value){
+  Engine::update_coins_text(value);
 }
 
 
-void GameEngine::update_totems(int value, bool show){
-   Engine::update_totems(value, show);
+void GameEngine::update_totems_text(int value, bool show){
+   Engine::update_totems_text(value, show);
+}
+
+void GameEngine::clear_totems_text(){
+  Engine::clear_totems_text();
 }
 
 void GameEngine::insert_to_scripter(std::string text)

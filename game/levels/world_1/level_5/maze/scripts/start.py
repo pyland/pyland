@@ -3,6 +3,9 @@ world_name = "world_1"
 level_name = "level_5"
 map_name = "maze"
 
+engine.update_world_text("1")
+engine.update_level_text("5")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name)
 #end save-data set_up
@@ -15,7 +18,7 @@ reached_arith = False
 if player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "reached_arith_help"):
     x, y = challenge_arith.get_position()
     player_one.move_to((x,y), callback = lambda: myla.move_to((x-1, y), callback = reached_arith_fun))
-else: 
+else:
     pass
     #do nothing as we have not got the checkpoint
 
@@ -196,7 +199,7 @@ def security_one_action(player_object):
                 "No" : lambda: no_help("Anindya")
             })
         )
-            
+
     else:
         engine.run_callback_list_sequence([
                 lambda callback: solved_puzzle("Anindya", callback = callback),
@@ -208,7 +211,7 @@ def security_one_action(player_object):
                 script_init = lambda: engine.insert_to_scripter("")
             )
         )
-        
+
 
 def security_one_problem():
     engine.run_callback_list_sequence([
@@ -282,7 +285,7 @@ def security_two_action(player_object):
                 "No" : lambda: no_help("Maenan")
             })
         )
-            
+
     else:
         engine.run_callback_list_sequence([
             lambda callback: solved_puzzle("Maenan", callback = callback)

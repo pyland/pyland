@@ -201,10 +201,12 @@ public:
     static void set_py_tabs(int val);
     static void show_external_script(std::function<void ()> confirm_callback, std::function<void ()> cancel_callback, std::string external_dialogue, std::function<void ()> script_init);
     //static void hide_external_tab();
-    static void update_world(std::string text);
-    static void update_level(std::string text);
-    static void update_coins(int value);
-    static void update_totems(int value,bool show);
+    static void update_world_text(std::string text);
+    static void update_level_text(std::string text);
+    static void clear_level_text();
+    static void update_coins_text(int value);
+    static void update_totems_text(int value,bool show);
+    static void clear_totems_text();
 
     static void insert_to_scripter(std::string text);
     static void clear_scripter();

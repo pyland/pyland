@@ -3,6 +3,9 @@ world_name = "world_1"
 level_name = "level_6"
 map_name = "vine_intro"
 
+engine.update_world_text("1")
+engine.update_level_text("6")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name)
 #end save-data set-up
@@ -15,7 +18,7 @@ engine.set_py_tabs(9)
 #checkpoint establishing
 def check1(player_object):
     player_data.save_checkpoint("check1")
-    
+
 check1a.player_walked_on = check1
 check1b.player_walked_on = check1
 check1c.player_walked_on = check1
@@ -170,7 +173,7 @@ vine2b_list_sequence = [
     lambda callback: vine2b.wait(cycle_length, callback = callback),
     lambda callback: engine.run_callback_list_sequence(vine2b_list_sequence)
 ]
- 
+
 vine2d_list_sequence = [
     lambda callback: vine2d.grow(callback = callback),
     lambda callback: vine2d.wait(cycle_length, callback = callback),

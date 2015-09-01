@@ -3,6 +3,9 @@ world_name = "world_1"
 level_name = "level_2"
 map_name = "start"
 
+engine.update_world_text("1")
+engine.update_level_text("2")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
@@ -112,6 +115,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: engine.show_dialogue("???: Thank you so much for helping me out back there!", callback = callback),
             lambda callback: engine.show_dialogue("I think if you hadn't come along I don't know what I would have done.", callback = callback),
             lambda callback: engine.show_dialogue("The green one you just had the pleasure of meeting is Carl.", callback = callback),
+            lambda callback: engine.play_music("world_1_myla", callback = callback),
             lambda callback: engine.show_dialogue("By the way I'm Myla, as you heard I guess? Oh sorry! You are?", callback = callback),
             lambda callback: engine.show_dialogue("...", callback = callback),
             lambda callback: engine.show_dialogue("Nice to meet you " + engine.get_player_name() + "!", callback = callback),

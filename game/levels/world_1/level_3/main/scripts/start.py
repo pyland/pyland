@@ -3,6 +3,9 @@ world_name = "world_1"
 level_name = "level_3"
 map_name = "main"
 
+engine.update_world_text("1")
+engine.update_level_text("2")
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
@@ -185,7 +188,7 @@ def player_walked_on_ti():
 
 for t in trigger_croc:
     t.player_walked_on = lambda player_object: player_walked_on_ti()
-    
+
 myla_warn_crocs.player_walked_on = lambda player_object: player_walked_on_myla_warn_crocs()
 challenge2a.player_walked_on = lambda player_object: player_walked_on_challenge2a()
 challenge2b.player_walked_on = lambda player_object: player_walked_on_challenge2b()

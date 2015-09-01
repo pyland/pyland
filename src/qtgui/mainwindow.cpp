@@ -1073,6 +1073,12 @@ void MainWindow::setLevel(std::string text){
     textLevel->setText(qtext);
 }
 
+//Clear the text from the top bar with the current level
+void MainWindow::clearLevelText(){
+    QString qtext = QString::fromStdString("");
+    textLevel->setText(qtext);
+}
+
 //Update the coin text in the tool bar
 void MainWindow::setCoins(int value){
     QString qtext = QString::fromStdString("Coins: "+std::to_string(value));
@@ -1091,6 +1097,12 @@ void MainWindow::setCurTotems(int value,bool show){
   {
       textTotems->hide();
   }
+}
+
+//Clear the text from the top bar with the current number of totems
+void MainWindow::clearTotemsText(){
+    QString qtext = QString::fromStdString("");
+    textTotems->setText(qtext);
 }
 
 //Insert text to the end of the currently open text editor tab
