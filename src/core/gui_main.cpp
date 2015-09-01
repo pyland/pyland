@@ -252,6 +252,16 @@ void GUIMain::create_bag(){
     gui_window->add(bag_window);
 }
 
+void GUIMain::hide_bag(){
+    bag_button->set_clickable(false);
+    bag_button->set_visible(false);
+}
+
+void GUIMain::unhide_bag(){
+    bag_button->set_clickable(true);
+    bag_button->set_visible(true);
+}
+
 void GUIMain::create_pyguide(){
 
     nlohmann::json j = Config::get_instance();

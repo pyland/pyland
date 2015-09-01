@@ -102,8 +102,8 @@
   <object name="tile_trigger/check1b" gid="292" x="640" y="768"/>
   <object name="tile_trigger/check1c" gid="292" x="704" y="768"/>
   <object name="tile_trigger/check1d" gid="292" x="768" y="768"/>
-  <object name="tile_trigger/check2a" gid="292" x="1344" y="1216"/>
-  <object name="tile_trigger/check2b" gid="292" x="1280" y="1280"/>
+  <object name="tile_trigger/check2a" gid="292" x="384" y="1536"/>
+  <object name="tile_trigger/check2b" gid="292" x="384" y="1600"/>
   <object name="tile_trigger/exit_level_start1" gid="292" x="0" y="256"/>
   <object name="tile_trigger/exit_level_start2" gid="292" x="0" y="192"/>
   <object name="tile_trigger/exit_level_end" gid="292" x="1600" y="2304"/>

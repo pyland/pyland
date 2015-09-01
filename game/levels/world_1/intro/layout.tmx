@@ -10,7 +10,7 @@
  </layer>
  <layer name="Monty" width="45" height="16">
   <data encoding="base64" compression="zlib">
-   eJztzsEJACAQxMBDBRXU/st1WzgQ9mEG8k8EAAB4qaiqmnskoauhpnskYamtjnsE37nacABJ
+   eJztzkkKwCAUBFFRwYhTpvuf1TqCksDf9IPal3MiIiLyJ0+BovXIhkQHZeuRRYUqNeo0bHeWnHTRTQ+9tjvywQS5TwC9
   </data>
  </layer>
  <objectgroup name="Objects" width="45" height="16">

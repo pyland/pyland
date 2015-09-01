@@ -275,6 +275,9 @@ public:
 
     //Update GUI buttons to distinguish the currently selected player from the others
     void update_selected();
-
+    
+    //Hide and unhide the bag button
+    void hide_bag();
+    void unhide_bag();
 };
 #endif

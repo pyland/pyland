@@ -23,11 +23,45 @@ check1b.player_walked_on = check1
 check1c.player_walked_on = check1
 check1d.player_walked_on = check1
 
+def check2(player_object):
+    player_data.save_checkpoint("check2")
+
+check2a.player_walked_on = check2
+check2b.player_walked_on = check2
+
+def check3(player_object):
+    player_data.save_checkpoint("check3")
+
+check3a.player_walked_on = check3
+check3b.player_walked_on = check3
+
+
+exit_level_start1.player_walked_on = lambda player_object: player_data.save_and_exit("/world_1")
+exit_level_start2.player_walked_on = lambda player_object: player_data.save_and_exit("/world_1")
+
+def finish_level(player_object):
+    player_data.complete_level_and_save()
+    player_data.save_and_exit("/world_1")
+
+exit_level_end.player_walked_on = finish_level
+
+first_time = False
+
+if player_data.previous_exit_is(world_name = world_name, level_name = level_name, map_name = map_name, info = "check1"):
+    x,y = check1d.get_position()
+    player_one.move_to((x,y), callback = lambda: myla.set_visible(False))
+elif player_data.previous_exit_is(world_name = world_name, level_name = level_name, map_name = map_name, info = "check2"):
+    x,y = check2b.get_position()
+    player_one.move_to((x,y), callback = lambda: myla.set_visible(False))
+elif player_data.previous_exit_is(world_name = world_name, level_name = level_name, map_name = map_name, info = "check3"):
+    x,y = check3a.get_position()
+    player_one.move_to((x,y), callback = lambda: myla.set_visible(False))
+else:
+    first_time = True
+
 #initial setting of players
 player_one.face_south()
 player_one.focus()
-myla.follow(player_one)
-
 
 vine_list = [
     vine0a,
@@ -84,13 +118,14 @@ whetstone2.prepare(5, vine_list)
 whetstone3.prepare(7, vine_list)
 
 #beginning of level
-engine.run_callback_list_sequence([
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("This is a dangerous forest, let me jump into your bag!", callback = callback),
-        lambda callback: myla.move_east(callback = callback),
-        lambda callback: player_one.face_east(callback = callback),
-        lambda callback: myla.set_visible(False, callback = callback),
-        lambda callback: player_one.set_busy(False, callback = callback)
+if first_time:
+    engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: engine.show_dialogue("This is a dangerous forest, let me jump into your bag!", callback = callback),
+            lambda callback: myla.move_east(callback = callback),
+            lambda callback: player_one.face_east(callback = callback),
+            lambda callback: myla.set_visible(False, callback = callback),
+            lambda callback: player_one.set_busy(False, callback = callback)
     ])
 
 #player meets vines 1
