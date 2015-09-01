@@ -152,6 +152,8 @@
 		//the sizes of the buttons on top of the screen
 		"button_width": 0.08,
 		"button_height": 0.12,
+		"button_text_x": 0.4,
+		"button_text_y": -0.5,
 
 		//the distance between two buttons
 		"horizontal_button_spacing": 0.08,

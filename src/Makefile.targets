@@ -66,7 +66,7 @@ $(EXECUTABLE): $(BASE_OBJS)              \
                jsonnet/jsonnet           \
                | dependencies            \
 
-	@echo "${bold}${green}[ Compiling Pyland]${normal}"
+	@echo "${bold}${green}[ Compiling Pyland ]${normal}"
 
 	@$(COMPILER) -o $@ $(EXECUTABLE_OBJ) \
 		$(BASE_OBJS) $(CORE_OBJS) $(GUI_OBJS) $(INPUT_OBJS) $(PYTHON_OBJS) $(QT_OBJS)\
@@ -220,7 +220,7 @@ $(PYTHON_HEADER).pch: $(PYTHON_HEADER)
 # Moc generated files
 qtgui/moc_mainwindow.cpp: qtgui/mainwindow.cpp qtgui/mainwindow.h
 
-	@echo "${bold}[Creating qt file ${turquoise}$ moc_mainwindow.cpp ${normal}${bold} from ${turquoise}$ mainwindow.h ${normal}${bold} ]${normal}"
+	@echo "${bold}[ Creating qt file ${turquoise}$ moc_mainwindow.cpp ${normal}${bold} from ${turquoise}$ mainwindow.h ${normal}${bold} ]${normal}"
 	@/usr/bin/moc-qt4 $(QT_DEFINES) $(QT_INCPATH) ./qtgui/mainwindow.h -o ./qtgui/moc_mainwindow.cpp
 
 #
