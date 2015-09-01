@@ -40,7 +40,7 @@ game/jsonnet/jsonnet
 game/.idea
 src/Pyland.*
 src/python_embed/interpreter
-#game/player_scripts/*.py
+game/player_scripts/*.py
 game/pyland
 *__pycache__/
 src/dependencies
