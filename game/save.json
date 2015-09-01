@@ -1,6 +1,26 @@
 {
-    "player_saves": {},
     "settings": {
         "language": "english"
+    },
+    "player_saves": {
+        "YourName": {
+            "py_scripter_tabs": 1,
+            "totems": {},
+            "coins": 0,
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "starting_map": "player_house",
+                        "heidi_state": 0
+                    },
+                    "level_2": {
+                        "starting_map": "start"
+                    }
+                }
+            },
+            "previous_exit": "/world_1/level_1/player_house",
+            "current_map": "/world_1/level_1/rossumberg",
+            "py_scripter_enabled": false
+        }
     }
 }

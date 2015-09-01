@@ -565,16 +565,29 @@ void GUIMain::proceed_notification_bar_with_options(){
     }
 }
 
-void GUIMain::toggle_selection_notification_bar_with_options(){
+void GUIMain::proceed_selection_notification_bar_with_options(bool forward){
     notification_bar_with_options_arrow_select_enable = true;
-    option_selected++;
-    if (option_selected > 1) option_selected = 0;
+
+	if(forward)
+	{
+		option_selected++;
+		if(option_selected > 1){
+			option_selected = 1;
+		}
+	}
+	else{
+		option_selected--;
+		if(option_selected < 0){
+			option_selected = 0;
+		}
+	}
+	
     for(unsigned int i=0; i<=1; i++){
         if (i == option_selected){
-            option_buttons[i]->set_text_colour(0, 0, 0, 255);
+            option_buttons[i]->highlight();
         }
         else{
-            option_buttons[i]->set_text_colour(150, 150, 200, 240);
+            option_buttons[i]->unhighlight();
         }
     }
 }
@@ -911,12 +924,12 @@ void GUIMain::update_selected()
     {
         if (cur_button_index == i)
         {
-            buttons[i]->set_text_colour(0, 0, 0, 255);
+            buttons[i]->highlight();
             refresh_gui();
         }
         else
         {
-            buttons[i]->set_text_colour(150, 150, 200, 240);
+            buttons[i]->unhighlight();
             refresh_gui();
         }
     }

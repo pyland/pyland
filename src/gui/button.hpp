@@ -33,6 +33,7 @@ class Button : public ComponentGroup {
     std::string file_path;
     std::string picture_name;
     ButtonAlignment alignment;
+    bool is_highlighted;
 
 public:
     Button(ButtonType _type);
@@ -50,6 +51,9 @@ public:
 
     void resize_text(float width, float height);
     void move_text(float x_offset, float y_offset);
+    
+    void highlight();
+    void unhighlight();
 
     int generate_vertex_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds);
     int generate_texture_coords_element(GLfloat* data, int offset, std::tuple<float,float,float,float> bounds);

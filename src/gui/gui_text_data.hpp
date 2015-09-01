@@ -72,6 +72,8 @@ public:
     /// @_text the new text
     ///
     void set_text(std::shared_ptr<Text> _text) { text = _text; }
+
+	std::string get_text_as_string() { return text->get_text_as_string(); }
 };
 
 #endif
