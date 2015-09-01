@@ -1,6 +1,53 @@
 {
+    "player_saves": {
+        "QtPi": {
+            "has_unlocked_pyscripter": true,
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "starting_map": "player_house",
+                        "heidi_state": 2
+                    },
+                    "level_2": {
+                        "starting_map": "start",
+                        "pyscripter_state": 1
+                    }
+                }
+            },
+            "previous_exit": "/world_1/level_2/start",
+            "totems": {},
+            "py_scripter_enabled": false,
+            "current_map": "/world_1",
+            "completed_levels": {
+                "/world_1/level_1": true
+            },
+            "coins": 0,
+            "py_scripter_tabs": 1
+        },
+        "???": {
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "starting_map": "player_house",
+                        "heidi_state": 2
+                    },
+                    "level_2": {
+                        "starting_map": "start"
+                    }
+                }
+            },
+            "totems": {},
+            "py_scripter_tabs": 1,
+            "py_scripter_enabled": false,
+            "current_map": "/world_1",
+            "completed_levels": {
+                "/world_1/level_1": true
+            },
+            "coins": 0,
+            "previous_exit": "/world_1/level_1/road_one"
+        }
+    },
     "settings": {
         "language": "english"
-    },
-    "player_saves": {}
+    }
 }
