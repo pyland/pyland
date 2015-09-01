@@ -6,6 +6,7 @@ sys.path.insert(1, config['files']['script_running_location'])
 from script_state_container import ScriptStateContainer
 
 camera.focus()
+engine.hide_bag()
 engine.clear_scripter()
 c1 = (210, 210, 210)
 c2 = (190, 190, 190)
