@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="35" height="25" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="31" height="30" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -21,43 +21,44 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <layer name="Ground" width="35" height="25">
+ <layer name="Ground" width="31" height="30">
   <data encoding="base64" compression="zlib">
-   eJztw0ENAAAMA6GTWv8qZmMPSFg1VVVVXz0sRkgw
+   eJztw0ENAAAMA6GTWv8q5mIvSFg1VVVVfXo/r1zQ
   </data>
  </layer>
- <layer name="Decor" width="35" height="25">
+ <layer name="Decor" width="31" height="30">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwSgYGuA4hfpPAvERKuHTFLoF5BdOIGYHYg4kzI5GY2MjY5AYGxXcwg3EYlAsigXjEkeXY6WCW3iAmBGImaA0Iw4+ITFmCt1ylgEz3o+iYZDYAQrtIQZQmvapCQaTWw4OtANoDAD0gx9p
+   eJztlusKgzAMRlPFOdG/7v0fRZwXRNxeaSkISmyptUpg5oND2wR6KIVSAAlX3ozuXtzi/kP3h9FNXS73gDQnMXq6dT9DUuS5IiWjab5G1x4H3DnymikN2Oq0lxxwF4hConlUlrWrFnu6J9jeW0vQtcqxj+1cIf2QiFvc4uZz18gXlvejIXP63rjWlYf76tzV3cF5f4M9cOcHQDBdGw==
   </data>
  </layer>
- <layer name="Bridge" width="35" height="25">
+ <layer name="Bridge" width="31" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt0LEJACAQBMHHxsysxP5rMFQMTG/BHfj4l6uSsuZ1BIQOQsPLaOmCjdRCQtqF1kLpoXTQpHfpx39Si6T/LEb9BWM=
+   eJxjYKAeSKGiWYPZTnzAjWlk2j2QYKSGOcjugbJ/NK3RB9gj2TeQdo+CUTAKRsEoGAWjYBRQGwAAR5sD0w==
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="35" height="25">
-  <object name="characters/player/player_one" gid="286" x="896" y="1600"/>
-  <object name="characters/enemies/crocodiles/blue_crocodile/croc_0" gid="296" x="1024" y="1152"/>
-  <object name="characters/enemies/crocodiles/blue_crocodile/croc_1" gid="296" x="1152" y="1152"/>
-  <object name="characters/enemies/crocodiles/blue_crocodile/croc_2" gid="296" x="1280" y="1152"/>
-  <object name="characters/enemies/crocodiles/blue_crocodile/croc_3" gid="296" x="1408" y="1152"/>
-  <object name="characters/enemies/crocodiles/blue_crocodile/croc_4" gid="296" x="1536" y="1152"/>
-  <object name="characters/npcs/generic/challenge_one" gid="297" x="896" y="1344"/>
-  <object name="vine/vine0" gid="287" x="960" y="1344"/>
-  <object name="vine/vine1" gid="287" x="1088" y="1344"/>
-  <object name="vine/vine2" gid="287" x="1216" y="1344"/>
-  <object name="vine/vine3" gid="287" x="1344" y="1344"/>
-  <object name="vine/vine4" gid="287" x="1472" y="1344"/>
+ <objectgroup name="Object Layer 1" width="31" height="30">
+  <object name="characters/player/player_one" gid="286" x="1856" y="1600"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_0" gid="296" x="768" y="832"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_1" gid="296" x="896" y="832"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_2" gid="296" x="1024" y="832"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_3" gid="296" x="1152" y="832"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_4" gid="296" x="1280" y="832"/>
+  <object name="characters/npcs/generic/challenge_one" gid="297" x="640" y="1024"/>
+  <object name="vine/vine0" gid="287" x="704" y="1024"/>
+  <object name="vine/vine1" gid="287" x="832" y="1024"/>
+  <object name="vine/vine2" gid="287" x="960" y="1024"/>
+  <object name="vine/vine3" gid="287" x="1088" y="1024"/>
+  <object name="vine/vine4" gid="287" x="1216" y="1024"/>
+  <object name="characters/npcs/generic/challenge_0" gid="297" x="1600" y="1600"/>
  </objectgroup>
- <layer name="SpecialLayer" width="35" height="25">
+ <layer name="SpecialLayer" width="31" height="30">
   <data encoding="base64" compression="zlib">
-   eJztzsEJACAMBMGQumL/bdlCHhJBZ2DfdxEAANyw8ly/famhL101sFXZjzdsDaAQ7w==
+   eJztzbENACAMA8Eoc4X912KFFIQC7qRv7QgAfrPyXK9919B3Vw1sV/YDgBs2QhAQ7w==
   </data>
  </layer>
- <layer name="rocks" width="35" height="25">
+ <layer name="rocks" width="31" height="30">
   <data encoding="base64" compression="zlib">
-   eJztzgEJAAAIA7DbxP4pTSEibAmWAADAL13XA9g3bZMAIg==
+   eJztzkENAAAIBKCzif1T+jKDm4MEJADA6roeAMB/AwQGACI=
   </data>
  </layer>
 </map>
