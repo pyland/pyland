@@ -71,7 +71,7 @@ challenge_0.player_action = lambda player_object: challenger_action(player_objec
 challenge_1.player_action = lambda player_object: challenger_action(player_object, challenge_1)
 challenge_2.player_action = lambda player_object: challenger_action(player_object, challenge_2)
 challenge_3.player_action = lambda player_object: challenger_action(player_object, challenge_3)
-challenge_4.player_action = lambda player_object: challenger_action(player_object, challenger_4)
-challenge_5_0.player_action = lambda player_object: challenger_action(player_object, challenger_5_0)
-challenge_5_1.player_action = lambda player_object: challenger_action(player_object, challenger_5_1)
+challenge_4.player_action = lambda player_object: challenger_action(player_object, challenge_4)
+challenge_5_0.player_action = lambda player_object: challenger_action(player_object, challenge_5_0)
+challenge_5_1.player_action = lambda player_object: challenger_action(player_object, challenge_5_1)
 

@@ -29,7 +29,7 @@
 		//"level_location" : "/world_1/level_7/town_hall",
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
-		//"level_location" : "/world_2/level_2/main",
+		//"level_location" : "/world_2/level_2/start/",
 		//"level_location" : "/world2/level1/main",
 		//"level_location" : "/demo_levels/level_1/main",
 		//"level_location" : "world_8/treasure_matrix",
