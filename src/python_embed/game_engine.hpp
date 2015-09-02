@@ -16,7 +16,7 @@ class GUIMain;
 class GameEngine {
 
     private:
-        GUIMain * gui_main;
+        GUIMain *gui_main;
         unsigned int button_id;
         Challenge *challenge;
 
@@ -115,6 +115,12 @@ class GameEngine {
         /// Returns a raw string of the json config
         ///
         std::string get_config();
+
+        ///
+        /// Showing and hiding the bag icon
+        ///
+        void hide_bag(PyObject* callback);
+        void unhide_bag(PyObject* callback);
 
         ///
         /// Change the settings of the PyScripter

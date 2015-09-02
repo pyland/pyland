@@ -28,6 +28,7 @@
  </layer>
  <objectgroup name="Object Layer 1" width="50" height="50">
   <object name="characters/player/player_one" gid="286" x="192" y="320"/>
+  <object name="tile_trigger/end" gid="292" x="3008" y="2944"/>
  </objectgroup>
  <layer name="SpecialLayer" width="50" height="50">
   <data encoding="base64" compression="zlib">
