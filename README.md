@@ -1,5 +1,5 @@
 
-![alt tag](https://raw.githubusercontent.com/pyland/pyland/master/resources/logo.png)
+![alt tag](https://raw.githubusercontent.com/pyland/pyland/master/small_logo.png)
 
 This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectPyland](http://twitter.com/ProjectPyland).
 
@@ -13,7 +13,7 @@ Broadcom Foundation. It was started by Ben Catterall, Heidi Howard, Joshua
 Landau, and Ashley Newson under the supervision of Alex Bradbury and Robert
 Mullins. It's currently being worked upon by Tom Read-Cutting, Alexander Day and Anindya Sharma.
 
-![Screenshot](https://raw.githubusercontent.com/pyland/pyland/master/resources/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/pyland/pyland/master/screenshot.png)
 
 ## Install
 These install instructions may be incomplete and you may require additional packages to the ones listed here
@@ -60,15 +60,16 @@ git clone http://github.com/pyland/pyland
 For compiling on the Raspberry Pi, use:
 
 ```bash
-cd pyland/src/
-#Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
-COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
-cd jsonnet/
-make
-cd ..
+#One needs to be in the pyland folder
+
+python3.2 build.py -c g++
+
+#Replace 3.2 with the version of python on the Pi
+#g++ can be replaced with any C++11 compiler
+#The -j flag followed by a number can be used to specify the number of jobs make uses while compiling
 ```
 
-#### Compiling on Desktop GNU/Linux
+#### Getting dependencies on Desktop GNU/Linux
 For desktop, you will need the packages listed above, which can be found here:
 
 ```bash
@@ -97,79 +98,47 @@ sudo apt-get install --no-install-recommends git-core
 git clone http://github.com/pyland/pyland
 ```
 
-#### Compiling on Raspberry Pi
-
-For compiling on the Raspberry Pi, use:
-
-```bash
-cd pyland/src
-cd jsonnet
-make
-cd../../game
-rm database.db
-sqlite3 database.db < database_source.sql
-#Put your python version here (change both PYTHON_VERSION and LIBBOOST_PYTHON). Need at least 3.2.
-COMPILER=g++-4.7 PYTHON_VERSION=3.2 LIBBOOST_PYTHON=boost_python-py32 make
-```
 
 #### Compiling on Desktop - Unix
 
 For compiling on desktop, use:
 
 ```bash
-# Set both PYTHON_VERSION and LIBBOOST_PYTHON to the version you have installed.
-# LIBBOOST_PYTHON is typically boost_python-py34 or boost_python3.
-#
-# Set COMPILER to the most recent g++ or clang++ version available,
-# but at least g++-4.7 or a recent clang++. Plain "g++" is the default.
+#One needs to be in the pyland folder
 
-cd pyland/src
-cd jsonnet
-make
-cd../../game
-rm database.db
-sqlite3 database.db < database_source.sql
-cd ..
-python3.4 build.py -d -j 6 -c g++
+python3.2 build.py -d -c g++
+
+#Replace 3.2 with the version of python on the Pi
+#g++ can be replaced with any C++11 compiler
+#The -j flag followed by a number can be used to specify the number of jobs make uses while compiling
 ```
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
 
 ##Usage
 
-To launch (you must be in the /src folder):
+To launch:
 
 ```bash
-#Must be in the src folder
+cd game
 ./pyland
 ```
 
-Keybindings
-* <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - Move sprite
-* <kbd>Enter</kbd> - Run the current script/halt running script
+##Keybindings
+* <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - Move sprite/Toggle between options
+* <kbd>Enter</kbd> - Interact with an object on the map/Proceed through dialogue/Select an option
 * <kbd>1-9</kbd> - Run the script of given number/halt running script
-* <kbd>Space</kbd> - Toggle speed
+* <kbd>Space</kbd> - Run the current script/halt running script
 * <kbd>Tab</kbd> - Switch player
+* <kbd>Shift</kbd> - Toggle the speed of running scripts
 
-* <kbd>escape</kbd> - Go back to level selection map
-
-##Installing qt for integrated editor test
-
-Install the following packages:
-
-```bash
-sudo apt-get install libqscintilla2-dev
-```
-
-This will create the executable "application" which can then be run.
 ##API
 
-* `help()` and `help(command)` - Get help on the current task and any in-game (or other) commands.
-
-* `move(direction)` - Move the character in the given direction. Parameter direction: north, east, south or west
-* `walkable(direction)` - Determines if the character can move in that direction. Parameter direction: north, east, south or west
-
-* `cut(direction)` - Cuts down vines or logs. Parameter direction: north, east, south or west
-* `look(radius)` - Find all objects in a given radius from the character. Parameter: radius of the area to search for objects in.
-
-* `monologue()` - Prints to the screen the name and location of a character.
+* `face_east(), face_west(), face_south(), face_north()` - Make the character face in the given direction. 
+* `move_east(), move_west(), move_south(), move_north()` - Move the character in the given direction. 
+* `can_move()` - Determines if the character can move one step ahead.
+* `get_position()` - Returns a pair with the x and y coordinates of the character.
+* `cut()` - Cuts down vines that are present in front of the character.
+* `get_cuts_left()` - Returns an integer, the number of cuts the character has remaining.
+* `yell()` - Yells in the given direction. Any object along the line of yelling responds to the yell depending on its type.
+* `turn_left(), turn_right()` - Turns the character by 90 degrees anticlockwise and clockwise respectively.
