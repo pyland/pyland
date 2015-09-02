@@ -116,30 +116,30 @@ def go_to_level_3(player_object):
 
 level_3.player_walked_on = go_to_level_3
 
-def go_to_level_4(player_object):
-    ask_to_go_to_level("world1","level4", "main_a", "Level 4", level_4_move_away)
-
-level_4.player_walked_on = go_to_level_4
+#def go_to_level_4(player_object):
+#    ask_to_go_to_level("world1","level4", "main_a", "Level 4", level_4_move_away)
+#
+#level_4.player_walked_on = go_to_level_4
 
 def go_to_level_5(player_object):
-    ask_to_go_to_level("world1","level5", "maze", "Level 5", level_6_move_away)
+    ask_to_go_to_level("world1","level5", "main", "Level 5", level_6_move_away)
 
 level_5.player_walked_on = go_to_level_5
 
-def go_to_level_6(player_object):
-    ask_to_go_to_level("world1","level6", "vine_intro", "Level 6", level_7_move_away)
-
-level_6.player_walked_on = go_to_level_6
-
-def go_to_level_7(player_object):
-    ask_to_go_to_level("world1","level7", "village", "Level 7", level_8_move_away)
-
-level_7.player_walked_on = go_to_level_7
-
-def go_to_level_8(player_object):
-    ask_to_go_to_level("world1","level7", "village", "Level 7", level_8_move_away)
-
-level_8.player_walked_on = go_to_level_8
+#def go_to_level_6(player_object):
+#    ask_to_go_to_level("world1","level6", "main", "Level 6", level_7_move_away)
+#
+#level_6.player_walked_on = go_to_level_6
+#
+#def go_to_level_7(player_object):
+#    ask_to_go_to_level("world1","level7", "main", "Level 7", level_8_move_away)
+#
+#level_7.player_walked_on = go_to_level_7
+#
+#def go_to_level_8(player_object):
+#    ask_to_go_to_level("world1","level7", "main", "Level 7", level_8_move_away)
+#
+#level_8.player_walked_on = go_to_level_8
 
 def go_to_level_1_2(player_object):
     ask_to_go_to_level("world2","level1", "main", "Level 7", level_8_move_away)
