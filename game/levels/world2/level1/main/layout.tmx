@@ -23,17 +23,12 @@
  </tileset>
  <layer name="Ground" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztw0ENAAAMA6GTWv8qJmJfSFg1VVVVVX0+71O50A==
+   eJztwzENAAAMA6BOep1XxF5I6CVVVVVV1ecBU69WUw==
   </data>
  </layer>
  <layer name="Decor" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztltsKwyAMhu26rTvdbu//Jjt1542+UhNQJpmaWgV3kR8+Ygz40womSolK6VzQ+ybeUcpxVzHeJ2APtECn41tHF7T2TPBGHZk8dPY90TtG/+TN5VQP5b9Pjo7kr0hvrC+BBlhYNCS61ja4Nx/hvQZ2mq3Gtw7VZiO8N0AFTHSsPDm3V0d6f9TvPV4IuHdgzvF9V0o9ReIt3uJdzhtnBewH5v1oyZq+N1yeOjsMlek/BuwjXP/OMYfhGSv17T/IdIB3jv9g9x9D7fC+qnC/zzEz+GYHkUgkyqkeyZ51uw==
-  </data>
- </layer>
- <layer name="Bridge" width="31" height="38">
-  <data encoding="base64" compression="zlib">
-   eJzt0rEJACAMRUFxMTsncf8ZxM5KLMQI3g2QB5+kdE47eOvl5krNf7Yj/br5aEf1/dodZepFtgEAAHZ1GhwD0w==
+   eJztlusKwjAMhTOnzttfff838Tbvyl7JBFocsW3WtTDBHPhI044ctsISANVQOkY+f8noHVvr371j7yrV+4BskRppTHya6IKf3RO8SXshD9W+JnrH6Je8pZzrBv77lGhY/oj0pvM5UiGzFhWLrnUb2pv28F4iG8Pa4FuHziY9vFdIgYxMLDy5tFdGer/g+x5PDNrbCXV875VyniL1Vm/1Hs6bZgXqB/b/UbM1/99Ieers0FW2/1ioj0j9O8ccRjUW8Ok/xLiDd47v0O4/ltLhfYZwv88xM/hmB5VKpcqpN5LEeNc=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="31" height="38">
@@ -62,7 +57,7 @@
  </objectgroup>
  <layer name="SpecialLayer" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztlUEOgDAIBJu+q/7/W8aTTdPQBRY1lUlIb4xrFUr5L63e9Ya7P9Nt7zeW1z326k9LWdwMtO7RP8sg5ZPyoplWfZF8qNt6n4zcEf+e1n1UXu3mbkFuFOZsscwvzXOibjbpTvcX3MiO9O4YyR2BtM9YNZunK7c3c98DdTPv9wLN/SRR36/mvSRJsicnM+hSIw==
+   eJztlUsOgCAMRAnnwvtfy7iyIU2Z/tRgJ2nYYB/jYG3tvxr9rjfYdEX3R7Kz9iO9LL65Z2iGqyxR9tyLrpaysCOkZc98zoPkT/KryVvqi/hD2Yg3JFeL74yZo2UfPa52Y48kNqrI2WK545pzouxoFbvYX2B7/yOe7zvDK8fM8MfN0xXb65n2QNmR+V5CfT+prPureS+lUmlPnZzsUp8=
   </data>
  </layer>
  <layer name="rocks" width="31" height="38">
