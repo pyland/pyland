@@ -179,6 +179,7 @@
 		"3": "move_north(): This moves the present character towards the top by one step.",
 		"4": "yell(): This has effect when it is called by a character that is facing a crocodile. This attracts the crocodile towards the yeller.",
 		"5": "cut(): This cuts a vine that is present in front of a character",
-		"6": "print(args): This prints the argument args to the terminal (args must be of type string)"
+		"6": "get_cuts_left(): This returns the number of cuts the person running the script has left",
+		"7": "print(args): This prints the argument args to the terminal (args must be of type string)"
 	}
 }
