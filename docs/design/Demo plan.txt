@@ -1,0 +1,56 @@
+Demo Plan
+
+Game Quest Goal:
+	Work with Myla to save people with scripts
+	Crocodiles have been reaking havoc in player's village, bring peace
+	(Myla on a quest to find snake in the jungle)
+
+Introduce programming concepts gradually in the level, and reinforce them
+
+Level 1 (Movement with arrow keys and talking to things)
+	-Pick up PyScripter
+
+Level 2 (Running scripts)
+	- Solving puzzles with crododiles by yelling
+	- Similar to current Level 4
+
+Level 3 (Movement scripts)
+	- Learn how to move with the scripter
+	- Script NPCs to move to stop blocking the path by fixing their scripts
+
+Level 4 (Movement and yell scripts)
+	- Write simple movement and yell scripts for the NPCs
+	- Similar puzzle to previous level
+
+Level 5 (Printing)
+	- Simple dungdeon/jungle with multiple paths
+	- Can read message from sign with PyScripter and print to terminal
+	- (or can read with enter, but need to use decipher function)
+
+Level 6 (Vines)
+	- Cutting down vines
+	- Using print to display how cuts your knife has left
+
+Level 7
+	- NPC puzzle with movement/crocodiles/vines
+
+Level 8 (Loops)
+	- Simple introduction to loops (given to you)
+	- ie moving long distances
+
+Level 9 (Fixing loops)
+	- Fix NPC loop scripts to solve puzzle
+
+World 2
+
+Level 1
+	- NPC puzzle invovling writing your own scripts
+
+Level 2
+	- Introduce conditionals
+
+Demo later level
+
+Maze level
+
+
