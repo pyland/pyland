@@ -579,7 +579,6 @@ void GUIMain::proceed_selection_notification_bar_with_options(bool forward){
 			option_selected++; 
 		}
 	}
-	LOG(INFO) << "££££" << option_selected;	
     for(unsigned int i=0; i<2; i++){
         if (i == option_selected){
             option_buttons[i]->highlight();
@@ -818,7 +817,7 @@ void GUIMain::add_button(std::string file_path, std::string name, std::function<
     new_button->set_height(button_height);
     new_button->set_visible(true);
     new_button->set_clickable(true);
-	new_button->move_text(button_text_x, button_text_y);
+    new_button->move_text(button_text_x, button_text_y);
 
     //Push to index element 'id'
     if (button_id > (button_indices.size() - 1))
@@ -1028,8 +1027,8 @@ void GUIMain::config_gui()
 
     button_width = j["scales"]["button_width"];
     button_height = j["scales"]["button_height"];
-	button_text_x = j["scales"]["button_text_x"];
-	button_text_y = j["scales"]["button_text_y"];
+    button_text_x = j["scales"]["button_text_x"];
+    button_text_y = j["scales"]["button_text_y"];
 
     horizontal_button_spacing = j["scales"]["horizontal_button_spacing"];
     vertical_button_spacing = j["scales"]["vertical_button_spacing"];

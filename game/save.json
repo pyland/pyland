@@ -1,72 +1,7 @@
 {
-    "player_saves": {
-        "???": {
-            "totems": {},
-            "level_data": {
-                "world_1": {
-                    "level_1": {
-                        "heidi_state": 0,
-                        "starting_map": "player_house"
-                    },
-                    "level_2": {
-                        "starting_map": "start",
-                        "pyscripter_state": 1
-                    }
-                }
-            },
-            "py_scripter_enabled": false,
-            "has_unlocked_pyscripter": true,
-            "completed_levels": {},
-            "coins": 0,
-            "current_map": "/world_1",
-            "py_scripter_tabs": 1,
-            "previous_exit": "/world_1/level_2/start"
-        },
-        "Ying": {
-            "totems": {},
-            "level_data": {
-                "world_1": {
-                    "level_1": {
-                        "heidi_state": 2,
-                        "starting_map": "player_house"
-                    },
-                    "level_2": {
-                        "starting_map": "start",
-                        "pyscripter_state": 1
-                    }
-                }
-            },
-            "current_map": "/world_1/level_2/start",
-            "has_unlocked_pyscripter": true,
-            "completed_levels": {
-                "/world_1/level_1": true
-            },
-            "coins": 0,
-            "py_scripter_enabled": false,
-            "py_scripter_tabs": 1,
-            "previous_exit": "/world_1"
-        },
-        "YourName": {
-            "totems": {},
-            "level_data": {
-                "world_1": {
-                    "level_1": {
-                        "heidi_state": 0,
-                        "starting_map": "player_house"
-                    },
-                    "level_2": {
-                        "starting_map": "start"
-                    }
-                }
-            },
-            "py_scripter_enabled": false,
-            "coins": 0,
-            "current_map": "/world_1/level_1/player_house",
-            "py_scripter_tabs": 1,
-            "previous_exit": "/world_1/intro"
-        }
-    },
+    "player_saves": {},
+
     "settings": {
-        "language": "pyrate"
+        "language": "english"
     }
 }

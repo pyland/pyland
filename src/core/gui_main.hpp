@@ -115,8 +115,8 @@ private:
 
     float button_width;
     float button_height;
-	float button_text_x;
-	float button_text_y;
+    float button_text_x;
+    float button_text_y;
 
     float horizontal_button_spacing;
     float vertical_button_spacing;

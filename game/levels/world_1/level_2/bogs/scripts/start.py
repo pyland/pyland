@@ -56,7 +56,7 @@ def myla_explain_whetstone_action(player_object):
         lambda callback: myla.move_east(callback = callback),
         lambda callback: myla.face_north(callback = callback),
         lambda callback: player_one.face_south(callback = callback),
-        lambda callback: engine.show_dialogue("You might have noticed that in the console the number of 'cuts' you have left decreased when you cut the vines.", callback = callback),
+        lambda callback: engine.show_dialogue("You might have noticed that in the PyConsole the number of 'cuts' you have left decreased when you cut the vines.", callback = callback),
         lambda callback: engine.show_dialogue("That's because the knife gets more blunt everytime you use it!", callback = callback),
         lambda callback: myla.face_east(callback = callback),
         lambda callback: player_one.face_east(callback = callback),

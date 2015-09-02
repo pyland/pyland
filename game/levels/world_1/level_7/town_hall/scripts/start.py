@@ -16,7 +16,6 @@ player.focus()
 engine.update_player_name(engine.get_player_name(), player.get_focus_button_id())
 
 engine.play_music("eery")
-engine.update_level("7")
 engine.set_py_tabs(9)
 
 player.face_east()

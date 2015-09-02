@@ -175,7 +175,7 @@ public:
     /// Sets the text.
     ///
     void set_text(std::string text);
-	std::string get_text_as_string() { return text; }
+    std::string get_text_as_string() { return text; }
     ///
     /// Calculates the size used by the text area.
     ///
