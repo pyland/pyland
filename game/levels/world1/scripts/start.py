@@ -142,7 +142,7 @@ level_5.player_walked_on = go_to_level_5
 #level_8.player_walked_on = go_to_level_8
 
 def go_to_level_1_2(player_object):
-    ask_to_go_to_level("world2","level1", "main", "Level 7", level_8_move_away)
+    ask_to_go_to_level("world2","level1", "main", "Level 1", level_8_move_away)
 
 level_1_2.player_walked_on = go_to_level_1_2
 
