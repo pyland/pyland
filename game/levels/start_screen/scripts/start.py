@@ -15,7 +15,7 @@ engine.play_music("heroic") #Menus have herioc music always
 engine.show_py_scripter()
 engine.set_py_tabs(1)
 engine.enable_py_scripter()
-engine.insert_to_scripter("#Message to all Pyland Citizens:\n#- Use the arrow keys to select menu options\n#- Press 'Enter' to select an option")
+engine.insert_to_scripter("#Message to all Pyland Citizens:\n#- Use the arrow keys to select menu options\n#- Press 'Enter' to select an option\n#Use the following command to load a saved game:\nload_game(\"\")")
 
 def load_game(save_name):
     save_data = engine.get_player_data(save_name)
