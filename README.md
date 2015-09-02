@@ -134,11 +134,11 @@ cd game
 
 ##API
 
-* `face_east(), face_west(), face_south(), face_north()` - Make the character face towards the given direction. 
+* `face_east(), face_west(), face_south(), face_north()` - Make the character face in the given direction. 
 * `move_east(), move_west(), move_south(), move_north()` - Move the character in the given direction. 
-* `can_move()` - Determines if the character one step ahead.
-* `get_position()` - Returns a pair with the x and y coordinates of the character
+* `can_move()` - Determines if the character can move one step ahead.
+* `get_position()` - Returns a pair with the x and y coordinates of the character.
 * `cut()` - Cuts down vines that are present in front of the character.
 * `get_cuts_left()` - Returns an integer, the number of cuts the character has remaining.
-* `yell()` - Yells in the given direction. Any objects along the line of yelling responds to the yell depending on their type.
+* `yell()` - Yells in the given direction. Any object along the line of yelling responds to the yell depending on its type.
 * `turn_left(), turn_right()` - Turns the character by 90 degrees anticlockwise and clockwise respectively.
