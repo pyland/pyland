@@ -167,6 +167,22 @@ void GameEngine::play_music(std::string song_name, PyObject* callback) {
     });
 }
 
+void GameEngine::hide_bag(PyObject* callback) {
+    gui_main->hide_bag();
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
+}
+
+
+void GameEngine::unhide_bag(PyObject* callback) {
+    gui_main->hide_bag();
+    boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
+    EventManager::get_instance()->add_event([boost_callback] {
+       boost_callback();
+    });
+}
 
 void GameEngine::show_py_scripter(PyObject* callback){
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));

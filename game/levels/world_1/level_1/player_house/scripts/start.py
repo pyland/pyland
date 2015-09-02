@@ -27,4 +27,4 @@ engine.play_music("calm")
 def go_to_village(player_object):
     player_data.save_and_exit("/world_1/level_1/rossumberg")
 
-exit_to_village.player_walked_on = go_to_village
+exit_to_village.player_walked_on = lambda player_one: engine.change_map("world_1/level_1/rossumberg")#go_to_village

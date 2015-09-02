@@ -483,6 +483,26 @@ class Engine:
         return
 
 
+    def hide_bag(self, callback = lambda: None):
+        """ Hides the bag icon from the top right of the screen
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+        """
+        self.__cpp_engine.hide_bag(callback)
+
+    def unhide_bag(self, callback = lambda: None):
+        """ Shows the bag icon from the top right of the screen
+
+        Parameters
+        ----------
+        callback : func, optional
+            Places the callback onto the engine
+        """
+        self.__cpp_engine.unhide_bag(callback)
+
     def disable_py_scripter(self, callback = lambda: None):
         """ Disables the PyScritpter
 
