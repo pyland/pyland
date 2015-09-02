@@ -10,7 +10,6 @@ player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 #end save-data set-up
 
-
 need_croc_warning = True
 first_time_a = True
 first_time_b = True

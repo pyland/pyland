@@ -14,7 +14,7 @@ from game_object import GameObject
 
 class Character(GameObject, ScriptStateContainer):
     """ This class is the parent of all characters in the game.
-    
+
     It provides a lot of useful prebuilt functionality, mainly to do with movement animation.
 
     Lets say you have an object called 'x' in objects/x, by default a sprite will be looked for in objects/x/sprites/main.png, if none is found,
@@ -56,13 +56,15 @@ class Character(GameObject, ScriptStateContainer):
 
     __busy = False #A business flag used in some circumstances to check if the character is already occupied with something else to make sure certain things don't clash
 
-    __finish_turning = False#A flag to specify whether the character is finsihing turning (to make the game more dynamic)
+    __finish_turning = False #A flag to specify whether the character is finsihing turning (to make the game more dynamic)
 
-    __finish_following = False#A flag to specify whether the character is finishing another object(to make the game more dynamic)
+    __finish_following = False #A flag to specify whether the character is finishing another object(to make the game more dynamic)
 
     __cuts_left = 0
 
     __keys = 0
+
+    __script = "" #The script that the NPC stores (for when the player is writing scripts for them)
 
     def initialise(self):
         super().initialise
@@ -149,9 +151,23 @@ class Character(GameObject, ScriptStateContainer):
 
     #override ScriptStateContainer---
     def set_script_name(self):
-        """ Sets the character name to the name of the object 
+        """ Sets the character name to the name of the object
         """
         self.set_character_name(self)
+
+    def set_script(self, script):
+        """ Sets the character's script to be the text 'script'
+        """
+        self.__script = script
+
+    def get_script(self):
+        """
+        Returns
+        -------
+        str
+            A string of the player's script text
+        """
+        return self.__script
 
     def get_character_name(self):
         """
@@ -173,7 +189,7 @@ class Character(GameObject, ScriptStateContainer):
         self.__character_name = character_name
 
     def set_busy(self, busy, callback = lambda: None):
-        """ Sets the play to busy or un-busy. 
+        """ Sets the play to busy or un-busy.
 
         If the player is busy then he cannot move or run scripts.
 
@@ -193,12 +209,12 @@ class Character(GameObject, ScriptStateContainer):
         Returns
         -------
         bool
-            A boolean value indicating if the character is busy or not 
+            A boolean value indicating if the character is busy or not
         """
         return self.__busy
 
     def face_north(self, callback = lambda: None):
-        """ Change the sprite folder to "north" 
+        """ Change the sprite folder to "north"
 
         Parameters
         ----------
@@ -210,7 +226,7 @@ class Character(GameObject, ScriptStateContainer):
         return
 
     def face_east(self, callback = lambda: None):
-        """ Change the sprite folder to "east" 
+        """ Change the sprite folder to "east"
 
         Parameters
         ----------
@@ -221,7 +237,7 @@ class Character(GameObject, ScriptStateContainer):
         return
 
     def face_south(self, callback = lambda: None):
-        """ Change the sprite folder to "south" 
+        """ Change the sprite folder to "south"
 
         Parameters
         ----------
@@ -232,7 +248,7 @@ class Character(GameObject, ScriptStateContainer):
         return
 
     def face_west(self, callback = lambda: None):
-        """ Change the sprite folder to "west" 
+        """ Change the sprite folder to "west"
 
         Parameters
         ----------
@@ -244,7 +260,7 @@ class Character(GameObject, ScriptStateContainer):
         return
 
     def turn_to_face(self, object_towards, callback = lambda: None):
-        """ Change the sprite to face towards the given object" 
+        """ Change the sprite to face towards the given object"
 
         Parameters
         ----------
@@ -344,11 +360,11 @@ class Character(GameObject, ScriptStateContainer):
             self.move_west(callback)
         elif self.is_facing_south():
             self.move_south(callback)
-    
+
     def __face(self, direction, callback):
 
         """ Get the character to "face" the direction specified
-        
+
         This method simply changes the last part of the sprite folder as relevant
 
         Parameters
@@ -403,7 +419,7 @@ class Character(GameObject, ScriptStateContainer):
         """
         return self.__is_facing("west")
 
-    
+
     def __is_facing(self, direction):
         """ Checks to see if the character is facing in the direction given
         direction -- a string specifing the direction, either 'north', 'east', 'south' or 'west'
@@ -424,16 +440,16 @@ class Character(GameObject, ScriptStateContainer):
 
     def __move_x(self, face_x, parent_move_x, callback = lambda: None):
         """ Moves the character in the given direction by one tile and animates them.
-        
+
         They will only move and animate if they are not busy.
-        
+
         Parameters
         ----------
         face_x : func
             The function to make the character face in the correct direction
         parent_move_x : func
             The parent move function, calls the engine api but doesn't start the animation
-        callback : func, optional 
+        callback : func, optional
             Places the callback onto the engine event-queue
         """
         if not self.is_busy():
@@ -476,10 +492,10 @@ class Character(GameObject, ScriptStateContainer):
         self.start_animating()
         self.move_by((0, 0), time = 0.3, callback = lambda: self.__stop_animating_func(callback))
 
-    
+
     def move_north(self, callback = lambda: None):
         """ Moves the character north by one tile and makes them face in that direction
-        
+
         Parameters
         ----------
         callback : func, optional
@@ -492,7 +508,7 @@ class Character(GameObject, ScriptStateContainer):
         """ Moves the character east by one tile and makes them face in that direction.
 
         Overides general object implementation
-        
+
         Parameters
         ----------
         callback : func, optional
@@ -531,7 +547,7 @@ class Character(GameObject, ScriptStateContainer):
     def change_state(self, state):
         """ Changes the state of the character.
 
-        A character can have multiple "states". e.g. a crocodile can have a main state and a swim state. If a crocodile is in the swim state, then the animation frames to be used should be the swimming frames. 
+        A character can have multiple "states". e.g. a crocodile can have a main state and a swim state. If a crocodile is in the swim state, then the animation frames to be used should be the swimming frames.
 
         Parameters
         ----------
@@ -548,7 +564,7 @@ class Character(GameObject, ScriptStateContainer):
     def follow(self, game_object, callback = lambda: None):
         """ The current character follows the game_object specified.
 
-        The follow algorithm is implemented in __follow_loop. 
+        The follow algorithm is implemented in __follow_loop.
 
         Parameters
         ----------
@@ -575,7 +591,7 @@ class Character(GameObject, ScriptStateContainer):
     def __follow_loop(self, game_object):
         """ Basic AI for the argument character to follow a GameObject.
 
-        The characters isn't solid when still so that player doesn't get stuck 
+        The characters isn't solid when still so that player doesn't get stuck
         TODO: find a better compromise!
 
         Parameters
@@ -660,10 +676,10 @@ class Character(GameObject, ScriptStateContainer):
             else:
                 self.wait(0.3, callback = lambda: self.__follow_loop(game_object))
 
-    
+
     def start_turning(self, time = 0.5, frequency = 8, callback = lambda: None): #Change frquency to period/sample
         """ Start the character turning randomly on the spot.
-        
+
         The greater frequency is, the less often the player will turn
         """
 
@@ -693,8 +709,8 @@ class Character(GameObject, ScriptStateContainer):
         ----------
         time : double, optional
             The time in seconds in between turns
-        frequency : int, optional  
-                
+        frequency : int, optional
+
         callback : func, optional
             Places the callback onto the engine event-queue
 
@@ -757,12 +773,12 @@ class Character(GameObject, ScriptStateContainer):
         """
         Returns
         -------
-        int 
+        int
             Number of cuts the player has left
         """
         return self.__cuts_left
 
-    def add_keys(self, num): #Move to level 
+    def add_keys(self, num): #Move to level
         """ Increments the number of keys the player has by num.
 
         This is used the the "math" challenge where we have to collect two keys
@@ -779,7 +795,7 @@ class Character(GameObject, ScriptStateContainer):
         Returns
         -------
         int
-            Number of keys the player current has 
+            Number of keys the player current has
         """
         return self.__keys
 
@@ -891,7 +907,7 @@ class Character(GameObject, ScriptStateContainer):
         if(is_paused()):
             self.wait(0.3, callback = lambda: self.follow_path(path, repeat = repeat, is_paused = is_paused))
             return
-        
+
         engine = self.get_engine()
         x, y = self.get_position()
 
@@ -900,7 +916,7 @@ class Character(GameObject, ScriptStateContainer):
             comma_location = len(path)
 
         old_path = path #store the old_path
-        
+
         instruction = path[ 0 : comma_location].strip() #get instruction and remove whitespace
         path = path[comma_location + 1: ].strip() #remove the instruction from the path itself
         if(repeat):
