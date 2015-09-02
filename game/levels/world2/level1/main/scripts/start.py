@@ -45,7 +45,7 @@ def challenger_action(player_object, challenger):
                 lambda callback: player_one.set_busy(False, callback = callback),
                 lambda callback: engine.show_dialogue("Aw, that's a shame", callback = callback),])
         }))"""
-            
+
 
 
 def write_script(challenger):
@@ -57,7 +57,8 @@ def write_script(challenger):
                 lambda callback: challenger.run_script(script_to_run = 10)]),
             cancel_callback = lambda: player_one.set_busy(False),
             external_dialogue = "Why doesn't this do anything?",
-            script_init = lambda: engine.insert_to_scripter("")
+            script_init = lambda: engine.insert_to_scripter(""),
+            character_object = challenger
         )
     ])
 
