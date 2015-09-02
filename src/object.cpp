@@ -2,12 +2,13 @@
 #include <string>
 
 #include "object.hpp"
-#include "entitythread.hpp"
+#include "python_thread_runner.hpp"
 #include "object_manager.hpp"
 
 Object::Object(): Object("") {}
 
 Object::Object(std::string name): name(name) {
+
     // Get a new id for the object
     ObjectManager& object_manager = ObjectManager::get_instance();
 
@@ -18,7 +19,7 @@ Object::Object(std::string name): name(name) {
 }
 
 Object::~Object() {
-    LOG(INFO) << "OBJECT DESTROYING (" << id << ")  " << name << std::endl;
+    VLOG(1) << "OBJECT DESTROYING (" << id << ")  " << name << std::endl;
 }
 
 void Object::set_id(int new_id) {

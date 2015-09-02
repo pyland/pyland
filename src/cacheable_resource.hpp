@@ -66,6 +66,11 @@ public:
     /// @return A shared pointer to the relevant resource.
     ///
     static std::shared_ptr<Res> get_shared(const std::string resource_name);
+
+    void clear(){
+    resource_cache.lock()->clear();
+    resource_caches.clear();
+    }
 };
 
 template<typename Res>

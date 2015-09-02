@@ -12,11 +12,12 @@ WARNINGS = \
 	-isystem ./catch                \
 	-isystem ./tmx-parser           \
 	-isystem ./tmx-parser/TmxParser \
+	-isystem ./jsonnet              \
+	-isystem ./json-parser          \
 	-pedantic                       \
 	-Wall -Wextra                   \
 	-Wconversion                    \
 	-Wmissing-braces                \
-	-Wno-sign-conversion            \
 	-Wpointer-arith                 \
 
 ifeq "$(QMAKING)" ""
@@ -31,12 +32,12 @@ CXXFLAGS = \
 
 CPPFLAGS = \
 	-I./                  \
+	-I./core              \
 	-I./catch             \
-	-I./challenges        \
 	-I./input_management  \
 	-I./gui               \
-	-I./qtgui             \
 	-I./python_embed      \
+	-I./qtgui             \
 	-MMD -MP              \
 	-MF dependencies/$*.d \
 	${CPP_EXTRA}          \
@@ -69,6 +70,10 @@ else
 	normal = $(shell tput sgr0)
 	red    = $(shell tput setaf 1)
 	green  = $(shell tput setaf 2)
+	yellow = $(shell tput setaf 3)
+	purple = $(shell tput setaf 4)
+	pink = $(shell tput setaf 5)
+	turquoise = $(shell tput setaf 6)
 endif
 
 

@@ -10,16 +10,10 @@
 #include <tuple>
 #include <utility>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 #include "cacheable_resource.hpp"
+#include "config.hpp"
 #include "dispatcher.hpp"
 #include "engine.hpp"
 #include "fml.hpp"
@@ -32,7 +26,6 @@
 #include "shader.hpp"
 #include "texture_atlas.hpp"
 #include "tileset.hpp"
-
 
 Map::Map(const std::string map_src):
     event_step_on(glm::ivec2(0, 0)),
@@ -47,7 +40,7 @@ Map::Map(const std::string map_src):
             return;
         }
 
-        locations = map_loader.get_object_mapping();
+        locations = map_loader.get_object_mapping(); //returns a vector of MapObjectProperties (see map_loader.hpp for structure)
 
         //Get the loaded map data
         map_width = map_loader.get_map_width();
@@ -62,6 +55,9 @@ Map::Map(const std::string map_src):
         for(auto layer : layers) {
             layer_ids.push_back(layer->get_id());
             ObjectManager::get_instance().add_object(layer);
+            if (layer->get_name() == Config::get_instance()["layers"]["special_layer_name"]) {
+                special_layer_id = layer->get_id();
+            }
         }
 
         tilesets = map_loader.get_tilesets();
@@ -88,49 +84,42 @@ Map::~Map() {
 }
 
 bool Map::is_walkable(int x_pos, int y_pos) {
-    return std::all_of(std::begin(layer_ids), std::end(layer_ids), [&] (int layer_id) {
-            std::shared_ptr<Layer> layer = ObjectManager::get_instance().get_object<Layer>(layer_id);
-        // Block only in the case where we're on the collisions layer and the tile is set
-            return !(layer->get_name() == "Collisions" && layer->get_tile(x_pos, y_pos).second);
-    });
-}
-
-
-void Map::add_map_object(int map_object_id) {
-    if(ObjectManager::is_valid_object_id(map_object_id))
-        map_object_ids.push_back(map_object_id);
-}
-
-void Map::remove_map_object(int map_object_id) {
-    if(ObjectManager::is_valid_object_id(map_object_id)){
-        for(auto it = map_object_ids.begin(); it != map_object_ids.end(); ++it) {
-            //If a valid object
-            if(*it != 0) {
-                //remove it if its the map_object
-                if(*it == map_object_id) {
-                    map_object_ids.erase(it);
-                    return;
-                }
-            }
+    if (special_layer_id != 0) {
+        // Block only in the case where a tile is set on the special layer
+        auto layer = ObjectManager::get_instance().get_object<Layer>(special_layer_id);
+        if (layer->get_tile(x_pos, y_pos).second == 1) {
+            return false;
         }
     }
+    return true;
 }
 
-void Map::add_sprite(int sprite_id) {
-    if (ObjectManager::is_valid_object_id(sprite_id)) {
-        event_sprite_add.trigger(sprite_id);
-        sprite_ids.push_back(sprite_id);
+int Map::get_tile_type(int x, int y) {
+    if (special_layer_id != 0) {
+        auto layer = ObjectManager::get_instance().get_object<Layer>(special_layer_id);
+        if ((layer->get_width_tiles() < x) || (layer->get_height_tiles() < y) || (x < 0) || (y < 0)) {
+            return 1; //The edge of the map is solid
+        } else {
+            return layer->get_tile(x, y).second;
+        }
     }
+    return -1;
 }
 
-void Map::remove_sprite(int sprite_id) {
-    if(ObjectManager::is_valid_object_id(sprite_id)){
-        for(auto it = sprite_ids.begin(); it != sprite_ids.end(); ++it) {
+
+void Map::add_map_object(int object_id) {
+    if(ObjectManager::is_valid_object_id(object_id))
+        object_ids.push_back(object_id);
+}
+
+void Map::remove_map_object(int object_id) {
+    if(ObjectManager::is_valid_object_id(object_id)){
+        for(auto it = object_ids.begin(); it != object_ids.end(); ++it) {
             //If a valid object
             if(*it != 0) {
-                //remove it if its the sprite
-                if(*it == sprite_id) {
-                    sprite_ids.erase(it);
+                //remove it if its the object
+                if(*it == object_id) {
+                    object_ids.erase(it);
                     return;
                 }
             }
@@ -203,7 +192,8 @@ void Map::generate_data() {
 
         // Don't generate data for the collisions layer
         // TODO: handle this not being in layer_mappings
-        if (layer->get_name() == "Collisions") {
+        // TODO: let python have some control over which layers are special
+        if (layer_id == special_layer_id) {
             layer_num++;
             continue;
         }
@@ -294,7 +284,7 @@ void Map::generate_data() {
         }
 
         // Set this data in the renderable component for the layer
-        RenderableComponent* renderable_component = layer->get_renderable_component();
+        std::shared_ptr<RenderableComponent> renderable_component = layer->get_renderable_component();
         renderable_component->set_texture_coords_data(layer_tex_coords, tex_data_size, false);
         renderable_component->set_vertex_data(layer_vert_coords, vert_data_size, false);
         renderable_component->set_num_vertices_render(num_tiles*num_tile_vertices);
@@ -414,7 +404,7 @@ void Map::generate_layer_vert_coords(GLfloat* data, std::shared_ptr<Layer> layer
                 vx2 = float(x + 1.001);
                 vy2 = float(y + 1.001);
             } else if (dense) {
-                LOG(INFO) << x << ", " << y;
+                VLOG(1) << x << ", " << y;
             }
 
             //bottom left
@@ -648,7 +638,7 @@ void Map::update_tile(int x_pos, int y_pos, const std::string layer_name, const 
 
         // Update the buffer
         // Just update that tile directly
-        RenderableComponent *renderable_component(layer->get_renderable_component());
+        std::shared_ptr<RenderableComponent> renderable_component(layer->get_renderable_component());
         renderable_component->update_texture_buffer(
             sizeof(GLfloat) * tile_offset * num_tile_vertices * num_tile_dimensions,
             data_size,
@@ -706,7 +696,7 @@ void Map::update_tile(int x_pos, int y_pos, const std::string layer_name, const 
 
         // TODO: small buffer
         // Get the data
-        RenderableComponent* layer_renderable_component(layer->get_renderable_component());
+        std::shared_ptr<RenderableComponent> layer_renderable_component(layer->get_renderable_component());
 
         GLfloat* layer_texture_data(layer_renderable_component->get_texture_coords_data());
         GLfloat* layer_vertex_data (layer_renderable_component->get_vertex_data());

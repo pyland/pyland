@@ -16,15 +16,7 @@
 #include "shader.hpp"
 #include "texture_atlas.hpp"
 
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
+#include "open_gl.hpp"
 
 void GUIManager::parse_components() {
     //IMPORTANT
@@ -43,15 +35,19 @@ void GUIManager::parse_components() {
     init_shaders();
 }
 
+std::shared_ptr<RenderableComponent> GUIManager::get_renderable_component(){
+    return renderable_component;
+}
+
 void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
     if(!parent)
         return;
 
-    parent->set_texture_atlas(renderable_component.get_texture());
+    parent->set_texture_atlas(renderable_component->get_texture());
 
     try{
         //Go through all the children of this component
-        for(auto component_pair : parent->get_components()) {
+        for(auto component_pair : *(parent->get_components()) ){
             std::shared_ptr<Component> component = component_pair.second;
 
             //Recalculate the dimensions
@@ -65,7 +61,7 @@ void GUIManager::regenerate_offsets(std::shared_ptr<Component> parent) {
             component->set_y_offset_pixels(int(float(height_pixels) * component->get_y_offset()));
 
             //Give it a pointer to its texture coordinates
-            component->set_texture_atlas(renderable_component.get_texture());
+            component->set_texture_atlas(renderable_component->get_texture());
             regenerate_offsets(component);
         }
     }
@@ -93,7 +89,7 @@ void GUIManager::mouse_callback_function(MouseInputEvent event) {
 bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x, int mouse_y, int curr_x_offset, int curr_y_offset) {
     try{
         //Go through all the children of this component
-        for(auto component_pair : root->get_components()) {
+        for(auto component_pair : *(root->get_components())) {
             std::shared_ptr<Component> component = component_pair.second;
 
             //Get the component dimensions
@@ -144,16 +140,18 @@ bool GUIManager::handle_mouse_click(std::shared_ptr<Component> root, int mouse_x
 
 GUIManager::GUIManager() {
 
+    renderable_component = std::make_shared<RenderableComponent>();
+
 }
 
 GUIManager::~GUIManager() {
-
+   renderable_component->get_texture()->clear();
 }
 
 
 
 void GUIManager::generate_texture_data() {
-    
+
     //generate the texture data data
     std::vector<std::pair<GLfloat*, int>> components_data = root->generate_texture_data();
 
@@ -188,7 +186,7 @@ void GUIManager::generate_texture_data() {
     }
 
     //Generate the data
-    renderable_component.set_texture_coords_data(gui_tex_data, sizeof(GLfloat)*num_floats, false);
+    renderable_component->set_texture_coords_data(gui_tex_data, sizeof(GLfloat)*num_floats, false);
 }
 
 void GUIManager::generate_vertex_data() {
@@ -224,8 +222,8 @@ void GUIManager::generate_vertex_data() {
         gui_data_offset += component_vertex_data.second;
     }
 
-    renderable_component.set_vertex_data(gui_data,sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(GLsizei(num_floats/num_dimensions));//GL_TRIANGLES being used
+    renderable_component->set_vertex_data(gui_data,sizeof(GLfloat)*num_floats, false);
+    renderable_component->set_num_vertices_render(GLsizei(num_floats/num_dimensions));//GL_TRIANGLES being used
 }
 
 void GUIManager::generate_text_data() {
@@ -234,11 +232,11 @@ void GUIManager::generate_text_data() {
 
 void GUIManager::render_text() {
    for(auto text_data : components_text) {
-        if(!text_data->get_text()) 
+        if(!text_data->get_text())
             continue;
 
         std::shared_ptr<GUITextData> gui_text_data = text_data->get_gui_text();
-        
+
         int x_pos = gui_text_data->get_transformed_x_offset();
         int y_pos = gui_text_data->get_transformed_y_offset();
         text_data->get_text()->move(x_pos, y_pos);
@@ -252,7 +250,7 @@ void GUIManager::render_text() {
 
 void GUIManager::load_textures() {
     //Set the texture data in the rederable component
-    renderable_component.set_texture(TextureAtlas::get_shared("../resources/tiles/gui.png"));
+    renderable_component->set_texture(TextureAtlas::get_shared("../game/gui/gui.png"));
 }
 
 bool GUIManager::init_shaders() {
@@ -266,7 +264,7 @@ bool GUIManager::init_shaders() {
     }
 
     //Set the shader
-    renderable_component.set_shader(shader);
+    renderable_component->set_shader(shader);
 
     return true;
 }

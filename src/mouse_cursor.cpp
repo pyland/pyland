@@ -1,18 +1,5 @@
 #include <memory>
 
-
-extern "C" {
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-}
-
-
 #include "mouse_cursor.hpp"
 
 #include "game_window.hpp"
@@ -40,7 +27,7 @@ MouseCursor::MouseCursor(GameWindow* window):
             y = event.to.y;
             dirty = true;
         })),
-    atlas(TextureAtlas::get_shared("../resources/cursor.png")),
+    atlas(TextureAtlas::get_shared("../game/gui/cursor.png")),
     shader(Shader::get_shared("cursor_shader")),
     vbo(0),
     x(0),

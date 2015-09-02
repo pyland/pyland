@@ -9,9 +9,9 @@
 
 #include "challenge.hpp"        //Included for getting id_type
 #include "engine.hpp"
-#include "entitythread.hpp"
+#include "python_thread_runner.hpp"
 #include "map_viewer.hpp"
-#include "object.hpp"
+#include "map_object.hpp"
 #include "object_manager.hpp"
 
 
@@ -53,7 +53,7 @@ public:
 
         if (!active_player) { return; }
 
-        active_player->daemon->value->halt_soft(EntityThread::Signal::RESTART);
+        active_player->daemon->value->halt_soft(PythonThreadRunner::Signal::RESTART);
     }
 
     void stop() {
@@ -63,7 +63,7 @@ public:
 
         if (!active_player) { return; }
 
-        active_player->daemon->value->halt_soft(EntityThread::Signal::STOP);
+        active_player->daemon->value->halt_soft(PythonThreadRunner::Signal::STOP);
     }
 
     void kill() {
@@ -73,23 +73,13 @@ public:
 
         if (!active_player) { return; }
 
-        active_player->daemon->value->halt_soft(EntityThread::Signal::KILL);
+        active_player->daemon->value->halt_soft(PythonThreadRunner::Signal::KILL);
     }
 
     void man_move(glm::vec2 direction) {
         auto id = Engine::get_map_viewer()->get_map_focus_object();
-        Challenge* current_challenge = Engine::get_challenge();
-        if (!(current_challenge->id_type(id) == assistant_id_type)){
-            Engine::move_object(id, direction);
-        }
+        Engine::move_object(id, direction);
     }
-
-    void monologue () {
-        auto id = Engine::get_map_viewer()->get_map_focus_object();
-        auto location =  Engine::find_object(id);
-        std::cout << "You are at " << location.x << ", " << location.y << std::endl;
-    }
-
 private:
     std::vector<int> key_to_id;
 };

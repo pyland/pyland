@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include "renderable_component.hpp"
 #include "object.hpp"
 
 class TileSet;
@@ -33,6 +34,12 @@ public:
     };
 
 private:
+
+    ///
+    /// The object's renderable component
+    ///
+    std::shared_ptr<RenderableComponent> renderable_component;
+
     ///
     /// The width of the layer in tiles
     ///
@@ -132,6 +139,8 @@ public:
     /// Get the layer's data as a shared_ptr
     ///
     std::shared_ptr<std::vector<std::pair<std::shared_ptr<TileSet>, int>>> get_layer_data() { return layer; }
+
+    std::shared_ptr<RenderableComponent>  get_renderable_component() override;
 };
 
 ///

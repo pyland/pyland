@@ -32,10 +32,10 @@ extern "C" {
 #include "lifeline_controller.hpp"
 #include "graphics_context.hpp"
 
-#include "game_init.hpp"
-
 class InputManager;
 class GameMain;
+class MainWindow;
+class QApplication;
 ///
 /// Sets up OpenGL|ES and handles basic SDL functionality.
 ///
@@ -55,9 +55,20 @@ private:
     };
 
     ///
-    /// Stores the game initialising class.
+    /// Stores the game initialising instance.
     ///
-    GameInit* curGameInit;
+    //GameInit* curGameInit;
+
+    ///
+    /// Stores the qt main window instance.
+    ///
+    MainWindow* mainWin;
+
+
+    ///
+    /// Stores the qt application instance.
+    ///
+    QApplication* app;
 
     ///
     /// Stores the SDL window.
@@ -90,6 +101,9 @@ private:
     /// SDL window and EGL surface height.
     ///
     int window_height;
+
+    int horizontal_resolution;
+    int vertical_resolution;
 
     ///
     /// SDL window and EGL surface displacement from XServer left edge.
@@ -259,11 +273,7 @@ public:
     ///
     /// Creates an SDL window and initializes OpenGL|ES.
     ///
-    /// @param width The width of the window. 0 uses current resolution.
-    /// @param height The height of the window. 0 uses current resolution.
-    /// @param fullscreen Whether to use fullscreen.
-    ///
-    GameWindow(int width, int height, int &argc, char **argv, GameMain *exGame = nullptr) ;
+    GameWindow(int &argc, char **argv, GameMain *exGame = nullptr) ;
 
     ///
     /// Shuts down and cleans up both SDL and EGL.
@@ -297,15 +307,19 @@ public:
     bool check_close();
 
     ///
-    /// Get the width and height of the window.
-    ///
-    /// @warning
-    ///     This method is subject to API changes.
+    /// Get the resolution of the game
     ///
     /// Returns the dimensions of the renderable area (excluding window
     /// borders).
     ///
-    std::pair<int, int> get_size();
+    std::pair<int, int> get_resolution();
+
+    ///
+    /// Get the actual size of the displayed game window
+    ///
+    ///
+    ///
+    std::pair<int, int> get_window_size();
 
     ///
     /// Switches the active opengl context to the one for this window.
@@ -343,9 +357,9 @@ public:
     InputManager* get_input_manager();
 
     ///
-    ///Game init getter.
+    ///Main window getter.
     ///
-    GameInit* get_cur_game_init();
+    MainWindow* get_main_win();
 
 
     ///

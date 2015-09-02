@@ -5,14 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
+#include "open_gl.hpp"
 
 #include "cacheable_resource.hpp"
 

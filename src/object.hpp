@@ -7,14 +7,14 @@
 #include "renderable_component.hpp"
 
 
-class LockableEntityThread;
+class LockablePythonThreadRunner;
 
 ///
 /// The class to hold an object's information so that the Engine can
-/// manipulate it.
-///
+/// manipulate it. Objects are essentially what are drawn to the screen so there are two types,
+/// Layer and MapObject in layer.cpp/hpp and map_object.cpp/hpp respectively. You can look in those
+/// files for more information.
 class Object {
-
 private:
     ///
     /// Boolean to indicate if the object has set itself to be renderable
@@ -26,11 +26,6 @@ private:
     ///
     int id = 0;
 protected:
-
-    ///
-    /// The object's renderable component
-    ///
-    RenderableComponent renderable_component;
 
     ///
     /// The name of the object
@@ -72,7 +67,7 @@ public:
     /// Get the renderable component
     /// @return the renderable component for this object
     ///
-    RenderableComponent* get_renderable_component() { return &renderable_component; }
+    virtual std::shared_ptr<RenderableComponent>  get_renderable_component() = 0;
 
     ///
     /// Determine if the object can be rendered
@@ -89,7 +84,7 @@ public:
     ///
     /// The Python thread for running scripts in.
     ///
-    std::unique_ptr<LockableEntityThread> daemon;
+    std::unique_ptr<LockablePythonThreadRunner> daemon;
 };
 
 #endif

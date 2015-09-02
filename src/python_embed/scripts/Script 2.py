@@ -1,2 +1,0 @@
-move_west()
-#west

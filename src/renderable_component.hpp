@@ -8,15 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/mat4x4.hpp>
 
-
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 class Shader;
 class TextureAtlas;
@@ -212,7 +204,6 @@ public:
     /// @returnimage An Image containing the texture data and metadata.
     ///
     std::shared_ptr<TextureAtlas> get_texture() { return texture_atlas; }
-
 
     ///
     /// Get the width of the component

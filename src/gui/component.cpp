@@ -1,4 +1,5 @@
 #include <mutex>
+#include "event_manager.hpp"
 
 #include "component.hpp"
 
@@ -11,10 +12,14 @@ int Component::get_new_id() {
     return ++next_component_id;
 }
 
+void Component::call_on_click() {
+    EventManager::get_instance()->add_event(on_click_func); //puts the function on the event queue
+}
+
 Component::Component(std::function<void (void)> on_click, float _width,
-                     float _height, float _x_offset, float _y_offset) : 
+                     float _height, float _x_offset, float _y_offset) :
     parent(nullptr),
-    vertex_data(nullptr), size_vertex_data(0), 
+    vertex_data(nullptr), size_vertex_data(0),
     texture_data(nullptr), size_texture_data(0),
     id(0), width(_width), height(_height),
     width_pixels(0),height_pixels(0),
@@ -57,7 +62,6 @@ void Component::set_texture_atlas(std::shared_ptr<TextureAtlas> _texture_atlas) 
     texture_atlas = _texture_atlas;
 }
 void Component::set_on_click(std::function<void (void)> func) {
-    clickable = true;
     on_click_func= func;
 }
 
@@ -74,7 +78,7 @@ void Component::set_height(float height) {
     this->height = height;
 }
 
-const std::map<int, std::shared_ptr<Component>>& Component::get_components() {
+const std::map<int, std::shared_ptr<Component>>* Component::get_components() {
     component_no_children_exception exception;
     throw exception;
 }

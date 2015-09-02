@@ -80,8 +80,8 @@ void MapLoader::load_layers() {
     }
 }
 
-std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
-    std::map<std::string, ObjectProperties> named_tiles_mapping;
+std::map<std::string, MapObjectProperties> MapLoader::get_object_mapping() {
+    std::map<std::string, MapObjectProperties> named_tiles_mapping;
 
     // For each object later
     for (int i = 0; i < map.GetNumObjectGroups(); ++i) {
@@ -103,37 +103,23 @@ std::map<std::string, ObjectProperties> MapLoader::get_object_mapping() {
 
             CHECK_NOTNULL(tileset);
 
-            auto id(object->GetGid() - tileset->GetFirstGid());
+            //taking the 'object name' from tiled and splitting into the object location and its python instance name
+            std::string object_file_location(object->GetName().substr(0, object->GetName().rfind("/"))); //get everything before last "/"
+            std::string object_name(object->GetName().substr(object->GetName().rfind("/") + 1, object->GetName().size())); //get everything after last "/"
 
-            auto atlas(TextureAtlas::get_shared(tileset->GetImage()->GetSource()));
-            auto names_to_indexes(atlas->get_names_to_indexes());
+            VLOG(1) << "Adding object to mapping " << object_file_location
+                      << " with name " << object_name;
 
-            auto tile(
-                std::find_if(std::begin(names_to_indexes), std::end(names_to_indexes),
-                    [&] (std::pair<std::string, int> p) { return p.second == id; }
-                )
-            );
-
-            if (tile == std::end(names_to_indexes)) {
-                throw std::runtime_error("no name for object tile id " + std::to_string(id));
-            }
-
-            auto tile_name(tile->first);
-
-            auto fullname(object_group->GetName() + "/" + object->GetName());
-
-            LOG(INFO) << "Adding object to mapping " << fullname
-                      << " with name " << tile_name;
-
-            ObjectProperties properties({
+            MapObjectProperties properties({
                 glm::ivec2(
                                  object->GetX() / Engine::get_tile_size(),
                     map_height - object->GetY() / Engine::get_tile_size()
                 ),
-                tile_name
+                object_file_location,
+                "" //the location of the base animation folder. Always looks relative to object_file_location/. .
             });
 
-            named_tiles_mapping.insert(std::make_pair(fullname, properties));
+            named_tiles_mapping.insert(std::make_pair(object_name, properties));
         }
     }
 
@@ -154,6 +140,7 @@ void MapLoader::load_tileset() {
 
         //Get the tileset location relative to the map file and append it to the location of the map file relative to here
         const std::string tileset_atlas(map.GetFilepath() + tileset->GetImage()->GetSource());
+        LOG(INFO) << "Getting tileset from: " << map.GetFilepath() << tileset->GetImage()->GetSource();
 
         //Create a new tileset and add it to the map
         std::shared_ptr<TileSet> map_tileset = std::make_shared<TileSet>(tileset_name, tileset_width, tileset_height, tileset_atlas);
