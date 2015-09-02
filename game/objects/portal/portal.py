@@ -2,7 +2,7 @@ import operator
 import os
 """
 In Python comments,
-could define some standard which the C++ code can use to determine things about it handles 
+could define some standard which the C++ code can use to determine things about it handles
 the python code
 """
 
@@ -39,6 +39,6 @@ class Portal(GameObject):
             self.__target = target
 
     def player_walked_on(self, player_object):
-        self.get_engine().print_terminal("I've just been walked on by: " + player_object.get_character_name())
+        #self.get_engine().print_terminal("Portal has just been walked on by: " + player_object.get_character_name())
         position = self.__target
         player_object.move_to(position)

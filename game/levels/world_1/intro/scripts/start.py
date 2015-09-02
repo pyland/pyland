@@ -1,11 +1,11 @@
-camera.focus()
-
 import sys
 import json
 
 sys.path.insert(1, engine.get_config()['files']['script_running_location'])
 from script_state_container import ScriptStateContainer
 
+camera.focus()
+engine.hide_bag()
 config = engine.get_config()
 
 c1 = (210, 210, 210)

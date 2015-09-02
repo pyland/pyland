@@ -64,6 +64,8 @@ BOOST_PYTHON_MODULE(wrapper_functions) {
         .def("play_music",        &GameEngine::play_music)
         .def("register_input_callback",  &GameEngine::register_input_callback)
         .def("flush_input_callback_list",  &GameEngine::flush_input_callback_list)
+        .def("hide_bag",        &GameEngine::hide_bag)
+        .def("unhide_bag",        &GameEngine::unhide_bag)
         .def("show_py_scripter",  &GameEngine::show_py_scripter)
         .def("hide_py_scripter",  &GameEngine::hide_py_scripter)
         .def("enable_py_scripter",&GameEngine::enable_py_scripter)
