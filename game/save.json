@@ -1,45 +1,69 @@
 {
     "player_saves": {
-        "YourName": {
-            "level_data": {
-                "world_1": {
-                    "level_2": {
-                        "starting_map": "start"
-                    },
-                    "level_1": {
-                        "starting_map": "player_house",
-                        "heidi_state": 0
-                    }
-                }
-            },
-            "previous_exit": "/world_1/intro",
-            "totems": {},
-            "py_scripter_enabled": false,
-            "py_scripter_tabs": 1,
-            "current_map": "/world_1/level_1/player_house",
-            "coins": 0
-        },
         "???": {
-            "py_scripter_enabled": false,
+            "totems": {},
             "level_data": {
                 "world_1": {
-                    "level_2": {
-                        "pyscripter_state": 1,
-                        "starting_map": "start"
-                    },
                     "level_1": {
-                        "starting_map": "player_house",
-                        "heidi_state": 0
+                        "heidi_state": 0,
+                        "starting_map": "player_house"
+                    },
+                    "level_2": {
+                        "starting_map": "start",
+                        "pyscripter_state": 1
                     }
                 }
             },
-            "previous_exit": "/world_1/level_2/start",
-            "totems": {},
+            "py_scripter_enabled": false,
             "has_unlocked_pyscripter": true,
             "completed_levels": {},
-            "py_scripter_tabs": 1,
+            "coins": 0,
             "current_map": "/world_1",
-            "coins": 0
+            "py_scripter_tabs": 1,
+            "previous_exit": "/world_1/level_2/start"
+        },
+        "Ying": {
+            "totems": {},
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "heidi_state": 2,
+                        "starting_map": "player_house"
+                    },
+                    "level_2": {
+                        "starting_map": "start",
+                        "pyscripter_state": 1
+                    }
+                }
+            },
+            "current_map": "/world_1/level_2/start",
+            "has_unlocked_pyscripter": true,
+            "completed_levels": {
+                "/world_1/level_1": true
+            },
+            "coins": 0,
+            "py_scripter_enabled": false,
+            "py_scripter_tabs": 1,
+            "previous_exit": "/world_1"
+        },
+        "YourName": {
+            "totems": {},
+            "level_data": {
+                "world_1": {
+                    "level_1": {
+                        "heidi_state": 0,
+                        "starting_map": "player_house"
+                    },
+                    "level_2": {
+                        "starting_map": "start"
+                    }
+                }
+            },
+            "py_scripter_enabled": false,
+            "coins": 0,
+            "current_map": "/world_1/level_1/player_house",
+            "py_scripter_tabs": 1,
+            "previous_exit": "/world_1/intro"
         }
     },
     "settings": {

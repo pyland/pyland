@@ -14,7 +14,7 @@
 		//"level_location": "/world_one_old/level_one/main",
 		//"level_location": "/world_one_old/level_two/main",
 		//"level_location": "/start_screen",
-		"level_location": "/world_1",
+		//"level_location": "/world_1",
 		//"level_location" : "/world_1/intro",
 		//"level_location" : "/world_1/level_1/rossumberg",
 		//"level_location" : "/world_1/level_1/player_house",
@@ -29,7 +29,7 @@
 		//"level_location": "/tomland/one",
 		//"level_location": "/menu",
 		//"level_location" : "/world_2/level_2/main",
-		//"level_location" : "/demo_levels/level_1/main",
+		"level_location" : "/demo_levels/level_1/main",
 		//"level_location" : "world_8/treasure_matrix",	
 		"player_scripts": self.game_folder + "/player_scripts",
 		"object_location": self.game_folder + "/objects",
@@ -153,7 +153,7 @@
 		"button_width": 0.08,
 		"button_height": 0.12,
 		"button_text_x": 0.4,
-		"button_text_y": -0.5,
+		"button_text_y": -0.0,
 
 		//the distance between two buttons
 		"horizontal_button_spacing": 0.08,
