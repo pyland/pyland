@@ -49,11 +49,8 @@
   <object id="162" name="characters/enemies/crocodiles/green_crocodile/croc_8" gid="296" x="512" y="1728" width="64" height="64"/>
   <object id="163" name="characters/enemies/crocodiles/green_crocodile/croc_9" gid="296" x="1216" y="1344" width="64" height="64"/>
   <object id="164" name="characters/npcs/myla/myla" gid="286" x="1024" y="3008" width="64" height="64"/>
-  <object id="176" name="tile_trigger/challenge2b" gid="292" x="448" y="3008" width="64" height="64"/>
-  <object id="186" name="tile_trigger/trigger_croc_9" gid="292" x="448" y="2816" width="64" height="64"/>
-  <object id="187" name="tile_trigger/trigger_croc_10" gid="292" x="448" y="2880" width="64" height="64"/>
-  <object id="188" name="tile_trigger/exit_level_start" gid="292" x="896" y="2944" width="64" height="64"/>
-  <object id="189" name="tile_trigger/myla_warn_crocs" gid="292" x="896" y="2816" width="64" height="64"/>
+  <object id="176" name="tile_trigger/croc_warning" gid="292" x="896" y="2496" width="64" height="64"/>
+  <object id="186" name="tile_trigger/made_it" gid="292" x="896" y="576" width="64" height="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="29" height="48">
   <data encoding="base64" compression="zlib">

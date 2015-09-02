@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="31" height="38" tilewidth="64" tileheight="64" nextobjectid="27">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="31" height="38" tilewidth="64" tileheight="64" nextobjectid="36">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -28,7 +28,7 @@
  </layer>
  <layer name="Decor" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztltsKwyAMhu26rTvdbu//Jjt1542+UhNQJpmaWgV3kR8+Ygz40womSolK6VzQ+ybeUcpxVzHeJ2APtECn41tHF7T2TPBGHZk8dPY90TtG/+TN5VQP5b9Pjo7kr0hvrC+BBlhYNCS61ja4Nx/hvQZ2mq3Gtw7VZiO8N0AFTHSsPDm3V0d6f9TvPV4IuHdgzvF9V0o9ReIt3uJdzhtnBewH5v1oyZq+N1yeOjsMlek/BuwjXP/OMYfhGSv17T/IdIB3jv9g9x9D7fC+qnC/zzEz+GYHkUgkyqkeyZ51uw==
+   eJztllsKwjAQRVNFa9FfXaZbtFrFN92SE0ihjEmHmwRqcS4c8oIcmpROjdGMlWZE91XdUHLcFeI+EQfiTLSufbnWB197JLhtjsJ4aO9bohvJL7mlMc/dhO9TomXjJ+i26xVREqseJWt9/T52bhnhXhM7x9YR6g+tLSLcG6IgZq4tAmNpbg663+b7Hi8MO1cL+4SeS1rvzix3EDeCutU9NbcN8h3ndTo2Xd3bA/BamepGzlvd8fHVf+SfIdc7F5NcZz81t0bzz/kA8AtzGw==
   </data>
  </layer>
  <layer name="Bridge" width="31" height="38">
@@ -38,32 +38,21 @@
  </layer>
  <objectgroup name="Object Layer 1">
   <object id="1" name="characters/player/player_one" gid="286" x="1600" y="2304" width="64" height="64"/>
-  <object id="2" name="characters/enemies/crocodiles/blue_crocodile/c3cr0" gid="296" x="768" y="832" width="64" height="64"/>
-  <object id="3" name="characters/enemies/crocodiles/blue_crocodile/c3cr1" gid="296" x="896" y="832" width="64" height="64"/>
-  <object id="4" name="characters/enemies/crocodiles/blue_crocodile/c3cr2" gid="296" x="1024" y="832" width="64" height="64"/>
-  <object id="5" name="characters/enemies/crocodiles/blue_crocodile/c3cr3" gid="296" x="1152" y="832" width="64" height="64"/>
-  <object id="6" name="characters/enemies/crocodiles/blue_crocodile/c3cr4" gid="296" x="1280" y="832" width="64" height="64"/>
-  <object id="7" name="characters/npcs/generic/challenge_3" gid="297" x="640" y="1024" width="64" height="64"/>
-  <object id="8" name="vine/c3v0" gid="287" x="704" y="1024" width="64" height="64"/>
-  <object id="9" name="vine/c3v1" gid="287" x="832" y="1024" width="64" height="64"/>
-  <object id="10" name="vine/c3v2" gid="287" x="960" y="1024" width="64" height="64"/>
-  <object id="11" name="vine/c3v3" gid="287" x="1088" y="1024" width="64" height="64"/>
-  <object id="12" name="vine/c3v4" gid="287" x="1216" y="1024" width="64" height="64"/>
-  <object id="13" name="characters/npcs/generic/challenge_0" gid="297" x="384" y="1856" width="64" height="64"/>
-  <object id="14" name="vine/c0v0" gid="287" x="384" y="1792" width="64" height="64"/>
-  <object id="15" name="characters/npcs/generic/challenge_1" gid="297" x="1472" y="1856" width="64" height="64"/>
-  <object id="16" name="characters/enemies/crocodiles/green_crocodile/c1cr0" gid="296" x="1792" y="1728" width="64" height="64"/>
+  <object id="7" name="characters/npcs/generic/npc_0" gid="297" x="1600" y="2048" width="64" height="64"/>
+  <object id="13" name="characters/npcs/generic/npc_1" gid="297" x="1472" y="1856" width="64" height="64"/>
+  <object id="15" name="characters/npcs/generic/npc_2" gid="297" x="640" y="1856" width="64" height="64"/>
+  <object id="16" name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="1152" y="1664" width="64" height="64"/>
   <object id="17" name="characters/npcs/generic/challenge_2" gid="297" x="1856" y="1600" width="64" height="64"/>
-  <object id="18" name="vine/c4v0" gid="287" x="1600" y="512" width="64" height="64"/>
-  <object id="19" name="characters/npcs/generic/challenge_4" gid="297" x="1600" y="704" width="64" height="64"/>
-  <object id="20" name="vine/v5v0" gid="287" x="896" y="512" width="64" height="64"/>
-  <object id="21" name="characters/npcs/generic/challenge_5_1" gid="291" x="960" y="512" width="64" height="64"/>
-  <object id="22" name="characters/npcs/generic/challenge_5_0" gid="291" x="1344" y="512" width="64" height="64"/>
-  <object id="26" name="characters/myla/myla" gid="286" x="1664" y="2304" width="64" height="64"/>
+  <object id="19" name="characters/npcs/generic/challenge_3" gid="297" x="1600" y="704" width="64" height="64"/>
+  <object id="21" name="characters/npcs/generic/challenge_4" gid="291" x="960" y="512" width="64" height="64"/>
+  <object id="22" name="characters/npcs/generic/challenge_5" gid="291" x="1344" y="512" width="64" height="64"/>
+  <object id="26" name="characters/npcs/myla/myla" gid="286" x="1664" y="2304" width="64" height="64"/>
+  <object id="27" name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="1152" y="1728" width="64" height="64"/>
+  <object id="35" name="characters/enemies/crocodiles/blue_crocodile/croc_2" gid="296" x="768" y="1472" width="64" height="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztlUEOgDAIBJu+q/7/W8aTTdPQBRY1lUlIb4xrFUr5L63e9Ya7P9Nt7zeW1z326k9LWdwMtO7RP8sg5ZPyoplWfZF8qNt6n4zcEf+e1n1UXu3mbkFuFOZsscwvzXOibjbpTvcX3MiO9O4YyR2BtM9YNZunK7c3c98DdTPv9wLN/SRR36/mvSRJsicnM+hSIw==
+   eJztlVEOwCAIQ43ncve/1r6WGQMKBbbM0aQx84NnZ4RS/qtWb7/B7tdk4/VGW9ljrX5FjLA9pGWPfCrDLN8srzTTqq4kn5SN3qdH7oi3p2Uf1c+7sVsQWyrP3oL0L805JWzkXpOd7C+wrTPb8r4j5gjFnPWQa1/7v7l9ZJ5r2dR5V3m576jcTwqZEYg5RiqV2lcnXEliUA==
   </data>
  </layer>
  <layer name="rocks" width="31" height="38">

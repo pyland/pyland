@@ -2,6 +2,10 @@
 world_name = "world_2"
 level_name = "level_1"
 map_name = "main"
+
+engine.update_world_text("2")
+engine.update_level_text("1")
+
 player_one.focus()
 player_one.face_south()
 
