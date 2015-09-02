@@ -22,13 +22,21 @@ challenge_1.face_west()
 challenge_2.face_south()
 challenge_3.face_south()
 challenge_3.set_cuts_left(5)
+challenge_4.face_north()
+challenge_4.set_cuts_left(1)
+challenge_5_0.face_west()
+challenge_5_0.set_cuts_left(1)
+challenge_5_1.face_east()
 
 def challenger_action(player_object, challenger):
     challenger.turn_to_face(player_object)
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: challenger.set_busy(True, callback = callback),
         lambda callback: engine.show_dialogue("My PyRunner doesn't seem to do anything. Can you have a look at it please?.", callback = callback),
-    ],
+        lambda callback: write_script(challenger)
+    ])
+    """,
     callback = lambda: engine.show_dialogue_with_options(
         "Can you help me?",
         options = {
@@ -36,13 +44,13 @@ def challenger_action(player_object, challenger):
             "No" : lambda: engine.run_callback_list_sequence([
                 lambda callback: player_one.set_busy(False, callback = callback),
                 lambda callback: engine.show_dialogue("Aw, that's a shame", callback = callback),])
-        }))
+        }))"""
             
 
 
 def write_script(challenger):
     engine.run_callback_list_sequence([
-        lambda callback: engine.show_dialogue("Thank you! Help me run a script!",  callback = callback),
+        lambda callback: challenger.set_busy(False, callback = callback),
         lambda callback: engine.show_external_script(
             confirm_callback = lambda: engine.run_callback_list_sequence([
                 lambda callback: player_one.set_busy(False, callback = callback),
@@ -58,3 +66,7 @@ challenge_0.player_action = lambda player_object: challenger_action(player_objec
 challenge_1.player_action = lambda player_object: challenger_action(player_object, challenge_1)
 challenge_2.player_action = lambda player_object: challenger_action(player_object, challenge_2)
 challenge_3.player_action = lambda player_object: challenger_action(player_object, challenge_3)
+challenge_4.player_action = lambda player_object: challenger_action(player_object, challenger_4)
+challenge_5_0.player_action = lambda player_object: challenger_action(player_object, challenger_5_0)
+challenge_5_1.player_action = lambda player_object: challenger_action(player_object, challenger_5_1)
+

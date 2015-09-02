@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="31" height="30" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="31" height="38" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -21,22 +21,22 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <layer name="Ground" width="31" height="30">
+ <layer name="Ground" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztw0ENAAAMA6GTWv8q5mIvSFg1VVVVfXo/r1zQ
+   eJztw0ENAAAMA6GTWv8qJmJfSFg1VVVVVX0+71O50A==
   </data>
  </layer>
- <layer name="Decor" width="31" height="30">
+ <layer name="Decor" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztltsKwjAMQDOnztur/v+nDJ13ZL9kAi2rsTV2LRYkgUNvkENX1hRAo1QcCrrP6lb3H7r5P/VLN3dJ7ivSZeIe6ab1JdIgC4eGtb6+C83NR7jXyM6wNYT6n9ZmI9wbpEImpq0CY2mujnQ/4P3cjgyaa4U8oX2lrKeEutWt7nLuPdLDcH90rM/vG2l8i3CnhK0/FqojF8Gd481MOVYw1B9i+oU7x3dw64+l9rhP8HouPcS9B3yEcvC3Q4l4AuacYys=
+   eJztltsKwyAMhu26rTvdbu//Jjt1542+UhNQJpmaWgV3kR8+Ygz40womSolK6VzQ+ybeUcpxVzHeJ2APtECn41tHF7T2TPBGHZk8dPY90TtG/+TN5VQP5b9Pjo7kr0hvrC+BBlhYNCS61ja4Nx/hvQZ2mq3Gtw7VZiO8N0AFTHSsPDm3V0d6f9TvPV4IuHdgzvF9V0o9ReIt3uJdzhtnBewH5v1oyZq+N1yeOjsMlek/BuwjXP/OMYfhGSv17T/IdIB3jv9g9x9D7fC+qnC/zzEz+GYHkUgkyqkeyZ51uw==
   </data>
  </layer>
- <layer name="Bridge" width="31" height="30">
+ <layer name="Bridge" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJxjYKAeSKGiWYPZTnzAjWlk2j2QYKSGOcjugbJ/NK3RB9gj2TeQdo+CUTAKRsEoGAWjYBRQGwAAR5sD0w==
+   eJzt0rEJACAMRUFxMTsncf8ZxM5KLMQI3g2QB5+kdE47eOvl5krNf7Yj/br5aEf1/dodZepFtgEAAHZ1GhwD0w==
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="31" height="30">
+ <objectgroup name="Object Layer 1" width="31" height="38">
   <object name="characters/player/player_one" gid="286" x="128" y="320"/>
   <object name="characters/enemies/crocodiles/blue_crocodile/c3cr0" gid="296" x="768" y="832"/>
   <object name="characters/enemies/crocodiles/blue_crocodile/c3cr1" gid="296" x="896" y="832"/>
@@ -54,15 +54,20 @@
   <object name="characters/npcs/generic/challenge_1" gid="297" x="1472" y="1856"/>
   <object name="characters/enemies/crocodiles/green_crocodile/c1cr0" gid="296" x="1792" y="1728"/>
   <object name="characters/npcs/generic/challenge_2" gid="297" x="1856" y="1600"/>
+  <object name="vine/c4v0" gid="287" x="1600" y="512"/>
+  <object name="characters/npcs/generic/challenge_4" gid="297" x="1600" y="704"/>
+  <object name="vine/v5v0" gid="287" x="896" y="512"/>
+  <object name="characters/npcs/generic/challenge_5_1" gid="291" x="960" y="512"/>
+  <object name="characters/npcs/generic/challenge_5_0" gid="291" x="1344" y="512"/>
  </objectgroup>
- <layer name="SpecialLayer" width="31" height="30">
+ <layer name="SpecialLayer" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztlVEKACEIRKNz1f2vFX0V4dZIY7u0Dgz+RE9JM4T/KsXmN9h9dLazb2CPM3WaPYvSeaa1bLa07Bx5vo2djNiodnruia3tZTRPlM2Ws539BfY4i9Y7RcqLrdk+Y1n6T1fs3Zr7O1A2832r0LpPyqp/URdxn0c9
+   eJztlUEOgDAIBJu+q/7/W8aTTdPQBRY1lUlIb4xrFUr5L63e9Ya7P9Nt7zeW1z326k9LWdwMtO7RP8sg5ZPyoplWfZF8qNt6n4zcEf+e1n1UXu3mbkFuFOZsscwvzXOibjbpTvcX3MiO9O4YyR2BtM9YNZunK7c3c98DdTPv9wLN/SRR36/mvSRJsicnM+hSIw==
   </data>
  </layer>
- <layer name="rocks" width="31" height="30">
+ <layer name="rocks" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJzt1DENAAAIwDBwgn+VXEggcLQKdi0CABiV1wUAbPD3Xxo3lQBD
+   eJzt1DEBAAAEAEGa6J/SJAKWuwQ/fQQAMCq/CwDY4O8ANxo7RABD
   </data>
  </layer>
 </map>
