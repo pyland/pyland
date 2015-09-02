@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="18" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <layer name="ground" width="30" height="18">
+  <data encoding="base64" compression="zlib">
+   eJxLZGBgSBzFo3gUj+JRPIpH8SimIQYABnfMnQ==
+  </data>
+ </layer>
+ <layer name="decor" width="30" height="18">
+  <data encoding="base64" compression="zlib">
+   eJzdVNsKwCAIdX+yv4ua7qH/fxiyI8QeFjhDmBAnvHRKTjIR8cs6aI3xJF6TeEsSb1afJYk3q8/7lsP7Nz03unup7+rYK6qeKpYg75krwIb7aUzR5s0Jn/kL/AU1X82jgR7A6zkj4r2eMyLmkUfzEbyemcaoU6wDyhAzjRt25Ji2Z39xlWXxevp8AZN7IIg=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="0" height="0">
+  <object name="characters/player/player_one" gid="286" x="0" y="1152" width="64" height="64"/>
+  <object name="tile_trigger/end_level" gid="292" x="1856" y="64" width="64" height="64"/>
+  <object name="player_data/player_data" gid="287" x="1792" y="64" width="64" height="64"/>
+  <object name="tile_trigger/exit_level_start" gid="292" x="0" y="1152" width="64" height="64"/>
+  <object name="scroll/scroll1" gid="287" x="384" y="1152"/>
+  <object name="scroll/scroll2" gid="287" x="576" y="896"/>
+  <object name="scroll/scroll3" gid="287" x="128" y="832"/>
+  <object name="tile_trigger/block1" gid="292" x="448" y="640"/>
+  <object name="tile_trigger/block2" gid="292" x="1088" y="896"/>
+  <object name="scroll/scroll1a" gid="287" x="448" y="512"/>
+  <object name="scroll/scroll1c" gid="287" x="64" y="128"/>
+  <object name="scroll/scroll1b" gid="287" x="448" y="128"/>
+  <object name="scroll/scroll1d" gid="287" x="64" y="576"/>
+  <object name="scroll/scroll2d" gid="287" x="1856" y="704"/>
+  <object name="scroll/scroll2c" gid="287" x="1856" y="1152"/>
+  <object name="scroll/scroll2b" gid="287" x="1152" y="1152"/>
+  <object name="scroll/scroll2a" gid="287" x="1216" y="896"/>
+ </objectgroup>
+ <layer name="SpecialLayer" width="30" height="18">
+  <data encoding="base64" compression="zlib">
+   eJyzYWJgsCGAiQXUVDtQ9tIKDFb/jto7ai+5avGVF4TKFHLUkloeUcOflOgZ6faSAwbSv9RIswMBhpK9ADg1FVE=
+  </data>
+ </layer>
+</map>
