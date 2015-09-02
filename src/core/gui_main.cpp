@@ -579,7 +579,6 @@ void GUIMain::proceed_selection_notification_bar_with_options(bool forward){
 			option_selected++; 
 		}
 	}
-	LOG(INFO) << "££££" << option_selected;	
     for(unsigned int i=0; i<2; i++){
         if (i == option_selected){
             option_buttons[i]->highlight();
