@@ -1,5 +1,5 @@
 
-![alt tag](https://raw.githubusercontent.com/pyland/pyland/master/logo.png)
+![alt tag](https://raw.githubusercontent.com/pyland/pyland/master/small_logo.png)
 
 This project is pre-alpha, the state of the project changes rapidly from day to day. Follow us on twitter for updates, [@ProjectPyland](http://twitter.com/ProjectPyland).
 
