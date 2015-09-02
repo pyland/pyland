@@ -7,10 +7,7 @@
   <image source="../../tiles/menu.png" width="320" height="700"/>
  </tileset>
  <tileset firstgid="146" name="logo" tilewidth="64" tileheight="64">
-  <image source="../../../logo.png" trans="ff00ff" width="320" height="997"/>
- </tileset>
- <tileset firstgid="221" name="logo" tilewidth="64" tileheight="64">
-  <image source="../../../logo.png" trans="ff00ff" width="320" height="997"/>
+  <image source="../../tiles/logo.png" trans="ff00ff" width="320" height="997"/>
  </tileset>
  <layer name="Background" width="70" height="16">
   <data encoding="base64" compression="zlib">
