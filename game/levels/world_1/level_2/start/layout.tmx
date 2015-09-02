@@ -39,5 +39,9 @@
   <object name="characters/enemies/crocodiles/green_crocodile/annoying_croc" gid="193" x="896" y="384"/>
   <object name="characters/npcs/myla/myla" gid="191" x="320" y="64" width="64" height="64"/>
   <object name="tile_trigger/exit_to_bogs" gid="197" x="832" y="1280"/>
+  <object name="ledge/ledge1" gid="193" x="576" y="512"/>
+  <object name="ledge/ledge2" gid="193" x="704" y="512"/>
+  <object name="ledge/ledge3" gid="193" x="832" y="512"/>
+  <object name="ledge/ledge4" gid="193" x="704" y="640"/>
  </objectgroup>
 </map>
