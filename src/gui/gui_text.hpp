@@ -43,7 +43,7 @@ public:
     ///
     std::shared_ptr<GUITextData> get_gui_text();
 
-	std::string get_text_as_string();
+    std::string get_text_as_string();
     //Overloads from Component
     std::vector<std::pair<GLfloat*, int>> generate_vertex_data();
     std::vector<std::pair<GLfloat*, int>> generate_texture_data();

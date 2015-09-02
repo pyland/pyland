@@ -1,48 +1,6 @@
 {
-    "player_saves": {
-        "YourName": {
-            "level_data": {
-                "world_1": {
-                    "level_2": {
-                        "starting_map": "start"
-                    },
-                    "level_1": {
-                        "starting_map": "player_house",
-                        "heidi_state": 0
-                    }
-                }
-            },
-            "previous_exit": "/world_1/intro",
-            "totems": {},
-            "py_scripter_enabled": false,
-            "py_scripter_tabs": 1,
-            "current_map": "/world_1/level_1/player_house",
-            "coins": 0
-        },
-        "???": {
-            "py_scripter_enabled": false,
-            "level_data": {
-                "world_1": {
-                    "level_2": {
-                        "pyscripter_state": 1,
-                        "starting_map": "start"
-                    },
-                    "level_1": {
-                        "starting_map": "player_house",
-                        "heidi_state": 0
-                    }
-                }
-            },
-            "previous_exit": "/world_1/level_2/start",
-            "totems": {},
-            "has_unlocked_pyscripter": true,
-            "completed_levels": {},
-            "py_scripter_tabs": 1,
-            "current_map": "/world_1",
-            "coins": 0
-        }
-    },
+    "player_saves": {},
     "settings": {
-        "language": "pyrate"
+        "language": "english"
     }
 }
