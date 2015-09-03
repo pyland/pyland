@@ -203,7 +203,8 @@ class Crocodile(Enemy):
             lambda callback: self.set_busy(False, callback = callback),
             lambda callback: self.turn_to_face(character, callback = callback),
             lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
-            lambda callback: self.get_engine().restart_level()])
+            lambda callback: engine.restart_level()
+        ])
     
 
 

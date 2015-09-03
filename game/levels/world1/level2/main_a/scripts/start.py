@@ -23,6 +23,11 @@ croc_1.face_east()
 croc_2.face_east()
 croc_3.face_east()
 
+croc_0.check_kill([player_one, myla])
+croc_1.check_kill([player_one, myla])
+croc_2.check_kill([player_one, myla])
+croc_3.check_kill([player_one, myla])
+
 if not came_from_main_b:
     engine.run_callback_list_sequence([
         lambda callback: player_one.face_east(callback = callback),
