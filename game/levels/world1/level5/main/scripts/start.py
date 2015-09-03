@@ -205,12 +205,11 @@ hor_crocs = [croc1, croc2, croc3, croc4, croc5]
 ver_crocs = [croc6, croc7, croc8, croc9]
 
 for croc in hor_crocs:
-	croc.check_kill([player_one])
-	croc.face_east()
+	croc.killable = [player_one]
 	croc.move_horizontal()
 
 for croc in ver_crocs:
-	croc.check_kill([player_one])
+	croc.killable = [player_one]
 	croc.move_vertical()
 
 ###final chamber
