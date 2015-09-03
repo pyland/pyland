@@ -176,7 +176,7 @@ class Engine:
         x, y = position                                     #Extract the position x and y coordinates
         return self.__cpp_engine.is_solid(x, y)
 
-    def print_terminal(self, message, highlighted = False):
+    def print_terminal(self, message, highlighted = False, callback = lambda: None):
         """ print the given message to in-game terminal
 
         Parameters
@@ -187,7 +187,9 @@ class Engine:
             if true the message is printed red, else it printed in black
         """
         self.__cpp_engine.print_terminal(str(message), highlighted)
+        self.add_event(callback)
 
+        
     def print_debug(self, message):
         """ print the given message to the operating system terminal
 
