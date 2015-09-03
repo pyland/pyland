@@ -46,7 +46,7 @@
  </layer>
  <layer name="LevelSprites" width="30" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFyECFcXjaRQoYrO6iFKD7azD5E5tbaOU+SswdLGE2WNxBDzCS/DrSAAC58wGY
+   eJxjYBgFyECFcXjaRQoYrO6iFKD7azD5E5tbYGLUdicl5g2WMBss7qAHGEl+HWkAAEjNAb0=
   </data>
  </layer>
  <objectgroup name="Objects">

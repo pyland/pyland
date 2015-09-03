@@ -24,7 +24,7 @@ level_8_move_away = player_one.move_west
 level_8_move_away = player_one.move_west
 
 level_1_2_move_away = player_one.move_west
-level_1_2_move_away = player_one.move_west
+level_2_2_move_away = player_one.move_west
 
 level_demo_move_away = player_one.move_west
 
@@ -129,7 +129,7 @@ def go_to_level_3(player_object):
 level_3.player_walked_on = go_to_level_3
 
 def go_to_level_4(player_object):
-    ask_to_go_to_level("world1","level4", "main_a", "Level 4", level_4_move_away)
+    ask_to_go_to_level("world1","level4", "main", "Level 4", level_4_move_away)
 
 level_4.player_walked_on = go_to_level_4
 
@@ -168,7 +168,7 @@ level_1_2.player_walked_on = go_to_level_1_2
 def go_to_level_2_2(player_object):
     ask_to_go_to_level("world2","level4", "main", "Level 2", level_2_2_move_away)
 
-level_1_2.player_walked_on = go_to_level_2_2
+level_2_2.player_walked_on = go_to_level_2_2
 
 
 def go_to_level_demo(player_object):

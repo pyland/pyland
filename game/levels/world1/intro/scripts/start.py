@@ -104,7 +104,7 @@ name_confirmed_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "wrote_first_program", {"player_name": player_name}), callback = callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "console_output"), callback = callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "go_enjoy_pyland", {"player_name": player_name}), callback = callback),
-    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "keys", {"player_name": player_name}), callback = callback)
+    #lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "keys", {"player_name": player_name}), callback = callback)
 ]
 
 def start_game():
