@@ -25,9 +25,6 @@ croc_4,
 croc_5
 ]
 
-croc_4.oscillate = 1
-croc_5.oscillate = 2
-
 croc[0].face_east()
 croc[1].face_east()
 croc[2].face_east()
@@ -36,7 +33,8 @@ croc[4].face_south()
 croc[5].face_west()
 
 for c in croc:
-    c.check_kill([player_one, myla])
+    c.killable = [player_one, myla]
+    c.still_check_kill()
     
 engine.run_callback_list_sequence([
     lambda callback: player_one.face_east(callback = callback),
