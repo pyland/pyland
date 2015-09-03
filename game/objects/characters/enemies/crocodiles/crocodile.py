@@ -13,7 +13,7 @@ class Crocodile(Enemy):
         self.__check_swim_state()
         self.oscillate = 0
 
-        killable = []
+        self.killable = []
 
     def __check_swim_state(self, callback = lambda: None):
         """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
