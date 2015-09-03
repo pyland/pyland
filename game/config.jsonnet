@@ -9,6 +9,7 @@
 		"game_folder": "../game",
 		"level_folder": self.game_folder+"/levels/",
 		"main_menu": "/start_screen",
+		"level_location": "/start_screen",
 		//"level_location": "/test_world/test_level/test_one",
 		//"level_location": "/test_world/yingischallenged/main",
 		//"level_location": "/world_one_old/level_one/main",
@@ -21,7 +22,7 @@
 		//"level_location" : "/world_1/level_1/player_house",
 		//"level_location" : "/world_1/level_1/road_one",
 		//"level_location" : "/world_1/level_3/main",
-		"level_location" : "/world_1/level_4/main_a",
+		//"level_location" : "/world_1/level_4/main_a",
 		//"level_location" : "/world_1/level_3/main",
 		//"level_location" : "/world_1/level_5/maze",
 		//"level_location" : "/world_1/level_6/vine_intro",
@@ -175,7 +176,7 @@
 	// "index": "pyguide api: description"
 
 	"pyguide_apis": {
-		"number": 7,
+		"number": 8,
 		"0": "move_east(): This moves the present character towards the right by one step.",
 		"1": "move_west(): This moves the present character towards the left by one step.",
 		"2": "move_south(): This moves the present character towards the bottom by one step.",
