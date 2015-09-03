@@ -26,7 +26,7 @@ engine.run_callback_list_sequence([
 ])
 
 def go_next(player_object):
-    player_data.save_and_exit("/world1/level6/main")
+    player_data.save_and_exit("/world1")
 
 end_level.player_walked_on = go_next
 
