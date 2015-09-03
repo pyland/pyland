@@ -28,12 +28,12 @@
  </layer>
  <layer name="decor" width="30" height="18">
   <data encoding="base64" compression="zlib">
-   eJy1VMsOhCAMrO77cdXzft0SXNiD/39YGqeREMCswCSTMS0wFmsNEZkMP9QGZiOvoTfHC3gNeG7gq6APxyHBU6HvO1CG3LP4juDgaalv6Mmw0Dut9Y3Uvl6559DXr/tY6BvDq1s0931b+Eo/Px17x85jDx4a+KqN/F5MtNwl1zXjmZX7SSNvoeFaC53wfpxjlXnzRUziCnGFPaWQHvgHcwXfPWfUqHfPGTXmvk7EY/Ogpq/N5GKeDIN9rNpT6+Wkx0VnrJHeTv2LuXprYGsGtELunlP4AY5XJ6M=
+   eJytVcsSgyAMjPb9uOq5B79NioUe/P9DZUxqJuUldWd2UgGzbAzUAICJ8AX5sIlckjFojJeJJ+RZ8Mh0HZ6JvF2V1lUYbxObAA+e9wyLKb+9iA5UZ9JtkQ2LpGvZezE/vjr34plyXWHx14Lfr9QN+cvxS3WWutz33qMr99/Db+1jeFRzjH1fruvTk1jTz/eJ9cSKsUbumK7UKz1HKjHPYdNLvnsZYK6l8zXi7xFzaJy3GOVai3HA/bk5Bct988YxGlc4Tnn/BfXAGowb6Jbk2MJvSY41934IOjDuuw+21I31sU/TwcDy/6VZtGyOepziiGuot0NnMeY3dX5zUJKjKzgDErn3BccHBPA9WQ==
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="0" height="0">
   <object name="characters/player/player_one" gid="286" x="0" y="1152" width="64" height="64"/>
-  <object name="tile_trigger/end_level" gid="292" x="1856" y="64" width="64" height="64"/>
+  <object name="tile_trigger/end_level" gid="292" x="1856" y="128" width="64" height="64"/>
   <object name="player_data/player_data" gid="287" x="1792" y="64" width="64" height="64"/>
   <object name="tile_trigger/exit_level_start" gid="292" x="0" y="1152" width="64" height="64"/>
   <object name="scroll/scroll1" gid="287" x="384" y="1152"/>
@@ -72,10 +72,20 @@
   <object name="characters/enemies/crocodiles/green_crocodile/croc7" gid="296" x="896" y="384"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc8" gid="296" x="832" y="448"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc9" gid="296" x="960" y="512"/>
+  <object name="characters/npcs/generic/bob" gid="291" x="1536" y="576"/>
+  <object name="scroll/scroll4" gid="287" x="1792" y="576"/>
+  <object name="tile_trigger/reset" gid="292" x="1344" y="128"/>
+  <object name="tile_trigger/switch1" gid="292" x="1280" y="448"/>
+  <object name="tile_trigger/switch2" gid="292" x="1408" y="384"/>
+  <object name="tile_trigger/switch3" gid="292" x="1408" y="512"/>
+  <object name="tile_trigger/switch4" gid="292" x="1536" y="448"/>
+  <object name="tile_trigger/switch5" gid="292" x="1664" y="384"/>
+  <object name="tile_trigger/reached1" gid="292" x="1792" y="384"/>
+  <object name="boulder/boulder1" gid="288" x="1792" y="320"/>
  </objectgroup>
  <layer name="SpecialLayer" width="30" height="18">
   <data encoding="base64" compression="zlib">
-   eJyzYWJgsCGAiQXUVAuTt2XCj6ltLwwQYy8pYLD6d9TekWEvNcxCV4uvvCBUppCjltTyiBr+pETPSLeXHDCQ/qVGmh0IMJTsBQDFLiMZ
+   eJyzYWJgsCGAiQWEzCHFXJi8LRN+jKwWnY3PXEKAGHuxmTuY/Etre3H5j5b24jOL3vYim0lreylNV8T6g1h1hNxDShlAzXKDmv6kVM9It5ccMJD+pUaapYdbaWEGvewFAHzCLA8=
   </data>
  </layer>
 </map>
