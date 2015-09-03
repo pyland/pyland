@@ -49,36 +49,6 @@
   <object name="characters/enemies/crocodiles/green_crocodile/croc_2" gid="391" x="640" y="768"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="391" x="320" y="960"/>
   <object name="characters/player/player_one" gid="381" x="1856" y="1152"/>
-  <object name="tile_trigger/trigger_0" gid="1" x="256" y="704"/>
-  <object name="tile_trigger/trigger_1" gid="1" x="256" y="768"/>
-  <object name="tile_trigger/trigger_2" gid="1" x="256" y="832"/>
-  <object name="tile_trigger/trigger_3" gid="1" x="256" y="896"/>
-  <object name="tile_trigger/trigger_4" gid="1" x="1902" y="692"/>
-  <object name="tile_trigger/trigger_5" gid="1" x="384" y="1024"/>
-  <object name="tile_trigger/trigger_6" gid="1" x="448" y="1024"/>
-  <object name="tile_trigger/trigger_7" gid="1" x="512" y="1024"/>
-  <object name="tile_trigger/trigger_8" gid="1" x="640" y="1024"/>
-  <object name="tile_trigger/trigger_9" gid="1" x="704" y="960"/>
-  <object name="tile_trigger/trigger_10" gid="1" x="704" y="896"/>
-  <object name="tile_trigger/trigger_11" gid="1" x="704" y="832"/>
-  <object name="tile_trigger/trigger_12" gid="1" x="704" y="768"/>
-  <object name="tile_trigger/trigger_13" gid="1" x="704" y="704"/>
-  <object name="tile_trigger/trigger_14" gid="1" x="704" y="640"/>
-  <object name="tile_trigger/trigger_15" gid="1" x="704" y="576"/>
-  <object name="tile_trigger/trigger_16" gid="1" x="704" y="512"/>
-  <object name="tile_trigger/trigger_17" gid="1" x="704" y="448"/>
-  <object name="tile_trigger/trigger_18" gid="1" x="1792" y="960"/>
-  <object name="tile_trigger/trigger_19" gid="1" x="1792" y="896"/>
-  <object name="tile_trigger/trigger_20" gid="1" x="1792" y="832"/>
-  <object name="tile_trigger/trigger_21" gid="1" x="1792" y="768"/>
-  <object name="tile_trigger/trigger_22" gid="1" x="1792" y="704"/>
-  <object name="tile_trigger/trigger_23" gid="1" x="320" y="1024"/>
-  <object name="tile_trigger/trigger_24" gid="1" x="1792" y="576"/>
-  <object name="tile_trigger/trigger_25" gid="1" x="1600" y="576"/>
-  <object name="tile_trigger/trigger_26" gid="1" x="1664" y="576"/>
-  <object name="tile_trigger/trigger_27" gid="1" x="256" y="960"/>
-  <object name="tile_trigger/trigger_28" gid="1" x="1472" y="1024"/>
-  <object name="tile_trigger/trigger_29" gid="1" x="1728" y="1024"/>
   <object name="characters/npcs/myla/myla" gid="381" x="1920" y="1152"/>
   <object name="tile_trigger/trigger_end" gid="387" x="704" y="448"/>
   <object name="tile_trigger/level_exit" gid="387" x="640" y="64"/>
