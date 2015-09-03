@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="31" height="38" tilewidth="64" tileheight="64" nextobjectid="36">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <layer name="Ground" width="31" height="38">
+  <data encoding="base64" compression="zlib">
+   eJztw0ENAAAMA6GTWv8qJmJfSFg1VVVVVX0+71O50A==
+  </data>
+ </layer>
+ <layer name="Decor" width="31" height="38">
+  <data encoding="base64" compression="zlib">
+   eJztllsKwjAQRVNFa9FfXaZbtFrFN92SE0ihjEmHmwRqcS4c8oIcmpROjdGMlWZE91XdUHLcFeI+EQfiTLSufbnWB197JLhtjsJ4aO9bohvJL7mlMc/dhO9TomXjJ+i26xVREqseJWt9/T52bhnhXhM7x9YR6g+tLSLcG6IgZq4tAmNpbg663+b7Hi8MO1cL+4SeS1rvzix3EDeCutU9NbcN8h3ndTo2Xd3bA/BamepGzlvd8fHVf+SfIdc7F5NcZz81t0bzz/kA8AtzGw==
+  </data>
+ </layer>
+ <layer name="Bridge" width="31" height="38">
+  <data encoding="base64" compression="zlib">
+   eJzt0rEJACAMRUFxMTsncf8ZxM5KLMQI3g2QB5+kdE47eOvl5krNf7Yj/br5aEf1/dodZepFtgEAAHZ1GhwD0w==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="1" name="characters/player/player_one" gid="286" x="1600" y="2304" width="64" height="64"/>
+  <object id="7" name="characters/npcs/generic/npc_0" gid="297" x="1600" y="2048" width="64" height="64"/>
+  <object id="13" name="characters/npcs/generic/npc_1" gid="297" x="1472" y="1856" width="64" height="64"/>
+  <object id="15" name="characters/npcs/generic/npc_2" gid="297" x="640" y="1856" width="64" height="64"/>
+  <object id="16" name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="1152" y="1664" width="64" height="64"/>
+  <object id="17" name="characters/npcs/generic/challenge_2" gid="297" x="1856" y="1600" width="64" height="64"/>
+  <object id="19" name="characters/npcs/generic/challenge_3" gid="297" x="1600" y="704" width="64" height="64"/>
+  <object id="21" name="characters/npcs/generic/challenge_4" gid="291" x="960" y="512" width="64" height="64"/>
+  <object id="22" name="characters/npcs/generic/challenge_5" gid="291" x="1344" y="512" width="64" height="64"/>
+  <object id="26" name="characters/npcs/myla/myla" gid="286" x="1664" y="2304" width="64" height="64"/>
+  <object id="27" name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="1152" y="1728" width="64" height="64"/>
+  <object id="35" name="characters/enemies/crocodiles/blue_crocodile/croc_2" gid="296" x="768" y="1472" width="64" height="64"/>
+ </objectgroup>
+ <layer name="SpecialLayer" width="31" height="38">
+  <data encoding="base64" compression="zlib">
+   eJztlVEOwCAIQ43ncve/1r6WGQMKBbbM0aQx84NnZ4RS/qtWb7/B7tdk4/VGW9ljrX5FjLA9pGWPfCrDLN8srzTTqq4kn5SN3qdH7oi3p2Uf1c+7sVsQWyrP3oL0L805JWzkXpOd7C+wrTPb8r4j5gjFnPWQa1/7v7l9ZJ5r2dR5V3m576jcTwqZEYg5RiqV2lcnXEliUA==
+  </data>
+ </layer>
+ <layer name="rocks" width="31" height="38">
+  <data encoding="base64" compression="zlib">
+   eJzt1DEBAAAEAEGa6J/SJAKWuwQ/fQQAMCq/CwDY4O8ANxo7RABD
+  </data>
+ </layer>
+</map>

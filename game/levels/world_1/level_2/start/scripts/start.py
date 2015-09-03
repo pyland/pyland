@@ -15,11 +15,6 @@ pyscripter_state_not_found = 0
 pyscripter_state_found = 1
 #end state definitions
 
-ledge1.set_ledge_face(1)
-ledge2.set_ledge_face(2)
-ledge3.set_ledge_face(3)
-ledge4.set_ledge_face(4)
-
 #setting the player's starting position
 if player_data.previous_exit_is("world_1", level_name = "level_2", map_name = "bogs"):
     engine.run_callback_list_sequence([

@@ -85,7 +85,7 @@ class Crocodile(Enemy):
             if x == character_x:
                 if character_y == y+1:
                     return self.face_north(self.set_busy(True, callback = lambda: self.lose(character)))
-                elif player_y == y-1:
+                elif character_y == y-1:
                     return self.face_south(self.set_busy(True, callback = lambda: self.lose(character)))
 
             elif y == character_y:
@@ -95,7 +95,7 @@ class Crocodile(Enemy):
                 elif character_x == x-1:
                     return self.face_west(self.set_busy(True, callback = lambda: self.lose(character)))
 
-        return self.wait(.15, lambda: self.check_kill(killable))
+        return self.wait(.1, lambda: self.check_kill(killable))
 
     def move_horizontal(self, times = -1):
         """ The crocodile moves horizontally (east/west direction).
@@ -113,20 +113,6 @@ class Crocodile(Enemy):
 
         x,y = self.get_position()
         engine = self.get_engine()
-        """player_x, player_y = player.get_position()
-        engine = self.get_engine()
-
-        if x == player_x:
-            if player_y == y+1:
-                return self.face_north(lambda: self.lose(player))
-            elif player_y == y-1:
-                return self.face_south(lambda: self.lose(player))
-        elif y == player_y:
-            if player_x == x+1:
-                return self.face_east(lambda: self.lose(player))
-            elif player_x == x-1:
-                return self.face_west(lambda: self.lose(player))"""
-
 
         if times != 0:
             if(self.is_facing_west()):
@@ -190,18 +176,18 @@ class Crocodile(Enemy):
         if not self.is_moving():
             if player_y == self_y:
                 if player_x < self_x and player.is_facing_east():
-                    self.move_west(lambda: self.move_horizontal(self.oscillate))
+                    self.face_west(lambda: self.move_horizontal(self.oscillate))
                 elif player_x > self_x and player.is_facing_west():
-                    self.move_east(lambda: self.move_horizontal(self.oscillate))
+                    self.face_east(lambda: self.move_horizontal(self.oscillate))
                 return
             if player_x == self_x:
                 if player_y < self_y and player.is_facing_north():
-                    self.move_south(lambda: self.move_vertical(self.oscillate))
+                    self.face_south(lambda: self.move_vertical(self.oscillate))
                 elif player_y > self_y and player.is_facing_south():
-                    self.move_north(lambda: self.move_vertical(self.oscillate))
+                    self.face_north(lambda: self.move_vertical(self.oscillate))
                 return
             
-    def lose(self, player):
+    def lose(self, character):
         """ This is run whenever the player gets caught by a crocodiles
 
         Parameters
@@ -211,8 +197,11 @@ class Crocodile(Enemy):
         """
         engine = self.get_engine()
         engine.run_callback_list_sequence([
-            lambda callback: player.set_busy(True, callback = callback),
-            
+            lambda callback: character.set_busy(True, callback = callback),
+            lambda callback: self.set_busy(True, callback = callback),
+            lambda callback: self.wait(.3, callback = callback),
+            lambda callback: self.set_busy(False, callback = callback),
+            lambda callback: self.turn_to_face(character, callback = callback),
             lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
             lambda callback: self.get_engine().restart_level()])
     

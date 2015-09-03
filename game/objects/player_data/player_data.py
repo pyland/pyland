@@ -9,8 +9,8 @@ import json
 
 #TODO: add checks in all of these functions so that states can be lazily made etc.
 
-""" This class is a useful object which is useful in that automatically handels a lot of the 
-saving that the Pyland game requires. 
+""" This class is a useful object which is useful in that automatically handels a lot of the
+saving that the Pyland game requires.
 
 
 All the save stuff from engine needs to be abstracted out to here as ultimately this will off a more robust and flexible system
@@ -77,7 +77,7 @@ class PlayerData(GameObject):
     def complete_level_and_save(self):
         self.__get_completed_levels()["/" + self.__current_world + "/" + self.__current_level] = True
         self.save()
-        
+
 
     def __get_completed_levels(self):
         if not ("completed_levels" in self.__player_data):
@@ -97,10 +97,14 @@ class PlayerData(GameObject):
             self.__player_data = engine.get_player_data(player_name)
 
         #setup all the player-data (what they have unlocked)
-        if(self.__has_unlocked_pyscripter()):
-            engine.show_py_scripter()
-        else:
-            engine.hide_py_scripter()
+
+
+#Removed for testing purposes
+ #       if(self.__has_unlocked_pyscripter()):
+ #           engine.show_py_scripter()
+ #       else:
+ #           engine.hide_py_scripter()
+ #
         return
 
     def save(self):
@@ -125,7 +129,7 @@ class PlayerData(GameObject):
         if self.__current_map != None:
             full_map_name += "/" + self.__current_map
         return full_map_name
-        
+
 
     def get_previous_exit(self):
         """ Deprecated, todo: make this private and make earlier levels use previous_exit_is """
@@ -171,5 +175,5 @@ class PlayerData(GameObject):
     def set_level_state(self, level_state, value):
         #TODO: add checks to this so that if the state doesn't exist it is created
         self.__get_level_data()[level_state] = value
-    
-            
+
+

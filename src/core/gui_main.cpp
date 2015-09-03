@@ -568,17 +568,17 @@ void GUIMain::proceed_notification_bar_with_options(){
 void GUIMain::proceed_selection_notification_bar_with_options(bool forward){
     notification_bar_with_options_arrow_select_enable = true;
 
-	if(forward)
-	{
-		if(option_selected > 0){
-			option_selected--;
-		}
-	}
-	else{
-		if(option_selected < 1){
-			option_selected++; 
-		}
-	}
+    if(forward)
+    {
+        if(option_selected > 0){
+            option_selected--;
+        }
+    }
+    else{
+        if(option_selected < 1){
+            option_selected++; 
+        }
+    }
     for(unsigned int i=0; i<2; i++){
         if (i == option_selected){
             option_buttons[i]->highlight();

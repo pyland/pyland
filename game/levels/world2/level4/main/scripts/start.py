@@ -3,5 +3,5 @@
 player_one.focus()
 player_one.face_south()
 
-coconut_0.weight = 5
+coconut_0.weight 
 engine.print_terminal(coconut_0.weight)
