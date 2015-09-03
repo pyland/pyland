@@ -1,3 +1,8 @@
+#This should be a puzzle invovling all previous mechanics
+#It is also your first time being required to write loops
+#You have to fix some of the players loops
+
+
 #commence save-data set-up
 world_name = "world_2"
 level_name = "level_1"
@@ -13,37 +18,31 @@ challenge_three_croc = [c3cr0, c3cr1, c3cr2, c3cr3, c3cr4]
 for croc in challenge_three_croc:
     croc.face_north()
     croc.change_state("swim")
-    croc.killable = [player_one, lily]
-    croc.still_check_kill()
 
 challenge_one_croc = [c1cr0]
 for croc in challenge_one_croc:
     croc.face_east()
     croc.change_state("swim")
-    croc.killable = [player_one, lucas, sam]
-    croc.still_check_kill()
-
-challengers = [matthew,lucas,sam, lily, susan,julie,courtney]
 
 
-challengers[0].face_west()
-challengers[0].set_cuts_left(1)
-challengers[1].face_west()
-challengers[2].face_south()
-challengers[3].face_south()
-challengers[3].set_cuts_left(5)
-challengers[4].face_north()
-challengers[4].set_cuts_left(1)
-challengers[5].face_west()
-challengers[5].set_cuts_left(1)
-challengers[6].face_east()
+challenge_0.face_west()
+challenge_0.set_cuts_left(1)
+challenge_1.face_west()
+challenge_2.face_south()
+challenge_3.face_south()
+challenge_3.set_cuts_left(5)
+challenge_4.face_north()
+challenge_4.set_cuts_left(1)
+challenge_5_0.face_west()
+challenge_5_0.set_cuts_left(1)
+challenge_5_1.face_east()
 
 def challenger_action(player_object, challenger):
     challenger.turn_to_face(player_object)
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: challenger.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Take a look at this cool device I found!.", callback = callback),
+        lambda callback: engine.show_dialogue("My PyRunner doesn't seem to do anything. Can you have a look at it please?.", callback = callback),
         lambda callback: write_script(challenger)
     ])
     """,
@@ -66,18 +65,18 @@ def write_script(challenger):
                 lambda callback: player_one.set_busy(False, callback = callback),
                 lambda callback: challenger.run_script(script_to_run = 10)]),
             cancel_callback = lambda: player_one.set_busy(False),
-            external_dialogue = "Isn't this neat?",
-            #script_init = lambda: engine.insert_to_scripter(""),
+            external_dialogue = "Why doesn't this do anything?",
+            script_init = lambda: engine.insert_to_scripter(""),
             character_object = challenger
         )
     ])
 
 
-challengers[0].player_action = lambda player_object: challenger_action(player_object, challengers[0])
-challengers[1].player_action = lambda player_object: challenger_action(player_object, challengers[1])
-challengers[2].player_action = lambda player_object: challenger_action(player_object, challengers[2])
-challengers[3].player_action = lambda player_object: challenger_action(player_object, challengers[3])
-challengers[4].player_action = lambda player_object: challenger_action(player_object, challengers[4])
-challengers[5].player_action = lambda player_object: challenger_action(player_object, challengers[5])
-challengers[6].player_action = lambda player_object: challenger_action(player_object, challengers[6])
+challenge_0.player_action = lambda player_object: challenger_action(player_object, challenge_0)
+challenge_1.player_action = lambda player_object: challenger_action(player_object, challenge_1)
+challenge_2.player_action = lambda player_object: challenger_action(player_object, challenge_2)
+challenge_3.player_action = lambda player_object: challenger_action(player_object, challenge_3)
+challenge_4.player_action = lambda player_object: challenger_action(player_object, challenge_4)
+challenge_5_0.player_action = lambda player_object: challenger_action(player_object, challenge_5_0)
+challenge_5_1.player_action = lambda player_object: challenger_action(player_object, challenge_5_1)
 

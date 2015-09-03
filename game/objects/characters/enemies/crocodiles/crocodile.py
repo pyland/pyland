@@ -13,6 +13,8 @@ class Crocodile(Enemy):
         self.__check_swim_state()
         self.oscillate = 0
 
+        self.killable = []
+
     def __check_swim_state(self, callback = lambda: None):
         """ This is used by the crocodiles to determine wether or not they are in water (and show the swimming sprite if they are).
 
@@ -64,38 +66,28 @@ class Crocodile(Enemy):
         """
         pass
 
-
-    def toggle(self):
-        """ Toggles the crocodile and makes him face the opposite direction
-        """
-        if(self.is_facing_north()):
-            return self.face_south()
-        if(self.is_facing_south()):
-            return self.face_north()
-        if(self.is_facing_east()):
-            return self.face_west()
-        if(self.is_facing_west()):
-            return self.face_east()
-
-    def check_kill(self, killable):
+    def check_kill(self, callback = lambda: None):
         x,y = self.get_position()
-        for character in killable:
+        engine = self.get_engine()
+
+        for character in self.killable:
             character_x, character_y = character.get_position()
-            engine = self.get_engine()
             if x == character_x:
                 if character_y == y+1:
                     return self.face_north(self.set_busy(True, callback = lambda: self.lose(character)))
                 elif character_y == y-1:
                     return self.face_south(self.set_busy(True, callback = lambda: self.lose(character)))
-
             elif y == character_y:
                 if character_x == x+1:
                     return self.face_east(self.set_busy(True, callback = lambda: self.lose(character)))
-
                 elif character_x == x-1:
                     return self.face_west(self.set_busy(True, callback = lambda: self.lose(character)))
+        self.get_engine().add_event(callback)
 
-        return self.wait(.1, lambda: self.check_kill(killable))
+    def still_check_kill(self, callback = lambda: None):
+        if not self.is_moving():
+            self.check_kill(callback = lambda: self.wait(0.15, lambda: self.still_check_kill()))
+        self.get_engine().add_event(callback)
 
     def move_horizontal(self, times = -1):
         """ The crocodile moves horizontally (east/west direction).
@@ -111,22 +103,28 @@ class Crocodile(Enemy):
             Number of times the crocoilde can collide with the edge of a riverbank before stopping.
         """
 
-        x,y = self.get_position()
         engine = self.get_engine()
+        self.check_kill(lambda: do())
 
-        if times != 0:
-            if(self.is_facing_west()):
-                if not engine.get_tile_type((x-1,y)) == engine.TILE_TYPE_WATER or engine.is_solid((x-1,y)):
-                        return self.face_east(lambda: self.move_horizontal(times-1))
+        def do():
+            if times != 0:
+                x,y = self.get_position()
+                if(self.is_facing_west()):
+                    if not engine.get_tile_type((x-1,y)) == engine.TILE_TYPE_WATER or engine.is_solid((x-1,y)):
+                            return self.face_east(lambda: self.move_horizontal(times-1))
+                    else:
+                        return self.move_west(lambda: self.move_horizontal(times))
+                elif(self.is_facing_east()):
+                    if not engine.get_tile_type((x+1,y)) == engine.TILE_TYPE_WATER or engine.is_solid((x+1,y)):
+                            return self.face_west(lambda: self.move_horizontal(times-1))
+                    else:
+                            return self.move_east(lambda: self.move_horizontal(times))
                 else:
-                    return self.move_west(lambda: self.move_horizontal(times))
-            elif(self.is_facing_east()):
-                if not engine.get_tile_type((x+1,y)) == engine.TILE_TYPE_WATER or engine.is_solid((x+1,y)):
-                        return self.face_west(lambda: self.move_horizontal(times-1))
-                else:
-                        return self.move_east(lambda: self.move_horizontal(times))
-        else:
-            return self.toggle()
+                    return self.face_east(lambda: self.move_horizontal(times))
+            else:
+                return self.toggle(lambda: self.still_check_kill())
+
+    
 
     def move_vertical(self, times = -1): 
         """ The crocodile moves vertically (north/south direction).
@@ -144,22 +142,28 @@ class Crocodile(Enemy):
     """
 
         engine = self.get_engine()
+        self.check_kill(lambda: do())
 
-        if times != 0:
-            x,y = self.get_position()
-            if(self.is_facing_north()):
-                if not engine.get_tile_type((x,y+1)) == engine.TILE_TYPE_WATER or engine.is_solid((x,y+1)):
-                    return self.face_south(lambda: self.move_vertical(times-1))
+        def do():
+            if times != 0:
+                x,y = self.get_position()
+                if(self.is_facing_north()):
+                    if not engine.get_tile_type((x,y+1)) == engine.TILE_TYPE_WATER or engine.is_solid((x,y+1)):
+                        return self.face_south(lambda: self.move_vertical(times-1))
+                    else:
+                        return self.move_north(lambda: self.move_vertical(times))
+                elif(self.is_facing_south()):
+                    if not engine.get_tile_type((x,y-1)) == engine.TILE_TYPE_WATER or engine.is_solid((x,y-1)):
+                            return self.face_north(lambda: self.move_vertical(times-1))
+                    else:
+                        return self.move_south(lambda: self.move_vertical(times))
                 else:
-                    return self.move_north(lambda: self.move_vertical(times))
-            elif(self.is_facing_south()):
-                if not engine.get_tile_type((x,y-1)) == engine.TILE_TYPE_WATER or engine.is_solid((x,y-1)):
-                        return self.face_north(lambda: self.move_vertical(times-1))
-                else:
-                    return self.move_south(lambda: self.move_vertical(times))
+                    return self.face_north(lambda: self.move_vertical(times))
 
-        if times == 0:
-            return self.toggle()
+
+            if times == 0:
+                return self.toggle(lambda: self.still_check_kill())
+
 
     def yelled_at(self, player):
         """ This is run whenever the player yells at the crocodile
@@ -195,14 +199,13 @@ class Crocodile(Enemy):
         player : Player
             The player that gets caught by the crocodile
         """
+        for c in self.killable:
+            c.set_busy(True)
         engine = self.get_engine()
         engine.run_callback_list_sequence([
-            lambda callback: character.set_busy(True, callback = callback),
             lambda callback: self.set_busy(True, callback = callback),
-            lambda callback: self.wait(.3, callback = callback),
-            lambda callback: self.set_busy(False, callback = callback),
             lambda callback: self.turn_to_face(character, callback = callback),
-            lambda callback: engine.show_dialogue("Crocodile: I've got you!", callback = callback),
+            lambda callback: engine.show_dialogue("Crocodile: I've got you " + character.get_name().capitalize() + "!", callback = callback),
             lambda callback: engine.restart_level()
         ])
     

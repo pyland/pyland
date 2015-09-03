@@ -15,7 +15,7 @@
 		//"level_location": "/world_one_old/level_one/main",
 		//"level_location": "/world_one_old/level_two/main",
 		//"level_location": "/world1/level1/main",
-		//"level_location": "/world1/",
+		"level_location": "/world1/",
 		//"level_location": "/world_1",
 		//"level_location" : "/world_1/intro",
 		//"level_location" : "/world_1/level_1/rossumberg",

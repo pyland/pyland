@@ -123,11 +123,12 @@ class Character(GameObject, ScriptStateContainer):
             script_api["can_move"] = self.__can_move
             script_api["move"] = scriptrunner.make_blocking(self.__move)
 
+            script_api["scan"] = self.__scan
+
             script_api["wait"] = scriptrunner.make_blocking(lambda callback: self.wait(0.3, callback))
 
             #the method to get the position of the player
             script_api["get_position"] = self.get_position
-            script_api["get_flag_message"] = self.get_flag_message
 
             script_api["yell"] = self.__yell
             script_api["cut"] = scriptrunner.make_blocking(self.__cut)
@@ -285,6 +286,20 @@ class Character(GameObject, ScriptStateContainer):
         else:
             callback()
         return
+
+
+    def toggle(self, callback = lambda: None):
+        """ Toggles the Character and makes him face the opposite direction
+        """
+        if(self.is_facing_north()):
+            return self.face_south(callback)
+        if(self.is_facing_south()):
+            return self.face_north(callback)
+        if(self.is_facing_east()):
+            return self.face_west(callback)
+        if(self.is_facing_west()):
+            return self.face_east(callback)
+
 
     def __turn_left(self, callback = lambda: None):
         """ Makes the character turn left
@@ -730,21 +745,37 @@ class Character(GameObject, ScriptStateContainer):
             self.wait(time, callback = lambda: self.__turning(time, frequency))
         self.get_engine().add_event(callback)
 
-    def get_flag_message(self):
+    def __scan(self):
         """
         Returns
         -------
         str
-            String of the a flag at the position of the player.
+            String of the scroll in front of the player
         """
-
-        message = "There is no flag here!"
+        message = "There is no message here!"
         engine = self.get_engine()
-        position = self.get_position()
-        game_objects = engine.get_objects_at(position)
-        for current_object in game_objects:
-            if(hasattr(current_object, "get_message")):
-                message = current_object.get_message()
+        x, y = self.get_position()
+
+        if self.is_facing_east():
+            for obj in engine.get_objects_at((x+1, y)):
+                if(hasattr(obj, "on_scan")):
+                    message = obj.on_scan()
+                    break
+        elif self.is_facing_west():
+            for obj in engine.get_objects_at((x-1, y)):
+                if(hasattr(obj, "on_scan")):
+                    message = obj.on_scan()
+                    break
+        elif self.is_facing_north():
+            for obj in engine.get_objects_at((x, y+1)):
+                if(hasattr(obj, "on_scan")):
+                    message = obj.on_scan()
+                    break
+        elif self.is_facing_south():
+            for obj in engine.get_objects_at((x, y-1)):
+                if(hasattr(obj, "on_scan")):
+                    message = obj.on_scan()
+                    break
         return message
 
     def __yell(self):
@@ -814,7 +845,7 @@ class Character(GameObject, ScriptStateContainer):
 
         if (self.__cuts_left == 0):
             engine.add_event(callback)
-            #engine.print_terminal("Your knife is too blunt to cut anything.")
+            engine.print_terminal("The knife is blunt. No cuts left.")
             return False
 
         (x,y) = self.get_position()

@@ -813,6 +813,8 @@ void MainWindow::createExternalTab(std::function<void ()> confirmCallback, std::
 
     ws->clear();
 
+    ws->setFocus();
+
     EventManager::get_instance()->add_event([this, dialogue] {
         Engine::show_external_script_help(dialogue);
     });
