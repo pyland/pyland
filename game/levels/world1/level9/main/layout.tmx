@@ -28,11 +28,11 @@
  </layer>
  <layer name="Decor" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztlusKwjAMhTOnzttfff838Tbvyl7JBFocsW3WtTDBHPhI044ctsISANVQOkY+f8noHVvr371j7yrV+4BskRppTHya6IKf3RO8SXshD9W+JnrH6Je8pZzrBv77lGhY/oj0pvM5UiGzFhWLrnUb2pv28F4iG8Pa4FuHziY9vFdIgYxMLDy5tFdGer/g+x5PDNrbCXV875VyniL1Vm/1Hs6bZgXqB/b/UbM1/99Ieers0FW2/1ioj0j9O8ccRjUW8Ok/xLiDd47v0O4/ltLhfYZwv88xM/hmB5VKpcqpN5LEeNc=
+   eJztlusKwjAMhTOnzttfff83mdOJd/ZKJtBiyVqz1jIUcuAjTQs9hZYmACqVStJxZL8DUiMt0pn4MNEHX7N5qhohd3Vm+eUL31j9kjfPJV0hfJ8SHcvvCWdfIhWycKhY9I1daG6e4L1GdoatITT+tDZL8N4gBTIxsQjk0lwZ6f2E/j2eGDS3j9x3iGLfpnqrt3r/hzf1ClQP7P/RsjH/b6T8NtK5bf2xUB2R6neOPoz2WMG7/hDTAd457tetP5bS4y3V+xw9Q2rvoFKpVDF6AVLmYxQ=
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="1" name="characters/player/player_one" gid="286" x="128" y="320" width="64" height="64"/>
+  <object id="1" name="characters/player/player_one" gid="286" x="128" y="1856" width="64" height="64"/>
   <object id="2" name="characters/enemies/crocodiles/blue_crocodile/c3cr0" gid="296" x="768" y="832" width="64" height="64"/>
   <object id="3" name="characters/enemies/crocodiles/blue_crocodile/c3cr1" gid="296" x="896" y="832" width="64" height="64"/>
   <object id="4" name="characters/enemies/crocodiles/blue_crocodile/c3cr2" gid="296" x="1024" y="832" width="64" height="64"/>
@@ -57,7 +57,7 @@
  </objectgroup>
  <layer name="SpecialLayer" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztlUsOgCAMRAnnwvtfy7iyIU2Z/tRgJ2nYYB/jYG3tvxr9rjfYdEX3R7Kz9iO9LL65Z2iGqyxR9tyLrpaysCOkZc98zoPkT/KryVvqi/hD2Yg3JFeL74yZo2UfPa52Y48kNqrI2WK545pzouxoFbvYX2B7/yOe7zvDK8fM8MfN0xXb65n2QNmR+V5CfT+prPureS+lUmlPnZzsUp8=
+   eJztldEKwCAIRaPvav//W3sdYlrumhD3gIzR6HQRW2uEEMnouIq4q/ieWWaw8mnvf/yzfeW31nPHFe1rNHdGj3fdT8fVbe6R5F4Febd484u4s1bcp6Gb7lPeyIwh5jAr62xfZDbtPvXc1vpOLs0v173/fbSfXu7q2akoQsi9vHvWRJM=
   </data>
  </layer>
  <layer name="rocks" width="31" height="38">

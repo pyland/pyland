@@ -139,7 +139,7 @@ def go_to_level_5(player_object):
 level_5.player_walked_on = go_to_level_5
 
 def go_to_level_6(player_object):
-    ask_to_go_to_level("world1","level6", "bogs", "Level 6", level_6_move_away)
+    ask_to_go_to_level("world1","level6", "main", "Level 6", level_6_move_away)
 
 level_6.player_walked_on = go_to_level_6
 
@@ -163,8 +163,10 @@ def go_to_level_1_2(player_object):
 
 level_1_2.player_walked_on = go_to_level_1_2
 
+#Loading Ying's World 2 Level 4 for now
+
 def go_to_level_2_2(player_object):
-    ask_to_go_to_level("world2","level2", "main", "Level 2", level_2_2_move_away)
+    ask_to_go_to_level("world2","level4", "main", "Level 2", level_2_2_move_away)
 
 level_1_2.player_walked_on = go_to_level_2_2
 
