@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="30" height="16" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="16" tilewidth="64" tileheight="64" nextobjectid="18">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -36,30 +36,34 @@
  </layer>
  <layer name="Decor" width="30" height="16">
   <data encoding="base64" compression="zlib">
-   eJyFVd1OgjEM7Z52Hze8gSYmotwoPBKi/Ci3coeg8UVswxrOjh1rcsKydT097bciIjIuQBsHkIav2UB3zR5S7TNPtU8UF2O3eJEL126Pqc4jMuR7V7wRFopPxVLxEeRlNlGee8AU9D2Tdr5rvy9X8hspNhJr7ulrcbvtIYeox9tGbNu71dhP6ZzPvMPDd1+l1o9nhg2shwL3s3pgfU+6PgQwy8S9lnMvDdhL6/tKsSvxnXtUzq2/vxT/mzRjrYeA2w21baWuN39/i+D+LKi11T9T7kI6nDeXOqyAZwexzAe1Hju9zXJ5O5YvvxXUi8hS99h+b8o3ZeuvgPdE/TXbk88aNGFs5vS6eK38Lf0E3xL3mnUJxbs2y7Bu7mOa79L/GYa9Nr8l6PK9LHX8TGci8UxGzdEZ70fzJ+prNKdxPUmXdW8+tWrZ2ov2nW9KXPyOeIb1/gt7hrWN3izbH8d6kKU=
+   eJyFVUtOQzEMdE6b101vABIShW6gPVIp9APd0l2hIC6CrcZiMjgvlkaNEsfjsV9cEZFpAdo0gDR8zQa6a3aXap9lqn2iuBi7xYtcuHa7T3UekSHfq+KFsFK8K9aKtyAvs5ny3ALmoO+RtPNd+30ayW+i2Emsuaevxe12hByiHu8bsW3vWmM/pEs+yw4P332WWj+eGXawHgrcz+qB9T3r+hTALBP3Vi69NGAvre8bxaHEd+5JObf+/lD8L9KMtR4CbjfUtpe63vz9rYL7i6DWVv9MuQvpcN5c6rABngPEMh/U+jnS20Xh9bdj+fJbQb2ILHWP7feqfFO2/gh4z9RfsyP5bEETxmZOr4vXyt/Sd/Atca9Zl1C8sVnmlsHHNN+k/zMMe21+a9Dle1nq+JnOROKZjJqjM96P5k/U12hO43qW/ta9+dSqZWsv2ne+OXHxO+IZ1vsv7BnWNnqzbL+iV5E1
   </data>
  </layer>
  <layer name="SpecialLayer" width="30" height="16">
   <data encoding="base64" compression="zlib">
-   eJzlVEEKACAIk97V/9/VtcTpKu3SIAi1zZElYqO3dVXD0tI9VPTC8lXpIo9z/qWurrPOZunOOeTXizOzsRNjZzDiQnxozyDycTtDJ+/M8+5xMveNekP8HgczK2wN4y8T0ZusxKu//2cMOsEeCQ==
+   eJxjYKAusGGisoGj9o7ai8VeEB8bpoW9+OygV3hgs4fadhMblrSwF5/ZtIpfdHvpkZ7Q7aUnGLV38NkLAOfQCi0=
   </data>
  </layer>
  <layer name="LevelSprites" width="30" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFyECFcaBdQHtAyI/DNQwGs7/o4bbhYsdIA6NhOnwBAAcnASk=
+   eJxjYBgFyECFcaBdQHtAyI/DNQwGs7+wuY3a7qWGeSM17QwkGA3T4QsAEbgBcw==
   </data>
  </layer>
- <objectgroup name="Objects" width="30" height="16">
-  <object name="tile_trigger/level_1" gid="292" x="64" y="832"/>
-  <object name="tile_trigger/level_2" gid="292" x="384" y="640"/>
-  <object name="characters/player/player_one" gid="286" x="64" y="832"/>
-  <object name="player_data/player_data" gid="287" x="0" y="256"/>
-  <object name="tile_trigger/level_3" gid="292" x="448" y="448"/>
-  <object name="tile_trigger/level_4" gid="292" x="320" y="320"/>
-  <object name="tile_trigger/level_5" gid="292" x="512" y="192"/>
-  <object name="tile_trigger/level_6" gid="292" x="832" y="320"/>
-  <object name="tile_trigger/level_7" gid="292" x="704" y="576"/>
-  <object name="tile_trigger/level_8" gid="292" x="1024" y="512"/>
-  <object name="characters/npcs/generic/no_desert_guy" gid="291" x="1344" y="512"/>
+ <objectgroup name="Objects">
+  <object id="1" name="tile_trigger/level_1" gid="292" x="64" y="832" width="64" height="64"/>
+  <object id="2" name="tile_trigger/level_2" gid="292" x="384" y="640" width="64" height="64"/>
+  <object id="3" name="characters/player/player_one" gid="286" x="64" y="832" width="64" height="64"/>
+  <object id="4" name="player_data/player_data" gid="287" x="0" y="256" width="64" height="64"/>
+  <object id="5" name="tile_trigger/level_3" gid="292" x="448" y="448" width="64" height="64"/>
+  <object id="6" name="tile_trigger/level_4" gid="292" x="320" y="320" width="64" height="64"/>
+  <object id="7" name="tile_trigger/level_5" gid="292" x="512" y="192" width="64" height="64"/>
+  <object id="8" name="tile_trigger/level_6" gid="292" x="832" y="320" width="64" height="64"/>
+  <object id="9" name="tile_trigger/level_7" gid="292" x="704" y="576" width="64" height="64"/>
+  <object id="10" name="tile_trigger/level_8" gid="292" x="1024" y="512" width="64" height="64"/>
+  <object id="11" name="characters/npcs/generic/no_desert_guy" gid="291" x="1792" y="512" width="64" height="64"/>
+  <object id="12" name="tile_trigger/level_1_2" gid="292" x="1344" y="512" width="64" height="64"/>
+  <object id="13" name="tile_trigger/world_2" gid="292" x="1280" y="512" width="64" height="64"/>
+  <object id="14" name="tile_trigger/world_1" gid="292" x="1216" y="512" width="64" height="64"/>
+  <object id="15" name="tile_trigger/level_demo" gid="292" x="1792" y="576" width="64" height="64"/>
  </objectgroup>
 </map>
