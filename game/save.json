@@ -4,10 +4,11 @@
     },
     "player_saves": {
         "???": {
-            "previous_exit": "/world_1/level_4/main_a",
+            "has_unlocked_pyscripter": true,
+            "py_scripter_tabs": 1,
+            "py_scripter_enabled": false,
             "coins": 0,
             "totems": {},
-            "py_scripter_enabled": false,
             "level_data": {
                 "world_1": {
                     "level_1": {
@@ -15,14 +16,13 @@
                         "heidi_state": 0
                     },
                     "level_2": {
-                        "starting_map": "start",
-                        "pyscripter_state": 1
+                        "pyscripter_state": 1,
+                        "starting_map": "start"
                     }
                 }
             },
-            "py_scripter_tabs": 1,
-            "has_unlocked_pyscripter": true,
-            "current_map": "/world_1/level_4/main_b"
+            "current_map": "/world_1/level_2/main_a",
+            "previous_exit": "/world_1/level_2/main_a"
         }
     }
 }

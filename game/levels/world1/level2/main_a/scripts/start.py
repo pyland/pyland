@@ -33,7 +33,7 @@ if not came_from_main_b:
         lambda callback: player_one.face_east(callback = callback),
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: myla.face_west(callback = callback),
-        lambda callback: engine.show_dialogue("Some of these crocodiles look different...", callback = callback),
+        lambda callback: engine.show_dialogue("Some of these crocodiles look cd different...", callback = callback),
         lambda callback: engine.show_dialogue("Let's try yelling at them again to see what they do.", callback =callback),
         lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback)
