@@ -14,6 +14,7 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 
 engine.enable_py_scripter()
 player_one.focus()
+engine.play_music("world_1_jungle")
 
 engine.run_callback_list_sequence([
 	lambda callback: player_one.set_busy(True, callback = callback),
