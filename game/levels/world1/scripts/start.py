@@ -114,7 +114,7 @@ def ask_to_go_to_level(world_name,level_name, map_name, readable_name, move_meth
     )
 
 def go_to_level_1(player_object):
-    ask_to_go_to_level("world1","level1", "main", "Level 1", level_1_move_away)
+    ask_to_go_to_level("world1","level1", "player_house", "Level 1", level_1_move_away)
 
 level_1.player_walked_on = go_to_level_1
 
