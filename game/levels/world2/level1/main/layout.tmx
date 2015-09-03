@@ -28,7 +28,7 @@
  </layer>
  <layer name="Decor" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztlusKwjAMhTOnzttfff838Tbvyl7JBFocsW3WtTDBHPhI044ctsISANVQOkY+f8noHVvr371j7yrV+4BskRppTHya6IKf3RO8SXshD9W+JnrH6Je8pZzrBv77lGhY/oj0pvM5UiGzFhWLrnUb2pv28F4iG8Pa4FuHziY9vFdIgYxMLDy5tFdGer/g+x5PDNrbCXV875VyniL1Vm/1Hs6bZgXqB/b/UbM1/99Ieers0FW2/1ioj0j9O8ccRjUW8Ok/xLiDd47v0O4/ltLhfYZwv88xM/hmB5VKpcqpN5LEeNc=
+   eJztlusKwjAMhTOnzttfff838Tbvyl7JBFocsW3WtTDBHPhI00IOW6EJgCpGxwFrXTJ6x9b6d+8c9x7jfUC2SI00Jj5NdMHP7gnepL2Qh2pfE71j9EveUs51A/99SjQsf0R60/kcqZBZi4pF17oN7U17eC+RjWFt8K1DZ5Me3iukQEYmFp5c2isjvV/wfY8nBu3thDq+70o5T5F6q7d6D+dNswL1A/t+1GzN3xspT50dusr2Hwv1Eal/55jDqMYCPv2HGHfwzvEf2v3HUjq8zxDu9zlmBt/soFKpVDn1BrEveZo=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="31" height="38">
@@ -38,26 +38,26 @@
   <object name="characters/enemies/crocodiles/blue_crocodile/c3cr2" gid="296" x="1024" y="832"/>
   <object name="characters/enemies/crocodiles/blue_crocodile/c3cr3" gid="296" x="1152" y="832"/>
   <object name="characters/enemies/crocodiles/blue_crocodile/c3cr4" gid="296" x="1280" y="832"/>
-  <object name="characters/npcs/generic/challenge_3" gid="297" x="640" y="1024"/>
+  <object name="characters/npcs/generic/lily" gid="297" x="640" y="1024"/>
   <object name="vine/c3v0" gid="287" x="704" y="1024"/>
   <object name="vine/c3v1" gid="287" x="832" y="1024"/>
   <object name="vine/c3v2" gid="287" x="960" y="1024"/>
   <object name="vine/c3v3" gid="287" x="1088" y="1024"/>
   <object name="vine/c3v4" gid="287" x="1216" y="1024"/>
-  <object name="characters/npcs/generic/challenge_0" gid="297" x="384" y="1856"/>
+  <object name="characters/npcs/generic/matthew" gid="297" x="384" y="1856"/>
   <object name="vine/c0v0" gid="287" x="384" y="1792"/>
-  <object name="characters/npcs/generic/challenge_1" gid="297" x="1472" y="1856"/>
+  <object name="characters/npcs/generic/lucas" gid="297" x="1472" y="1856"/>
   <object name="characters/enemies/crocodiles/green_crocodile/c1cr0" gid="296" x="1792" y="1728"/>
-  <object name="characters/npcs/generic/challenge_2" gid="297" x="1856" y="1600"/>
+  <object name="characters/npcs/generic/sam" gid="297" x="1856" y="1600"/>
   <object name="vine/c4v0" gid="287" x="1600" y="512"/>
-  <object name="characters/npcs/generic/challenge_4" gid="297" x="1600" y="704"/>
+  <object name="characters/npcs/generic/susan" gid="297" x="1600" y="704"/>
   <object name="vine/v5v0" gid="287" x="896" y="512"/>
-  <object name="characters/npcs/generic/challenge_5_1" gid="291" x="960" y="512"/>
-  <object name="characters/npcs/generic/challenge_5_0" gid="291" x="1344" y="512"/>
+  <object name="characters/npcs/generic/courtney" gid="291" x="960" y="512"/>
+  <object name="characters/npcs/generic/julie" gid="291" x="1344" y="512"/>
  </objectgroup>
  <layer name="SpecialLayer" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztlUsOgCAMRAnnwvtfy7iyIU2Z/tRgJ2nYYB/jYG3tvxr9rjfYdEX3R7Kz9iO9LL65Z2iGqyxR9tyLrpaysCOkZc98zoPkT/KryVvqi/hD2Yg3JFeL74yZo2UfPa52Y48kNqrI2WK545pzouxoFbvYX2B7/yOe7zvDK8fM8MfN0xXb65n2QNmR+V5CfT+prPureS+lUmlPnZzsUp8=
+   eJztlVEOgCAMQwnnwvtfy/hhJGSBdmyoZE32h33UIqb0L5X8zGqve50Vm/HyYLPr384tPVN3OOoSZbde7R7Y0bAtxLJbvpShl6+Xl+m754vkQ9lINqRXTW6rjiVPlH1ku9mNXZzYqCzvFs0ZZ/aJsq0V7GB/gT37H5n5vj2ySkyPfNJ9OmLPZq49ULZlv5fQ3CvldX6Z9xIKhfbUCZ5LVI8=
   </data>
  </layer>
  <layer name="rocks" width="31" height="38">

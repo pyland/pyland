@@ -128,12 +128,14 @@ croc_9]
 for i in range(len(b1_croc)):
     croc = b1_croc[i]
     croc.change_state("swim")
+    croc.check_kill([player_one])
+
 
     if i % 2 == 0:
         croc.face_east()
     else:
         croc.face_west()
-    croc.move_horizontal(player_one)
+    croc.move_horizontal()
 
 
 b2_croc = [croc_b2_1,
@@ -151,10 +153,13 @@ croc_b2_10
 for croc in [croc_b2_1, croc_b2_2, croc_b2_3, croc_b2_7,croc_b2_8,croc_b2_9,croc_b2_10]:
     croc.face_east()
     croc.change_state("swim")
+    croc.check_kill([player_one])
 
 for croc in [croc_b2_4,croc_b2_5,croc_b2_6]:
     croc.face_west()
     croc.change_state("swim")
+    croc.check_kill([player_one])
+
 
 trigger_croc = [trigger_croc_0,
 trigger_croc_1,
@@ -171,22 +176,12 @@ trigger_croc_10]
 
 for croc in b1_croc:
     croc.go_to_checkpoint = lambda: engine.change_map("/world_1/level_3/mainb")
+    croc.check_kill([player_one])
 for croc in b2_croc:
     croc.go_to_checkpoint = lambda: engine.change_map("/world_1/level_3/mainb")
+    croc.check_kill([player_one])
 
 
-def player_walked_on_ti():
-    x,y = player_one.get_position()
-    for a in [-1, 1]:
-        for obj in engine.get_objects_at((x+a,y)):
-            if obj in b2_croc:
-                return obj.lose(player_one)
-        for obj in engine.get_objects_at((x,y+a)):
-            if obj in b2_croc:
-                return obj.lose(player_one)
-
-for t in trigger_croc:
-    t.player_walked_on = lambda player_object: player_walked_on_ti()
 
 myla_warn_crocs.player_walked_on = lambda player_object: player_walked_on_myla_warn_crocs()
 challenge2a.player_walked_on = lambda player_object: player_walked_on_challenge2a()
