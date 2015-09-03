@@ -21,7 +21,7 @@
 		//"level_location" : "/world_1/level_1/player_house",
 		//"level_location" : "/world_1/level_1/road_one",
 		//"level_location" : "/world_1/level_3/main",
-		"level_location" : "/world_1/level_4/main_a",
+		"level_location" : "/world1",
 		//"level_location" : "/world_1/level_3/main",
 		//"level_location" : "/world_1/level_5/maze",
 		//"level_location" : "/world_1/level_6/vine_intro",

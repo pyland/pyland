@@ -1,3 +1,8 @@
+#Heidi is with you going to find this secret device
+#She's scared off by the crocodiles but you still go
+#Pick it up and meet Myla
+
+
 #commence save-data set-up
 world_name = "world1"
 level_name = "level1"

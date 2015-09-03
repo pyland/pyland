@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="26" height="40" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
+ <layer name="Ground" width="26" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztwwENAAAMw6BKnX8Vd3AFkLBqqqqqqs8DlhyGEA==
+  </data>
+ </layer>
+ <layer name="Decor" width="26" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzdlD0OgCAMRhuMv3HVy3gZJybuPyuJBkIUKmkB+ZK3YR9QqQIAVRHcSe3h9uXyUPVaItakOE9sZCJPKF/uXTqU+F5r91BD0cs/eKji1uT8D3Ywc4LTY88izjeP6VttHkzcPT1x582VwkNJbg9XSvVQ3yd13ZI9MYmtMZ70CDqPR9cYAiwXa4DW45kQ32PRnk0YbM98IohoPOfhCPd8y8UBQhrnEg==
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="26" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzdk8EOwCAIQw2/hf7/b3nZaTMZOAquTXrxwCOWdmmtExmtbA6aV8WJzLriHtg5nj89sa8sHJU1J9p6mZ0TpftMlnuzclC5sXOilMWq6mkWB6VTOX/vTyVnR7szvLtb3lYeRr9xrHMsHJVnXxHZf8nHK9TdVnsCXpyMCw==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="26" height="40">
+  <object name="characters/player/player_one" gid="286" x="128" y="256" width="64" height="64"/>
+  <object name="characters/npcs/myla/myla" gid="291" x="0" y="256" width="64" height="64"/>
+  <object name="tile_trigger/trigger1a" gid="292" x="1216" y="384"/>
+  <object name="tile_trigger/trigger1b" gid="292" x="1280" y="384"/>
+  <object name="vine/poison_vine/vine1" gid="101" x="1280" y="448"/>
+  <object name="vine/poison_vine/vine2a" gid="101" x="576" y="704"/>
+  <object name="vine/poison_vine/vine2b" gid="101" x="640" y="704"/>
+  <object name="vine/poison_vine/vine2c" gid="101" x="704" y="704"/>
+  <object name="vine/poison_vine/vine2d" gid="101" x="768" y="704"/>
+  <object name="vine/poison_vine/vine0a" gid="101" x="1024" y="576"/>
+  <object name="vine/poison_vine/vine3a" gid="101" x="1408" y="960"/>
+  <object name="vine/poison_vine/vine3b" gid="101" x="1472" y="960"/>
+  <object name="vine/poison_vine/vine3d" gid="101" x="1408" y="1024"/>
+  <object name="vine/poison_vine/vine3c" gid="101" x="1472" y="1024"/>
+  <object name="vine/poison_vine/vine3e" gid="101" x="1408" y="1088"/>
+  <object name="vine/poison_vine/vine3f" gid="101" x="1472" y="1088"/>
+  <object name="whetstone/whetstone1" gid="302" x="1472" y="1280"/>
+  <object name="vine/poison_vine/vine4a" gid="101" x="320" y="1344"/>
+  <object name="vine/poison_vine/vine4b" gid="101" x="256" y="1344"/>
+  <object name="vine/poison_vine/vine4c" gid="101" x="192" y="1344"/>
+  <object name="vine/poison_vine/vine4d" gid="101" x="128" y="1344"/>
+  <object name="vine/poison_vine/vine4e" gid="101" x="128" y="1408"/>
+  <object name="vine/poison_vine/vine4f" gid="101" x="192" y="1408"/>
+  <object name="vine/poison_vine/vine4g" gid="101" x="256" y="1408"/>
+  <object name="vine/poison_vine/vine4h" gid="101" x="320" y="1408"/>
+  <object name="vine/poison_vine/vine4i" gid="101" x="320" y="1472"/>
+  <object name="vine/poison_vine/vine4j" gid="101" x="256" y="1472"/>
+  <object name="vine/poison_vine/vine4k" gid="101" x="192" y="1472"/>
+  <object name="vine/poison_vine/vine4l" gid="101" x="128" y="1472"/>
+  <object name="vine/poison_vine/vine4m" gid="101" x="128" y="1536"/>
+  <object name="vine/poison_vine/vine4n" gid="101" x="192" y="1536"/>
+  <object name="vine/poison_vine/vine4o" gid="101" x="192" y="1600"/>
+  <object name="tile_trigger/trigger_whetstone1" gid="292" x="1472" y="1152"/>
+  <object name="tile_trigger/trigger_whetstone2a" gid="292" x="1408" y="1280"/>
+  <object name="tile_trigger/trigger_whetstone2b" gid="292" x="1472" y="1216"/>
+  <object name="vine/poison_vine/vine0b" gid="101" x="1344" y="1280"/>
+  <object name="vine/poison_vine/vine0c" gid="101" x="1408" y="1216"/>
+  <object name="whetstone/whetstone2" gid="302" x="448" y="1600"/>
+  <object name="whetstone/whetstone3" gid="302" x="320" y="1920"/>
+  <object name="vine/poison_vine/vine51" gid="101" x="832" y="1536"/>
+  <object name="vine/poison_vine/vine61" gid="101" x="832" y="1600"/>
+  <object name="vine/poison_vine/vine53" gid="101" x="960" y="1536"/>
+  <object name="vine/poison_vine/vine54" gid="101" x="1024" y="1600"/>
+  <object name="vine/poison_vine/vine55" gid="101" x="1088" y="1536"/>
+  <object name="vine/poison_vine/vine56" gid="101" x="1152" y="1600"/>
+  <object name="vine/poison_vine/vine57" gid="101" x="1216" y="1536"/>
+  <object name="vine/poison_vine/vine58" gid="101" x="1280" y="1600"/>
+  <object name="vine/poison_vine/vine59" gid="101" x="1344" y="1536"/>
+  <object name="vine/poison_vine/vine52" gid="101" x="896" y="1600"/>
+  <object name="vine/poison_vine/vine62" gid="101" x="896" y="1536"/>
+  <object name="vine/poison_vine/vine63" gid="101" x="960" y="1600"/>
+  <object name="vine/poison_vine/vine64" gid="101" x="1024" y="1536"/>
+  <object name="vine/poison_vine/vine65" gid="101" x="1088" y="1600"/>
+  <object name="vine/poison_vine/vine66" gid="101" x="1152" y="1536"/>
+  <object name="vine/poison_vine/vine67" gid="101" x="1216" y="1600"/>
+  <object name="vine/poison_vine/vine68" gid="101" x="1280" y="1536"/>
+  <object name="vine/poison_vine/vine69" gid="101" x="1344" y="1600"/>
+  <object name="characters/enemies/crocodiles/white_crocodile/crocodile1" gid="296" x="768" y="2240"/>
+  <object name="tile_trigger/check1a" gid="292" x="576" y="768"/>
+  <object name="tile_trigger/check1b" gid="292" x="640" y="768"/>
+  <object name="tile_trigger/check1c" gid="292" x="704" y="768"/>
+  <object name="tile_trigger/check1d" gid="292" x="768" y="768"/>
+  <object name="tile_trigger/check2a" gid="292" x="384" y="1536"/>
+  <object name="tile_trigger/check2b" gid="292" x="384" y="1600"/>
+  <object name="tile_trigger/exit_level_start1" gid="292" x="0" y="256"/>
+  <object name="tile_trigger/exit_level_start2" gid="292" x="0" y="192"/>
+  <object name="tile_trigger/exit_level_end" gid="292" x="1600" y="2304"/>
+  <object name="tile_trigger/check3a" gid="292" x="1408" y="1600"/>
+  <object name="tile_trigger/check3b" gid="292" x="1408" y="1536"/>
+  <object name="player_data/player_data" gid="287" x="0" y="128"/>
+ </objectgroup>
+</map>
