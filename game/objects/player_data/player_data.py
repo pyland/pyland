@@ -98,13 +98,10 @@ class PlayerData(GameObject):
 
         #setup all the player-data (what they have unlocked)
 
-
-#Removed for testing purposes
- #       if(self.__has_unlocked_pyscripter()):
- #           engine.show_py_scripter()
- #       else:
- #           engine.hide_py_scripter()
- #
+        if(self.__has_unlocked_pyscripter()):
+            engine.show_py_scripter()
+        else:
+            engine.hide_py_scripter()
         return
 
     def save(self):

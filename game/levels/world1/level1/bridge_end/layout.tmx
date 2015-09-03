@@ -34,10 +34,10 @@
   <object name="characters/player/player_one" gid="191" x="0" y="704"/>
   <object name="sign/bog_sign" gid="193" x="128" y="640"/>
   <object name="pyscripter/pyscripter" gid="192" x="320" y="704"/>
-  <object name="tile_trigger/exit_to_world" gid="197" x="0" y="704"/>
+  <object name="tile_trigger/exit_to_bridge" gid="197" x="0" y="704"/>
   <object name="player_data/player_data" gid="192" x="0" y="64"/>
   <object name="characters/enemies/crocodiles/green_crocodile/annoying_croc" gid="193" x="896" y="384"/>
   <object name="characters/npcs/myla/myla" gid="191" x="320" y="64" width="64" height="64"/>
-  <object name="tile_trigger/exit_to_bogs" gid="197" x="832" y="1280"/>
+  <object name="tile_trigger/exit_to_world" gid="197" x="832" y="1280"/>
  </objectgroup>
 </map>

@@ -16,25 +16,19 @@ pyscripter_state_found = 1
 #end state definitions
 
 #setting the player's starting position
-if player_data.previous_exit_is("world_1", level_name = "level_2", map_name = "bogs"):
-    engine.run_callback_list_sequence([
-        lambda callback: player_one.move_to(exit_to_bogs.get_position(), callback = callback),
-        lambda callback: player_one.move_north(callback = callback),
-    ])
-    myla_start_position = exit_to_bogs.get_position()
-elif player_data.previous_exit_is("world_1"):
+if player_data.previous_exit_is("world1", level_name = "level1", map_name = "bridge"):
     player_one.move_east()
     myla_start_position = (3, 10)
 #end setting the player's starting position
 
+def go_to_bridge(player_object):
+    player_data.save_and_exit("/world1/level1/bridge")
+
 def go_to_world(player_object):
-    player_data.save_and_exit("/world_1")
+    player_data.save_and_exit("/world1")
 
-def go_to_bogs(player_object):
-    player_data.save_and_exit("/world_1/level_2/bogs")
-
+exit_to_bridge.player_walked_on = go_to_bridge
 exit_to_world.player_walked_on = go_to_world
-exit_to_bogs.player_walked_on = go_to_bogs
 
 pyscripter_state = player_data.get_level_state("pyscripter_state")
 if pyscripter_state == pyscripter_state_not_found:
