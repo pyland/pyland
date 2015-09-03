@@ -34,7 +34,7 @@
  <objectgroup name="ObjectLayer" width="0" height="0">
   <object name="characters/player/player_one" gid="286" x="896" y="960" width="64" height="64"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_one" gid="296" x="896" y="1216" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_two" gid="296" x="1152" y="1088"/>
+  <object name="characters/enemies/crocodiles/blue_crocodile/croc_two" gid="296" x="1152" y="1088"/>
   <object name="characters/npcs/generic/bob" gid="291" x="1216" y="1216"/>
  </objectgroup>
  <layer name="SpecialLayer" width="30" height="30">

@@ -286,6 +286,20 @@ class Character(GameObject, ScriptStateContainer):
             callback()
         return
 
+
+    def toggle(self, callback = lambda: None):
+        """ Toggles the Character and makes him face the opposite direction
+        """
+        if(self.is_facing_north()):
+            return self.face_south(callback)
+        if(self.is_facing_south()):
+            return self.face_north(callback)
+        if(self.is_facing_east()):
+            return self.face_west(callback)
+        if(self.is_facing_west()):
+            return self.face_east(callback)
+
+
     def __turn_left(self, callback = lambda: None):
         """ Makes the character turn left
 
