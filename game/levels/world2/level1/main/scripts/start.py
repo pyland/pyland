@@ -13,11 +13,13 @@ challenge_three_croc = [c3cr0, c3cr1, c3cr2, c3cr3, c3cr4]
 for croc in challenge_three_croc:
     croc.face_north()
     croc.change_state("swim")
+    croc.check_kill([player_one, lily])
 
 challenge_one_croc = [c1cr0]
 for croc in challenge_one_croc:
     croc.face_east()
     croc.change_state("swim")
+    croc.check_kill([player_one, lucas, sam])
 
 challengers = [matthew,lucas,sam, lily, susan,julie,courtney]
 

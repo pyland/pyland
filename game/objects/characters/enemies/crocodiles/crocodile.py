@@ -125,6 +125,8 @@ class Crocodile(Enemy):
                         return self.face_west(lambda: self.move_horizontal(times-1))
                 else:
                         return self.move_east(lambda: self.move_horizontal(times))
+            else:
+                return self.face_east(lambda: self.move_horizontal(times))
         else:
             return self.toggle()
 
@@ -157,6 +159,9 @@ class Crocodile(Enemy):
                         return self.face_north(lambda: self.move_vertical(times-1))
                 else:
                     return self.move_south(lambda: self.move_vertical(times))
+            else:
+                return self.face_north(lambda: self.move_vertical(times))
+
 
         if times == 0:
             return self.toggle()
