@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="38" tilewidth="64" tileheight="64" nextobjectid="132">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="38" tilewidth="64" tileheight="64" nextobjectid="130">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -28,7 +28,7 @@
  </layer>
  <layer name="Decor" width="35" height="38">
   <data encoding="base64" compression="zlib">
-   eJztVu0KwjAMjJtTRMFfvuZeURDH/EB8JTuwGMKSLWk6hxg4yrYmuVzTdjUA1D8EjWGfOfDNHY+rfy6YktvU9XPr8U3uXlp7xYk4BZyVuDnmjzVtAtZKrALaDJpuAw5KVAEXRz268TojLu2fC8tlF7AIKN7jgnnG70rEBVA8Cs2+PJLnRpjbkO93R02iLpY9Hfc1jodHSSuJi7Zf9vBZJ3pOUMvNZcnEtHDBSOUCkM4lzrNwqWaiS9crJckjmWY/4fNlDEomjocuD9D/K2ig6RfLOU59rLoA9HPR3kNAYlm4cLqk3IneXLheLYC/E6XYY7nEOd0/7hPs/UhzgfBN4qzt11ygNqQfV4vWN1ctXnmH9EjJAQZ/bBLH1JqtPqk6eK67dp4Xj1RdgPHve+/Bj5olzgsfA8cD
+   eJztlusKwjAMhTPnFFHwl6+5hxTHdCK+ki1YiKHZmjSdQywcxi5Nvp6m7VoAaH9Ikob7LIG3dDxu/EvRnGxzj5+bj2+yW3ltFSfo7HQRajDMH8a0c9oKtXHqC3i6dzoJ1ThdDf3w19uCWPo/C8tycKqcVu9rxdzjZzViARRPy+H1gM912gG/hjvy/m7oSfBFs6bDusbxNN5QFmm9HNE8cfvEXCzrhLga5bLk5s9d041BfgtffK3URn5Qb/D+kqI6M+eY6P6S+q+AfQFyr60XzT5uvfdTFuk5BJFYVr7knok5PJSFq9UV8Gei5Tz5f9wnyGs39BlIPA1Hjp8pNYxbKs/U92PNikXqIY0raVbzFPtG2qRjHmOMvbdmieWb6luSJfVbzFqKRepLqXrR5NSwvAB/9rXI
   </data>
  </layer>
  <layer name="Bridge" width="35" height="38">
@@ -37,12 +37,12 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="106" name="characters/player/player_one" gid="286" x="2176" y="1536" width="64" height="64"/>
-  <object id="107" name="characters/npcs/generic/npc_0" gid="297" x="1536" y="1600" width="64" height="64"/>
-  <object id="108" name="characters/npcs/generic/npc_1" gid="297" x="1408" y="1856" width="64" height="64"/>
+  <object id="106" name="characters/player/player_one" gid="286" x="1664" y="2304" width="64" height="64"/>
+  <object id="107" name="characters/npcs/generic/npc_0" gid="297" x="1664" y="2048" width="64" height="64"/>
+  <object id="108" name="characters/npcs/generic/npc_1" gid="297" x="1536" y="1856" width="64" height="64"/>
   <object id="109" name="characters/npcs/generic/npc_2" gid="297" x="704" y="1856" width="64" height="64"/>
   <object id="110" name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="1216" y="1664" width="64" height="64"/>
-  <object id="111" name="characters/npcs/myla/myla" gid="286" x="2176" y="1472" width="64" height="64"/>
+  <object id="111" name="characters/npcs/myla/myla" gid="286" x="1728" y="2304" width="64" height="64"/>
   <object id="112" name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="1024" y="1728" width="64" height="64"/>
   <object id="113" name="characters/enemies/crocodiles/blue_crocodile/croc_2" gid="296" x="832" y="1152" width="64" height="64"/>
   <object id="114" name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="1152" y="1280" width="64" height="64"/>
@@ -64,7 +64,7 @@
  </objectgroup>
  <layer name="SpecialLayer" width="35" height="38">
   <data encoding="base64" compression="zlib">
-   eJztllEKgDAMQ4fn2u7/46HED6VImabNZtEG9jXWvQVbU0oqlfqr6uJfbBbPeSZLMy4my+FJFJZdyZIssxTFl0acdV9hYf8DvCxMMXyJwCLPszgsLKPygkUrD+FUFV6j2WlUH6G5QavxJkskX5j515tx5Tu0PYSLlf81Fo8sXvd60Hvvk5rsb1XWQucIe85qNXuM2j6b5e79jF5FWBCGESwal9yb6c2VDbnTwrIB8g9oUA==
+   eJztl+EKwCAIhGPPtd7/tcZ+DGRIm96ZsXnQr/D6kjJrrVQq/VX7hg82CxLPZOnOwWS5crIKy6liKRYLS7aH9PHmpRNr3VdY2G8AysIUIy8rsMj4TJaofiEzXvPy9E5R98jaN2gemSwr5YXJEvW+evpyVv+vsaB7s/41RncQXfeNJ/usSi9rHWHXNs1zxKjNs1me9o+cAw+LhSGCReOSczNzc2ezrOlhOQDBAGaM
   </data>
  </layer>
 </map>
