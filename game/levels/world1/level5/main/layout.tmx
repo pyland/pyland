@@ -28,7 +28,7 @@
  </layer>
  <layer name="decor" width="30" height="18">
   <data encoding="base64" compression="zlib">
-   eJzdVNsKwCAIdX+yv4ua7qH/fxiyI8QeFjhDmBAnvHRKTjIR8cs6aI3xJF6TeEsSb1afJYk3q8/7lsP7Nz03unup7+rYK6qeKpYg75krwIb7aUzR5s0Jn/kL/AU1X82jgR7A6zkj4r2eMyLmkUfzEbyemcaoU6wDyhAzjRt25Ji2Z39xlWXxevp8AZN7IIg=
+   eJy1VMsOhCAMrO77cdXzft0SXNiD/39YGqeREMCswCSTMS0wFmsNEZkMP9QGZiOvoTfHC3gNeG7gq6APxyHBU6HvO1CG3LP4juDgaalv6Mmw0Dut9Y3Uvl6559DXr/tY6BvDq1s0931b+Eo/Px17x85jDx4a+KqN/F5MtNwl1zXjmZX7SSNvoeFaC53wfpxjlXnzRUziCnGFPaWQHvgHcwXfPWfUqHfPGTXmvk7EY/Ogpq/N5GKeDIN9rNpT6+Wkx0VnrJHeTv2LuXprYGsGtELunlP4AY5XJ6M=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="0" height="0">
@@ -43,16 +43,39 @@
   <object name="tile_trigger/block2" gid="292" x="1088" y="896"/>
   <object name="scroll/scroll1a" gid="287" x="448" y="512"/>
   <object name="scroll/scroll1c" gid="287" x="64" y="128"/>
-  <object name="scroll/scroll1b" gid="287" x="448" y="128"/>
-  <object name="scroll/scroll1d" gid="287" x="64" y="576"/>
+  <object name="scroll/scroll1d" gid="287" x="448" y="128"/>
+  <object name="scroll/scroll1b" gid="287" x="64" y="576"/>
   <object name="scroll/scroll2d" gid="287" x="1856" y="704"/>
   <object name="scroll/scroll2c" gid="287" x="1856" y="1152"/>
   <object name="scroll/scroll2b" gid="287" x="1152" y="1152"/>
   <object name="scroll/scroll2a" gid="287" x="1216" y="896"/>
+  <object name="characters/npcs/generic/pete" gid="291" x="320" y="448"/>
+  <object name="tile_trigger/topleft1" gid="292" x="192" y="256"/>
+  <object name="tile_trigger/topright1" gid="292" x="320" y="256"/>
+  <object name="tile_trigger/centre1" gid="292" x="256" y="320"/>
+  <object name="tile_trigger/bottomleft1" gid="292" x="192" y="384"/>
+  <object name="tile_trigger/bottomright1" gid="292" x="320" y="384"/>
+  <object name="tile_trigger/door1" gid="292" x="512" y="192"/>
+  <object name="characters/npcs/generic/maddie" gid="291" x="1280" y="1024"/>
+  <object name="tile_trigger/door2" gid="292" x="1152" y="640"/>
+  <object name="tile_trigger/topleft2" gid="292" x="1472" y="896"/>
+  <object name="tile_trigger/topright2" gid="292" x="1600" y="896"/>
+  <object name="tile_trigger/centre2" gid="292" x="1536" y="960"/>
+  <object name="tile_trigger/bottomleft2" gid="292" x="1472" y="1024"/>
+  <object name="tile_trigger/bottomright2" gid="292" x="1600" y="1024"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc1" gid="296" x="704" y="256"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc2" gid="296" x="768" y="320"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc3" gid="296" x="832" y="384"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc4" gid="296" x="768" y="448"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc5" gid="296" x="896" y="512"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc6" gid="296" x="704" y="320"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc7" gid="296" x="896" y="384"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc8" gid="296" x="832" y="448"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc9" gid="296" x="960" y="512"/>
  </objectgroup>
  <layer name="SpecialLayer" width="30" height="18">
   <data encoding="base64" compression="zlib">
-   eJyzYWJgsCGAiQXUVDtQ9tIKDFb/jto7ai+5avGVF4TKFHLUkloeUcOflOgZ6faSAwbSv9RIswMBhpK9ADg1FVE=
+   eJyzYWJgsCGAiQXUVAuTt2XCj6ltLwwQYy8pYLD6d9TekWEvNcxCV4uvvCBUppCjltTyiBr+pETPSLeXHDCQ/qVGmh0IMJTsBQDFLiMZ
   </data>
  </layer>
 </map>
