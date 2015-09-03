@@ -1,26 +1,28 @@
 {
+    "settings": {
+        "language": "english"
+    },
     "player_saves": {
         "???": {
-            "coins": 0,
-            "totems": {},
-            "previous_exit": "/world_1/intro",
-            "current_map": "/world_1/level_2/start",
             "py_scripter_enabled": false,
+            "current_map": "/world_1/level_3/main",
+            "previous_exit": "/world_1/level_3/main/challenge2a",
+            "totems": {},
             "py_scripter_tabs": 1,
             "level_data": {
                 "world_1": {
-                    "level_2": {
-                        "starting_map": "start"
-                    },
                     "level_1": {
-                        "heidi_state": 0,
-                        "starting_map": "player_house"
+                        "starting_map": "player_house",
+                        "heidi_state": 0
+                    },
+                    "level_2": {
+                        "pyscripter_state": 1,
+                        "starting_map": "start"
                     }
                 }
-            }
+            },
+            "coins": 0,
+            "has_unlocked_pyscripter": true
         }
-    },
-    "settings": {
-        "language": "english"
     }
 }
