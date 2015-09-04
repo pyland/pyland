@@ -191,7 +191,7 @@ void Engine::open_main_menu(){
 
 void Engine::restart_level(){
     game_main->change_challenge(game_main->get_current_challenge());
-	enable_py_scripter();
+    enable_py_scripter();
 }
 
 void Engine::change_map(std::string map_location){

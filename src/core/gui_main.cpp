@@ -659,7 +659,7 @@ void GUIMain::close_notification_bar(){
             notification_func();
         });
     }
-	
+    
     if(ignored_scripter_state){
         //do nothing cause we have ignored scripter state. 
         //If you are debugging and have reached here wondering why the scripter is enabled, check if you passed True to ignore_scripting in engine.py
