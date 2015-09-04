@@ -9,12 +9,13 @@
 		"game_folder": "../game",
 		"level_folder": self.game_folder+"/levels/",
 		"main_menu": "/start_screen",
+		//"level_location": "/start_screen",
 		//"level_location": "/test_world/test_level/test_one",
 		//"level_location": "/test_world/yingischallenged/main",
 		//"level_location": "/world_one_old/level_one/main",
 		//"level_location": "/world_one_old/level_two/main",
 		//"level_location": "/world1/level1/main",
-		"level_location": "/world1/",
+		"level_location": "/start_screen/",
 		//"level_location": "/world_1",
 		//"level_location" : "/world_1/intro",
 		//"level_location" : "/world_1/level_1/rossumberg",
@@ -32,7 +33,7 @@
 		//"level_location" : "/world_1/level_2/start/",
 		//"level_location" : "/world2/level1/main",
 		//"level_location" : "/world2/level1/main",
-		//"level_location" : "/Jamie's Level"
+		//"level_location" : "/demo_levels/Jamie's Level",
 		//"level_location" : "/demo_levels/level_1/main",
 		//"level_location" : "world_8/treasure_matrix",
 		//"level_location" : "/crocodile_test/",
@@ -175,7 +176,7 @@
 	// "index": "pyguide api: description"
 
 	"pyguide_apis": {
-		"number": 7,
+		"number": 8,
 		"0": "move_east(): This moves the present character towards the right by one step.",
 		"1": "move_west(): This moves the present character towards the left by one step.",
 		"2": "move_south(): This moves the present character towards the bottom by one step.",

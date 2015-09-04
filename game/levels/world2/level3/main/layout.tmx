@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="30" height="22" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="22" tilewidth="64" tileheight="64" nextobjectid="46">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -31,61 +31,64 @@
  </layer>
  <layer name="Water" width="30" height="22">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20Hb6AAAOA3ClAAAQ==
+   eJxjYBgFwxGoMA60C0bBKBgFQxmMliGjYBSMAlIAAN85AEs=
   </data>
  </layer>
  <layer name="Decor" width="30" height="22">
   <data encoding="base64" compression="zlib">
-   eJztlA0KwCAIhbv/qdoY+4ddaUUIIZrWFmvQgwj8JA0fGtOGNncmd/YCTjHpPdCC7hxOMek96OtC94nuFMcM50OujequBf/T8FgDEePqzib0eBRySZp+a8jX5bxXy8NQl5vV2x4GjSb4jfIj5WGJcfma/9fQlx5qoa6fbzwHvKM0jIpTu84q+tL6l4vn7DKv1A7iGBV/usu6uv6iG/L8fi8=
+   eJztVVsOwyAMo/e/VDdN617SLtDnTQYa0TzXQD/KXy2haDEKCXaZcz9MjXM9rLFxf8jxiivVMww+f/fx4tcj/t7KK65Uz/qa/epiLsSF+s3xikvtt7mxrzfFF8UczxzvD3tamDvEm9Cop34DkMO84lnbUzxjpnP5/gOusd/nmtrEGxbQwzA0a71Mg1oexnOV9/b2MPZsvlPe28vD6Anr+ey+flN+VB4ucan9OD/3U2uN8R5S914LA52rvtkay3Rf4uymL+rAb9QWTuXVW9fGmVlf0yGgo/tIcSqfq4NvB+qAbxB/r4pT+VwdBfUfVOJUPlfnwIFa+ACDUD4q
   </data>
  </layer>
  <layer name="SpecialLayer" width="30" height="22">
   <data encoding="base64" compression="zlib">
-   eJztUkEKwCAMk71r/3/XjhNNltjKymABEZtaU5vWbpzHvJrJI26l3hh3z6ymut/n9TvSy3jEsXyk4y1E+3N4lPv0N308eh65qN4dHlY6HY9HPMxylfcyHq708upMd6xMn8orTp9V/Ua1Z+HMweVQXNUZtSBtjFN3WF30LtPmzEzNN4MKT/z4Fi7O3T1H
+   eJztUkEOgCAMI77L/7/Lowu2tm4omtiEENYxOtbWdqzLcTWTR9yVen3cPbOa6n7MizvSy3jEsXyk425U+3N4lHv2NzGePfdcVu8IDyudjsczHma5ynsVD7/Fy0+tSp/KK06fs/rNaq/CmYPLobiq02tB2hin7rC66F2mzZmZmm8FMzzx41vYANsRPYU=
   </data>
  </layer>
- <objectgroup name="Objects" width="30" height="22">
-  <object name="vine/c0v0" gid="287" x="192" y="896"/>
-  <object name="vine/c0v1" gid="287" x="384" y="896"/>
-  <object name="vine/c0v2" gid="287" x="576" y="896"/>
-  <object name="vine/c0v3" gid="287" x="704" y="896"/>
-  <object name="vine/c0v4" gid="287" x="832" y="896"/>
-  <object name="vine/c0v5" gid="287" x="960" y="896"/>
-  <object name="vine/c0v6" gid="287" x="1088" y="896"/>
-  <object name="vine/c0v7" gid="287" x="1216" y="896"/>
-  <object name="vine/c0v8" gid="287" x="1344" y="896"/>
-  <object name="vine/c0v9" gid="287" x="1536" y="896"/>
-  <object name="vine/c0v10" gid="287" x="1664" y="896"/>
-  <object name="vine/c1v0" gid="287" x="1664" y="640"/>
-  <object name="vine/c1v1" gid="287" x="1536" y="640"/>
-  <object name="vine/c1v2" gid="287" x="1408" y="640"/>
-  <object name="vine/c1v3" gid="287" x="1280" y="640"/>
-  <object name="vine/c1v4" gid="287" x="1088" y="640"/>
-  <object name="vine/c1v5" gid="287" x="896" y="640"/>
-  <object name="vine/c1v6" gid="287" x="768" y="640"/>
-  <object name="vine/c1v7" gid="287" x="640" y="640"/>
-  <object name="vine/c1v8" gid="287" x="512" y="640"/>
-  <object name="vine/c1v9" gid="287" x="384" y="640"/>
-  <object name="vine/c1v10" gid="287" x="320" y="640"/>
-  <object name="vine/c1v11" gid="287" x="256" y="640"/>
-  <object name="vine/c2v0" gid="287" x="128" y="448"/>
-  <object name="vine/c2v1" gid="287" x="128" y="320"/>
-  <object name="vine/c2v2" gid="287" x="256" y="256"/>
-  <object name="vine/c2v3" gid="287" x="320" y="256"/>
-  <object name="vine/c2v4" gid="287" x="384" y="256"/>
-  <object name="vine/c2v5" gid="287" x="576" y="256"/>
-  <object name="vine/c2v6" gid="287" x="768" y="256"/>
-  <object name="vine/c2v7" gid="287" x="896" y="256"/>
-  <object name="vine/c2v8" gid="287" x="832" y="256"/>
-  <object name="vine/c2v9" gid="287" x="1088" y="256"/>
-  <object name="vine/c2v10" gid="287" x="1280" y="256"/>
-  <object name="vine/c2v11" gid="287" x="1216" y="256"/>
-  <object name="vine/c2v12" gid="287" x="1472" y="256"/>
-  <object name="vine/c2v13" gid="287" x="1408" y="256"/>
-  <object name="vine/c2v14" gid="287" x="1600" y="256"/>
-  <object name="characters/player/player_one" gid="286" x="64" y="896"/>
-  <object name="characters/npcs/generic/mita" gid="291" x="128" y="896"/>
-  <object name="characters/npcs/generic/arnav" gid="291" x="1728" y="768"/>
-  <object name="characters/npcs/generic/advaith" gid="291" x="128" y="576"/>
+ <objectgroup name="Objects">
+  <object id="1" name="vine/c0v0" gid="287" x="192" y="896" width="64" height="64"/>
+  <object id="2" name="vine/c0v1" gid="287" x="384" y="896" width="64" height="64"/>
+  <object id="3" name="vine/c0v2" gid="287" x="576" y="896" width="64" height="64"/>
+  <object id="4" name="vine/c0v3" gid="287" x="704" y="896" width="64" height="64"/>
+  <object id="5" name="vine/c0v4" gid="287" x="832" y="896" width="64" height="64"/>
+  <object id="6" name="vine/c0v5" gid="287" x="960" y="896" width="64" height="64"/>
+  <object id="7" name="vine/c0v6" gid="287" x="1088" y="896" width="64" height="64"/>
+  <object id="8" name="vine/c0v7" gid="287" x="1216" y="896" width="64" height="64"/>
+  <object id="9" name="vine/c0v8" gid="287" x="1344" y="896" width="64" height="64"/>
+  <object id="10" name="vine/c0v9" gid="287" x="1536" y="896" width="64" height="64"/>
+  <object id="11" name="vine/c0v10" gid="287" x="1664" y="896" width="64" height="64"/>
+  <object id="12" name="vine/c1v0" gid="287" x="1664" y="640" width="64" height="64"/>
+  <object id="13" name="vine/c1v1" gid="287" x="1536" y="640" width="64" height="64"/>
+  <object id="14" name="vine/c1v2" gid="287" x="1408" y="640" width="64" height="64"/>
+  <object id="15" name="vine/c1v3" gid="287" x="1280" y="640" width="64" height="64"/>
+  <object id="16" name="vine/c1v4" gid="287" x="1088" y="640" width="64" height="64"/>
+  <object id="17" name="vine/c1v5" gid="287" x="896" y="640" width="64" height="64"/>
+  <object id="18" name="vine/c1v6" gid="287" x="768" y="640" width="64" height="64"/>
+  <object id="19" name="vine/c1v7" gid="287" x="640" y="640" width="64" height="64"/>
+  <object id="20" name="vine/c1v8" gid="287" x="512" y="640" width="64" height="64"/>
+  <object id="21" name="vine/c1v9" gid="287" x="384" y="640" width="64" height="64"/>
+  <object id="22" name="vine/c1v10" gid="287" x="320" y="640" width="64" height="64"/>
+  <object id="23" name="vine/c1v11" gid="287" x="256" y="640" width="64" height="64"/>
+  <object id="24" name="vine/c2v0" gid="287" x="128" y="448" width="64" height="64"/>
+  <object id="25" name="vine/c2v1" gid="287" x="128" y="320" width="64" height="64"/>
+  <object id="26" name="vine/c2v2" gid="287" x="256" y="256" width="64" height="64"/>
+  <object id="27" name="vine/c2v3" gid="287" x="320" y="256" width="64" height="64"/>
+  <object id="28" name="vine/c2v4" gid="287" x="384" y="256" width="64" height="64"/>
+  <object id="29" name="vine/c2v5" gid="287" x="576" y="256" width="64" height="64"/>
+  <object id="30" name="vine/c2v6" gid="287" x="768" y="256" width="64" height="64"/>
+  <object id="31" name="vine/c2v7" gid="287" x="896" y="256" width="64" height="64"/>
+  <object id="32" name="vine/c2v8" gid="287" x="832" y="256" width="64" height="64"/>
+  <object id="33" name="vine/c2v9" gid="287" x="1088" y="256" width="64" height="64"/>
+  <object id="34" name="vine/c2v10" gid="287" x="1280" y="256" width="64" height="64"/>
+  <object id="35" name="vine/c2v11" gid="287" x="1216" y="256" width="64" height="64"/>
+  <object id="36" name="vine/c2v12" gid="287" x="1472" y="256" width="64" height="64"/>
+  <object id="37" name="vine/c2v13" gid="287" x="1408" y="256" width="64" height="64"/>
+  <object id="38" name="vine/c2v14" gid="287" x="1600" y="256" width="64" height="64"/>
+  <object id="39" name="characters/player/player_one" gid="286" x="64" y="896" width="64" height="64"/>
+  <object id="40" name="characters/npcs/generic/mita" gid="291" x="128" y="896" width="64" height="64"/>
+  <object id="41" name="characters/npcs/generic/arnav" gid="291" x="1728" y="768" width="64" height="64"/>
+  <object id="42" name="characters/npcs/generic/advaith" gid="291" x="128" y="576" width="64" height="64"/>
+  <object id="43" name="player_data/player_data" gid="287" x="0" y="64" width="64" height="64"/>
+  <object id="44" name="tile_trigger/start" gid="292" x="64" y="896" width="64" height="64"/>
+  <object id="45" name="tile_trigger/end" gid="292" x="1792" y="256" width="64" height="64"/>
  </objectgroup>
 </map>

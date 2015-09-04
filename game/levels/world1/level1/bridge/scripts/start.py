@@ -129,7 +129,7 @@ pyscripter_state_found = 1
 pyscripter_state = pyscripter_state_not_found
 #pyscripter_state = player_data.get_level_state("pyscripter_state")
 if pyscripter_state == pyscripter_state_not_found:
-    pyscripter.move_to((14, 64))
+    pyscripter.move_to((14, 69))
     def pyscripter_player_action(player_object):
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
@@ -143,7 +143,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: myla.face_south(callback = callback),
             lambda callback: myla.set_solidity(False, callback = callback),
             lambda callback: myla.start_animating(callback = callback),
-            lambda callback: myla.move_to((14,64), time = 0.8, callback = callback),
+            lambda callback: myla.move_to((14,69), time = 0.8, callback = callback),
             lambda callback: myla.stop_animating(callback = callback),
             lambda callback: myla.turn_to_face(player_one, callback = callback),
             lambda callback: engine.show_dialogue("???: You found my PyScripter!", callback = callback),

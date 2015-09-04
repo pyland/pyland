@@ -16,7 +16,7 @@ engine.update_level_text("3")
 finish_level = [
     lambda callback: engine.set_py_tabs(2, callback = callback),
     lambda callback: engine.show_dialogue("You have unlocked another PyScripter Tab!", callback = callback),
-    lambda callback: engine.show_dialogue("You can now store two scripts in you PyScripter. They can be run at any time using '1' or '2' on your keyboard", callback = callback),
+    lambda callback: engine.show_dialogue("You can now store two scripts in you PyScripter. They can be run at any time using '1' or '2' on your keyboard.", callback = callback),
     lambda callback: player_data.save_and_exit("/world1"),
 ]
 
@@ -82,6 +82,7 @@ def fix_script(challenger, dialogue, script):
 npcs = [ben,ruby,sid,cindy,joya,ying]
 
 for npc in npcs:
+    npc.face_south()
     npc.start_turning(4.0,10)
 
 npcs[0].player_action = lambda player_object: fix_script(npcs[0],"Can you fix my script so I get out of the way of the path?","movewest")

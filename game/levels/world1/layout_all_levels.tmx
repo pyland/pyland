@@ -46,7 +46,7 @@
  </layer>
  <layer name="LevelSprites" width="30" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFyECFcXjaRQoYrO6iFAw1fw1G99LLTYTsGYxhQyswkvw60gAAaEYBTg==
+   eJxjYBgFyECFcXjaRQoYrO6iFKD7azD5E5tbYGLUdicl5tErzAjZM5jijtZgJPl1pAEAtFQB4g==
   </data>
  </layer>
  <objectgroup name="Objects">
@@ -58,11 +58,15 @@
   <object id="6" name="tile_trigger/level_4" gid="292" x="320" y="256" width="64" height="64"/>
   <object id="7" name="tile_trigger/level_5" gid="292" x="512" y="192" width="64" height="64"/>
   <object id="8" name="tile_trigger/level_6" gid="292" x="832" y="320" width="64" height="64"/>
+  <object id="9" name="tile_trigger/level_7" gid="292" x="704" y="448" width="64" height="64"/>
+  <object id="10" name="tile_trigger/level_8" gid="292" x="832" y="576" width="64" height="64"/>
   <object id="11" name="characters/npcs/generic/no_desert_guy" gid="291" x="1792" y="512" width="64" height="64"/>
   <object id="12" name="tile_trigger/level_1_2" gid="292" x="1344" y="512" width="64" height="64"/>
   <object id="13" name="tile_trigger/world_2" gid="292" x="1280" y="512" width="64" height="64"/>
   <object id="14" name="tile_trigger/world_1" gid="292" x="1216" y="512" width="64" height="64"/>
   <object id="15" name="tile_trigger/level_demo" gid="292" x="1792" y="576" width="64" height="64"/>
+  <object id="18" name="tile_trigger/level_9" gid="292" x="1024" y="512" width="64" height="64"/>
+  <object id="19" name="tile_trigger/level_2_2" gid="292" x="1472" y="512" width="64" height="64"/>
   <object id="20" name="tile_trigger/level_3_2" gid="292" x="1536" y="640" width="64" height="64"/>
  </objectgroup>
 </map>

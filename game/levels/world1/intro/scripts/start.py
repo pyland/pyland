@@ -110,5 +110,5 @@ name_confirmed_sequence = [
 def start_game():
     """Save the player's game and start the game!"""
     player_data.create(engine.get_player_name())
-    engine.change_map("/world1/level1/main")
+    engine.change_map("/world1/level1/bridge")
 

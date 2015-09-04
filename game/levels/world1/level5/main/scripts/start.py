@@ -42,9 +42,9 @@ if(start_from_beg):
         lambda callback: player_one.turn_to_face(myla, callback = callback),
         lambda callback: myla.turn_to_face(player_one, callback = callback),
         lambda callback: engine.show_dialogue("There are scrolls lying all over in this region! They usually contain riddles.", callback = callback),
-        lambda callback: engine.show_dialogue("Here is a script to read them.", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("\nprint(scan())", callback = callback),
+        lambda callback: engine.insert_to_scripter("print(scan())", callback = callback),
+        lambda callback: engine.show_dialogue("Here is a script to read them:", callback = callback),
         lambda callback: engine.show_dialogue("The command scan() extract the messages from the place in front of you.", callback = callback),
         lambda callback: engine.show_dialogue("Print then displays the text returned by scan() to the PyConsole.", callback = callback),
         lambda callback: engine.show_dialogue("Try and read from the scroll, so we can find our way out of here!", callback = callback),
@@ -116,10 +116,10 @@ count1 = [0, 0, 0, 0]
 door1.player_walked_on = do_nothing
 door1.set_solidity(True)
 
-scroll1a.set_message("The man who lives here is a wizard and must stand\ on the central magical leaves to access his powers.")
-scroll1b.set_message("Once the wizard starts using magic, you need\nto step on as many magical leaves as indicated on the next scroll,\nafter stepping on at least one tile")
+scroll1a.set_message("The man who lives here is a wizard and must stand\ on the central magical leaves to harness his powers.")
+scroll1b.set_message("Once the wizard starts using magic, you need\nto step on as many magical leaves as indicated on the next scroll.")
 scroll1c.set_message(magic_message)
-scroll1d.set_message("The magic the wizard performs makes the \nnorth-most log of wood on the east wall walkable")
+scroll1d.set_message("The magic the wizard performs lets you walk through the \nnorth-most log of wood on the east wall.")
 
 tiles1 = [topright1, bottomright1, bottomleft1, topleft1]
 
@@ -145,8 +145,8 @@ def pete_speak():
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
             lambda callback: pete.turn_to_face(player_one, callback = callback),
-            lambda callback: engine.show_dialogue("I am performing my magic and you can harness my energy", callback = callback),
-            lambda callback: engine.show_dialogue("You have walked these many times on the magic tiles:", callback = callback),
+            lambda callback: engine.show_dialogue("I am performing my magic. Please follow the scroll's instructions for harnessing the magic.", callback = callback),
+            lambda callback: engine.show_dialogue("You have walked these many times on the magic leaves:", callback = callback),
             lambda callback: engine.show_dialogue("Top-right:"+str(count1[0])+", Bottom-right:"+str(count1[1])+", Bottom-left:"+str(count1[2])+", Top-left:"+str(count1[3]), callback = callback),
             lambda callback: player_one.set_busy(False, callback =callback)
         ])
@@ -176,10 +176,10 @@ count2 = [0, 0, 0, 0]
 door2.player_walked_on = do_nothing
 door2.set_solidity(True)
 
-scroll2a.set_message("The lady up ahead is a witch and she must be\non the centre grass tile for her magic to work.")
-scroll2b.set_message("Once the witch starts her magic, you need\nto step on as many grass tiles as indicated on the next scroll,\nafter stepping on at least one tile")
+scroll2a.set_message("The lady who lives here is a witch and she must be\non the central magical leaves to harness her powers.")
+scroll2b.set_message("Once the witch starts her magic, you need\nto step on as many grass tiles as indicated on the next scroll.")
 scroll2c.set_message(magic_message)
-scroll2d.set_message("The magic the witch performs makes the \nwest-most log of wood on the north wall walkable")
+scroll2d.set_message("The magic the witch performs allows you to walk through the \nwest-most log of wood on the north wall.")
 
 tiles2 = [topright2, bottomright2, bottomleft2, topleft2]
 
@@ -205,8 +205,8 @@ def maddie_speak():
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
             lambda callback: maddie.turn_to_face(player_one, callback = callback),
-            lambda callback: engine.show_dialogue("I am performing my magic and you can harness my energy", callback = callback),
-            lambda callback: engine.show_dialogue("You have walked these many times on the magic tiles:", callback = callback),
+            lambda callback: engine.show_dialogue("I am performing my magic. Please follow the scroll's instructions for harnessing the magic.", callback = callback),
+            lambda callback: engine.show_dialogue("You have walked these many times on the magic leaves:", callback = callback),
             lambda callback: engine.show_dialogue("Top-right:"+str(count2[0])+", Bottom-right:"+str(count2[1])+", Bottom-left:"+str(count2[2])+", Top-left:"+str(count2[3]), callback = callback),
             lambda callback: player_one.set_busy(False, callback =callback)
         ])
@@ -228,20 +228,20 @@ def maddie_speak():
 maddie.player_action = lambda player_object: maddie_speak()
 
 ###croc chamber
-hor_crocs = [croc1, croc2, croc3, croc4, croc5]
-ver_crocs = [croc6, croc7, croc8, croc9]
+hor_crocs = [croc1, croc2, croc3]
+ver_crocs = [croc4, croc5]
 
 for croc in hor_crocs:
-    croc.killable = [player_one]
+    croc.killable = [player_one,myla]
     croc.move_horizontal()
 
 for croc in ver_crocs:
-    croc.killable = [player_one]
+    croc.killable = [player_one,myla]
     croc.move_vertical()
 
 ###final chamber
 
-scroll4.set_message("The boulder will give way when you come close to it.\nHowever, this will not happen if you walk on any grass patches.\nTo reset the boulder mechanic, stand on the leaves\nwhich are in the north part of this chamber")
+scroll4.set_message("The boulder will give way when you come close to it,\nbut only if you don't walk on any grass patches.\n In case you do, reset the boulder by standing on the leaves\nin the north part of this chamber.")
 
 def bob_speak():
     engine.run_callback_list_sequence([
@@ -252,7 +252,7 @@ def bob_speak():
                 lambda callback: player_one.set_busy(False, callback = callback),
                 lambda callback: bob.run_script(script_to_run = 10)]),
             cancel_callback = lambda: player_one.set_busy(False),
-            external_dialogue = "You can edit my script and I will run it!",
+            external_dialogue = "You can edit my script and I will run it! I wish I could scan the scroll over here!",
             script_init = lambda: engine.insert_to_scripter(""),
             character_object = bob
             )

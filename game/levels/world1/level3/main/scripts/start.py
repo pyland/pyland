@@ -56,8 +56,8 @@ engine.run_callback_list_sequence([
 run_sequence = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: myla.turn_to_face(player_one,callback = callback),
-        lambda callback: engine.show_dialogue("Lets talk to the players and fix their scripts.", callback = callback),
-        lambda callback: engine.show_dialogue("Make sure their move commands are spelt exactly like move_north() .", callback = callback),
+        lambda callback: engine.show_dialogue("Lets go and talk to the players and fix their scripts.", callback = callback),
+        lambda callback: engine.show_dialogue("You need to make sure commands are spelt exactly like move_north() .", callback = callback),
         lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
 ]
@@ -79,7 +79,7 @@ yell_sequence = [
         lambda callback: engine.show_dialogue("More sleeping crocodiles! Here's the yell script again, I think you'll need it!", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
         lambda callback: engine.insert_to_scripter("yell()", callback = callback),
-        lambda callback: engine.show_dialogue("If you can't remember you name of a command, check out the PyGuide. It's in your bag, that green bag in the top right.", callback = callback),
+        lambda callback: engine.show_dialogue("If you can't remember the name of a command, check out the PyGuide. It's in your bag - that green bag in the top right.", callback = callback),
         lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
 ]
@@ -116,6 +116,7 @@ def write_script(challenger, dialogue, script):
 npcs = [louis,anya,harriet,kushan]
 
 for npc in npcs:
+    npc.face_east()
     npc.start_turning(3.0,20)
 
 louis.player_action = lambda player_object: write_script(louis,"I'm stuck here and blocking the path! Please fix my script and then click 'Give Script' in the PyScripter below.","mve_north()")

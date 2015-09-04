@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="31" height="38" tilewidth="64" tileheight="64" nextobjectid="23">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="31" height="38" tilewidth="64" tileheight="64" nextobjectid="26">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -28,7 +28,7 @@
  </layer>
  <layer name="Decor" width="31" height="38">
   <data encoding="base64" compression="zlib">
-   eJztVl1OwzAMdhgwGLzC/W8yYGPlV7vAuq0IhLgFsRYrxrSd7e4BoVj65Djx8tVxFhugiFY2AWDFsA7D99HuUUe/x6jnCbWT+yPsfv9k2AP9KsjfvXVyNyneysH9NfDM+V4a7k2KE/3fo57Bz9xrQd9r4Uafu6insMvVMukXyPmXkGs8vxZuytEt5HxLW8ZXCd8HJzfx8zsmbXlOfO/ayN0WjxZ0Nxpha7nl/9mKpbCfjdy4fh4xjjhjGAvdNubAuVMH90XEdcJVQte4b+3EwX0ZgS5HSYcOe9/cyMj9Cr/zeC+Aczegu5tbY9za+25537Xc3npVuAv3X+fmvUIT/DXF0ztQr4D1gN6PuRjL92af3dc78DrvjfUz4i3k+kPAOtJXv1HPOs5BK7THBHL9QRx3cPMY0R6aU15/CKMW7gX01/tD9AxtvcMh76+llypSpMj/lW8X4WgV
+   eJztVttOwzAMdRgwbq/w/3/Cxgblqv0A3dYJNO0vsEWsGpN2jrsHhGLpyHGT+tRxGhugiFVWAeBdYBmG+7H6qHHdE+o5YhJtj3zie3eonzN80LoK2u9eO7mbGG/l4N4N3HPpy8K9inHS+g/UM/iZeyv4e3O465ijW/jO9yLq16hT0HMyvzncnKMptPnWto6vUmsfndzML8+YtvU+Sd91JncqHiv4bDTKtnLL/9mDhbJfMrlp/hwxRpwJjJVOjSXo2amD+xJxE3Ed0TXumztxcF8haMlR1KHD3vdslMn9Br/zeK/A97vlbK4z47ae95z73crtrVeFu3D/dW7ZKzTBX1M8vQP3ClQP+P6Yq7G+b/bZfb2DrPPeWLeITWjrD4PqSF/9Jj3r2AersI8LaOsP4biDW9f3IfllH1x/GKME9wP01/tD9Ayp3uGQ5zdnX4oUKfJ/5Qv3Imgc
   </data>
  </layer>
  <layer name="PortalLayer" width="31" height="38">
@@ -59,6 +59,9 @@
   <object id="20" name="vine/v5v0" gid="287" x="896" y="512" width="64" height="64"/>
   <object id="21" name="characters/npcs/generic/courtney" gid="291" x="960" y="512" width="64" height="64"/>
   <object id="22" name="characters/npcs/generic/julie" gid="291" x="1344" y="512" width="64" height="64"/>
+  <object id="23" name="player_data/player_data" gid="287" x="-7.75757" y="86.1819" width="64" height="64"/>
+  <object id="24" name="tile_trigger/start" gid="292" x="64" y="320" width="64" height="64"/>
+  <object id="25" name="tile_trigger/end" gid="292" x="1024" y="256" width="64" height="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="31" height="38">
   <data encoding="base64" compression="zlib">

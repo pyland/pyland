@@ -1,3 +1,5 @@
+#TODO: Restore Myla properly when reloading checkpoints
+
 #commence save-data set-up
 world_name = "world1"
 level_name = "level6"
@@ -32,20 +34,27 @@ if reached[0] == True:
     x,y = check1.get_position()
     player_one.set_cuts_left(0)
     player_one.move_to((x,y), callback = lambda: player_one.face_east())
+    myla.move_to((x+1,y))
+    myla.follow(player_one)
 
 elif reached[1] == True:
     x,y = check2.get_position()
     player_one.set_cuts_left(0)
     player_one.move_to((x,y), callback = lambda: player_one.face_west())
+    myla.move_to((x+1,y))
+    myla.follow(player_one)
 
 if start_from_beg:
     player_one.face_south()
     player_one.set_cuts_left(3)
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("This region is filled with many vines that one has to cut. One can use cut() to cut down vines.", callback = callback),
+        lambda callback: myla.turn_to_face(player_one, callback = callback),
+        lambda callback: engine.show_dialogue("There are a lot of vines blocking the path here. Never fear, I've got just the right script for you!", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("#function used to cut down an object in front of the character\ncut()", callback = callback),
+        lambda callback: engine.insert_to_scripter("cut()", callback = callback),
+        lambda callback: engine.show_dialogue("Run this to cut them down:", callback = callback),
+        lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback)
     ])
 
@@ -82,8 +91,8 @@ vine_list = [
 ]
 
 croc_still_list = [
-    croc1, 
-    croc2, 
+    croc1,
+    croc2,
     croc3
 ]
 
@@ -98,10 +107,10 @@ def explain_cut(player_object):
     explained_cut = True
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Your knife gets blunt after cutting. Use get_cuts_left() to see how many cuts you have left.", callback = callback),
-        lambda callback: engine.show_dialogue("Remember, you need to print the value that get_cuts_left() gives you to actually read it", callback = callback),
+        lambda callback: engine.show_dialogue("Your knife gets blunt after cutting down vines. I've got another script for that.", callback = callback),
+        lambda callback: engine.show_dialogue("The text after the # symbols are comments, the PyScripter ignores them but I've put them there to explain what each line means!", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
-        lambda callback: engine.insert_to_scripter("#function used to cut down an object in front of the character\ncut()\n#function to get the number of cuts left\nget_cuts_left()\n#remember to print() the above value if you want to see it", callback = callback),
+        lambda callback: engine.insert_to_scripter("#for cutting down an object in front of you\ncut()\n#for getting the number of cuts left \nget_cuts_left()\n# use print() to see the value returned by get_cuts_left()\n\n#From Myla :)", callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback)
     ])
 explain_cut_trigger.player_walked_on = explain_cut
@@ -117,8 +126,8 @@ def explain_whetstone(player_object):
     explained_whetstone = True
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Go up to the whetsone ahead to sharpen your knife and get more cuts", callback = callback),
-        lambda callback: engine.show_dialogue("Since sharpening knives takes long, vines grow back while you sharpen your knife", callback = callback),
+        lambda callback: engine.show_dialogue("Oh look a whestone. You can press 'Enter' on it to sharpen your knife and get more cuts.", callback = callback),
+        lambda callback: engine.show_dialogue("Since sharpening knives takes so long, the vines will grow back by the time you finish.", callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback)
     ])
 explain_whetstone_trigger.player_walked_on = explain_whetstone
@@ -136,7 +145,7 @@ def alpha_speak():
                 lambda callback: player_one.set_busy(False, callback = callback),
                 lambda callback: alpha.run_script(script_to_run = 10)]),
             cancel_callback = lambda: player_one.set_busy(False),
-            external_dialogue = "You can edit my script and I will run it!",
+            external_dialogue = "Give me a script and I will run it!",
             script_init = lambda: engine.insert_to_scripter(""),
             character_object = alpha
             )
@@ -160,12 +169,13 @@ def explain_poison(player_object):
     explained_poison = True
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("That vine up ahead is poisonous. Don't step on it. If you do, you'll die", callback = callback),
+        lambda callback: myla.turn_to_face(player_one, callback = callback),
+        lambda callback: engine.show_dialogue("That vine up ahead is poisonous to humans. Don't step on it!", callback = callback),
         lambda callback: player_one.set_busy(False, callback =callback)
     ])
 explain_poison_trigger.player_walked_on = explain_poison
 
-scroll1.set_message("Other characters in the game may have knives as well,\n though they may not be sharp")
+scroll1.set_message("Other characters in the game may have knives as well,\nthough they may not be sharp.")
 
 def bravo_speak():
     engine.run_callback_list_sequence([
@@ -185,3 +195,29 @@ bravo.face_north()
 bravo.set_cuts_left(1)
 bravo.player_action = lambda player_object: bravo_speak()
 
+again = [
+    lambda callback: engine.show_dialogue("Here you go!", callback = callback),
+    lambda callback: engine.clear_scripter(callback = callback),
+    lambda callback: engine.insert_to_scripter("#for cutting down an object in front of you\ncut()\n#for getting the number of cuts left \nget_cuts_left()\n# use print() to see the value returned by get_cuts_left()\nprint(get_cuts_left())\n\n#From Myla :)", callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback)
+]
+
+not_again = [
+    lambda callback: player_one.set_busy(False, callback = callback)
+]
+
+myla_sequence = [
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
+
+    lambda callback: engine.show_dialogue_with_options(
+        "Would you like the cutting script again?",
+        {
+            "Yes": lambda: engine.run_callback_list_sequence(again),
+            "No" : lambda: engine.run_callback_list_sequence(not_again)
+        }
+    )
+
+]
+
+myla.player_action = lambda player_object: engine.run_callback_list_sequence(myla_sequence)

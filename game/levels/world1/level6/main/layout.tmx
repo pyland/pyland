@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="26" height="22" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="26" height="22" tilewidth="64" tileheight="64" nextobjectid="39">
  <tileset firstgid="1" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
@@ -30,43 +30,44 @@
    eJydVFkKAjEMjXfxYCq4gNvXHLHan7mTKUyYELNO4NElTd5rm3YGgDkAGO3ANxELjk+u0ea6ssbKuYUjyh3xkTWRT44tLsuvoSmatnJILi1G+rz9Z3mqcQ3Ws8zEVzVW6icTl8lLdR1pjHRV46y61+44a03pa7WfPdduzHuW2a+nieyGOIvxRczxOH6HnjbeHzkfiCfiuuQf42mZ43xench3IbXdEccFB4YxfiNeiBPkzq3B/91F/wJpsDg6xDyaaf7orXFO4vIs8luaPM7se7TWkq7R/4jWqpHsuWgcFZ2RWX9WhqNiWl3ud2v/B8wb6mY=
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="26" height="22">
-  <object name="characters/player/player_one" gid="286" x="832" y="64"/>
-  <object name="tile_trigger/exit_level_start" gid="292" x="832" y="64"/>
-  <object name="player_data/player_data" gid="287" x="0" y="64"/>
-  <object name="vine/vine0" gid="196" x="576" y="256"/>
-  <object name="whetstone/whetstone1" gid="292" x="320" y="512"/>
-  <object name="tile_trigger/end_level" gid="292" x="1472" y="1408"/>
-  <object name="tile_trigger/explain_cut_trigger" gid="292" x="512" y="256"/>
-  <object name="vine/vine1" gid="196" x="320" y="256"/>
-  <object name="vine/vine2" gid="196" x="256" y="320"/>
-  <object name="tile_trigger/explain_whetstone_trigger" gid="292" x="256" y="384"/>
-  <object name="tile_trigger/check1" gid="292" x="1024" y="384"/>
-  <object name="vine/vine3" gid="196" x="896" y="448"/>
-  <object name="vine/vine4" gid="196" x="832" y="448"/>
-  <object name="characters/npcs/generic/alpha" gid="291" x="1088" y="192"/>
-  <object name="whetstone/whetstone2" gid="287" x="1024" y="128"/>
-  <object name="vine/vine5a" gid="196" x="1152" y="704"/>
-  <object name="vine/vine5b" gid="196" x="1024" y="704"/>
-  <object name="vine/vine5c" gid="196" x="832" y="704"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc1" gid="296" x="1152" y="832"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc2" gid="296" x="1024" y="832"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc3" gid="296" x="832" y="832"/>
-  <object name="tile_trigger/check2" gid="292" x="448" y="704"/>
-  <object name="vine/poison_vine/vine7a" gid="197" x="192" y="960"/>
-  <object name="vine/poison_vine/vine7b" gid="197" x="256" y="1024"/>
-  <object name="vine/poison_vine/vine7c" gid="197" x="192" y="1088"/>
-  <object name="vine/poison_vine/vine7d" gid="197" x="256" y="1152"/>
-  <object name="vine/poison_vine/vine7e" gid="197" x="192" y="1024"/>
-  <object name="vine/poison_vine/vine7f" gid="197" x="256" y="960"/>
-  <object name="vine/poison_vine/vine7g" gid="197" x="256" y="1088"/>
-  <object name="whetstone/whetstone3" gid="287" x="384" y="896"/>
-  <object name="vine/poison_vine/vine6" gid="196" x="192" y="832"/>
-  <object name="tile_trigger/explain_poison_trigger" gid="292" x="384" y="704"/>
-  <object name="vine/vine8" gid="196" x="768" y="1152"/>
-  <object name="scroll/scroll1" gid="287" x="1088" y="1088"/>
-  <object name="characters/npcs/generic/bravo" gid="291" x="1472" y="1216"/>
-  <object name="vine/vine9b" gid="196" x="1536" y="1216"/>
-  <object name="vine/vine9a" gid="196" x="1472" y="1280"/>
+ <objectgroup name="Object Layer 1">
+  <object id="1" name="characters/player/player_one" gid="286" x="832" y="64" width="64" height="64"/>
+  <object id="2" name="tile_trigger/exit_level_start" gid="292" x="832" y="64" width="64" height="64"/>
+  <object id="3" name="player_data/player_data" gid="287" x="0" y="64" width="64" height="64"/>
+  <object id="4" name="vine/vine0" gid="196" x="576" y="256" width="64" height="64"/>
+  <object id="5" name="whetstone/whetstone1" gid="292" x="320" y="512" width="64" height="64"/>
+  <object id="6" name="tile_trigger/end_level" gid="292" x="1472" y="1408" width="64" height="64"/>
+  <object id="7" name="tile_trigger/explain_cut_trigger" gid="292" x="512" y="256" width="64" height="64"/>
+  <object id="8" name="vine/vine1" gid="196" x="320" y="256" width="64" height="64"/>
+  <object id="9" name="vine/vine2" gid="196" x="256" y="320" width="64" height="64"/>
+  <object id="10" name="tile_trigger/explain_whetstone_trigger" gid="292" x="256" y="384" width="64" height="64"/>
+  <object id="11" name="tile_trigger/check1" gid="292" x="1024" y="384" width="64" height="64"/>
+  <object id="12" name="vine/vine3" gid="196" x="896" y="448" width="64" height="64"/>
+  <object id="13" name="vine/vine4" gid="196" x="832" y="448" width="64" height="64"/>
+  <object id="14" name="characters/npcs/generic/alpha" gid="291" x="1088" y="192" width="64" height="64"/>
+  <object id="15" name="whetstone/whetstone2" gid="287" x="1024" y="128" width="64" height="64"/>
+  <object id="16" name="vine/vine5a" gid="196" x="1152" y="704" width="64" height="64"/>
+  <object id="17" name="vine/vine5b" gid="196" x="1024" y="704" width="64" height="64"/>
+  <object id="18" name="vine/vine5c" gid="196" x="832" y="704" width="64" height="64"/>
+  <object id="19" name="characters/enemies/crocodiles/green_crocodile/croc1" gid="296" x="1152" y="832" width="64" height="64"/>
+  <object id="20" name="characters/enemies/crocodiles/green_crocodile/croc2" gid="296" x="1024" y="832" width="64" height="64"/>
+  <object id="21" name="characters/enemies/crocodiles/green_crocodile/croc3" gid="296" x="832" y="832" width="64" height="64"/>
+  <object id="22" name="tile_trigger/check2" gid="292" x="448" y="704" width="64" height="64"/>
+  <object id="23" name="vine/poison_vine/vine7a" gid="197" x="192" y="960" width="64" height="64"/>
+  <object id="24" name="vine/poison_vine/vine7b" gid="197" x="256" y="1024" width="64" height="64"/>
+  <object id="25" name="vine/poison_vine/vine7c" gid="197" x="192" y="1088" width="64" height="64"/>
+  <object id="26" name="vine/poison_vine/vine7d" gid="197" x="256" y="1152" width="64" height="64"/>
+  <object id="27" name="vine/poison_vine/vine7e" gid="197" x="192" y="1024" width="64" height="64"/>
+  <object id="28" name="vine/poison_vine/vine7f" gid="197" x="256" y="960" width="64" height="64"/>
+  <object id="29" name="vine/poison_vine/vine7g" gid="197" x="256" y="1088" width="64" height="64"/>
+  <object id="30" name="whetstone/whetstone3" gid="287" x="384" y="896" width="64" height="64"/>
+  <object id="31" name="vine/poison_vine/vine6" gid="196" x="192" y="832" width="64" height="64"/>
+  <object id="32" name="tile_trigger/explain_poison_trigger" gid="292" x="384" y="704" width="64" height="64"/>
+  <object id="33" name="vine/vine8" gid="196" x="768" y="1152" width="64" height="64"/>
+  <object id="34" name="scroll/scroll1" gid="287" x="1088" y="1088" width="64" height="64"/>
+  <object id="35" name="characters/npcs/generic/bravo" gid="291" x="1472" y="1216" width="64" height="64"/>
+  <object id="36" name="vine/vine9b" gid="196" x="1536" y="1216" width="64" height="64"/>
+  <object id="37" name="vine/vine9a" gid="196" x="1472" y="1280" width="64" height="64"/>
+  <object id="38" name="characters/npcs/myla/myla" gid="286" x="768" y="128" width="64" height="64"/>
  </objectgroup>
 </map>

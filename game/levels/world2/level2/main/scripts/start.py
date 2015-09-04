@@ -64,7 +64,7 @@ erick_end = ([
 erick.player_action = lambda player_object: challenger_action_move(player_object, erick, erick_dialogue, erick_end)
 
 derek_dialogue = ([
-    lambda callback: engine.show_dialogue("Derek: I love turning right!.", callback = callback),
+    lambda callback: engine.show_dialogue("Derek: I love turning right!", callback = callback),
     lambda callback: engine.show_dialogue("Sadly, I'm not an ambiturner...I can't turn left", callback = callback),
     lambda callback: engine.insert_to_scripter("\nturn_right()", callback = callback),
     lambda callback: engine.show_dialogue("Now you can turn right too!", callback = callback),
@@ -72,8 +72,8 @@ derek_dialogue = ([
     ])
 
 derek_end = ([
-    lambda callback: derek.move_north(callback = callback),
-    lambda callback: derek.move_north()
+    lambda callback: derek.move_east(callback = callback),
+    lambda callback: derek.move_east()
     ])
 
 
