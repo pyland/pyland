@@ -10,14 +10,7 @@
 #include <utility>
 #include <vector>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 class GUIText;
 class TextureAtlas;
@@ -126,15 +119,15 @@ protected:
 
 
     ///
-    /// The texture atlas being used for this GUI - 
-    /// 
+    /// The texture atlas being used for this GUI -
+    ///
     std::shared_ptr<TextureAtlas> texture_atlas;
 public:
     Component();
     Component(std::function<void (void)> on_click, float _width, float _height, float _xo_offset, float _y_offset);
- 
-    ~Component(); 
-   
+
+    ~Component();
+
     ///
     /// Generates the vertex data for this particular component. This
     /// data is in the local 'object' space and will need to be
@@ -151,8 +144,8 @@ public:
 
     ///
     /// Generates the text data for this component
-    /// 
-    /// 
+    ///
+    ///
     virtual std::vector<std::shared_ptr<GUIText>> generate_text_data() = 0;
 
     ///
@@ -160,7 +153,7 @@ public:
     /// This returns an empty map for Component.
     /// @return a reference to a constant map object
     ///
-    virtual const std::map<int, std::shared_ptr<Component>>& get_components();
+    virtual const std::map<int, std::shared_ptr<Component>>* get_components();
 
     ///
     /// Set the visibility
@@ -184,7 +177,7 @@ public:
     ///
     /// Call the component's on click function
     ///
-    void call_on_click() { on_click_func(); }
+    void call_on_click();
 
     ///
     /// Clear the handler - replaces with a void lambda that does nothing

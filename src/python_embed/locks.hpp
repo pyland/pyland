@@ -8,6 +8,16 @@
 #include "interpreter_context.hpp"
 
 namespace lock {
+    
+
+    ///
+    /// A simple way of handling python errors
+    /// Run it after boost::python::error_already_set is thrown to get the python error message.
+    /// TODO: move this somewhere more sensible!!!!
+    ///
+    std::string get_python_error_message();
+
+
     ///
     /// A RAII lock for the GIL. Usage:
     ///

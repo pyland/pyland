@@ -54,6 +54,11 @@ public:
     /// Removes a resource from the cache. Does not destroy it.
     ///
     void remove_resource(const std::string resource_name);
+
+    ///
+    /// Removes all the resources from the cache. Does not destoy it.
+    ///
+    void clear();
 };
 
 // //////////////////////////////////////////////////////////////
@@ -66,7 +71,7 @@ public:
 template<typename Res>
 ResourceCache<Res>::ResourceCache(GraphicsContext*):
     weak_this() {
-    LOG(INFO) << "Created resource cache " << this;
+    VLOG(1) << "Created resource cache " << this;
 }
 
 template<typename Res>
@@ -106,8 +111,13 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
 
 template<typename Res>
 void ResourceCache<Res>::remove_resource(const std::string resource_name) {
-    LOG(INFO) << "Removing resource \"" << resource_name << "\" from cache " << this;
+    VLOG(1) << "Removing resource \"" << resource_name << "\" from cache " << this;
     resources.erase(resource_name);
 }
 
+template<typename Res>
+void ResourceCache<Res>::clear() {
+    VLOG(1) << "Clearing all resources from cache";
+    resources.clear();
+}
 #endif

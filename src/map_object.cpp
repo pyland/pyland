@@ -7,58 +7,53 @@
 #include <stdexcept>
 #include <tuple>
 
-#include "animation_frames.hpp"
 #include "cacheable_resource.hpp"
 #include "engine.hpp"
 #include "map_object.hpp"
 #include "map_viewer.hpp"
+#include "object_manager.hpp"
 #include "shader.hpp"
+#include "sprite_manager.hpp"
 #include "texture_atlas.hpp"
 #include "walkability.hpp"
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
+#include "open_gl.hpp"
 
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
-
-// WTF
 MapObject::MapObject(glm::vec2 position,
                      std::string name,
-                     Walkability walkability,
-                     AnimationFrames frames,
-                     std::string start_frame):
+                     Walkability walkability):
     Object(name),
+    tile("../game/objects/0.png"),
     render_above_sprite(false),
     walkability(walkability),
-    position(position),
-    cuttable(false),
-    findable(true),
-    frames(frames)
+    game_position(position),
+    render_position(position)
+
     {
 
         VLOG(2) << "New map object: " << name;
 
         regenerate_blockers();
-
-        init_shaders();
-        // Hack hack hack
-        load_textures(frames.get_frame(start_frame));
-        generate_tex_data(frames.get_frame(start_frame));
+        generate_tex_data();
         generate_vertex_data();
 
-        LOG(INFO) << "MapObject initialized";
+        VLOG(2)<< "MapObject initialized";
 }
 MapObject::~MapObject() {
-    LOG(INFO) << "MapObject destructed";
+    VLOG(1) << "MapObject destructed";
+}
+
+std::shared_ptr<RenderableComponent> MapObject::get_renderable_component(){
+    return SpriteManager::get_component(tile);
 }
 
 void MapObject::set_walkability(Walkability walkability) {
     this->walkability = walkability;
     regenerate_blockers();
+}
+
+Walkability MapObject::get_walkability() {
+    return this->walkability;
 }
 
 void MapObject::regenerate_blockers() {
@@ -69,42 +64,29 @@ void MapObject::regenerate_blockers() {
         }
 
         case Walkability::BLOCKED: {
-            int x_left(int(position.x));
-            int y_bottom(int(position.y));
-            VLOG(2) << std::fixed << position.y << " " << position.x;
-            // If non-integral, the left or top have a higher
-            // tile number. If integral, they do not.
-            //
-            // The test is done by checking if the truncation
-            // changed the value
-            int x_right(x_left   + (float(x_left)   != position.x));
-            int y_top  (y_bottom + (float(y_bottom) != position.y));
-
+            VLOG(2) << std::fixed << game_position.y << " " << game_position.x;
             auto *map = Engine::get_map_viewer()->get_map();
             body_blockers = {
-                map->block_tile(glm::ivec2(x_left,  y_top)),
-                map->block_tile(glm::ivec2(x_left,  y_bottom)),
-                map->block_tile(glm::ivec2(x_right, y_top)),
-                map->block_tile(glm::ivec2(x_right, y_bottom))
+                map->block_tile(game_position),
             };
 
             break;
         }
 
         default: {
-            throw std::runtime_error("WTF do I do now?");
+            throw std::runtime_error("WTF do I do now?"); //LOOOOOOOL What is this code bruh
         }
     }
 }
 
-void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
+void MapObject::generate_tex_data() {
     // holds the texture data
     // need 12 float for the 2D texture coordinates
     int num_floats = 12;
 
     GLfloat *map_object_tex_data;
     try {
-        map_object_tex_data = new GLfloat[sizeof(GLfloat)*num_floats];
+        map_object_tex_data = new GLfloat[num_floats];
     }
     catch(std::bad_alloc &) {
         LOG(ERROR) << "ERROR in MapObject::generate_tex_data(), cannot allocate memory";
@@ -112,7 +94,7 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
     }
 
     std::tuple<float,float,float,float> bounds(
-        renderable_component.get_texture()->index_to_coords(tile.first)
+        SpriteManager::get_component(tile)->get_texture()->index_to_coords(0)
     );
 
     // bottom left
@@ -139,18 +121,25 @@ void MapObject::generate_tex_data(std::pair<int, std::string> tile) {
     map_object_tex_data[10] = std::get<1>(bounds);
     map_object_tex_data[11] = std::get<2>(bounds);
 
-    renderable_component.set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
+    SpriteManager::get_component(tile)->set_texture_coords_data(map_object_tex_data, sizeof(GLfloat)*num_floats, false);
 }
 
-void MapObject::set_position(glm::vec2 position) {
-    this->position = position;
+void MapObject::set_game_position(glm::ivec2 position) {
+    this->game_position = position;
     VLOG(2) << std::fixed << position.x << " " << position.y;
     regenerate_blockers();
 }
 
-void MapObject::set_tile(std::pair<int, std::string> tile) {
-    load_textures(tile);
-    generate_tex_data(tile);
+void MapObject::set_render_position(glm::vec2 position) {
+    this->render_position = position;
+    VLOG(2) << std::fixed << position.x << " " << position.y;
+}
+
+void MapObject::set_tile(std::string _tile) {
+    tile = _tile;
+    load_textures();
+    generate_tex_data();
+    generate_vertex_data();
 }
 
 void MapObject::generate_vertex_data() {
@@ -160,7 +149,7 @@ void MapObject::generate_vertex_data() {
     GLfloat *map_object_vert_data(nullptr);
 
     try {
-        map_object_vert_data = new GLfloat[sizeof(GLfloat)*num_floats];
+        map_object_vert_data = new GLfloat[num_floats];
     }
     catch(std::bad_alloc& ba) {
         LOG(ERROR) << "ERROR in MapObject::generate_vertex_data(), cannot allocate memory";
@@ -191,8 +180,8 @@ void MapObject::generate_vertex_data() {
     map_object_vert_data[10] = 1;
     map_object_vert_data[11] = 0;
 
-    renderable_component.set_vertex_data(map_object_vert_data, sizeof(GLfloat)*num_floats, false);
-    renderable_component.set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
+    SpriteManager::get_component(tile)->set_vertex_data(map_object_vert_data, sizeof(GLfloat)*num_floats, false);
+    SpriteManager::get_component(tile)->set_num_vertices_render(num_floats / num_dimensions);//GL_TRIANGLES being used
 }
 
 void MapObject::set_state_on_moving_start(glm::ivec2) {
@@ -201,39 +190,10 @@ void MapObject::set_state_on_moving_start(glm::ivec2) {
 
 void MapObject::set_state_on_moving_finish() {
     moving = false;
-
-    // Remove all elements from container including and following
-    // any prior occurence of this position, to remove redundant loops.
-    while (positions.find(position) != std::end(positions)) {
-        positions.get<insertion_order>().pop_back();
-    }
-
-    // Insert the position as most recent position
-    positions.insert(position);
 }
 
-// TODO: rewrite
-void MapObject::load_textures(std::pair<int, std::string> tile) {
-    renderable_component.set_texture(TextureAtlas::get_shared(tile.second));
-}
-
-bool MapObject::init_shaders() {
-    std::shared_ptr<Shader> shader;
-    try {
-        shader = Shader::get_shared("tile_shader");
-    }
-    catch (std::exception e) {
-        LOG(ERROR) << "Failed to create the shader";
-        return false;
-    }
-
-    //Set the shader
-    renderable_component.set_shader(shader);
-    return true;
-}
-
-OrderedHashSet<glm::vec2> const &MapObject::get_positions() {
-    return positions;
+void MapObject::load_textures() {
+    SpriteManager::get_component(tile)->set_texture(TextureAtlas::get_shared(tile)); //tile is the location of the sprite you wish to load in from the file-system.
 }
 
 void MapObject::set_challenge(Challenge *challenge) {
@@ -242,4 +202,20 @@ void MapObject::set_challenge(Challenge *challenge) {
 
 Challenge const *MapObject::get_challenge() {
     return challenge;
+}
+
+void MapObject::set_focus(bool _is_focus) {
+    // check focus is actually being changed
+    if (_is_focus != is_focus) {
+        LOG(INFO) << "trying to set focus to "<< is_focus;
+        is_focus = _is_focus;
+
+        auto focus_icon = ObjectManager::get_instance().get_object<MapObject>(focus_icon_id);
+        if (!focus_icon) {
+            LOG(ERROR) << "Object manager no longer has focus_icon";
+            return;
+        }
+
+        focus_icon->set_renderable(is_focus);
+    }
 }

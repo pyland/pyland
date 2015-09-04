@@ -10,14 +10,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/vec2.hpp>
 
-#ifdef USE_GLES
-#include <GLES2/gl2.h>
-#endif
-
-#ifdef USE_GL
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
-#endif
+#include "open_gl.hpp"
 
 #include "dispatcher.hpp"
 #include "fml.hpp"
@@ -39,6 +32,11 @@ class Map {
     std::vector<int> layer_ids;
 
     ///
+    /// The id of the 'special' layer. Initialised during construction
+    ///
+    int special_layer_id = -1;
+
+    ///
     /// A vector of layers which maps the (x, y) position in the map
     /// onto the offset in the buffer. The offsets are based off of
     /// the number of vertices and the number of dimensions. It gives
@@ -52,14 +50,9 @@ class Map {
     std::map<int, std::shared_ptr<std::map<int, int>>> layer_mappings;
 
     ///
-    /// The ids of the map objects that are on this map
+    /// The ids of the objects that are on this map
     ///
-    std::vector<int> map_object_ids;
-
-    ///
-    /// The ids of the sprites that are on this map
-    ///
-    std::vector<int> sprite_ids;
+    std::vector<int> object_ids;
 
     ///
     /// Cache of the tileset texture data for this Map
@@ -202,48 +195,30 @@ public:
     ~Map();
 
     ///
-    /// Add a sprite to the map
-    /// @param sprite_id the id of the sprite
-    ///
-    void add_sprite(int sprite_id);
-
-    ///
-    /// Remove a sprite from the map
-    /// @param sprite_id the id of the sprite
-    ///
-    void remove_sprite(int sprite_id);
-
-    ///
     /// Add a map object to the map
-    /// @param map_object_id the id of the map object
+    /// @param object_id the id of the map object
     ///
-    void add_map_object(int map_object_id);
+    void add_map_object(int object_id);
 
     ///
     /// Remove a map object from the map
-    /// @param map_object_id the id of the map object
+    /// @param object_id the id of the map object
     ///
-    void remove_map_object(int map_object_id);
+    void remove_map_object(int object_id);
 
     ///
     /// FML-valid mapping from strings to object properties,
     /// for hierachically accessing locations on the map by name.
     ///
-    std::map<std::string, ObjectProperties> locations;
+    std::map<std::string, MapObjectProperties> locations;
 
     ///
-    /// Get the sprites that are on this map
+    /// Get the objects that are on this map
     /// @return a vector of sprite ids
     /// - we don't want class users to add sprites to the map
     /// using this vector
     ///
-    const std::vector<int>& get_sprites() { return sprite_ids; }
-
-    ///
-    /// Get the map objects that are on this map
-    /// @return a vector of map object ids
-    ///
-    const std::vector<int>& get_map_objects() { return map_object_ids; }
+    const std::vector<int>& get_objects() { return object_ids; }
 
     ///
     /// Get the map width
@@ -259,6 +234,8 @@ public:
     /// Is this location walkable
     ///
     bool is_walkable(int x_pos, int y_pos);
+
+    int get_tile_type(int x, int y);
 
     ///
     /// TODO: Heidi: Document this class

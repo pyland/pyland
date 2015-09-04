@@ -20,7 +20,7 @@ class MapViewer {
     GUIManager* gui_manager;
 
     ///
-    /// Object to focus the map on
+    /// MapObject to focus the map on
     ///
     int map_focus_object = 0;
 
@@ -51,14 +51,14 @@ class MapViewer {
 
     ///
     /// Render objects on the map
-    /// @param above_sprite if the object is to be rendered above the sprites
-    ///
-    void render_objects(bool above_sprite);
+    /// @param above_object if the object is to be rendered above the objects
+    /// 
+    //void render_objects(bool above_object); TODO: Create the fixed render order based on layer
 
     ///
-    /// Render sprites on the map
+    /// Render objects on the map
     ///
-    void render_sprites();
+    void render_objects();
 
 public:
     MapViewer(GameWindow* window, GUIManager* manager);

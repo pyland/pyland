@@ -1,0 +1,51 @@
+Game screen is completely white....
+
+"Aaah, I'm coming now! I'll just be a ssssecond",
+" ... ",
+" ... ",
+Snake appears,
+"Oh 'ello, I haven't seen you around here before. I'm Monty and I'm going to introduce you to Pyland. I'm the 4th wall breaking snake so I can help you in ways some of the lesser able inhabitants here can't.",
+"Oh, how rude of me, I almost forgot I don't even know your name! You're going to have to tell me your name through the text-editor, it's a bit of a boring name I know, but I didn't pick it the designers of this game did!",
+"So you see the big white box below me? That is just what you'll need. Give it a click and replace 'YourName' with, well, your name of course!.",
+read-in what is printed to get name.
+"Well hello %player_name%, you are called %player_name% right?", //at this point insert ssss'es into playerssss name (maybe have a method called snakify :P)
+yesss/no optionssss given, if yessss is presssssed, repeat from earlier step,
+elssse continue.
+"Brilliant %player_name%, you have just written a program! That is absolutey
+spiffing! You are well onto your way to becoming a massster like me! ",
+"Now you see the little white box next to the text-box you just wrote your program
+in? That is called the console-output, and everything you 'print' will be shown
+in there! It will be a really helpful tool as you progress throughout Pyland!",
+"And now for something completely different,
+why don't you try telling your hair-colour using 'print' in the same way
+you told me your name? As I am a program myself (this is a game after all),
+I can only understand the following options: %hair_color_options%",
+read-in hair-colour
+if hair-colour isn't valid try again...
+if hair-colour is valid, give unique response to each
+color,
+"Now that 'print' thing you have been using, is something that we programmers
+call a function. The piece of text you have it in quotes is called a 'string',
+don't ask me why, but someone at some point came up with the bright idea of calling
+any kind of text you handle in a program a string! In fact, programming can be silly,
+like that in a lot of ways. You'll find words being used which mean one thing in English,
+but mean something completely else in a programming language. Sometimes it makes sense,
+but sometimes it really doesn't! When I was a young snakling, I used to get confused why
+I was always typing 'print' when I wasn't using the printer at all! It's just something
+you eventually have to get used to...",
+"Anyway, instead of giving 'print' a string to show in the console-output, we will give
+it an integer. An integer is simply a whole-number, 1, 7 and 3 are integers while
+2/5, 3.14 and "twenty" are not."
+Snake moves to the right a bit (Camera moving to the left?) And a numbered colour-pallette
+appears.
+"Ahh here we go, 'print' any of the numbers here to select your skin color from my
+chart! You don't need quotation marks around the number either! "
+If not integer, start again....
+"Brilliant, now I just need to know one more thing and that is your gender! Instead
+of using 'print' you are now going to be using a different function called 'set_gender',
+you can type either set_gender("boy") or set_gender("girl"). "
+Handle result...
+"Well done %player_name%, you are now ready to get started in the world of pyland! You
+probably won't see me for a while, enjoy!!!!!"
+Save data and start first level.....
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <layer name="land" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMA6A9+povx0HBXlJVVVVVVVVVVVV9fj5h9cU=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="50" height="50">
+  <object name="characters/player/player_one" gid="286" x="192" y="320"/>
+  <object name="tile_trigger/end" gid="292" x="3008" y="2944"/>
+ </objectgroup>
+ <layer name="SpecialLayer" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztVFtqxDAQW3quHjZHbX8K2elopHk4zkIGjIkfshRZfr2eemptfX99Vutq3fnNxv/mmH7bX8Uf8UA6WJ1xdt4jRUfGl6vK48bWqngWd6UPWT+q+VhVyIdPykfE6a75+MU7vG8190iHNw7WHt1meL/1jKuig2XaO4+d75x5oJ7oTuuw810eng8Wj1VWB/Kgey/OvIstpQOdjcaqvmSrmA94J7K+IN6Fd0HWiLIccWJ6Ip8wM87VzkVv0oQvdo/3H6by4WGfezQf7fHuV/QfWIn5gP+dzWf2RJwn8+Fhn3s2jsYUrswXIR/KW0H7DA7hO5YPD1vpMzhZX6r5uJMvGR0WA2ErvcLRcmW+ZHQo/1fV0/XFwWrpYGdk9glcocYJHVf4Eo1N6gD7S/s8HJQLy3VCx0pfhDaqA+DI61WPENdoLqsj40u0Rm0rdRiccF5dE9VKHVUforU78sG+K5iM65SOwr1uY0/ryFQ3c4hrNLfbB/GsER0Y5R9mW0fEdUKH8p5MvREr86H4MnU3HV3jOir5yJZz1nYd3XdC1WH/gfodVdWH4lm2Hc7YbdpTT62uHxvom2U=
+  </data>
+ </layer>
+ <layer name="Walls" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztmdlqxDAMRRMKhUL//+s6WzvDpPMVnReDe9FyJS/tQwQh4ya2JR9rcbosu+wyVr7WZflwrvsft8t1XNtsPUD/6+S2pkctJ4PD5/q7/w3GGd0+KXpIYj3Dd77Bzm1w+7HKelg6Wn5SxmNs7imoG9olvcuMx9jc4zrCfIyuuFcs/5jFo8xzmeQfrRfGV40Do2t5hnGrnuM8iIe2by6K3Yx/MHuRsTmz/2+KDp7dlh1lzKugs8YlyukAc3gcIv6R4YLraOVUSx92HSJ2oC+fBR2RSzSeefnUy2OMHZFYofX1/OdM2svogM9wr6IuLVy0+b19mPEPbPfgIvmPFM9ZieRzXOMeXGrWki4sl0x91ZNL/Vyq0VgumXrX4/IQ/o59MB9szppqXHrUV57vWlwksWo0j0t2XGmN0XclXlI+YNa0iMal9fwh6Z3NgUzu17i01rtMTGJrk0jtnDmfs7lrJpfM+Zyt/WZywViaqa/Y/DGCS+Z8zuozg8vb8/5a9c2cz/8Dl/fn/YWYq0WPVi51vSCdgzfldzR/jOYivRuVnjy8egvfq2ss9N8R549WLhEOUd/B/taz6L2cKfD7CsMhGtNm+AcT43vnGusZe5fOFFrb48BymZE/LOkVC3G8lrki36ijHFguPf2DETZGeG1t3Myckdii/b8kGyNazh89uPSIEa3njx5ctNweFZyL8Q92z2pra9WO1rvM/rzAuJYd2bYlWQ6Z/tE9y37jj77L9C+cdtllpPwAp7l1kQ==
+  </data>
+ </layer>
+</map>

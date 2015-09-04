@@ -62,7 +62,7 @@ void InputManager::handle_event(SDL_Event* event) {
     int button, buttons, button_find;
     // Used to change the coordinate system of some events to
     // bottom-left originating.
-    int height_inv = window->get_size().second - 1;
+    int height_inv = window->get_resolution().second - 1;
     switch (event->type) {
     case SDL_KEYDOWN:
         if (down_keys.find(event->key.keysym.scancode) == std::end(down_keys)) {
@@ -116,10 +116,10 @@ void InputManager::handle_event(SDL_Event* event) {
 }
 
 void InputManager::run_callbacks() {
+
     while (!key_events.empty()) {
         KeyboardInputEvent& event = key_events.front();
         VLOG(3) << event;
-
         keyboard_callbacks.broadcast(event);
         if (event.down) {
             if (event.changed) {

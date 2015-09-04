@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="64" tileheight="64" nextobjectid="41">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
+ <layer name="ground" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMBKHL+v1DLMdAwVVTVVVVVVVVVVXV5w/tQb02
+  </data>
+ </layer>
+ <layer name="foreground" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztmdtOAyEQhmnindc+Y4lJH0Hr2URf2uWCZPJnjrDbhY1/MqlWQJgPmAEuKaVL0B4b6mzZjsfuF3u4od0F+kbF/c6Vv5XfPP3WvpMY78HD4zfUWj7aU6OuD0/ftLFI9blykj5PKX2AvZ30OnmFdqx1PBsPbS+3RP35vfjsFexH8WNOPI+vYDt1LJJm4+Epe2a+y/Dp5SFxqGrhoWk0HpKi+xEqg0XXh6Sj8CiK8ogwoL7n9LT47Bns5Z/HkHlQRBJXXI9ejcKjRzTHeYdPK2cq0nzWkofVNs8pzmRPHi3ixsbFgmq/zhxW8ltPnJltfawljYflO8tnPfHBYsH97Qg8irw8uFy4iPoukoe17mf4f6odgQc3h737lSWLR+v6qf7HGDMTj8geb53xvNqax8zrA8/YVTXnvDrPFJQp7je419B89sq02csDNRMPOo7IHJfaKcL5T30pxRqqtc6VVSPw8Jw/apkeHpn5WePRq5Y+zsQjco/L+cITe5CH1Ja1z0nxwdIoPCw/4z07JxyzNH7t3p3ywPw3OevVOpg7zcDDO++ldxwUniMseXlE6tF+zHZfEr3f9ZSP+KA1fmwVd0a5T7R8HH2/koQ5E+ZH3tyotZ6mUd9rpb4WcXFEesOdQSO8n1tzPfpeO7vR+TQqD+TyB98ukgU=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="1" name="characters/player/player" gid="286" x="448" y="832" width="64" height="64"/>
+  <object id="2" name="characters/npcs/myla/myla" gid="286" x="448" y="832" width="64" height="64"/>
+  <object id="3" name="tile_trigger/hall_entrance" gid="292" x="448" y="832" width="64" height="64"/>
+  <object id="4" name="characters/npcs/snake/snake1" gid="286" x="448" y="832" width="64" height="64"/>
+  <object id="5" name="characters/npcs/snake/snake2" gid="286" x="448" y="832" width="64" height="64"/>
+  <object id="6" name="characters/npcs/snake/snake3" gid="286" x="448" y="832" width="64" height="64"/>
+  <object id="7" name="characters/npcs/snake/snake4" gid="286" x="448" y="832" width="64" height="64"/>
+  <object id="8" name="characters/npcs/snake/snake5" gid="286" x="448" y="832" width="64" height="64"/>
+  <object id="9" name="characters/npcs/snake/snake6" gid="286" x="448" y="832" width="64" height="64"/>
+  <object id="12" name="characters/enemies/crocodiles/blue_crocodile/croc_0" gid="296" x="3968" y="960" width="64" height="64"/>
+  <object id="13" name="characters/enemies/crocodiles/blue_crocodile/croc_1" gid="296" x="3904" y="960" width="64" height="64"/>
+  <object id="14" name="characters/enemies/crocodiles/blue_crocodile/croc_2" gid="296" x="4352" y="704" width="64" height="64"/>
+  <object id="15" name="characters/enemies/crocodiles/blue_crocodile/croc_3" gid="296" x="4992" y="704" width="64" height="64"/>
+  <object id="16" name="characters/enemies/crocodiles/blue_crocodile/croc_4" gid="296" x="5312" y="768" width="64" height="64"/>
+  <object id="17" name="characters/enemies/crocodiles/blue_crocodile/croc_5" gid="296" x="3904" y="256" width="64" height="64"/>
+  <object id="18" name="characters/enemies/crocodiles/blue_crocodile/croc_6" gid="296" x="4352" y="512" width="64" height="64"/>
+  <object id="19" name="characters/enemies/crocodiles/blue_crocodile/croc_7" gid="296" x="4864" y="256" width="64" height="64"/>
+  <object id="20" name="characters/enemies/crocodiles/blue_crocodile/croc_8" gid="296" x="4352" y="1408" width="64" height="64"/>
+  <object id="30" name="vine/vine_0" gid="301" x="5824" y="704" width="64" height="64"/>
+  <object id="31" name="vine/vine_1" gid="301" x="5824" y="768" width="64" height="64"/>
+  <object id="32" name="vine/vine_2" gid="301" x="5824" y="832" width="64" height="64"/>
+  <object id="33" name="vine/vine_3" gid="301" x="5824" y="896" width="64" height="64"/>
+  <object id="35" name="vine/vine_4" gid="301" x="5824" y="960" width="64" height="64"/>
+  <object id="36" name="vine/vine_5" gid="301" x="5824" y="1024" width="64" height="64"/>
+  <object id="37" name="vine/vine_6" gid="301" x="5824" y="640" width="64" height="64"/>
+  <object id="38" name="characters/npcs/snake/snake0" gid="292" x="448" y="832" width="64" height="64"/>
+  <object id="40" name="whetstone/whetstone0" gid="292" x="5696" y="640" width="64" height="64"/>
+ </objectgroup>
+ <layer name="SpecialLayer" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztl0EOwyAMBBHfSvsh/v+AniohGspiGzBkR/IpQJKdYJEQnsE7zq8rrn5rv9CHL3b3kYTzXvG+Vq3zZXcfUuhjng8kD/rg/kCgD/rw4MMK+villok2m39ro3N7ueKassSrDwlofvm3bTHOkpN9lH2lJ+u7vlSbZw3qozfL1prWvpA8yzGSfTHSx8r9ob1nOba312h85Nct2dlHiaT393iqjbFE4wPpb6t8zCwvtLKWzNf4OOH/Q8PMsxMCfch8jPJIH+N8SBzRB/cHfdR5mg/kPIuuQx84KSsvpNB+rlN95Bl4oHSxu48PWbz9CQ==
+  </data>
+ </layer>
+ <layer name="Bridge" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJzt1kEKwCAMBMD8/3v9UO/VWBOEQpkBD8LiIYutEQAAAPBf1weLXHWGJ3LkVrOqzjo7O9sz2pnnM9O5FzHJMup8a7p9ROjjTecfUelpliF34r3U6Q4AAAB23G/4i0w=
+  </data>
+ </layer>
+</map>
