@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="28" tilewidth="64" tileheight="64" nextobjectid="205">
+<map version="1.0" orientation="orthogonal" width="40" height="28" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -28,59 +28,59 @@
  </layer>
  <layer name="decor" width="40" height="28">
   <data encoding="base64" compression="zlib">
-   eJztlssOgyAQRbHv11bXXfhtVbC44P8XhXQmnRDQgoIuvMnNKM/DILQ9Y6zfvBqHKgVDFzC/TMQwJA7xqn0GXyyfCJ9ROzJuXczH10C8a5ceHx39ehLnyl9rRSPcX+SrwCWJyCdJv6F1T9nf1nrHOW/sl6+KufNn8/nmmTN/uL82H83jwcH3stZp3t8T+Vx6Ft849P1RPheXrRTn96G90y6Id+A94bO5Ut8vzUg9lRxvEsVs9tDkScGzgrlMmYBnAaZtJUQB6zB1DYzZkbGxvIFyHsg3VfiNhignn4rok5NPrJyPe8pd9+kSfEPn1sUWyof/iziJktThmcaooA2eZd8a15K/mDH+Zasj7oacfHMo9Pcg1GtkiuFcgmnz5lz+AIEYIb0=
+   eJztlksPgyAMx3Hv11XPO/jZRDR48PsfJlmbNQRwICgHm/xTx6s/isUNjLFhVzbytRQMvUd8mYjBZQL8fdIVdNN0IXzK2pl16yIeHwf/nFRadDbMG4iPlb9W88rwfJGvApXEI58k81z7XnK+rfYbYz7YL18VM+dP57PFiZk/PF+dj+bxZOBrtH02JFbM+ngXX+96/yifiUu3FPX7mnSYVBAdQEfCp3Olvl/4TD81OT8kiFmdocrTCM8jxFJtHTx3IDpWgu9gH6qPw5o9WRvbObQLT76lhu+oj63JNwbMWZOvy5xPWNpN9+kWfK66NbH58uH/IkG8JH1Y0+hHGIO1bNtjLvkLWeNftjrgbliTL4b5fg98lSNTCOcWTLt2raUPmRghvw==
   </data>
  </layer>
- <objectgroup name="Object Layer 1">
-  <object id="152" name="characters/player/player_one" gid="286" x="1344" y="768" width="64" height="64"/>
-  <object id="153" name="tile_trigger/end_level" gid="292" x="2176" y="320" width="64" height="64"/>
-  <object id="154" name="player_data/player_data" gid="287" x="2112" y="256" width="64" height="64"/>
-  <object id="155" name="tile_trigger/exit_level_start" gid="292" x="512" y="1344" width="64" height="64"/>
-  <object id="156" name="scroll/scroll1" gid="287" x="768" y="1408" width="64" height="64"/>
-  <object id="157" name="scroll/scroll2" gid="287" x="896" y="1024" width="64" height="64"/>
-  <object id="158" name="scroll/scroll3" gid="287" x="512" y="1024" width="64" height="64"/>
-  <object id="159" name="tile_trigger/block1" gid="292" x="768" y="832" width="64" height="64"/>
-  <object id="160" name="tile_trigger/block2" gid="292" x="1408" y="1088" width="64" height="64"/>
-  <object id="161" name="scroll/scroll1a" gid="287" x="768" y="704" width="64" height="64"/>
-  <object id="162" name="scroll/scroll1c" gid="287" x="384" y="320" width="64" height="64"/>
-  <object id="163" name="scroll/scroll1d" gid="287" x="768" y="320" width="64" height="64"/>
-  <object id="164" name="scroll/scroll1b" gid="287" x="384" y="704" width="64" height="64"/>
-  <object id="165" name="scroll/scroll2d" gid="287" x="2176" y="1088" width="64" height="64"/>
-  <object id="166" name="scroll/scroll2c" gid="287" x="2176" y="1344" width="64" height="64"/>
-  <object id="167" name="scroll/scroll2b" gid="287" x="1536" y="1344" width="64" height="64"/>
-  <object id="168" name="scroll/scroll2a" gid="287" x="1536" y="1088" width="64" height="64"/>
-  <object id="169" name="characters/npcs/generic/pete" gid="291" x="640" y="640" width="64" height="64"/>
-  <object id="170" name="tile_trigger/topleft1" gid="292" x="512" y="448" width="64" height="64"/>
-  <object id="171" name="tile_trigger/topright1" gid="292" x="640" y="448" width="64" height="64"/>
-  <object id="172" name="tile_trigger/centre1" gid="292" x="576" y="512" width="64" height="64"/>
-  <object id="173" name="tile_trigger/bottomleft1" gid="292" x="512" y="576" width="64" height="64"/>
-  <object id="174" name="tile_trigger/bottomright1" gid="292" x="640" y="576" width="64" height="64"/>
-  <object id="175" name="tile_trigger/door1" gid="292" x="832" y="384" width="64" height="64"/>
-  <object id="176" name="characters/npcs/generic/maddie" gid="291" x="1600" y="1216" width="64" height="64"/>
-  <object id="177" name="tile_trigger/door2" gid="292" x="1472" y="832" width="64" height="64"/>
-  <object id="178" name="tile_trigger/topleft2" gid="292" x="1792" y="1088" width="64" height="64"/>
-  <object id="179" name="tile_trigger/topright2" gid="292" x="1920" y="1088" width="64" height="64"/>
-  <object id="180" name="tile_trigger/centre2" gid="292" x="1856" y="1152" width="64" height="64"/>
-  <object id="181" name="tile_trigger/bottomleft2" gid="292" x="1792" y="1216" width="64" height="64"/>
-  <object id="182" name="tile_trigger/bottomright2" gid="292" x="1920" y="1216" width="64" height="64"/>
-  <object id="183" name="characters/enemies/crocodiles/green_crocodile/croc1" gid="296" x="1088" y="320" width="64" height="64"/>
-  <object id="184" name="characters/enemies/crocodiles/green_crocodile/croc2" gid="296" x="1088" y="448" width="64" height="64"/>
-  <object id="186" name="characters/enemies/crocodiles/green_crocodile/croc3" gid="296" x="1088" y="576" width="64" height="64"/>
-  <object id="187" name="characters/enemies/crocodiles/green_crocodile/croc4" gid="296" x="1216" y="640" width="64" height="64"/>
-  <object id="189" name="characters/enemies/crocodiles/green_crocodile/croc5" gid="296" x="1152" y="512" width="64" height="64"/>
-  <object id="192" name="characters/npcs/generic/bob" gid="291" x="1856" y="768" width="64" height="64"/>
-  <object id="193" name="scroll/scroll4" gid="287" x="2112" y="768" width="64" height="64"/>
-  <object id="194" name="tile_trigger/reset" gid="292" x="1664" y="320" width="64" height="64"/>
-  <object id="195" name="tile_trigger/switch1" gid="292" x="1600" y="640" width="64" height="64"/>
-  <object id="196" name="tile_trigger/switch2" gid="292" x="1728" y="576" width="64" height="64"/>
-  <object id="197" name="tile_trigger/switch3" gid="292" x="1728" y="704" width="64" height="64"/>
-  <object id="198" name="tile_trigger/switch4" gid="292" x="1856" y="640" width="64" height="64"/>
-  <object id="199" name="tile_trigger/switch5" gid="292" x="1984" y="576" width="64" height="64"/>
-  <object id="200" name="tile_trigger/reached1" gid="292" x="2112" y="576" width="64" height="64"/>
-  <object id="201" name="boulder/boulder1" gid="288" x="2112" y="512" width="64" height="64"/>
-  <object id="202" name="tile_trigger/check1" gid="292" x="1472" y="768" width="64" height="64"/>
-  <object id="203" name="tile_trigger/check2" gid="292" x="896" y="384" width="64" height="64"/>
-  <object id="204" name="characters/npcs/myla/myla" gid="286" x="1408" y="768" width="64" height="64"/>
+ <objectgroup name="Object Layer 1" width="0" height="0">
+  <object name="characters/player/player_one" gid="286" x="320" y="1344" width="64" height="64"/>
+  <object name="tile_trigger/end_level" gid="292" x="2176" y="320" width="64" height="64"/>
+  <object name="player_data/player_data" gid="287" x="2112" y="256" width="64" height="64"/>
+  <object name="tile_trigger/exit_level_start" gid="292" x="320" y="1344" width="64" height="64"/>
+  <object name="scroll/scroll1" gid="287" x="768" y="1408" width="64" height="64"/>
+  <object name="scroll/scroll2" gid="287" x="896" y="1024" width="64" height="64"/>
+  <object name="scroll/scroll3" gid="287" x="512" y="1024" width="64" height="64"/>
+  <object name="tile_trigger/block1" gid="292" x="768" y="832" width="64" height="64"/>
+  <object name="tile_trigger/block2" gid="292" x="1408" y="1088" width="64" height="64"/>
+  <object name="scroll/scroll1a" gid="287" x="768" y="704" width="64" height="64"/>
+  <object name="scroll/scroll1c" gid="287" x="384" y="320" width="64" height="64"/>
+  <object name="scroll/scroll1d" gid="287" x="768" y="320" width="64" height="64"/>
+  <object name="scroll/scroll1b" gid="287" x="384" y="704" width="64" height="64"/>
+  <object name="scroll/scroll2d" gid="287" x="2176" y="1088" width="64" height="64"/>
+  <object name="scroll/scroll2c" gid="287" x="2176" y="1344" width="64" height="64"/>
+  <object name="scroll/scroll2b" gid="287" x="1536" y="1344" width="64" height="64"/>
+  <object name="scroll/scroll2a" gid="287" x="1536" y="1088" width="64" height="64"/>
+  <object name="characters/npcs/generic/pete" gid="291" x="640" y="640" width="64" height="64"/>
+  <object name="tile_trigger/topleft1" gid="292" x="512" y="448" width="64" height="64"/>
+  <object name="tile_trigger/topright1" gid="292" x="640" y="448" width="64" height="64"/>
+  <object name="tile_trigger/centre1" gid="292" x="576" y="512" width="64" height="64"/>
+  <object name="tile_trigger/bottomleft1" gid="292" x="512" y="576" width="64" height="64"/>
+  <object name="tile_trigger/bottomright1" gid="292" x="640" y="576" width="64" height="64"/>
+  <object name="tile_trigger/door1" gid="292" x="832" y="384" width="64" height="64"/>
+  <object name="characters/npcs/generic/maddie" gid="291" x="1600" y="1216" width="64" height="64"/>
+  <object name="tile_trigger/door2" gid="292" x="1472" y="832" width="64" height="64"/>
+  <object name="tile_trigger/topleft2" gid="292" x="1792" y="1088" width="64" height="64"/>
+  <object name="tile_trigger/topright2" gid="292" x="1920" y="1088" width="64" height="64"/>
+  <object name="tile_trigger/centre2" gid="292" x="1856" y="1152" width="64" height="64"/>
+  <object name="tile_trigger/bottomleft2" gid="292" x="1792" y="1216" width="64" height="64"/>
+  <object name="tile_trigger/bottomright2" gid="292" x="1920" y="1216" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc1" gid="296" x="1088" y="320" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc2" gid="296" x="1088" y="448" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc3" gid="296" x="1088" y="576" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc4" gid="296" x="1216" y="640" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc5" gid="296" x="1152" y="512" width="64" height="64"/>
+  <object name="characters/npcs/generic/bob" gid="291" x="1856" y="768" width="64" height="64"/>
+  <object name="scroll/scroll4" gid="287" x="2112" y="768" width="64" height="64"/>
+  <object name="tile_trigger/reset" gid="292" x="1664" y="320" width="64" height="64"/>
+  <object name="tile_trigger/switch1" gid="292" x="1600" y="640" width="64" height="64"/>
+  <object name="tile_trigger/switch2" gid="292" x="1728" y="576" width="64" height="64"/>
+  <object name="tile_trigger/switch3" gid="292" x="1728" y="704" width="64" height="64"/>
+  <object name="tile_trigger/switch4" gid="292" x="1856" y="640" width="64" height="64"/>
+  <object name="tile_trigger/switch5" gid="292" x="1984" y="576" width="64" height="64"/>
+  <object name="tile_trigger/reached1" gid="292" x="2112" y="576" width="64" height="64"/>
+  <object name="boulder/boulder1" gid="288" x="2112" y="512" width="64" height="64"/>
+  <object name="tile_trigger/check1" gid="292" x="1472" y="768" width="64" height="64"/>
+  <object name="tile_trigger/check2" gid="292" x="896" y="384" width="64" height="64"/>
+  <object name="characters/npcs/myla/myla" gid="286" x="320" y="1408" width="64" height="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="40" height="28">
   <data encoding="base64" compression="zlib">
