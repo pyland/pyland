@@ -6,7 +6,7 @@
 #commence save-data set-up
 world_name = "world1"
 level_name = "level1"
-map_name = "main"
+map_name = "bridge"
 
 engine.disable_py_scripter()
 myla.set_visible(False)
@@ -14,7 +14,7 @@ myla.set_visible(False)
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 
-end.player_walked_on = lambda player_object: player_data.save_and_exit("/world1")
+end.player_walked_on = lambda player_object: player_data.save_and_exit("/world1/level1/bridge_end")
 
 engine.update_world_text("1")
 engine.update_level_text("1")
@@ -49,7 +49,7 @@ for i in range(len(b1_croc)):
 engine.run_callback_list_sequence([
     lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: camera.focus(callback = callback),
-    lambda callback: engine.show_dialogue("Attention Pyland Citizens: Use the arrow keys to move your player", disable_scripting = False, callback = callback),
+    lambda callback: engine.show_dialogue("Attention Pyland Citizens: Use the arrow keys to move your player", ignore_scripting = True, callback = callback),
     lambda callback: player_one.focus(callback = callback),
     lambda callback: player_one.set_busy(False, callback = callback),
 ])
@@ -58,8 +58,8 @@ start_callback = [
         lambda callback: player_one.focus(callback = callback),
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("Heidi: So you think you there's a magical scripting device across the river huh?", disable_scripting = False, callback = callback),
-        lambda callback: engine.show_dialogue("Looks pretty dangerous but if you insist...", disable_scripting = False, callback = callback),
+        lambda callback: engine.show_dialogue("Heidi: So you think you there's a magical scripting device across the river huh?", ignore_scripting = True, callback = callback),
+        lambda callback: engine.show_dialogue("Looks pretty dangerous but if you insist...", ignore_scripting = True, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
         lambda callback: heidi.start_turning(1.0, 7, callback = callback),
 ]
@@ -72,7 +72,7 @@ heidi_callback = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: heidi.stop_turning(callback = callback),
         lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("You think you can make it across the bridge?!", disable_scripting = False, callback = callback),
+        lambda callback: engine.show_dialogue("You think you can make it across the bridge?!", ignore_scripting = True, callback = callback),
         lambda callback: heidi.start_turning(1.0, 7, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
 ]
@@ -84,7 +84,7 @@ heidi.player_action  = lambda player_object: engine.run_callback_list_sequence(h
 croc_callback = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("Heidi: And I forgot to mention, don't stand next to any crocodiles...", disable_scripting = False, callback = callback),
+        lambda callback: engine.show_dialogue("Heidi: And I forgot to mention, don't stand next to any crocodiles...", ignore_scripting = True, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
@@ -92,7 +92,7 @@ croc_warning.player_walked_on = lambda player_object: engine.run_callback_list_s
 
 made_it_callback = [
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Hit 'Enter' to pick up items", disable_scripting = False, callback = callback),
+        lambda callback: engine.show_dialogue("Hit 'Enter' to pick up items", ignore_scripting = True, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
 ]
 

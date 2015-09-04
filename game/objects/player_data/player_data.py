@@ -98,13 +98,10 @@ class PlayerData(GameObject):
 
         #setup all the player-data (what they have unlocked)
 
-
-#Removed for testing purposes
- #       if(self.__has_unlocked_pyscripter()):
- #           engine.show_py_scripter()
- #       else:
- #           engine.hide_py_scripter()
- #
+        if(self.__has_unlocked_pyscripter()):
+            engine.show_py_scripter()
+        else:
+            engine.hide_py_scripter()
         return
 
     def save(self):
@@ -162,6 +159,10 @@ class PlayerData(GameObject):
         self.get_engine().add_event(callback)
 
     def __get_level_data(self):
+        if not (self.__current_world in self.__player_data["level_data"]):
+            self.__player_data["level_data"][self.__current_world] = {}
+        if not (self.__current_level in self.__player_data["level_data"][self.__current_world]):
+            self.__player_data["level_data"][self.__current_world][self.__current_level] = {}
         return self.__player_data["level_data"][self.__current_world][self.__current_level]
 
     def get_level_state(self, level_state):

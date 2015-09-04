@@ -39,13 +39,14 @@ if not came_from_main_b:
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: myla.face_west(callback = callback),
         lambda callback: engine.show_dialogue("Myla: Looks like we've got some sleeping crocodiles here.", callback = callback),
-        lambda callback: engine.show_dialogue("The scent of someone walking past wakes them up, so we should try to stop them blocking paths to protect the people of Pyland.", callback = callback),
-        lambda callback: engine.show_dialogue("Here's a script for your PyScripter called yell().", callback = callback),
+        lambda callback: engine.show_dialogue("The scent of someone walking past wakes them up. We should try to stop them blocking paths to make Pyland a safer place to live.", callback = callback),
+        lambda callback: engine.show_dialogue("Here's a script for your PyScripter that wakes them up.", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
         lambda callback: engine.insert_to_scripter("yell()", callback = callback),
-        lambda callback: engine.show_dialogue("Just talk to me again if you accidently lose the script and need it again!", callback = callback),
-        lambda callback: engine.show_dialogue("Click 'Run' in the PyScripter below when you're facing a crocodile to wake them up and clear the way.", callback = callback),
+            lambda callback: engine.show_dialogue("Click 'Run' in the PyScripter below when you're facing a crocodile to wake them up.", callback = callback),
         lambda callback: engine.show_dialogue("Try yelling at these ones, you should be safe with the rocks.", callback =callback),
+        lambda callback: engine.show_dialogue("And don't hesistate to talk to me again if you accidently lose the script!", callback = callback),
+
         lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback)
         ])
