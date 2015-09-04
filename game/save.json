@@ -1,6 +1,23 @@
 {
-    "player_saves": {},
     "settings": {
         "language": "english"
+    },
+    "player_saves": {
+        "???": {
+            "coins": 0,
+            "totems": {},
+            "level_data": {
+                "world1": {
+                    "level1": {
+                        "pyscripter_state": 1
+                    }
+                }
+            },
+            "py_scripter_enabled": false,
+            "current_map": "/world1",
+            "has_unlocked_pyscripter": true,
+            "py_scripter_tabs": 1,
+            "previous_exit": "/world1/level7/main"
+        }
     }
 }

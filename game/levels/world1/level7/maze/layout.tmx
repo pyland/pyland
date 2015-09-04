@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="29" height="30" tilewidth="64" tileheight="64" nextobjectid="15">
+<map version="1.0" orientation="orthogonal" width="29" height="70" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -24,35 +24,34 @@
  <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="29" height="30">
+ <layer name="Ground" width="29" height="70">
   <data encoding="base64" compression="zlib">
-   eJztw0ENAAAMA6GTWv8qJmMfSFg1VVVV3x6XLEZQ
+   eJztw0ENAAAMA6GTWv8qJmMfSFg1VVVVVVVVVfXlAckX+V8=
   </data>
  </layer>
- <layer name="Decor" width="29" height="30">
+ <layer name="Decor" width="29" height="70">
   <data encoding="base64" compression="zlib">
-   eJydVkluxDAM41N1csaX/P9YDFADLEMtqQEhjiWTorwkN4C7sUj6WWwVn83/jl8D/GmOYfpvsCaaw/jd2LE9wGJ+tgz/U/gug6H8p52Y9UL/JTGfwu84VWu1JrvJpfPjNwaJ/+0e62yJTmC2dqe/TT25plvwuM+8k702rWeYePVjGOu4/pNrNhbo90SXlxuH6HS8kPkdP2OD5p/aHE62W+IUZ6rbYXemObr6VGuo99Kxr9aFp06tDbduDS+K3dRfNKY5ae4Lf88z0NfX6Qv42rszp/r0vds/BzvIV+XbYU74nE81V/vC5acaKk7F1fszBk/+ZmUty1+59H7P7vuOz+kEnue3wnbfYtcOpsNiv37fMv6gZ9eyfPXsMWa15h1nVq/DwdbtU845a26erotyOo2BZy4TTu5n/2ZVLTVmqlF5nY6uLueeVi40GibnT/8TQoz5gvrbxHaW5ar2A4s5MRM=
+   eJztmM2KwzAMhOdRfUqaS97/WAor0E5GllJqB9IaTL2RPJ8k/yTsDmBPegvGkW/PP5r/er4W9KsxNjE+o1XJuQm7emZ9K2h5vu+R/qNjW4UG862Zz3Ii/5V8Hh27YnKuvTXZklgyO/58ENjP7rGsL5QnUFs7G2+inr6mG+n5sedW9lq1nk34sx1FX8V6J9boWUO+J7K41HNQnooLmp/xvTbcfKuNMX3fyY91qnkr7axzjKo+vTXke8n6K9cFxzy5Nr5la7g6382NF/eMY+LYF/w/z0BeX5Vfg669OnOcH/+d7R/Tbs7WizfTrPCUjXPu7QsVH+fQY7Iu35+t8OvfWVGL4mcW3+/RfZ/xVJ7A8fz2tNW7WDXTVFrezu+3iN/ot5qjj5fPHmtGa54xo3oZw/dsn3LMqql5vC7MVDk26FiAI1vNj/ZDpZa9mkU5MlflkdWFv52NBTG3eh69tqprg157Y2/CN+tRrJHfqKa0r2CO5va0R+ca1Xhk4zM5ek2NwfzRjRk/5meZs7lXMJk7e+/O4nkmj0fyrmReUdtZvG9jzjyXat/e9Tvhx7wv887ffd/w/jTOzDuXWXdlevbMPWRM/zuLOZP3CeY7a8P/V8nsfI+o+yzTrDKUvaeRxfEEb9dy0Q==
   </data>
  </layer>
- <objectgroup name="Object Layer 1">
-  <object id="1" name="characters/player/player_one" gid="286" x="1728" y="1152" width="64" height="64"/>
-  <object id="2" name="characters/npcs/myla/myla" gid="291" x="1792" y="1152" width="64" height="64"/>
-  <object id="3" name="sign/sign_one" gid="287" x="1472" y="960" width="64" height="64"/>
-  <object id="4" name="sign/sign_two" gid="287" x="960" y="896" width="64" height="64"/>
-  <object id="5" name="characters/npcs/generic/helper_one" gid="291" x="1024" y="960" width="64" height="64"/>
-  <object id="6" name="characters/npcs/generic/security_one" gid="301" x="896" y="704" width="64" height="64"/>
-  <object id="7" name="characters/npcs/generic/security_three" gid="301" x="832" y="896" width="64" height="64"/>
-  <object id="8" name="characters/npcs/generic/security_two" gid="301" x="896" y="1152" width="64" height="64"/>
-  <object id="9" name="key/key1" gid="287" x="1024" y="256" width="64" height="64"/>
-  <object id="10" name="key/key2" gid="287" x="1024" y="1600" width="64" height="64"/>
-  <object id="11" name="player_data/player_data" gid="287" x="64" y="640" width="64" height="64"/>
-  <object id="12" name="tile_trigger/challenge_arith" gid="292" x="1216" y="896" width="64" height="64"/>
-  <object id="13" name="tile_trigger/exit_level_start" gid="292" x="1792" y="1152" width="64" height="64"/>
-  <object id="14" name="tile_trigger/exit_level_end" gid="292" x="0" y="1920" width="64" height="64"/>
+ <objectgroup name="Object Layer 1" width="29" height="70">
+  <object name="characters/player/player_one" gid="286" x="1728" y="1152" width="64" height="64"/>
+  <object name="sign/sign_one" gid="287" x="1472" y="960" width="64" height="64"/>
+  <object name="sign/sign_two" gid="287" x="960" y="896" width="64" height="64"/>
+  <object name="characters/npcs/generic/helper_one" gid="291" x="1024" y="960" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_one" gid="301" x="896" y="704" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_three" gid="301" x="832" y="896" width="64" height="64"/>
+  <object name="characters/npcs/generic/security_two" gid="301" x="896" y="1152" width="64" height="64"/>
+  <object name="key/key1" gid="287" x="1024" y="256" width="64" height="64"/>
+  <object name="key/key2" gid="287" x="1024" y="1600" width="64" height="64"/>
+  <object name="player_data/player_data" gid="287" x="1792" y="1088" width="64" height="64"/>
+  <object name="tile_trigger/challenge_arith" gid="292" x="1216" y="896" width="64" height="64"/>
+  <object name="tile_trigger/exit_level_start" gid="292" x="1792" y="1152" width="64" height="64"/>
+  <object name="tile_trigger/end_level" gid="292" x="1792" y="4416" width="64" height="64"/>
  </objectgroup>
- <layer name="SpecialLayer" width="29" height="30">
+ <layer name="SpecialLayer" width="29" height="70">
   <data encoding="base64" compression="zlib">
-   eJzVlVEOgDAIQ43n8v7n8teQUihbl0hijBP7uo3hdf0jnhtfJ3iI7+ah9w7myvtVZtR3rm28u/eSPbvi1HoiLtvXFd1ME53NXcyoXXlQ+FkfY9qZDtNDudWYGt25fHMrPfU71qM7dcnGutyp32wOLH/KjLlVLSuaHe1uVP4yH+zcTkJdz+hB5at7ONFQed2e7uj3yMNuplKru/4xrnOj8BB3Wrcq0xG7fE+4rngB4W0rWw==
+   eJztmFkKwzAMREPP1fufq1+BILSNLE2pa0EJ8TJPXqS4vq7fsPdL/zF4Gn+ap9VPMFfqV5lSf3Ju5XN6Lb33KWPNp8b11nVF19LUYrOLKbUjHxC+lcc8bUvH09PaRmWoZcfybBvpof28HJ3Zl15Zllv11xqD177KlG2jvYxoZrSzFvln+eHFbcXQ+ZQ+oHx0DSsaKC+b0xEmUp/JfytMZK+ic4vUdcWN1ifKNUjMV/yWfkXPLNPywxqf1t8qt7iZsqz/1RzbZatx1c2c4nbkkE7uJFPTn5xbjzlth8ljMrjfYEoGI1Y0JsPYTOT8OMFkreXNej4Ps5fJjEvvvDjJ1Mon7TD3Zu587vuH7+fNYebc6n/yLibzmy3ZuzOZvA5mZT9E9yqVe6LsXU3EqI7L8uMD23FTEw==
   </data>
  </layer>
 </map>
