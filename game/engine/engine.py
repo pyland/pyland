@@ -422,7 +422,7 @@ class Engine:
         self.__game_objects[game_object.get_id()] = game_object #Store the object and associate with it's id in the engine's dictionary
         return game_object
 
-    def show_dialogue(self, dialogue, disable_scripting = True, callback = lambda: None):
+    def show_dialogue(self, dialogue, ignore_scripting = False, callback = lambda: None):
         """ The engine display the dialogue as a pop-up text window.
 
         This is usually used for dialogue (NPCs talking to the player) or this is run when interacting with a sign. (The pop-up shows the text on the sign)
@@ -431,13 +431,14 @@ class Engine:
         ----------
         dialogue : str
             The string that will be display on the dialogue window
-        disable_scripting : bool
-            A boolean value that indicates if we want the PyScripter to be disabled or not if the dialogue window is up.
+        ignore_scripting : bool
+            By default, the dialogue box enables the scripter on opening and disables it on closing 
+            Ths boolean value is true if we don't want that default functionality. It is then up to the caller to enable and disable the PyScripter.
         callback : func, optional
             Places the callback onto the engine
 
         """
-        self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
+        self.__cpp_engine.show_dialogue(dialogue, ignore_scripting, callback)
 
     def close_external_script_help(self, callback = lambda: None):
         self.__cpp_engine.close_external_script_help(callback)

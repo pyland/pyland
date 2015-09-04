@@ -51,7 +51,7 @@ void GameEngine::print_debug(std::string debug_message) {
     std::cout << debug_message << std::endl; // TODO: work out properly how python messages should be debugged.
 }
 
-void GameEngine::show_dialogue(std::string text, bool disable_scripting, PyObject *callback) {
+void GameEngine::show_dialogue(std::string text, bool ignore_scripting, PyObject *callback) {
 
     if(Engine::is_bar_open()){
         LOG(INFO) << "Replacing the old notification bar with the new one";
@@ -62,7 +62,7 @@ void GameEngine::show_dialogue(std::string text, bool disable_scripting, PyObjec
 
     LOG(INFO) << "Adding \"" << text << "\"to the notification bar with a regular callback";
     Engine::add_text(text);
-    Engine::open_notification_bar(disable_scripting, boost_callback);
+    Engine::open_notification_bar(ignore_scripting, boost_callback);
 }
 
 void GameEngine::show_external_script_help(std::string text, PyObject *callback) {
@@ -89,7 +89,7 @@ void GameEngine::close_external_script_help(PyObject *callback) {
 }
 
 
-void GameEngine::show_dialogue_with_options(std::string text, bool disable_scripting, PyObject *_boost_options){
+void GameEngine::show_dialogue_with_options(std::string text, bool ignore_scripting, PyObject *_boost_options){
 
     if(Engine::is_bar_open()){
         LOG(INFO) << "Replacing the old notification bar with the new one";
@@ -116,7 +116,7 @@ void GameEngine::show_dialogue_with_options(std::string text, bool disable_scrip
 
     LOG(INFO) << "Adding \"" << text << "\"to the notification bar with options";
     Engine::add_text(text);
-    Engine::open_notification_bar_with_options(disable_scripting, options);
+    Engine::open_notification_bar_with_options(ignore_scripting, options);
 }
 
 unsigned int GameEngine::add_button(std::string file_path, std::string name, PyObject* callback) {

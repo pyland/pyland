@@ -82,6 +82,8 @@
   <object name="tile_trigger/switch5" gid="292" x="1664" y="384"/>
   <object name="tile_trigger/reached1" gid="292" x="1792" y="384"/>
   <object name="boulder/boulder1" gid="288" x="1792" y="320"/>
+  <object name="tile_trigger/check1" gid="292" x="1152" y="576"/>
+  <object name="tile_trigger/check2" gid="292" x="576" y="192"/>
  </objectgroup>
  <layer name="SpecialLayer" width="30" height="18">
   <data encoding="base64" compression="zlib">

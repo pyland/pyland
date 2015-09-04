@@ -16,15 +16,36 @@ engine.enable_py_scripter()
 player_one.focus()
 engine.play_music("world_1_jungle")
 
-engine.run_callback_list_sequence([
-    lambda callback: player_one.set_busy(True, callback = callback),
-    lambda callback: engine.show_dialogue("There are scrolls lying all over in this region", callback = callback),
-    lambda callback: engine.show_dialogue("To read a scroll, face it and use the command scan() to extract the message", callback = callback),
-    lambda callback: engine.show_dialogue("Print the message to the screen using print()", callback = callback),
-    lambda callback: engine.clear_scripter(callback = callback),
-    lambda callback: engine.insert_to_scripter("#print the scanned message\nprint(scan())", callback = callback),
-    lambda callback: player_one.set_busy(False, callback =callback)
-])
+def check_croc1(player_object):
+	player_data.save_checkpoint("croc1")
+
+def check_croc2(player_object):
+	player_data.save_checkpoint("croc2")
+
+check1.player_walked_on = check_croc1
+check2.player_walked_on = check_croc2
+
+start_from_beg = False
+
+if player_data.previous_exit_is(world_name = world_name, level_name = level_name, map_name = map_name, info = "croc1"):
+	x,y = check1.get_position()
+	player_one.move_to((x,y), callback = lambda: door1.set_solidity(False, callback = lambda: door2.set_solidity(True)))
+elif player_data.previous_exit_is(world_name = world_name, level_name = level_name, map_name = map_name, info = "croc2"):
+	x,y = check2.get_position()
+	player_one.move_to((x,y), callback = lambda: door2.set_solidity(False, callback = lambda: door1.set_solidity(True)))
+else:
+	start_from_beg = True
+
+if(start_from_beg):
+	engine.run_callback_list_sequence([
+		lambda callback: player_one.set_busy(True, callback = callback),
+		lambda callback: engine.show_dialogue("There are scrolls lying all over in this region", callback = callback),
+		lambda callback: engine.show_dialogue("To read a scroll, face it and use the command scan() to extract the message", callback = callback),
+		lambda callback: engine.show_dialogue("Print the message to the screen using print()", callback = callback),
+		lambda callback: engine.clear_scripter(callback = callback),
+		lambda callback: engine.insert_to_scripter("#print the scanned message\nprint(scan())", callback = callback),
+		lambda callback: player_one.set_busy(False, callback =callback)
+	])
 
 def go_next(player_object):
     player_data.save_and_exit("/world1")

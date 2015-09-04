@@ -191,6 +191,7 @@ void Engine::open_main_menu(){
 
 void Engine::restart_level(){
     game_main->change_challenge(game_main->get_current_challenge());
+	enable_py_scripter();
 }
 
 void Engine::change_map(std::string map_location){
@@ -265,25 +266,17 @@ void Engine::add_text(std::string text) {
     });
 }
 
-void Engine::open_notification_bar(bool disable_scripting, std::function<void ()> func){
-    if(disable_scripting){
-        EventManager::get_instance()->add_event([] {
-            disable_py_scripter();
-        });
-    }
-    EventManager::get_instance()->add_event([func] {
-        gui_main->open_notification_bar(func);
+void Engine::open_notification_bar(bool ignore_scripter, std::function<void ()> func){
+
+    EventManager::get_instance()->add_event([func, ignore_scripter] {
+        gui_main->open_notification_bar(func, ignore_scripter);
     });
 }
 
-void Engine::open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair <std::string, std::function<void ()> > > options){
-    if(disable_scripting){
-        EventManager::get_instance()->add_event([] {
-            disable_py_scripter();
-        });
-    }
-    EventManager::get_instance()->add_event([options] {
-        gui_main->open_notification_bar_with_options(options);
+void Engine::open_notification_bar_with_options(bool ignore_scripter, std::deque<std::pair <std::string, std::function<void ()> > > options){
+
+    EventManager::get_instance()->add_event([options, ignore_scripter] {
+        gui_main->open_notification_bar_with_options(options, ignore_scripter);
     });
 
 }
@@ -291,9 +284,6 @@ void Engine::open_notification_bar_with_options(bool disable_scripting, std::deq
 void Engine::close_notification_bar(){
     EventManager::get_instance()->add_event([] {
         gui_main->close_notification_bar();
-        if (!Engine::is_bar_with_options_open()){
-            enable_py_scripter();
-        }
     });
 }
 
