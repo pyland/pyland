@@ -17,10 +17,10 @@ player_one.focus()
 engine.play_music("world_1_jungle")
 
 def check_croc1(player_object):
-	player_data.save_checkpoint("croc1")
+    player_data.save_checkpoint("croc1")
 
 def check_croc2(player_object):
-	player_data.save_checkpoint("croc2")
+    player_data.save_checkpoint("croc2")
 
 check1.player_walked_on = check_croc1
 check2.player_walked_on = check_croc2
@@ -28,16 +28,16 @@ check2.player_walked_on = check_croc2
 start_from_beg = False
 
 if player_data.previous_exit_is(world_name = world_name, level_name = level_name, map_name = map_name, info = "croc1"):
-	x,y = check1.get_position()
-	player_one.move_to((x,y), callback = lambda: door1.set_solidity(False, callback = lambda: door2.set_solidity(True)))
+    x,y = check1.get_position()
+    player_one.move_to((x,y), callback = lambda: door1.set_solidity(False, callback = lambda: door2.set_solidity(True)))
 elif player_data.previous_exit_is(world_name = world_name, level_name = level_name, map_name = map_name, info = "croc2"):
-	x,y = check2.get_position()
-	player_one.move_to((x,y), callback = lambda: door2.set_solidity(False, callback = lambda: door1.set_solidity(True)))
+    x,y = check2.get_position()
+    player_one.move_to((x,y), callback = lambda: door2.set_solidity(False, callback = lambda: door1.set_solidity(True)))
 else:
-	start_from_beg = True
+    start_from_beg = True
 
 if(start_from_beg):
-	engine.run_callback_list_sequence([
+    engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.turn_to_face(myla, callback = callback),
         lambda callback: myla.turn_to_face(player_one, callback = callback),
