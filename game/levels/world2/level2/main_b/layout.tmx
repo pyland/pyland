@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="45" height="22" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
+ <layer name="Ground" width="45" height="22">
+  <data encoding="base64" compression="zlib">
+   eJztwzENAAAMA6BOep1XxT5I6CVVVVVVXw4zPfbM
+  </data>
+ </layer>
+ <layer name="Decor" width="45" height="22">
+  <data encoding="base64" compression="zlib">
+   eJzVlwsKgzAQRLM9i7fw/rdoaksttbdoUyrGJTG/2SUdCILi5PlIhIwnY8bfmMl8M32u507HhTZeN9ZYMkVZ3/U7pGJpz/ug7b7LvdLFU8hviNnS/triAh3LmPn9F8CFC2Jf8M4Yc60n/j7Cd6hTg7nGd8ivFrPrr+mLfb82c47vI78hNqm1UdKb06Gxno96h4S3Hpl55j9kzunSZL4V/OuunexBZGfsOaq/xG+ub2lmRFLMtV64kxa/qW7OjHLixz8XtJwNeDfKywL0G/ON+P5U/DMcYh7pcxznbZ3vDZHBTS8=
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="45" height="22">
+  <data encoding="base64" compression="zlib">
+   eJztlUEKgDAMBIvv8v/v8iSV0pgoszXFLoRAlWUYqJZSs291Z55erPMMadmuns+daSLMlAsiEWbChcIv7dnrV3SqmEm/I5lVXWpmwu8XzHTHYv4Pc7TLeu9pqDs467fO67SeU/1v/ieebzUzkQgz5YScO2bKiSI95hlmZUwO/KpalQ==
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="45" height="22">
+  <object name="characters/player/player_one" gid="286" x="0" y="128"/>
+  <object name="characters/npcs/generic/yuri" gid="291" x="192" y="128"/>
+  <object name="characters/npcs/generic/pia" gid="291" x="384" y="128"/>
+  <object name="tile_trigger/end" gid="292" x="2048" y="704"/>
+ </objectgroup>
+</map>
