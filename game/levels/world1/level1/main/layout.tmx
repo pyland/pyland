@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="29" height="70" tilewidth="64" tileheight="64" nextobjectid="196">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="29" height="70" tilewidth="64" tileheight="64" nextobjectid="197">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -31,7 +31,7 @@
  </layer>
  <layer name="Decor" width="29" height="70">
   <data encoding="base64" compression="zlib">
-   eJztWNtyAiEMTa2tdbSXF/uN2xcf/P8HYSQzKU0gQFbcLZk5s8olJwnZLHAGgHMFQPgtjdH0xW1AnlRq7NX6pBWtryD0U5kEDq6d01HrF6d/UvCWxrIkvhpugLy+2nWVOLV6WjjnlL3DLoPXMDbVl9L9Fs15dzhl8BHGpvo4aHT/N3wHpPpizMGlmXtq5K+1b22cJfFeC2dr7j5qvCzfR60+61j2riutNWnpsKjtvda+d7wsc+fT4cnhy8A+bfsWbvvng4Ev2vl+j+b3fa37sRQfXZvc/saK0yKncvk2B28Pf1tz6J4xoNjM7Ce2Yy2g76dFXkh7Tc/3DLdzqOfaRRyW8UbfkM+fBa1qgWTrC/w+l2O9a6nl3Jpw/uHZ/hjaOWwy7fg8CrZuA4f2rgPHSPcu8V3RgfiF3yjMTS1frD93/+N9pTHE/5MRH+W9OPww8+ndkvZeR+KY4C8nB43dWt9SfCkbpHGclOorAcezZNzLl7XEqzeGDBkyZMiQpcsVE9T11w==
+   eJztWNtSAyEMjbXaOq2Xl/oF/bj1pQ/+/4MwJWPEBAJki7uSmTPbcslJQjYLXADgUoHz3fdvEMZI7VJf3AbkSaXGXg1KROsrCP1UJoGDa+d01PrF6Z8UvKWxLImvhhsgr692XSVOrZ4WzjnlyWGXwWMYm+pL6d5Hc54dThm8hLGpPg4a3f8N7wGpvhhzcGnmnhr5a+1bG2dJvNfC2Zq7fzVelu+jVp91LHvXldaatHRY1PZea987Xpa58+rgjkjwZmCftn0L1/3zwcAX7Xy/R/P7vtb9WIqPrk1uf2PFaZFTuXybg7eHv605dMsYUGxm9hPbsRbQ99MiL6S9pue7h+s51HPtIg7LeKNvyOfPgla1QLL1AX6ey7HetdRybk04//BsfwztHDaZdnweBVu3gUN714FjpHuX+K7oQPzCbxTmppYv1p+7//G+0hji/8mIj/J+Onww8+ndkvZeR+KY4DcnB43dWt9SfCkbpHGclOorAcezZNzKl7XEqzeGDBkyZMiQpcsXoY/1/A==
   </data>
  </layer>
  <layer name="Bridge" width="29" height="70">
@@ -41,11 +41,9 @@
  </layer>
  <objectgroup name="Object Layer 1">
   <object id="153" name="characters/player/player_one" gid="286" x="896" y="3072" width="64" height="64"/>
-  <object id="154" name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="704" y="1280" width="64" height="64"/>
   <object id="155" name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="1344" y="2240" width="64" height="64"/>
   <object id="156" name="characters/enemies/crocodiles/green_crocodile/croc_2" gid="296" x="1472" y="1216" width="64" height="64"/>
   <object id="157" name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="704" y="896" width="64" height="64"/>
-  <object id="158" name="characters/enemies/crocodiles/green_crocodile/croc_4" gid="296" x="1024" y="1024" width="64" height="64"/>
   <object id="159" name="characters/enemies/crocodiles/green_crocodile/croc_5" gid="296" x="256" y="1408" width="64" height="64"/>
   <object id="160" name="characters/enemies/crocodiles/green_crocodile/croc_6" gid="296" x="1152" y="1664" width="64" height="64"/>
   <object id="161" name="characters/enemies/crocodiles/green_crocodile/croc_7" gid="296" x="512" y="1088" width="64" height="64"/>
@@ -59,6 +57,7 @@
   <object id="193" name="pyscripter/pyscripter" gid="287" x="896" y="448" width="64" height="64"/>
   <object id="194" name="camera/camera" gid="679" x="896" y="4288" width="64" height="64"/>
   <object id="195" name="tile_trigger/heidi_talk" gid="292" x="896" y="2816" width="64" height="64"/>
+  <object id="196" name="characters/npcs/myla/myla" gid="286" x="1408" y="64" width="64" height="64"/>
  </objectgroup>
  <layer name="SpecialLayer" width="29" height="70">
   <data encoding="base64" compression="zlib">

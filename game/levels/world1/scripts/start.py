@@ -1,3 +1,5 @@
+#TODO: Add commands to PyGuide as you unlock ie face_north() etc
+
 #The red collisions tiles have been removed from the map for testing purposes
 
 #commence save-data set-up

@@ -8,6 +8,9 @@ world_name = "world1"
 level_name = "level1"
 map_name = "main"
 
+engine.disable_py_scripter()
+myla.set_visible(False)
+
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
 
@@ -21,11 +24,11 @@ player_one.focus()
 engine.play_music("beach")
 
 b1_croc = [
-croc_0,
+#croc_0,
 croc_1,
 croc_2,
 croc_3,
-croc_4,
+#croc_4,
 croc_5,
 croc_6,
 croc_7,
@@ -43,14 +46,20 @@ for i in range(len(b1_croc)):
         croc.face_west()
     croc.move_horizontal()
 
+engine.run_callback_list_sequence([
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: camera.focus(callback = callback),
+    lambda callback: engine.show_dialogue("Attention Pyland Citizens: Use the arrow keys to move your player", disable_scripting = False, callback = callback),
+    lambda callback: player_one.focus(callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
+])
+
 start_callback = [
-        lambda callback: camera.focus(callback = callback),
-        lambda callback: engine.show_dialogue("Attention Pyland Citizens: Use the arrow keys to move your player", callback = callback),
         lambda callback: player_one.focus(callback = callback),
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("Heidi: So you think you there's a magical scripting device across the river huh?", callback = callback),
-        lambda callback: engine.show_dialogue("Looks pretty dangerous but if you insist...", callback = callback),
+        lambda callback: engine.show_dialogue("Heidi: So you think you there's a magical scripting device across the river huh?", disable_scripting = False, callback = callback),
+        lambda callback: engine.show_dialogue("Looks pretty dangerous but if you insist...", disable_scripting = False, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
         lambda callback: heidi.start_turning(1.0, 7, callback = callback),
 ]
@@ -63,7 +72,7 @@ heidi_callback = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: heidi.stop_turning(callback = callback),
         lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("You think you can make it across the bridge?!", callback = callback),
+        lambda callback: engine.show_dialogue("You think you can make it across the bridge?!", disable_scripting = False, callback = callback),
         lambda callback: heidi.start_turning(1.0, 7, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
 ]
@@ -75,8 +84,73 @@ heidi.player_action  = lambda player_object: engine.run_callback_list_sequence(h
 croc_callback = [
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("Heidi: And I forgot to mention, don't stand next to any crocodiles...", callback = callback),
+        lambda callback: engine.show_dialogue("Heidi: And I forgot to mention, don't stand next to any crocodiles...", disable_scripting = False, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 croc_warning.player_walked_on = lambda player_object: engine.run_callback_list_sequence(croc_callback)
+
+made_it_callback = [
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: engine.show_dialogue("Hit 'Enter' to pick up items", disable_scripting = False, callback = callback),
+        lambda callback: player_one.set_busy(False, callback = callback),
+]
+
+made_it.player_walked_on = lambda player_object: engine.run_callback_list_sequence(made_it_callback)
+
+#defining the possible states of the level
+pyscripter_state_not_found = 0
+pyscripter_state_found = 1
+#end state definitions
+
+pyscripter_state = pyscripter_state_not_found
+#pyscripter_state = player_data.get_level_state("pyscripter_state")
+if pyscripter_state == pyscripter_state_not_found:
+    pyscripter.move_to((14, 63))
+    def pyscripter_player_action(player_object):
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: pyscripter.set_visible(False, callback = callback),
+            lambda callback: pyscripter.set_solidity(False, callback = callback),
+            lambda callback: pyscripter.move_to((0, 0), callback = callback),
+            lambda callback: engine.show_dialogue(engine.get_player_name() + " picked up the PyScripter", callback = callback),
+            lambda callback: engine.enable_py_scripter(callback = callback),
+            lambda callback: engine.clear_scripter(callback = callback),
+            lambda callback: engine.show_dialogue("Monkey surprise!", callback = callback),
+            lambda callback: myla.set_visible(True, callback = callback),
+            lambda callback: myla.face_south(callback = callback),
+            lambda callback: myla.set_solidity(False, callback = callback),
+            lambda callback: myla.start_animating(callback = callback),
+            lambda callback: myla.move_to((14,64), time = 0.8, callback = callback),
+            lambda callback: myla.stop_animating(callback = callback),
+            lambda callback: myla.face_east(callback = callback),
+            lambda callback: player_one.wait(0.5, callback = callback),
+            lambda callback: player_one.face_east(callback = callback),
+            lambda callback: myla.face_west(callback = callback),
+            lambda callback: engine.show_dialogue("???: You found my PyScripter!", callback = callback),
+            lambda callback: engine.play_music("world_1_myla", callback = callback),
+            lambda callback: engine.show_dialogue("By the way I'm Myla, nice to meet you.", callback = callback),
+            lambda callback: engine.show_dialogue("Let's get out of here. These crododiles sure like to cause trouble.", callback = callback),
+            lambda callback: myla.follow(player_one, callback = callback),
+            lambda callback: player_one.set_busy(False, callback = callback)
+        ], save_pyscripter_state)
+
+    def save_pyscripter_state():
+        player_data.set_level_state("pyscripter_state", pyscripter_state_found)
+        player_data.unlock_pyscripter()
+        player_data.save()
+
+    pyscripter.player_action = pyscripter_player_action
+
+elif pyscripter_state == pyscripter_state_found:
+    pyscripter.set_visible(False)
+    pyscripter.set_solidity(False, callback = lambda: pyscripter.move_to((0,0)))
+    annoying_croc.set_visible(False)
+    annoying_croc.set_solidity(False)
+    myla.move_to(myla_start_position)
+    myla.follow(player_one)
+
+
+
+
+

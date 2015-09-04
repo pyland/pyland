@@ -292,7 +292,7 @@ void Engine::close_notification_bar(){
     EventManager::get_instance()->add_event([] {
         gui_main->close_notification_bar();
         if (!Engine::is_bar_with_options_open()){
-            enable_py_scripter();
+            if (reenable_scripting) enable_py_scripter();
         }
     });
 }

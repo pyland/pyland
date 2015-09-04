@@ -18,12 +18,17 @@ engine.play_music("world_1_jungle")
 
 engine.run_callback_list_sequence([
 	lambda callback: player_one.set_busy(True, callback = callback),
-	lambda callback: engine.show_dialogue("There are scrolls lying all over in this region", callback = callback),
-	lambda callback: engine.show_dialogue("To read a scroll, face it and use the command scan() to extract the message", callback = callback),
-    lambda callback: engine.show_dialogue("Print the message to the screen using print()", callback = callback),
+	lambda callback: player_one.turn_to_face(myla, callback = callback),
+	lambda callback: myla.turn_to_face(player_one, callback = callback),
+	lambda callback: engine.show_dialogue("There are scrolls lying all over in this region! They usually contain riddles.", callback = callback),
+	lambda callback: engine.show_dialogue("Here is a script to read them.", callback = callback),
     lambda callback: engine.clear_scripter(callback = callback),
-    lambda callback: engine.insert_to_scripter("#print the scanned message\nprint(scan())", callback = callback),
-    lambda callback: player_one.set_busy(False, callback =callback)
+    lambda callback: engine.insert_to_scripter("\nprint(scan())", callback = callback),
+	lambda callback: engine.show_dialogue("The command scan() extract the messages from the place in front of you.", callback = callback),
+    lambda callback: engine.show_dialogue("Print then displays the text returned by scan() to the PyConsole.", callback = callback),
+    lambda callback: engine.show_dialogue("Try and read from the scroll, so we can find our way out of here!", callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
+    lambda callback: myla.follow(player_one, callback = callback)
 ])
 
 def go_next(player_object):
@@ -37,7 +42,7 @@ def leave_beg(player_object):
 exit_level_start.player_walked_on = leave_beg
 
 scroll1.set_message("The second boulder from the left is an illusion.")
-scroll2.set_message("If the other scroll has an odd number,\nthe middle tree stumps in the north are fake.\nElse, the tree stumps on the right are fake.")
+scroll2.set_message("If the scroll to my left contains an odd number,\nthe middle tree stumps to the north are what you desire.\nElse, the tree stumps to the west are what you seek.")
 
 rand_block = randint(0,999)
 
@@ -90,8 +95,8 @@ count1 = [0, 0, 0, 0]
 door1.player_walked_on = do_nothing
 door1.set_solidity(True)
 
-scroll1a.set_message("The man up ahead is a wizard and he must be\non the centre grass tile for his magic to work.")
-scroll1b.set_message("Once the wizard starts his magic, you need\nto step on as many grass tiles as indicated on the next scroll,\nafter stepping on at least one tile")
+scroll1a.set_message("The man who lives here is a wizard and must stand\ on the central magical leaves to access his powers.")
+scroll1b.set_message("Once the wizard starts using magic, you need\nto step on as many magical leaves as indicated on the next scroll,\nafter stepping on at least one tile")
 scroll1c.set_message(magic_message)
 scroll1d.set_message("The magic the wizard performs makes the \nnorth-most log of wood on the east wall walkable")
 
@@ -259,3 +264,33 @@ def reached():
 		boulder1.move_west()
 
 reached1.player_walked_on = lambda player_object: reached()
+
+
+again = [
+    lambda callback: engine.show_dialogue("Here you go!", callback = callback),
+    lambda callback: engine.clear_scripter(callback = callback),
+    lambda callback: engine.insert_to_scripter("print(scan())", callback = callback),
+    lambda callback: engine.show_dialogue("Remember to run your script when you're facing a scroll. Talking to it won't help!", callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback)
+]
+
+not_again = [
+    lambda callback: engine.show_dialogue("Remember to run your script when you're facing a scroll. Talking to it won't help!", callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback)
+]
+
+myla_sequence = [
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
+
+    lambda callback: engine.show_dialogue_with_options(
+        "Would you like the scan script again?",
+        {
+            "Yes": lambda: engine.run_callback_list_sequence(again),
+            "No" : lambda: engine.run_callback_list_sequence(not_again)
+        }
+    )
+
+]
+
+myla.player_action = lambda player_object: engine.run_callback_list_sequence(myla_sequence)
