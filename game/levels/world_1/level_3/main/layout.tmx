@@ -61,17 +61,6 @@
   <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_9" gid="296" x="896" y="1216"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_b2_10" gid="296" x="896" y="1280"/>
   <object name="tile_trigger/challenge2b" gid="292" x="960" y="1408"/>
-  <object name="tile_trigger/trigger_croc_0" gid="292" x="960" y="448"/>
-  <object name="tile_trigger/trigger_croc_1" gid="292" x="960" y="512"/>
-  <object name="tile_trigger/trigger_croc_2" gid="292" x="960" y="576"/>
-  <object name="tile_trigger/trigger_croc_3" gid="292" x="960" y="640"/>
-  <object name="tile_trigger/trigger_croc_4" gid="292" x="512" y="768"/>
-  <object name="tile_trigger/trigger_croc_5" gid="292" x="512" y="832"/>
-  <object name="tile_trigger/trigger_croc_6" gid="292" x="512" y="896"/>
-  <object name="tile_trigger/trigger_croc_7" gid="292" x="960" y="1024"/>
-  <object name="tile_trigger/trigger_croc_8" gid="292" x="960" y="1088"/>
-  <object name="tile_trigger/trigger_croc_9" gid="292" x="960" y="1216"/>
-  <object name="tile_trigger/trigger_croc_10" gid="292" x="960" y="1280"/>
   <object name="tile_trigger/exit_level_start" gid="292" x="1920" y="1600"/>
   <object name="tile_trigger/exit_level_end" gid="292" x="0" y="1472"/>
   <object name="player_data/player_data" gid="287" x="64" y="64"/>

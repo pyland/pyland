@@ -1,3 +1,14 @@
+#commence save-data set-up
+world_name = "world2"
+level_name = "demo"
+map_name = "main"
+
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name)
+
+start.player_walked_on = lambda player_object: player_data.save_and_exit("/world1")
+
+
 player_one.set_character_name("QtPi")
 player_one.focus()
 player_one.face_east()

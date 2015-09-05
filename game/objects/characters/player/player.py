@@ -150,6 +150,7 @@ class Player(Character):
         x,y = self.get_position()
         target_position = (x, y+1)
         if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
+            self.wait(0.0, callback = lambda: self.__trigger_walk_off((x,y)))
             super().move_north(callback)
             self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
@@ -174,6 +175,7 @@ class Player(Character):
         x,y = self.get_position()
         target_position = (x+1, y)
         if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
+            self.wait(0.0, callback = lambda: self.__trigger_walk_off((x,y)))
             super().move_east(callback)
             self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
@@ -197,6 +199,7 @@ class Player(Character):
         x,y = self.get_position()
         target_position = (x, y-1)
         if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
+            self.wait(0.0, callback = lambda: self.__trigger_walk_off((x,y)))
             super().move_south(callback)
             self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on a moment before they reach there
         else:
@@ -220,6 +223,7 @@ class Player(Character):
         x,y = self.get_position()
         target_position = (x-1, y)
         if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
+            self.wait(0.0, callback = lambda: self.__trigger_walk_off((x,y)))
             super().move_west(callback)
             self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
@@ -324,6 +328,22 @@ class Player(Character):
         for game_object in game_objects:
             if(hasattr(game_object, "player_walked_on")):
                 game_object.player_walked_on(self)
+        return
+
+    def __trigger_walk_off(self, position):
+        """ Triggers the walked-off functions for objects, objects which have a walked-off method will have those methos automatically called when they are walked off.
+        Everytime the player finishes walking, this is called. The player looks at all objects they have left and triggers their player_walked_off method if the have one.
+
+        Parameters
+        ----------
+        position : tuple of int * int
+            A tuple containing the x and y coordinate of the position being walked off
+        """
+        engine = self.get_engine()
+        game_objects = engine.get_objects_at(position)
+        for game_object in game_objects:
+            if(hasattr(game_object, "player_walked_off")):
+                game_object.player_walked_off(self)
         return
 
     def add_to_bag(self, bag_item):

@@ -382,7 +382,7 @@ void MainWindow::initWorkspace(QsciScintilla* ws, int i)
     ws->setLexer(lexer);
     ws->zoomIn(13);
     ws->setAutoCompletionThreshold(3);
-    ws->setAutoCompletionSource(QsciScintilla::AcsAPIs);
+    //ws->setAutoCompletionSource(QsciScintilla::AcsAPIs); //TODO: uncomment this to enable autocompletion - make this a function
     ws->setSelectionBackgroundColor("DeepPink");
     ws->setSelectionForegroundColor("white");
     ws->setCaretWidth(5);
@@ -812,6 +812,8 @@ void MainWindow::createExternalTab(std::function<void ()> confirmCallback, std::
     QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
 
     ws->clear();
+
+    ws->setFocus();
 
     EventManager::get_instance()->add_event([this, dialogue] {
         Engine::show_external_script_help(dialogue);

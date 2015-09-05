@@ -15,7 +15,7 @@ engine.play_music("heroic") #Menus have herioc music always
 engine.show_py_scripter()
 engine.set_py_tabs(1)
 engine.enable_py_scripter()
-engine.insert_to_scripter("#Message to all Pyland Citizens:\n#- Use the arrow keys to select menu options\n#- Press 'Enter' to select an option")
+engine.insert_to_scripter("#Message to all Pyland Citizens:\n#- Use the arrow keys to select menu options\n#- Press 'Enter' to select an option\n#- Use the following command to load a saved game:\nload_game(\"\")")
 
 def load_game(save_name):
     save_data = engine.get_player_data(save_name)
@@ -93,7 +93,7 @@ class MenuState:
                 lambda callback: self.move_bracket(next_state.location)
             ])
 
-    
+
 
 #Add all the menu states
 start_game = MenuState((17, 10))    #start the game....
@@ -110,7 +110,7 @@ settings = engine.get_settings()
 
 #Setting up how all the menu states interact with each other
 start_game.down_destination = options
-start_game.select = lambda: engine.change_map("/world_1/intro")
+start_game.select = lambda: engine.change_map("/world1/intro")
 
 options.up_destination = start_game
 options.select_destination = language

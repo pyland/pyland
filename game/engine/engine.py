@@ -176,7 +176,7 @@ class Engine:
         x, y = position                                     #Extract the position x and y coordinates
         return self.__cpp_engine.is_solid(x, y)
 
-    def print_terminal(self, message, highlighted = False):
+    def print_terminal(self, message, highlighted = False, callback = lambda: None):
         """ print the given message to in-game terminal
 
         Parameters
@@ -187,7 +187,9 @@ class Engine:
             if true the message is printed red, else it printed in black
         """
         self.__cpp_engine.print_terminal(str(message), highlighted)
+        self.add_event(callback)
 
+        
     def print_debug(self, message):
         """ print the given message to the operating system terminal
 
@@ -420,7 +422,7 @@ class Engine:
         self.__game_objects[game_object.get_id()] = game_object #Store the object and associate with it's id in the engine's dictionary
         return game_object
 
-    def show_dialogue(self, dialogue, disable_scripting = True, callback = lambda: None):
+    def show_dialogue(self, dialogue, ignore_scripting = False, callback = lambda: None):
         """ The engine display the dialogue as a pop-up text window.
 
         This is usually used for dialogue (NPCs talking to the player) or this is run when interacting with a sign. (The pop-up shows the text on the sign)
@@ -429,13 +431,14 @@ class Engine:
         ----------
         dialogue : str
             The string that will be display on the dialogue window
-        disable_scripting : bool
-            A boolean value that indicates if we want the PyScripter to be disabled or not if the dialogue window is up.
+        ignore_scripting : bool
+            By default, the dialogue box enables the scripter on opening and disables it on closing 
+            Ths boolean value is true if we don't want that default functionality. It is then up to the caller to enable and disable the PyScripter.
         callback : func, optional
             Places the callback onto the engine
 
         """
-        self.__cpp_engine.show_dialogue(dialogue, disable_scripting, callback)
+        self.__cpp_engine.show_dialogue(dialogue, ignore_scripting, callback)
 
     def close_external_script_help(self, callback = lambda: None):
         self.__cpp_engine.close_external_script_help(callback)
@@ -592,11 +595,22 @@ class Engine:
         """
         self.__cpp_engine.set_py_tabs(num_tabs, callback)
 
-    def show_external_script(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", script_init = lambda: None):
+    def show_external_script(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", script_init = lambda: None, character_object = None):
         """ This function is used to have the player give a script to an NPC (after which the NPC may or may not run the script)
 
-        When an NPC requires a script he will ask the player if he/she can help write a script. If the player says yes, confirm_callback is run, if the palyer says no, the cancel_callback is run. The tab that the player is given to edit is
-        the external_tab that can be initialized via script_init and external dialogue is displayed when this tab is open.
+        When an NPC requires a script he will ask the player if he/she can help write a script. If the player says 'Give script;, confirm_callback is run, if the player says 'Cancel', the cancel_callback is run. The tab that the player is given to edit is
+        the external_tab that can be initialized via script_init and external dialogue is displayed in the notification bar when this tab is open.
+
+        There are two cases for this external script:
+
+        Fixing NPC scripts
+            - Do not pass a character
+            - Just pass the script initialisation that you want
+            - The script is not persistent i.e. each time you are given this script it starts with the same initialisation (so you can try and fix it again)
+
+        Writing NPC scripts from scratch
+            - Do not pass any script initialisation
+            - The script is stored with the character so the next time you work on their script, it restores what you had already done.
 
         Parameters
         ----------
@@ -608,9 +622,20 @@ class Engine:
             String that gets displayed in the dialogue window while the external PyScript is open
         script_init : func, optional
             The callback that is run when tab is created and before the player confirms/cancels. This is used to initialize the external script and commonly includes "insert_to_scripter"
+        character_object : character, optional
         """
 
-        self.__cpp_engine.show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init)
+        #Add function calls to the confirm callback if the script needs storing with the character
+        def store_script():
+            confirm_callback()
+            character_object.set_script(self.get_external_script())
+
+        if character_object:
+            script_init = lambda: self.insert_to_scripter(character_object.get_script())
+            confirm_and_store_script_callback = store_script
+            self.__cpp_engine.show_external_script(confirm_and_store_script_callback, cancel_callback, external_dialogue, script_init)
+        else:
+            self.__cpp_engine.show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init)
 
     def insert_to_scripter(self, text, callback = lambda: None):
         """ Inserts code into the PyScripter

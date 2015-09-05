@@ -17,6 +17,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     bar_options_open(false),
     external_help_open(false),
     callback_options(false),
+    ignored_scripter_state(false),
     option_start(0),
     option_selected(0),
     pause_open(false),
@@ -410,11 +411,8 @@ void GUIMain::create_pyguide(){
         std::string help = j["pyguide_apis"][std::to_string(i)];
         unsigned int beg_name = help.find(":");
 
-        if(beg_name == std::string::npos){
-            LOG(INFO) << "ERROR: Pycommand " << i << " in the config file does not follow the format required";
-            return;
-        }
-        else{
+        if(beg_name != std::string::npos)
+        {
             std::string name = help.substr(0, beg_name);
             std::string explanation = help.substr(beg_name+1, std::string::npos);
 
@@ -441,6 +439,10 @@ void GUIMain::create_pyguide(){
 
             py_command->set_clickable(false);
             py_command->set_visible(false);
+        }
+        else{
+            LOG(INFO) << "ERROR: Pycommand " << i << " in the config file does not follow the format required";
+            return;
         }
     }
 
@@ -536,7 +538,15 @@ void GUIMain::close_pause_window(){
     refresh_gui();
 }
 
-void GUIMain::open_notification_bar(std::function<void ()> func){
+void GUIMain::open_notification_bar(std::function<void ()> func, bool ignore_scripting){
+    ignored_scripter_state = ignore_scripting;
+
+    if(!ignored_scripter_state){
+        EventManager::get_instance()->add_event([] {
+            Engine::disable_py_scripter();
+        });
+    }
+
     bar_open = true;
     callback_options = false;
     notification_func = func;
@@ -544,7 +554,15 @@ void GUIMain::open_notification_bar(std::function<void ()> func){
     LOG(INFO) << "Notification Bar open";
 }
 
-void GUIMain::open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options){
+void GUIMain::open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options, bool ignore_scripting){
+    ignored_scripter_state = ignore_scripting;
+
+    if(!ignored_scripter_state){
+        EventManager::get_instance()->add_event([] {
+            Engine::disable_py_scripter();
+        });
+    }
+
     bar_open = true;
     callback_options = true;
     notification_options.clear();
@@ -590,6 +608,7 @@ void GUIMain::proceed_selection_notification_bar_with_options(bool forward){
 }
 
 void GUIMain::close_notification_bar(){
+
     if(callback_options){
         bar_options_open = true;
         options_box->set_visible(true);
@@ -639,6 +658,17 @@ void GUIMain::close_notification_bar(){
         em->add_event([this] {
             notification_func();
         });
+    }
+    
+    if(ignored_scripter_state){
+        //do nothing cause we have ignored scripter state. 
+        //If you are debugging and have reached here wondering why the scripter is enabled, check if you passed True to ignore_scripting in engine.py
+        //Then, it is your responsibilty to manage the state of the pyscripter
+        //Else, we have a bug
+    }
+    else if (! Engine::is_bar_with_options_open()){
+        //if bar with options is open, let the pyscripter remain so
+        Engine::enable_py_scripter();
     }
 
     refresh_gui();
