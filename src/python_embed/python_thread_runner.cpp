@@ -15,6 +15,7 @@
 #include <thread>
 
 #include "entity.hpp"
+#include "config.hpp"
 #include "python_thread_runner.hpp"
 #include "event_manager.hpp"
 #include "interpreter_context.hpp"
@@ -200,6 +201,8 @@ PythonThreadRunner::PythonThreadRunner(InterpreterContext interpreter_context, s
         }
 
         py::api::object game_engine_object = py::api::object(boost::ref(game_engine));
+        Config::json j = Config::get_instance();
+        std::string game_folder = j["files"]["game_folder"];
 
         thread = std::thread(
             run_entities,
@@ -208,7 +211,7 @@ PythonThreadRunner::PythonThreadRunner(InterpreterContext interpreter_context, s
             game_engine_object,
             std::move(thread_id_promise),
             // TODO: Extract path into a more logical place
-            boost::filesystem::path("../game/bootstrapper.py"), //TODO: Move this configuration out to an ini file!
+            boost::filesystem::path(game_folder + "/bootstrapper.py"), //TODO: Move this configuration out to an ini file!
             interpreter_context,
             signal_to_exception
         );

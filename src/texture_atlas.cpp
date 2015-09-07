@@ -398,8 +398,11 @@ std::tuple<float,float,float,float> TextureAtlas::index_to_coords(int index) {
 
 
 void TextureAtlas::load_names(const std::string filename) {
+    
+    Config::json j = Config::get_instance();
+    std::string game_folder = j["files"]["game_folder"];
 
-    bool is_fml = (filename == "../game/gui/gui") || (filename == "../game/gui/cursor");
+    bool is_fml = (filename == (game_folder + "/gui/gui")) || (filename == (game_folder + "/gui/cursor"));
     //bool is_fml = true;
 
     if(is_fml){
