@@ -10,6 +10,7 @@
 #include "cacheable_resource.hpp"
 #include "component.hpp"
 #include "component_group.hpp"
+#include "config.hpp"
 #include "gui_manager.hpp"
 #include "mouse_input_event.hpp"
 #include "mouse_state.hpp"
@@ -250,7 +251,9 @@ void GUIManager::render_text() {
 
 void GUIManager::load_textures() {
     //Set the texture data in the rederable component
-    renderable_component->set_texture(TextureAtlas::get_shared("../game/gui/gui.png"));
+    Config::json j = Config::get_instance();
+    std::string game_folder = j["files"]["game_folder"];
+    renderable_component->set_texture(TextureAtlas::get_shared(game_folder + "/gui/gui.png"));
 }
 
 bool GUIManager::init_shaders() {

@@ -1,12 +1,12 @@
 //This is the config file for the game, it is a jsonnet file for ease of use.
 {
-	"game_save": import "../game/save.json",
+	"game_save": import "./save.json",
 	"game_settings": self.game_save.settings, //Import the game settings from the game json file. (Which python can directly read an write to)
 	"special_methods": {
 		"walk_on" : "b" //TODO explain this!!!!
 	},
 	"files": {
-		"game_folder": "../game",
+		"game_folder": ".",
 		"level_folder": self.game_folder+"/levels/",
 		"main_menu": "/start_screen",
 		//"level_location": "/start_screen",

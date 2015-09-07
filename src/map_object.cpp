@@ -23,13 +23,16 @@ MapObject::MapObject(glm::vec2 position,
                      std::string name,
                      Walkability walkability):
     Object(name),
-    tile("../game/objects/0.png"),
     render_above_sprite(false),
     walkability(walkability),
     game_position(position),
     render_position(position)
 
     {
+        Config::json j = Config::get_instance();
+        std::string game_folder = j["files"]["game_folder"];
+
+        tile = game_folder + "/objects/0.png";
 
         VLOG(2) << "New map object: " << name;
 
