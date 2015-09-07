@@ -100,9 +100,8 @@ class PlayerData(GameObject):
 
         if(self.__has_unlocked_pyscripter()):
             engine.show_py_scripter()
-        #Commented out for now, trying to disable scripter before unlock instead of hiding - since full screen game is too slow on pis
-        #else:
-        #    engine.hide_py_scripter()
+        else:
+            engine.hide_py_scripter()
         return
 
     def save(self):

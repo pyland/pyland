@@ -22,21 +22,21 @@
  </layer>
  <layer name="Decor" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJy1Ve0KwjAM7N5CxOdr6589jgp+4MeLmoGBEC5p4vTgGFu7uyRN27mUsiHOiv3zbGAMsap/O5iz+OyDepIM6cV+XXnviFtDB3lbQP/rnDK5eJBzUD2jOlmMYu1JvcNUypF4mnwvXUeJ5uhzPHfSfxGfA59M7bRvNcbWrvW3iPhU8M0Dmv+vXCI1i8bv9WV0XbhXdb96/Tfy4rNSxnkm7RvxQryCfs16WDkte+Lh7AuGrLGso7U3+R0hez5YHr/sueh5vMbT0tB5NeO752dpo/vAu5uj9zbKQcb7BhlSd/E=
+   eJzNVVsKAjEM7N5CxPO19WePo4Ku+LioWTAQhiRNWD8cGJZN00wS0nYupeyIM7B/vw3sDPSvsLcrPqvOUbFrlDqoWYVeB+0DcW/E1LQtaPuxpkgtEUhfrZ/ZeFGMcu7JeKeplDPxMvla2EeJ5sTnfB4U/018DXQyvUPdaqxlZncrsjpVsXlg/3+pJZq/N5fRWnhWcV69+Rtp8V0p87xS7DvxRlyUec1qWDWtZ+LpnAuG7LHso3U2+V9D9n6wNH45c5HzuVXTioF1NcPu6VmxtfcA3+bomkd8uz8Z0nfx
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJzN1EEKACAIRFE7ife/ZatAXIjk1xpwF/PAQF0i+vmcdHb7TDnWyrhkaCPqIC27q6xD7a7616Q74XT1vnCid6RFOtm9+RvS5VRC3ErKqJi3RsYjusnZ+AYgYQ==
+   eJzF1EsKACAIRdFaifvfZaNAgsLP1R44zEMWyhxDHLXjORMp7VSat3Q52rK4ZGjj1YO09KysDjW77FuTVofTYfy4C/UPqx3r3M4dUuVkQuxKysiYUcPiEb3JWlQEIKE=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
   <object name="characters/player/player_one" gid="191" x="1152" y="448"/>
   <object name="characters/npcs/heidi/heidi" gid="196" x="0" y="1216"/>
-  <object name="sign/route_sign" gid="193" x="1344" y="512"/>
+  <object name="sign/route_sign" gid="193" x="960" y="256"/>
   <object name="tile_trigger/exit_to_house" gid="197" x="1152" y="448"/>
-  <object name="tile_trigger/exit_to_road_top" gid="197" x="1600" y="576"/>
-  <object name="tile_trigger/exit_to_road_bottom" gid="197" x="1600" y="640"/>
+  <object name="tile_trigger/exit_to_road_top" gid="197" x="768" y="64"/>
+  <object name="tile_trigger/exit_to_road_bottom" gid="197" x="832" y="64"/>
   <object name="player_data/player_data" gid="192" x="0" y="64"/>
   <object name="characters/npcs/generic/villager1" gid="196" x="1088" y="768"/>
   <object name="characters/npcs/generic/villager2" gid="196" x="640" y="576"/>
