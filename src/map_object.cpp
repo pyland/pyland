@@ -140,9 +140,10 @@ void MapObject::set_render_position(glm::vec2 position) {
 
 void MapObject::set_tile(std::string _tile) {
     tile = _tile;
-    load_textures();
-    generate_tex_data();
-    generate_vertex_data();
+    if(load_textures()) {
+        generate_tex_data();
+        generate_vertex_data();
+    }
 }
 
 void MapObject::generate_vertex_data() {
@@ -195,8 +196,15 @@ void MapObject::set_state_on_moving_finish() {
     moving = false;
 }
 
-void MapObject::load_textures() {
-    SpriteManager::get_component(tile)->set_texture(TextureAtlas::get_shared(tile)); //tile is the location of the sprite you wish to load in from the file-system.
+bool MapObject::load_textures() {
+    auto texture = TextureAtlas::get_shared(tile, false); //We want MapObjects to gracefully show nothing if an invalid texture is requested, so we request a nullptr on failure instead of throwing an exception
+    if (texture) {
+        SpriteManager::get_component(tile)->set_texture(texture); //tile is the location of the sprite you wish to load in from the file-system.
+        return true;
+    } else {
+        LOG(ERROR) << "The tile " << tile << " doesn't exist";
+        return false;
+    }
 }
 
 void MapObject::set_challenge(Challenge *challenge) {

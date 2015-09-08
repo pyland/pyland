@@ -184,7 +184,7 @@ public:
     ///
     /// Load the textures that are being used by the object
     ///
-    virtual void load_textures();
+    virtual bool load_textures();
 
     ///
     /// Set the object's moving status

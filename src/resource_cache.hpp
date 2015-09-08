@@ -44,11 +44,15 @@ public:
     /// If already loaded, retrieves a resource from the cache.
     /// Otherwise, the resource is loaded.
     ///
-    /// @param resource_name Resource name given to resource
-    ///        constructor.
-    /// @return A resource pointer to the relevant resource.
+    /// @param resource_name
+    ///        Resource name given to resource constructor.
+    /// @param throw_exception_on_error
+    ///        A boolean that determines if an exception is thrown when there is an error.
+    ///        If this is false, a nullptr is returned instead.
+    /// @return
+    ///        A resource pointer to the relevant resource.
     ///
-    std::shared_ptr<Res> get_resource(const std::string resource_name);
+    std::shared_ptr<Res> get_resource(const std::string resource_name, bool throw_exception_on_error = true);
 
     ///
     /// Removes a resource from the cache. Does not destroy it.
@@ -82,7 +86,7 @@ ResourceCache<Res>::~ResourceCache() {
 }
 
 template<typename Res>
-std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource_name) {
+std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource_name, bool throw_exception_on_error) {
     VLOG(3) << "Getting resource \"" << resource_name << "\" from cache " << this;
 
     if (resources.count(resource_name) == 0) {
@@ -95,7 +99,11 @@ std::shared_ptr<Res> ResourceCache<Res>::get_resource(const std::string resource
         }
         catch (std::exception &e) {
             LOG(ERROR) << "Error creating shared resource \"" << resource_name << "\": " << e.what();
-            throw e;
+            if(throw_exception_on_error) {
+                throw e;
+            } else {
+                return nullptr;
+            }
         }
     }
     else {
