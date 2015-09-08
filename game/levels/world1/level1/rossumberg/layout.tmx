@@ -41,6 +41,6 @@
   <object name="characters/npcs/generic/villager1" gid="196" x="1088" y="768"/>
   <object name="characters/npcs/generic/villager2" gid="196" x="640" y="576"/>
   <object name="characters/npcs/generic/villager3" gid="196" x="768" y="960"/>
-  <object name="characters/npcs/generic/villager4" gid="196" x="832" y="384"/>
+  <object name="characters/npcs/generic/villager4" gid="196" x="1088" y="960"/>
  </objectgroup>
 </map>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="29" height="75" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="25" height="30" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/water.png" width="320" height="1216"/>
  </tileset>
@@ -21,46 +21,33 @@
  <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
- <tileset firstgid="666" name="intro" tilewidth="64" tileheight="64">
-  <image source="../../../../tiles/intro.png" width="320" height="1216"/>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="29" height="75">
+ <layer name="Ground" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJztwwEJAAAMA6BFXf8UzzGuYJNUVVVVVVV1NADAdwd1u1Y/
+   eJztw0ENAAAMA6GTWv8qZmMPSFg1VVX19QOR5hlQ
   </data>
  </layer>
- <layer name="Decor" width="29" height="75">
+ <layer name="Decor" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJztWNtyAiEMjdbWdtS2L/Ybty/+/6PLSGZSSuAAwfVCZs6scskhIZuFnIjoVAFSfmtjkL6wjcRTSs16UZtQQW0lpV/KpHDE2mM6au2K6Z8A3lJflvgX4SbK66vdV40T1dPC2VM+ZmwzePNjU30p3e/BnMOMYwaffmyqLwZE97PhxyPVF6IHFzL32Mhfu75H4yzx96NwtsburfrL8n1E9Vn7cum80pqT7h0WuX2pvV/aX5ax8zVjNePbYH1o+4Yu5+edgS3ofHdGc+e+1vNYik/uTe58Y8VpEVO5eOvBu4S9rTF0TR9IrDvbye2cC+T7aREX2lnT8b3Q5R7quLYBh6W/2Tbmc3dBq1ygrfWV/t7LOd+15PLYnsTs47v93rfHsM6083OvrHXjOdBaB4/R6i5hrWgn7OJvFMcmyhfqz9V/nK3Sh/x/MuILa0O/kfmytoTWdTSOif5zptZTUk9CbUR5SmpYpfpaa4K90ZNP023Nh+i7pk/vlXPIkCFDhgwZMuTZ5QxWXO0p
+   eJyllWsOAyEIhDntqn96271Ps+ma0MkHYiQhrYrDa1jNfvIpqAW21b0d3fHltb027dD3an8k9pX7GrNf9+CeF8JscJfwsp49coEf1SvwT/gUv8qqt5V+PnI7nTIAexSw/P/u8G75pVxOua8+vH+NrTIX1If7xfU+Lme3W3/iUiZZfMrdKHezf76ufJz0ZMqQNdlHM0f19XlHohye80d+Mj5U8buss9kgfOWrgW119mitUvlmrebhhLsRfvROPOJrVOWwrrVPZD9FezKM86c8sjnMakY2VIvV2xHxOIuhMg+V/mc5ZvPl69vgToTT4Jz8El42Q+pHbehNNLDNZiiKYXI1wvJ7GofWI+N6c/t0TnVY8WpHK3Xw52pH/gnvC+5b1kU=
   </data>
  </layer>
- <layer name="Bridge" width="29" height="75">
-  <data encoding="base64" compression="zlib">
-   eJztz9EJgDAMQMHSxfxzkqzsPlIo1B9BEaLSOwihUHikFIDnNk1NTU1NTU3NiZvRm9Ens5vRjMN+487WXOp4r/X0q6bm5WZG9wt3av63CQAAAHfsRxkktA==
-  </data>
- </layer>
- <objectgroup name="Object Layer 1" width="0" height="0">
-  <object name="characters/player/player_one" gid="286" x="896" y="3520" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="1344" y="2240" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_2" gid="296" x="1472" y="1216" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="704" y="896" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_5" gid="296" x="256" y="1408" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_6" gid="296" x="1152" y="1664" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_7" gid="296" x="512" y="1088" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_8" gid="296" x="512" y="1728" width="64" height="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/croc_9" gid="296" x="1216" y="1344" width="64" height="64"/>
-  <object name="characters/npcs/heidi/heidi" gid="286" x="832" y="2816" width="64" height="64"/>
-  <object name="tile_trigger/croc_warning" gid="292" x="896" y="2496" width="64" height="64"/>
-  <object name="tile_trigger/made_it" gid="292" x="896" y="576" width="64" height="64"/>
-  <object name="tile_trigger/end" gid="292" x="896" y="64" width="64" height="64"/>
-  <object name="player_data/player_data" gid="287" x="448" y="3072" width="64" height="64"/>
-  <object name="camera/camera" gid="679" x="896" y="4608" width="64" height="64"/>
-  <object name="tile_trigger/heidi_talk" gid="292" x="896" y="2816" width="64" height="64"/>
-  <object name="characters/npcs/myla/myla" gid="286" x="1792" y="64" width="64" height="64"/>
+ <objectgroup name="Object Layer 1" width="25" height="30">
+  <object name="characters/player/player_one" gid="286" x="512" y="1920"/>
+  <object name="tile_trigger/exit_to_village_bottom" gid="292" x="576" y="1920"/>
+  <object name="tile_trigger/exit_to_village_top" gid="292" x="512" y="1920"/>
+  <object name="sign/village_sign" gid="288" x="192" y="1216"/>
+  <object name="sign/bog_sign" gid="288" x="704" y="1216"/>
+  <object name="characters/npcs/heidi/heidi" gid="291" x="1536" y="1920"/>
+  <object name="tile_trigger/no_potion" gid="292" x="64" y="576"/>
+  <object name="tile_trigger/exit_to_world" gid="292" x="1536" y="1600"/>
+  <object name="player_data/player_data" gid="287" x="0" y="320"/>
  </objectgroup>
- <layer name="SpecialLayer" width="29" height="75">
+ <layer name="SpecialLayer" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJztmFsKxCAMRUu3Ne3+tzXIUJDg4xqjMPRcCH0kzTGpP+Y6j+NyWFLpvhaj+Oy759nKs161JlVqrXkNXlaNq/YjQjO9jKy5tS9q30Qw1TyRPY/UfWrWiu3lHuFEGUyYMGHChAkTJkyYMGHC/J1D0/WzmbeDmZ/LdzPzf7iKmaTOOp6Y2tzFzopaTJVn8/fmP7aHpTpneKU5nJprlGl9rbX1fJ46SzEj/VHqVfPNzgRX20peLXc0z7sndvT2n5gIIYQQQm/XF17FRe0=
+   eJztlV0KgDAMg8Vzef9z+a5Nlh8FHywIMkc+m7Xdtv3RxrHfnzf0V2upLtNqOI4nCWPSn3jXby4DrT3lGcqjYSDfkS+p/rRXzb3xL2Wg+mB1xDyc9rKaQWttvqsZoZwnele8UGt+0lNzc868mVlfYST7E1+b/1LujpajaCk9p/SoOwudOcH0nF5l2gpnxUV3kfov7CwYX2WoZ+2GwnD6K2GocQJJzC0N
   </data>
  </layer>
 </map>

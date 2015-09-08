@@ -1,126 +1,78 @@
-#Heidi is with you going to find this secret device
-#She's scared off by the crocodiles but you still go
-#Pick it up and meet Myla
-
-
 #commence save-data set-up
-world_name = "world1"
 level_name = "level1"
+world_name = "world1"
 map_name = "bridge"
-
-engine.disable_py_scripter()
-myla.set_visible(False)
-
-player_data.load(engine.get_player_name())
-player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
-
-end.player_walked_on = lambda player_object: player_data.save_and_exit("/world1/level1/bridge_end")
 
 engine.update_world_text("1")
 engine.update_level_text("1")
-engine.set_ui_colours((200,255,200),(215,255,215))
 
+player_data.load(engine.get_player_name())
+player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
+#end save-data set-up
+
+#defining the possible states of the level
+heidi_state_speaking_about_prank = 0 #not used on this map!
+heidi_state_getting_prank_materials = 1
+heidi_state_got_prank_materials = 2
+#end state definitions
+
+
+player_start_pos = (0, 0)
+#setting the player's starting position
+if player_data.get_previous_exit() == "/world1/level1/rossumberg/top":
+    player_start_pos = exit_to_village_top.get_position()
+    player_one.move_to(player_start_pos, callback = player_one.move_north)
+elif player_data.get_previous_exit() == "/world1/level1/rossumberg/bottom":
+    player_start_pos = exit_to_village_bottom.get_position()
+    player_one.move_to(player_start_pos, callback = player_one.move_north)
+# end settin the default starting position
+
+#setting up the level's exits
+def go_to_village_top(player_object):
+    player_data.save_and_exit("/world1/level1/rossumberg", info = "top")
+
+def go_to_village_bottom(player_object):
+    player_data.save_and_exit("/world1/level1/rossumberg", info = "bottom")
+
+def go_to_world(player_object):
+    player_data.complete_level_and_save()
+    player_data.save_and_exit("/world1/level1/bridge_end")
+
+exit_to_village_top.player_walked_on = go_to_village_top
+exit_to_village_bottom.player_walked_on = go_to_village_bottom
+exit_to_world.player_walked_on = go_to_world
+
+#end setting up the level exits
+
+# general object set-up
+
+village_sign.set_message("(west) rossumberg (north) bog (north) merchant")
+bog_sign.set_message("(south) rossumberg (east) bog (north) merchant")
+
+def no_potion_player_action(player_object):
+    player_one.set_busy(True)
+    engine.show_dialogue("The totems are cursed...", callback = lambda: player_one.set_busy(False))
+
+no_potion.player_walked_on = lambda: None
+no_potion.player_action = no_potion_player_action
+# end general object set-up
+
+#state-based set-up
+heidi_state = player_data.get_level_state("heidi_state")
+if heidi_state == heidi_state_getting_prank_materials:
+    def heidi_player_action(player_object):
+        player_one.set_busy(True)
+        engine.show_dialogue("This is bad, normally the crocodiles never come out this far.", callback = lambda: player_one.set_busy(False))
+
+    heidi.player_action = heidi_player_action
+    heidi.set_solidity(False)
+    heidi.wait(0.3, callback = lambda: heidi.move_to(player_start_pos, callback = lambda: heidi.follow(player_one)))
+else:
+    heidi.set_solidity(False)
+    heidi.set_visible(False)
+
+# end object set-up
+engine.play_music("world_1_jungle")
 player_one.focus()
-engine.play_music("beach")
-
-b1_croc = [
-#croc_0,
-croc_1,
-croc_2,
-croc_3,
-#croc_4,
-croc_5,
-croc_6,
-croc_7,
-croc_8,
-croc_9]
-
-for i in range(len(b1_croc)):
-    croc = b1_croc[i]
-    croc.killable = [player_one]
-    croc.change_state("swim")
-
-    if i % 2 == 0:
-        croc.face_east()
-    else:
-        croc.face_west()
-    croc.move_horizontal()
-
-engine.run_callback_list_sequence([
-    lambda callback: player_one.set_busy(True, callback = callback),
-    lambda callback: camera.focus(callback = callback),
-    lambda callback: engine.show_dialogue("Attention Pyland Citizens: Use the arrow keys to move your player", ignore_scripting = True, callback = callback),
-    lambda callback: player_one.focus(callback = callback),
-    lambda callback: player_one.set_busy(False, callback = callback),
-])
-
-start_callback = [
-        lambda callback: player_one.focus(callback = callback),
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("Heidi: So you think you there's a magical scripting device across the river huh?", ignore_scripting = True, callback = callback),
-        lambda callback: engine.show_dialogue("Looks pretty dangerous but if you insist...", ignore_scripting = True, callback = callback),
-        lambda callback: player_one.set_busy(False, callback = callback),
-        lambda callback: heidi.start_turning(1.0, 7, callback = callback),
-]
-
-
-done_initial = False
-
-def initial_info():
-    global done_initial
-    if (not done_initial) :
-        engine.run_callback_list_sequence(start_callback)
-        done_initial = True
-
-heidi_talk.player_walked_on = lambda player_object: initial_info()
-
-heidi_callback = [
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: heidi.stop_turning(callback = callback),
-        lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("You think you can make it across the bridge?!", ignore_scripting = True, callback = callback),
-        lambda callback: heidi.start_turning(1.0, 7, callback = callback),
-        lambda callback: player_one.set_busy(False, callback = callback),
-]
-
-
-
-heidi.player_action  = lambda player_object: engine.run_callback_list_sequence(heidi_callback)
-
-croc_callback = [
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: heidi.turn_to_face(player_one, callback = callback),
-        lambda callback: engine.show_dialogue("Heidi: And I forgot to mention, don't stand next to any crocodiles...", ignore_scripting = True, callback = callback),
-        lambda callback: player_one.set_busy(False, callback = callback),
-]
-
-done_warning = False
-
-def croc_info():
-    global done_warning
-    if (not done_warning) :
-        engine.run_callback_list_sequence(croc_callback)
-        done_warning = True
-
-croc_warning.player_walked_on = lambda player_object: croc_info()
-
-made_it_callback = [
-        lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("Hit 'Enter' to pick up items", ignore_scripting = True, callback = callback),
-        lambda callback: player_one.set_busy(False, callback = callback),
-]
-
-done_made_it = False
-
-def made_it_info():
-    global done_made_it
-    if (not done_made_it) :
-        engine.run_callback_list_sequence(made_it_callback)
-        done_made_it = True
-
-made_it.player_walked_on = lambda player_object: made_it_info()
-
-
 
 

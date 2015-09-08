@@ -14,7 +14,6 @@ engine.set_ui_colours(c1, c2)
 engine.play_music("calm")
 engine.show_py_scripter()
 
-""" Some quick and hacky methods I wrote to grab the player's name from the terminal"""
 player_name = "???"
 
 name_parsed = False
@@ -78,8 +77,6 @@ introduction_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "big_white_box"), callback = callback),
     lambda callback: engine.show_external_script_help(engine.get_dialogue(level_name, "scripting"), callback = callback),
     lambda callback: get_player_name(callback = callback),
-    #TODO: save the player's name in a new save file for them :)
-    #TODO: change the level to the intro level
 ]
 
 def confirm_name():
@@ -102,8 +99,8 @@ name_wrong_sequence = [
 name_confirmed_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "wrote_first_program", {"player_name": player_name}), callback = callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "console_output"), callback = callback),
+    lambda callback: engine.show_dialogue("Now we can use print function to select who you will be in Pyland (TODO)", callback = callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "go_enjoy_pyland", {"player_name": player_name}), callback = callback),
-    #lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "keys", {"player_name": player_name}), callback = callback)
 ]
 
 def start_game():

@@ -135,7 +135,6 @@ class Engine:
             The name of the object it is given in tiled
 
         """
-        print(self.__game_objects_by_name)
         return self.__game_objects_by_name[object_name]
 
     def get_objects_at(self, position):
