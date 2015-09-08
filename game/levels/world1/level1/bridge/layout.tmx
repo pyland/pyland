@@ -31,7 +31,7 @@
  </layer>
  <layer name="Decor" width="29" height="75">
   <data encoding="base64" compression="zlib">
-   eJztWNtuwjAM9biVCQZ7Yd/YvfD/j2tELBkTJ07iklFi6aglFx/bcUPiKwBcCwDCuzRG08fbgDyplNir9UkrWl9B6KcyChyh9pCOUr9C+kcFb24sc+Kr4QZI6ytdV4lTq6eGc075nDAksPNjY30x3Xs252vCJYGTHxvrC0Gj+93w4xHr45iDSzP3Uslfat/SOHPivRTO2tz9r/Gy/B61+qxj2Xpfqd2TXh0We3urtW8dL8vcOU/4mPBtYJ+2fQO38/PBwBftfHdGc+e+2vNYjI+uTep8Y8VpkVOpfJuDt4W/tTn0zBhQrGb2E9txL6Dfp0VeSGdNx7eG2z3UcQ2MwzLe6Bvyubug1V4g2bqF+3s57nc1e3loTUL+4d3+6NtDWCXa8XkUbN14Dm2tA8dIdRdeKzoQv/A/CnNTy8f1p+o/zlcaQ/w9GvHx2tBvYD6tLWnrOhLHCI+cMXs0NufU1kp1AHuX/M21ScvNeV4Zz/JlKfFqjS5dunTp0qVLl3eXPyP08r8=
+   eJztWNtyAiEMjdbWdtS2L/Ybty/+/6PLSGZSSuAAwfVCZs6scskhIZuFnIjoVAFSfmtjkL6wjcRTSs16UZtQQW0lpV/KpHDE2mM6au2K6Z8A3lJflvgX4SbK66vdV40T1dPC2VM+ZmwzePNjU30p3e/BnMOMYwaffmyqLwZE97PhxyPVF6IHFzL32Mhfu75H4yzx96NwtsburfrL8n1E9Vn7cum80pqT7h0WuX2pvV/aX5ax8zVjNePbYH1o+4Yu5+edgS3ofHdGc+e+1vNYik/uTe58Y8VpEVO5eOvBu4S9rTF0TR9IrDvbye2cC+T7aREX2lnT8b3Q5R7quLYBh6W/2Tbmc3dBq1ygrfWV/t7LOd+15PLYnsTs47v93rfHsM6083OvrHXjOdBaB4/R6i5hrWgn7OJvFMcmyhfqz9V/nK3Sh/x/MuILa0O/kfmytoTWdTSOif5zptZTUk9CbUR5SmpYpfpaa4K90ZNP023Nh+i7pk/vlXPIkCFDhgwZMuTZ5QxWXO0p
   </data>
  </layer>
  <layer name="Bridge" width="29" height="75">
@@ -40,7 +40,7 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="0" height="0">
-  <object name="characters/player/player_one" gid="286" x="896" y="3072" width="64" height="64"/>
+  <object name="characters/player/player_one" gid="286" x="896" y="3520" width="64" height="64"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="1344" y="2240" width="64" height="64"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_2" gid="296" x="1472" y="1216" width="64" height="64"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="704" y="896" width="64" height="64"/>
@@ -60,7 +60,7 @@
  </objectgroup>
  <layer name="SpecialLayer" width="29" height="75">
   <data encoding="base64" compression="zlib">
-   eJztmFsKhDAMRcVt6ex/W1JEKKGN15jpMHouBB+NOUnsT7PO07QGrKh13/NR1uy749kqkq9akyq11rqGKKvHVfuRoTu9zKzZ2xe9bzKYapzMnmfqM2vm+Z7FvsLJMpgwYcKECRMmTJgwYcKEuZ9Dy3UZzBvBrM/lo5n1P/wWs0iddRw+vbmLnRV5TJVn45/Nf2wPW3Xe4bXmcGqsq0y75uWm5K3W5vln9SeaU3Qm+M82qpan9OvXhhBCCCH0dm1U30kT
+   eJztmFsKxCAMRUu3Ne3+tzXIUJDg4xqjMPRcCH0kzTGpP+Y6j+NyWFLpvhaj+Oy759nKs161JlVqrXkNXlaNq/YjQjO9jKy5tS9q30Qw1TyRPY/UfWrWiu3lHuFEGUyYMGHChAkTJkyYMGHC/J1D0/WzmbeDmZ/LdzPzf7iKmaTOOp6Y2tzFzopaTJVn8/fmP7aHpTpneKU5nJprlGl9rbX1fJ46SzEj/VHqVfPNzgRX20peLXc0z7sndvT2n5gIIYQQQm/XF17FRe0=
   </data>
  </layer>
 </map>
