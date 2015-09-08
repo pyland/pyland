@@ -70,7 +70,6 @@ def get_player_name(callback):
 
 level_name = "/world_1/intro"
 introduction_sequence = [
-    lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "pyland_public_announcement"), callback = callback),
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "monty_coming_now"), callback = callback),
     lambda callback: camera.move_by((0, -11), 2.2, callback = callback),
     lambda callback: camera.wait(0.2, callback = callback),
