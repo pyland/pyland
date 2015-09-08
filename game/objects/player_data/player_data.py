@@ -102,6 +102,10 @@ class PlayerData(GameObject):
             engine.show_py_scripter()
         else:
             engine.hide_py_scripter()
+
+        #change the player sprite to be what is saved in the player_data
+        player_one = engine.get_object_called("player_one")
+        player_one.change_state(self.__get_player_data_value("player_type", default = "female_0"))
         return
 
     def save(self):

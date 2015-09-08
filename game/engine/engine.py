@@ -13,8 +13,10 @@ class Engine:
     """
     #Represents the cplusplus engine
     __cpp_engine = None
-    #A dictonary of all the game objects in the level (maps from object_id to object)
-    __game_objects = dict()
+    #A dictionary of all the game objects in the level (maps from object_id to object)
+    __game_objects_by_id = dict()
+    #A dictionary of all the game objects in the level (maps from object_name to object)
+    __game_objects_by_name = dict()
     #Represents the connections to the sqlite database
     conn = dict()
 
@@ -74,7 +76,8 @@ class Engine:
         """
 
         self.__cpp_engine = cpp_engine
-        self.__game_objects.clear() #Have to do this otherwise the engine seems to still have the objects of the last engine instance
+        self.__game_objects_by_id.clear() #Have to do this otherwise the engine seems to still have the objects of the last engine instance
+        self.__game_objects_by_name.clear() #Have to do this otherwise the engine seems to still have the objects of the last engine instance
         #Use some magic trickery to give the Engine class all the methods of the C++GameEngine with their functionality
         engine_properties = [a for a in dir(self.__cpp_engine) if not a.startswith('__')]   #get all the engine properties with the magic and private methods filtered out
         for engine_property in engine_properties:                                           #loop over all the engine properties
@@ -123,15 +126,17 @@ class Engine:
 
         return self.language
 
-    def register_game_object(self, game_object):
-        """ Register a game object.
+    def get_object_called(self, object_name):
+        """ Get an object by the name it is given in tiled
 
-        Parmeters
-        ---------
-        game_object : GameObject
-            The game object you wish to register
+        Parameters
+        ----------
+        object_name : str
+            The name of the object it is given in tiled
+
         """
-        self.__game_objects[game_object.get_id()] = game_object # associate each game_object with it's id
+        print(self.__game_objects_by_name)
+        return self.__game_objects_by_name[object_name]
 
     def get_objects_at(self, position):
         """ Returns a list of all the objects at a given position
@@ -153,7 +158,7 @@ class Engine:
         game_objects= list()                        #initialise the list that will be returned giving the objects at the position
         object_ids = self.__cpp_engine.get_objects_at(x, y) #get a list of the ids of all the objects at the given position from the game engine
         for object_id in object_ids:                        #iterate over all the object_ids and grab the object associated with each one.
-            game_objects.append(self.__game_objects[object_id])
+            game_objects.append(self.__game_objects_by_id[object_id])
 
         #return a list of the objects at the given position
         return game_objects
@@ -419,7 +424,8 @@ class Engine:
         wrapper_class = getattr(module, self.__snake_to_camelcase(module_name))
         game_object = wrapper_class()  # create the object
         game_object.set_entity(entity, self)  # initialise it and wrap the entity instance in it
-        self.__game_objects[game_object.get_id()] = game_object #Store the object and associate with it's id in the engine's dictionary
+        self.__game_objects_by_id[game_object.get_id()] = game_object # associate each game_object with its id
+        self.__game_objects_by_name[game_object.get_name()] = game_object # associate each game_object with its i
         return game_object
 
     def show_dialogue(self, dialogue, ignore_scripting = False, callback = lambda: None):
@@ -686,7 +692,7 @@ class Engine:
         list of game_object
             A list of all the game_object
         """
-        return list(self.__game_objects.values())
+        return list(self.__game_objects_by_id.values())
 
     def get_error(self):
         """Gets if the last run of the PyScripter ran with errors or not

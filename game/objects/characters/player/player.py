@@ -59,6 +59,7 @@ class Player(Character):
         #####engine.print_terminal("Load in this image for the player head: "+"objects/"+super().get_file_location() + "/sprites/head")
         self.__focus_button_id = engine.add_button("gui/head/monkey", self.get_character_name(), self.focus)
         self.set_character_name(engine.get_player_name())
+        self.change_state("female_0") #TODO: Change this to engine.get_object_by_name and if it's not there set a default
 
     """ public:
     Put the regular public methods you wish to use here.
@@ -145,7 +146,6 @@ class Player(Character):
         callback : func, optional
             Places the callback onto the engine event-queue
         """
-
         engine = self.get_engine()
         x,y = self.get_position()
         target_position = (x, y+1)
@@ -169,8 +169,6 @@ class Player(Character):
         callback : func, optional
             Places the callback onto the engine event-queue
         """
-
-
         engine = self.get_engine()
         x,y = self.get_position()
         target_position = (x+1, y)
@@ -194,7 +192,6 @@ class Player(Character):
         callback : func, optional
             Places the callback onto the engine event-queue
         """
-
         engine = self.get_engine()
         x,y = self.get_position()
         target_position = (x, y-1)
