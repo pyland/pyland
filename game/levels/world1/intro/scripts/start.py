@@ -55,7 +55,7 @@ def get_player_name(callback):
     global name_parsed
     name_parsed = False
     engine.clear_scripter()
-    engine.insert_to_scripter("print(\"YourName\")")
+    engine.insert_to_scripter("print(\"" + engine.get_dialogue(level_name, "print_name_string") + "\")")
     engine.enable_py_scripter()
     script_api = {
         "print" : lambda text: name_parser(text, callback)
@@ -86,8 +86,8 @@ def confirm_name():
     engine.show_dialogue_with_options(
         engine.get_dialogue(level_name, "confirm_player_name", {"player_name": player_name}),
         {
-            "Yes": lambda: engine.run_callback_list_sequence(name_confirmed_sequence, start_game), #change the level once the intro has finished
-            "No" : lambda: engine.run_callback_list_sequence(name_wrong_sequence, confirm_name)
+            engine.get_dialogue("shared", "yes"): lambda: engine.run_callback_list_sequence(name_confirmed_sequence, start_game), #change the level once the intro has finished
+            engine.get_dialogue("shared", "no") : lambda: engine.run_callback_list_sequence(name_wrong_sequence, confirm_name)
         }
     )
 
