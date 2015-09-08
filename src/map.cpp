@@ -97,7 +97,7 @@ bool Map::is_walkable(int x_pos, int y_pos) {
 int Map::get_tile_type(int x, int y) {
     if (special_layer_id != 0) {
         auto layer = ObjectManager::get_instance().get_object<Layer>(special_layer_id);
-        if ((layer->get_width_tiles() < x) || (layer->get_height_tiles() < y) || (x < 0) || (y < 0)) {
+        if ((layer->get_width_tiles() <= x) || (layer->get_height_tiles() <= y) || (x < 0) || (y < 0)) {
             return 1; //The edge of the map is solid
         } else {
             return layer->get_tile(x, y).second;
