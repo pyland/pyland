@@ -205,7 +205,7 @@ class Crocodile(Enemy):
         engine.run_callback_list_sequence([
             lambda callback: self.set_busy(True, callback = callback),
             lambda callback: self.turn_to_face(character, callback = callback),
-            lambda callback: engine.show_dialogue("Crocodile: I've got you " + character.get_name().capitalize() + "!", callback = callback),
+            lambda callback: engine.show_dialogue("Crocodile: I've got you " + character.get_character_name() + "!", callback = callback),
             lambda callback: engine.restart_level()
         ])
     
