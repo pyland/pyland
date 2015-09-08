@@ -45,14 +45,14 @@ class MenuState:
     """ A menu state is a way of defining what each input does when the player is on a particular option (state) in the menu """
 
     location = (0, 0)          #The state's location in the map
-    up_desination = None       #The state that will be changed to when up is pressed
+    up_destination = None       #The state that will be changed to when up is pressed
     down_destination = None    #The state that will be changed to when down is pressed
     select_destination = None  #The state that will be changed to when the state is selected
 
     def __init__(self, location):
         self.location = location
         #Default behaviour is that each input maintains the current state
-        self.up_desination = self
+        self.up_destination = self
         self.down_destination = self
         self.select_destination = self
 
