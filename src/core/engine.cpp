@@ -116,9 +116,6 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
 
     object->set_state_on_moving_start(target);
 
-    // Step-off events
-    get_map_viewer()->get_map()->event_step_off.trigger(location, id);
-
     std::string direction(to_direction(move_by));
 
     // Motion
@@ -141,14 +138,10 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
                 object->set_state_on_moving_finish();
 
                 // TODO: Make this only focus if the object
-             #include <thread>   // is the main object.
+                #include <thread>   // is the main object.
                 if (Engine::map_viewer) {
                     Engine::map_viewer->refocus_map();
                 }
-
-                // Step-on events
-                get_map_viewer()->get_map()->event_step_on.trigger(target, id);
-
                 EventManager::get_instance()->add_event(func);
             }
 
@@ -164,8 +157,8 @@ bool Engine::walkable(glm::ivec2 location) {
 
     // Check bounds
     if(!(0 <= location.x && location.x < map_width) || !(0 <= location.y && location.y < map_height)) {
-        VLOG(2) << "Cannot move to requested tile due to map bounds";
-        return false;
+        VLOG(2) << "The object is moving off the map.";
+        return true;
     }
 
     // Check against collidable layer

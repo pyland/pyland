@@ -98,7 +98,7 @@ int Map::get_tile_type(int x, int y) {
     if (special_layer_id != 0) {
         auto layer = ObjectManager::get_instance().get_object<Layer>(special_layer_id);
         if ((layer->get_width_tiles() <= x) || (layer->get_height_tiles() <= y) || (x < 0) || (y < 0)) {
-            return 1; //The edge of the map is solid
+            return 0; //The edge of the map is normal
         } else {
             return layer->get_tile(x, y).second;
         }
@@ -481,30 +481,43 @@ bool Map::init_shaders() {
 
 Map::Blocker::Blocker(glm::ivec2 tile, std::vector <std::vector<int>>* blocker):
     tile(tile), blocker(blocker) {
-        (*blocker)[tile.x][tile.y]++;
+        if(tile.x < 0 || tile.y < 0 || tile.x >= (*blocker).size() || tile.y >=(*blocker)[tile.x].size()) {
+            VLOG(2) << "Block level can't be increased at " << tile.x << " " << tile.y
+                    << " as it is off the edge of the map";
+        } else {
+            (*blocker)[tile.x][tile.y]++;
 
-        VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
-                << " increased from " << (*blocker)[tile.x][tile.y] - 1
-                << " to " << (*blocker)[tile.x][tile.y] << ".";
+            VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
+                    << " increased from " << (*blocker)[tile.x][tile.y] - 1
+                    << " to " << (*blocker)[tile.x][tile.y] << ".";
+        }
 }
 
 Map::Blocker::Blocker(const Map::Blocker &other):
     tile(other.tile), blocker(other.blocker) {
-        (*blocker)[tile.x][tile.y]++;
+        if(tile.x < 0 || tile.y < 0 || tile.x >= (*blocker).size() || tile.y >=(*blocker)[tile.x].size()) {
+            VLOG(2) << "Block level can't be increased at " << tile.x << " " << tile.y
+                    << " as it is off the edge of the map";
+        } else {
+            (*blocker)[tile.x][tile.y]++;
 
-        VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
-                << " increased from " << (*blocker)[tile.x][tile.y] - 1
-                << " to " << (*blocker)[tile.x][tile.y] << ".";
+            VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
+                    << " increased from " << (*blocker)[tile.x][tile.y] - 1
+                    << " to " << (*blocker)[tile.x][tile.y] << ".";
+        }
 }
 
 Map::Blocker::~Blocker() {
     VLOG(2) << "Unblocking tile at " << tile.x << ", " << tile.y << ".";
-
-    blocker->at(tile.x).at(tile.y) -= 1;
-
-    VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
-            << " decreased from " << (*blocker)[tile.x][tile.y] + 1
-            << " to " << (*blocker)[tile.x][tile.y] << ".";
+    if(tile.x < 0 || tile.y < 0 || tile.x >= (*blocker).size() || tile.y >=(*blocker)[tile.x].size()) {
+        VLOG(2) << "Block level can't be decresed at " << tile.x << " " << tile.y
+                << " as it is off the edge of the map";
+    } else {
+        (*blocker)[tile.x][tile.y]--;
+        VLOG(2) << "Block level at tile " << tile.x << " " <<tile.y
+                << " decreased from " << (*blocker)[tile.x][tile.y] + 1
+                << " to " << (*blocker)[tile.x][tile.y] << ".";
+    }
 }
 
 Map::Blocker Map::block_tile(glm::ivec2 tile) {
