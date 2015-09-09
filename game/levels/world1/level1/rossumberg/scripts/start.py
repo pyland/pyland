@@ -22,10 +22,10 @@ player_start_pos = (0, 0)
 if player_data.previous_exit_is("world1", level_name = "level1", map_name = "player_house"):
     player_start_pos = exit_to_house.get_position()
     player_one.move_to(exit_to_house.get_position(), callback = player_one.move_south)
-elif player_data.previous_exit_is("world1", level_name = "level1", map_name = "rossumberg", info = "west"):
+elif player_data.previous_exit_is("world1", level_name = "level1", map_name = "bridge", info = "west"):
     player_start_pos = exit_to_road_west.get_position()
     player_one.move_to(exit_to_road_west.get_position(), callback = player_one.move_south)
-elif player_data.previous_exit_is("world1", level_name = "level1", map_name = "rossumberg", info = "east"):
+elif player_data.previous_exit_is("world1", level_name = "level1", map_name = "bridge", info = "east"):
     player_start_pos = exit_to_road_east.get_position()
     player_one.move_to(exit_to_road_east.get_position(), callback = player_one.move_south)
 else:
