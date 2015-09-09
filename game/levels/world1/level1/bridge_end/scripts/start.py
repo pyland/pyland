@@ -25,6 +25,7 @@ def go_to_bridge(player_object):
     player_data.save_and_exit("/world1/level1/bridge")
 
 def go_to_world(player_object):
+    player_data.complete_level_and_save()
     player_data.save_and_exit("/world1")
 
 exit_to_bridge.player_walked_on = go_to_bridge

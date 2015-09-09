@@ -29,25 +29,30 @@
    eJztw0ENAAAMA6GTWv8qZmMPSFg1VVX19QOR5hlQ
   </data>
  </layer>
- <layer name="Decor" width="25" height="30">
-  <data encoding="base64" compression="zlib">
-   eJyllWsOAyEIhDntqn96271Ps+ma0MkHYiQhrYrDa1jNfvIpqAW21b0d3fHltb027dD3an8k9pX7GrNf9+CeF8JscJfwsp49coEf1SvwT/gUv8qqt5V+PnI7nTIAexSw/P/u8G75pVxOua8+vH+NrTIX1If7xfU+Lme3W3/iUiZZfMrdKHezf76ufJz0ZMqQNdlHM0f19XlHohye80d+Mj5U8buss9kgfOWrgW119mitUvlmrebhhLsRfvROPOJrVOWwrrVPZD9FezKM86c8sjnMakY2VIvV2xHxOIuhMg+V/mc5ZvPl69vgToTT4Jz8El42Q+pHbehNNLDNZiiKYXI1wvJ7GofWI+N6c/t0TnVY8WpHK3Xw52pH/gnvC+5b1kU=
-  </data>
- </layer>
  <objectgroup name="Object Layer 1" width="25" height="30">
   <object name="characters/player/player_one" gid="286" x="512" y="1920"/>
   <object name="tile_trigger/exit_to_village_east" gid="292" x="576" y="1984"/>
   <object name="tile_trigger/exit_to_village_west" gid="292" x="512" y="1984"/>
-  <object name="sign/village_sign" gid="288" x="192" y="1216"/>
-  <object name="sign/bog_sign" gid="288" x="704" y="1216"/>
+  <object name="sign/village_sign" gid="288" x="640" y="1792"/>
+  <object name="sign/bog_sign" gid="288" x="1280" y="256"/>
   <object name="characters/npcs/heidi/heidi" gid="291" x="1536" y="1920"/>
-  <object name="tile_trigger/no_potion" gid="292" x="64" y="576"/>
-  <object name="tile_trigger/exit_to_world" gid="292" x="1536" y="1600"/>
-  <object name="player_data/player_data" gid="287" x="0" y="320"/>
+  <object name="tile_trigger/exit_to_bridge_end" gid="292" x="1600" y="448"/>
+  <object name="player_data/player_data" gid="287" x="0" y="64"/>
+  <object name="tile_trigger/no_potion" gid="292" x="1152" y="256"/>
  </objectgroup>
+ <layer name="Water" width="25" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztzUsKADAIQ0Ev0ftftfviDzFSIYG3KnVEuE07Suj7Vce7lQl9f8qInC7Dc7YZltNtaBbKYIz9kwwZGedd9G6t+o/btQud8SOG
+  </data>
+ </layer>
+ <layer name="Decor" width="25" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztluEKgDAIhPfEPW29T/SrIXp3ug0idiBUzn2ag9naq2OiWaE1kS/DYnyPVa1ZEYtF9WeF/mm0tiIlFtVxFbkZMcbjPzvzxHqhMJCUfts8rSGGd74rUuoYlVrHKkZmj2o/MozV2ozvMWafI4W5Gf9gRDOFGmO/RXNJA8/eXtaHZjYvjt2P0TylzG1oLcpZmT9ZrSM59+83NMlr3Q==
+  </data>
+ </layer>
  <layer name="SpecialLayer" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJztlV0KgDAMg8Vzef9z+a5Nlh8FHywIMkc+m7Xdtv3RxrHfnzf0V2upLtNqOI4nCWPSn3jXby4DrT3lGcqjYSDfkS+p/rRXzb3xL2Wg+mB1xDyc9rKaQWttvqsZoZwnele8UGt+0lNzc868mVlfYST7E1+b/1LujpajaCk9p/SoOwudOcH0nF5l2gpnxUV3kfov7CwYX2WoZ+2GwnD6K2GocQJJzC0N
+   eJztwTEBAAAAwqD1T20ND6AAAIB3Awu4AAE=
   </data>
  </layer>
 </map>

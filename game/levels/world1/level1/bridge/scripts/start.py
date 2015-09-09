@@ -25,6 +25,9 @@ if player_data.get_previous_exit() == "/world1/level1/rossumberg/west":
 elif player_data.get_previous_exit() == "/world1/level1/rossumberg/east":
     player_start_pos = exit_to_village_east.get_position()
     player_one.move_to(player_start_pos, callback = player_one.move_north)
+elif player_data.previous_exit_is("world1", level_name = "level1", map_name = "bridge_end"):
+    player_start_pos = exit_to_bridge_end.get_position()
+    player_one.move_to(player_start_pos, callback = player_one.move_west)
 # end settin the default starting position
 
 #setting up the level's exits
@@ -34,13 +37,12 @@ def go_to_village_west(player_object):
 def go_to_village_east(player_object):
     player_data.save_and_exit("/world1/level1/rossumberg", info = "east")
 
-def go_to_world(player_object):
-    player_data.complete_level_and_save()
+def go_to_bridge_end(player_object):
     player_data.save_and_exit("/world1/level1/bridge_end")
 
 exit_to_village_west.player_walked_on = go_to_village_west
 exit_to_village_east.player_walked_on = go_to_village_east
-exit_to_world.player_walked_on = go_to_world
+exit_to_bridge_end.player_walked_on = go_to_bridge_end
 
 #end setting up the level exits
 
