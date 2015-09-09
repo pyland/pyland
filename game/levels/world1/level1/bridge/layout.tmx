@@ -43,7 +43,7 @@
  </objectgroup>
  <layer name="Water" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJztzUsKADAIQ0Ev0ftftfviDzFSIYG3KnVEuE07Suj7Vce7lQl9f8qInC7Dc7YZltNtaBbKYIz9kwwZGedd9G6t+o/btQud8SOG
+   eJztk+sKgCAMRmc3C+zyp/d/1RYorFWmpoHhBweS4c4UAyjJKQPSayTSJeg/IithCvSYWSUcZ+b9qUeC+7lsvVxoHByhvX3u7q3DxRPDsdN+4LCdJZaDvjfuiungLvMPpHAUCn9BIEtixx714JmRSs8j9PfC6oLV6RpuPHRfDeco0u+qfhdFZvDZV5JXNhmEH+A=
   </data>
  </layer>
  <layer name="Decor" width="25" height="30">
