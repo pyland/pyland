@@ -11,9 +11,9 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 #end save-data set-up
 
 #defining the possible states of the level
-heidi_state_speaking_about_prank = 0
-heidi_state_getting_prank_materials = 1
-heidi_state_got_prank_materials = 2
+heidi_state_warn_about_crocodiles = 0
+heidi_state_following_player = 1
+heidi_state_stand_by_bridge = 2
 #end state definitions
 
 
@@ -22,12 +22,12 @@ player_start_pos = (0, 0)
 if player_data.get_previous_exit() == "/world1/level1/player_house":
     player_start_pos = exit_to_house.get_position()
     player_one.move_to(exit_to_house.get_position(), callback = player_one.move_south)
-elif player_data.get_previous_exit() == "/world1/level1/bridge/top":
-    player_start_pos = exit_to_road_top.get_position()
-    player_one.move_to(exit_to_road_top.get_position(), callback = player_one.move_south)
-elif player_data.get_previous_exit() == "/world1/level1/bridge/bottom":
-    player_start_pos = exit_to_road_bottom.get_position()
-    player_one.move_to(exit_to_road_bottom.get_position(), callback = player_one.move_south)
+elif player_data.get_previous_exit() == "/world1/level1/bridge/west":
+    player_start_pos = exit_to_road_west.get_position()
+    player_one.move_to(exit_to_road_west.get_position(), callback = player_one.move_south)
+elif player_data.get_previous_exit() == "/world1/level1/bridge/east":
+    player_start_pos = exit_to_road_east.get_position()
+    player_one.move_to(exit_to_road_east.get_position(), callback = player_one.move_south)
 else:
     player_one.move_to(exit_to_house.get_position(), callback = player_one.move_south)
 # end settin the default starting position
@@ -36,15 +36,15 @@ else:
 def go_to_house(player_object):
     player_data.save_and_exit("/world1/level1/player_house")
 
-def go_to_road_top(player_object):
-    player_data.save_and_exit("/world1/level1/bridge", info = "top")
+def go_to_road_west(player_object):
+    player_data.save_and_exit("/world1/level1/bridge", info = "west")
 
-def go_to_road_bottom(player_object):
-    player_data.save_and_exit("/world1/level1/bridge", info = "bottom")
+def go_to_road_east(player_object):
+    player_data.save_and_exit("/world1/level1/bridge", info = "east")
 
 exit_to_house.player_walked_on = go_to_house
-exit_to_road_top.player_walked_on = go_to_road_top
-exit_to_road_bottom.player_walked_on = go_to_road_bottom
+exit_to_road_west.player_walked_on = go_to_road_west
+exit_to_road_east.player_walked_on = go_to_road_east
 
 # end setting up the level's exits
 
@@ -60,10 +60,10 @@ route_sign.set_message("Rossumberg, a peaceful town. \n(east) merchant (east) bo
 
 """ Only have heidi speak to player about the prank if they haven't heard about it yet! """
 heidi_state = player_data.get_level_state("heidi_state")
-if heidi_state == heidi_state_speaking_about_prank:
+if heidi_state == heidi_state_warn_about_crocodiles:
     """ Heidi introducing herself and walking over to the player """
     heidi_introduction_sequence = [
-        lambda callback: heidi.move_to(exit_to_road_top.get_position(), callback = callback),
+        lambda callback: heidi.move_to(exit_to_road_west.get_position(), callback = callback),
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: heidi.move_south(callback = callback),
         lambda callback: heidi.move_south(callback = callback),
@@ -89,12 +89,12 @@ if heidi_state == heidi_state_speaking_about_prank:
     ]
 
     def save_heidi_spoken_about_prank():
-        player_data.set_level_state("heidi_state", heidi_state_getting_prank_materials)
+        player_data.set_level_state("heidi_state", heidi_state_following_player)
         player_data.save()
 
     engine.run_callback_list_sequence(heidi_introduction_sequence, callback = save_heidi_spoken_about_prank)
 
-elif heidi_state == heidi_state_getting_prank_materials:
+elif heidi_state == heidi_state_following_player:
     heidi.set_solidity(False)
     heidi.wait(0.3, callback = lambda: heidi.move_to(player_start_pos, callback = lambda: heidi.follow(player_one)))
 

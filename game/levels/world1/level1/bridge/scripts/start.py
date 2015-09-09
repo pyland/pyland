@@ -11,35 +11,35 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 #end save-data set-up
 
 #defining the possible states of the level
-heidi_state_speaking_about_prank = 0 #not used on this map!
-heidi_state_getting_prank_materials = 1
-heidi_state_got_prank_materials = 2
+heidi_state_warn_about_crocodiles = 0
+heidi_state_following_player = 1
+heidi_state_stand_by_bridge = 2
 #end state definitions
 
 
 player_start_pos = (0, 0)
 #setting the player's starting position
-if player_data.get_previous_exit() == "/world1/level1/rossumberg/top":
-    player_start_pos = exit_to_village_top.get_position()
+if player_data.get_previous_exit() == "/world1/level1/rossumberg/west":
+    player_start_pos = exit_to_village_west.get_position()
     player_one.move_to(player_start_pos, callback = player_one.move_north)
-elif player_data.get_previous_exit() == "/world1/level1/rossumberg/bottom":
-    player_start_pos = exit_to_village_bottom.get_position()
+elif player_data.get_previous_exit() == "/world1/level1/rossumberg/east":
+    player_start_pos = exit_to_village_east.get_position()
     player_one.move_to(player_start_pos, callback = player_one.move_north)
 # end settin the default starting position
 
 #setting up the level's exits
-def go_to_village_top(player_object):
-    player_data.save_and_exit("/world1/level1/rossumberg", info = "top")
+def go_to_village_west(player_object):
+    player_data.save_and_exit("/world1/level1/rossumberg", info = "west")
 
-def go_to_village_bottom(player_object):
-    player_data.save_and_exit("/world1/level1/rossumberg", info = "bottom")
+def go_to_village_east(player_object):
+    player_data.save_and_exit("/world1/level1/rossumberg", info = "east")
 
 def go_to_world(player_object):
     player_data.complete_level_and_save()
     player_data.save_and_exit("/world1/level1/bridge_end")
 
-exit_to_village_top.player_walked_on = go_to_village_top
-exit_to_village_bottom.player_walked_on = go_to_village_bottom
+exit_to_village_west.player_walked_on = go_to_village_west
+exit_to_village_east.player_walked_on = go_to_village_east
 exit_to_world.player_walked_on = go_to_world
 
 #end setting up the level exits
@@ -59,7 +59,7 @@ no_potion.player_action = no_potion_player_action
 
 #state-based set-up
 heidi_state = player_data.get_level_state("heidi_state")
-if heidi_state == heidi_state_getting_prank_materials:
+if heidi_state == heidi_state_following_player:
     def heidi_player_action(player_object):
         player_one.set_busy(True)
         engine.show_dialogue("This is bad, normally the crocodiles never come out this far.", callback = lambda: player_one.set_busy(False))
