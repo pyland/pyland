@@ -205,10 +205,36 @@ class Engine:
         self.__cpp_engine.print_debug(str(message))
 
     def create_object(self, object_file_location, object_name, position):
-        """ This is meant to return a new instance of a given game object, but it hasn't been properly implemented yet """
+        """ Creates a new game object dynamically and returns it.
+
+        WARNING: Has only been tested on tile-triggers, needs more thorough checks. 
+
+        Parameters
+        ----------
+        object_file_location : str
+            The string of where the object is located in the file system, identical to what you provide in tiled.
+        object_name : str
+            The name you wish to give the object, used by self.get_object_called to get the object with the given name, so make sure it's unique or won't be need by this method if possible.
+        position : 2-tuple of int 
+            The position at which you wish to spawn the object
+        """
         x, y = position
-        entity = self.__cpp_engine.create_object( object_file_location, object_name, x, y)
-        return self.wrap_entity_in_game_object(self, entity) #TODO: COMMENT THIS
+        entity = self.__cpp_engine.create_object(object_file_location, object_name, x, y)
+        return self.wrap_entity_in_game_object(entity)
+
+    def destroy_object(self, game_object):
+        """ Destroys the given game object in memory and removes it from the map.
+        
+        WARNING: Only moves it off the map and makes it invisible and unsolid, for now.
+        TODO: Work out how to implement this functionality properly, allowing for the most graceful possible degredation.
+
+        Parameters
+        ----------
+        game_object : GameObject
+            The instance of the game object you wish to destroy
+        """
+        object_id = game_object.get_id()
+        game_object.move_to((-10000, -10000))
 
     def get_tile_type(self, position):
         """Returns an integer corresponding to a specific tile type specified in the SpecialLayer of tiled at the current position.
