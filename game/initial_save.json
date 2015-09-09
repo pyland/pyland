@@ -4,7 +4,7 @@
 	"totems": {},
 	"coins": 0, 
 	"py_scripter_tabs": 1,
-	"py_scripter_enabled": false,
+	"has_unlocked_pyscripter": false,
 	"player_type": "male_0",
 	"level_data" : {
 		"world_1" : {

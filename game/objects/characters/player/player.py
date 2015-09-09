@@ -150,8 +150,8 @@ class Player(Character):
         x,y = self.get_position()
         target_position = (x, y+1)
         if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
-            self.wait(0.0, callback = lambda: self.__trigger_walk_off((x,y)))
             super().move_north(callback)
+            self.__trigger_walk_off((x,y))
             self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
             self.face_north()
@@ -173,8 +173,8 @@ class Player(Character):
         x,y = self.get_position()
         target_position = (x+1, y)
         if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
-            self.wait(0.0, callback = lambda: self.__trigger_walk_off((x,y)))
             super().move_east(callback)
+            self.__trigger_walk_off((x,y))
             self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
             self.face_east()
@@ -196,8 +196,8 @@ class Player(Character):
         x,y = self.get_position()
         target_position = (x, y-1)
         if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
-            self.wait(0.0, callback = lambda: self.__trigger_walk_off((x,y)))
             super().move_south(callback)
+            self.__trigger_walk_off((x,y))
             self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on a moment before they reach there
         else:
             self.face_south()
@@ -220,8 +220,8 @@ class Player(Character):
         x,y = self.get_position()
         target_position = (x-1, y)
         if (engine.get_tile_type(target_position) != engine.TILE_TYPE_WATER) and (not engine.is_solid(target_position)): #stop the player from being Chris Angel
-            self.wait(0.0, callback = lambda: self.__trigger_walk_off((x,y)))
             super().move_west(callback)
+            self.__trigger_walk_off((x,y))
             self.wait(0.2, callback = lambda: self.__trigger_walk_on(target_position)) #call walk-on triggers on objects player walks on
         else:
             self.face_west()

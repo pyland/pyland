@@ -72,6 +72,7 @@ if heidi_state == heidi_state_speaking_about_prank:
         lambda callback: heidi.move_south(callback = callback),
         lambda callback: heidi.move_south(callback = callback),
         lambda callback: heidi.move_south(callback = callback),
+        lambda callback: heidi.move_south(callback = callback),
         lambda callback: heidi.face_east(callback = callback),
         lambda callback: player_one.face_west(callback = callback),
         lambda callback: engine.show_dialogue(engine.get_player_name() + "!", callback = callback),

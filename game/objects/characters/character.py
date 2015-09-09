@@ -467,10 +467,9 @@ class Character(GameObject, ScriptStateContainer):
         callback : func, optional
             Places the callback onto the engine event-queue
         """
-        if not self.is_busy():
-            face_x()
-            self.start_animating()
-            parent_move_x(lambda: self.__stop_animating_func(callback))
+        face_x()
+        self.start_animating()
+        parent_move_x(lambda: self.__stop_animating_func(callback))
         return
 
     def __stop_animating_func(self, callback = lambda : None):
