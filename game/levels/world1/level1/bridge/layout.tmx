@@ -39,6 +39,7 @@
   <object name="tile_trigger/exit_to_bridge_end" gid="292" x="1600" y="448"/>
   <object name="player_data/player_data" gid="287" x="0" y="64"/>
   <object name="tile_trigger/no_potion" gid="292" x="1152" y="256"/>
+  <object name="totem/totem0" gid="298" x="128" y="256"/>
  </objectgroup>
  <layer name="Water" width="25" height="30">
   <data encoding="base64" compression="zlib">
