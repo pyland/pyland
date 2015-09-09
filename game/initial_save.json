@@ -1,6 +1,6 @@
 {
-	"current_map": "/world_1/level_1/player_house",
-	"previous_exit": "/world_1/intro",
+	"current_map": "/world1/intro",
+	"previous_exit": "/world1/intro",
 	"totems": {},
 	"coins": 0, 
 	"py_scripter_tabs": 1,

@@ -19,13 +19,13 @@ heidi_state_stand_by_bridge = 2
 
 player_start_pos = (0, 0)
 #setting the player's starting position
-if player_data.get_previous_exit() == "/world1/level1/player_house":
+if player_data.previous_exit_is("world1", level_name = "level1", map_name = "player_house"):
     player_start_pos = exit_to_house.get_position()
     player_one.move_to(exit_to_house.get_position(), callback = player_one.move_south)
-elif player_data.get_previous_exit() == "/world1/level1/bridge/west":
+elif player_data.previous_exit_is("world1", level_name = "level1", map_name = "rossumberg", info = "west"):
     player_start_pos = exit_to_road_west.get_position()
     player_one.move_to(exit_to_road_west.get_position(), callback = player_one.move_south)
-elif player_data.get_previous_exit() == "/world1/level1/bridge/east":
+elif player_data.previous_exit_is("world1", level_name = "level1", map_name = "rossumberg", info = "east"):
     player_start_pos = exit_to_road_east.get_position()
     player_one.move_to(exit_to_road_east.get_position(), callback = player_one.move_south)
 else:

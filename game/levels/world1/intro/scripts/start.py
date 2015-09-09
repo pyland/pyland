@@ -67,7 +67,7 @@ def get_player_name(callback):
     engine.register_input_callback(engine.INPUT_HALT, stc.halt_script)
 
 
-level_name = "/world_1/intro"
+level_name = "/world1/intro"
 introduction_sequence = [
     lambda callback: engine.show_dialogue(engine.get_dialogue(level_name, "monty_coming_now"), callback = callback),
     lambda callback: camera.move_by((0, -11), 2.2, callback = callback),

@@ -67,6 +67,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: annoying_croc.face_north(callback = callback),
             lambda callback: engine.show_dialogue("???: Wait you lousy croc!", callback = callback),
             lambda callback: engine.show_dialogue("Monkey surprise attack!", callback = callback),
+            lambda callback: engine.play_music("world_1_myla", callback = callback),
             lambda callback: myla.face_south(callback = callback),
             lambda callback: myla.set_solidity(False, callback = callback),
             lambda callback: myla.start_animating(callback = callback),
@@ -110,13 +111,13 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: engine.show_dialogue("???: Thank you so much for helping me out back there!", callback = callback),
             lambda callback: engine.show_dialogue("I think if you hadn't come along I don't know what I would have done.", callback = callback),
             lambda callback: engine.show_dialogue("The green one you just had the pleasure of meeting is Carl.", callback = callback),
-            lambda callback: engine.play_music("world_1_myla", callback = callback),
             lambda callback: engine.show_dialogue("By the way I'm Myla, as you heard I guess? Oh sorry! You are?", callback = callback),
             lambda callback: engine.show_dialogue("...", callback = callback),
             lambda callback: engine.show_dialogue("Nice to meet you " + engine.get_player_name() + "!", callback = callback),
             lambda callback: engine.show_dialogue("It seems that you have found my PyScripter, this is an early prototype, there aren't many around ...", callback = callback),
             lambda callback: engine.show_dialogue("Anyway, I will let you keep it for a while if you help me get to the other side of the jungle. I could do with some help!", callback = callback),
             lambda callback: engine.show_dialogue("Let's head to the bog, I will teach you the basics there!", callback = callback),
+            lambda callback: engine.play_music("world_1_jungle", callback = callback),
             lambda callback: myla.follow(player_one, callback = callback),
             lambda callback: player_one.set_busy(False, callback = callback)
         ], save_pyscripter_state)
