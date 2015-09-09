@@ -20,24 +20,29 @@
    eJxLYGBgSBjFo3gUj+JRPIpH8ShGwgDsl8MB
   </data>
  </layer>
+ <layer name="Water" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztkM0KgDAMg3dyepi37f0f1RZWLKUpAxU8NBD2I80XV0oqlUr9Wwe5kvdp3m8fMBq5k8dc2ecLLM6W3k3la84TluTrbHHEquV+V70iRjMZkiv2uOjcnf7VMFB3+w3x5c5mDyfHm7N7e+c5mkVvt8JCPdG/RB1XzPMXAnQMbA==
+  </data>
+ </layer>
  <layer name="Decor" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJytVEEOwCAM4sX+/+i9KQW0JIs6W2DO9gA45WHo4uo7xpXkOfGdL+ZT8dSxcrP19K3V13SuTOtFzwXTcv5TCuaX7f+C3YdtsLsK+HrO2U71tKUBsefyOzxOvbOcOlc6nZ7qUalG0vteakn1ReUn1XB0Eig/vz0myVO9rePZ4mdx3dqFc6ZoRhcXorlXqQ==
+   eJztk7EOgDAIRPlaaxf/f9RBY/PCAdrFwUsaW+A4gXazGxuWiX2DXfFVLrU64nqBQ42IY4UYxo71muPz6nuavzt5DDHU82ZBnseJ/j3TUnzFGW2cbTvPvEteb5RmdtcM++vb4PP6RlT7EL2JCOuxlkQzyk3fOuwXnA0+hchXwaWZzWqM67BlUHn5ZqNeVZG9OzWjWa2otuay5zHTpy/q/HiHHYCiXWQ=
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJzNlV0OwCAIg91Jdv9b7lFDWoECyUiMyUS/rviz1r/jfXZ/tikGG+tiVHO65kdzre+KRm9ed03tWhN75uQgb1R/vRz7LcPwdKkeWX3eOuifox5ktLJ9wDxHeiIM795gXKV+Nw5jVRmIk4mMHuWsqndTtC4T707lPGc5qI/GB/UNDkE=
+   eJxjYBgFo4B0IM+IimlpBy47qeEGYvXis4tYOXLdRo69gwkQG2f4/KHAiB0TkyaITSu47IBhcv1OjNmU2kWq+eTYT207kO2hhdmjmHIMAGyBHSo=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
   <object name="characters/player/player_one" gid="191" x="0" y="704"/>
   <object name="sign/bog_sign" gid="193" x="128" y="640"/>
   <object name="pyscripter/pyscripter" gid="192" x="320" y="704"/>
-  <object name="tile_trigger/exit_to_bridge" gid="197" x="0" y="704"/>
+  <object name="tile_trigger/exit_to_bridge" gid="197" x="-64" y="704"/>
   <object name="player_data/player_data" gid="192" x="0" y="64"/>
-  <object name="characters/enemies/crocodiles/green_crocodile/annoying_croc" gid="193" x="896" y="384"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/annoying_croc" gid="193" x="896" y="1024"/>
   <object name="characters/npcs/myla/myla" gid="191" x="320" y="64" width="64" height="64"/>
-  <object name="tile_trigger/exit_to_world" gid="197" x="832" y="1280"/>
+  <object name="tile_trigger/exit_to_world" gid="197" x="1664" y="640"/>
  </objectgroup>
 </map>
