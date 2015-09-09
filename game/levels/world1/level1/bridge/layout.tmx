@@ -29,18 +29,6 @@
    eJztw0ENAAAMA6GTWv8qZmMPSFg1VVX19QOR5hlQ
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="25" height="30">
-  <object name="characters/player/player_one" gid="286" x="512" y="1920"/>
-  <object name="tile_trigger/exit_to_village_east" gid="292" x="576" y="1984"/>
-  <object name="tile_trigger/exit_to_village_west" gid="292" x="512" y="1984"/>
-  <object name="sign/village_sign" gid="288" x="640" y="1792"/>
-  <object name="sign/bog_sign" gid="288" x="1280" y="256"/>
-  <object name="characters/npcs/heidi/heidi" gid="291" x="1536" y="1920"/>
-  <object name="tile_trigger/exit_to_bridge_end" gid="292" x="1600" y="448"/>
-  <object name="player_data/player_data" gid="287" x="0" y="64"/>
-  <object name="tile_trigger/no_potion" gid="292" x="1152" y="256"/>
-  <object name="totem/totem0" gid="298" x="128" y="256"/>
- </objectgroup>
  <layer name="Water" width="25" height="30">
   <data encoding="base64" compression="zlib">
    eJztVNEOgyAMrHMbLmGbL/L/nzpIIOlqoYVuDyY2uahA764FBDjjSPGIWDJcxP0P/M+IDeE1qFO8Ovj2TPmxjgN9XS2ugkCeGFeFRi2XG6vVJNWi4ZG0JZ1afuioJeE2oNGLVi2cb6rVqgmPl/NGtUZ9SzWVe+CUfbL0UDr7Up7ljNS0uX3SzI3oWnqm5bB4tvxTRvZDy2/t3y/8prVTxMp4svijuSk80uHwjrhkP1N+X2HvFc/jbyA6AfGWNTPswyM+br4WHnnoyTvjWPEBL5sgFg==
@@ -56,4 +44,17 @@
    eJztllEKwDAIQ0vPtd3/WvvccIlG60cZCxQGrT61sjrGrWP2LSvvDNvLsCI+YlVzVhTZevl7Oud7eTVlcWX8W46at7WP/KPz2VpEDEVeDirD49r7rsbJ7FB/Z+oe5fnMI4qnymD91s1A9e68j+44f8b3GN19tEteuzPU/0LH/a72AJN98xU7Nhcgf+gtsd/Il91jM5uXC4sVMRhPEZu9qrNfxELfWV1FbH/y
   </data>
  </layer>
+ <objectgroup name="Object Layer 1" width="25" height="30">
+  <object name="characters/player/player_one" gid="286" x="512" y="1920"/>
+  <object name="tile_trigger/exit_to_village_east" gid="292" x="576" y="1984"/>
+  <object name="tile_trigger/exit_to_village_west" gid="292" x="512" y="1984"/>
+  <object name="sign/village_sign" gid="288" x="640" y="1792"/>
+  <object name="sign/bog_sign" gid="288" x="1280" y="256"/>
+  <object name="characters/npcs/heidi/heidi" gid="291" x="1536" y="1920"/>
+  <object name="tile_trigger/exit_to_bridge_end" gid="292" x="1600" y="448"/>
+  <object name="player_data/player_data" gid="287" x="0" y="64"/>
+  <object name="tile_trigger/no_potion" gid="292" x="1152" y="256"/>
+  <object name="totem/totem0" gid="298" x="128" y="256"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="640" y="576" width="64" height="64"/>
+ </objectgroup>
 </map>

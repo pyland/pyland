@@ -14,10 +14,10 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 
 #setting the player's starting position
 player_one.set_busy(True)
-if player_data.previous_exit_is("world1", level_name = "intro"):
-    player_one.set_busy(False)
-elif player_data.previous_exit_is("world1", level_name = "level1", map_name = "rossumberg"):
+if player_data.previous_exit_is("world1", level_name = "level1", map_name = "rossumberg"):
     player_one.move_to((3, 4), callback = lambda: player_one.move_south(callback = lambda: player_one.set_busy(False)))
+else:
+    player_one.set_busy(False)
 
 #end setting the player's starting position
 

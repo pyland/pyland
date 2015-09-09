@@ -76,5 +76,6 @@ else:
 # end object set-up
 engine.play_music("world_1_jungle")
 player_one.focus()
+croc_0.face_south()
 
 

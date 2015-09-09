@@ -30,11 +30,11 @@ for croc in horizontal_crocodiles:
     croc.face_east()
     croc.change_state("swim")
     croc.move_horizontal()
-    croc.killable = [player_one, myla]
+    croc.killable = [player_one]
     croc.still_check_kill()
 
 for croc in all_crocodiles:
-    croc.killable = [player_one, myla]
+    croc.killable = [player_one]
     croc.still_check_kill()
 
 
