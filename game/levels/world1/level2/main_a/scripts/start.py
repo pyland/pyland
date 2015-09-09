@@ -1,6 +1,6 @@
 #commence save-data set-up
-world_name = "world_1"
-level_name = "level_2"
+world_name = "world1"
+level_name = "level2"
 map_name = "main_a"
 
 engine.update_world_text("1")
@@ -23,15 +23,6 @@ croc_0.face_east()
 croc_1.face_east()
 croc_2.face_east()
 croc_3.face_east()
-
-croc_0.killable = [player_one, myla]
-croc_1.killable = [player_one, myla]
-croc_2.killable = [player_one, myla]
-croc_3.killable = [player_one, myla]
-croc_0.still_check_kill()
-croc_1.still_check_kill()
-croc_2.still_check_kill()
-croc_3.still_check_kill()
 
 if not came_from_main_b:
     engine.run_callback_list_sequence([

@@ -1,6 +1,6 @@
 #commence save-data set-up
-world_name = "world_1"
-level_name = "level_2"
+world_name = "world1"
+level_name = "level2"
 map_name = "main_b"
 
 engine.update_world_text("1")
@@ -26,10 +26,6 @@ croc[0].face_east()
 croc[1].face_east()
 croc[2].face_south()
 croc[3].face_west()
-
-for c in croc:
-    c.killable = [player_one, myla]
-    c.still_check_kill()
 
 engine.run_callback_list_sequence([
     lambda callback: player_one.face_east(callback = callback),
