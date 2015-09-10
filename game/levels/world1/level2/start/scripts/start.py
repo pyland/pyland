@@ -20,22 +20,58 @@ def myla_introduces_programming_action(player_object):
         lambda callback: engine.show_dialogue("The first thing we are going to start with is printing to the the PyConsole in the bottom right-hand corner of the screen.", callback = callback),
         lambda callback: engine.show_dialogue("To start with, I am going to ask you to give the scripts for me to check and run.", callback = callback),
         lambda callback: engine.show_external_script(
+            external_dialogue = "Can you please print my name? Don't forget to put it in quotation marks!",
             script_init = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.clear_scripter(callback = callback),
                 lambda callback: engine.insert_to_scripter("print()"),
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
-                lambda callback: engine.show_dialogue("Awesome!", callback = callback),
+                lambda callback: engine.show_dialogue("Awesome!", callback = callback), #TODO: add all the possible reactions to what the player can give Myla
             ], callback = callback),
             cancel_callback = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.show_dialogue("Oh, you've forgotten my name already? I'm Myla! Try giving it another go.", callback = callback),
             ], callback = callback),
-            external_dialogue = "Can you please print my name? Don't forget to put it in quotation marks!"
         ),
+        lambda callback: engine.show_dialogue("print() is an example of something called a function.", callback = callback),
+        lambda callback: engine.show_dialogue("A function takes what you give it in between the brackets, and does something with it!", callback = callback),
+        lambda callback: engine.show_dialogue("The thing you give to a function is called an argument.", callback = callback),
+        lambda callback: engine.show_dialogue("If it's a lot to take in, don't worry, we will back to all of this again and again in many different ways.", callback = callback),
+        lambda callback: engine.show_dialogue("In summary, you just used a function called print, and gave it my name as an argument.", callback = callback),
+        lambda callback: engine.show_dialogue("Anyway, let's get moving, I will teach you some more in a bit.", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
     ])
 
 myla_introduces_programming.player_walked_on = myla_introduces_programming_action
+
+def myla_introduces_variables_action(player_object):
+    engine.run_callback_list_sequence([
+        lambda callback: player_one.set_busy(True, callback = callback),
+        lambda callback: player_one.face_west(callback = callback),
+        lambda callback: engine.show_dialogue("Myla: Now we are going to start getting fancy!", callback = callback),
+        lambda callback: engine.show_dialogue("I'm going to introduce you to variables.", callback = callback),
+        lambda callback: engine.show_dialogue("A variable is something you can give a value of some kind, and then do with it what you want.", callback = callback),
+        lambda callback: engine.show_dialogue("The reason it's called a variable, is because the value it contains can vary!", callback = callback),
+        lambda callback: engine.show_external_script(
+            external_dialogue = "Try printing your name this time! However, do it by changing what name is equals to, don't give it straight to print!",
+            script_init = lambda: engine.run_callback_list_sequence([
+                lambda callback: engine.clear_scripter(callback = callback),
+                lambda callback: engine.insert_to_scripter("name = \"Myla\"\n", callback = callback),
+                lambda callback: engine.insert_to_scripter("print(name)", callback = callback), #TODO, add all the reactions to what the player can give Myla
+            ]),
+            confirm_callback = lambda: engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("Awesome!", callback = callback),
+            ], callback = callback),
+            cancel_callback = lambda: engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("Oh, you've forgotten your own name already? Hahaha, you're called " + engine.get_player_name() + " silly.", callback = callback),
+            ], callback = callback)
+        ),
+        lambda callback: engine.show_dialogue("Well done " + engine.get_player_name() + "!", callback = callback),
+        lambda callback: engine.show_dialogue("Variables are really useful for making your program remember things, they will really come in handy for when we do maths.", callback = callback),
+        lambda callback: engine.show_dialogue("Don't worry if you don't like doing maths much, the thing that's useful about programming is that the PyScripter does all the maths for you!", callback = callback),
+        lambda callback: player_one.set_busy(False, callback = callback),
+    ])
+
+myla_introduces_variables.player_walked_on = myla_introduces_variables_action
 
 
 #setting the player's starting position
