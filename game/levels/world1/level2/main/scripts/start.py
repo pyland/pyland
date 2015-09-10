@@ -1,7 +1,7 @@
 #commence save-data set-up
 world_name = "world1"
 level_name = "level2"
-map_name = "start"
+map_name = "main"
 
 engine.update_world_text("1")
 engine.update_level_text("2")
