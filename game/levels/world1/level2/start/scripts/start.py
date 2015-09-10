@@ -46,7 +46,7 @@ myla_introduces_programming.player_walked_on = myla_introduces_programming_actio
 def myla_introduces_variables_action(player_object):
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
-        lambda callback: player_one.face_west(callback = callback),
+        lambda callback: player_one.face_east(callback = callback),
         lambda callback: engine.show_dialogue("Myla: Now we are going to start getting fancy!", callback = callback),
         lambda callback: engine.show_dialogue("I'm going to introduce you to variables.", callback = callback),
         lambda callback: engine.show_dialogue("A variable is something you can give a value of some kind, and then do with it what you want.", callback = callback),
@@ -78,12 +78,12 @@ myla_introduces_variables.player_walked_on = myla_introduces_variables_action
 if player_data.previous_exit_is("world1", level_name = "level2", map_name = "bogs"):
     engine.run_callback_list_sequence([
         lambda callback: player_one.move_to(exit_to_bogs.get_position(), callback = callback),
-        lambda callback: player_one.move_north(callback = callback),
+        lambda callback: player_one.move_south(callback = callback),
     ])
     myla_start_position = exit_to_bogs.get_position()
 elif player_data.previous_exit_is("world1"):
-    player_one.move_east()
-    myla_start_position = (3, 10)
+    player_one.move_north()
+    myla_start_position = exit_to_world.get_position()
 #end setting the player's starting position
 
 
@@ -99,10 +99,20 @@ def go_to_bogs(player_object):
 exit_to_world.player_walked_on = go_to_world
 exit_to_bogs.player_walked_on = go_to_bogs
 
+myla.set_solidity(False)
 myla.move_to(myla_start_position)
 myla.follow(player_one)
 
 player_one.focus()
 engine.play_music("world_1_jungle")
 
-bog_sign.set_message("(west) rossumberg (south) bog")
+toll_person.set_dialogue_list([
+    "This person will want to toll you to cross the bridge, before letting you through",
+    "However, their PyRunner doesn't work and Myla cheekily tells you to 'fix' it so that...",
+    "...it always show that everyone has payed.",
+    "That will resolve and complete the level. The script the toll_person has will be to the effect of...",
+    "amount_payed = \"£0\" \n print(amount_payed)",
+    "The played can replace the amount_payed with whatever they want above the charge of £10.",
+    "That will complete the level",
+])
+
