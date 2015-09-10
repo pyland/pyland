@@ -38,7 +38,7 @@ elif player_data.previous_exit_is("world1", level_name = "level2"):
     if player_data.is_level_completed("/world1/level2"):
         player_one.move_to(level2.get_position())
     else:
-        player_one.move_to(level1.get_position(), callback = level2_move_away)
+        player_one.move_to(level2.get_position(), callback = level2_move_away)
 elif player_data.previous_exit_is("world1", level_name = "level3"):
     if player_data.is_level_completed("/world1/level3"):
         player_one.move_to(level3.get_position())
@@ -102,7 +102,7 @@ def go_to_level1(player_object):
 level1.player_walked_on = go_to_level1
 
 def go_to_level2(player_object):
-    ask_to_go_to_level("world1","level2", "main_a", "Level 2", level2_move_away)
+    ask_to_go_to_level("world1","level2", "bogs", "Level 2", level2_move_away)
 
 level2.player_walked_on = go_to_level2
 

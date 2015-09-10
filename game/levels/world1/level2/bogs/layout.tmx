@@ -27,13 +27,13 @@
  </layer>
  <layer name="Decor" width="26" height="50">
   <data encoding="base64" compression="zlib">
-   eJylWO1uwzAI5FG7Td267qN/1kdMkz99p8VSkNjpDsiKhNLYhuMwpm7vZnYv1MRz6NywtWQO17CxZcNhc3tiVxhT4bvCq2QO8WMcSqpcZn5YrnCOYTEbnOvy95xGPGU3h+dkuWT2Cuc/uVY5yfh068V1SWKcCh8m7Lqc2Fq0U1LtkVqv8or+lqa/KHv4sj10Oa16hPfXbWwidnEPM4z4efj8XPVr1bfN/3i/bmOO5+tZnWT9xNd9rPq06SHoeL+s+r3qs/Xzpmovy/1HgrHYXxysExxnceBY58yxHljJnr7EMLM1XX9x7gZP1Uu6eenY2YbH4qxE9awqFzHvuG/qexX7C8Ma4mfb9UjWMz8MKxs/r/qz6TjjL0Vce+t9yClguDIcPHM4r7gMnQOXa8AZPesI6x/BGfJO+CCn6ix18sn4ICe3uRFek+CDOMgn4jFON9N8FI7320vAcBzv9UNmYqfiZmOIxbiwnKuYXbI7z1lwyeKeTHOMMcVnxMHzwzCUL2bD+Kh+oO5AVb37Oe3wyXo3w8HfSchH7U1cx+5QjA+rt4iT7U1WawoHddT2gXBxG3bvQ/8dHCYxz4/gLJb3YeSTYSEO44Txq+9mFleXD+OS3QOq/c5w4jzDQLwKA/tRlb+Iy/6jQCwWUwdP2e3B8eeIFe+irIdkXIysrfhkMSqc7u/I//zHVYnyb+QzG6uwujFm+avqh2H8Aqp6I2w=
+   eJylWFtuw0AI5Khpq/SRPvKTHNGxf3KneiUj0dEM4AYJOd5dGIZlySZ3M7sXauI5dG7YWjKHa9jYsuGwuT2xK4yp8F3hVTKH+DEOJVUuMz8sVzjHsJgNznX5e04jnrKbw3OyXDJ7hfOfXKucZHy69eK6JDFOhQ8Tdl1ObC3aKan2SK1XeUV/S9NflD182R66vK96hPfXbWwidnEPM4z4efj8WvV71bfN/3i/bmOO5+tZnWT9xNd9rvq06SHoeD+v+rPqs/Xzpmovy/1ngrHYXxysExxnceBY58yxHljJnr7EMLM1XX9x7gZP1Uu6eenY2YbH4qxE9awqFzHvuG/qexX7C8Ma4mfb9UjWMz8MKxs/rXrZdJzxlyKuvfU+xHvKJSjDwTOH84rL0DlwuQac0bOOsP4RnCEfwIVxqs5SJ5+MD3JymxvhNQk+iIN8Ih7jdDPNR+F4vz0HDMfxXj9kJnYqbjaGWIwLy7mK2SW785wElyzuyTTHGFN8Rhw8PwxD+WI2jI/qB+oOVNW7n9MOn6x3Mxz8nYR81N7EdewOxfiweos42d5ktaZwUEdtHwgXt2H3PvTfwWES8/wIzmJ5H0Y+GRbiME4Yv/puZnF1+TAu2T2g2u8MJ84zDMSrMLAfVfmLuOw/CsRiMXXwlN0eHH+OWPEuynpIxsXI2opPFqPC6f6O/M9/XJUo/0Y+s7EKqxtjlr+qfhjGL1ZaI2Q=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="26" height="50">
   <object name="characters/player/player_one" gid="286" x="832" y="64"/>
   <object name="sign/bog_sign" gid="288" x="704" y="192"/>
-  <object name="tile_trigger/exit_to_start" gid="292" x="832" y="64"/>
+  <object name="tile_trigger/exit_to_start" gid="292" x="832" y="0"/>
   <object name="player_data/player_data" gid="287" x="0" y="64"/>
   <object name="characters/npcs/myla/myla" gid="286" x="64" y="128" width="64" height="64"/>
   <object name="vine/vine0" gid="196" x="320" y="256"/>
@@ -73,14 +73,6 @@
   <object name="tile_trigger/myla_explain_whetstone" gid="292" x="960" y="384"/>
   <object name="vine/vine1" gid="196" x="640" y="448"/>
   <object name="whetstone/whetstone2" gid="292" x="1280" y="3072"/>
-  <object name="tile_trigger/exit_to_world" gid="292" x="768" y="3200"/>
-  <object name="tile_trigger/trigger_croc_0" gid="292" x="1216" y="832"/>
-  <object name="tile_trigger/trigger_croc_1" gid="292" x="1024" y="768"/>
-  <object name="tile_trigger/trigger_croc_2" gid="292" x="768" y="768"/>
-  <object name="tile_trigger/trigger_croc_3" gid="292" x="64" y="1600"/>
-  <object name="tile_trigger/trigger_croc_4" gid="292" x="64" y="1664"/>
-  <object name="tile_trigger/trigger_croc_5" gid="292" x="64" y="1728"/>
-  <object name="tile_trigger/trigger_croc_6" gid="292" x="64" y="1792"/>
-  <object name="tile_trigger/trigger_croc_7" gid="292" x="64" y="1856"/>
+  <object name="tile_trigger/exit_to_world" gid="292" x="768" y="3264"/>
  </objectgroup>
 </map>

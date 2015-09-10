@@ -143,6 +143,9 @@ class Engine:
         Overrides the get_objects_at method inherited from cpp engine, as that version returns a list of object ids and this returns
         the actual instances.
 
+        WARNING: Using this when in an objects initialise method is not advised, as not all objects will have been initialised yet so it could cause unexpected behaviour.
+        This function will gracefully fail by just ignoring unitialised objects in this case.
+
         Parameters
         ----------
         position : 2-tuple of int
@@ -153,12 +156,12 @@ class Engine:
         list of GameObject
             returns a list of the objects at the given position
         """
-        x, y = position                                     #Extract the position x and y coordinates
-        game_objects= list()                        #initialise the list that will be returned giving the objects at the position
-        object_ids = self.__cpp_engine.get_objects_at(x, y) #get a list of the ids of all the objects at the given position from the game engine
-        for object_id in object_ids:                        #iterate over all the object_ids and grab the object associated with each one.
-            game_objects.append(self.__game_objects_by_id[object_id])
-
+        x, y = position                                     # Extract the position x and y coordinates
+        game_objects= list()                                # Initialise the list that will be returned giving the objects at the position
+        object_ids = self.__cpp_engine.get_objects_at(x, y) # Get a list of the ids of all the objects at the given position from the game engine
+        for object_id in object_ids:                        # Iterate over all the object_ids and grab the object associated with each one.
+            if object_id in self.__game_objects_by_id:      # Gracefully handle unitialised objects
+                game_objects.append(self.__game_objects_by_id[object_id])
         #return a list of the objects at the given position
         return game_objects
 

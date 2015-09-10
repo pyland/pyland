@@ -1,7 +1,10 @@
 #commence save-data set-up
-world_name = "world_1"
-level_name = "level_2"
+world_name = "world1"
+level_name = "level2"
 map_name = "bogs"
+
+engine.update_world_text("1")
+engine.update_level_text("2")
 
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed
@@ -16,10 +19,10 @@ def myla_explain_cut_action(player_object):
 
     def myla_ask_player_if_there_is_way(callback):
         engine.show_dialogue_with_options(
-            "Aren't you gonna ask me if there is a way?",
+            "...",
             {
-                "Yes" : lambda: engine.show_dialogue("Why thank you, you can use your *ahem*, I mean MY PyScripter!", callback = callback),
-                "No": lambda: engine.show_dialogue("Argh ok you win. You can use the PyScripter.", callback = callback)
+                "Is there a way?" : lambda: engine.show_dialogue("Why thank you, you can use your *ahem*, I mean MY PyScripter!", callback = callback),
+                "...": lambda: engine.show_dialogue("Argh ok you win. You can use the PyScripter.", callback = callback)
             }
         )
 
@@ -29,11 +32,10 @@ def myla_explain_cut_action(player_object):
         lambda callback: engine.show_dialogue(engine.get_player_name() + ", there's a vine in the way over there.", callback = callback),
         lambda callback: engine.show_dialogue("What's that, I hear you ask? How could we possibly make it through?", callback = callback),
         lambda callback: engine.show_dialogue("If only there was a way...", callback = callback),
-        lambda callback: engine.show_dialogue("...", callback = callback),
         myla_ask_player_if_there_is_way,
         lambda callback: engine.show_dialogue("I'm going to give you my knife so that you can cut down vines.", callback = callback),
         lambda callback: engine.show_dialogue("The PyScripter let's you control objects from the real world. So you can use it to cut down vines!", callback = callback),
-        lambda callback: engine.show_dialogue("I have written a small script for you and put it into your PyScripter...", callback = callback),
+        lambda callback: engine.show_dialogue("I have written a small program for you and put it into your PyScripter...", callback = callback),
         lambda callback: engine.show_dialogue("Stand next to a vine and hit the 'Run' button (or you can use the spacebar to run scripts)!", callback = callback),
         lambda callback: engine.clear_scripter(callback = callback),
         lambda callback: engine.insert_to_scripter("cut()\n", callback = callback),
@@ -53,7 +55,8 @@ def myla_explain_whetstone_action(player_object):
         lambda callback: myla.move_east(callback = callback),
         lambda callback: myla.face_north(callback = callback),
         lambda callback: player_one.face_south(callback = callback),
-        lambda callback: engine.show_dialogue("You might have noticed that in the console the number of 'cuts' you have left decreased when you cut the vines.", callback = callback),
+        lambda callback: engine.show_dialogue("Well done " + engine.get_player_name() + "!", callback = callback),
+        lambda callback: engine.show_dialogue("You might have noticed that in the PyConsole the number of 'cuts' you have left decreased when you cut the vines.", callback = callback),
         lambda callback: engine.show_dialogue("That's because the knife gets more blunt everytime you use it!", callback = callback),
         lambda callback: myla.face_east(callback = callback),
         lambda callback: player_one.face_east(callback = callback),
@@ -246,11 +249,7 @@ myla_notice_bog_water.player_walked_on = myla_notice_bog_water_action
 #end function assignment
 
 #setting the player's starting position
-if player_data.previous_exit_is("world_1", level_name = "level_2", map_name = "start"):
-    player_one.move_south()
-    myla_start_position = exit_to_start.get_position()
-    myla.set_solidity(False, callback = lambda: myla.move_to(myla_start_position, callback = lambda: myla.follow(player_one)))
-elif player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_explain_cut"):
+if player_data.previous_exit_is(world_name, level_name = level_name, map_name = map_name, info = "myla_explain_cut"):
     x, y = myla_explain_cut.get_position()
     player_one.move_to((x, y), callback = lambda: myla_explain_cut_action(player_one))
     myla.set_solidity(False, callback = lambda: myla.move_to((x + 1, y), callback = lambda: myla.follow(player_one)))
@@ -301,14 +300,18 @@ elif player_data.previous_exit_is(world_name, level_name = level_name, map_name 
     x, y = myla_notice_bog_water.get_position()
     player_one.move_to((x, y), callback = lambda: myla_notice_bog_water_action(player_one))
     myla.set_solidity(False, callback = lambda: myla.move_to((x + 1, y), callback = lambda: myla.follow(player_one)))
+elif player_data.previous_exit_is(world_name):
+    player_one.move_south()
+    myla_start_position = exit_to_start.get_position()
+    myla.set_solidity(False, callback = lambda: myla.move_to(myla_start_position, callback = lambda: myla.follow(player_one)))
 #end setting the player's starting position
 
 def go_to_start(player_object):
-    player_data.save_and_exit("/world_1/level_2/start")
+    player_data.save_and_exit("/world1")
 
 def go_to_world(player_object):
     player_data.complete_level_and_save()
-    player_data.save_and_exit("/world_1")
+    player_data.save_and_exit("/world1")
 
 exit_to_world.player_walked_on = go_to_world
 exit_to_start.player_walked_on = go_to_start
@@ -359,28 +362,3 @@ b2_croc = [
     croc_bottom_7,
     croc_guard_totem
 ]
-
-trigger_crocs = [
-    trigger_croc_0,
-    trigger_croc_1,
-    trigger_croc_2,
-    trigger_croc_3,
-    trigger_croc_4,
-    trigger_croc_5,
-    trigger_croc_6,
-    trigger_croc_7,
-]
-
-
-def player_walked_on_ti():
-    x,y = player_one.get_position()
-    for a in [-1, 1]:
-        for obj in engine.get_objects_at((x+a,y)):
-            if obj in b2_croc:
-                return obj.lose(player_one)
-        for obj in engine.get_objects_at((x,y+a)):
-            if obj in b2_croc:
-                return obj.lose(player_one)
-
-for t in trigger_crocs:
-    t.player_walked_on = lambda player_object: player_walked_on_ti()
