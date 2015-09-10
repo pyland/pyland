@@ -91,7 +91,7 @@ class Crocodile(Enemy):
         if(engine.get_tile_type((x-1, y)) == engine.TILE_TYPE_STANDARD):
             self.wait(0.1, lambda: self.change_state("main"))
 
-    def move_horizontal(self, times = -1):
+    def move_horizontal(self, times = None):
         """ The crocodile moves horizontally (east/west direction).
 
         Everytime there is a collision, times is decremented. When time hits zero, the crocodile stops moving and holds in place. The toggle is needed to the crocodile faces the correct direction when stopping.
@@ -102,7 +102,8 @@ class Crocodile(Enemy):
         times : int, optional
             Number of times the crocoilde can collide with the edge of a riverbank before stopping.
         """
-
+        if times == None:
+            times = self.oscillate
         engine = self.get_engine()
         if times != 0:
             x,y = self.get_position()
@@ -123,7 +124,7 @@ class Crocodile(Enemy):
 
     
 
-    def move_vertical(self, times = -1): 
+    def move_vertical(self, times = None): 
         """ The crocodile moves vertically (north/south direction).
 
         Everytime there is a collision, times is decremented. When time hits zero, the crocodile stops moving and holds in place. The toggle is needed to the crocodile faces the correct direction when stopping.
@@ -132,8 +133,10 @@ class Crocodile(Enemy):
         Parameters
         ----------
         times : int, optional
-            Number of times the crocoilde can collide with the edge of a riverbank before stopping.
+            Number of times the crocoilde can collide with the edge of a riverbank before stopping. If it isn't set the default is the 'oscillate' value of the crocodile.
         """
+        if times == None:
+            times = self.oscillate
 
         engine = self.get_engine()
         if times != 0:

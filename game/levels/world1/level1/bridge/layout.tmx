@@ -56,5 +56,10 @@
   <object name="tile_trigger/no_potion" gid="292" x="1152" y="256"/>
   <object name="totem/totem0" gid="298" x="128" y="256"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="640" y="576" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="448" y="960" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_2" gid="296" x="896" y="1472" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="192" y="1408" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_4" gid="296" x="64" y="1088" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_5" gid="296" x="512" y="704" width="64" height="64"/>
  </objectgroup>
 </map>

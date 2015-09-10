@@ -77,5 +77,10 @@ else:
 engine.play_music("world_1_jungle")
 player_one.focus()
 croc_0.face_south()
+croc_1.move_vertical()
+croc_2.move_horizontal()
+croc_3.move_horizontal()
+croc_4.move_horizontal()
+croc_5.face_north()
 
 
