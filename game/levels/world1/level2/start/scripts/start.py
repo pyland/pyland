@@ -75,15 +75,11 @@ myla_introduces_variables.player_walked_on = myla_introduces_variables_action
 
 
 #setting the player's starting position
-if player_data.previous_exit_is("world1", level_name = "level2", map_name = "bogs"):
-    engine.run_callback_list_sequence([
-        lambda callback: player_one.move_to(exit_to_bogs.get_position(), callback = callback),
-        lambda callback: player_one.move_south(callback = callback),
-    ])
-    myla_start_position = exit_to_bogs.get_position()
-elif player_data.previous_exit_is("world1"):
-    player_one.move_north()
-    myla_start_position = exit_to_world.get_position()
+engine.run_callback_list_sequence([
+    lambda callback: player_one.move_to(exit_to_world.get_position(), callback = callback),
+    lambda callback: player_one.move_north(callback = callback),
+])
+myla_start_position = exit_to_world.get_position()
 #end setting the player's starting position
 
 
@@ -94,7 +90,8 @@ def go_to_world(player_object):
     player_data.save_and_exit("/world1")
 
 def go_to_bogs(player_object):
-    player_data.save_and_exit("/world1/level2/bogs")
+    player_data.complete_level_and_save()
+    player_data.save_and_exit("/world1")
 
 exit_to_world.player_walked_on = go_to_world
 exit_to_bogs.player_walked_on = go_to_bogs
