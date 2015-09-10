@@ -466,7 +466,7 @@ class Engine:
         dialogue : str
             The string that will be display on the dialogue window
         ignore_scripting : bool
-            By default, the dialogue box enables the scripter on opening and disables it on closing 
+            By default, the dialogue box disables the pyscripter when it is opened and enables it when it is closed.
             Ths boolean value is true if we don't want that default functionality. It is then up to the caller to enable and disable the PyScripter.
         callback : func, optional
             Places the callback onto the engine
@@ -475,9 +475,20 @@ class Engine:
         self.__cpp_engine.show_dialogue(dialogue, ignore_scripting, callback)
 
     def close_external_script_help(self, callback = lambda: None):
+        """ This closes the dialogue box created by show_external_script_help
+        
+        WARNING: This is a stupid and confusing function name and really needs to be changed!!!!
+        TODO: This method should probably be called close_dialogue and should apply to whatever dialogue is being displayed!!!
+        """
         self.__cpp_engine.close_external_script_help(callback)
 
     def show_external_script_help(self, dialogue, callback = lambda: None):
+        """ This shows a dialogue box which cannot be closed by the player, this is useful for create dialogue boxes that you might want to close yourself.
+        
+        WARNING: THIS IS A STUPID METHOD NAME, THIS METHOD NEEDS TO MERGED WITH SHOW DIALOGUE, WITH AN EXTRA PARAMETER TO DETERMINE IF THE PLAYER CAN MANUALLY CONTINUE OR GIVEN A BETTER NAME
+
+        The callback is run straight after the dialogue box is opened
+        """
         self.__cpp_engine.show_external_script_help(dialogue, callback)
 
     def show_dialogue_with_options(self, dialogue, options, disable_scripting = True):
