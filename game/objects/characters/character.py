@@ -64,8 +64,6 @@ class Character(GameObject, ScriptStateContainer):
 
     __keys = 0
 
-    __script = "" #The script that the NPC stores (for when the player is writing scripts for them)
-
     def initialise(self):
         super().initialise
         self.set_solidity(True)
@@ -155,20 +153,6 @@ class Character(GameObject, ScriptStateContainer):
         """ Sets the character name to the name of the object
         """
         self.set_character_name(self)
-
-    def set_script(self, script):
-        """ Sets the character's script to be the text 'script'
-        """
-        self.__script = script
-
-    def get_script(self):
-        """
-        Returns
-        -------
-        str
-            A string of the player's script text
-        """
-        return self.__script
 
     def get_character_name(self):
         """

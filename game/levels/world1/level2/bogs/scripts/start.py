@@ -300,14 +300,14 @@ elif player_data.previous_exit_is(world_name, level_name = level_name, map_name 
     x, y = myla_notice_bog_water.get_position()
     player_one.move_to((x, y), callback = lambda: myla_notice_bog_water_action(player_one))
     myla.set_solidity(False, callback = lambda: myla.move_to((x + 1, y), callback = lambda: myla.follow(player_one)))
-elif player_data.previous_exit_is(world_name):
+else:
     player_one.move_south()
     myla_start_position = exit_to_start.get_position()
     myla.set_solidity(False, callback = lambda: myla.move_to(myla_start_position, callback = lambda: myla.follow(player_one)))
 #end setting the player's starting position
 
 def go_to_start(player_object):
-    player_data.save_and_exit("/world1")
+    player_data.save_and_exit("/world1/level2/start")
 
 def go_to_world(player_object):
     player_data.complete_level_and_save()

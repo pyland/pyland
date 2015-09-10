@@ -109,7 +109,7 @@ def write_script(challenger, dialogue, script):
                 lambda callback: player_one.set_busy(False, callback = callback),
                 lambda callback: npc.start_turning(4.0,10, callback = callback)]),
             external_dialogue = dialogue,
-            character_object = challenger
+            script_state_container = challenger
         )
     ])
 

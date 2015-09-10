@@ -6,6 +6,7 @@ class ScriptStateContainer:
     __script_name = "script_state_container"
     __thread_id = 0
     __running_script = False
+    __script = ""
 
     def set_running_script_status(self, status):
         """ Set the script runnin status of the player, used by scriptrunner.py as a simple check to see if this player is already running as script.
@@ -20,6 +21,21 @@ class ScriptStateContainer:
 
     def get_script_name(self):
         return self.__script_name
+
+    def set_script(self, script):
+        """ Sets the object's script to be the text 'script'
+        """
+        self.__script = script
+
+    def get_script(self):
+        """
+        Returns
+        -------
+        str
+            A string of the object's script text
+            Used by engine.py mainly in show_external_script and has no direct effect here.
+        """
+        return self.__script
 
     def set_script_name(self, script_name):
         self.__script_name = script_name
