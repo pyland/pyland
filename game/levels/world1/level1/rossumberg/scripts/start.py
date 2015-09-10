@@ -84,6 +84,7 @@ if heidi_state == heidi_state_warn_about_crocodiles:
         lambda callback: engine.show_dialogue("Where were you?", callback = callback),
         lambda callback: engine.show_dialogue("There was a huge storm and a surge of lightning last night.", callback = callback),
         lambda callback: engine.show_dialogue("Now crocodiles are attacking our village bridge to the north of here!", callback = callback),
+        lambda callback: engine.show_dialogue("Please come and help.", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
         lambda callback: heidi.follow(player_one, callback = callback)
     ]

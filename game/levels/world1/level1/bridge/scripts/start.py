@@ -66,7 +66,31 @@ if heidi_state == heidi_state_following_player:
         player_one.set_busy(True)
         engine.show_dialogue("This is bad, normally the crocodiles never come out this far.", callback = lambda: player_one.set_busy(False))
 
+    def heidi_chicken_out_action(player_object):
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: player_one.face_south(callback = callback),
+            lambda callback: engine.show_dialogue("Heidi: Maybe I will just back out on this one, crocodiles are scary.", callback = callback),
+            lambda callback: engine.show_dialogue("If a crocodiles touches you, you're a gonner, so I will hang back and give you moral support!", callback = callback),
+            lambda callback: heidi.stop_follow(callback = callback),
+            lambda callback: heidi.set_solidity(True, callback = callback),
+            lambda callback: heidi.move_south(callback = callback),
+            lambda callback: heidi.move_west(callback = callback),
+            lambda callback: heidi.face_east(callback = callback),
+            lambda callback: player_one.set_busy(False, callback = callback), 
+        ]) #TODO: save heidi state
+
+    def heidi_totem_warning_action(player_object):
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: player_one.face_south(callback = callback),
+            lambda callback: engine.show_dialogue("Heidi: " + engine.get_player_name() + "!!! Don't go that way, the crocodiles are just sitting there waiting to eat you!!!", callback = callback),
+            lambda callback: player_one.set_busy(False, callback = callback), 
+        ]) #TODO: save heidi state
+
     heidi.player_action = heidi_player_action
+    heidi_chicken_out.player_walked_on = heidi_chicken_out_action
+    heidi_totem_warning.player_walked_on = heidi_totem_warning_action
     heidi.set_solidity(False)
     heidi.wait(0.3, callback = lambda: heidi.move_to(player_start_pos, callback = lambda: heidi.follow(player_one)))
 else:

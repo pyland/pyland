@@ -33,6 +33,15 @@ exit_to_world.player_walked_on = go_to_world
 
 pyscripter_state = player_data.get_level_state("pyscripter_state")
 if pyscripter_state == pyscripter_state_not_found:
+
+    def pick_up_instruction_action(player_object):
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: engine.show_dialogue("Press \"Enter\" to pick up objects.", callback = callback),
+            lambda callback: player_one.set_busy(False, callback = callback),
+        ])
+    pick_up_instruction.player_walked_on = pick_up_instruction_action
+
     def pyscripter_player_action(player_object):
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
@@ -115,7 +124,6 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: engine.show_dialogue("It seems that you have found my PyScripter, this is an early prototype, there aren't many around ...", callback = callback),
             lambda callback: engine.show_dialogue("Anyway, I will let you keep it for a while if you help me get to the other side of the jungle. I could do with some help!", callback = callback),
             lambda callback: engine.show_dialogue("Let's head to the bog, I will teach you the basics there!", callback = callback),
-            lambda callback: engine.play_music("world_1_jungle", callback = callback),
             lambda callback: myla.follow(player_one, callback = callback),
             lambda callback: player_one.set_busy(False, callback = callback)
         ], save_pyscripter_state)
@@ -134,6 +142,7 @@ elif pyscripter_state == pyscripter_state_found:
     annoying_croc.set_solidity(False)
     myla.move_to(myla_start_position)
     myla.follow(player_one)
+    pick_up_instruction.player_walked_on = lambda player_object: None
 
 player_one.focus()
 engine.play_music("world_1_jungle")

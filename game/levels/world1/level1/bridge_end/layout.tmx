@@ -44,5 +44,6 @@
   <object name="characters/enemies/crocodiles/green_crocodile/annoying_croc" gid="193" x="896" y="1024"/>
   <object name="characters/npcs/myla/myla" gid="191" x="320" y="64" width="64" height="64"/>
   <object name="tile_trigger/exit_to_world" gid="197" x="896" y="0"/>
+  <object name="tile_trigger/pick_up_instruction" gid="197" x="256" y="704"/>
  </objectgroup>
 </map>

@@ -36,12 +36,12 @@
  </layer>
  <layer name="Decor" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJztVlsOhCAQ47QoP57Wvc/Gj8nWZh5lNZtsYhMShKHtCOK09sHmtCUYrxoji4nmVA8cO4C7U398mZvFIjdiFfLlnKNY5EP/EXhth+fIV+U/05nxgngJGhUqn5XGMb9DQ05711kOqkYGPleKT26ZxgBeZc8iKHkYlPMzq2He+wX+SoMRfW9X9kPFHRyPxv9p3H2OFM1H4zcayr01o3Hw4R2Fd/BMbcLjg+as79VY1rc1fGeOdq5FmGtz4jx+79+1OrHoW6lJlxbXfgi1Jsy8Z/l4c+zLcuZ64Q25C3ZS
+   eJztVlsOhCAQ47QoP57Wvc/Gj8nWZh5lNZtsYhMShKHtCOK09sHmtCUYrxoji4nmVA8cO4C7U398mZvFIjdiFfLlnKNY5EP/EXhth+fIV+U/05nxgngJGhUqn5XGMb9DQ05711kOqkYGPleKT26ZxgBeZc8iKHkYlPMzq2He+wX+SoMRfW9X9kPFHRyPxv9p3H2OFM1H4zcayr11aER1hceHdxTewTO1CY8PmrO+V2NZ39bwnTnauRZhrs2J8/i9f9fqxKJvpSZdWlz7IdSaMPOe5ePNsS/LmeuFN57Kdrs=
   </data>
  </layer>
  <layer name="SpecialLayer" width="25" height="30">
   <data encoding="base64" compression="zlib">
-   eJztllEKwDAIQ0vPtd3/WvvccIlG60cZCxQGrT61sjrGrWP2LSvvDNvLsCI+YlVzVhTZevl7Oud7eTVlcWX8W46at7WP/KPz2VpEDEVeDirD49r7rsbJ7FB/Z+oe5fnMI4qnymD91s1A9e68j+44f8b3GN19tEteuzPU/0LH/a72AJN98xU7Nhcgf+gtsd/Il91jM5uXC4sVMRhPEZu9qrNfxELfWV1FbH/y
+   eJztllEKwCAMQ8Vzbfe/1j43uqRJpR8yVhAEbV9TRTvGbcfsG9GyPWytwlJ8xFrV7JjyzfRnds73yGrK8qrEjxxXd/RX8dH+ai0Uw7FMg8vIuPG8V/Nkfuh+V+qudD51qHxWGey+dTNQvTvPozvPn/E9Rvc92kXX7gz3Xeg4X7VHvXPM4p/v+LG+AMVDf0mco1hxjfVsmRaWK2IwnmOs91rt/RQLzat2Ac0KgDA=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="25" height="30">
@@ -61,5 +61,7 @@
   <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="192" y="1408" width="64" height="64"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_4" gid="296" x="64" y="1088" width="64" height="64"/>
   <object name="characters/enemies/crocodiles/green_crocodile/croc_5" gid="296" x="512" y="704" width="64" height="64"/>
+  <object name="tile_trigger/heidi_chicken_out" gid="292" x="576" y="1536"/>
+  <object name="tile_trigger/heidi_totem_warning" gid="292" x="704" y="640"/>
  </objectgroup>
 </map>
