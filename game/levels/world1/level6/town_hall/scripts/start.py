@@ -2,8 +2,8 @@ import copy
 from random import randint
 import string
 
-world_name = "world_1"
-level_name = "level_7"
+world_name = "world1"
+level_name = "level6"
 map_name = "town_hall"
 
 engine.update_world_text("1")
@@ -12,14 +12,14 @@ engine.update_level_text("7")
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name)
 
-player.focus()
-engine.update_player_name(engine.get_player_name(), player.get_focus_button_id())
+player_one.focus()
+engine.update_player_name(engine.get_player_name(), player_one.get_focus_button_id())
 
 engine.play_music("eery")
 engine.set_py_tabs(9)
 
-player.face_east()
-player.set_busy(True)
+player_one.face_east()
+player_one.set_busy(True)
 myla.face_east()
 
 #List of snakes
@@ -139,7 +139,7 @@ def pace(cur_object, callback = lambda: None):
     #cur_object.move_north(lambda: cur_object.wait(1.0, lambda: cur_object.move_south(lambda: cur_object.move_south(lambda: cur_object.wait(1.0, lambda: cur_object.move_north(lambda: pace(cur_object)))))))
 
 dialogue_sequence = [
-    lambda callback: camera.move_to(player.get_position(), time = 0.0, callback = callback),
+    lambda callback: camera.move_to(player_one.get_position(), time = 0.0, callback = callback),
     lambda callback: camera.focus(callback = callback),
     lambda callback: camera.move_to(elisabeth.get_position(), time = 1.5, callback = callback),
     lambda callback: engine.show_dialogue("Minister: Attention my friends. I am sorry to have to say this again.", callback = callback),
@@ -156,19 +156,19 @@ dialogue_sequence = [
     lambda callback: engine.show_dialogue("Minister: Please stay calm. I can handle this.", callback = callback),
     lambda callback: engine.show_dialogue("But we must prepare to head to the desert, even if we cannot use our scripts to escape quickly.", callback = callback),
     lambda callback: myla.move_east(callback = callback),
-    lambda callback: camera.move_to(player.get_position(), time = 1.5, callback = callback),
-    lambda callback: player.focus(callback = callback),
+    lambda callback: camera.move_to(player_one.get_position(), time = 1.5, callback = callback),
+    lambda callback: player_one.focus(callback = callback),
     lambda callback: engine.show_dialogue("Myla: Lets help them out, we might be able to fix their scripts! Talk to as many of them as you can.", callback = callback),
     lambda callback: pace(elisabeth, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
-    lambda callback: myla.follow(player, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
+    lambda callback: myla.follow(player_one, callback = callback),
    # lambda callback: engine.enable_py_scripter(callback = callback)
 ]
 
 sequence_0 = [
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: get_snake(0).stop_turning(callback = callback),
-    lambda callback: get_snake(0).turn_to_face(player, callback = callback),
+    lambda callback: get_snake(0).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("I'm scared. I thought the catchers were just a myth.", callback = callback),
     #lambda callback: engine.show_dialogue("My PyRunner script is broken. Can you fix it so I move east and get to the desert?", callback = callback),
     lambda callback: engine.show_dialogue_with_options(
@@ -183,7 +183,7 @@ sequence_0 = [
 
 help_sequence_0 = [
     lambda callback: engine.show_dialogue("Thank you! Here is my script.",  callback = callback),
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: engine.show_external_script(
         confirm_callback = lambda: engine.run_callback_list_sequence(try_script_sequence_0),
         cancel_callback = lambda: engine.run_callback_list_sequence(cancel_script_sequence_0),
@@ -194,7 +194,7 @@ help_sequence_0 = [
 reject_sequence_0 = [
     lambda callback: engine.show_dialogue("I didn't think it was possible to edit scripts.", callback = callback),
     lambda callback: get_snake(0).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 def snake_finish_script_0(snake_index):
@@ -211,7 +211,7 @@ def snake_finish_script_0(snake_index):
 
     if (removed_white_space == "move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
-        snake.turn_to_face(player)
+        snake.turn_to_face(player_one)
         engine.run_callback_list_sequence(successful_sequence_0, callback = check_finish)
     else:
         engine.run_callback_list_sequence(unsuccessful_sequence_0)
@@ -224,7 +224,7 @@ def set_other_snakes_not_solid(snake_index):
 def set_all_solid():
     for snake in snakes:
         snake.set_solidity(True)
-    player.set_solidity(True)
+    player_one.set_solidity(True)
 
 
 def snake_run_script(action_index, run_callback = lambda: None):
@@ -236,7 +236,7 @@ def snake_run_script(action_index, run_callback = lambda: None):
 
         removed_white_space = (engine.get_external_script()).replace(" ","").replace("\n","").replace("  ","")
 
-        player.set_solidity(False)
+        player_one.set_solidity(False)
 
         #set all other snakes to not solid
 
@@ -248,13 +248,13 @@ def snake_run_script(action_index, run_callback = lambda: None):
 
 try_script_sequence_0 = [
     lambda callback: engine.show_dialogue("Thank you, this means a lot! I'll try running it now.", callback = callback),
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: snake_run_script(0, run_callback = snake_finish_script_0),
 ]
 
 cancel_script_sequence_0 = [
     lambda callback: get_snake(0).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 def turn_snakes_west(callback = lambda: None):
@@ -274,12 +274,12 @@ def all_face_leader(callback = lambda: None):
     for snake_index in range(len(snakes)-1):
         snakes[snake_index].turn_to_face(elisabeth)
     myla.turn_to_face(elisabeth)
-    player.turn_to_face(elisabeth)
+    player_one.turn_to_face(elisabeth)
     callback()
 
 successful_sequence_0 = [
     lambda callback: engine.show_dialogue("You did it! I can now move east!", callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Lets try and help the others!", callback = callback),
     lambda callback: myla.wait(0.5, callback = callback),
     lambda callback: camera.move_to(leave_hall.get_position(), time = 0.0, callback = callback),
@@ -289,7 +289,7 @@ successful_sequence_0 = [
     lambda callback: myla.wait(0.5, callback = callback),
     lambda callback: myla.stop_follow(callback = callback),
     lambda callback: turn_snakes_west(callback = callback),
-    lambda callback: player.face_west(callback = callback),
+    lambda callback: player_one.face_west(callback = callback),
     lambda callback: myla.face_west(callback = callback),
     lambda callback: stop_pace(callback = callback),
     lambda callback: camera.move_by((3,0), time = 0.15, callback = callback),
@@ -305,36 +305,36 @@ successful_sequence_0 = [
     lambda callback: elisabeth.set_visible(False, callback = callback),
     lambda callback: elisabeth.set_solidity(False, callback = callback),
     lambda callback: elisabeth.stop_animating(callback = callback),
-    lambda callback: camera.move_to(player.get_position(), time = 2.0, callback = callback),
+    lambda callback: camera.move_to(player_one.get_position(), time = 2.0, callback = callback),
     lambda callback: turn_snakes(time = 0.075, callback = callback),
     lambda callback: myla.face_east(callback = callback),
     lambda callback: engine.show_dialogue("Myla: "+engine.get_player_name()+" we must make sure everyone's scripts are working!", callback = callback),
-    lambda callback: player.focus(callback = callback),
-    lambda callback: myla.follow(player, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.focus(callback = callback),
+    lambda callback: myla.follow(player_one, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 unsuccessful_sequence_0 = [
     lambda callback: myla.wait(1.5, callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Myla: That didn't seem to work. Talk to them again and make sure their script says move_east()", callback = callback),
     lambda callback: engine.show_dialogue("... it needs to work without errors!", callback = callback),
     lambda callback: get_snake(0).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 complete_sequence_0 = [
-    lambda callback: player.set_busy(True, callback = callback),
-    lambda callback: get_snake(0).turn_to_face(player, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: get_snake(0).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Thank you so much for fixing my script. I feel safe now!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 sequence_1 = [
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: get_snake(1).stop_turning(callback = callback),
-    lambda callback: get_snake(1).turn_to_face(player, callback = callback),
+    lambda callback: get_snake(1).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("My west movement script is broken. I might need it to avoid the catchers, if we are to run to the desert!", callback = callback),
     lambda callback: engine.run_callback_list_sequence(help_sequence_1),
 ]
@@ -361,23 +361,23 @@ def snake_finish_script_1(snake_index):
 
     if (removed_white_space == "move_west()" or ((xchange == -1)  and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
-        snake.turn_to_face(player)
+        snake.turn_to_face(player_one)
         engine.run_callback_list_sequence(successful_sequence_1, callback = check_finish)
     else:
         engine.run_callback_list_sequence(unsuccessful_sequence_1)
 
 successful_sequence_1 = [
     lambda callback: engine.show_dialogue("Perfect, it works!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 unsuccessful_sequence_1 = [
     lambda callback: myla.wait(1.5, callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Myla: I think the script needs to say move_west()", callback = callback),
     lambda callback: get_snake(1).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 try_script_sequence_1 = [
@@ -387,20 +387,20 @@ try_script_sequence_1 = [
 
 cancel_script_sequence_1 = [
     lambda callback: get_snake(1).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 complete_sequence_1 = [
-    lambda callback: player.set_busy(True, callback = callback),
-    lambda callback: get_snake(1).turn_to_face(player, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: get_snake(1).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("You and your monkey friend are so awesome!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 sequence_2 = [
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: get_snake(2).stop_turning(callback = callback),
-    lambda callback: get_snake(2).turn_to_face(player, callback = callback),
+    lambda callback: get_snake(2).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("My PyRunner doesn't seem to understand my move east script!", callback = callback),
     lambda callback: engine.show_external_script(
         confirm_callback = lambda: engine.run_callback_list_sequence(try_script_sequence_2),
@@ -423,7 +423,7 @@ def snake_finish_script_2(snake_index):
 
     if (removed_white_space == "move_east()" or ((xchange == 1)  and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
-        snake.turn_to_face(player)
+        snake.turn_to_face(player_one)
         engine.run_callback_list_sequence(successful_sequence_2, callback = check_finish)
     else:
         engine.run_callback_list_sequence(unsuccessful_sequence_2)
@@ -431,16 +431,16 @@ def snake_finish_script_2(snake_index):
 successful_sequence_2 = [
     lambda callback: engine.show_dialogue("It works! Those brackets seem to make it understand that it's calling a function.", callback = callback),
     lambda callback: engine.show_dialogue("I guess it thought move_east was variable!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 unsuccessful_sequence_2 = [
     lambda callback: myla.wait(1.5, callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Myla: I think the script needs to say move_east() ! The brackets seem important.", callback = callback),
     lambda callback: get_snake(2).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 try_script_sequence_2 = [
@@ -450,20 +450,20 @@ try_script_sequence_2 = [
 
 cancel_script_sequence_2 = [
     lambda callback: get_snake(2).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 complete_sequence_2 = [
-    lambda callback: player.set_busy(True, callback = callback),
-    lambda callback: get_snake(2).turn_to_face(player, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: get_snake(2).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("I love living in the jungle.", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 sequence_3 = [
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: get_snake(3).stop_turning(callback = callback),
-    lambda callback: get_snake(3).turn_to_face(player, callback = callback),
+    lambda callback: get_snake(3).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Someone thought it would be funny to give me script that moves me east and then back again!", callback = callback),
     lambda callback: engine.show_external_script(
         confirm_callback = lambda: engine.run_callback_list_sequence(try_script_sequence_3),
@@ -486,48 +486,48 @@ def snake_finish_script_3(snake_index):
 
     if (removed_white_space == "move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
-        snake.turn_to_face(player)
+        snake.turn_to_face(player_one)
         engine.run_callback_list_sequence(successful_sequence_3, callback = check_finish)
     else:
         engine.run_callback_list_sequence(unsuccessful_sequence_3)
 
 successful_sequence_3 = [
     lambda callback: engine.show_dialogue("Perfect, it works!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 unsuccessful_sequence_3 = [
     lambda callback: myla.wait(1.5, callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Make sure the script only contains move_east()", callback = callback),
     lambda callback: get_snake(3).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 try_script_sequence_3 = [
     lambda callback: engine.show_dialogue("Thanks for having tinker with it! Lets give this a go...", callback = callback),
-    #lambda callback: player.set_busy(False, callback = callback),
+    #lambda callback: player_one.set_busy(False, callback = callback),
     lambda callback: snake_run_script(3, run_callback = snake_finish_script_3),
 ]
 
 cancel_script_sequence_3 = [
     lambda callback: get_snake(3).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 complete_sequence_3 = [
-    lambda callback: player.set_busy(True, callback = callback),
-    lambda callback: get_snake(3).turn_to_face(player, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: get_snake(3).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("I'm learning to play the marimba. I hope the catchers don't steal anything from my house!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 sequence_4 = [
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: get_snake(4).stop_turning(callback = callback),
-    lambda callback: get_snake(4).turn_to_face(player, callback = callback),
+    lambda callback: get_snake(4).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("I knew it by was bad idea to get a script that tries to print to my PyRunner terminal!", callback = callback),
     lambda callback: engine.show_external_script(
         confirm_callback = lambda: engine.run_callback_list_sequence(try_script_sequence_4),
@@ -550,23 +550,23 @@ def snake_finish_script_4(snake_index):
 
     if (removed_white_space == "move_east()" or removed_white_space == "print('I'm moving east')move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
-        snake.turn_to_face(player)
+        snake.turn_to_face(player_one)
         engine.run_callback_list_sequence(successful_sequence_4, callback = check_finish)
     else:
         engine.run_callback_list_sequence(unsuccessful_sequence_4)
 
 successful_sequence_4 = [
     lambda callback: engine.show_dialogue("Great, it no longer crashes!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 unsuccessful_sequence_4 = [
     lambda callback: myla.wait(1.5, callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Try fixing the print statment, or removing it!", callback = callback),
     lambda callback: get_snake(4).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 try_script_sequence_4 = [
@@ -576,20 +576,20 @@ try_script_sequence_4 = [
 
 cancel_script_sequence_4 = [
     lambda callback: get_snake(4).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 complete_sequence_4 = [
-    lambda callback: player.set_busy(True, callback = callback),
-    lambda callback: get_snake(4).turn_to_face(player, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: get_snake(4).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("I've heard rumours that beyond the desert is a vast span of water!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 sequence_5 = [
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: get_snake(5).stop_turning(callback = callback),
-    lambda callback: get_snake(5).turn_to_face(player, callback = callback),
+    lambda callback: get_snake(5).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("I can move east, but then I can't stop and I can't halt my RyRunner!", callback = callback),
     lambda callback: engine.show_external_script(
         confirm_callback = lambda: engine.run_callback_list_sequence(try_script_sequence_5),
@@ -612,25 +612,25 @@ def snake_finish_script_5(snake_index):
 
     if (removed_white_space == "move_east()" or ((xchange == 1) and (ychange == 0))) and (not engine.get_error()):
         update_snake_stage(snake = snake_index, stage = 2)
-        snake.turn_to_face(player)
+        snake.turn_to_face(player_one)
         engine.run_callback_list_sequence(successful_sequence_5, callback = check_finish)
     else:
         engine.run_callback_list_sequence(unsuccessful_sequence_5)
 
 successful_sequence_5 = [
     lambda callback: engine.show_dialogue("Yes, it's working! Fixing the problem with scripting is way cooler than using halt!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 unsuccessful_sequence_5 = [
     lambda callback: myla.wait(1.5, callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Looks like didn't work. Make sure you remove the tab from the start of move_east(), when it's no longer inside a loop!", callback = callback),
     lambda callback: engine.show_dialogue("Good job I set their scripts to terminate after 10 seconds, or they could get stuck forever!", callback = callback),
 
     lambda callback: get_snake(5).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 try_script_sequence_5 = [
@@ -640,20 +640,20 @@ try_script_sequence_5 = [
 
 cancel_script_sequence_5 = [
     lambda callback: get_snake(5).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 complete_sequence_5 = [
-    lambda callback: player.set_busy(True, callback = callback),
-    lambda callback: get_snake(5).turn_to_face(player, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: get_snake(5).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("I'm free from the burden of infinite loops!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 sequence_6 = [
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: get_snake(6).stop_turning(callback = callback),
-    lambda callback: get_snake(6).turn_to_face(player, callback = callback),
+    lambda callback: get_snake(6).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("I'm fortunate enough that all my scripts work! I think it's so cool that you can write your own scripts.", callback = callback),
     lambda callback: engine.show_dialogue("Oh I know something fun!", callback = callback),
     lambda callback: engine.show_external_script(
@@ -674,7 +674,7 @@ def snake_finish_script_6(snake_index):
     set_all_solid()
 
     if ((not engine.get_error()) and ("print" in engine.get_external_script())):
-        snake.turn_to_face(player)
+        snake.turn_to_face(player_one)
         update_snake_stage(snake = snake_index, stage = 2)
         response =randint(0,2)
         if response == 0:
@@ -691,30 +691,30 @@ successful_sequence_6_1 = [
     lambda callback: engine.show_dialogue("I love jokes!", callback = callback),
     lambda callback: engine.show_dialogue("'"+engine.get_terminal_text(1)+"' ..." , callback = callback),
     lambda callback: engine.show_dialogue("Really...? That's the lamest joke in all of Pyland!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 successful_sequence_6_2 = [
     lambda callback: engine.show_dialogue("I love me a good joke!", callback = callback),
     lambda callback: engine.show_dialogue("'"+engine.get_terminal_text(1)+"'. Hahahaha!" , callback = callback),
     lambda callback: engine.show_dialogue("Mate you're hilarious.", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 successful_sequence_6_3 = [
     lambda callback: engine.show_dialogue("Life is always better with a good joke!", callback = callback),
     lambda callback: engine.show_dialogue("'"+engine.get_terminal_text(1)+"'. Huh?" , callback = callback),
     lambda callback: engine.show_dialogue("Not sure I get the joke but thanks for trying to lighten my day!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 unsuccessful_sequence_6 = [
     lambda callback: myla.wait(1.5, callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Make sure the script runs and you use 'print('Your Joke')' too!", callback = callback),
     lambda callback: get_snake(6).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 try_script_sequence_6 = [
@@ -723,23 +723,23 @@ try_script_sequence_6 = [
 
 cancel_script_sequence_6 = [
     lambda callback: get_snake(5).start_turning(time = 0.1, frequency = 8, callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 
 complete_sequence_6 = [
-    lambda callback: player.set_busy(True, callback = callback),
-    lambda callback: get_snake(6).turn_to_face(player, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: get_snake(6).turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Jokes give me life!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
 ]
 
 try_to_leave_sequence = [
-    lambda callback: player.set_busy(True, callback = callback),
+    lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: engine.show_dialogue("Myla: Don't leave "+engine.get_player_name()+", they need our help!", callback = callback),
-    lambda callback: player.set_busy(False, callback = callback),
-    lambda callback: player.move_east(callback = callback),
-    #lambda callback: myla.follow(player, callback = callback)
+    lambda callback: player_one.set_busy(False, callback = callback),
+    lambda callback: player_one.move_east(callback = callback),
+    #lambda callback: myla.follow(player_one, callback = callback)
 ]
 
 myla_sequence = [
@@ -749,27 +749,27 @@ myla_sequence = [
 
 def follow_all():
     for snake_index in range(len(snakes)-1):
-        snakes[snake_index].follow(player)
+        snakes[snake_index].follow(player_one)
 
 finish_sequence = [
     lambda callback: elisabeth.set_solidity(False, callback = callback),
     lambda callback: jamie.face_east(callback = callback),
-    lambda callback: camera.move_to(player.get_position(), time = 0.0, callback = callback),
+    lambda callback: camera.move_to(player_one.get_position(), time = 0.0, callback = callback),
     lambda callback: camera.focus(callback = callback),
-    lambda callback: jamie.turn_to_face(player, callback = callback),
+    lambda callback: jamie.turn_to_face(player_one, callback = callback),
     lambda callback: camera.move_to(jamie.get_position(), time = 1.25, callback = callback),
     lambda callback: engine.show_dialogue("Jamie: Looks like all our scripts are ready. What's happened to our minister?!", callback = callback),
     lambda callback: camera.move_to(alexandra.get_position(), time = 1.25, callback = callback),
-    lambda callback: alexandra.turn_to_face(player, callback = callback),
+    lambda callback: alexandra.turn_to_face(player_one, callback = callback),
     lambda callback: engine.show_dialogue("Alexandra: He's not come back! They must have taken him!!!", callback = callback),
     lambda callback: myla.stop_follow(callback = callback),
-    lambda callback: myla.turn_to_face(player, callback = callback),
-    lambda callback: camera.move_to(player.get_position(), time = 1.5, callback = callback),
-    lambda callback: player.focus(callback = callback),
+    lambda callback: myla.turn_to_face(player_one, callback = callback),
+    lambda callback: camera.move_to(player_one.get_position(), time = 1.5, callback = callback),
+    lambda callback: player_one.focus(callback = callback),
     lambda callback: engine.show_dialogue("Myla: I've not heard any noises outside for a while. We'll have to try and escape now.", callback = callback),
     lambda callback: jamie.move_west(callback = callback),
     lambda callback: engine.show_dialogue("Jamie: Lets do it. I trust in you both.", callback = callback),
-    lambda callback: myla.follow(player, callback = callback),
+    lambda callback: myla.follow(player_one, callback = callback),
     lambda callback: follow_all(),
 ]
 
@@ -835,7 +835,7 @@ engine.run_callback_list_sequence(dialogue_sequence)
 def try_leave():
     if level_finished():
         player_data.complete_level_and_save()
-        player_data.save_and_exit("/world_1")
+        player_data.save_and_exit("/world1")
     else:
         engine.run_callback_list_sequence(try_to_leave_sequence)
 

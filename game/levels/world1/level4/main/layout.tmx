@@ -47,8 +47,8 @@
   <object name="key/key2" gid="287" x="1024" y="1600"/>
   <object name="player_data/player_data" gid="287" x="0" y="832"/>
   <object name="tile_trigger/challenge_arith" gid="292" x="832" y="896"/>
-  <object name="tile_trigger/exit_level_start" gid="292" x="0" y="960"/>
-  <object name="tile_trigger/exit_level_end" gid="292" x="1792" y="1152"/>
+  <object name="tile_trigger/exit_level_start" gid="292" x="-64" y="960"/>
+  <object name="tile_trigger/exit_level_end" gid="292" x="1856" y="1152"/>
  </objectgroup>
  <layer name="SpecialLayer" width="29" height="30">
   <data encoding="base64" compression="zlib">
