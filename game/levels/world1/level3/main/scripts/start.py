@@ -14,16 +14,27 @@ def myla_introduces_programming_action(player_object):
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_west(callback = callback),
-        lambda callback: engine.show_dialogue("Myla: This is as good place to start as any!", callback = callback),
-        lambda callback: engine.show_dialogue("Just a quick question though, the PyScripter uses a programming language called Python.", callback = callback),
-        lambda callback: engine.show_dialogue("Have you ever programmed in Python before? (TODO ASK QUESTION AND GIVE APPROPRIATE RESPONSE)", callback = callback),
-        lambda callback: engine.show_dialogue("The first thing we are going to start with is printing to the the PyConsole in the bottom right-hand corner of the screen.", callback = callback),
-        lambda callback: engine.show_dialogue("To start with, I am going to ask you to give the scripts for me to check and run.", callback = callback),
+        lambda callback: engine.show_dialogue("The next thing I'm going to teach you is comments.", callback = callback),
+        lambda callback: engine.show_dialogue("When programming, even with years of experience, you can sometimes find things difficult to understand.", callback = callback),
+        lambda callback: engine.show_dialogue("Comments allow you to write explenations for what your program does without interfering with the program itself.", callback = callback),
         lambda callback: engine.show_external_script(
-            external_dialogue = "Can you please print my name? Don't forget to put it in quotation marks!",
+            external_dialogue = "Look at the program I just gave you, give it a good read and do with it what you want! If you can't see everything, use the '+' and '-' buttons to zoom in and out.",
             script_init = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.clear_scripter(callback = callback),
-                lambda callback: engine.insert_to_scripter("print()"),
+                lambda callback: engine.insert_to_scripter("#Everything after the \"#\" symbol on the same line will be ignored.\n", callback = callback),
+                lambda callback: engine.insert_to_scripter("#So you can write whatever you want here without your program being affected!\n", callback = callback),
+                lambda callback: engine.insert_to_scripter('""" If you want to put a comment on multiple lines,\n', callback = callback),
+                lambda callback: engine.insert_to_scripter('You can really easily do that by enclosing it between two sets of three quotes.\n', callback = callback),
+                lambda callback: engine.insert_to_scripter('"""\n', callback = callback),
+                lambda callback: engine.insert_to_scripter("#Try and write comments in your programs, it's good practise!\n", callback = callback),
+                lambda callback: engine.insert_to_scripter("hello = \"Hello \" # Aha, here we are using variables again!\n", callback = callback),
+                lambda callback: engine.insert_to_scripter("myname = \"Myla\"  # Just so you know, everything in between a set of quotes is called a string.\n", callback = callback),
+                lambda callback: engine.insert_to_scripter("yourname = '" + engine.get_player_name() + "' # You can use single or double quotes!\n", callback = callback),
+                lambda callback: engine.insert_to_scripter('""" Strings are how we manipulate text in python,\n', callback = callback),
+                lambda callback: engine.insert_to_scripter('You can add strings together, give this to me to run to see what is printed!\n', callback = callback),
+                lambda callback: engine.insert_to_scripter('"""\n', callback = callback),
+                lambda callback: engine.insert_to_scripter("print(hello + myname + \"!\")\n", callback = callback), #TODO, add all the reactions to what the player can give 
+                lambda callback: engine.insert_to_scripter("print(hello + yourname + \"!\")", callback = callback), #TODO, add all the reactions to what the player can give M
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.show_dialogue("Awesome!", callback = callback), #TODO: add all the possible reactions to what the player can give Myla
@@ -47,10 +58,7 @@ def myla_introduces_variables_action(player_object):
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_east(callback = callback),
-        lambda callback: engine.show_dialogue("Myla: Now we are going to start getting fancy!", callback = callback),
-        lambda callback: engine.show_dialogue("I'm going to introduce you to variables.", callback = callback),
-        lambda callback: engine.show_dialogue("A variable is something you can give a value of some kind, and then do with it what you want.", callback = callback),
-        lambda callback: engine.show_dialogue("The reason it's called a variable, is because the value it contains can vary!", callback = callback),
+        lambda callback: engine.show_dialogue("Now I'm going to teach you how to write your own function.", callback = callback),
         lambda callback: engine.show_external_script(
             external_dialogue = "Try printing your name this time! However, do it by changing what name is equals to, don't give it straight to print!",
             script_init = lambda: engine.run_callback_list_sequence([

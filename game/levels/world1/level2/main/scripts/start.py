@@ -23,7 +23,7 @@ def myla_introduces_programming_action(player_object):
             external_dialogue = "Can you please print my name? Don't forget to put it in quotation marks!",
             script_init = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.clear_scripter(callback = callback),
-                lambda callback: engine.insert_to_scripter("print()"),
+                lambda callback: engine.insert_to_scripter("print()", callback = callback),
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.show_dialogue("Awesome!", callback = callback), #TODO: add all the possible reactions to what the player can give Myla
