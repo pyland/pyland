@@ -20,20 +20,30 @@
    eJxLYGBgSBjFo3gUj+JRPIpH8ShGwgDsl8MB
   </data>
  </layer>
+ <layer name="Water" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRQEsgiobpZQ+t7MJmD63so5efRgEmAACEJQG6
+  </data>
+ </layer>
+ <layer name="Decor" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzFlVEOwCAIQ/XCHGa78LI/16xQmY4mxMQAr0SNrdXJIHb238mM+qxi/cGpmIWd0wrZsBrsIdtjsjzcU2aIOKy3kse8YK3iLcpTOG81M28w8sPOQxXzEfmcZWSUmaWSc3a/v8rA/KM/4+Zk7hIyPO7q/+Gr3ypdWCA1uw==
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzVlUsKACEMQ52TOPc/pasBlYamNWUw4EZKXkr9tPaf+rOuSv9KpudzE4dhqDloTgp9PrN/5jygun2P6cHjIG+mDmWxemH5ngfbp5UzcqatejQPViiHlzPKeLcVyXbCYVhKjsWLvreZ+5jpgfFUCGWt+PPUGgkCEFA=
+  </data>
+ </layer>
  <objectgroup name="Object Layer 1" width="26" height="20">
   <object name="characters/player/player_one" gid="191" x="1600" y="640"/>
   <object name="tile_trigger/exit_to_world" gid="197" x="1664" y="640"/>
   <object name="player_data/player_data" gid="192" x="0" y="64"/>
   <object name="characters/npcs/myla/myla" gid="191" x="128" y="128" width="64" height="64"/>
   <object name="tile_trigger/exit_to_bogs" gid="197" x="-64" y="640"/>
-  <object name="tile_trigger/myla_introduces_programming" gid="197" x="1344" y="640"/>
-  <object name="totem/totem_0" gid="203" x="448" y="960"/>
+  <object name="tile_trigger/myla_introduces_programming" gid="197" x="1280" y="832"/>
+  <object name="totem/totem_0" gid="203" x="320" y="1152"/>
   <object name="tile_trigger/myla_introduces_variables" gid="197" x="768" y="640"/>
-  <object name="characters/npcs/generic/toll_person" gid="202" x="320" y="576" width="64" height="64"/>
+  <object name="characters/npcs/generic/card_person" gid="202" x="256" y="320" width="64" height="64"/>
  </objectgroup>
- <layer name="SpecialLayer" width="26" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwShABQAIIAAB
-  </data>
- </layer>
 </map>
