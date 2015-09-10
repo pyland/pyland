@@ -182,6 +182,13 @@ void Engine::open_main_menu(){
     game_main->change_challenge(map_location);
 }
 
+void Engine::exit_level(){
+    //TODO: Add some system for setting the destination for exit level at runtime without changing the config file!
+    Config::json j = Config::get_instance();
+    std::string map_location = j["files"]["main_menu"];
+    game_main->change_challenge(map_location);
+}
+
 void Engine::restart_level(){
     game_main->change_challenge(game_main->get_current_challenge());
     enable_py_scripter();

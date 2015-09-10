@@ -99,20 +99,38 @@ void GUIMain::create_pause_menu(){
 
     gui_window->add(pause_button);
 
-    exit_button = std::make_shared<Button>(ButtonType::NoPicture);
-    exit_button->set_text("Main Menu");
-    exit_button->set_alignment(ButtonAlignment::BottomLeft);
-    exit_button->set_on_click( [this] () {
+    //Add the exit to menu button, changes the level to whatever files/main_menu is set to in the config.jsonnet file
+    menu_button = std::make_shared<Button>(ButtonType::NoPicture);
+    menu_button->set_text("Main Menu");
+    menu_button->set_alignment(ButtonAlignment::BottomLeft);
+    menu_button->set_on_click( [this] () {
         Engine::open_main_menu();
     });
-    exit_button->set_clickable(false);
-    exit_button->set_visible(false);
-    exit_button->set_width(menu_width);
-    exit_button->set_height(menu_height);
-    exit_button->set_x_offset(pause_x_offset);
-    exit_button->set_y_offset(pause_y_offset - 2 * menu_spacing);
+    menu_button->set_clickable(false);
+    menu_button->set_visible(false);
+    menu_button->set_width(menu_width);
+    menu_button->set_height(menu_height);
+    menu_button->set_x_offset(pause_x_offset);
+    menu_button->set_y_offset(pause_y_offset - 3 * menu_spacing);
 
-    gui_window->add(exit_button);
+    gui_window->add(menu_button);
+
+
+    //Add the exit level button, changes the level to the given exit level destination. By defualt it is the main menu
+    exit_level_button = std::make_shared<Button>(ButtonType::NoPicture);
+    exit_level_button->set_text("Exit Level");
+    exit_level_button->set_alignment(ButtonAlignment::BottomLeft);
+    exit_level_button->set_on_click( [this] () {
+        Engine::exit_level();
+    });
+    exit_level_button->set_clickable(false);
+    exit_level_button->set_visible(false);
+    exit_level_button->set_width(menu_width);
+    exit_level_button->set_height(menu_height);
+    exit_level_button->set_x_offset(pause_x_offset);
+    exit_level_button->set_y_offset(pause_y_offset - 2 * menu_spacing);
+
+    gui_window->add(exit_level_button);
 
     music_button = std::make_shared<Button>(ButtonType::NoPicture);
     music_button->set_text("Music ON");
@@ -475,8 +493,11 @@ void GUIMain::open_pause_window(){
         }
     }
 
-    exit_button->set_visible(true);
-    exit_button->set_clickable(true);
+    menu_button->set_visible(true);
+    menu_button->set_clickable(true);
+
+    exit_level_button->set_visible(true);
+    exit_level_button->set_clickable(true);
 
     music_button->set_visible(true);
     music_button->set_clickable(true);
@@ -526,8 +547,11 @@ void GUIMain::close_pause_window(){
         }
     }
 
-    exit_button->set_visible(false);
-    exit_button->set_clickable(false);
+    menu_button->set_visible(false);
+    menu_button->set_clickable(false);
+
+    exit_level_button->set_visible(false);
+    exit_level_button->set_clickable(false);
 
     music_button->set_visible(false);
     music_button->set_clickable(false);

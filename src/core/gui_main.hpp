@@ -160,7 +160,8 @@ private:
     void open_pause_window();
     void close_pause_window();
 
-    std::shared_ptr<Button> exit_button;
+    std::shared_ptr<Button> exit_level_button;
+    std::shared_ptr<Button> menu_button;
     std::shared_ptr<Button> restart_button;
     bool music_on;
     std::shared_ptr<Button> music_button;
