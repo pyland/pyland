@@ -4,7 +4,7 @@ level_name = "level3"
 map_name = "main"
 
 engine.update_world_text("1")
-engine.update_level_text("2")
+engine.update_level_text("3")
 
 player_data.load(engine.get_player_name())
 player_data.set_map(world_name, level_name = level_name, map_name = map_name) #change the map and save that the map has changed

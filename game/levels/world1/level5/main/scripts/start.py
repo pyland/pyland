@@ -1,7 +1,7 @@
 #commence save-data set-up
 world_name = "world1"
-level_name = "level2"
-map_name = "bogs"
+level_name = "level5"
+map_name = "main"
 
 engine.update_world_text("1")
 engine.update_level_text("2")
@@ -307,7 +307,7 @@ else:
 #end setting the player's starting position
 
 def go_to_start(player_object):
-    player_data.save_and_exit("/world1/level2/start")
+    player_data.save_and_exit("/world1")
 
 def go_to_world(player_object):
     player_data.complete_level_and_save()
