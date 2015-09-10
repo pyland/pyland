@@ -677,7 +677,7 @@ class Engine:
             confirm_callback() #Run the confirm callback sequence
             script_state_container.set_script(self.get_external_script()) #Save the script against the character
 
-        if character_object: #If a character has been provided, 
+        if script_state_container: #If a character has been provided, 
             script_init = lambda: self.insert_to_scripter(script_state_container.get_script())
             confirm_and_store_script_callback = store_script
             self.__cpp_engine.show_external_script(confirm_and_store_script_callback, cancel_callback, external_dialogue, script_init)
