@@ -33,7 +33,7 @@
 		//"level_location" : "/world_1/level_2/start/",
 		//"level_location" : "/world2/level1/main",
 		//"level_location" : "/world2/level1/main",
-		//"level_location" : "/demo_levels/Jamie's Level",
+		//"level_location" : "/demo_levels/jamie_level",
 		//"level_location" : "/demo_levels/level_1/main",
 		//"level_location" : "world_8/treasure_matrix",
 		//"level_location" : "/crocodile_test/",

@@ -118,7 +118,7 @@ def start(entities, cpp_engine, RESTART, STOP, KILL, waiting):
 
         while True:
             try:
-                script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/scripts/start.py".format(engine.get_level_location()); #TODO: grab this stuff form the config
+                script_filename = os.path.dirname(os.path.realpath(__file__)) + "/levels/{}/script.py".format(engine.get_level_location()); #TODO: grab this stuff form the config
                 engine.print_debug("Reading from file: {}".format(script_filename))
                 with open(script_filename, encoding="utf8") as script_file:
                     script = script_file.read()
