@@ -238,9 +238,10 @@ public:
     int get_tile_type(int x, int y);
 
     ///
-    /// TODO: Heidi: Document this class
-    /// Collision detection for generated elements
-    ///
+    /// This class is used for collision detection in the game. The map has a 2D-array of integers to determine if a position is solid or not. (called blocker)
+    /// When this class is instantiated, it increments the given position in the array.
+    /// When it is destructed it decrements that same position.
+    /// Positions off the edge of the map cannot be blocked, so those are ignored.
     class Blocker {
         public:
             Blocker(glm::ivec2 tile, std::vector <std::vector<int>>* blocker);

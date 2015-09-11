@@ -131,11 +131,6 @@ class PlayerData(GameObject):
             full_map_name += "/" + self.__current_map
         return full_map_name
 
-
-    def get_previous_exit(self):
-        """ Deprecated, todo: make this private and make earlier levels use previous_exit_is """
-        return self.__player_data["previous_exit"]
-
     def previous_exit_is(self, world_name, level_name = None, map_name = None, info = None):
         """ Check to see where the player perviously exited the game. Can check to see how much matches """
         check_string = "/" + world_name
@@ -145,7 +140,7 @@ class PlayerData(GameObject):
             check_string += "/" + map_name
         if(info != None):
             check_string += "/" + info
-        return (check_string in self.get_previous_exit())
+        return (check_string in self.__player_data["previous_exit"])
 
     def save_and_exit(self, destination, info = None):
         """ Go to the given destination and save the game """

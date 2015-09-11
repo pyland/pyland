@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="38" tilewidth="64" tileheight="64" nextobjectid="145">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <layer name="Ground" width="35" height="38">
+  <data encoding="base64" compression="zlib">
+   eJztw0ENAAAMA6GTWv8qZmMPSFg1VVVVVdXHD3018tA=
+  </data>
+ </layer>
+ <layer name="Decor" width="35" height="38">
+  <data encoding="base64" compression="zlib">
+   eJzdlesOwiAMhWs2NUYTf/mae0fN1MXbMwmJyypSGHBgi01OlrCVfpwCa4io+SOFBM+ZA2/u+aT1z0Ul2UqvX+rHlOwor1Hz9DoptYJumfpj1tR1NkprQSulq9ATpBdandJW6SCoZizo2iksnCcHVyhLbl92SgtBlYMF7U1H/vD50kcqy4W+z9X583ywsTt4/TF+uc56f95dvUJ45dvTexr2ktknorIs9QQ9GsOCWrsk/Z94OViWnnw0n+SL3iuVUM8MFIu+U2x3YGX5VgoUy5N+75nWMWbT2Fo+7iMNvbJ5hvCFaBxLL/Nelu7hUI6ce53zxOShWWL5c8wT05u5eMJ5fFy2dzwnNLdEj1Pq+vxIqUER+TxcjKlrjs1J9QHZ99DvUBypvpCQbxtH8JkRM88bFLz3wA==
+  </data>
+ </layer>
+ <layer name="Bridge" width="35" height="38">
+  <data encoding="base64" compression="zlib">
+   eJzt1qENwCAQQFGuk1R0j7pOwv4zVFJRICGX8MV/CQZx/IChlFw1ed4KQsPIc+wuaEgtJKR7obVQejI7rvjfP6O/qHa/z/05n9QiSdJM7z8gSZI4Xi0mBQQ=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="106" name="characters/player/player_one" gid="286" x="2112" y="1536" width="64" height="64"/>
+  <object id="107" name="characters/npcs/generic/louis" gid="297" x="1792" y="1536" width="64" height="64"/>
+  <object id="108" name="characters/npcs/generic/anya" gid="297" x="1600" y="1536" width="64" height="64"/>
+  <object id="109" name="characters/npcs/generic/harriet" gid="297" x="1152" y="1536" width="64" height="64"/>
+  <object id="111" name="characters/npcs/myla/myla" gid="286" x="2112" y="1600" width="64" height="64"/>
+  <object id="113" name="characters/enemies/crocodiles/blue_crocodile/croc_2" gid="296" x="960" y="896" width="64" height="64"/>
+  <object id="114" name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="1280" y="1216" width="64" height="64"/>
+  <object id="116" name="characters/npcs/generic/kushan" gid="297" x="1088" y="1024" width="64" height="64"/>
+  <object id="125" name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="1088" y="704" width="64" height="64"/>
+  <object id="132" name="characters/enemies/crocodiles/white_crocodile/croc_1" gid="296" x="768" y="704" width="64" height="64"/>
+  <object id="135" name="tile_trigger/trigger_run" gid="292" x="2112" y="1472" width="64" height="64"/>
+  <object id="136" name="tile_trigger/start" gid="292" x="2112" y="1536" width="64" height="64"/>
+  <object id="137" name="tile_trigger/end" gid="292" x="448" y="640" width="64" height="64"/>
+  <object id="143" name="tile_trigger/trigger_yell" gid="292" x="1088" y="1024" width="64" height="64"/>
+  <object id="144" name="player_data/player_data" gid="287" x="0" y="64" width="64" height="64"/>
+ </objectgroup>
+ <layer name="SpecialLayer" width="35" height="38">
+  <data encoding="base64" compression="zlib">
+   eJzt1NEKgCAMQFHpu+z/fyt8E0Fnzs2Bd3BfgvDQqvyklImIgiSN15nvxD1ez6NYRmHBUltm5jaLZnfSv+BGS6QdeTo0lt3v+orF6tsbWSSDhUU7Oy293bfXrC1/z7F2rLpPO4iIKEYf37kqhw==
+  </data>
+ </layer>
+</map>

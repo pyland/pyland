@@ -25,6 +25,7 @@ def go_to_bridge(player_object):
     player_data.save_and_exit("/world1/level1/bridge")
 
 def go_to_world(player_object):
+    player_data.complete_level_and_save()
     player_data.save_and_exit("/world1")
 
 exit_to_bridge.player_walked_on = go_to_bridge
@@ -32,7 +33,15 @@ exit_to_world.player_walked_on = go_to_world
 
 pyscripter_state = player_data.get_level_state("pyscripter_state")
 if pyscripter_state == pyscripter_state_not_found:
-    pyscripter.move_to((14, 14))
+
+    def pick_up_instruction_action(player_object):
+        engine.run_callback_list_sequence([
+            lambda callback: player_one.set_busy(True, callback = callback),
+            lambda callback: engine.show_dialogue("Press \"Enter\" to pick up objects.", callback = callback),
+            lambda callback: player_one.set_busy(False, callback = callback),
+        ])
+    pick_up_instruction.player_walked_on = pick_up_instruction_action
+
     def pyscripter_player_action(player_object):
         engine.run_callback_list_sequence([
             lambda callback: player_one.set_busy(True, callback = callback),
@@ -44,11 +53,10 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: engine.clear_scripter(callback = callback),
             lambda callback: engine.show_py_scripter(callback = callback),
             lambda callback: engine.show_dialogue("Annoying Croc: Stop right there!", callback = callback),
-            lambda callback: annoying_croc.move_to((14, 14), callback = callback),
-            lambda callback: annoying_croc.move_south(callback = callback),
-            lambda callback: annoying_croc.move_south(callback = callback),
-            lambda callback: annoying_croc.move_south(callback = callback),
-            lambda callback: annoying_croc.move_south(callback = callback),
+            lambda callback: annoying_croc.move_north(callback = callback),
+            lambda callback: annoying_croc.move_north(callback = callback),
+            lambda callback: annoying_croc.move_north(callback = callback),
+            lambda callback: annoying_croc.move_north(callback = callback),
             lambda callback: annoying_croc.move_west(callback = callback),
             lambda callback: annoying_croc.move_west(callback = callback),
             lambda callback: annoying_croc.move_west(callback = callback),
@@ -56,7 +64,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: annoying_croc.move_west(callback = callback),
             lambda callback: annoying_croc.move_west(callback = callback),
             lambda callback: annoying_croc.move_west(callback = callback),
-            lambda callback: annoying_croc.move_south(callback = callback),
+            lambda callback: annoying_croc.move_north(callback = callback),
             lambda callback: annoying_croc.move_west(callback = callback),
             lambda callback: annoying_croc.move_west(callback = callback),
             lambda callback: engine.show_dialogue("You've found what I was looking for, you've been working with the monkey all along you punk!", callback = callback),
@@ -64,12 +72,13 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: engine.show_dialogue("I was gonna take it off you anyway, give it 'ere!", callback = callback),
             lambda callback: player_one.face_north(callback = callback),
             lambda callback: annoying_croc.face_north(callback = callback),
+            lambda callback: engine.play_music("world_1_myla", callback = callback),
             lambda callback: engine.show_dialogue("???: Wait you lousy croc!", callback = callback),
             lambda callback: engine.show_dialogue("Monkey surprise attack!", callback = callback),
             lambda callback: myla.face_south(callback = callback),
             lambda callback: myla.set_solidity(False, callback = callback),
             lambda callback: myla.start_animating(callback = callback),
-            lambda callback: myla.move_to((5,9), time = 0.8, callback = callback),
+            lambda callback: myla.move_to(annoying_croc.get_position(), time = 0.8, callback = callback),
             lambda callback: myla.stop_animating(callback = callback),
             lambda callback: annoying_croc.face_west(callback = callback),
             lambda callback: annoying_croc.start_animating(callback = callback),
@@ -84,32 +93,31 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: engine.show_dialogue("... too hard. Hehehehehehe.", callback = callback),
             lambda callback: annoying_croc.face_east(callback = callback),
             lambda callback: annoying_croc.move_east(callback = callback),
-            lambda callback: annoying_croc.move_north(callback = callback),
+            lambda callback: annoying_croc.move_south(callback = callback),
             lambda callback: annoying_croc.move_east(callback = callback),
             lambda callback: annoying_croc.move_east(callback = callback),
             lambda callback: annoying_croc.move_east(callback = callback),
-            lambda callback: annoying_croc.move_north(callback = callback),
-            lambda callback: annoying_croc.move_east(callback = callback),
-            lambda callback: annoying_croc.move_north(callback = callback),
             lambda callback: annoying_croc.wait(0.5, callback = callback),
             lambda callback: annoying_croc.face_west(callback = callback),
             lambda callback: engine.show_dialogue("Annoying Croc: And Myla...", callback = callback),
-            lambda callback: engine.show_dialogue("... your mother is very dissapointed.", callback = callback),
+            lambda callback: engine.show_dialogue("... your mother is very disappointed.", callback = callback),
             lambda callback: annoying_croc.face_east(callback = callback),
             lambda callback: annoying_croc.start_animating(callback = callback),
             lambda callback: engine.show_dialogue("Mwahahahahaah!", callback = callback),
             lambda callback: annoying_croc.stop_animating(callback = callback),
+            lambda callback: annoying_croc.move_south(callback = callback),
             lambda callback: annoying_croc.move_east(callback = callback),
-            lambda callback: annoying_croc.move_north(callback = callback),
+            lambda callback: annoying_croc.move_south(callback = callback),
             lambda callback: annoying_croc.move_east(callback = callback),
-            lambda callback: annoying_croc.move_north(callback = callback),
+            lambda callback: annoying_croc.move_south(callback = callback),
+            lambda callback: annoying_croc.move_east(callback = callback),
+            lambda callback: annoying_croc.move_south(callback = callback),
             lambda callback: annoying_croc.set_visible(False, callback = callback),
             lambda callback: annoying_croc.set_solidity(False, callback = callback),
             lambda callback: myla.face_west(callback = callback),
             lambda callback: engine.show_dialogue("???: Thank you so much for helping me out back there!", callback = callback),
             lambda callback: engine.show_dialogue("I think if you hadn't come along I don't know what I would have done.", callback = callback),
             lambda callback: engine.show_dialogue("The green one you just had the pleasure of meeting is Carl.", callback = callback),
-            lambda callback: engine.play_music("world_1_myla", callback = callback),
             lambda callback: engine.show_dialogue("By the way I'm Myla, as you heard I guess? Oh sorry! You are?", callback = callback),
             lambda callback: engine.show_dialogue("...", callback = callback),
             lambda callback: engine.show_dialogue("Nice to meet you " + engine.get_player_name() + "!", callback = callback),
@@ -134,8 +142,11 @@ elif pyscripter_state == pyscripter_state_found:
     annoying_croc.set_solidity(False)
     myla.move_to(myla_start_position)
     myla.follow(player_one)
+    pick_up_instruction.player_walked_on = lambda player_object: None
 
 player_one.focus()
 engine.play_music("world_1_jungle")
 
-bog_sign.set_message("(west) rossumberg (south) bog")
+bog_sign.set_message("You can press 'Enter' to read signs. But you already knew that didn't you? \nWest: Rossumberg\nNorth: Bog")
+
+

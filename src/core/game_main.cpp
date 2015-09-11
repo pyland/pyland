@@ -426,9 +426,7 @@ void GameMain::game_loop(bool showMouse)
         challenge_data->run_challenge = true;
 
         changing_challenge = false;
-    }
-    else if ((!challenge_data->game_window->check_close()) && challenge_data->run_challenge && run_game)
-    {
+    } else if ((!challenge_data->game_window->check_close()) && challenge_data->run_challenge && run_game) {
         //std::cout << "running game loop" << std::endl;
 
         last_clock = std::chrono::steady_clock::now();
@@ -438,14 +436,9 @@ void GameMain::game_loop(bool showMouse)
 
         VLOG(3) << "} IM | EM {";
 
-        do
-        {
+        do {
             EventManager::get_instance()->process_events(interpreter.interpreter_context);
-        }
-        while (
-            std::chrono::steady_clock::now() - last_clock
-            < std::chrono::nanoseconds(1000000000 / 60)
-        );
+        } while (std::chrono::steady_clock::now() - last_clock < std::chrono::nanoseconds(1000000000 / 60));
 
         VLOG(3) << "} EM | RM {";
         //std::cout << "calling render" << std::endl;

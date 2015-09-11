@@ -135,7 +135,6 @@ class Engine:
             The name of the object it is given in tiled
 
         """
-        print(self.__game_objects_by_name)
         return self.__game_objects_by_name[object_name]
 
     def get_objects_at(self, position):
@@ -143,6 +142,9 @@ class Engine:
 
         Overrides the get_objects_at method inherited from cpp engine, as that version returns a list of object ids and this returns
         the actual instances.
+
+        WARNING: Using this when in an objects initialise method is not advised, as not all objects will have been initialised yet so it could cause unexpected behaviour.
+        This function will gracefully fail by just ignoring unitialised objects in this case.
 
         Parameters
         ----------
@@ -154,12 +156,12 @@ class Engine:
         list of GameObject
             returns a list of the objects at the given position
         """
-        x, y = position                                     #Extract the position x and y coordinates
-        game_objects= list()                        #initialise the list that will be returned giving the objects at the position
-        object_ids = self.__cpp_engine.get_objects_at(x, y) #get a list of the ids of all the objects at the given position from the game engine
-        for object_id in object_ids:                        #iterate over all the object_ids and grab the object associated with each one.
-            game_objects.append(self.__game_objects_by_id[object_id])
-
+        x, y = position                                     # Extract the position x and y coordinates
+        game_objects= list()                                # Initialise the list that will be returned giving the objects at the position
+        object_ids = self.__cpp_engine.get_objects_at(x, y) # Get a list of the ids of all the objects at the given position from the game engine
+        for object_id in object_ids:                        # Iterate over all the object_ids and grab the object associated with each one.
+            if object_id in self.__game_objects_by_id:      # Gracefully handle unitialised objects
+                game_objects.append(self.__game_objects_by_id[object_id])
         #return a list of the objects at the given position
         return game_objects
 
@@ -206,10 +208,36 @@ class Engine:
         self.__cpp_engine.print_debug(str(message))
 
     def create_object(self, object_file_location, object_name, position):
-        """ This is meant to return a new instance of a given game object, but it hasn't been properly implemented yet """
+        """ Creates a new game object dynamically and returns it.
+
+        WARNING: Has only been tested on tile-triggers, needs more thorough checks. 
+
+        Parameters
+        ----------
+        object_file_location : str
+            The string of where the object is located in the file system, identical to what you provide in tiled.
+        object_name : str
+            The name you wish to give the object, used by self.get_object_called to get the object with the given name, so make sure it's unique or won't be need by this method if possible.
+        position : 2-tuple of int 
+            The position at which you wish to spawn the object
+        """
         x, y = position
-        entity = self.__cpp_engine.create_object( object_file_location, object_name, x, y)
-        return self.wrap_entity_in_game_object(self, entity) #TODO: COMMENT THIS
+        entity = self.__cpp_engine.create_object(object_file_location, object_name, x, y)
+        return self.wrap_entity_in_game_object(entity)
+
+    def destroy_object(self, game_object):
+        """ Destroys the given game object in memory and removes it from the map.
+        
+        WARNING: Only moves it off the map and makes it invisible and unsolid, for now.
+        TODO: Work out how to implement this functionality properly, allowing for the most graceful possible degredation.
+
+        Parameters
+        ----------
+        game_object : GameObject
+            The instance of the game object you wish to destroy
+        """
+        object_id = game_object.get_id()
+        game_object.move_to((-10000, -10000))
 
     def get_tile_type(self, position):
         """Returns an integer corresponding to a specific tile type specified in the SpecialLayer of tiled at the current position.
@@ -438,7 +466,7 @@ class Engine:
         dialogue : str
             The string that will be display on the dialogue window
         ignore_scripting : bool
-            By default, the dialogue box enables the scripter on opening and disables it on closing 
+            By default, the dialogue box disables the pyscripter when it is opened and enables it when it is closed.
             Ths boolean value is true if we don't want that default functionality. It is then up to the caller to enable and disable the PyScripter.
         callback : func, optional
             Places the callback onto the engine
@@ -447,9 +475,20 @@ class Engine:
         self.__cpp_engine.show_dialogue(dialogue, ignore_scripting, callback)
 
     def close_external_script_help(self, callback = lambda: None):
+        """ This closes the dialogue box created by show_external_script_help
+        
+        WARNING: This is a stupid and confusing function name and really needs to be changed!!!!
+        TODO: This method should probably be called close_dialogue and should apply to whatever dialogue is being displayed!!!
+        """
         self.__cpp_engine.close_external_script_help(callback)
 
     def show_external_script_help(self, dialogue, callback = lambda: None):
+        """ This shows a dialogue box which cannot be closed by the player, this is useful for create dialogue boxes that you might want to close yourself.
+        
+        WARNING: THIS IS A STUPID METHOD NAME, THIS METHOD NEEDS TO MERGED WITH SHOW DIALOGUE, WITH AN EXTRA PARAMETER TO DETERMINE IF THE PLAYER CAN MANUALLY CONTINUE OR GIVEN A BETTER NAME
+
+        The callback is run straight after the dialogue box is opened
+        """
         self.__cpp_engine.show_external_script_help(dialogue, callback)
 
     def show_dialogue_with_options(self, dialogue, options, disable_scripting = True):
@@ -601,11 +640,11 @@ class Engine:
         """
         self.__cpp_engine.set_py_tabs(num_tabs, callback)
 
-    def show_external_script(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", script_init = lambda: None, character_object = None):
+    def show_external_script(self, confirm_callback = lambda: None, cancel_callback = lambda: None, external_dialogue = "", script_init = lambda: None, script_state_container  = None):
         """ This function is used to have the player give a script to an NPC (after which the NPC may or may not run the script)
 
-        When an NPC requires a script he will ask the player if he/she can help write a script. If the player says 'Give script;, confirm_callback is run, if the player says 'Cancel', the cancel_callback is run. The tab that the player is given to edit is
-        the external_tab that can be initialized via script_init and external dialogue is displayed in the notification bar when this tab is open.
+        When an NPC requires a script they will ask the player if they can help write a script. If the player says 'Give script', confirm_callback is run, if the player says 'Cancel', the cancel_callback is run. The tab that the player is given to edit is
+        the external_tab that can be initialized via script_init and external dialogue is displayed in the dialogue box when this tab is open.
 
         There are two cases for this external script:
 
@@ -628,16 +667,18 @@ class Engine:
             String that gets displayed in the dialogue window while the external PyScript is open
         script_init : func, optional
             The callback that is run when tab is created and before the player confirms/cancels. This is used to initialize the external script and commonly includes "insert_to_scripter"
-        character_object : character, optional
+        script_state_container : ScriptStateContainer, optional
+            The script_state_container you want the script to be associated with, script_init argument is ignored if this is provided.
+            This can be any kind of object which simply provides a set_script and get_script method
         """
 
         #Add function calls to the confirm callback if the script needs storing with the character
         def store_script():
-            confirm_callback()
-            character_object.set_script(self.get_external_script())
+            confirm_callback() #Run the confirm callback sequence
+            script_state_container.set_script(self.get_external_script()) #Save the script against the character
 
-        if character_object:
-            script_init = lambda: self.insert_to_scripter(character_object.get_script())
+        if script_state_container: #If a character has been provided, 
+            script_init = lambda: self.insert_to_scripter(script_state_container.get_script())
             confirm_and_store_script_callback = store_script
             self.__cpp_engine.show_external_script(confirm_and_store_script_callback, cancel_callback, external_dialogue, script_init)
         else:

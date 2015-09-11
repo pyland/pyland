@@ -225,6 +225,7 @@ public:
 
     static void set_music(bool on);
     static void open_main_menu();
+    static void exit_level();
     static void restart_level();
 
     /// global access to game font

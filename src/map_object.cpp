@@ -128,6 +128,7 @@ void MapObject::generate_tex_data() {
 }
 
 void MapObject::set_game_position(glm::ivec2 position) {
+    if(this->game_position == position) return;
     this->game_position = position;
     VLOG(2) << std::fixed << position.x << " " << position.y;
     regenerate_blockers();

@@ -15,65 +15,65 @@ player_data.load(engine.get_player_name())
 player_data.set_map(world_name) #change the map and save that the map has changed
 #end save-data set-up
 
-level_1_move_away = player_one.move_west
-level_2_move_away = player_one.move_west
-level_3_move_away = player_one.move_east
-level_4_move_away = player_one.move_south
-level_5_move_away = player_one.move_west
-level_6_move_away = player_one.move_north
+level1_move_away = player_one.move_west
+level2_move_away = player_one.move_south
+level3_move_away = player_one.move_east
+level4_move_away = player_one.move_south
+level5_move_away = player_one.move_west
+level6_move_away = player_one.move_north
 
-level_1_2_move_away = player_one.move_west
-level_3_2_move_away = player_one.move_west
+level1_2_move_away = player_one.move_west
+level3_2_move_away = player_one.move_west
 
 level_demo_move_away = player_one.move_west
 
 
 #setting the player's starting position
-if player_data.previous_exit_is("world_1", level_name = "level_1"):
-    if player_data.is_level_completed("/world_1/level_1"):
-        player_one.move_to(level_1.get_position())
+if player_data.previous_exit_is("world1", level_name = "level1"):
+    if player_data.is_level_completed("/world1/level1"):
+        player_one.move_to(level1.get_position())
     else:
-        player_one.move_to(level_1.get_position(), callback = level_1_move_away)
-elif player_data.previous_exit_is("world_1", level_name = "level_2"):
-    if player_data.is_level_completed("/world_1/level_2"):
-        player_one.move_to(level_2.get_position())
+        player_one.move_to(level1.get_position(), callback = level1_move_away)
+elif player_data.previous_exit_is("world1", level_name = "level2"):
+    if player_data.is_level_completed("/world1/level2"):
+        player_one.move_to(level2.get_position())
     else:
-        player_one.move_to(level_1.get_position(), callback = level_2_move_away)
-elif player_data.previous_exit_is("world_1", level_name = "level_3"):
-    if player_data.is_level_completed("/world_1/level_3"):
-        player_one.move_to(level_3.get_position())
+        player_one.move_to(level2.get_position(), callback = level2_move_away)
+elif player_data.previous_exit_is("world1", level_name = "level3"):
+    if player_data.is_level_completed("/world1/level3"):
+        player_one.move_to(level3.get_position())
     else:
-        player_one.move_to(level_3.get_position(), callback = level_3_move_away)
-elif player_data.previous_exit_is("world_1", level_name = "level_4"):
-    if player_data.is_level_completed("/world_1/level_4"):
-        player_one.move_to(level_4.get_position())
+        player_one.move_to(level3.get_position(), callback = level3_move_away)
+elif player_data.previous_exit_is("world1", level_name = "level4"):
+    if player_data.is_level_completed("/world1/level4"):
+        player_one.move_to(level4.get_position())
     else:
-        player_one.move_to(level_4.get_position(), callback = level_4_move_away)
-elif player_data.previous_exit_is("world_1", level_name = "level_5"):
-    if player_data.is_level_completed("/world_1/level_5"):
-        player_one.move_to(level_5.get_position())
+        player_one.move_to(level4.get_position(), callback = level4_move_away)
+elif player_data.previous_exit_is("world1", level_name = "level5"):
+    if player_data.is_level_completed("/world1/level5"):
+        player_one.move_to(level5.get_position())
     else:
-        player_one.move_to(level_5.get_position(), callback = level_5_move_away)
-elif player_data.previous_exit_is("world_1", level_name = "level_6"):
-    if player_data.is_level_completed("/world_1/level_6"):
-        player_one.move_to(level_6.get_position())
+        player_one.move_to(level5.get_position(), callback = level5_move_away)
+elif player_data.previous_exit_is("world1", level_name = "level6"):
+    if player_data.is_level_completed("/world1/level6"):
+        player_one.move_to(level6.get_position())
     else:
-        player_one.move_to(level_6.get_position(), callback = level_6_move_away)
-elif player_data.previous_exit_is("world_2", level_name = "level_1"):
-    if player_data.is_level_completed("/world_2/level_1"):
-        player_one.move_to(level_1_2.get_position())
+        player_one.move_to(level6.get_position(), callback = level6_move_away)
+elif player_data.previous_exit_is("world2", level_name = "level1"):
+    if player_data.is_level_completed("/world2/level1"):
+        player_one.move_to(level1_2.get_position())
     else:
-        player_one.move_to(level_1_2.get_position(), callback = level_1_2_move_away)
-elif player_data.previous_exit_is("world_2", level_name = "level_3"):
-    if player_data.is_level_completed("/world_2/level_3"):
-        player_one.move_to(level_3_2.get_position())
+        player_one.move_to(level1_2.get_position(), callback = level1_2_move_away)
+elif player_data.previous_exit_is("world2", level_name = "level3"):
+    if player_data.is_level_completed("/world2/level3"):
+        player_one.move_to(level3_2.get_position())
     else:
-        player_one.move_to(level_2_2.get_position(), callback = level_2_2_move_away)
-elif player_data.previous_exit_is("demo_levels", level_name = "level_1"):
-    if player_data.is_level_completed("/demo_levels/level_1"):
-        player_one.move_to(level_1_2.get_position())
+        player_one.move_to(level2_2.get_position(), callback = level2_2_move_away)
+elif player_data.previous_exit_is("demo_levels", level_name = "level1"):
+    if player_data.is_level_completed("/demo_levels/level1"):
+        player_one.move_to(level1_2.get_position())
     else:
-        player_one.move_to(level_1_2.get_position(), callback = level_1_2_move_away)
+        player_one.move_to(level1_2.get_position(), callback = level1_2_move_away)
 
 
 #end setting the player's starting position
@@ -83,10 +83,9 @@ def ask_to_go_to_level(world_name,level_name, map_name, readable_name, move_meth
     full_level_name = "/" + world_name + "/" + level_name
     map_location = full_level_name + "/" + map_name
     def player_refused_level():
-        #REMOVED FOR TESTING
-        #if not player_data.is_level_completed(full_level_name):
-        #    player_one.set_busy(False, callback = move_method)
-        #else:
+        if not player_data.is_level_completed(full_level_name):
+            player_one.set_busy(False, callback = move_method)
+        else:
             player_one.set_busy(False)
 
     engine.show_dialogue_with_options(
@@ -97,49 +96,49 @@ def ask_to_go_to_level(world_name,level_name, map_name, readable_name, move_meth
         }
     )
 
-def go_to_level_1(player_object):
-    ask_to_go_to_level("world1","level1", "bridge", "Level 1", level_1_move_away)
+def go_to_level1(player_object):
+    ask_to_go_to_level("world1","level1", "player_house", "Level 1", level1_move_away)
 
-level_1.player_walked_on = go_to_level_1
+level1.player_walked_on = go_to_level1
 
-def go_to_level_2(player_object):
-    ask_to_go_to_level("world1","level2", "main_a", "Level 2", level_2_move_away)
+def go_to_level2(player_object):
+    ask_to_go_to_level("world1","level2", "main", "Level 2", level2_move_away)
 
-level_2.player_walked_on = go_to_level_2
+level2.player_walked_on = go_to_level2
 
-def go_to_level_3(player_object):
-    ask_to_go_to_level("world1","level3", "main", "Level 3", level_3_move_away)
+def go_to_level3(player_object):
+    ask_to_go_to_level("world1","level3", "main", "Level 3", level3_move_away)
 
-level_3.player_walked_on = go_to_level_3
+level3.player_walked_on = go_to_level3
 
-def go_to_level_4(player_object):
-    ask_to_go_to_level("world1","level4", "main", "Level 4", level_4_move_away)
+def go_to_level4(player_object):
+    ask_to_go_to_level("world1","level4", "main", "Level 4", level4_move_away)
 
-level_4.player_walked_on = go_to_level_4
+level4.player_walked_on = go_to_level4
 
-def go_to_level_5(player_object):
-    ask_to_go_to_level("world1","level5", "main", "Level 5", level_6_move_away)
+def go_to_level5(player_object):
+    ask_to_go_to_level("world1","level5", "main", "Level 5", level5_move_away)
 
-level_5.player_walked_on = go_to_level_5
+level5.player_walked_on = go_to_level5
 
-def go_to_level_6(player_object):
-    ask_to_go_to_level("world1","level6", "main", "Level 6", level_6_move_away)
+def go_to_level6(player_object):
+    ask_to_go_to_level("world1","level6", "town_hall", "Level 6", level6_move_away)
 
-level_6.player_walked_on = go_to_level_6
+level6.player_walked_on = go_to_level6
 
-def go_to_level_1_2(player_object):
-    ask_to_go_to_level("world2","level1", "main", "Level 1", level_1_2_move_away)
+def go_to_level1_2(player_object):
+    ask_to_go_to_level("world2","level1", "main", "Level 1", level1_2_move_away)
 
-level_1_2.player_walked_on = go_to_level_1_2
+level1_2.player_walked_on = go_to_level1_2
 
-def go_to_level_3_2(player_object):
-    ask_to_go_to_level("world2","level3", "main", "Level 3", level_3_2_move_away)
+def go_to_level3_2(player_object):
+    ask_to_go_to_level("world2","level3", "main", "Level 3", level3_2_move_away)
 
-level_3_2.player_walked_on = go_to_level_3_2
+level3_2.player_walked_on = go_to_level3_2
 
 
 def go_to_level_demo(player_object):
-    ask_to_go_to_level("demo_levels","level_1", "main", "Demo Level", level_demo_move_away)
+    ask_to_go_to_level("demo_levels","level1", "main", "Demo Level", level_demo_move_away)
 
 level_demo.player_walked_on = go_to_level_demo
 
