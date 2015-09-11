@@ -54,7 +54,7 @@ def heidi_player_action(player_object):
 
 heidi.player_action = heidi_player_action
 
-route_sign.set_message("Rossumberg, a peaceful town. \n(east) merchant (east) bog")
+route_sign.set_message("Rossumberg, a peaceful town. \nNorth: Bogs")
 
 """ LEVEL EVENTS """
 

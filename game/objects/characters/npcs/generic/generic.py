@@ -16,6 +16,8 @@ class Generic(NPC):
     def player_action(self, player_object):
         """ This is the method that is run if the player presses the action key while facing the generic NPC.
 
+        By default it shows the list of strings that have been set using set_dialogue_list
+
         Parameters
         ----------
         player_object : Player 
