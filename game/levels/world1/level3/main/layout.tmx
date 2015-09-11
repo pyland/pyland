@@ -41,9 +41,9 @@
   <object name="player_data/player_data" gid="192" x="0" y="64"/>
   <object name="characters/npcs/myla/myla" gid="191" x="128" y="128" width="64" height="64"/>
   <object name="tile_trigger/exit_to_bogs" gid="197" x="-64" y="640"/>
-  <object name="tile_trigger/myla_introduces_programming" gid="197" x="1280" y="832"/>
+  <object name="tile_trigger/myla_introduces_comments" gid="197" x="1280" y="832"/>
   <object name="totem/totem_0" gid="203" x="320" y="1152"/>
-  <object name="tile_trigger/myla_introduces_variables" gid="197" x="768" y="640"/>
-  <object name="characters/npcs/generic/card_person" gid="202" x="256" y="320" width="64" height="64"/>
+  <object name="tile_trigger/myla_introduces_functions" gid="197" x="768" y="640"/>
+  <object name="characters/npcs/generic/card_person" gid="202" x="256" y="384" width="64" height="64"/>
  </objectgroup>
 </map>
