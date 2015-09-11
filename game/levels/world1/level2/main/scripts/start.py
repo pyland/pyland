@@ -11,6 +11,35 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 #end save-data set-up
 
 def myla_introduces_programming_action(player_object):
+
+    def check_myla_name(callback):
+        text = engine.get_terminal_text(1)
+        lower_text = text.lower()
+        if lower_text == "myla":
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("Fantastic!", callback = callback),
+                    lambda callback: engine.show_dialogue("print() is an example of something called a function.", callback = callback),
+                    lambda callback: engine.show_dialogue("A function takes what you give it in between the brackets, and does something with it!", callback = callback),
+                    lambda callback: engine.show_dialogue("The thing you give to a function is called an argument.", callback = callback),
+                    lambda callback: engine.show_dialogue("If it's a lot to take in, don't worry, we will come back to all of this again and again in many different ways.", callback = callback),
+                    lambda callback: engine.show_dialogue("In summary, you just used a function called print, and gave it my name as an argument.", callback = callback),
+                    lambda callback: engine.show_dialogue("Anyway, let's get moving, I will teach you some more in a bit.", callback = callback),
+                ], callback = callback)
+        elif lower_text == engine.get_player_name().lower():
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("I'm not called " + engine.get_player_name(), callback = callback),
+                ], callback = callback)
+        else:
+            def fun(callback):
+                callback()
+
+        engine.run_callback_list_sequence([
+            lambda callback: engine.show_dialogue("Myla: You just printed: '" + text + "'.", callback = callback),
+            fun,
+        ], callback = callback)
+
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_west(callback = callback),
@@ -20,24 +49,20 @@ def myla_introduces_programming_action(player_object):
         lambda callback: engine.show_dialogue("The first thing we are going to start with is printing to the PyConsole in the bottom right-hand corner of the screen.", callback = callback),
         lambda callback: engine.show_dialogue("Printing is just the word programmers use for displaying any kind of text! Not just sending things to a printer!", callback = callback),
         lambda callback: engine.show_external_script(
-            external_dialogue = "Can you please print my name? If I was printing your name I would type: print(\"" + engine.get_player_name() + "\").\nClick on 'Give Script' when you are done!",
+            external_dialogue = "Myla: Can you please print my name? If I was printing your name I would type: print(\"" + engine.get_player_name() + "\").\nClick on 'Give Script' when you are done!",
             script_init = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.clear_scripter(callback = callback),
                 #lambda callback: engine.insert_to_scripter("print()", callback = callback),
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
-                lambda callback: engine.show_dialogue("Awesome!", callback = callback), #TODO: add all the possible reactions to what the player can give Myla
+                lambda callback: myla.run_script(script_to_run = 10, callback = lambda: check_myla_name(callback))
             ], callback = callback),
             cancel_callback = lambda: engine.run_callback_list_sequence([
-                lambda callback: engine.show_dialogue("Oh, you've forgotten my name already? I'm Myla! Try giving it another go.", callback = callback),
+                lambda callback: engine.show_dialogue("Oh, you've forgotten my name already? I'm Myla! I'm not letting you through until you get it right.", callback = callback),
+                lambda callback: myla.move_west(callback = callback),
+                lambda callback: player_one.move_west(callback = callback)
             ], callback = callback),
         ),
-        lambda callback: engine.show_dialogue("print() is an example of something called a function.", callback = callback),
-        lambda callback: engine.show_dialogue("A function takes what you give it in between the brackets, and does something with it!", callback = callback),
-        lambda callback: engine.show_dialogue("The thing you give to a function is called an argument.", callback = callback),
-        lambda callback: engine.show_dialogue("If it's a lot to take in, don't worry, we will come back to all of this again and again in many different ways.", callback = callback),
-        lambda callback: engine.show_dialogue("In summary, you just used a function called print, and gave it my name as an argument.", callback = callback),
-        lambda callback: engine.show_dialogue("Anyway, let's get moving, I will teach you some more in a bit.", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
     ])
 
