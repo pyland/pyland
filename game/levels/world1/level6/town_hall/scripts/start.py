@@ -735,11 +735,7 @@ complete_sequence_6 = [
 ]
 
 try_to_leave_sequence = [
-    lambda callback: player_one.set_busy(True, callback = callback),
-    lambda callback: engine.show_dialogue("Myla: Don't leave "+engine.get_player_name()+", they need our help!", callback = callback),
-    lambda callback: player_one.set_busy(False, callback = callback),
-    lambda callback: player_one.move_east(callback = callback),
-    #lambda callback: myla.follow(player_one, callback = callback)
+    lambda callback: player_data.save_and_exit("/world1")
 ]
 
 myla_sequence = [

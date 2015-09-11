@@ -27,10 +27,10 @@ def myla_introduces_comments_action(player_object):
                 lambda callback: engine.insert_to_scripter("hello = \"Hello \" # Aha, here we are using variables again!\n", callback = callback),
                 lambda callback: engine.insert_to_scripter("myname = \"Myla\"  # Just so you know, all text you use had to be in quotes.\n", callback = callback),
                 lambda callback: engine.insert_to_scripter("yourname = '" + engine.get_player_name() + "' # You can use single or double quotes!\n", callback = callback),
-                lambda callback: engine.insert_to_scripter('# Programmers for some reason decided to call texts in programs strings.\n', callback = callback),
+                lambda callback: engine.insert_to_scripter('# A piece of text in a programm is called a string.\n', callback = callback),
                 lambda callback: engine.insert_to_scripter('# You can add strings together, give this to me to run to see what is printed!\n', callback = callback),
                 lambda callback: engine.insert_to_scripter("print(hello + myname + \"!\")\n", callback = callback), #TODO, add all the reactions to what the player can give 
-                lambda callback: engine.insert_to_scripter("#print(hello + yourname + \"!\") #Remove the hash here so that your name is printed as well!", callback = callback), #TODO, add all the reactions to what the player can give Myla
+                lambda callback: engine.insert_to_scripter("#print(hello + yourname + \"!\") #Remove the hash form the start of this line to print: Hello " + engine.get_player_name() + "!", callback = callback), #TODO, add all the reactions to what the player can give Myla
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.show_dialogue("Awesome! I know that was a lot to read.", callback = callback), #TODO: add all the possible reactions to what the player can give Myla
@@ -111,6 +111,11 @@ def card_person_action(player_object):
 
 card_person.player_action = card_person_action
     
+teach_enter_to_talk.player_walked_one = lambda player_object: engine.run_callback_list_sequence([
+    lambda callback: player_one.set_busy(True, callback = callback),
+    lambda callback: engine.show_dialogue("You can press 'Enter' to talk to people.", callback = callback),
+    lambda callback: player_one.set_busy(False, callback = callback),
+])
 
 #setting the player's starting position
 engine.run_callback_list_sequence([

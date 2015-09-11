@@ -20,7 +20,7 @@ def myla_introduces_programming_action(player_object):
         lambda callback: engine.show_dialogue("The first thing we are going to start with is printing to the PyConsole in the bottom right-hand corner of the screen.", callback = callback),
         lambda callback: engine.show_dialogue("Printing is just the word programmers use for displaying any kind of text! Not just sending things to a printer!", callback = callback),
         lambda callback: engine.show_external_script(
-            external_dialogue = "Can you please print my name? If I was printing your name I would type print(\"" + engine.get_player_name() + "\"). Click on 'Give Script' when you are done!",
+            external_dialogue = "Can you please print my name? If I was printing your name I would type: print(\"" + engine.get_player_name() + "\").\nClick on 'Give Script' when you are done!",
             script_init = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.clear_scripter(callback = callback),
                 #lambda callback: engine.insert_to_scripter("print()", callback = callback),
@@ -53,7 +53,7 @@ def myla_introduces_variables_action(player_object):
         lambda callback: engine.show_dialogue("The reason it's called a variable, is because the value it contains can vary!", callback = callback),
         lambda callback: engine.show_dialogue("I'm going to give you a script.", callback = callback),
         lambda callback: engine.show_external_script(
-            external_dialogue = "Try printing your name this time! However, do it by replacing my name with yours, don't put give it straight to print!",
+            external_dialogue = "Try printing your name this time! However, do it by replacing my name with yours, don't just type it straight into the print function!",
             script_init = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.clear_scripter(callback = callback),
                 lambda callback: engine.insert_to_scripter("name = \"Myla\"\n", callback = callback),
