@@ -100,7 +100,7 @@ if pyscripter_state == pyscripter_state_not_found:
             lambda callback: annoying_croc.wait(0.5, callback = callback),
             lambda callback: annoying_croc.face_west(callback = callback),
             lambda callback: engine.show_dialogue("Annoying Croc: And Myla...", callback = callback),
-            lambda callback: engine.show_dialogue("... your mother is very dissapointed.", callback = callback),
+            lambda callback: engine.show_dialogue("... your mother is very disappointed.", callback = callback),
             lambda callback: annoying_croc.face_east(callback = callback),
             lambda callback: annoying_croc.start_animating(callback = callback),
             lambda callback: engine.show_dialogue("Mwahahahahaah!", callback = callback),
