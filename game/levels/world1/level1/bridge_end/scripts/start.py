@@ -147,4 +147,6 @@ elif pyscripter_state == pyscripter_state_found:
 player_one.focus()
 engine.play_music("world_1_jungle")
 
-bog_sign.set_message("(west) rossumberg (south) bog")
+bog_sign.set_message("You can press 'Enter' to read signs. But you already knew that didn't you? \nWest: Rossumberg\nNorth: Bog")
+
+
