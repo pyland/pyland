@@ -180,12 +180,75 @@ def myla_introduces_variables_action(player_object):
                 lambda callback: player_one.move_east(callback = callback)
             ], callback = callback)
         ),
+        lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
     ])
 
 myla_introduces_variables.player_walked_on = myla_introduces_variables_action
 
 def toll_listener_action(player_object):
+
+    
+    def check_toll_payment(callback):
+        """ This function is run when the player clicks 'give_script' to the toll person """
+
+        #Get what the user printed
+        text = engine.get_terminal_text(1)
+        lower_text = text.lower()
+
+        #get the script text itself
+        script = engine.get_external_script()
+
+        if lower_text == "£1000":
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("Toll Man: Hahaha, you fixed my PyRunner and payed me the money, I can't believe I get away with this!", callback = callback),
+                    lambda callback: player_one.face_south(callback = callback),
+                    lambda callback: myla.face_north(callback = callback),
+                    lambda callback: engine.show_dialogue("Myla: *the jokes on him, mwahahahaha*", callback = callback),
+                    lambda callback: player_one.face_west(callback = callback),
+                    lambda callback: myla.face_west(callback = callback),
+                    lambda callback: engine.show_dialogue("Toll Man: Oi, did you say anything?", callback = callback),
+                    lambda callback: player_one.face_south(callback = callback),
+                    lambda callback: engine.show_dialogue("Myla: What, me? No not at all.", callback = callback),
+                    lambda callback: myla.face_north(callback = callback),
+                    lambda callback: engine.show_dialogue("Come on " + engine.get_player_name() + " let's get out of here!", callback = callback),
+                ], callback = callback)
+        #elif lower_text == engine.get_player_name().lower():
+        #	def fun(callback):
+        #		engine.run_callback_list_sequence([
+        #			lambda callback: engine.show_dialogue("Well done " + engine.get_player_name() + "!", callback = callback),
+        #			lambda callback: engine.show_dialogue("Variables are really useful for making your program remember things, they will really come in handy for when we do maths.", callback = callback),
+        #			lambda callback: engine.show_dialogue("Don't worry if you don't like doing maths much, the thing that's useful about programming is that the PyScripter does all the maths for you!", callback = callback),
+        #		], callback = callback)
+        elif script.strip() == "":
+            engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("You don't seem to have written anything in the PyScripter, I need something to run!", callback = callback),
+                lambda callback: myla.move_south(callback = callback),
+                lambda callback: player_one.move_south(callback = callback)
+            ], callback = callback)
+            return
+        elif engine.get_error(): #If there was an error in the script the player wrote
+            engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("There appeared to be an error in the script you wrote " + engine.get_player_name() + ".", callback = callback),
+                lambda callback: engine.show_dialogue("Remember, you want to the toll person's PyRunner to print £1000!", callback = callback),
+                lambda callback: myla.move_south(callback = callback),
+                lambda callback: player_one.move_south(callback = callback)
+            ], callback = callback)
+            return
+        else:
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("I don't think you quite got that " + engine.get_player_name() + ".", callback = callback),
+                    lambda callback: myla.move_south(callback = callback),
+                    lambda callback: player_one.move_south(callback = callback)
+                ], callback = callback)
+
+        engine.run_callback_list_sequence([
+            #lambda callback: engine.show_dialogue("Myla: You just printed: '" + text + "'.", callback = callback),
+            fun,
+        ], callback = callback)
+
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: toll_person.face_east(callback = callback),
@@ -208,21 +271,13 @@ def toll_listener_action(player_object):
                 lambda callback: engine.insert_to_scripter("print(amount_payed)", callback = callback), #TODO, add all the reactions to what the player can give Myla
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
-                lambda callback: engine.show_dialogue("Toll Man: Hahaha, you fixed my PyRunner and payed me the money, I can't believe I get away with this!", callback = callback),
-                lambda callback: player_one.face_south(callback = callback),
-                lambda callback: myla.face_north(callback = callback),
-                lambda callback: engine.show_dialogue("Myla: *the jokes on him, mwahahahaha*", callback = callback),
-                lambda callback: player_one.face_west(callback = callback),
-                lambda callback: myla.face_west(callback = callback),
-                lambda callback: engine.show_dialogue("Toll Man: Oi, did you say anything?", callback = callback),
-                lambda callback: player_one.face_south(callback = callback),
-                lambda callback: engine.show_dialogue("Myla: What, me? No not at all.", callback = callback),
-                lambda callback: myla.face_north(callback = callback),
-                lambda callback: engine.show_dialogue("Come on " + engine.get_player_name() + " let's get out of here!", callback = callback),
+                lambda callback: toll_person.run_script(script_to_run = 10, callback = lambda: check_toll_payment(callback)),
             ], callback = callback),
             cancel_callback = lambda: engine.run_callback_list_sequence([
                 lambda callback: player_one.face_south(callback = callback),
                 lambda callback: engine.show_dialogue("Myla: Just try typing amount_payed = \"£1000\".", callback = callback),
+                lambda callback: myla.move_south(callback = callback),
+                lambda callback: player_one.move_south(callback = callback)
             ], callback = callback)
         ),
         lambda callback: myla.follow(player_one, callback = callback),
