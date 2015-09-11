@@ -12,7 +12,9 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 
 def myla_introduces_programming_action(player_object):
 
+    
     def check_myla_name(callback):
+        """ This function is run when the player clicks 'give_script' to Myla """
 
         #Get what the user printed
         text = engine.get_terminal_text(1)
@@ -100,6 +102,60 @@ def myla_introduces_programming_action(player_object):
 myla_introduces_programming.player_walked_on = myla_introduces_programming_action
 
 def myla_introduces_variables_action(player_object):
+
+    def check_player_name(callback):
+        """ This function is run when the player clicks 'give_script' to Myla """
+
+        #Get what the user printed
+        text = engine.get_terminal_text(1)
+        lower_text = text.lower()
+
+        #get the script text itself
+        script = engine.get_external_script()
+
+        if lower_text == "myla":
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("Don't print my name this time, print your name!", callback = callback),
+                    lambda callback: myla.move_east(callback = callback),
+                    lambda callback: player_one.move_east(callback = callback)
+                ], callback = callback)
+        elif lower_text == engine.get_player_name().lower():
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("Well done " + engine.get_player_name() + "!", callback = callback),
+                    lambda callback: engine.show_dialogue("Variables are really useful for making your program remember things, they will really come in handy for when we do maths.", callback = callback),
+                    lambda callback: engine.show_dialogue("Don't worry if you don't like doing maths much, the thing that's useful about programming is that the PyScripter does all the maths for you!", callback = callback),
+                ], callback = callback)
+        elif script.strip() == "":
+            engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("You don't seem to have written anything in the PyScripter, I need something to run!", callback = callback),
+                lambda callback: myla.move_east(callback = callback),
+                lambda callback: player_one.move_east(callback = callback)
+            ], callback = callback)
+            return
+        elif engine.get_error(): #If there was an error in the script the player wrote
+            engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("There appeared to be an error in the script you wrote " + engine.get_player_name() + ".", callback = callback),
+                lambda callback: engine.show_dialogue("Remember, you want to write 'name = ' followed by your name in quotes, then followed by 'print(name)' on a new line.", callback = callback),
+                lambda callback: myla.move_east(callback = callback),
+                lambda callback: player_one.move_east(callback = callback)
+            ], callback = callback)
+            return
+        else:
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("I don't think you quite got that " + engine.get_player_name() + ".", callback = callback),
+                    lambda callback: myla.move_east(callback = callback),
+                    lambda callback: player_one.move_east(callback = callback)
+                ], callback = callback)
+
+        engine.run_callback_list_sequence([
+            lambda callback: engine.show_dialogue("Myla: You just printed: '" + text + "'.", callback = callback),
+            fun,
+        ], callback = callback)
+
+
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_east(callback = callback),
@@ -116,15 +172,14 @@ def myla_introduces_variables_action(player_object):
                 lambda callback: engine.insert_to_scripter("print(name)", callback = callback), #TODO, add all the reactions to what the player can give Myla
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
-                lambda callback: engine.show_dialogue("Awesome! In this case, 'name' was the variable you used.", callback = callback),
+                lambda callback: myla.run_script(script_to_run = 10, callback = lambda: check_player_name(callback)),
             ], callback = callback),
             cancel_callback = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.show_dialogue("Oh, you've forgotten your own name already? Hahaha, you're called " + engine.get_player_name() + " silly.", callback = callback),
+                lambda callback: myla.move_east(callback = callback),
+                lambda callback: player_one.move_east(callback = callback)
             ], callback = callback)
         ),
-        lambda callback: engine.show_dialogue("Well done " + engine.get_player_name() + "!", callback = callback),
-        lambda callback: engine.show_dialogue("Variables are really useful for making your program remember things, they will really come in handy for when we do maths.", callback = callback),
-        lambda callback: engine.show_dialogue("Don't worry if you don't like doing maths much, the thing that's useful about programming is that the PyScripter does all the maths for you!", callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
     ])
 
