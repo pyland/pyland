@@ -104,14 +104,16 @@ def card_person_action(player_object):
         ),
         lambda callback: engine.show_dialogue("Thank you!", callback = callback),
         lambda callback: myla.follow(player_one, callback = callback),
+        lambda callback: card_person.move_south(callback = callback),
         lambda callback: card_person.move_west(callback = callback),
-        lambda callback: card_person.face_east(callback = callback),
+        lambda callback: card_person.move_south(callback = callback),
+        lambda callback: card_person.face_north(callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
     ])
 
 card_person.player_action = card_person_action
     
-teach_enter_to_talk.player_walked_one = lambda player_object: engine.run_callback_list_sequence([
+teach_enter_to_talk.player_walked_on = lambda player_object: engine.run_callback_list_sequence([
     lambda callback: player_one.set_busy(True, callback = callback),
     lambda callback: engine.show_dialogue("You can press 'Enter' to talk to people.", callback = callback),
     lambda callback: player_one.set_busy(False, callback = callback),
@@ -124,10 +126,6 @@ engine.run_callback_list_sequence([
 ])
 myla_start_position = exit_to_world.get_position()
 #end setting the player's starting position
-
-
-
-
 
 def go_to_world(player_object):
     player_data.save_and_exit("/world1")
@@ -146,11 +144,8 @@ myla.follow(player_one)
 player_one.focus()
 engine.play_music("world_1_jungle")
 
-card_person.face_south()
-card_person.set_dialogue_list([
-    "This person will have a PyRunner that automatically printed their special occasion cards for them.",
-    "Here the player will have to write a function for them to do that.",
-    "They will be given a broken version of the function and have to fix it.",
-    "The fun but is, the player can make the function print whatever they want it to!",
-])
+card_person.face_north()
+
+croc.move_vertical()
+
 

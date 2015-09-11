@@ -22,12 +22,12 @@
  </layer>
  <layer name="Water" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRQEsgiobpZQ+t7MJmD63so5efRgEmAACEJQG6
+   eJztzTEKACAQA8FTwVMRsfL/TzWCldbpsjCkjJlSSilmFRwKZOJPg3UN4leH+Xw56e98BYh3j0T4UX8b2DMA4A==
   </data>
  </layer>
  <layer name="Decor" width="26" height="20">
   <data encoding="base64" compression="zlib">
-   eJzFlVEOwCAIQ/XCHGa78LI/16xQmY4mxMQAr0SNrdXJIHb238mM+qxi/cGpmIWd0wrZsBrsIdtjsjzcU2aIOKy3kse8YK3iLcpTOG81M28w8sPOQxXzEfmcZWSUmaWSc3a/v8rA/KM/4+Zk7hIyPO7q/+Gr3ypdWCA1uw==
+   eJydVUEOwzAIo59Nmkses314qpZJrmtDNCRECyQ2hKYzvjJJ+7IDfEG56p1jmONyZ+I/TdzZvhT3GYKrw3O8OuWodW3xVbUr5dpcnQqbpVG9roaMD2OcZCOe/CrMrN+qP+jjuMNwa9Dy2jD+XWXeztfiKY77jq+JWI89Lq5vzE1hKB2QhzaS951euj2rNQrD+dW3UHHN4uhTM6UEZ6O6N3h/deYOR+2P2G6WQjyjZXkf2s//ENVLd0dfPF/HXS+caqazs/j5G2k17woLvwE1l//cL3gG7h/BONhHdV4qZ0c/I2mbpA==
   </data>
  </layer>
  <layer name="SpecialLayer" width="26" height="20">
@@ -46,5 +46,6 @@
   <object name="tile_trigger/myla_introduces_functions" gid="197" x="768" y="640"/>
   <object name="characters/npcs/generic/card_person" gid="202" x="192" y="576" width="64" height="64"/>
   <object name="tile_trigger/teach_enter_to_talk" gid="197" x="192" y="448"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc" gid="201" x="640" y="960"/>
  </objectgroup>
 </map>
