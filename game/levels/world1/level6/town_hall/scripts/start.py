@@ -158,7 +158,7 @@ dialogue_sequence = [
     lambda callback: myla.move_east(callback = callback),
     lambda callback: camera.move_to(player_one.get_position(), time = 1.5, callback = callback),
     lambda callback: player_one.focus(callback = callback),
-    lambda callback: engine.show_dialogue("Myla: Lets help them out, we might be able to fix their scripts! Talk to as many of them as you can.", callback = callback),
+    lambda callback: engine.show_dialogue("Myla: This is it " + engine.get_player_name() + "! Use everything you've learnt so far to help these snakes out!", callback = callback),
     lambda callback: pace(elisabeth, callback = callback),
     lambda callback: player_one.set_busy(False, callback = callback),
     lambda callback: myla.follow(player_one, callback = callback),

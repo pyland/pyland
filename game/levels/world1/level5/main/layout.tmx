@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="26" height="50" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="37" height="50" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="special" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/special.png" width="320" height="1216"/>
  </tileset>
@@ -15,22 +15,22 @@
  <tileset firstgid="381" name="house" tilewidth="64" tileheight="64">
   <image source="../../../../tiles/house.png" width="320" height="640"/>
  </tileset>
- <layer name="Ground" width="26" height="50">
+ <layer name="Ground" width="37" height="50">
   <data encoding="base64" compression="zlib">
-   eJztwwENAAAMw6D6NzVrt3ABkLBqqqqqqqqPB67Eyho=
+   eJztwwEJAAAMBKHrX+qrLcdAwVVTVVVVVVVVffQAuvBkkg==
   </data>
  </layer>
- <layer name="SpecialLayer" width="26" height="50">
+ <layer name="SpecialLayer" width="37" height="50">
   <data encoding="base64" compression="zlib">
-   eJy1ldsKQzEIBEvP//9zX1oI4q6zkgqhJxcdNca+Xr28j1HX67466+Rdft1ad6bb2zKcbcV2a0QmPZV3950yiL0zB7fuPPGts0HvnbKmmJR+UkOpz4ThbKq7ojW8vR8n5D1t2Um8zqfnO+r8XFM8xzi/Hzgqp9pyjIST9Lqu9lzuT8bkd8dROqpPuRpI+1UiXf4Un9SNO0did3vEbvJWSU4J58bdOHs1ZvXmqp9p7KqnkF5COSSWTTxqbeLUfrXhkHgeoaNypPiEU1nK7m2Oq1/HIT1f6Sm/lV+OpXzs5q7mJlant+X85hvGbc7UC9SZf3CU3Q1nqjP3/9NxlM/E31scmqekPyl9ZWvaSzlqPsU3CfWbxkpYKp4pTyRvlTcxlN2EpXRJ35nOEx8pZ6NH/JqE9kXX99Iaq3PqZyL1fUysxBflW+WoccoHwkAEcQ==
+   eJzFlVEKxDAIREt7/zsvC1sI4owzxm6FfNRE86pGjyOXc1lRH/fRWeSvWpntEfaQLjuT7cV9JiwGTMc4VFuFybFDPtD+BJPK2s3Hqmc5zva69awwVfWM7NT7lDen6DK9WhtVn5hkijq3/zyhj/WDbNxe12Xq1hOT6t+Y3rVTOLoxVN50PHP9VvxedRnbFFPM7SWuyFT5Vpmy96cy7b7Tqscq/XzlfWLeMD3bZ7ydnunOL0e6TKutkit2d3Zud94xv2p+MrsO004PY7526mlXYs6r+5Ua+Arqf9FP5x27TLcoTEqddznjeTYnoh9nXuzMFnV+dZim43Ql51EOp+KnMEUu5PdNJufNd5lOgynaZfpKVzGtdgoP8snqf2e2IK7M7h9M93eH502mqoejM28zIb9PM1VvK6vTKSZ0vorDW0xqriaYmKj5mWJi9atyODOn81bQeSUek3FS5AxL1XeZVC5k68xgxOXYq7Y7b4zpKjYWjyeYOnc4/YrZVUyOnVrXcd+Nk3Knem+2lHscLsW/Izu+ENPEWuUDt6cFcw==
   </data>
  </layer>
- <layer name="Decor" width="26" height="50">
+ <layer name="Decor" width="37" height="50">
   <data encoding="base64" compression="zlib">
-   eJylWFtuw0AI5Khpq/SRPvKTHNGxf3KneiUj0dEM4AYJOd5dGIZlySZ3M7sXauI5dG7YWjKHa9jYsuGwuT2xK4yp8F3hVTKH+DEOJVUuMz8sVzjHsJgNznX5e04jnrKbw3OyXDJ7hfOfXKucZHy69eK6JDFOhQ8Tdl1ObC3aKan2SK1XeUV/S9NflD182R66vK96hPfXbWwidnEPM4z4efj8WvV71bfN/3i/bmOO5+tZnWT9xNd9rvq06SHoeD+v+rPqs/Xzpmovy/1ngrHYXxysExxnceBY58yxHljJnr7EMLM1XX9x7gZP1Uu6eenY2YbH4qxE9awqFzHvuG/qexX7C8Ma4mfb9UjWMz8MKxs/rXrZdJzxlyKuvfU+xHvKJSjDwTOH84rL0DlwuQac0bOOsP4RnCEfwIVxqs5SJ5+MD3JymxvhNQk+iIN8Ih7jdDPNR+F4vz0HDMfxXj9kJnYqbjaGWIwLy7mK2SW785wElyzuyTTHGFN8Rhw8PwxD+WI2jI/qB+oOVNW7n9MOn6x3Mxz8nYR81N7EdewOxfiweos42d5ktaZwUEdtHwgXt2H3PvTfwWES8/wIzmJ5H0Y+GRbiME4Yv/puZnF1+TAu2T2g2u8MJ84zDMSrMLAfVfmLuOw/CsRiMXXwlN0eHH+OWPEuynpIxsXI2opPFqPC6f6O/M9/XJUo/0Y+s7EKqxtjlr+qfhjGL1ZaI2Q=
+   eJy9mN1uwjAMhfOobBP7gTFu4BEL3PBOS6Ra86xzbCctRLJaUsf+4jhOy72Ucg+kkGtGSqd+hgHxyP2typU88/i8NsozBRxeXy9T1K7lLy7aRsbHUiZ2r9miZ9aP55/1Rc+y+SHrqtmQLrPBfFzVdbKDHBt2fMQU2cuse89ezcSpx0eGQWoBm89kbCxh8uxEnEyX2cnYZy3KKaYf8TImfbW+b0nf1mY2howpqjFW57PK1vx+n/smME5ybgkT2y/32f93lUOVj5ml/T7PfcIm+noPjDB5NUX09lVeZtkoab+PVX6qvJbHrB3bg96e2zs8KC+zTKym2FxGc4lqWS+TzAWdn1HLnj0jTCjW2TkzXc+/Z+diruy8iNbG41kSpzKzIZ2ooT2xlMk2nSc2z9j7puaK/GeZpCaLbIF+xl7Gf9bGrsppllab34i+jOmpESNMcm6clCAmdn4xP6NMLTckRmfFdCj/z69nMrX2Vf7HCMUqqlXemo4woTjZWMmYVi9svKbAzwiTjZNmQ7G6FB6nNZiatHP9qHiESd4/WruCcche1Jfht1woRlGOIE70v0KGycqu4Bihcdq3dyaMxkmumsnWJ8TDbC1hYnFidZx9y2RqRA+Tzl0vTixGjGk0n6w9qVMol7Qe+m5CcVq67zSTl0venluDyUqrB5vC9xv6ZrMsazOhpvPiWUy34p/3Wl/rMt9r7DtWf9n7LZrDI+KEdLz3bm/91mTSeoiH2fTiHdU0xhStoWZkddDbJ2sweXMr5PmaTHJtMbDfwNqHrdseY2bfoXG6j3GwuTM70X+9yK/3TGKVWcue9e3JC8ZSwD3qy3Blm7ceHpfHtIbo9gupWIUk
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="26" height="50">
+ <objectgroup name="Object Layer 1" width="37" height="50">
   <object name="characters/player/player_one" gid="286" x="832" y="64"/>
   <object name="sign/bog_sign" gid="288" x="704" y="192"/>
   <object name="tile_trigger/exit_to_start" gid="292" x="832" y="0"/>
@@ -72,7 +72,10 @@
   <object name="whetstone/whetstone1" gid="292" x="1344" y="320"/>
   <object name="tile_trigger/myla_explain_whetstone" gid="292" x="960" y="384"/>
   <object name="vine/vine1" gid="196" x="640" y="448"/>
-  <object name="whetstone/whetstone2" gid="292" x="1280" y="3072"/>
+  <object name="whetstone/whetstone2" gid="292" x="1216" y="2944"/>
+  <object name="totem/totem" gid="298" x="1024" y="128"/>
   <object name="tile_trigger/exit_to_world" gid="292" x="768" y="3264"/>
+  <object name="tile_trigger/myla_explain_speed" gid="292" x="1600" y="3008"/>
+  <object name="tile_trigger/myla_whetstone_reminder" gid="292" x="1344" y="3136"/>
  </objectgroup>
 </map>
