@@ -47,6 +47,14 @@ def myla_introduces_programming_action(player_object):
                 lambda callback: player_one.move_west(callback = callback)
             ], callback = callback)
             return
+        elif engine.get_error(): #If there was an error in the script the player wrote
+            engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("There appeared to be an error in the script you wrote " + engine.get_player_name() + ".", callback = callback),
+                lambda callback: engine.show_dialogue("Remember you want to write 'print', followed by an opening bracket '(', then put my name in quotes, then put a closing bracket ')'.", callback = callback),
+                lambda callback: myla.move_west(callback = callback),
+                lambda callback: player_one.move_west(callback = callback)
+            ], callback = callback)
+            return
         else:
             def fun(callback):
                 engine.run_callback_list_sequence([
