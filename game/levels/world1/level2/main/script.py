@@ -13,8 +13,14 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 def myla_introduces_programming_action(player_object):
 
     def check_myla_name(callback):
+
+        #Get what the user printed
         text = engine.get_terminal_text(1)
         lower_text = text.lower()
+
+        #get the script text itself
+        script = engine.get_external_script()
+
         if lower_text == "myla":
             def fun(callback):
                 engine.run_callback_list_sequence([
@@ -29,11 +35,26 @@ def myla_introduces_programming_action(player_object):
         elif lower_text == engine.get_player_name().lower():
             def fun(callback):
                 engine.run_callback_list_sequence([
-                    lambda callback: engine.show_dialogue("I'm not called " + engine.get_player_name(), callback = callback),
+                    lambda callback: engine.show_dialogue("I'm not called " + engine.get_player_name() + "!", callback = callback),
+                    lambda callback: engine.show_dialogue("Try that again, but I would like you to print my name instead of yours.", callback = callback),
+                    lambda callback: myla.move_west(callback = callback),
+                    lambda callback: player_one.move_west(callback = callback)
                 ], callback = callback)
+        elif script.strip() == "":
+            engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("You don't seem to have written anything in the PyScripter, I need something to run!", callback = callback),
+                lambda callback: myla.move_west(callback = callback),
+                lambda callback: player_one.move_west(callback = callback)
+            ], callback = callback)
+            return
         else:
             def fun(callback):
-                callback()
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("I don't think you quite got that " + engine.get_player_name() + ".", callback = callback),
+                    lambda callback: engine.show_dialogue("Try that again, you want to write print(\"Myla\") to print my name to the PyConsole.", callback = callback),
+                    lambda callback: myla.move_west(callback = callback),
+                    lambda callback: player_one.move_west(callback = callback)
+                ], callback = callback)
 
         engine.run_callback_list_sequence([
             lambda callback: engine.show_dialogue("Myla: You just printed: '" + text + "'.", callback = callback),
@@ -44,6 +65,7 @@ def myla_introduces_programming_action(player_object):
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_west(callback = callback),
         lambda callback: engine.show_dialogue("Myla: This is as good place to start as any!", callback = callback),
+        lambda callback: myla.stop_follow(callback = callback),
         lambda callback: engine.show_dialogue("Just a quick question though, the PyScripter uses a programming language called Python.", callback = callback),
         lambda callback: engine.show_dialogue("Have you ever programmed in Python before? (TODO ASK QUESTION AND GIVE APPROPRIATE RESPONSE)", callback = callback),
         lambda callback: engine.show_dialogue("The first thing we are going to start with is printing to the PyConsole in the bottom right-hand corner of the screen.", callback = callback),
@@ -63,6 +85,7 @@ def myla_introduces_programming_action(player_object):
                 lambda callback: player_one.move_west(callback = callback)
             ], callback = callback),
         ),
+        lambda callback: myla.follow(player_one, callback = callback),
         lambda callback: player_one.set_busy(False, callback = callback),
     ])
 
