@@ -199,7 +199,7 @@ def toll_listener_action(player_object):
         #get the script text itself
         script = engine.get_external_script()
 
-        if lower_text == "£1000":
+        if lower_text == "1000":
             def fun(callback):
                 engine.run_callback_list_sequence([
                     lambda callback: engine.show_dialogue("Toll Man: Hahaha, you fixed my PyRunner and payed me the money, I can't believe I get away with this!", callback = callback),
@@ -214,13 +214,6 @@ def toll_listener_action(player_object):
                     lambda callback: myla.face_north(callback = callback),
                     lambda callback: engine.show_dialogue("Come on " + engine.get_player_name() + " let's get out of here!", callback = callback),
                 ], callback = callback)
-        #elif lower_text == engine.get_player_name().lower():
-        #	def fun(callback):
-        #		engine.run_callback_list_sequence([
-        #			lambda callback: engine.show_dialogue("Well done " + engine.get_player_name() + "!", callback = callback),
-        #			lambda callback: engine.show_dialogue("Variables are really useful for making your program remember things, they will really come in handy for when we do maths.", callback = callback),
-        #			lambda callback: engine.show_dialogue("Don't worry if you don't like doing maths much, the thing that's useful about programming is that the PyScripter does all the maths for you!", callback = callback),
-        #		], callback = callback)
         elif script.strip() == "":
             engine.run_callback_list_sequence([
                 lambda callback: engine.show_dialogue("You don't seem to have written anything in the PyScripter, I need something to run!", callback = callback),
@@ -231,7 +224,7 @@ def toll_listener_action(player_object):
         elif engine.get_error(): #If there was an error in the script the player wrote
             engine.run_callback_list_sequence([
                 lambda callback: engine.show_dialogue("There appeared to be an error in the script you wrote " + engine.get_player_name() + ".", callback = callback),
-                lambda callback: engine.show_dialogue("Remember, you want to the toll person's PyRunner to print £1000!", callback = callback),
+                lambda callback: engine.show_dialogue("Remember, you want to the toll person's PyRunner to print 1000!", callback = callback),
                 lambda callback: myla.move_south(callback = callback),
                 lambda callback: player_one.move_south(callback = callback)
             ], callback = callback)
@@ -245,7 +238,6 @@ def toll_listener_action(player_object):
                 ], callback = callback)
 
         engine.run_callback_list_sequence([
-            #lambda callback: engine.show_dialogue("Myla: You just printed: '" + text + "'.", callback = callback),
             fun,
         ], callback = callback)
 
@@ -264,10 +256,10 @@ def toll_listener_action(player_object):
         lambda callback: engine.show_dialogue("Myla: Oi, toll man! My friend here can fix your PyRunner for you!", callback = callback),
         lambda callback: player_one.face_west(callback = callback),
         lambda callback: engine.show_external_script(
-            external_dialogue = "Toll Man: If you do this, I still won't let you through until you have payed me at least £1000.",
+            external_dialogue = "Toll Man: If you do this, I still won't let you through until you have payed me at least 1000.",
             script_init = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.clear_scripter(callback = callback),
-                lambda callback: engine.insert_to_scripter("amount_payed = \"£0\"\n", callback = callback),
+                lambda callback: engine.insert_to_scripter("amount_payed = \"1\"\n", callback = callback),
                 lambda callback: engine.insert_to_scripter("print(amount_payed)", callback = callback), #TODO, add all the reactions to what the player can give Myla
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
