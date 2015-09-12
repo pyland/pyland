@@ -240,6 +240,11 @@ void GameEngine::set_py_tabs(int val, PyObject* callback){
     });
 }
 
+int GameEngine::get_py_tabs(){
+    return Engine::get_py_tabs();
+}
+
+
 void GameEngine::show_external_script(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue, PyObject* script_init){
     //Engine::show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init);
 
@@ -283,23 +288,23 @@ void GameEngine::clear_totems_text(){
   Engine::clear_totems_text();
 }
 
-void GameEngine::insert_to_scripter(std::string text)
+void GameEngine::insert_to_scripter(std::string text, int tab_number)
 {
-    Engine::insert_to_scripter(text);
+    Engine::insert_to_scripter(text, tab_number);
 }
 
-void GameEngine::clear_scripter(PyObject* callback)
+void GameEngine::clear_scripter(int tab_number, PyObject* callback)
 {
     boost::python::object boost_callback(boost::python::handle<>(boost::python::borrowed(callback)));
-    Engine::clear_scripter();
+    Engine::clear_scripter(tab_number);
     EventManager::get_instance()->add_event([boost_callback] {
        boost_callback();
     });
 }
 
-std::string GameEngine::get_script()
+std::string GameEngine::get_script(int tab_number)
 {
-    return Engine::get_script();
+    return Engine::get_script(tab_number);
 }
 
 std::string GameEngine::get_external_script()

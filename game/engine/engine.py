@@ -684,31 +684,36 @@ class Engine:
         else:
             self.__cpp_engine.show_external_script(confirm_callback, cancel_callback, external_dialogue, script_init)
 
-    def insert_to_scripter(self, text, callback = lambda: None):
+    def insert_to_scripter(self, text, tab_number = -1, callback = lambda: None):
         """ Inserts code into the PyScripter
 
-        This function can be used to have an NPC give the player code to run.
+        This function can be used to have an NPC give the player code to run. It is also used by the save_system to insert the player's saved text into the PyScripter.
 
         Parameters
         ----------
         text : str
             The text/code we wish to insert into the current tab of the PyScripter
+        tab_number : int, optional
+            The tab number you wish to insert the script into. If -1 inserts into the currently open scripter.
         callback : func, optional
             Places the callback onto the engine
         """
-        self.__cpp_engine.insert_to_scripter(text)
+        self.__cpp_engine.insert_to_scripter(text, int(tab_number))
         self.add_event(callback)
 
-    def clear_scripter(self, callback = lambda: None):
+    def clear_scripter(self, tab_number = -1, callback = lambda: None):
         """ Clears the PyScripter. (Deletes all code associated with the current tab)
 
         Parameters
         ----------
+        
+        tab_number : int, optional
+            The tab number that you wish to clear
         callback : func, optional
             Places the callback onto the engine
 
         """
-        self.__cpp_engine.clear_scripter(callback)
+        self.__cpp_engine.clear_scripter(int(tab_number), callback)
 
     def change_map(self, map_name):
         """ Changes from the current map to next map with file path map_name
@@ -734,6 +739,23 @@ class Engine:
             A list of all the game_object
         """
         return list(self.__game_objects_by_id.values())
+
+    def get_script(self, tab_number = -1):
+        """ Gets the script from the given tab as a string. If -1 is passed as the tab_number, returns the script from the currently open tab.
+
+        Returns an empty string if the tab doesn't exist.
+
+        Parameters
+        ----------
+        tab_number : int, optional
+            The tab's who's script you wish to return. Or the currently open tab if -1 is passed as the argument.
+        
+        Returns
+        -------
+        string
+            The text in the tab
+        """
+        return self.__cpp_engine.get_script(int(tab_number))
 
     def get_error(self):
         """Gets if the last run of the PyScripter ran with errors or not

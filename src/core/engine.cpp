@@ -360,6 +360,10 @@ void Engine::set_py_tabs(int val){
     });
 }
 
+int Engine::get_py_tabs(){
+    return main_window->getTabs();
+}
+
 void Engine::show_external_script(std::function<void ()> confirm_callback, std::function<void ()> cancel_callback, std::string external_dialogue, std::function<void ()> script_init){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window,confirm_callback, cancel_callback, external_dialogue, script_init] {
@@ -411,25 +415,25 @@ void Engine::clear_totems_text(){
     });
 }
 
-void Engine::insert_to_scripter(std::string text)
+void Engine::insert_to_scripter(std::string text, int tab_number)
 {
     auto _main_window = main_window;
-    EventManager::get_instance()->add_event([_main_window, text] {
-        _main_window->insertToTextEditor(text);
+    EventManager::get_instance()->add_event([_main_window, text, tab_number] {
+        _main_window->insertToTextEditor(text, tab_number);
     });
 }
 
-void Engine::clear_scripter()
+void Engine::clear_scripter(int tab_number)
 {
     auto _main_window = main_window;
-    EventManager::get_instance()->add_event([_main_window] {
-        _main_window->clearTextEditor();
+    EventManager::get_instance()->add_event([_main_window, tab_number] {
+        _main_window->clearTextEditor(tab_number);
     });
 }
 
-std::string Engine::get_script()
+std::string Engine::get_script(int tab_number)
 {
-    return main_window->getEditorText();
+    return main_window->getEditorText(tab_number);
 }
 
 std::string Engine::get_external_script()
