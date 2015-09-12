@@ -132,6 +132,7 @@ class GameEngine {
         void enable_script_editing(PyObject* callback);
         void disable_script_editing(PyObject* callback);
         void set_py_tabs(int val, PyObject* callback);
+        int get_py_tabs();
         void show_external_script(PyObject* confirm_callback, PyObject* cancel_callback, std::string external_dialogue, PyObject* script_init);
         //void hide_external_tab(PyObject* callback);
 
@@ -149,17 +150,17 @@ class GameEngine {
         /// Insert text to the current QsciScintilla
         /// text edtior
         ///
-        void insert_to_scripter(std::string text);
+        void insert_to_scripter(std::string text, int tab_number);
 
         /// Clear all the text in the current QsciScintilla
         /// text edtior
         ///
-        void clear_scripter(PyObject* callback);
+        void clear_scripter(int tab_number, PyObject* callback);
 
         /// Get the text in the current QsciScintilla
         /// text edtior
         ///
-        std::string get_script();
+        std::string get_script(int tab_number);
 
         /// Get the text in the external QsciScintilla
         /// text edtior tab

@@ -786,6 +786,12 @@ void MainWindow::setTabs(int num){
     }
 }
 
+
+//Get the number of scripting tabs
+int MainWindow::getTabs(){
+    return currentTabs;
+}
+
 //Create a new PyScripter tab, for scripts given by other players
 //The 'Run' and 'Speed' buttons get replaced with 'Give Script' and 'Cancel'
 //The results of clicking these buttons is given by the first two python callbacks
@@ -1107,35 +1113,53 @@ void MainWindow::clearTotemsText(){
     textTotems->setText(qtext);
 }
 
-//Insert text to the end of the currently open text editor tab
-void MainWindow::insertToTextEditor(std::string text)
+//Insert text to the end of the currently open text editor tab if -1 
+//the tab number otherwise
+//silently ignored if tab doesn't exist
+void MainWindow::insertToTextEditor(std::string text, int tab_number)
 {
+
     QsciScintilla *ws;
-    ws = (QsciScintilla*)textWidget->currentWidget();
+    if (tab_number <= -1) {
+        ws = (QsciScintilla*)textWidget->currentWidget();
+    } else if (tab_number < workspace_max) {
+        ws = workspaces[tab_number];
+    } else return;
 
     QString qtext = QString::fromStdString(text);
 
     QString priorText = ws->text();
 
-    clearTextEditor();
+    clearTextEditor(tab_number);
     ws->insert(qtext);
     ws->insert(priorText);
 }
 
-//Clear the text in the currently open text editor tab
-void MainWindow::clearTextEditor()
+//Clear the text in the currently open text editor tab if -1
+//the tab number otherwise
+//silently ignored if the tab doesn't exist
+void MainWindow::clearTextEditor(int tab_number)
 {
-    QsciScintilla *ws = (QsciScintilla*)textWidget->currentWidget();
-
+    QsciScintilla *ws;
+    if (tab_number <= -1) {
+        ws = (QsciScintilla*)textWidget->currentWidget();
+    } else if (tab_number < workspace_max) {
+        ws = workspaces[tab_number];
+    } else return;
     ws->clear();
 }
 
-//Get the text from the currently open text editor tab
-std::string MainWindow::getEditorText()
+//Get the text from the currently open text editor tab if -1
+//else get the text from the tab specified
+//if the tab doesn't exist, an empty string is returned.
+std::string MainWindow::getEditorText(int tab_number)
 {
     QsciScintilla *ws;
-    ws = (QsciScintilla*)textWidget->currentWidget();
-
+    if (tab_number <= -1) {
+        ws = (QsciScintilla*)textWidget->currentWidget();
+    } else if(tab_number < workspace_max) {
+        ws = workspaces[tab_number];
+    } else return "";
     return ws->text().toStdString();
 }
 
