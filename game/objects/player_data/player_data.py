@@ -108,8 +108,9 @@ class PlayerData(GameObject):
         #load in any scripts that might have been saved from the last time the player played
         if "py_scripter_text" in self.__player_data:
             for tab_number in self.__player_data["py_scripter_text"]:
-                engine.clear_scripter(tab_number = tab_number)
-                engine.insert_to_scripter(self.__player_data["py_scripter_text"][tab_number], tab_number = tab_number)
+                if self.__player_data["py_scripter_text"][tab_number] != engine.get_script(tab_number = tab_number):
+                    engine.clear_scripter(tab_number = tab_number)
+                    engine.insert_to_scripter(self.__player_data["py_scripter_text"][tab_number], tab_number = tab_number)
 
         #change the player sprite to be what is saved in the player_data
         player_one = engine.get_object_called("player_one")
