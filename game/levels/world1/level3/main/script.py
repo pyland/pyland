@@ -11,6 +11,55 @@ player_data.set_map(world_name, level_name = level_name, map_name = map_name) #c
 #end save-data set-up
 
 def myla_introduces_comments_action(player_object):
+
+    def check_myla_comments(callback):
+        """ This function is run when the player clicks 'give_script' to Myla """
+
+        #Get what the user printed
+        text_bottom = engine.get_terminal_text(1)
+        lower_text_bottom = text_bottom.lower()
+        text_top = engine.get_terminal_text(2)
+        lower_text_top = text_top.lower()
+
+
+        #get the script text itself
+        script = engine.get_external_script()
+
+        if "myla" in lower_text_bottom:
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("You seem to have missed some of the comments!", callback = callback),
+                    lambda callback: engine.show_dialogue("Read them carefully, they ask you to change some of the code somewhere. Don't just run it without reading it!", callback = callback),
+                ], callback = callback)
+        elif engine.get_player_name().lower() in lower_text_bottom:
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("Fantastic, seemed like you noticed the cheeky comment at the bottom. Let's carry on " + engine.get_player_name() + "!", callback = callback),
+                ], callback = callback)
+        elif script.strip() == "":
+            engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("You don't seem to have written anything in the PyScripter, I need something to run!", callback = callback),
+                lambda callback: myla.move_west(callback = callback),
+                lambda callback: player_one.move_west(callback = callback)
+            ], callback = callback)
+            return
+        elif engine.get_error(): #If there was an error in the script the player wrote
+            engine.run_callback_list_sequence([
+                lambda callback: engine.show_dialogue("There appeared to be an error in the script you wrote " + engine.get_player_name() + ".", callback = callback),
+                lambda callback: engine.show_dialogue("You don't want to chang too much, just read the comments and they ask you to make one change to the program.", callback = callback),
+            ], callback = callback)
+            return
+        else:
+            def fun(callback):
+                engine.run_callback_list_sequence([
+                    lambda callback: engine.show_dialogue("I don't think you quite got that " + engine.get_player_name() + ".", callback = callback),
+                    lambda callback: engine.show_dialogue("Read the comments carefully, I've written some instructions there for you.", callback = callback),
+                ], callback = callback)
+
+        engine.run_callback_list_sequence([
+            fun,
+        ], callback = callback)
+
     engine.run_callback_list_sequence([
         lambda callback: player_one.set_busy(True, callback = callback),
         lambda callback: player_one.face_west(callback = callback),
@@ -33,7 +82,7 @@ def myla_introduces_comments_action(player_object):
                 lambda callback: engine.insert_to_scripter("#print(hello + yourname + \"!\") #Remove the hash form the start of this line to print: Hello " + engine.get_player_name() + "!", callback = callback), #TODO, add all the reactions to what the player can give Myla
             ]),
             confirm_callback = lambda: engine.run_callback_list_sequence([
-                lambda callback: engine.show_dialogue("Awesome! I know that was a lot to read.", callback = callback), #TODO: add all the possible reactions to what the player can give Myla
+                lambda callback: myla.run_script(script_to_run = 10, callback = lambda: check_myla_comments(callback))
             ], callback = callback),
             cancel_callback = lambda: engine.run_callback_list_sequence([
                 lambda callback: engine.show_dialogue("I would at least give it to me to run! TODO: go back to running", callback = callback),
