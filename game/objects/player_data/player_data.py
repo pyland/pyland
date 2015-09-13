@@ -87,7 +87,8 @@ class PlayerData(GameObject):
     def load(self, player_name):
         """ loads in the player data, and correctly set's up all the global states of the game.
 
-        For example, it displays the correct number of totems, PyScipter tabs etc. """
+        For example, it displays the correct number of totems, PyScipter tabs etc.
+        """
         #TODO: Make handling a save not existing a lot nicer
         engine = self.get_engine()
         self.__player_name = player_name
@@ -98,10 +99,17 @@ class PlayerData(GameObject):
 
         #setup all the player-data (what they have unlocked)
 
+        #set if the pyscripter is unlocked
         if(self.__has_unlocked_pyscripter()):
             engine.show_py_scripter()
         else:
             engine.hide_py_scripter()
+
+        #load in any scripts that might have been saved from the last time the player played
+        if "py_scripter_text" in self.__player_data:
+            for tab_number in self.__player_data["py_scripter_text"]:
+                engine.clear_scripter(tab_number = tab_number)
+                engine.insert_to_scripter(self.__player_data["py_scripter_text"][tab_number], tab_number = tab_number)
 
         #change the player sprite to be what is saved in the player_data
         player_one = engine.get_object_called("player_one")
@@ -109,7 +117,12 @@ class PlayerData(GameObject):
         return
 
     def save(self):
-        self.get_engine().save_player_data(self.__player_name, self.__player_data)
+        engine = self.get_engine()
+        self.__player_data["py_scripter_text"] = {}
+        unlocked_tabs = engine.get_py_tabs()
+        for tab_number in range(0, unlocked_tabs):
+            self.__player_data["py_scripter_text"][tab_number] = engine.get_script(tab_number = tab_number)
+        engine.save_player_data(self.__player_name, self.__player_data)
         return
 
     def set_map(self, world_name, level_name = None, map_name = None):

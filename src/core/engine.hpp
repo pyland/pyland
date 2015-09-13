@@ -199,6 +199,7 @@ public:
     static void enable_script_editing();
     static void disable_script_editing();
     static void set_py_tabs(int val);
+    static int get_py_tabs();
     static void show_external_script(std::function<void ()> confirm_callback, std::function<void ()> cancel_callback, std::string external_dialogue, std::function<void ()> script_init);
     //static void hide_external_tab();
     static void update_world_text(std::string text);
@@ -208,9 +209,9 @@ public:
     static void update_totems_text(int value,bool show);
     static void clear_totems_text();
 
-    static void insert_to_scripter(std::string text);
-    static void clear_scripter();
-    static std::string get_script();
+    static void insert_to_scripter(std::string text, int tab_number);
+    static void clear_scripter(int tab_number);
+    static std::string get_script(int tab_number);
     static std::string get_external_script();
     static void print_terminal(std::string text, bool error);
     static std::string get_terminal_text(unsigned int index);
