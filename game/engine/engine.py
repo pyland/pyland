@@ -776,3 +776,10 @@ class Engine:
             If the last run had an error or not
         """
         self.__error = has_error
+
+    def update_totems_text(self, totems_achieved, totems_total):
+        """ Updated the number of totems the player has, out of the total given """
+        #self.__cpp_engine.update_totems_text(totems_achieved, totems_total)
+        self.__cpp_engine.update_totems_text(totems_achieved, True)
+
+

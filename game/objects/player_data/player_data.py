@@ -112,6 +112,11 @@ class PlayerData(GameObject):
                     engine.clear_scripter(tab_number = tab_number)
                     engine.insert_to_scripter(self.__player_data["py_scripter_text"][tab_number], tab_number = tab_number)
 
+        #show the correct level and world TODO: Make it extract the correct level and worlds
+        engine.update_world_text("1")
+        engine.update_level_text("2")
+        engine.update_totems_text(0, 5)
+
         #change the player sprite to be what is saved in the player_data
         player_one = engine.get_object_called("player_one")
         player_one.change_state(self.__get_player_data_value("player_type", default = "female_0"))
@@ -189,5 +194,16 @@ class PlayerData(GameObject):
     def set_level_state(self, level_state, value):
         #TODO: add checks to this so that if the state doesn't exist it is created
         self.__get_level_data()[level_state] = value
+
+    def __get_totems(self):
+        if not "totems" in self.__player_data:
+            self.__player_data["totems"] = {}
+        return self.__player_data["totems"]
+    
+    def unlock_totem(self, totem_number, callback = lambda: None):
+        """ Unlock the totem with the given id """
+        unlocked_totems = self.__get_totems()
+        unlocked_totems[totem_number] = True
+        callback()
 
 
