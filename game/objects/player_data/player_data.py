@@ -112,7 +112,7 @@ class PlayerData(GameObject):
                     engine.clear_scripter(tab_number = tab_number)
                     engine.insert_to_scripter(self.__player_data["py_scripter_text"][tab_number], tab_number = tab_number)
 
-        #show the correct level and world TODO: Make it extract the correct level and worlds
+        #show the correct level and world TODO: Make it extract the correct level, worlds, and unlocked totems for the world!
         engine.update_world_text("1")
         engine.update_level_text("2")
         engine.update_totems_text(0, 5)
