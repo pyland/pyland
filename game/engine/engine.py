@@ -196,7 +196,7 @@ class Engine:
         self.__cpp_engine.print_terminal(str(message), highlighted)
         self.add_event(callback)
 
-        
+
     def print_debug(self, message):
         """ print the given message to the operating system terminal
 
@@ -210,7 +210,7 @@ class Engine:
     def create_object(self, object_file_location, object_name, position):
         """ Creates a new game object dynamically and returns it.
 
-        WARNING: Has only been tested on tile-triggers, needs more thorough checks. 
+        WARNING: Has only been tested on tile-triggers, needs more thorough checks.
 
         Parameters
         ----------
@@ -218,7 +218,7 @@ class Engine:
             The string of where the object is located in the file system, identical to what you provide in tiled.
         object_name : str
             The name you wish to give the object, used by self.get_object_called to get the object with the given name, so make sure it's unique or won't be need by this method if possible.
-        position : 2-tuple of int 
+        position : 2-tuple of int
             The position at which you wish to spawn the object
         """
         x, y = position
@@ -227,7 +227,7 @@ class Engine:
 
     def destroy_object(self, game_object):
         """ Destroys the given game object in memory and removes it from the map.
-        
+
         WARNING: Only moves it off the map and makes it invisible and unsolid, for now.
         TODO: Work out how to implement this functionality properly, allowing for the most graceful possible degredation.
 
@@ -465,7 +465,7 @@ class Engine:
         ----------
         dialogue : str
             The string that will be display on the dialogue window
-        ignore_scripting : bool
+        ignore_scripting : bool, optional
             By default, the dialogue box disables the pyscripter when it is opened and enables it when it is closed.
             Ths boolean value is true if we don't want that default functionality. It is then up to the caller to enable and disable the PyScripter.
         callback : func, optional
@@ -476,7 +476,7 @@ class Engine:
 
     def close_external_script_help(self, callback = lambda: None):
         """ This closes the dialogue box created by show_external_script_help
-        
+
         WARNING: This is a stupid and confusing function name and really needs to be changed!!!!
         TODO: This method should probably be called close_dialogue and should apply to whatever dialogue is being displayed!!!
         """
@@ -484,7 +484,7 @@ class Engine:
 
     def show_external_script_help(self, dialogue, callback = lambda: None):
         """ This shows a dialogue box which cannot be closed by the player, this is useful for create dialogue boxes that you might want to close yourself.
-        
+
         WARNING: THIS IS A STUPID METHOD NAME, THIS METHOD NEEDS TO MERGED WITH SHOW DIALOGUE, WITH AN EXTRA PARAMETER TO DETERMINE IF THE PLAYER CAN MANUALLY CONTINUE OR GIVEN A BETTER NAME
 
         The callback is run straight after the dialogue box is opened
@@ -677,7 +677,7 @@ class Engine:
             confirm_callback() #Run the confirm callback sequence
             script_state_container.set_script(self.get_external_script()) #Save the script against the character
 
-        if script_state_container: #If a character has been provided, 
+        if script_state_container: #If a character has been provided,
             script_init = lambda: self.insert_to_scripter(script_state_container.get_script())
             confirm_and_store_script_callback = store_script
             self.__cpp_engine.show_external_script(confirm_and_store_script_callback, cancel_callback, external_dialogue, script_init)
