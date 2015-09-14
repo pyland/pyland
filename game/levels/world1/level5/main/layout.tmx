@@ -27,7 +27,7 @@
  </layer>
  <layer name="Decor" width="37" height="50">
   <data encoding="base64" compression="zlib">
-   eJy9mN1uwjAMhfOobBP7gTFu4BEL3PBOS6Ra86xzbCctRLJaUsf+4jhOy72Ucg+kkGtGSqd+hgHxyP2typU88/i8NsozBRxeXy9T1K7lLy7aRsbHUiZ2r9miZ9aP55/1Rc+y+SHrqtmQLrPBfFzVdbKDHBt2fMQU2cuse89ezcSpx0eGQWoBm89kbCxh8uxEnEyX2cnYZy3KKaYf8TImfbW+b0nf1mY2howpqjFW57PK1vx+n/smME5ybgkT2y/32f93lUOVj5ml/T7PfcIm+noPjDB5NUX09lVeZtkoab+PVX6qvJbHrB3bg96e2zs8KC+zTKym2FxGc4lqWS+TzAWdn1HLnj0jTCjW2TkzXc+/Z+diruy8iNbG41kSpzKzIZ2ooT2xlMk2nSc2z9j7puaK/GeZpCaLbIF+xl7Gf9bGrsppllab34i+jOmpESNMcm6clCAmdn4xP6NMLTckRmfFdCj/z69nMrX2Vf7HCMUqqlXemo4woTjZWMmYVi9svKbAzwiTjZNmQ7G6FB6nNZiatHP9qHiESd4/WruCcche1Jfht1woRlGOIE70v0KGycqu4Bihcdq3dyaMxkmumsnWJ8TDbC1hYnFidZx9y2RqRA+Tzl0vTixGjGk0n6w9qVMol7Qe+m5CcVq67zSTl0venluDyUqrB5vC9xv6ZrMsazOhpvPiWUy34p/3Wl/rMt9r7DtWf9n7LZrDI+KEdLz3bm/91mTSeoiH2fTiHdU0xhStoWZkddDbJ2sweXMr5PmaTHJtMbDfwNqHrdseY2bfoXG6j3GwuTM70X+9yK/3TGKVWcue9e3JC8ZSwD3qy3Blm7ceHpfHtIbo9gupWIUk
+   eJy9mNtuwjAMhv2obBM7wBg38Igd3PBOS6RYM5Z/22kCkay2wbG/OLHTciOiWyAErhmhTv0Mg8XD99ciS5OM/0xby7OIPnnvxSbbeudxaaJtZHyMMqF7yRb9pv14/lFf9Ft2f/BaSjZLF9lAPi7iuuhBjg09PmKK7GXWvSdXM3Hq8ZFh4FqA5qPzcYTJsxNxIl1kJ2MftWhPIf2IFzHJq/Z9TfqWzz0xRExRjdE6n0W26vm99S10f9bIPTfChPLl1vx/FzkU+Wgs9fnc+iSbzoE1TF5NYb19kZcmGyH1+Vjkp8grPWbtUA56Obd3eKx9mWVCNUXvZWsuUS3rZeK5WOdn1LJnzxomK9bZOSNdz79n51dd0XkRrY3HMxInamyWTtSsnBhlsmoyN73P0Pum5Ir8Z5m4JrNsDf2MvYz/yAafB7sipya1Nr85cyDqqxFrmPjcOAmxmND5hfyMMHGMzoLpQP/rJ+vEs5i+6D5GVqyiWuWt6RomK046Vjym1gsdL/0tPINJx0myWbHiGpv108tUpZ7rR8HDTPz+UdvFGGfZi/oy/JrLilG0RyzOBehGTFp2ZMfIGid9o9itYdJXyaTrk8WDbI0woTihOo6+ZTI1oodJ7l0vTihGiGntftL2uE5Ze0nqLaBfc4/mnWTy9pKXczOYtNR6sCGcb9Y3m2aZzWQ1uS+exXQl/7yX+lIX+Z6Rd6j+ovdbaw6PiJOl4713e+s3k0nqWTzIphfvqKYhpmgNJSOqg16ezGDy5kbg95lMfK0x0N/A0oeu2x5jJu+scbIPcaC5IzvRf72WX+83jlVmLXvWt2dfIBYy7q2+DFe2eevhcXlMM0S2P0uPj+Y=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="37" height="50">
@@ -73,9 +73,11 @@
   <object name="tile_trigger/myla_explain_whetstone" gid="292" x="960" y="384"/>
   <object name="vine/vine1" gid="196" x="640" y="448"/>
   <object name="whetstone/whetstone2" gid="292" x="1216" y="2944"/>
-  <object name="totem/totem" gid="298" x="1024" y="128"/>
+  <object name="totem/totem_5" gid="298" x="1024" y="128"/>
   <object name="tile_trigger/exit_to_world" gid="292" x="768" y="3264"/>
   <object name="tile_trigger/myla_explain_speed" gid="292" x="1600" y="3008"/>
   <object name="tile_trigger/myla_whetstone_reminder" gid="292" x="1344" y="3136"/>
+  <object name="totem/totem_6" gid="298" x="64" y="1856"/>
+  <object name="totem/totem_7" gid="298" x="1344" y="896"/>
  </objectgroup>
 </map>
