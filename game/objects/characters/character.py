@@ -128,7 +128,7 @@ class Character(GameObject, ScriptStateContainer):
             #the method to get the position of the player
             script_api["get_position"] = self.get_position
 
-            script_api["yell"] = self.__yell
+            script_api["yell"] = self.yell
             script_api["cut"] = scriptrunner.make_blocking(self.__cut)
             script_api["get_cuts_left"] = self.__get_cuts_left
 
@@ -761,7 +761,7 @@ class Character(GameObject, ScriptStateContainer):
                     break
         return message
 
-    def __yell(self):
+    def yell(self):
         """ Loops through all the GameObjects and if they have a yelled_at() function runs it.
 
         This is used for when you yell at crocodiles/anything else that can get yelled at
