@@ -12,6 +12,7 @@ CREATE TABLE "dialogue" (
 
 INSERT INTO "dialogue" VALUES('shared','yes','Yes','Untranslated french','Untranslated dutch','Untranslated hindi','Aye!');
 INSERT INTO "dialogue" VALUES('shared','no','No','Untranslated french','Untranslated dutch','Untranslated hindi','No!');
+
 INSERT INTO "dialogue" VALUES('/world1/intro','monty_coming_now','Aaah, I''m coming now! I''ll just be a second. Oh, you can press ''Enter'' or click on the arrow to continue.','Untranslated to French.','Untranslated to Dutch.','Untranslated to Hindi.','Yeaarrr, I''m comin'' now! I''ll just be a second! Ye can press ''Enter'' or click on t'' arrow to continue.');
 INSERT INTO "dialogue" VALUES('/world1/intro','im_monty_the_snake',' I haven''t seen you around here before. I''m Monty and I''m going to introduce you to Pyland. I think you''re going to like it here!','Untranslated','Untranslated','Untranslated','I haven''t seen you around here before. I''m Monty and I''m goin'' t'' introduce you t'' Pyland. Me thinks you''re going t''enjoy it ''ere!');
 INSERT INTO "dialogue" VALUES('/world1/intro','monty_doesnt_know_name','Oh, how rude of me, I don''t even know your name!','Untranslated','Untranslated','Untranslated','Oh, how rude o'' me, I almost forgot I don''t even know yer name!');
@@ -27,5 +28,11 @@ INSERT INTO "dialogue" VALUES('/world1/intro','keys','Use the arrow keys to move
 INSERT INTO "dialogue" VALUES('/world1/level1/rossumberg','heidi_shout_player_name','Heidi: %player_name%!!!!','Untranslated french','Untranslated dutch','Untranslated hindi','Heidi: Ahoy %player_name%!!!!');
 INSERT INTO "dialogue" VALUES('/world1/level1/rossumberg','heidi_today_is_big_day','Today is the big day! You did remember right?','Untranslated french','Untranslated dutch','Untranslated hindi','Today be t'' grand day! Ye did remember right?');
 INSERT INTO "dialogue" VALUES('/world1/level1/rossumberg','heidi_question_player_about_day','Ok, so what are what are we doing today then?','Untranslated french','Untranslated dutch','Untranslated hindi','Ahoy, so what we be doin'' then?');
+
+INSERT INTO "dialogue" VALUES('totems','0','Emod metot','Untranslated french','Untranslated dutch','Untranslated hindi','Emod metot');
+INSERT INTO "dialogue" VALUES('totems','1','Muiromem emit ecnis Dnalyp no neeb sah efil.','Untranslated french','Untranslated dutch','Untranslated hindi','Muiromem emit ecnis Dnalyp no neeb sah efil.');
+INSERT INTO "dialogue" VALUES('totems','2','Nohtyp eht fo taht saw egaugnal ylno eht.','Untranslated french','Untranslated dutch','Untranslated hindi','Nohtyp eht fo taht saw egaugnal ylno eht.');
+INSERT INTO "dialogue" VALUES('totems','3','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...','Untranslated french','Untranslated dutch','Untranslated hindi','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...');
+
 -- INSERT INTO "dialogue" VALUES('world1/level1/rossumberg','','','Untranslated french','Untranslated dutch','Untranslated hindi','');
 COMMIT;
