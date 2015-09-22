@@ -63,6 +63,7 @@ public:
     void disableScripter();
 
     void setTabs(int num);
+    int getTabs();
     void createExternalTab(std::function<void ()> confirmCallback, std::function<void ()> cancelCallback, std::function<void ()> scriptInit, std::string dialogue);
     void removeExternalTab();
 
@@ -75,9 +76,9 @@ public:
     void setCoins(int value);
     void setCurTotems(int value,bool show);
     void clearTotemsText();
-    void insertToTextEditor(std::string text);
-    void clearTextEditor();
-    std::string getEditorText();
+    void insertToTextEditor(std::string text, int tab_number);
+    void clearTextEditor(int tab_number);
+    std::string getEditorText(int tab_number);
     std::string getExternalText();
     void runCode(int script);
     void toggleSpeed();

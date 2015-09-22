@@ -9,8 +9,8 @@ import json
 
 #TODO: add checks in all of these functions so that states can be lazily made etc.
 
-""" This class is a useful object which is useful in that automatically handels a lot of the 
-saving that the Pyland game requires. 
+""" This class is a useful object which is useful in that automatically handels a lot of the
+saving that the Pyland game requires.
 
 
 All the save stuff from engine needs to be abstracted out to here as ultimately this will off a more robust and flexible system
@@ -77,7 +77,7 @@ class PlayerData(GameObject):
     def complete_level_and_save(self):
         self.__get_completed_levels()["/" + self.__current_world + "/" + self.__current_level] = True
         self.save()
-        
+
 
     def __get_completed_levels(self):
         if not ("completed_levels" in self.__player_data):
@@ -87,7 +87,8 @@ class PlayerData(GameObject):
     def load(self, player_name):
         """ loads in the player data, and correctly set's up all the global states of the game.
 
-        For example, it displays the correct number of totems, PyScipter tabs etc. """
+        For example, it displays the correct number of totems, PyScipter tabs etc.
+        """
         #TODO: Make handling a save not existing a lot nicer
         engine = self.get_engine()
         self.__player_name = player_name
@@ -97,14 +98,37 @@ class PlayerData(GameObject):
             self.__player_data = engine.get_player_data(player_name)
 
         #setup all the player-data (what they have unlocked)
+
+        #set if the pyscripter is unlocked
         if(self.__has_unlocked_pyscripter()):
             engine.show_py_scripter()
         else:
             engine.hide_py_scripter()
+
+        #load in any scripts that might have been saved from the last time the player played
+        if "py_scripter_text" in self.__player_data:
+            for tab_number in self.__player_data["py_scripter_text"]:
+                if self.__player_data["py_scripter_text"][tab_number] != engine.get_script(tab_number = tab_number):
+                    engine.clear_scripter(tab_number = tab_number)
+                    engine.insert_to_scripter(self.__player_data["py_scripter_text"][tab_number], tab_number = tab_number)
+
+        #show the correct level and world TODO: Make it extract the correct level, worlds, and unlocked totems for the world!
+        engine.update_world_text("1")
+        engine.update_level_text("2")
+        engine.update_totems_text(0, 5)
+
+        #change the player sprite to be what is saved in the player_data
+        player_one = engine.get_object_called("player_one")
+        player_one.change_state(self.__get_player_data_value("player_type", default = "female_0"))
         return
 
     def save(self):
-        self.get_engine().save_player_data(self.__player_name, self.__player_data)
+        engine = self.get_engine()
+        self.__player_data["py_scripter_text"] = {}
+        unlocked_tabs = engine.get_py_tabs()
+        for tab_number in range(0, unlocked_tabs):
+            self.__player_data["py_scripter_text"][tab_number] = engine.get_script(tab_number = tab_number)
+        engine.save_player_data(self.__player_name, self.__player_data)
         return
 
     def set_map(self, world_name, level_name = None, map_name = None):
@@ -125,11 +149,6 @@ class PlayerData(GameObject):
         if self.__current_map != None:
             full_map_name += "/" + self.__current_map
         return full_map_name
-        
-
-    def get_previous_exit(self):
-        """ Deprecated, todo: make this private and make earlier levels use previous_exit_is """
-        return self.__player_data["previous_exit"]
 
     def previous_exit_is(self, world_name, level_name = None, map_name = None, info = None):
         """ Check to see where the player perviously exited the game. Can check to see how much matches """
@@ -140,7 +159,7 @@ class PlayerData(GameObject):
             check_string += "/" + map_name
         if(info != None):
             check_string += "/" + info
-        return (check_string in self.get_previous_exit())
+        return (check_string in self.__player_data["previous_exit"])
 
     def save_and_exit(self, destination, info = None):
         """ Go to the given destination and save the game """
@@ -158,6 +177,10 @@ class PlayerData(GameObject):
         self.get_engine().add_event(callback)
 
     def __get_level_data(self):
+        if not (self.__current_world in self.__player_data["level_data"]):
+            self.__player_data["level_data"][self.__current_world] = {}
+        if not (self.__current_level in self.__player_data["level_data"][self.__current_world]):
+            self.__player_data["level_data"][self.__current_world][self.__current_level] = {}
         return self.__player_data["level_data"][self.__current_world][self.__current_level]
 
     def get_level_state(self, level_state):
@@ -171,5 +194,16 @@ class PlayerData(GameObject):
     def set_level_state(self, level_state, value):
         #TODO: add checks to this so that if the state doesn't exist it is created
         self.__get_level_data()[level_state] = value
+
+    def __get_totems(self):
+        if not "totems" in self.__player_data:
+            self.__player_data["totems"] = {}
+        return self.__player_data["totems"]
     
-            
+    def unlock_totem(self, totem_number, callback = lambda: None):
+        """ Unlock the totem with the given id """
+        unlocked_totems = self.__get_totems()
+        unlocked_totems[totem_number] = True
+        callback()
+
+

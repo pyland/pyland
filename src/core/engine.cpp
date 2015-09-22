@@ -116,9 +116,6 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
 
     object->set_state_on_moving_start(target);
 
-    // Step-off events
-    get_map_viewer()->get_map()->event_step_off.trigger(location, id);
-
     std::string direction(to_direction(move_by));
 
     // Motion
@@ -141,14 +138,10 @@ void Engine::move_object(int id, glm::ivec2 move_by, double duration, std::funct
                 object->set_state_on_moving_finish();
 
                 // TODO: Make this only focus if the object
-             #include <thread>   // is the main object.
+                #include <thread>   // is the main object.
                 if (Engine::map_viewer) {
                     Engine::map_viewer->refocus_map();
                 }
-
-                // Step-on events
-                get_map_viewer()->get_map()->event_step_on.trigger(target, id);
-
                 EventManager::get_instance()->add_event(func);
             }
 
@@ -164,8 +157,8 @@ bool Engine::walkable(glm::ivec2 location) {
 
     // Check bounds
     if(!(0 <= location.x && location.x < map_width) || !(0 <= location.y && location.y < map_height)) {
-        VLOG(2) << "Cannot move to requested tile due to map bounds";
-        return false;
+        VLOG(2) << "The object is moving off the map.";
+        return true;
     }
 
     // Check against collidable layer
@@ -189,8 +182,16 @@ void Engine::open_main_menu(){
     game_main->change_challenge(map_location);
 }
 
+void Engine::exit_level(){
+    //TODO: Add some system for setting the destination for exit level at runtime without changing the config file!
+    Config::json j = Config::get_instance();
+    std::string map_location = j["files"]["main_menu"];
+    game_main->change_challenge(map_location);
+}
+
 void Engine::restart_level(){
     game_main->change_challenge(game_main->get_current_challenge());
+    enable_py_scripter();
 }
 
 void Engine::change_map(std::string map_location){
@@ -265,25 +266,17 @@ void Engine::add_text(std::string text) {
     });
 }
 
-void Engine::open_notification_bar(bool disable_scripting, std::function<void ()> func){
-    if(disable_scripting){
-        EventManager::get_instance()->add_event([] {
-            disable_py_scripter();
-        });
-    }
-    EventManager::get_instance()->add_event([func] {
-        gui_main->open_notification_bar(func);
+void Engine::open_notification_bar(bool ignore_scripter, std::function<void ()> func){
+
+    EventManager::get_instance()->add_event([func, ignore_scripter] {
+        gui_main->open_notification_bar(func, ignore_scripter);
     });
 }
 
-void Engine::open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair <std::string, std::function<void ()> > > options){
-    if(disable_scripting){
-        EventManager::get_instance()->add_event([] {
-            disable_py_scripter();
-        });
-    }
-    EventManager::get_instance()->add_event([options] {
-        gui_main->open_notification_bar_with_options(options);
+void Engine::open_notification_bar_with_options(bool ignore_scripter, std::deque<std::pair <std::string, std::function<void ()> > > options){
+
+    EventManager::get_instance()->add_event([options, ignore_scripter] {
+        gui_main->open_notification_bar_with_options(options, ignore_scripter);
     });
 
 }
@@ -291,9 +284,6 @@ void Engine::open_notification_bar_with_options(bool disable_scripting, std::deq
 void Engine::close_notification_bar(){
     EventManager::get_instance()->add_event([] {
         gui_main->close_notification_bar();
-        if (!Engine::is_bar_with_options_open()){
-            enable_py_scripter();
-        }
     });
 }
 
@@ -370,6 +360,10 @@ void Engine::set_py_tabs(int val){
     });
 }
 
+int Engine::get_py_tabs(){
+    return main_window->getTabs();
+}
+
 void Engine::show_external_script(std::function<void ()> confirm_callback, std::function<void ()> cancel_callback, std::string external_dialogue, std::function<void ()> script_init){
     auto _main_window = main_window;
     EventManager::get_instance()->add_event([_main_window,confirm_callback, cancel_callback, external_dialogue, script_init] {
@@ -421,25 +415,25 @@ void Engine::clear_totems_text(){
     });
 }
 
-void Engine::insert_to_scripter(std::string text)
+void Engine::insert_to_scripter(std::string text, int tab_number)
 {
     auto _main_window = main_window;
-    EventManager::get_instance()->add_event([_main_window, text] {
-        _main_window->insertToTextEditor(text);
+    EventManager::get_instance()->add_event([_main_window, text, tab_number] {
+        _main_window->insertToTextEditor(text, tab_number);
     });
 }
 
-void Engine::clear_scripter()
+void Engine::clear_scripter(int tab_number)
 {
     auto _main_window = main_window;
-    EventManager::get_instance()->add_event([_main_window] {
-        _main_window->clearTextEditor();
+    EventManager::get_instance()->add_event([_main_window, tab_number] {
+        _main_window->clearTextEditor(tab_number);
     });
 }
 
-std::string Engine::get_script()
+std::string Engine::get_script(int tab_number)
 {
-    return main_window->getEditorText();
+    return main_window->getEditorText(tab_number);
 }
 
 std::string Engine::get_external_script()

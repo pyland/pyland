@@ -178,8 +178,8 @@ public:
 
     static void add_dialogue(std::string text);
     static void add_text(std::string text);
-    static void open_notification_bar(bool disable_scripting, std::function<void ()> func);
-    static void open_notification_bar_with_options(bool disable_scripting, std::deque<std::pair<std::string, std::function<void ()> > > _options);
+    static void open_notification_bar(bool ignore_scripting, std::function<void ()> func);
+    static void open_notification_bar_with_options(bool ignore_scripting, std::deque<std::pair<std::string, std::function<void ()> > > _options);
     static void close_notification_bar();
     static bool is_bar_open();
     static bool is_bar_with_options_open();
@@ -199,6 +199,7 @@ public:
     static void enable_script_editing();
     static void disable_script_editing();
     static void set_py_tabs(int val);
+    static int get_py_tabs();
     static void show_external_script(std::function<void ()> confirm_callback, std::function<void ()> cancel_callback, std::string external_dialogue, std::function<void ()> script_init);
     //static void hide_external_tab();
     static void update_world_text(std::string text);
@@ -208,9 +209,9 @@ public:
     static void update_totems_text(int value,bool show);
     static void clear_totems_text();
 
-    static void insert_to_scripter(std::string text);
-    static void clear_scripter();
-    static std::string get_script();
+    static void insert_to_scripter(std::string text, int tab_number);
+    static void clear_scripter(int tab_number);
+    static std::string get_script(int tab_number);
     static std::string get_external_script();
     static void print_terminal(std::string text, bool error);
     static std::string get_terminal_text(unsigned int index);
@@ -225,6 +226,7 @@ public:
 
     static void set_music(bool on);
     static void open_main_menu();
+    static void exit_level();
     static void restart_level();
 
     /// global access to game font

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
+ <layer name="Ground" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMA6A9+povx0HBXlJVVVVVVVVVVVV9fj5h9cU=
+  </data>
+ </layer>
+ <layer name="Water" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+ <layer name="Decor" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2bENACAIRUHdxML9Z3QGCiKQu/oXlC9hLQAAYJqz/29vYAsAEJXVMABAL92aoMINAECOCr+ZiMld8gCSVAGy
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt0rEJADEQA0Hjutx/XQ9fgZ0NJwkuu2BX6Oz15+y7k39ltnpYbLe/UyJ3nLgrna0eFls9LLZ6WGxpHlMid5y4K52tHhZbPSy2elhsaR5TInecuCudrR4WWz0stnpYbGkeUyJ3nLgrna0eFls9LLZ6WGxpHlMid/zy+wFqf+p+
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="50" height="50">
+  <object name="characters/player/player_one" gid="286" x="2176" y="3200"/>
+  <object name="scroll/s0" gid="287" x="2240" y="3072"/>
+  <object name="scroll/s1" gid="287" x="2112" y="2368"/>
+  <object name="scroll/s2" gid="287" x="1408" y="2368"/>
+  <object name="scroll/s3" gid="287" x="832" y="1792"/>
+  <object name="scroll/s4" gid="287" x="128" y="1664"/>
+  <object name="scroll/s6" gid="287" x="128" y="384"/>
+  <object name="scroll/s7" gid="287" x="832" y="256"/>
+  <object name="scroll/s8" gid="287" x="1536" y="384"/>
+  <object name="scroll/s9" gid="287" x="2112" y="256"/>
+  <object name="scroll/s10" gid="287" x="2944" y="384"/>
+  <object name="scroll/s5" gid="287" x="128" y="960"/>
+  <object name="scroll/s2_5" gid="287" x="1536" y="1792"/>
+ </objectgroup>
+</map>

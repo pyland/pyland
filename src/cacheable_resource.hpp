@@ -65,7 +65,7 @@ public:
     /// @param resource_name A string which represents a resource.
     /// @return A shared pointer to the relevant resource.
     ///
-    static std::shared_ptr<Res> get_shared(const std::string resource_name);
+    static std::shared_ptr<Res> get_shared(const std::string resource_name, bool throw_exception_on_error = true);
 
     void clear(){
     resource_cache.lock()->clear();
@@ -89,7 +89,7 @@ CacheableResource<Res>::~CacheableResource() {
 }
 
 template<typename Res>
-std::shared_ptr<Res> CacheableResource<Res>::get_shared(const std::string resource_name) {
+std::shared_ptr<Res> CacheableResource<Res>::get_shared(const std::string resource_name, bool throw_exception_on_error) {
     GraphicsContext* context = GraphicsContext::get_current();
 
     if (resource_caches.count(context) == 0) {
@@ -101,7 +101,7 @@ std::shared_ptr<Res> CacheableResource<Res>::get_shared(const std::string resour
         context->register_resource_releaser(std::function<void()>([context] () {resource_caches.erase(context);}));
     }
 
-    return resource_caches.find(context)->second->get_resource(resource_name);
+    return resource_caches.find(context)->second->get_resource(resource_name, throw_exception_on_error);
 }
 
 template<typename Res>

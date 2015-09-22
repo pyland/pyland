@@ -17,6 +17,7 @@ GUIMain::GUIMain(GameWindow * _embedWindow):
     bar_options_open(false),
     external_help_open(false),
     callback_options(false),
+    ignored_scripter_state(false),
     option_start(0),
     option_selected(0),
     pause_open(false),
@@ -98,20 +99,38 @@ void GUIMain::create_pause_menu(){
 
     gui_window->add(pause_button);
 
-    exit_button = std::make_shared<Button>(ButtonType::NoPicture);
-    exit_button->set_text("Main Menu");
-    exit_button->set_alignment(ButtonAlignment::BottomLeft);
-    exit_button->set_on_click( [this] () {
+    //Add the exit to menu button, changes the level to whatever files/main_menu is set to in the config.jsonnet file
+    menu_button = std::make_shared<Button>(ButtonType::NoPicture);
+    menu_button->set_text("Main Menu");
+    menu_button->set_alignment(ButtonAlignment::BottomLeft);
+    menu_button->set_on_click( [this] () {
         Engine::open_main_menu();
     });
-    exit_button->set_clickable(false);
-    exit_button->set_visible(false);
-    exit_button->set_width(menu_width);
-    exit_button->set_height(menu_height);
-    exit_button->set_x_offset(pause_x_offset);
-    exit_button->set_y_offset(pause_y_offset - 2 * menu_spacing);
+    menu_button->set_clickable(false);
+    menu_button->set_visible(false);
+    menu_button->set_width(menu_width);
+    menu_button->set_height(menu_height);
+    menu_button->set_x_offset(pause_x_offset);
+    menu_button->set_y_offset(pause_y_offset - 3 * menu_spacing);
 
-    gui_window->add(exit_button);
+    gui_window->add(menu_button);
+
+
+    //Add the exit level button, changes the level to the given exit level destination. By defualt it is the main menu
+    exit_level_button = std::make_shared<Button>(ButtonType::NoPicture);
+    exit_level_button->set_text("Exit Level");
+    exit_level_button->set_alignment(ButtonAlignment::BottomLeft);
+    exit_level_button->set_on_click( [this] () {
+        Engine::exit_level();
+    });
+    exit_level_button->set_clickable(false);
+    exit_level_button->set_visible(false);
+    exit_level_button->set_width(menu_width);
+    exit_level_button->set_height(menu_height);
+    exit_level_button->set_x_offset(pause_x_offset);
+    exit_level_button->set_y_offset(pause_y_offset - 2 * menu_spacing);
+
+    gui_window->add(exit_level_button);
 
     music_button = std::make_shared<Button>(ButtonType::NoPicture);
     music_button->set_text("Music ON");
@@ -410,11 +429,8 @@ void GUIMain::create_pyguide(){
         std::string help = j["pyguide_apis"][std::to_string(i)];
         unsigned int beg_name = help.find(":");
 
-        if(beg_name == std::string::npos){
-            LOG(INFO) << "ERROR: Pycommand " << i << " in the config file does not follow the format required";
-            return;
-        }
-        else{
+        if(beg_name != std::string::npos)
+        {
             std::string name = help.substr(0, beg_name);
             std::string explanation = help.substr(beg_name+1, std::string::npos);
 
@@ -441,6 +457,10 @@ void GUIMain::create_pyguide(){
 
             py_command->set_clickable(false);
             py_command->set_visible(false);
+        }
+        else{
+            LOG(INFO) << "ERROR: Pycommand " << i << " in the config file does not follow the format required";
+            return;
         }
     }
 
@@ -473,8 +493,11 @@ void GUIMain::open_pause_window(){
         }
     }
 
-    exit_button->set_visible(true);
-    exit_button->set_clickable(true);
+    menu_button->set_visible(true);
+    menu_button->set_clickable(true);
+
+    exit_level_button->set_visible(true);
+    exit_level_button->set_clickable(true);
 
     music_button->set_visible(true);
     music_button->set_clickable(true);
@@ -524,8 +547,11 @@ void GUIMain::close_pause_window(){
         }
     }
 
-    exit_button->set_visible(false);
-    exit_button->set_clickable(false);
+    menu_button->set_visible(false);
+    menu_button->set_clickable(false);
+
+    exit_level_button->set_visible(false);
+    exit_level_button->set_clickable(false);
 
     music_button->set_visible(false);
     music_button->set_clickable(false);
@@ -536,7 +562,15 @@ void GUIMain::close_pause_window(){
     refresh_gui();
 }
 
-void GUIMain::open_notification_bar(std::function<void ()> func){
+void GUIMain::open_notification_bar(std::function<void ()> func, bool ignore_scripting){
+    ignored_scripter_state = ignore_scripting;
+
+    if(!ignored_scripter_state){
+        EventManager::get_instance()->add_event([] {
+            Engine::disable_py_scripter();
+        });
+    }
+
     bar_open = true;
     callback_options = false;
     notification_func = func;
@@ -544,7 +578,15 @@ void GUIMain::open_notification_bar(std::function<void ()> func){
     LOG(INFO) << "Notification Bar open";
 }
 
-void GUIMain::open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options){
+void GUIMain::open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options, bool ignore_scripting){
+    ignored_scripter_state = ignore_scripting;
+
+    if(!ignored_scripter_state){
+        EventManager::get_instance()->add_event([] {
+            Engine::disable_py_scripter();
+        });
+    }
+
     bar_open = true;
     callback_options = true;
     notification_options.clear();
@@ -590,6 +632,7 @@ void GUIMain::proceed_selection_notification_bar_with_options(bool forward){
 }
 
 void GUIMain::close_notification_bar(){
+
     if(callback_options){
         bar_options_open = true;
         options_box->set_visible(true);
@@ -639,6 +682,17 @@ void GUIMain::close_notification_bar(){
         em->add_event([this] {
             notification_func();
         });
+    }
+    
+    if(ignored_scripter_state){
+        //do nothing cause we have ignored scripter state. 
+        //If you are debugging and have reached here wondering why the scripter is enabled, check if you passed True to ignore_scripting in engine.py
+        //Then, it is your responsibilty to manage the state of the pyscripter
+        //Else, we have a bug
+    }
+    else if (! Engine::is_bar_with_options_open()){
+        //if bar with options is open, let the pyscripter remain so
+        Engine::enable_py_scripter();
     }
 
     refresh_gui();

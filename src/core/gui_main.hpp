@@ -138,6 +138,7 @@ private:
     bool notification_bar_with_options_arrow_select_enable; //Whether the user has pressed arrow keys to select an option to press enter through
     bool external_help_open;
     bool callback_options; //whether or not there are options at the end of the notification bar
+    bool ignored_scripter_state;
     void create_notification_bar();
 
     std::shared_ptr<TextBox> notification_bar;
@@ -159,7 +160,8 @@ private:
     void open_pause_window();
     void close_pause_window();
 
-    std::shared_ptr<Button> exit_button;
+    std::shared_ptr<Button> exit_level_button;
+    std::shared_ptr<Button> menu_button;
     std::shared_ptr<Button> restart_button;
     bool music_on;
     std::shared_ptr<Button> music_button;
@@ -240,8 +242,8 @@ public:
     void add_text(std::string text);
 
     //To open and close the notification bar, func is the callback function to be called after the user finished reading the notification
-    void open_notification_bar(std::function<void ()> func);
-    void open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options);
+    void open_notification_bar(std::function<void ()> func, bool ignore_scripter);
+    void open_notification_bar_with_options(std::deque<std::pair<std::string, std::function<void ()> > > options, bool ignore_scripter);
     void proceed_notification_bar();
     void proceed_notification_bar_with_options();
     void close_external_script_help();

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="26" height="20" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
+ <layer name="Ground" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxLYGBgSBjFo3gUj+JRPIpH8ShGwgDsl8MB
+  </data>
+ </layer>
+ <layer name="Decor" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzNVVsKAjEM7N5CxPO19WePo4Ku+LioWTAQhiRNWD8cGJZN00wS0nYupeyIM7B/vw3sDPSvsLcrPqvOUbFrlDqoWYVeB+0DcW/E1LQtaPuxpkgtEUhfrZ/ZeFGMcu7JeKeplDPxMvla2EeJ5sTnfB4U/018DXQyvUPdaqxlZncrsjpVsXlg/3+pJZq/N5fRWnhWcV69+Rtp8V0p87xS7DvxRlyUec1qWDWtZ+LpnAuG7LHso3U2+V9D9n6wNH45c5HzuVXTioF1NcPu6VmxtfcA3+bomkd8uz8Z0nfx
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="26" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzF1EEKACAIRNE6Sfe/ZatAosL0Tw24zEcWtlpKu6iRmzORso7S3EXdf2V5XDK0cepBWnZWXoeaHfXmhPXCeWH8uAv1D9WOd27zDlE5mZA7M2tkzKjh8YjeZHWkaCBh
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="26" height="20">
+  <object name="characters/player/player_one" gid="191" x="1152" y="448"/>
+  <object name="characters/npcs/heidi/heidi" gid="196" x="0" y="1216"/>
+  <object name="sign/route_sign" gid="193" x="960" y="256"/>
+  <object name="tile_trigger/exit_to_house" gid="197" x="1152" y="448"/>
+  <object name="tile_trigger/exit_to_road_west" gid="197" x="768" y="0"/>
+  <object name="tile_trigger/exit_to_road_east" gid="197" x="832" y="0"/>
+  <object name="player_data/player_data" gid="192" x="0" y="64"/>
+  <object name="characters/npcs/generic/villager1" gid="196" x="1088" y="768"/>
+  <object name="characters/npcs/generic/villager2" gid="196" x="640" y="576"/>
+  <object name="characters/npcs/generic/villager3" gid="196" x="768" y="960"/>
+  <object name="characters/npcs/generic/villager4" gid="196" x="1088" y="960"/>
+ </objectgroup>
+</map>

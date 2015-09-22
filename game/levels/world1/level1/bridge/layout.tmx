@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="30" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="water" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/water.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="96" name="jungle" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/jungle.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="191" name="paths" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/paths.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="286" name="objects" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/objects.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="381" name="sand" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/sand.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="476" name="walls" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/walls.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="571" name="special" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/special.png" width="320" height="1216"/>
+ </tileset>
+ <tileset firstgid="666" name="house" tilewidth="64" tileheight="64">
+  <image source="../../../../tiles/house.png" width="320" height="640"/>
+ </tileset>
+ <layer name="Ground" width="25" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztw0ENAAAMA6GTWv8qZmMPSFg1VVX19QOR5hlQ
+  </data>
+ </layer>
+ <layer name="Water" width="25" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztVNEOgyAMrHMbLmGbL/L/nzpIIOlqoYVuDyY2uahA764FBDjjSPGIWDJcxP0P/M+IDeE1qFO8Ovj2TPmxjgN9XS2ugkCeGFeFRi2XG6vVJNWi4ZG0JZ1afuioJeE2oNGLVi2cb6rVqgmPl/NGtUZ9SzWVe+CUfbL0UDr7Up7ljNS0uX3SzI3oWnqm5bB4tvxTRvZDy2/t3y/8prVTxMp4svijuSk80uHwjrhkP1N+X2HvFc/jbyA6AfGWNTPswyM+br4WHnnoyTvjWPEBL5sgFg==
+  </data>
+ </layer>
+ <layer name="Decor" width="25" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztVlsOhCAQ47QoP57Wvc/Gj8nWZh5lNZtsYhMShKHtCOK09sHmtCUYrxoji4nmVA8cO4C7U398mZvFIjdiFfLlnKNY5EP/EXhth+fIV+U/05nxgngJGhUqn5XGMb9DQ05711kOqkYGPleKT26ZxgBeZc8iKHkYlPMzq2He+wX+SoMRfW9X9kPFHRyPxv9p3H2OFM1H4zcayr11aER1hceHdxTewTO1CY8PmrO+V2NZ39bwnTnauRZhrs2J8/i9f9fqxKJvpSZdWlz7IdSaMPOe5ePNsS/LmeuFN57Kdrs=
+  </data>
+ </layer>
+ <layer name="SpecialLayer" width="25" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztllEKwCAMQ8Vzbfe/1j43uqRJpR8yVhAEbV9TRTvGbcfsG9GyPWytwlJ8xFrV7JjyzfRnds73yGrK8qrEjxxXd/RX8dH+ai0Uw7FMg8vIuPG8V/Nkfuh+V+qudD51qHxWGey+dTNQvTvPozvPn/E9Rvc92kXX7gz3Xeg4X7VHvXPM4p/v+LG+AMVDf0mco1hxjfVsmRaWK2IwnmOs91rt/RQLzat2Ac0KgDA=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="25" height="30">
+  <object name="characters/player/player_one" gid="286" x="512" y="1920"/>
+  <object name="tile_trigger/exit_to_village_east" gid="292" x="576" y="1984"/>
+  <object name="tile_trigger/exit_to_village_west" gid="292" x="512" y="1984"/>
+  <object name="sign/village_sign" gid="288" x="640" y="1792"/>
+  <object name="sign/bog_sign" gid="288" x="1280" y="256"/>
+  <object name="characters/npcs/heidi/heidi" gid="291" x="1536" y="1920"/>
+  <object name="tile_trigger/exit_to_bridge_end" gid="292" x="1600" y="448"/>
+  <object name="player_data/player_data" gid="287" x="0" y="64"/>
+  <object name="tile_trigger/no_potion" gid="292" x="1152" y="256"/>
+  <object name="totem/totem_1" gid="298" x="128" y="256"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_0" gid="296" x="640" y="576" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_1" gid="296" x="448" y="960" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_2" gid="296" x="896" y="1472" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_3" gid="296" x="192" y="1408" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_4" gid="296" x="64" y="1088" width="64" height="64"/>
+  <object name="characters/enemies/crocodiles/green_crocodile/croc_5" gid="296" x="512" y="704" width="64" height="64"/>
+  <object name="tile_trigger/heidi_chicken_out" gid="292" x="576" y="1536"/>
+  <object name="tile_trigger/heidi_totem_warning" gid="292" x="704" y="640"/>
+ </objectgroup>
+</map>
