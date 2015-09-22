@@ -142,3 +142,13 @@ cd game
 * `get_cuts_left()` - Returns an integer, the number of cuts the character has remaining.
 * `yell()` - Yells in the given direction. Any object along the line of yelling responds to the yell depending on its type.
 * `turn_left(), turn_right()` - Turns the character by 90 degrees anticlockwise and clockwise respectively.
+
+##Creating Levels
+
+To learn how to create your own levels to play in Pyland, you can use the following resources.
+
+Wiki documentation:
+https://github.com/pyland/pyland/wiki/Tutorial:----How-to-create-a-simple-level
+
+Video Tutorial series:
+https://www.youtube.com/playlist?list=PLnlsbuD48Ge2a5WO1etHQDCsiD-JvUUka
