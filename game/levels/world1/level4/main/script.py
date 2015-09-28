@@ -55,15 +55,10 @@ def for_help(player_object):
 def help_with_for(player_object):
     engine.run_callback_list_sequence([
         lambda callback: player_object.set_busy(True, callback = callback),
-        lambda callback: engine.show_dialogue("There are three guardians here, solve their challenges to prove your worth...", callback = callback),
-        lambda callback: engine.show_dialogue("They will pose riddles a plenty, can you achieve this?", callback = callback),
-        lambda callback: myla.start_animating(speed = 0.1, loop = False, forward = False, callback = callback)
-    ], callback = lambda: engine.show_dialogue_with_options(
-        "Myla: Do you want me to help you with that?",
-        {
-            "Yes": lambda: for_help(player_object),
-            "No": lambda: no_thanks(player_object)
-        }))
+        lambda callback: engine.show_dialogue("Up ahead, there are guardians three...", callback = callback),
+        lambda callback: engine.show_dialogue("Riddles a plenty will be posed, can you prove your worth?", callback = callback),
+        lambda callback: player_object.set_busy(False, callback = callback),
+    ])
 
 def reached_arith_fun():
     player_data.save_checkpoint("reached_arith_help")

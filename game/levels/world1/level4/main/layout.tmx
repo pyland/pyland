@@ -31,13 +31,13 @@
  </layer>
  <layer name="Decor" width="42" height="30">
   <data encoding="base64" compression="zlib">
-   eJytl8GuhDAIRfuprHTc+P/Ll0keCZ7h0oo2IdZK4ZRCU8e4384FMdFXupW+NRgV59fWvsC0ui5D/y3Obqw4num+xXks+I/MURTnB9+6nG7P9zr6JbM319kKTsoOGx3OuOZok8J5ZMzkAH+Xs7KZcR5i7qp0muLJZMP64nx/Mhdj//j/3mkqh2I9GfpqruJ7I55qr238+uD3sajLvOpydmKixkys+414VlyZrzGu8cxYB+Yr5oq9U5fcN4Oc0KOdE3qZ7WrM6yWKn90Zz0zoJ9uHilXFKfP1Gde7SCYb3me5p/Jopan93oNOrM8tjHEdzNFtXM/bEb7R/wojfbAeKDyX4tgx5iwqD2c1MuMlN/Psjjxpiols9GWJfvZe2bjLmdmaievznmULz06L97dj/PLEMRN9f+cdRN1JOq2KVZVnFp4Vv58fb+272jcVD+fkXU8xR7tdziq/VFx4NmbzvP/W/1GWhyq3YjyjVPXNdT7hZLwyX8wzcpKXT+93Ob/zWeuZz4w1m1PthT3knNU7WQ3j2Ryuye8FXc6V8yhbi4ob7/MG6XJGGzEPaH8man2UP18gXLI=
+   eJytWNFuxCAMy6fmqYWX/f/jdtLQ+Vw7pN0qRaVgEuMEDl3E+5k/9iWMH4VhS9N22AqfN+IiXxfrbHDqritFG3kobhPG7qyroxX3K6yaM4R+O26zER85ozlOw/hgrUbU3NbclWuMq/wGYI6CJ9sJWpzEscM3xdhpsAE+lZYuR6xHCJyL2fG5q/Entpv7F98vO0jPiH4t5u/6XE7xHMUYjjfWEHLANvtx9e7yEuSDv52+KtcZ1xg8Hk2s0+0/8r7TxPWlWbeyYbR8PacZc7xUrCA9Fdeg+ezHPU80VfPXXk+yyjdzXg/uSxULsTPeZ/WIz7Ob+Rxx5cemYnEeVnvAW9VAwLiKtfqZZ8W5m0+HZZ5qbpXvCe0D+ngdXKNHXPNa1ekA/KA51Z7M0PrxuYR9k8YwDn/v9pQ7pxxf5s11dscqrk/wGVduPDcFXn0rH+p+EKbN58VdfRaef6+z8d5xVHcAvEup3zTs22nId5Dd/Vjx5b6OVlXdJLwr/qzFzlgrxz1Dx8vQPPmu5zij345mC1Pd7Tu68Nmo5q12lX+2dXYubXlNXIe72koyxDouJ8y/o2ml105P5FRpmYTF+E/4cv2qmLs9sXBVLhLiLlyXr/JVYfC/EqWlWxP/N8C6zvi8TwThOjWu1uJ04/t8knX1U/yWre8ZV/87c+tj+wa1Tb8s
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="42" height="30">
   <object name="characters/player/player_one" gid="286" x="0" y="896" width="64" height="64"/>
   <object name="characters/npcs/myla/myla" gid="291" x="-64" y="896" width="64" height="64"/>
-  <object name="sign/sign_one" gid="287" x="1216" y="1472" width="64" height="64"/>
+  <object name="sign/sign_one" gid="287" x="256" y="832" width="64" height="64"/>
   <object name="sign/sign_two" gid="287" x="1664" y="960" width="64" height="64"/>
   <object name="characters/npcs/generic/helper_one" gid="291" x="1856" y="960" width="64" height="64"/>
   <object name="characters/npcs/generic/security_one" gid="301" x="1728" y="704" width="64" height="64"/>
@@ -49,10 +49,11 @@
   <object name="tile_trigger/challenge_arith" gid="292" x="1664" y="896"/>
   <object name="tile_trigger/exit_level_start" gid="292" x="-64" y="896"/>
   <object name="tile_trigger/exit_level_end" gid="292" x="2688" y="1152"/>
+  <object name="tile_trigger/myla_teach_maths" gid="292" x="640" y="1024"/>
  </objectgroup>
  <layer name="SpecialLayer" width="42" height="30">
   <data encoding="base64" compression="zlib">
-   eJztlVkKwCAMRKXn6v3P1V8JWSZV4wg+KEVjdNAsrV163kf/mJC6GLVGeph0jtir6HVITWzvLv+MsemNmWB+a4nUtlMnmi+771Or5b3NWotqRnuZ1fc8X7TG/+mp3nly/9lk7sBav1IXYp8RJ0id9OZQrdoY8UF9o1jKxlk2PiI/7Rwk5yr7aiYmsnuswKurbFh5y6Y56h0sRDnIAtI7GTjp3UdrVBW76vjlbD7WCS4F
+   eJztlWsKgDAMg8Vzef9z+XeUPrK2GxH3gYh7Bptl13UYeW79YULqYtQa6WHSWenfxahDamKru3wzetP7ZoK51hKpLaPTyt/ZtdDzkv2f1rzZ9bQsH/ussege3jjvDkFqgGZ8Vz07/DW7V0b3al1If8WHXr21eVZbt9bsmfO8q+m0fIb4He2P/Iycuex+1VyW7dU1VuDlKhteDjMR+YyFKAtYQO5OBr5U92pG7aIrlw//4gVHCi/1
   </data>
  </layer>
 </map>
