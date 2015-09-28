@@ -33,6 +33,8 @@ INSERT INTO "dialogue" VALUES('totems','0','Emod metot','Untranslated french','U
 INSERT INTO "dialogue" VALUES('totems','1','Muiromem emit ecnis Dnalyp no neeb sah efil.','Untranslated french','Untranslated dutch','Untranslated hindi','Muiromem emit ecnis Dnalyp no neeb sah efil.');
 INSERT INTO "dialogue" VALUES('totems','2','Nohtyp eht fo taht saw egaugnal ylno eht.','Untranslated french','Untranslated dutch','Untranslated hindi','Nohtyp eht fo taht saw egaugnal ylno eht.');
 INSERT INTO "dialogue" VALUES('totems','3','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...','Untranslated french','Untranslated dutch','Untranslated hindi','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...');
-
+INSERT INTO "dialogue" VALUES('totems','5','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...','Untranslated french','Untranslated dutch','Untranslated hindi','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...');
+INSERT INTO "dialogue" VALUES('totems','6','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...','Untranslated french','Untranslated dutch','Untranslated hindi','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...');
+INSERT INTO "dialogue" VALUES('totems','7','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...','Untranslated french','Untranslated dutch','Untranslated hindi','Dnalyp derevocsid ytinamuh litnu, slamina rehto eht lla revo delur dna, esiw deredisnoc erew yeht...');
 -- INSERT INTO "dialogue" VALUES('world1/level1/rossumberg','','','Untranslated french','Untranslated dutch','Untranslated hindi','');
 COMMIT;
