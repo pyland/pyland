@@ -79,15 +79,9 @@ For desktop, you will need the packages listed above, which can be found here:
 sudo apt-get update
 sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
 sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-sudo apt-get install --no-install-recommends libboost1.55-all-dev python3-dev libgl1-mesa-dev
-sudo apt-get install libsdl2-dev
-sudo apt-get install libsdl2-image-dev
-sudo apt-get install libsdl2-ttf-dev
-sudo apt-get install libgoogle-glog0
-sudo apt-get install libgoogle-glog-dev
-sudo apt-get install libqscintilla2-dev
-sudo apt-get install install sqlite3
-sudo apt-get install libsdl2-mixer-dev 
+sudo apt-get install --no-install-recommends libboost-all-dev python3-dev libgl1-mesa-dev
+sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libgoogle-glog-dev
+sudo apt-get install libqscintilla2-dev sqlite3 libsdl2-mixer-dev
 ```
 
 If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
@@ -105,20 +99,20 @@ git clone http://github.com/pyland/pyland
 For compiling on desktop, use:
 
 ```bash
-#One needs to be in the pyland folder
+#You must set the current directory in terminal to the 'pyland' folder (that was downloaded from github)
 
-python3.2 build.py -d -c g++
+python3.5 build.py -d -c g++
 
-#Replace 3.2 with the version of python on the Pi
+#Replace 3.5 with the version of python installed
 #g++ can be replaced with any C++11 compiler
 #The -j flag followed by a number can be used to specify the number of jobs make uses while compiling
 ```
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
 
-#### Running Pyland (All Platforms)
+##Running Pyland (All Platforms)
 
-To launch:
+To launch Pyland, set the current directory to the 'pyland' folder and then enter the following commands:
 
 ```bash
 cd game
