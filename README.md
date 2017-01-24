@@ -16,7 +16,10 @@ Mullins. It's currently being worked upon by Tom Read-Cutting, Alexander Day and
 ![Screenshot](https://raw.githubusercontent.com/pyland/pyland/master/screenshot.png)
 
 ## Install
-These install instructions may be incomplete and you may require additional packages to the ones listed here
+
+To install Pyland, follow the instructions for either the Raspberry Pi or Desktop Linux. The instructions will guide you through getting the dependencies and then downloading, compiling and running Pyland. The commands given below should be entered into the 'terminal'.
+
+These install instructions may be incomplete and you may require additional packages to the ones listed here.
 
 #### Getting Dependencies (Raspberry Pi)
 
@@ -30,7 +33,7 @@ sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev 
 sudo apt-get install libqscintilla2-dev
 sudo apt-get install install sqlite3
 ```
-
+ 
 Download and install extra dependencies:
 ```bash
 mkdir pyl-temp
@@ -47,15 +50,15 @@ wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog-dev_0.3.3-1_armhf.deb
 sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
 cd ..
 ```
-Also requires libsdl2-mixer-dev, not currently on the raspbian repo.
+You must also install the library libsdl2-mixer-dev, which is not currently on the raspbian repo.
 
-Get source code using git:
+Get Pyland source code using git:
 ```bash
 sudo apt-get install --no-install-recommends git-core
 git clone http://github.com/pyland/pyland
 ```
 
-#### Compiling on Raspberry Pi
+#### Compiling (Raspberry Pi)
 
 For compiling on the Raspberry Pi, use:
 
@@ -69,7 +72,7 @@ python3.2 build.py -c g++
 #The -j flag followed by a number can be used to specify the number of jobs make uses while compiling
 ```
 
-#### Getting dependencies on Desktop GNU/Linux
+#### Getting Dependencies (Desktop GNU/Linux)
 For desktop, you will need the packages listed above, which can be found here:
 
 ```bash
@@ -89,9 +92,7 @@ sudo apt-get install libsdl2-mixer-dev
 
 If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
 
-#### Getting Pyland source code
-
-Get source code using git:
+Get Pyland source code using git:
 
 ```bash
 sudo apt-get install --no-install-recommends git-core
@@ -99,7 +100,7 @@ git clone http://github.com/pyland/pyland
 ```
 
 
-#### Compiling on Desktop - Unix
+#### Compiling (Desktop GNU/Linux)
 
 For compiling on desktop, use:
 
@@ -115,7 +116,7 @@ python3.2 build.py -d -c g++
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
 
-##Usage
+#### Running Pyland (All Platforms)
 
 To launch:
 
