@@ -26,8 +26,7 @@ These install instructions may be incomplete and you may require additional pack
 Install packages from the Raspbian repo:
 ```
 sudo apt-get update
-sudo apt-get install --no-install-recommends build-essential libx11-dev libtinyxml-dev zlib1g-dev mesa-common-dev mesa-utils libgl1-mesa-dev libboost-all-dev python3-dev
-sudo apt-get install libqscintilla2-dev libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libgoogle-glog-dev sqlite3
+sudo apt-get install build-essential libx11-dev libtinyxml-dev zlib1g-dev mesa-common-dev mesa-utils libgl1-mesa-dev libboost-all-dev python3-dev libqscintilla2-dev libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libgoogle-glog-dev sqlite3
 ```
 
 Get Pyland source code using git:
