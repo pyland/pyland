@@ -147,6 +147,7 @@ $(INPUT_OBJS): %.o : %.cpp | dependencies/input_management
 
 	@$(COMPILER) -c $*.cpp -o $*.o \
 		$(GLOG_CPPFLAGS) $(GLOG_CXXFLAGS) \
+		$(GRAPHICS_CPPFLAGS) \
 		$(SDL_CPPFLAGS)  $(SDL_CXXFLAGS)  \
 		$(CPPFLAGS)      $(CXXFLAGS)      \
 
