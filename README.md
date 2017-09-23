@@ -26,32 +26,10 @@ These install instructions may be incomplete and you may require additional pack
 Install packages from raspbian repo:
 ```
 sudo apt-get update
-sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
-sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-sudo apt-get install libts-dev
-sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
-sudo apt-get install libqscintilla2-dev
-sudo apt-get install install sqlite3
+sudo apt-get install --no-install-recommends build-essential libx11-dev libtinyxml-dev g++-4.7 zlib1g-dev mesa-common-dev mesa-utils libgl1-mesa-dev libboost-all-dev python3-dev
+sudo apt-get install libqscintilla2-dev libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libgoogle-glog-dev sqlite3
 ```
  
-Download and install extra dependencies:
-```bash
-mkdir pyl-temp
-cd pyl-temp
-wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2_2.0.3-1_armhf.deb
-sudo gdebi libsdl2_2.0.3-1_armhf.deb
-wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2-image_2.0.0-1_armhf.deb
-sudo gdebi libsdl2-image_2.0.0-1_armhf.deb
-wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2-ttf_2.0.12-1_armhf.deb
-sudo gdebi libsdl2-ttf_2.0.12-1_armhf.deb
-wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog0_0.3.3-1_armhf.deb
-sudo gdebi libgoogle-glog0_0.3.3-1_armhf.deb
-wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog-dev_0.3.3-1_armhf.deb
-sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
-cd ..
-```
-You must also install the library libsdl2-mixer-dev, which is not currently on the raspbian repo.
-
 Get Pyland source code using git:
 ```bash
 sudo apt-get install --no-install-recommends git-core
