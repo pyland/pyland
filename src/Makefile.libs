@@ -76,7 +76,7 @@ else
 
 	GLES_CXXFLAGS =
 	GLES_LDFLAGS  = -L/opt/vc/lib/
-	GLES_LDLIBS   = -lGLESv2 -lEGL -lbcm_host -lpthread
+	GLES_LDLIBS   = -lbrcmGLESv2 -lbrcmEGL -lbcm_host -lpthread
 
 	GRAPHICS_CPPFLAGS = $(GLES_CPPFLAGS) $(X11_CPPFLAGS)
 	GRAPHICS_CXXFLAGS = $(GLES_CXXFLAGS) $(X11_CXXFLAGS)

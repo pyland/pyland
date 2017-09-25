@@ -23,34 +23,11 @@ These install instructions may be incomplete and you may require additional pack
 
 #### Getting Dependencies (Raspberry Pi)
 
-Install packages from raspbian repo:
+Install packages from the Raspbian repo:
 ```
 sudo apt-get update
-sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
-sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-sudo apt-get install libts-dev
-sudo apt-get install --no-install-recommends libboost1.50-all-dev python3.2-dev libgl1-mesa-dev
-sudo apt-get install libqscintilla2-dev
-sudo apt-get install install sqlite3
+sudo apt-get install build-essential libx11-dev libtinyxml-dev zlib1g-dev mesa-common-dev mesa-utils libgl1-mesa-dev libboost-all-dev python3-dev libqscintilla2-dev libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libgoogle-glog-dev sqlite3
 ```
- 
-Download and install extra dependencies:
-```bash
-mkdir pyl-temp
-cd pyl-temp
-wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2_2.0.3-1_armhf.deb
-sudo gdebi libsdl2_2.0.3-1_armhf.deb
-wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2-image_2.0.0-1_armhf.deb
-sudo gdebi libsdl2-image_2.0.0-1_armhf.deb
-wget http://people.ds.cam.ac.uk/ajn44/files/libsdl2-ttf_2.0.12-1_armhf.deb
-sudo gdebi libsdl2-ttf_2.0.12-1_armhf.deb
-wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog0_0.3.3-1_armhf.deb
-sudo gdebi libgoogle-glog0_0.3.3-1_armhf.deb
-wget http://people.ds.cam.ac.uk/ajn44/files/libgoogle-glog-dev_0.3.3-1_armhf.deb
-sudo gdebi libgoogle-glog-dev_0.3.3-1_armhf.deb
-cd ..
-```
-You must also install the library libsdl2-mixer-dev, which is not currently on the raspbian repo.
 
 Get Pyland source code using git:
 ```bash
@@ -65,34 +42,14 @@ For compiling on the Raspberry Pi, use:
 ```bash
 #One needs to be in the pyland folder
 
-python3.2 build.py -c g++
+python3 build.py -c g++
 
-#Replace 3.2 with the version of python on the Pi
 #g++ can be replaced with any C++11 compiler
-#The -j flag followed by a number can be used to specify the number of jobs make uses while compiling
 ```
 
 #### Getting Dependencies (Desktop GNU/Linux)
-For desktop, you will need the packages listed above, which can be found here:
 
-```bash
-sudo apt-get update
-sudo apt-get install --no-install-recommends libx11-dev gdebi libtinyxml-dev g++-4.7 zlib1g-dev
-sudo apt-get install --no-install-recommends mesa-common-dev mesa-utils build-essential gedit
-sudo apt-get install --no-install-recommends libboost-all-dev python3-dev libgl1-mesa-dev
-sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libgoogle-glog-dev
-sudo apt-get install libqscintilla2-dev sqlite3 libsdl2-mixer-dev
-```
-
-If you have problems installing these packages, you can start entering their names and press tab for the currently available packages.
-
-Get Pyland source code using git:
-
-```bash
-sudo apt-get install --no-install-recommends git-core
-git clone http://github.com/pyland/pyland
-```
-
+The dependencies for the Raspberry Pi and Desktop are similar. In fact, the same apt-get commands, given above, should work for a Desktop Debian PC as they do for the Pi. If you're running a different Linux distribution, use the list given in the Raspberry Pi section as a guide.
 
 #### Compiling (Desktop GNU/Linux)
 
@@ -101,11 +58,11 @@ For compiling on desktop, use:
 ```bash
 #You must set the current directory in terminal to the 'pyland' folder (that was downloaded from github)
 
-python3.5 build.py -d -c g++
+python3 build.py -d -c g++
 
-#Replace 3.5 with the version of python installed
 #g++ can be replaced with any C++11 compiler
-#The -j flag followed by a number can be used to specify the number of jobs make uses while compiling
+#Notice the -d flag. This specifies that you are compiling for desktop.
+#The -j flag followed by a number can be used to specify the number of jobs make uses while compiling. (It is not recommended to use this on a Pi, due to memory limitations.)
 ```
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
@@ -118,6 +75,14 @@ To launch Pyland, set the current directory to the 'pyland' folder and then ente
 cd game
 ./pyland
 ```
+
+###Troubleshooting
+
+####Game crashes near the beginning (Raspberry Pi)
+
+The Pi's default memory split doesn't give enough memory to the GPU in order to run the game at high resolutions.
+
+You can fix this by running `raspi-config`, going into `Advanced Options`, `Memory Split`, and trying a larger value (e.g. 128). Make sure to reboot for the changes to take effect.
 
 ##Keybindings
 * <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - Move sprite/Toggle between options
