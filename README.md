@@ -67,7 +67,7 @@ python3 build.py -d -c g++
 
 Please note that desktop support is secondary, and may be incomplete. At the moment, there is only a Unix version.
 
-##Running Pyland (All Platforms)
+## Running Pyland (All Platforms)
 
 To launch Pyland, set the current directory to the 'pyland' folder and then enter the following commands:
 
@@ -76,15 +76,15 @@ cd game
 ./pyland
 ```
 
-###Troubleshooting
+### Troubleshooting
 
-####Game crashes near the beginning (Raspberry Pi)
+#### Game crashes near the beginning (Raspberry Pi)
 
 The Pi's default memory split doesn't give enough memory to the GPU in order to run the game at high resolutions.
 
 You can fix this by running `raspi-config`, going into `Advanced Options`, `Memory Split`, and trying a larger value (e.g. 128). Make sure to reboot for the changes to take effect.
 
-##Keybindings
+## Keybindings
 * <kbd>up</kbd><kbd>down</kbd><kbd>left</kbd><kbd>right</kbd> / <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd> - Move sprite/Toggle between options
 * <kbd>Enter</kbd> - Interact with an object on the map/Proceed through dialogue/Select an option
 * <kbd>1-9</kbd> - Run the script of given number/halt running script
@@ -92,7 +92,7 @@ You can fix this by running `raspi-config`, going into `Advanced Options`, `Memo
 * <kbd>Tab</kbd> - Switch player
 * <kbd>Shift</kbd> - Toggle the speed of running scripts
 
-##API
+## API
 
 * `face_east(), face_west(), face_south(), face_north()` - Make the character face in the given direction. 
 * `move_east(), move_west(), move_south(), move_north()` - Move the character in the given direction. 
@@ -103,7 +103,7 @@ You can fix this by running `raspi-config`, going into `Advanced Options`, `Memo
 * `yell()` - Yells in the given direction. Any object along the line of yelling responds to the yell depending on its type.
 * `turn_left(), turn_right()` - Turns the character by 90 degrees anticlockwise and clockwise respectively.
 
-##Creating Levels
+## Creating Levels
 
 To learn how to create your own levels to play in Pyland, you can use the following resources.
 
